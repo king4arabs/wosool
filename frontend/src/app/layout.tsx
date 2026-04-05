@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import { Providers } from "./providers";
 import "./globals.css";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://wosool.org";
@@ -71,13 +72,15 @@ export default function RootLayout({
   return (
     <html lang="en" dir="ltr" className="h-full antialiased scroll-smooth">
       <body className="min-h-full flex flex-col font-sans">
-        <a
-          href="#main-content"
-          className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:px-4 focus:py-2 focus:bg-brand-gold focus:text-brand-navy focus:rounded-md focus:font-medium"
-        >
-          Skip to main content
-        </a>
-        {children}
+        <Providers>
+          <a
+            href="#main-content"
+            className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:px-4 focus:py-2 focus:bg-brand-gold focus:text-brand-navy focus:rounded-md focus:font-medium"
+          >
+            Skip to main content
+          </a>
+          {children}
+        </Providers>
       </body>
     </html>
   );
