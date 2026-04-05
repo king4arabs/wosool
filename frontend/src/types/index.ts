@@ -17,6 +17,10 @@ export interface Founder {
   offers: string[]
   isVerified: boolean
   isFeatured: boolean
+  status?: "active" | "pending" | "rejected" | "suspended"
+  skills?: string[]
+  createdAt?: string
+  updatedAt?: string
 }
 
 export interface Company {
@@ -35,6 +39,8 @@ export interface Company {
   isFundraising: boolean
   isCollaborating: boolean
   founderIds: string[]
+  createdAt?: string
+  updatedAt?: string
 }
 
 export interface Event {
@@ -49,9 +55,11 @@ export interface Event {
   isVirtual: boolean
   registrationUrl?: string
   maxAttendees?: number
+  currentAttendees?: number
   imageUrl?: string
   isPublic: boolean
   tags: string[]
+  createdAt?: string
 }
 
 export interface Program {
@@ -66,6 +74,7 @@ export interface Program {
   cohortSize?: number
   benefits: string[]
   isOpen: boolean
+  createdAt?: string
 }
 
 export interface Partner {
@@ -87,7 +96,7 @@ export interface Sponsor {
   description: string
   logoUrl: string
   website?: string
-  tier: "Platinum" | "Gold" | "Silver"
+  tier: "Platinum" | "Gold" | "Silver" | "Bronze" | "Community"
   isActive: boolean
 }
 
@@ -112,4 +121,76 @@ export interface User {
   avatarUrl?: string
   founderId?: string
   companyId?: string
+  emailVerifiedAt?: string
+  createdAt?: string
+}
+
+/** Application form submission */
+export interface Application {
+  id: string
+  fullName: string
+  email: string
+  phone: string
+  companyName: string
+  sector: string
+  stage: string
+  motivation: string
+  status: "submitted" | "reviewing" | "approved" | "rejected" | "waitlisted"
+  referenceId: string
+  submittedAt: string
+}
+
+/** Contact form submission */
+export interface ContactMessage {
+  name: string
+  email: string
+  company?: string
+  category: "general" | "partnerships" | "sponsorship" | "founder-support" | "media" | "office-hours"
+  subject: string
+  message: string
+}
+
+/** Founder match */
+export interface Match {
+  id: string
+  founderId: string
+  matchedFounderId: string
+  score: number
+  reason: string
+  status: "suggested" | "accepted" | "declined" | "connected"
+  createdAt: string
+}
+
+/** Introduction between founders */
+export interface Intro {
+  id: string
+  requesterId: string
+  targetId: string
+  facilitatorId?: string
+  message: string
+  status: "requested" | "pending" | "completed" | "declined"
+  createdAt: string
+}
+
+/** Paginated API response */
+export interface PaginatedResponse<T> {
+  data: T[]
+  meta: {
+    currentPage: number
+    lastPage: number
+    perPage: number
+    total: number
+  }
+  links: {
+    first: string
+    last: string
+    prev: string | null
+    next: string | null
+  }
+}
+
+/** API success response */
+export interface ApiResponse<T> {
+  data: T
+  message?: string
 }

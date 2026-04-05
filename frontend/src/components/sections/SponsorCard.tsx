@@ -11,12 +11,16 @@ const tierVariant: Record<Sponsor["tier"], "default" | "gold" | "secondary"> = {
   Platinum: "default",
   Gold: "gold",
   Silver: "secondary",
+  Bronze: "secondary",
+  Community: "secondary",
 }
 
 const tierColors: Record<Sponsor["tier"], string> = {
   Platinum: "from-slate-200 to-slate-300",
   Gold: "from-yellow-100 to-amber-200",
   Silver: "from-gray-100 to-gray-200",
+  Bronze: "from-orange-100 to-orange-200",
+  Community: "from-blue-50 to-blue-100",
 }
 
 export function SponsorCard({ sponsor }: SponsorCardProps) {
