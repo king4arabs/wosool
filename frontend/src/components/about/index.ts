@@ -1,0 +1,9 @@
+export { HeroSection } from "./hero-section";
+export { WhoWeAreSection } from "./who-we-are-section";
+export { WhyWosoolExistsSection } from "./why-wosool-exists-section";
+export { VisionMissionSection } from "./vision-mission-section";
+export { DifferentiatorsSection } from "./differentiators-section";
+export { FounderPrinciplesSection } from "./founder-principles-section";
+export { CommunityModelSection } from "./community-model-section";
+export { GovernanceTrustSection } from "./governance-trust-section";
+export { LeadershipSection } from "./leadership-section";
