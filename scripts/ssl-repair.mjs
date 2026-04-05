@@ -6,7 +6,7 @@ const wwwDomain = process.env.WWW_DOMAIN ?? (apexDomain ? `www.${apexDomain}` : 
 const applyChanges = args.has('--apply')
 
 const requiredEnv = ['CLOUDFLARE_API_TOKEN', 'CLOUDFLARE_ZONE_ID']
-const missingEnv = requiredEnv.filter((name) => !process.env[name])
+const missingEnv = requiredEnv.filter((name) => !process.env[name]?.trim())
 
 function fail(message) {
   console.error(`\n[ssl-repair] ${message}\n`)
@@ -64,7 +64,7 @@ async function cf(path, options = {}) {
   const payload = await response.json()
 
   if (!response.ok || payload.success === false) {
-    const errors = payload.errors?.map((error) => error.message).join('; ') || response.statusText
+    const errors = payload.errors?.map((error) => error?.message || 'Unknown error').join('; ') || response.statusText
     throw new Error(`Cloudflare API request failed (${response.status}): ${errors}`)
   }
 
