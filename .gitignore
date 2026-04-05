@@ -1,0 +1,31 @@
+# Root gitignore for Wosool monorepo
+
+# Frontend (Next.js)
+frontend/node_modules/
+frontend/.next/
+frontend/out/
+frontend/.env.local
+frontend/.env.*.local
+
+# Backend (Laravel)
+backend/vendor/
+backend/storage/logs/*
+backend/.env
+backend/database/database.sqlite
+backend/storage/app/public
+backend/public/storage
+backend/bootstrap/cache/*.php
+!backend/storage/logs/.gitkeep
+!backend/bootstrap/cache/.gitkeep
+
+# OS files
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+
+# IDE
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
