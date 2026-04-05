@@ -1,0 +1,41 @@
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #1E293B;
+  --brand-navy: #0A1628;
+  --brand-gold: #C9A84C;
+  --brand-cream: #F8F5EF;
+  --brand-dark: #1E293B;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+
+  --color-brand-navy: #0A1628;
+  --color-brand-gold: #C9A84C;
+  --color-brand-cream: #F8F5EF;
+  --color-brand-dark: #1E293B;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+
+.section-cream {
+  background-color: #F8F5EF;
+}
+
+.section-navy {
+  background-color: #0A1628;
+  color: #ffffff;
+}
