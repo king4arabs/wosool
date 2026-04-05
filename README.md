@@ -19,8 +19,11 @@ Wosool is a founders-to-founders platform that helps founders connect, grow, col
 
 ```
 wosool/
-├── frontend/          # Next.js 15 + TypeScript + Tailwind CSS
-├── backend/           # Laravel 12 PHP API
+├── docs/              # Operations and product documentation
+├── scripts/           # Repository-level ops utilities
+├── frontend/          # Next.js 16 + TypeScript + Tailwind CSS
+├── backend/           # Laravel 13 PHP API
+├── package.json       # Root ops scripts
 └── README.md
 ```
 
@@ -28,11 +31,22 @@ wosool/
 
 | Layer | Technology |
 |-------|-----------|
-| Frontend | Next.js 15, TypeScript, Tailwind CSS, shadcn/ui components |
-| Backend | Laravel 12, PHP 8.3, RESTful API |
+| Frontend | Next.js 16, TypeScript, Tailwind CSS, shadcn/ui components |
+| Backend | Laravel 13, PHP 8.3, RESTful API |
 | Database | PostgreSQL (+ pgvector for AI features) |
 | Cache/Queue | Redis |
 | Auth | Laravel Sanctum |
+
+### Documentation
+
+- [Architecture](./docs/ARCHITECTURE.md)
+- [Audit](./docs/AUDIT.md)
+- [API Contract](./docs/API_CONTRACT.md)
+- [Database](./docs/DATABASE.md)
+- [Deployment](./docs/DEPLOYMENT.md)
+- [SSL Runbook](./docs/SSL_RUNBOOK.md)
+- [Skills Profile](./docs/SKILLS_PROFILE.md)
+- [Backend CHANGELOG](./backend/CHANGELOG.md)
 
 ---
 
@@ -160,4 +174,3 @@ php artisan serve     # API at http://localhost:8000
 ## License
 
 Copyright © 2024 Wosool. All rights reserved.
-

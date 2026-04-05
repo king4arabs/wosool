@@ -1,0 +1,7 @@
+{
+  "name": "wosool-ops",
+  "private": true,
+  "scripts": {
+    "ops:ssl:repair": "node ./scripts/ssl-repair.mjs"
+  }
+}
