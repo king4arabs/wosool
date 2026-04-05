@@ -4,12 +4,18 @@ use App\Http\Controllers\Api\CompanyController;
 use App\Http\Controllers\Api\ContactController;
 use App\Http\Controllers\Api\EventController;
 use App\Http\Controllers\Api\FounderController;
+use App\Http\Controllers\Api\HealthController;
 use App\Http\Controllers\Api\NewsController;
 use App\Http\Controllers\Api\PartnerController;
 use App\Http\Controllers\Api\ProgramController;
+use App\Http\Controllers\Api\ResourceController;
 use Illuminate\Support\Facades\Route;
 
+// Health check (no prefix, no rate limiting)
+Route::get('/health', HealthController::class);
+
 Route::prefix('v1')->group(function () {
+    // Public read endpoints
     Route::get('/founders', [FounderController::class, 'index']);
     Route::get('/founders/{slug}', [FounderController::class, 'show']);
 
@@ -28,6 +34,12 @@ Route::prefix('v1')->group(function () {
     Route::get('/news', [NewsController::class, 'index']);
     Route::get('/news/{slug}', [NewsController::class, 'show']);
 
-    Route::post('/applications', [ApplicationController::class, 'store']);
-    Route::post('/contact', [ContactController::class, 'store']);
+    Route::get('/resources', [ResourceController::class, 'index']);
+    Route::get('/resources/{slug}', [ResourceController::class, 'show']);
+
+    // Public write endpoints (rate limited)
+    Route::middleware('throttle:10,1')->group(function () {
+        Route::post('/applications', [ApplicationController::class, 'store']);
+        Route::post('/contact', [ContactController::class, 'store']);
+    });
 });
