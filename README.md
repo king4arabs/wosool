@@ -157,6 +157,23 @@ php artisan serve     # API at http://localhost:8000
 
 ---
 
+## Documentation
+
+| Document | Description |
+|----------|-------------|
+| [Architecture](./docs/ARCHITECTURE.md) | System architecture, tech stack, and conventions |
+| [API Contract](./docs/API_CONTRACT.md) | REST API endpoints, auth, and response format |
+| [Database](./docs/DATABASE.md) | PostgreSQL schema, migrations, and seeders |
+| [Deployment](./docs/DEPLOYMENT.md) | Deployment guide and environment configuration |
+| [SSL Runbook](./docs/SSL_RUNBOOK.md) | SSL/TLS certificate management and repair |
+| [Security Audit](./docs/AUDIT.md) | Dependency audit and security compliance |
+| [Skills Profile](./docs/SKILLS_PROFILE.md) | Founder skills and scorecard system |
+| [Dependency Audit](./docs/DEPENDENCY_AUDIT.md) | Vulnerability assessment and remediation |
+| [Changelog](./CHANGELOG.md) | Release history and changes |
+| [Backend Changelog](./backend/CHANGELOG.md) | Laravel framework changelog |
+
+---
+
 ## License
 
 Copyright © 2024 Wosool. All rights reserved.
