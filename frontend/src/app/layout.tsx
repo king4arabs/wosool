@@ -2,8 +2,9 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Wosool",
-  description: "Wosool Platform",
+  title: "Wosool — Founders to Founders",
+  description:
+    "A curated founder network and execution platform connecting visionary entrepreneurs across the Saudi and GCC ecosystem.",
 };
 
 export default function RootLayout({
@@ -13,7 +14,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="h-full antialiased">
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col font-sans bg-surface text-primary">
+        {children}
+      </body>
     </html>
   );
 }
