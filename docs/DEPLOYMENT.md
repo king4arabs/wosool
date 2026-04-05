@@ -15,7 +15,7 @@ npm run lint
 npm run build
 ```
 
-The frontend is a static/public Next.js 16 application with dashboard shells and should be validated before deployment.
+The frontend is a Next.js 16 application with public marketing routes and dashboard shells; deploy it as a standard Next app unless you intentionally introduce a static export workflow.
 
 ## Backend
 

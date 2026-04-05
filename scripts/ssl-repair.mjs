@@ -6,7 +6,8 @@ const wwwDomain = process.env.WWW_DOMAIN ?? (apexDomain ? `www.${apexDomain}` : 
 const applyChanges = args.has('--apply')
 
 const requiredEnv = ['CLOUDFLARE_API_TOKEN', 'CLOUDFLARE_ZONE_ID']
-const missingEnv = requiredEnv.filter((name) => !process.env[name]?.trim())
+const normalizedEnv = Object.fromEntries(requiredEnv.map((name) => [name, process.env[name]?.trim() ?? '']))
+const missingEnv = requiredEnv.filter((name) => !normalizedEnv[name])
 
 function fail(message) {
   console.error(`\n[ssl-repair] ${message}\n`)
@@ -48,8 +49,8 @@ if (missingEnv.length > 0) {
   )
 }
 
-const token = process.env.CLOUDFLARE_API_TOKEN
-const zoneId = process.env.CLOUDFLARE_ZONE_ID
+const token = normalizedEnv.CLOUDFLARE_API_TOKEN
+const zoneId = normalizedEnv.CLOUDFLARE_ZONE_ID
 
 async function cf(path, options = {}) {
   const response = await fetch(`https://api.cloudflare.com/client/v4${path}`, {
@@ -64,7 +65,10 @@ async function cf(path, options = {}) {
   const payload = await response.json()
 
   if (!response.ok || payload.success === false) {
-    const errors = payload.errors?.map((error) => error?.message || 'Unknown error').join('; ') || response.statusText
+    const errorMessages = Array.isArray(payload.errors)
+      ? payload.errors.map((error) => error?.message || 'Unknown error').filter(Boolean)
+      : []
+    const errors = errorMessages.length > 0 ? errorMessages.join('; ') : response.statusText || 'Unknown Cloudflare error'
     throw new Error(`Cloudflare API request failed (${response.status}): ${errors}`)
   }
 
@@ -82,6 +86,12 @@ async function patchRecord(record) {
   })
 }
 
+function formatProxied(proxied) {
+  if (proxied === true) return 'true'
+  if (proxied === false) return 'false'
+  return 'n/a'
+}
+
 function printRecords(hostname, records) {
   console.log(`\n[ssl-repair] ${hostname}`)
 
@@ -92,7 +102,7 @@ function printRecords(hostname, records) {
 
   for (const record of records) {
     console.log(
-      `  - ${record.type} ${record.name} -> ${record.content} | proxied=${record.proxied ?? 'n/a'} | ttl=${record.ttl}`
+      `  - ${record.type} ${record.name} -> ${record.content} | proxied=${formatProxied(record.proxied)} | ttl=${record.ttl}`
     )
   }
 }
