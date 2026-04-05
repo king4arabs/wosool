@@ -1,0 +1,14 @@
+{
+  "name": "wosool",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Wosool — Founders to Founders platform",
+  "scripts": {
+    "ops:ssl:repair": "node scripts/ssl-repair.mjs",
+    "frontend:dev": "cd frontend && npm run dev",
+    "frontend:build": "cd frontend && npm run build",
+    "frontend:lint": "cd frontend && npm run lint",
+    "backend:dev": "cd backend && php artisan serve",
+    "backend:test": "cd backend && composer test"
+  }
+}
