@@ -2,13 +2,13 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Wosool — Founders to Founders",
+  title: "Wosool — Supporting Saudi Entrepreneurs | Founder to Founders",
   description:
-    "Wosool is a premium founders-to-founders network for ambitious entrepreneurs building in Saudi Arabia and the GCC. Apply to join a trusted community of verified founders.",
+    "Wosool empowers Saudi entrepreneurs to build successful and sustainable businesses through resources, mentorship, and strategic partnerships. Founder to Founders.",
   openGraph: {
-    title: "Wosool — Founders to Founders",
+    title: "Wosool — Supporting Saudi Entrepreneurs | Founder to Founders",
     description:
-      "A premium founders-to-founders network for ambitious entrepreneurs in Saudi Arabia and the GCC.",
+      "Empowering Saudi entrepreneurs to build successful and sustainable businesses while fostering an innovation-driven culture.",
     type: "website",
   },
 };

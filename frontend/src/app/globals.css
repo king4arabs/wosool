@@ -39,3 +39,20 @@ h1, h2, h3, h4, h5, h6 {
   background-color: #0A1628;
   color: #ffffff;
 }
+
+@keyframes scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-scroll {
+  animation: scroll 30s linear infinite;
+}
+
+.animate-scroll:hover {
+  animation-play-state: paused;
+}

@@ -1,40 +1,32 @@
 import { PublicLayout } from "@/components/layout/PublicLayout"
 import { SectionHeader } from "@/components/sections/SectionHeader"
+import { BoardMemberCard } from "@/components/sections/BoardMemberCard"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
-import { Shield, Users, Heart, Lightbulb, Globe } from "lucide-react"
+import { Target, Eye, Compass, Users, Rocket, Handshake, GraduationCap, Lightbulb } from "lucide-react"
+import { boardMembers } from "@/data/seed"
 
-const principles = [
+const objectives = [
   {
-    icon: Shield,
-    title: "Founder-First, Always",
-    description:
-      "Every decision we make is filtered through one question: does this serve founders? Wosool exists for builders, not institutions.",
+    icon: Rocket,
+    title: "Empower Entrepreneurs",
+    description: "Support and empower Saudi entrepreneurs in a dynamic ecosystem.",
   },
   {
-    icon: Heart,
-    title: "Trust Over Scale",
-    description:
-      "We grow deliberately. We&apos;d rather have 200 deeply engaged founders than 2,000 passive members. Quality of connection matters.",
+    icon: Handshake,
+    title: "Enhance Networking",
+    description: "Enhance networking and partnerships between entrepreneurs and investors.",
   },
   {
     icon: Lightbulb,
-    title: "Honest & Direct",
-    description:
-      "We tell founders what they need to hear, not what they want to hear. Candid feedback, honest assessments, no fluff.",
+    title: "Innovative Solutions",
+    description: "Provide innovative financial and investment solutions for startups.",
   },
   {
-    icon: Globe,
-    title: "Rooted in the GCC",
-    description:
-      "We celebrate the unique context of building in Saudi Arabia and the GCC. Local insight meets global ambition.",
-  },
-  {
-    icon: Users,
-    title: "Give More Than You Take",
-    description:
-      "The best communities are built on generosity. We ask every member to contribute their expertise, network, and time.",
+    icon: GraduationCap,
+    title: "Develop Skills",
+    description: "Organize educational and training events to develop members' skills.",
   },
 ]
 
@@ -45,188 +37,155 @@ export default function AboutPage() {
       <section className="bg-[#0A1628] text-white py-24 px-4">
         <div className="max-w-4xl mx-auto text-center">
           <Badge variant="gold" className="mb-4 uppercase tracking-widest text-xs px-4 py-1.5">
-            Our Story
+            Who We Are
           </Badge>
           <h1 className="text-5xl sm:text-6xl font-bold tracking-tight mb-6">
-            About Wosool
+            About <span className="text-[#C9A84C]">Wosool</span>
           </h1>
           <p className="text-xl text-gray-300 leading-relaxed max-w-2xl mx-auto">
-            We built Wosool because we believe founders in Saudi Arabia and the
-            GCC deserve a truly premium support network — not another generic
-            accelerator or events series.
+            Supporting Saudi entrepreneurs — founders to founders. We empower
+            visionary builders with the resources, mentorship, and connections
+            they need to create lasting impact.
           </p>
         </div>
       </section>
 
-      {/* Mission & Vision */}
+      {/* Vision & Mission */}
       <section className="py-24 px-4 bg-white">
         <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-            <div>
-              <p className="text-sm font-semibold text-[#C9A84C] uppercase tracking-widest mb-3">
-                Our Mission
-              </p>
-              <h2 className="text-4xl font-bold text-[#0A1628] mb-6">
-                To accelerate the best founders in the GCC
-              </h2>
-              <p className="text-gray-600 leading-relaxed mb-6">
-                Wosool connects ambitious founders with the people, programs, and
-                resources they need to build faster and smarter. We exist to
-                bridge the gap between founders and the support structures that
-                exist in more mature startup ecosystems.
-              </p>
-              <p className="text-gray-600 leading-relaxed">
-                Founded by entrepreneurs who&apos;ve built and scaled companies in the
-                region, Wosool is built on deep understanding of what founders
-                in Saudi Arabia and the GCC actually need.
-              </p>
-            </div>
-            <div className="bg-[#F8F5EF] rounded-3xl p-10">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-stretch">
+            {/* Vision */}
+            <div className="bg-gradient-to-br from-[#0A1628] to-[#1a2d4a] rounded-3xl p-10 text-white flex flex-col">
+              <div className="h-14 w-14 rounded-2xl bg-[#C9A84C]/20 flex items-center justify-center mb-6">
+                <Eye className="h-7 w-7 text-[#C9A84C]" aria-hidden="true" />
+              </div>
               <p className="text-sm font-semibold text-[#C9A84C] uppercase tracking-widest mb-3">
                 Our Vision
               </p>
-              <h3 className="text-2xl font-bold text-[#0A1628] mb-4">
-                Saudi Arabia as a global hub for world-class founders
-              </h3>
-              <p className="text-gray-600 leading-relaxed">
-                We envision a future where the most ambitious founders in the
-                world choose Saudi Arabia and the GCC as the place to build
-                their companies — and where Wosool is the connective tissue
-                that makes this possible.
+              <h2 className="text-3xl font-bold mb-6">
+                Innovation-Driven Future
+              </h2>
+              <p className="text-gray-300 leading-relaxed text-lg flex-1">
+                Empowering Saudi entrepreneurs to build successful and sustainable
+                businesses while fostering an innovation-driven culture for a
+                thriving economy.
+              </p>
+            </div>
+
+            {/* Mission */}
+            <div className="bg-[#F8F5EF] rounded-3xl p-10 flex flex-col">
+              <div className="h-14 w-14 rounded-2xl bg-[#0A1628] flex items-center justify-center mb-6">
+                <Target className="h-7 w-7 text-[#C9A84C]" aria-hidden="true" />
+              </div>
+              <p className="text-sm font-semibold text-[#C9A84C] uppercase tracking-widest mb-3">
+                Our Mission
+              </p>
+              <h2 className="text-3xl font-bold text-[#0A1628] mb-6">
+                Building the Ecosystem
+              </h2>
+              <p className="text-gray-600 leading-relaxed text-lg flex-1">
+                Providing a supportive entrepreneurial environment through resources,
+                mentorship, and strategic partnerships to ensure the success and
+                sustainability of startups.
               </p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Why Wosool Exists */}
+      {/* Objectives */}
       <section className="py-24 px-4 section-cream">
-        <div className="max-w-4xl mx-auto text-center">
-          <SectionHeader
-            eyebrow="Why We Exist"
-            heading="The gap we're closing"
-            centered
-          />
-          <div className="space-y-6 text-left">
-            {[
-              "Most founder networks in the GCC are either too broad (10,000 LinkedIn connections) or too narrow (a closed circle of insiders). Wosool is curated, trusted, and designed for serious builders.",
-              "Founders in Saudi Arabia often face unique challenges — navigating regulatory landscapes, finding early adopters, hiring senior talent, or raising from a small pool of local investors. Generic resources don't help.",
-              "The best support founders get is from other founders who've been through it. Wosool systematises peer learning and warm introductions so you don't have to stumble upon them by chance.",
-            ].map((text, i) => (
-              <div
-                key={i}
-                className="flex gap-4 bg-white rounded-2xl p-6 shadow-sm"
-              >
-                <span className="flex-shrink-0 h-8 w-8 rounded-full bg-[#C9A84C]/20 text-[#C9A84C] flex items-center justify-center text-sm font-bold">
-                  {i + 1}
-                </span>
-                <p className="text-gray-700 leading-relaxed">{text}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Principles */}
-      <section className="py-24 px-4 bg-white" id="principles">
         <div className="max-w-7xl mx-auto">
           <SectionHeader
-            eyebrow="Our Principles"
-            heading="The values that guide everything we do"
+            eyebrow="Our Objectives"
+            heading="What drives us forward"
+            subheading="We are committed to creating a thriving entrepreneurial ecosystem in Saudi Arabia through focused, impactful initiatives."
             centered
           />
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {principles.map(({ icon: Icon, title, description }) => (
-              <div key={title} className="p-6 rounded-2xl bg-[#F8F5EF]">
-                <div className="h-10 w-10 rounded-xl bg-[#0A1628] flex items-center justify-center mb-4">
-                  <Icon className="h-5 w-5 text-[#C9A84C]" aria-hidden="true" />
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {objectives.map(({ icon: Icon, title, description }) => (
+              <div
+                key={title}
+                className="bg-white rounded-2xl p-8 text-center hover:shadow-lg transition-shadow group"
+              >
+                <div className="h-16 w-16 rounded-2xl bg-[#0A1628] flex items-center justify-center mx-auto mb-5 group-hover:bg-[#C9A84C] transition-colors">
+                  <Icon className="h-7 w-7 text-[#C9A84C] group-hover:text-[#0A1628] transition-colors" aria-hidden="true" />
                 </div>
-                <h3 className="font-semibold text-[#0A1628] mb-2">{title}</h3>
-                <p
-                  className="text-sm text-gray-600 leading-relaxed"
-                  dangerouslySetInnerHTML={{ __html: description }}
-                />
+                <h3 className="text-lg font-bold text-[#0A1628] mb-3">{title}</h3>
+                <p className="text-sm text-gray-600 leading-relaxed">{description}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Community Model */}
-      <section className="py-24 px-4 bg-[#0A1628] text-white">
-        <div className="max-w-4xl mx-auto text-center">
+      {/* Our Services */}
+      <section className="py-24 px-4 bg-white">
+        <div className="max-w-7xl mx-auto">
           <SectionHeader
-            eyebrow="Community Model"
-            heading="How Wosool works"
-            subheading="Wosool operates as an invite-and-apply network. Members are vetted, verified, and matched based on their founder profile, stage, and goals."
+            eyebrow="Our Services"
+            heading="How we support founders"
+            centered
+          />
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {[
+              {
+                title: "Resources & Tools",
+                description: "Access to curated resources, playbooks, and tools designed for Saudi startups — from incorporation guides to growth frameworks.",
+                icon: "📚",
+              },
+              {
+                title: "Mentorship & Advisory",
+                description: "Connect with experienced founders and industry experts who provide hands-on guidance tailored to your stage and sector.",
+                icon: "🧭",
+              },
+              {
+                title: "Strategic Partnerships",
+                description: "Leverage our network of institutional partners, investors, and corporate allies to accelerate your business growth.",
+                icon: "🤝",
+              },
+              {
+                title: "Founder Circles",
+                description: "Join curated peer groups of 6–8 founders for structured accountability, candid feedback, and deep connections.",
+                icon: "👥",
+              },
+              {
+                title: "Events & Training",
+                description: "Attend exclusive workshops, masterclasses, and networking dinners designed to sharpen your skills and expand your reach.",
+                icon: "🎓",
+              },
+              {
+                title: "Investment Readiness",
+                description: "Prepare for fundraising with pitch coaching, financial modeling workshops, and warm introductions to investors.",
+                icon: "💡",
+              },
+            ].map((service) => (
+              <div
+                key={service.title}
+                className="relative bg-[#F8F5EF] rounded-2xl p-8 hover:shadow-md transition-shadow"
+              >
+                <span className="text-3xl mb-4 block" aria-hidden="true">{service.icon}</span>
+                <h3 className="text-lg font-bold text-[#0A1628] mb-2">{service.title}</h3>
+                <p className="text-sm text-gray-600 leading-relaxed">{service.description}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Board Members */}
+      <section className="py-24 px-4 bg-[#0A1628] text-white" id="board">
+        <div className="max-w-7xl mx-auto">
+          <SectionHeader
+            eyebrow="Board Members"
+            heading="The leaders behind Wosool"
+            subheading="Our board brings together accomplished entrepreneurs, investors, and industry leaders who are passionate about empowering Saudi founders."
             centered
             light
           />
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mt-8">
-            {[
-              { step: "1", title: "Apply", desc: "Submit your application and tell us about your journey." },
-              { step: "2", title: "Get Verified", desc: "Our team reviews and verifies your founder profile." },
-              { step: "3", title: "Get Connected", desc: "Access the network, programs, and matched introductions." },
-            ].map(({ step, title, desc }) => (
-              <div key={step} className="bg-white/5 rounded-2xl p-6">
-                <div className="h-10 w-10 rounded-full bg-[#C9A84C] text-[#0A1628] font-bold flex items-center justify-center mx-auto mb-4">
-                  {step}
-                </div>
-                <h3 className="font-semibold mb-2">{title}</h3>
-                <p className="text-sm text-gray-400">{desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Governance & Trust */}
-      <section className="py-24 px-4 section-cream">
-        <div className="max-w-4xl mx-auto">
-          <SectionHeader
-            eyebrow="Governance & Trust"
-            heading="A community built on accountability"
-            centered
-          />
-          <div className="bg-white rounded-2xl p-8 shadow-sm space-y-4">
-            {[
-              "All members are manually reviewed before being granted access.",
-              "A Founder Score system ensures active, contributing members are recognised.",
-              "Community guidelines are enforced by a member-elected advisory council.",
-              "Conflict of interest policies apply to all introductions and referrals.",
-              "Data privacy and confidentiality are treated as sacred — we never sell member data.",
-            ].map((item) => (
-              <div key={item} className="flex items-start gap-3">
-                <span className="text-[#C9A84C] text-lg mt-0.5">✓</span>
-                <p className="text-gray-700">{item}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Leadership Placeholder */}
-      <section className="py-24 px-4 bg-white" id="team">
-        <div className="max-w-7xl mx-auto text-center">
-          <SectionHeader
-            eyebrow="Leadership"
-            heading="The team behind Wosool"
-            centered
-          />
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {["Founder & CEO", "Head of Community", "Head of Programs"].map((role) => (
-              <div
-                key={role}
-                className="bg-[#F8F5EF] rounded-2xl p-8 flex flex-col items-center gap-4"
-              >
-                <div className="h-20 w-20 rounded-full bg-[#0A1628] flex items-center justify-center">
-                  <Users className="h-8 w-8 text-[#C9A84C]" aria-hidden="true" />
-                </div>
-                <div className="text-center">
-                  <p className="font-semibold text-[#0A1628]">Coming Soon</p>
-                  <p className="text-sm text-gray-500">{role}</p>
-                </div>
-              </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {boardMembers.map((member) => (
+              <BoardMemberCard key={member.id} member={member} />
             ))}
           </div>
         </div>
@@ -239,7 +198,7 @@ export default function AboutPage() {
             Ready to be part of the story?
           </h2>
           <p className="text-[#0A1628]/70 mb-8">
-            Applications are reviewed on a rolling basis.
+            Join a community of visionary Saudi entrepreneurs building the future.
           </p>
           <Button asChild size="lg" variant="secondary">
             <Link href="/apply">Apply to Join Wosool</Link>

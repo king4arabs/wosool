@@ -104,6 +104,15 @@ export interface NewsItem {
   tags: string[]
 }
 
+export interface BoardMember {
+  id: string
+  name: string
+  image: string
+  brief: string
+  companyName: string
+  linkedinUrl: string
+}
+
 export interface User {
   id: string
   email: string

@@ -2,13 +2,12 @@ import Link from "next/link"
 import { PublicLayout } from "@/components/layout/PublicLayout"
 import { SectionHeader } from "@/components/sections/SectionHeader"
 import { FounderCard } from "@/components/sections/FounderCard"
-import { CompanyCard } from "@/components/sections/CompanyCard"
 import { EventCard } from "@/components/sections/EventCard"
-import { PartnerCard } from "@/components/sections/PartnerCard"
+import { PartnerLogoSlider } from "@/components/sections/PartnerLogoSlider"
 import { NewsCard } from "@/components/sections/NewsCard"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { founders, companies, events, partners, newsItems } from "@/data/seed"
+import { founders, events, partners, newsItems } from "@/data/seed"
 import {
   Users,
   Globe,
@@ -19,58 +18,59 @@ import {
   BookOpen,
   BrainCircuit,
   ArrowRight,
-  Star,
   MapPin,
   TrendingUp,
+  Target,
+  Eye,
+  Rocket,
+  GraduationCap,
 } from "lucide-react"
 
 const trustStats = [
-  { label: "Founders", value: "250+", icon: Users },
-  { label: "Countries", value: "15", icon: Globe },
-  { label: "Active Cohorts", value: "3", icon: Layers },
+  { label: "Entrepreneurs Supported", value: "250+", icon: Users },
+  { label: "Strategic Partners", value: "15+", icon: Globe },
+  { label: "Active Programs", value: "6", icon: Layers },
 ]
 
 const whyWosool = [
   {
     icon: Handshake,
-    title: "Trusted Network",
+    title: "Founder to Founder",
     description:
-      "Every member is vetted and verified. No noise — just genuine founders who've earned their seat at the table.",
+      "Every member is a verified entrepreneur. Real connections, real experience — founders supporting founders at every stage.",
   },
   {
     icon: Zap,
-    title: "Execution Support",
+    title: "Resources & Mentorship",
     description:
-      "Expert office hours, warm intros, peer circles, and AI-powered matching to help you move faster.",
+      "Access expert office hours, strategic mentorship, and curated resources designed to accelerate your startup journey.",
   },
   {
     icon: MapPin,
-    title: "Saudi & GCC Focus",
+    title: "Saudi-Focused Ecosystem",
     description:
-      "Built for founders navigating the specific opportunities and challenges of the Saudi and GCC market.",
+      "Built specifically for Saudi entrepreneurs navigating local opportunities, regulations, and the Vision 2030 landscape.",
   },
 ]
 
-const founderStages = [
-  { stage: "Pre-seed", description: "Validating and building" },
-  { stage: "Seed", description: "Finding product-market fit" },
-  { stage: "Series A", description: "Scaling go-to-market" },
-  { stage: "Scale-up", description: "Expanding regionally" },
-  { stage: "Exited Founders", description: "Giving back, advising" },
+const pillars = [
+  { icon: Target, title: "Strategic Partnerships", description: "Connecting startups with investors and institutions" },
+  { icon: Eye, title: "Innovation Culture", description: "Fostering creativity and forward-thinking solutions" },
+  { icon: Rocket, title: "Startup Growth", description: "Accelerating success through structured support" },
+  { icon: GraduationCap, title: "Skills Development", description: "Training and workshops for founders" },
 ]
 
 const memberBenefits = [
-  { icon: Handshake, label: "Warm Introductions" },
+  { icon: Handshake, label: "Strategic Partnerships" },
   { icon: Users, label: "Founder Circles" },
-  { icon: BookOpen, label: "Expert Office Hours" },
-  { icon: BrainCircuit, label: "AI Matching Engine" },
+  { icon: BookOpen, label: "Expert Mentorship" },
+  { icon: BrainCircuit, label: "Innovation Labs" },
   { icon: CalendarDays, label: "Curated Events" },
   { icon: TrendingUp, label: "Growth Resources" },
 ]
 
 export default function HomePage() {
   const featuredFounders = founders.filter((f) => f.isFeatured).slice(0, 3)
-  const featuredCompanies = companies.slice(0, 3)
   const upcomingEvents = events.slice(0, 3)
   const latestNews = newsItems.slice(0, 3)
 
@@ -84,22 +84,25 @@ export default function HomePage() {
         <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-5" aria-hidden="true" />
         <div className="relative max-w-4xl mx-auto text-center">
           <Badge variant="gold" className="mb-6 text-xs px-4 py-1.5 uppercase tracking-widest">
-            Founders to Founders
+            Supporting Saudi Entrepreneurs
           </Badge>
           <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight mb-6 leading-tight">
             Wosool —{" "}
             <span className="text-[#C9A84C]">وصول</span>
           </h1>
-          <p className="text-xl sm:text-2xl text-gray-300 leading-relaxed max-w-2xl mx-auto mb-10">
-            The premium founders-to-founders network for ambitious entrepreneurs
-            building in Saudi Arabia and the GCC.
+          <p className="text-xl sm:text-2xl text-gray-300 leading-relaxed max-w-2xl mx-auto mb-4">
+            Founder to Founders
+          </p>
+          <p className="text-lg text-gray-400 leading-relaxed max-w-2xl mx-auto mb-10">
+            Empowering Saudi entrepreneurs to build successful and sustainable
+            businesses through resources, mentorship, and strategic partnerships.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16">
             <Button asChild size="lg">
               <Link href="/apply">Apply to Join</Link>
             </Button>
             <Button asChild size="lg" variant="outline" className="border-white/30 text-white hover:bg-white/10 hover:text-white">
-              <Link href="/founders">Explore Founders</Link>
+              <Link href="/about">Learn More</Link>
             </Button>
           </div>
 
@@ -116,20 +119,44 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* Vision & Mission Snapshot */}
+      <section className="py-20 px-4 bg-white" aria-label="Vision and Mission">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div className="bg-gradient-to-br from-[#0A1628] to-[#1a2d4a] rounded-2xl p-8 text-white">
+              <Eye className="h-8 w-8 text-[#C9A84C] mb-4" aria-hidden="true" />
+              <h3 className="text-sm font-semibold text-[#C9A84C] uppercase tracking-widest mb-2">Vision</h3>
+              <p className="text-lg leading-relaxed text-gray-200">
+                Empowering Saudi entrepreneurs to build successful and sustainable businesses
+                while fostering an innovation-driven culture for a thriving economy.
+              </p>
+            </div>
+            <div className="bg-[#F8F5EF] rounded-2xl p-8">
+              <Target className="h-8 w-8 text-[#C9A84C] mb-4" aria-hidden="true" />
+              <h3 className="text-sm font-semibold text-[#C9A84C] uppercase tracking-widest mb-2">Mission</h3>
+              <p className="text-lg leading-relaxed text-gray-700">
+                Providing a supportive entrepreneurial environment through resources,
+                mentorship, and strategic partnerships to ensure the success and sustainability of startups.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Why Wosool */}
-      <section className="py-24 px-4 bg-white" aria-label="Why Wosool">
+      <section className="py-24 px-4 section-cream" aria-label="Why Wosool">
         <div className="max-w-7xl mx-auto">
           <SectionHeader
             eyebrow="Why Wosool"
-            heading="Built for founders who are serious about building"
-            subheading="Wosool is not a generic network. It's a curated community with tools, programs, and relationships designed to help you build faster."
+            heading="Built for Saudi entrepreneurs who are serious about building"
+            subheading="Wosool is a curated community with resources, programs, and relationships designed to help you build faster and smarter."
             centered
           />
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {whyWosool.map(({ icon: Icon, title, description }) => (
               <div
                 key={title}
-                className="flex flex-col items-center text-center p-8 rounded-2xl bg-[#F8F5EF]"
+                className="flex flex-col items-center text-center p-8 rounded-2xl bg-white"
               >
                 <div className="h-14 w-14 rounded-2xl bg-[#0A1628] flex items-center justify-center mb-5">
                   <Icon className="h-6 w-6 text-[#C9A84C]" aria-hidden="true" />
@@ -142,22 +169,22 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Who It's For */}
-      <section className="py-24 px-4 section-cream" aria-label="Who Wosool is for">
+      {/* Our Pillars */}
+      <section className="py-24 px-4 bg-white" aria-label="Our Pillars">
         <div className="max-w-7xl mx-auto">
           <SectionHeader
-            eyebrow="Who It&apos;s For"
-            heading="For founders at every stage of the journey"
+            eyebrow="Our Objectives"
+            heading="What drives us forward"
             centered
           />
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
-            {founderStages.map(({ stage, description }) => (
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+            {pillars.map(({ icon: Icon, title, description }) => (
               <div
-                key={stage}
-                className="bg-white rounded-2xl p-6 text-center shadow-sm hover:shadow-md transition-shadow"
+                key={title}
+                className="bg-[#F8F5EF] rounded-2xl p-6 text-center hover:shadow-md transition-shadow"
               >
-                <Star className="h-6 w-6 text-[#C9A84C] mx-auto mb-3" aria-hidden="true" />
-                <h3 className="font-semibold text-[#0A1628] text-sm mb-1">{stage}</h3>
+                <Icon className="h-8 w-8 text-[#C9A84C] mx-auto mb-3" aria-hidden="true" />
+                <h3 className="font-semibold text-[#0A1628] text-sm mb-1">{title}</h3>
                 <p className="text-xs text-gray-500">{description}</p>
               </div>
             ))}
@@ -169,9 +196,9 @@ export default function HomePage() {
       <section className="py-24 px-4 bg-[#0A1628] text-white" aria-label="Member benefits">
         <div className="max-w-7xl mx-auto">
           <SectionHeader
-            eyebrow="What Members Get"
-            heading="Everything you need to build faster"
-            subheading="Your membership unlocks a full suite of tools, programs, and connections."
+            eyebrow="Our Services"
+            heading="Everything you need to build and scale"
+            subheading="Your membership unlocks a full suite of resources, mentorship, and strategic connections."
             centered
             light
           />
@@ -198,7 +225,7 @@ export default function HomePage() {
       <section className="py-24 px-4 bg-white" aria-label="Featured founders">
         <div className="max-w-7xl mx-auto">
           <SectionHeader
-            eyebrow="Featured Founders"
+            eyebrow="Featured Entrepreneurs"
             heading="Meet some of our members"
             ctaLabel="See All Founders"
             ctaHref="/founders"
@@ -211,29 +238,12 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Founders' Companies */}
-      <section className="py-24 px-4 section-cream" aria-label="Founders' companies">
-        <div className="max-w-7xl mx-auto">
-          <SectionHeader
-            eyebrow="Founders&apos; Companies"
-            heading="Companies built by Wosool members"
-            ctaLabel="Explore Companies"
-            ctaHref="/founders/companies"
-          />
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {featuredCompanies.map((company) => (
-              <CompanyCard key={company.id} company={company} />
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* Upcoming Events */}
-      <section className="py-24 px-4 bg-white" aria-label="Upcoming events">
+      <section className="py-24 px-4 section-cream" aria-label="Upcoming events">
         <div className="max-w-7xl mx-auto">
           <SectionHeader
-            eyebrow="Upcoming Events"
-            heading="Gather with fellow founders"
+            eyebrow="Events & Training"
+            heading="Gather, learn, and grow together"
             ctaLabel="View Calendar"
             ctaHref="/events"
           />
@@ -245,24 +255,22 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Partners */}
-      <section className="py-24 px-4 section-cream" aria-label="Partners and supporters">
+      {/* Partners Slider */}
+      <section className="py-20 px-4 bg-white" aria-label="Partners and supporters">
         <div className="max-w-7xl mx-auto">
           <SectionHeader
             eyebrow="Partners & Supporters"
             heading="Backed by the best in the ecosystem"
+            ctaLabel="View All Partners"
+            ctaHref="/partners"
             centered
           />
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {partners.map((partner) => (
-              <PartnerCard key={partner.id} partner={partner} />
-            ))}
-          </div>
+          <PartnerLogoSlider partners={partners} />
         </div>
       </section>
 
       {/* Latest News */}
-      <section className="py-24 px-4 bg-white" aria-label="Latest news">
+      <section className="py-24 px-4 section-cream" aria-label="Latest news">
         <div className="max-w-7xl mx-auto">
           <SectionHeader
             eyebrow="Latest News"
@@ -289,8 +297,8 @@ export default function HomePage() {
             <span className="text-[#C9A84C]">Wosool?</span>
           </h2>
           <p className="text-gray-300 text-lg mb-10 leading-relaxed">
-            Applications are reviewed on a rolling basis. Join a trusted network
-            of verified founders committed to building something meaningful.
+            Join a community of visionary Saudi entrepreneurs committed to building
+            successful and sustainable businesses. Applications are reviewed on a rolling basis.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button asChild size="lg">

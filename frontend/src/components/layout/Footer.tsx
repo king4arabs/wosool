@@ -22,8 +22,7 @@ const footerLinks = {
   ],
   Company: [
     { href: "/about", label: "About Wosool" },
-    { href: "/about#principles", label: "Our Principles" },
-    { href: "/about#team", label: "Leadership" },
+    { href: "/about#board", label: "Board Members" },
     { href: "/contact", label: "Get in Touch" },
   ],
 }
@@ -42,8 +41,8 @@ export function Footer() {
               </span>
             </Link>
             <p className="text-gray-400 text-sm leading-relaxed mb-6 max-w-xs">
-              A premium founders-to-founders network for ambitious entrepreneurs
-              building in Saudi Arabia and the GCC.
+              Supporting Saudi entrepreneurs — founders to founders. Empowering
+              visionary builders with resources, mentorship, and strategic partnerships.
             </p>
             <div className="flex items-center gap-3">
               <a
@@ -101,7 +100,7 @@ export function Footer() {
         {/* Bottom bar */}
         <div className="mt-12 pt-8 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="text-gray-500 text-sm">
-            © {new Date().getFullYear()} Wosool. All rights reserved.
+            © {new Date().getFullYear()} All rights reserved Wosool.
           </p>
           <div className="flex items-center gap-6">
             <Link

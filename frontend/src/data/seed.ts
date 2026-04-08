@@ -1,4 +1,4 @@
-import type { Founder, Company, Event, Program, Partner, Sponsor, NewsItem } from "@/types"
+import type { Founder, Company, Event, Program, Partner, Sponsor, NewsItem, BoardMember } from "@/types"
 
 export const founders: Founder[] = [
   {
@@ -529,5 +529,64 @@ export const newsItems: NewsItem[] = [
     publishedAt: "2025-06-01",
     author: "Wosool Team",
     tags: ["Sponsors", "stc Ventures", "Partnership"],
+  },
+]
+
+export const boardMembers: BoardMember[] = [
+  {
+    id: "bm1",
+    name: "Abdullah Al-Othaim",
+    image: "",
+    brief: "Serial entrepreneur and venture capitalist with 20+ years of experience building and scaling businesses across the GCC. Champion of Saudi Vision 2030 entrepreneurship initiatives.",
+    companyName: "Al-Othaim Ventures",
+    linkedinUrl: "https://linkedin.com",
+  },
+  {
+    id: "bm2",
+    name: "Noura Al-Faisal",
+    image: "",
+    brief: "Pioneer in Saudi women entrepreneurship. Founded three successful startups in the e-commerce and EdTech space. Advisor to multiple government accelerator programs.",
+    companyName: "Nujoom Innovation",
+    linkedinUrl: "https://linkedin.com",
+  },
+  {
+    id: "bm3",
+    name: "Mohammed Al-Harbi",
+    image: "",
+    brief: "Former investment banker turned tech founder. Built one of the largest fintech platforms in MENA. Active angel investor with a portfolio of 40+ startups.",
+    companyName: "Raqam Technologies",
+    linkedinUrl: "https://linkedin.com",
+  },
+  {
+    id: "bm4",
+    name: "Reem Al-Sulaiman",
+    image: "",
+    brief: "Award-winning social entrepreneur and sustainability advocate. Leading impact investing initiatives to empower underserved communities across Saudi Arabia.",
+    companyName: "Athar Impact",
+    linkedinUrl: "https://linkedin.com",
+  },
+  {
+    id: "bm5",
+    name: "Tariq Al-Ghamdi",
+    image: "",
+    brief: "Deep-tech visionary and AI researcher. Co-founded two AI startups acquired by global tech companies. Passionate about nurturing the next generation of Saudi innovators.",
+    companyName: "Thakaa AI Labs",
+    linkedinUrl: "https://linkedin.com",
+  },
+  {
+    id: "bm6",
+    name: "Hessa Al-Jaber",
+    image: "",
+    brief: "Healthcare entrepreneur and digital transformation expert. Built telemedicine solutions reaching 100K+ patients across Saudi Arabia. Mentor at KAUST Innovation.",
+    companyName: "Seha Digital",
+    linkedinUrl: "https://linkedin.com",
+  },
+  {
+    id: "bm7",
+    name: "Fahad Al-Rashed",
+    image: "",
+    brief: "Logistics and supply chain innovator. Scaled a last-mile delivery startup to profitability in 18 months. Advocate for operational excellence in Saudi startups.",
+    companyName: "Tawseel Express",
+    linkedinUrl: "https://linkedin.com",
   },
 ]

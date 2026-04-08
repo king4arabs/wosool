@@ -15,7 +15,7 @@ const navLinks = [
   { href: "/events", label: "Events" },
   { href: "/partners", label: "Partners" },
   { href: "/news", label: "News" },
-  { href: "/apply", label: "Apply" },
+  { href: "/contact", label: "Contact" },
 ]
 
 export function Header() {
