@@ -129,10 +129,10 @@ export default function ContactPage() {
         <div className="max-w-4xl mx-auto text-center">
           <p className="text-gray-500 text-sm mb-2">You can also reach us directly at</p>
           <a
-            href="mailto:hello@wosool.com"
+            href="mailto:hello@wosool.org"
             className="text-[#C9A84C] font-semibold hover:underline"
           >
-            hello@wosool.com
+            hello@wosool.org
           </a>
         </div>
       </section>
