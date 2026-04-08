@@ -1,0 +1,9 @@
+{
+  "name": "wosool",
+  "version": "0.2.0",
+  "private": true,
+  "description": "Wosool — Founders to Founders platform",
+  "scripts": {
+    "ops:ssl:repair": "node scripts/ssl-repair.mjs"
+  }
+}
