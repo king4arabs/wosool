@@ -8,7 +8,7 @@
 
 | Attribute | Value |
 |-----------|-------|
-| Version | 0.2.0 |
+| Version | 0.2.1 |
 | Stage | Pre-launch (MVP in development) |
 | Domain | [wosool.org](https://wosool.org) |
 | License | MIT |
@@ -19,9 +19,9 @@
 
 | Component | Status | Version | Notes |
 |-----------|--------|---------|-------|
-| Frontend (Next.js 16) | ✅ Built | 0.1.0 | 17 routes, component library, responsive |
-| Backend (Laravel 13) | ✅ Built | 0.1.0 | 12 API endpoints, 12 models |
-| Database (PostgreSQL) | ✅ Designed | — | 15 migrations, 20+ tables |
+| Frontend (Next.js 16) | ✅ Built | 0.1.0 | 35 routes (12 public, 10 dashboard, 13 admin), component library, responsive |
+| Backend (Laravel 13) | ✅ Built | 0.1.0 | 17 API endpoints, 21 models |
+| Database (PostgreSQL) | ✅ Designed | — | 16 migrations, 20+ tables |
 | Authentication | 🟡 Planned | — | Sanctum configured, not implemented |
 | CI/CD | ❌ Missing | — | No GitHub Actions workflows |
 | Tests | ❌ Missing | — | Test directories exist, no test cases |
@@ -45,11 +45,11 @@
 
 | Metric | Value |
 |--------|-------|
-| Frontend routes | 17 |
-| API endpoints | 14 |
+| Frontend routes | 35 (12 public, 10 dashboard, 13 admin) |
+| API endpoints | 17 |
 | Database tables | 20+ |
-| Eloquent models | 12 |
-| UI components | 15+ (shadcn/ui based) |
+| Eloquent models | 21 |
+| UI components | 27+ (shadcn/ui based) |
 | Test coverage | 0% (no tests written) |
 | CI/CD pipelines | 0 |
 

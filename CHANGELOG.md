@@ -6,6 +6,20 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and [Sem
 
 ---
 
+## [0.2.1] — 2026-04-08
+
+### Added
+- 11 admin portal pages: members, companies, scorecards, matches, events, programs, partners, sponsors, news, analytics, settings
+- 7 member dashboard pages: company, community, matches, events, programs, messages, settings
+- 2 new events in seed data (regulatory workshop, demo day)
+
+### Changed
+- Updated seed data dates from 2025 to 2026
+- Updated all documentation to reflect 35 routes, 21 models, 17 API endpoints, 27+ components
+- Fixed contact email from wosool.com to wosool.org
+
+---
+
 ## [0.2.0] — 2026-04-08
 
 ### Added

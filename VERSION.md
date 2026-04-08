@@ -1,10 +1,10 @@
 # Version
 
-**Current Version:** `0.2.0`
+**Current Version:** `0.2.1`
 
 | Component | Version |
 |-----------|---------|
-| Project | 0.2.0 |
+| Project | 0.2.1 |
 | Frontend (Next.js) | 0.1.0 |
 | Backend (Laravel) | 0.1.0 |
 | API | v1 |
@@ -29,5 +29,6 @@ This project follows [Semantic Versioning](https://semver.org/):
 
 | Version | Date | Summary |
 |---------|------|---------|
+| 0.2.1 | 2026-04-08 | Admin portal (13 pages), member dashboard (10 pages), documentation update |
 | 0.2.0 | 2026-04-08 | Repository operations system, documentation, SKILLS framework |
 | 0.1.0 | 2026-01-01 | Initial platform — frontend pages, backend API, database schema |

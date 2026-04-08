@@ -18,7 +18,7 @@
 │                   Frontend (Next.js 16)              │
 │  ┌─────────┐ ┌──────────┐ ┌───────────┐ ┌────────┐ │
 │  │  Pages  │ │Components│ │  Layouts  │ │  API   │ │
-│  │ (17)    │ │(shadcn)  │ │ (Public/  │ │ Client │ │
+│  │ (35)    │ │(shadcn)  │ │ (Public/  │ │ Client │ │
 │  │         │ │          │ │  Member/  │ │        │ │
 │  │         │ │          │ │  Admin)   │ │        │ │
 │  └─────────┘ └──────────┘ └───────────┘ └────┬───┘ │
@@ -30,7 +30,7 @@
 │                  Backend (Laravel 13)                │
 │  ┌──────────┐ ┌──────────┐ ┌───────────┐ ┌──────┐ │
 │  │Controllers│ │  Models  │ │ Middleware│ │Routes│ │
-│  │ (8 API)  │ │  (12)    │ │ (Auth/    │ │(API  │ │
+│  │ (10 API) │ │  (21)    │ │ (Auth/    │ │(API  │ │
 │  │          │ │          │ │  CORS)    │ │ v1)  │ │
 │  └──────────┘ └──────────┘ └───────────┘ └──────┘ │
 │  ┌──────────┐ ┌──────────┐ ┌───────────┐          │
@@ -56,7 +56,7 @@
 wosool/
 ├── frontend/              # Next.js 16 + TypeScript + Tailwind CSS 4
 │   ├── src/
-│   │   ├── app/           # App Router (17 routes)
+│   │   ├── app/           # App Router (35 routes)
 │   │   ├── components/    # UI components (layout, sections, ui)
 │   │   ├── data/          # Mock/seed data
 │   │   ├── lib/           # Utilities (cn, etc.)
@@ -65,11 +65,11 @@ wosool/
 │   └── package.json       # v0.1.0
 ├── backend/               # Laravel 13 + PHP 8.3
 │   ├── app/
-│   │   ├── Http/Controllers/Api/  # 8 API controllers
-│   │   ├── Models/                # 12 Eloquent models
+│   │   ├── Http/Controllers/Api/  # 10 API controllers
+│   │   ├── Models/                # 21 Eloquent models
 │   │   └── Providers/
 │   ├── database/
-│   │   ├── migrations/    # 15 migrations
+│   │   ├── migrations/    # 16 migrations
 │   │   ├── factories/     # Model factories
 │   │   └── seeders/       # Demo data seeders
 │   ├── routes/            # API v1 + web routes
@@ -119,6 +119,7 @@ wosool/
 
 | Method | Endpoint | Controller | Auth |
 |--------|----------|------------|------|
+| GET | `/health` | HealthController | Public |
 | GET | `/founders` | FounderController@index | Public |
 | GET | `/founders/{slug}` | FounderController@show | Public |
 | GET | `/companies` | CompanyController@index | Public |
@@ -131,6 +132,8 @@ wosool/
 | GET | `/sponsors` | PartnerController@sponsors | Public |
 | GET | `/news` | NewsController@index | Public |
 | GET | `/news/{slug}` | NewsController@show | Public |
+| GET | `/resources` | ResourceController@index | Public |
+| GET | `/resources/{slug}` | ResourceController@show | Public |
 | POST | `/applications` | ApplicationController@store | Public |
 | POST | `/contact` | ContactController@store | Public |
 
