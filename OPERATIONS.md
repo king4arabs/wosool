@@ -53,11 +53,15 @@ php artisan migrate:status
 
 ```bash
 # Requires CLOUDFLARE_API_TOKEN and CLOUDFLARE_ZONE_ID
+export CLOUDFLARE_API_TOKEN="your-token"
+export CLOUDFLARE_ZONE_ID="your-zone-id"
+
 npm run ops:ssl:repair
 # Or directly: node scripts/ssl-repair.mjs
 ```
 
-Reference: scripts/ssl-repair.mjs
+> **Full runbook:** [docs/SSL_RUNBOOK.md](./docs/SSL_RUNBOOK.md) — diagnosis,
+> automated repair, manual procedures, and monitoring setup.
 
 ### 4. Cache Management
 

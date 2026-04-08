@@ -176,6 +176,8 @@ php artisan serve     # API at http://localhost:8000
 | [Changelog](./CHANGELOG.md) | Release history and changes |
 | [Version](./VERSION.md) | Version tracking |
 | [SKILLS/](./SKILLS/README.md) | Skills reference framework (14 domains) |
+| [SSL Runbook](./docs/SSL_RUNBOOK.md) | SSL/TLS and DNS operational procedures |
+| [Dependency Audit](./docs/DEPENDENCY_AUDIT.md) | Dependency inventory and vulnerability audit |
 
 ---
 

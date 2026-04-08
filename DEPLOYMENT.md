@@ -167,7 +167,8 @@ jobs:
 ## SSL/TLS
 
 - Primary SSL via Cloudflare (Full Strict mode)
-- SSL repair script: `npm run ops:ssl:repair` (see scripts/ssl-repair.mjs)
+- SSL repair script: `npm run ops:ssl:repair` (see [scripts/ssl-repair.mjs](./scripts/ssl-repair.mjs))
+- Full operational runbook: [docs/SSL_RUNBOOK.md](./docs/SSL_RUNBOOK.md)
 - Certificate monitoring via UptimeRobot (recommended)
 
 ---
