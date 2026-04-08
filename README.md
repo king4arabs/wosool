@@ -1,223 +1,139 @@
-# Wosool — Founders to Founders
+# Wosool
 
-> A premium, curated founder network and execution platform for the Saudi and GCC startup ecosystem.
+> A premium founders-to-founders network and execution platform designed for **Saudi Arabia first**, with deliberate expansion across the GCC, MENA, and global founder ecosystem.
 
-**Domain:** [wosool.org](https://wosool.org) | **Social:** @AboutWosool | **Version:** 0.2.1
+**Domain:** [wosool.org](https://wosool.org) | **Version:** `0.3.0` | **Stage:** Pre-launch MVP hardening
 
 ---
 
 ## Overview
 
-Wosool (وصول) is a founders-to-founders platform that helps founders connect, grow, collaborate, and access trusted support through community, programs, introductions, events, and AI-powered workflows.
+**Wosool (وصول)** helps founders build faster through trusted community, curated introductions, events, programs, and operational support. The repository is organized as a monorepo with a **Next.js frontend**, a **Laravel backend**, and a growing repository operating system composed of documentation, SKILLS files, release metadata, and implementation standards.
 
-### Core Promise
-> *Founders helping founders build faster.*
+This release focuses on **delivery readiness** rather than feature sprawl. The highest-value work at this stage is to strengthen testing, CI/CD, documentation quality, security posture, and engineering consistency so that later product work—especially authentication, profile CRUD, live API integration, analytics, and localization—can be implemented with lower risk.
 
----
-
-## Architecture
-
-```
-wosool/
-├── frontend/          # Next.js 16 + TypeScript + Tailwind CSS 4
-├── backend/           # Laravel 13 PHP API
-├── SKILLS/            # Skills reference framework (14 files)
-└── docs & configs     # Project documentation
-```
-
-### Tech Stack
-
-| Layer | Technology |
-|-------|-----------|
+| Layer | Current implementation |
+|---|---|
 | Frontend | Next.js 16, React 19, TypeScript 5, Tailwind CSS 4, shadcn/ui |
-| Backend | Laravel 13, PHP 8.3, RESTful API |
-| Database | PostgreSQL 16+ (+ pgvector for AI features) |
-| Cache/Queue | Redis 7+ |
-| Auth | Laravel Sanctum + Spatie Permission |
+| Backend | Laravel 13, Form Requests, REST-style public API |
+| Database | PostgreSQL-first schema design with SQLite-compatible testing path |
+| Product positioning | Saudi-first founder network with GCC expansion readiness |
+| Repository OS | Structured docs, SKILLS framework, changelog, version tracking, ADR index |
 
 ---
 
-## Frontend
+## Repository Structure
 
-### Setup
+```text
+wosool/
+├── frontend/              # Next.js application
+├── backend/               # Laravel API and data layer
+├── docs/                  # API, SDK, audits, runbooks, ADR index
+├── SKILLS/                # Cross-functional execution guides
+├── scripts/               # Utility scripts and operational helpers
+├── README.md              # Primary project entry point
+└── core docs              # Status, roadmap, architecture, security, testing, ops
+```
+
+The repository is intended to function as both a **product codebase** and a **delivery system**. Documentation and SKILLS files are maintained as operational assets, not passive reference material.
+
+---
+
+## Current Product Surface
+
+| Capability area | Status |
+|---|---|
+| Public marketing pages | Implemented |
+| Member dashboard shells | Implemented |
+| Admin portal shells | Implemented |
+| Public read API | Implemented |
+| Public application and contact submissions | Implemented |
+| Public write-endpoint throttling | Implemented |
+| CI/CD workflows | Introduced in `0.3.0` |
+| Backend API test foundation | Introduced in `0.3.0` |
+| Frontend live API adoption | Planned next |
+| Authentication and RBAC | Planned next |
+| Arabic/English localization and RTL | Planned next |
+
+---
+
+## Local Development
+
+### Frontend
 
 ```bash
 cd frontend
 npm install
-npm run dev        # Development server at http://localhost:3000
-npm run build      # Production build
-npm run lint       # Lint check
+npm run lint
+npm run build
+npm run dev
 ```
 
-### Public Pages (12 routes)
-
-| Path | Description |
-|------|-------------|
-| `/` | Homepage with all sections |
-| `/about` | About Wosool |
-| `/founders` | Founder directory |
-| `/founders/companies` | Companies directory |
-| `/programs` | Programs and cohorts |
-| `/events` | Events calendar |
-| `/partners` | Partners and supporters |
-| `/sponsors` | Sponsorship information |
-| `/news` | News and updates |
-| `/apply` | Apply to join |
-| `/contact` | Contact page |
-| `/login` | Member login |
-
-### Member Dashboard (10 routes)
-
-| Path | Description |
-|------|-------------|
-| `/dashboard` | Member dashboard overview |
-| `/dashboard/profile` | Profile editor |
-| `/dashboard/company` | Company profile management |
-| `/dashboard/community` | Community feed |
-| `/dashboard/matches` | Match suggestions |
-| `/dashboard/events` | Events and RSVPs |
-| `/dashboard/programs` | Program applications |
-| `/dashboard/messages` | Messages and notifications |
-| `/dashboard/scorecard` | Founder scorecard |
-| `/dashboard/settings` | Account settings |
-
-### Admin Portal (13 routes)
-
-| Path | Description |
-|------|-------------|
-| `/admin` | Admin overview |
-| `/admin/founders` | Founder management |
-| `/admin/members` | Member management |
-| `/admin/companies` | Company management |
-| `/admin/scorecards` | Scorecard management |
-| `/admin/matches` | Match management |
-| `/admin/events` | Event management |
-| `/admin/programs` | Program management |
-| `/admin/partners` | Partner management |
-| `/admin/sponsors` | Sponsor management |
-| `/admin/news` | News management |
-| `/admin/analytics` | Analytics dashboard |
-| `/admin/settings` | Admin settings |
-
-### Design System
-
-**Brand Colors:**
-- Navy: `#0A1628` — primary backgrounds, headers
-- Gold: `#C9A84C` — accents, CTAs, highlights
-- Cream: `#F8F5EF` — section backgrounds
-
----
-
-## Backend
-
-### Setup
+### Backend
 
 ```bash
 cd backend
 composer install
 cp .env.example .env
 php artisan key:generate
-
-# Configure database in .env (PostgreSQL recommended)
 php artisan migrate
-php artisan db:seed   # Seeds demo founders, companies, events, programs, partners, sponsors, news
-
-php artisan serve     # API at http://localhost:8000
+php artisan db:seed
+php artisan serve
 ```
 
-### API Endpoints (Base: `/api/v1`)
-
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/health` | Health check |
-| GET | `/founders` | List founders |
-| GET | `/founders/{slug}` | Get founder by slug |
-| GET | `/companies` | List companies |
-| GET | `/companies/{slug}` | Get company by slug |
-| GET | `/events` | List events |
-| GET | `/events/{slug}` | Get event by slug |
-| GET | `/programs` | List programs |
-| GET | `/programs/{slug}` | Get program by slug |
-| GET | `/partners` | List partners |
-| GET | `/sponsors` | List sponsors |
-| GET | `/news` | List news items |
-| GET | `/news/{slug}` | Get news item by slug |
-| GET | `/resources` | List resources |
-| GET | `/resources/{slug}` | Get resource by slug |
-| POST | `/applications` | Submit membership application |
-| POST | `/contact` | Submit contact inquiry |
+When working in a constrained environment, keep the documented runtime in sync with [DEPLOYMENT.md](./DEPLOYMENT.md) and treat CI as the authoritative validation layer.
 
 ---
 
-## Database Schema
+## Engineering and Delivery Standards
 
-20+ tables covering: users, founder_profiles, company_profiles, applications, scorecards, events, programs, cohorts, matches, intros, appointments, partner_profiles, sponsor_profiles, news_items, resources, messages, analytics_events, admin_actions.
-
----
-
-## Implementation Roadmap
-
-### Phase 1 (Complete ✅)
-- [x] Repository structure and architecture
-- [x] Design system (Tailwind + component library)
-- [x] All public website pages
-- [x] Member dashboard (10 pages)
-- [x] Admin portal (13 pages)
-- [x] Database migrations (20+ tables)
-- [x] Laravel REST API (17 endpoints)
-- [x] Seeded demo content
-
-### Phase 2 (Next)
-- [ ] Authentication (login, registration, email verification)
-- [ ] Founder and company profile CRUD
-- [ ] Community feed
-- [ ] Match suggestions and warm intros
-- [ ] Appointment booking
-- [ ] Events RSVP
-- [ ] Program applications
-
-### Phase 3 (Future)
-- [ ] AI agent service layer (10 agents)
-- [ ] Scorecard calculation engine
-- [ ] Analytics dashboard
-- [ ] Admin content management
-- [ ] Email notifications
+| Standard | Expectation |
+|---|---|
+| Versioning | Semantic Versioning across releases |
+| Release metadata | Every release updates `CHANGELOG.md` and `VERSION.md` |
+| Quality gate | Frontend lint/build and backend tests should pass in CI |
+| Security baseline | Rate limiting, secret hygiene, dependency review, documented controls |
+| Product clarity | Core operating docs remain current and decision-oriented |
+| Regional readiness | Saudi-first assumptions, bilingual planning, RTL readiness |
 
 ---
 
-## Trust and Brand Guardrails
+## Core Documentation
 
-- NEVER fabricate quotes from public figures
-- NEVER imply official endorsement without verified approval
-- Partner status labels: Confirmed / Prospective / Ecosystem-Aligned / Past Collaborator
-- Saudi Innovation Leadership section uses CMS-editable placeholder blocks
-
----
-
-## Documentation
-
-| Document | Description |
-|----------|-------------|
-| [Architecture](./ARCHITECTURE.md) | System architecture, tech stack, and conventions |
-| [Deployment](./DEPLOYMENT.md) | Deployment guide and environment configuration |
-| [Testing](./TESTING.md) | Testing strategy and standards |
-| [Security](./SECURITY.md) | Security policies and practices |
-| [Operations](./OPERATIONS.md) | Operational runbooks and procedures |
-| [Business Context](./BUSINESS_CONTEXT.md) | Business model and market context |
-| [Marketing & Growth](./MARKETING_GROWTH.md) | Growth strategy and channels |
-| [Decisions](./DECISIONS.md) | Architectural decision records |
-| [Project Status](./PROJECT_STATUS.md) | Current state overview |
-| [Roadmap](./ROADMAP.md) | Development plan and milestones |
-| [TODO](./TODO.md) | Prioritized task backlog |
-| [Changelog](./CHANGELOG.md) | Release history and changes |
-| [Version](./VERSION.md) | Version tracking |
-| [SKILLS/](./SKILLS/README.md) | Skills reference framework (14 domains) |
-| [SSL Runbook](./docs/SSL_RUNBOOK.md) | SSL/TLS and DNS operational procedures |
-| [Dependency Audit](./docs/DEPENDENCY_AUDIT.md) | Dependency inventory and vulnerability audit |
+| Document | Purpose |
+|---|---|
+| [PROJECT_STATUS.md](./PROJECT_STATUS.md) | Current product and delivery posture |
+| [ROADMAP.md](./ROADMAP.md) | Sequenced implementation priorities |
+| [ARCHITECTURE.md](./ARCHITECTURE.md) | System architecture, boundaries, and patterns |
+| [DEPLOYMENT.md](./DEPLOYMENT.md) | Runtime and deployment guidance |
+| [TESTING.md](./TESTING.md) | Validation strategy and quality gates |
+| [SECURITY.md](./SECURITY.md) | Security baseline and next controls |
+| [OPERATIONS.md](./OPERATIONS.md) | Operating procedures and release discipline |
+| [BUSINESS_CONTEXT.md](./BUSINESS_CONTEXT.md) | Market and business framing |
+| [MARKETING_GROWTH.md](./MARKETING_GROWTH.md) | Growth motion and channel strategy |
+| [DECISIONS.md](./DECISIONS.md) | Decision register |
+| [TODO.md](./TODO.md) | Prioritized backlog |
+| [docs/API.md](./docs/API.md) | API contract overview |
+| [docs/SDK.md](./docs/SDK.md) | Client integration guidance |
+| [docs/ADR/README.md](./docs/ADR/README.md) | ADR index and usage guidance |
+| [SKILLS/README.md](./SKILLS/README.md) | Repository execution skill system |
 
 ---
 
-## License
+## Immediate Release Focus: `0.3.0`
 
-Copyright © 2026 Wosool. All rights reserved.
+The `0.3.0` release is a **production-foundation hardening release**. It prioritizes the work that increases confidence, auditability, and execution speed before more complex feature delivery begins.
 
+| Priority | Why it matters |
+|---|---|
+| CI/CD | Prevents regressions and creates release discipline |
+| Backend API tests | Protects the public contract and accelerates future refactors |
+| API and SDK documentation | Aligns frontend and backend implementation |
+| Repository OS upgrades | Improves onboarding, auditability, and standards enforcement |
+| Security and operations alignment | Improves pre-launch readiness |
+
+---
+
+## Product Principles
+
+Wosool should evolve as an **enterprise-quality**, **regionally aware**, and **trust-centered** platform. Improvements should preserve existing work, build iteratively, document rationale clearly, and always optimize for Saudi Arabia first before expanding to wider regional and global contexts.

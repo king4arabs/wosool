@@ -1,133 +1,51 @@
 # Roadmap
 
-> Wosool development roadmap — Saudi Arabia first, then GCC, MENA, and global.
+## Roadmap Framing
+
+Wosool should mature through **sequenced execution**, not uncontrolled feature expansion. The roadmap is organized to first strengthen delivery foundations, then unlock real product workflows, then scale regionally with production discipline.
+
+| Phase | Focus | Status |
+|---|---|---|
+| `0.3.x` | CI/CD, tests, docs, governance, release discipline | In progress |
+| `0.4.x` | Authentication, RBAC, public-page API integration | Next |
+| `0.5.x` | Member profile CRUD, program and event workflows | Planned |
+| `0.6.x` | Arabic/English localization, RTL, Saudi readiness rollout | Planned |
+| `0.7.x` | Analytics, monitoring, support tooling, growth instrumentation | Planned |
+| `0.8.x` | AI-enabled workflows, matching, scorecards | Future |
 
 ---
 
-## Phase 1 — Foundation ✅ Complete
+## Immediate Priorities
 
-> Shipped: v0.1.0
+### Release `0.3.0`
 
-- [x] Monorepo structure (frontend/ + backend/)
-- [x] Next.js 16 frontend with 35 routes (12 public, 10 dashboard, 13 admin)
-- [x] Design system (Navy/Gold/Cream, shadcn/ui)
-- [x] Laravel 13 backend with REST API
-- [x] PostgreSQL schema (15 migrations, 20+ tables)
-- [x] Seeded demo content
-- [x] Member and admin dashboard pages (10 + 13)
-- [x] Repository operations system and documentation (v0.2.0)
+| Priority | Outcome |
+|---|---|
+| Establish CI/CD | Reliable validation on push and pull request |
+| Add backend API tests | Protect current public contract |
+| Upgrade repository OS | Improve execution quality and auditability |
+| Align testing and security docs | Reduce delivery ambiguity |
 
----
+### Release `0.4.0`
 
-## Phase 2 — Core Platform 🟡 In Progress
+| Priority | Outcome |
+|---|---|
+| Implement authentication | Real member access and protected flows |
+| Activate role boundaries | Safer admin and dashboard separation |
+| Replace mock data on priority public pages | Operational realism and easier iteration |
+| Start monitoring and analytics | Better product and operational visibility |
 
-> Target: v0.3.0–0.5.0
+### Release `0.5.0`
 
-### Authentication & Identity
-- [ ] Laravel Sanctum token-based auth
-- [ ] Login / register / email verification flows
-- [ ] Role-based access (founder, partner, sponsor, admin)
-- [ ] Password reset and account recovery
-
-### Profile & Data Management
-- [ ] Founder profile CRUD
-- [ ] Company profile CRUD
-- [ ] Profile image upload (Supabase Storage or S3)
-- [ ] Frontend ↔ Backend API integration (replace mock data)
-
-### Community Features
-- [ ] Community feed (posts, updates, milestones)
-- [ ] Founder directory with search and filters
-- [ ] Match suggestions (founder-to-founder, founder-to-mentor)
-- [ ] Warm introduction requests
-- [ ] Appointment booking system
-
-### Programs & Events
-- [ ] Event RSVP and attendance tracking
-- [ ] Program application workflow
-- [ ] Cohort management
-
-### Infrastructure
-- [ ] CI/CD with GitHub Actions (lint, test, build, deploy)
-- [ ] Unit and feature tests (PHPUnit + Jest/Vitest)
-- [ ] Environment configuration for staging/production
-- [ ] Error tracking (Sentry)
-- [ ] Rate limiting and API throttling
+| Priority | Outcome |
+|---|---|
+| Founder/company CRUD | Enable real data management |
+| Event RSVP and applications | Unlock member utility |
+| Program workflows | Strengthen platform stickiness |
+| Email delivery | Support transactional lifecycle communication |
 
 ---
 
-## Phase 3 — Intelligence & Scale
+## Regional Scaling Track
 
-> Target: v0.6.0–1.0.0
-
-### AI Service Layer
-- [ ] AI agent architecture (10 agents planned)
-- [ ] Founder scorecard calculation engine
-- [ ] AI-powered match scoring
-- [ ] Content generation assistance
-- [ ] Smart notifications and recommendations
-
-### Analytics & Insights
-- [ ] Analytics dashboard (PostHog or Plausible)
-- [ ] Founder engagement metrics
-- [ ] Program effectiveness tracking
-- [ ] Admin reporting and exports
-
-### Content & Communications
-- [ ] Admin CMS for news, events, programs
-- [ ] Email notification system (Resend or SendGrid)
-- [ ] In-app messaging
-- [ ] Push notifications
-
-### Internationalization
-- [ ] Arabic language support (i18n)
-- [ ] RTL layout support
-- [ ] Date/currency localization (SAR, AED)
-
----
-
-## Phase 4 — Enterprise & Growth
-
-> Target: v1.0.0+
-
-### Enterprise Features
-- [ ] Multi-tenant organization support
-- [ ] Advanced analytics and BI dashboards
-- [ ] API for third-party integrations
-- [ ] Webhook system for external automations
-- [ ] SSO (SAML/OIDC) for enterprise partners
-
-### Regional Expansion
-- [ ] GCC country-specific features (UAE, Bahrain, Kuwait, Oman, Qatar)
-- [ ] MENA expansion support
-- [ ] Multi-currency payment processing (Moyasar, Stripe)
-- [ ] Regional compliance (Saudi data residency, PDPL)
-
-### Growth & Monetization
-- [ ] Premium membership tiers
-- [ ] Sponsor/partner portal
-- [ ] Event ticketing
-- [ ] Marketplace for founder services
-- [ ] Affiliate/referral program
-
-### Infrastructure at Scale
-- [ ] Kubernetes deployment
-- [ ] CDN optimization (Cloudflare)
-- [ ] Database read replicas
-- [ ] Queue workers (Redis/Horizon)
-- [ ] Full observability stack (Datadog or New Relic)
-
----
-
-## Milestones
-
-| Milestone | Version | Target | Status |
-|-----------|---------|--------|--------|
-| Platform foundation | 0.1.0 | Q1 2026 | ✅ Done |
-| Docs & operations system | 0.2.0 | Q2 2026 | ✅ Done |
-| Auth & profiles | 0.3.0 | Q2 2026 | 🟡 Next |
-| Community MVP | 0.4.0 | Q2 2026 | ⬜ Planned |
-| Programs & events | 0.5.0 | Q3 2026 | ⬜ Planned |
-| AI layer | 0.6.0 | Q3 2026 | ⬜ Planned |
-| Public beta | 0.8.0 | Q4 2026 | ⬜ Planned |
-| Production launch | 1.0.0 | Q1 2027 | ⬜ Planned |
+Saudi Arabia remains the reference market. GCC expansion should happen only after the platform supports bilingual content strategy, RTL layout readiness, operational compliance review, and appropriate payments, support, and data policies.

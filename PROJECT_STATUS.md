@@ -2,74 +2,65 @@
 
 > Last updated: 2026-04-08
 
-## Overview
+## Executive Summary
 
-**Wosool** — Founders-to-founders network and execution platform for the Saudi and GCC startup ecosystem.
+**Wosool** is in a **pre-launch MVP hardening phase**. The repository already contains a meaningful frontend surface area, a structured Laravel API, seeded business objects, and a solid initial documentation base. The most important gap is no longer raw page creation; it is the absence of strong delivery gates, executable API coverage, and progressively replacing mock-driven frontend flows with live backend integration.
 
 | Attribute | Value |
-|-----------|-------|
-| Version | 0.2.1 |
-| Stage | Pre-launch (MVP in development) |
-| Domain | [wosool.org](https://wosool.org) |
-| License | MIT |
+|---|---|
+| Current release | `0.3.0` |
+| Product stage | Pre-launch MVP hardening |
+| Primary market | Saudi Arabia |
+| Expansion path | GCC, then MENA, then global |
+| Repository profile | Product monorepo with operating-system documentation |
 
 ---
 
 ## Component Status
 
-| Component | Status | Version | Notes |
-|-----------|--------|---------|-------|
-| Frontend (Next.js 16) | ✅ Built | 0.1.0 | 35 routes (12 public, 10 dashboard, 13 admin), component library, responsive |
-| Backend (Laravel 13) | ✅ Built | 0.1.0 | 17 API endpoints, 21 models |
-| Database (PostgreSQL) | ✅ Designed | — | 16 migrations, 20+ tables |
-| Authentication | 🟡 Planned | — | Sanctum configured, not implemented |
-| CI/CD | ❌ Missing | — | No GitHub Actions workflows |
-| Tests | ❌ Missing | — | Test directories exist, no test cases |
-| Documentation | ✅ Created | 0.2.0 | Full docs and SKILLS framework |
-| Monitoring | ❌ Missing | — | No Sentry/logging configured |
-| Analytics | ❌ Missing | — | No tracking implemented |
+| Component | Status | Assessment |
+|---|---|---|
+| Frontend application | Stable build | Public pages, member dashboard shells, and admin shells compile successfully |
+| Backend API | Structurally ready | Public resource and submission endpoints exist and are documented |
+| Database design | Strong | PostgreSQL-first schema with practical test fallback patterns |
+| Test coverage | Early | Real backend feature coverage is introduced in this release |
+| CI/CD | New | Workflow automation becomes part of `0.3.0` |
+| Security posture | Moderate | Rate limiting exists; broader controls remain in progress |
+| Documentation OS | Strong and improving | Core docs exist and are being aligned more tightly to real implementation |
+| Saudi/GCC readiness | Strategic | Market framing is in place; localization and compliance implementation remain partial |
 
 ---
 
-## Phase Completion
+## Current Release Scope
 
-| Phase | Description | Status |
-|-------|-------------|--------|
-| Phase 1 | Structure, pages, API, schema, seeds | ✅ Complete |
-| Phase 2 | Auth, CRUD, feed, matching, booking | 🟡 Next |
-| Phase 3 | AI agents, scorecard engine, analytics | ⬜ Future |
+The `0.3.0` cycle is designed to improve **delivery confidence**, **auditability**, and **engineering consistency**. It focuses on repository foundations rather than attempting too many product features at once.
 
----
-
-## Key Metrics
-
-| Metric | Value |
-|--------|-------|
-| Frontend routes | 35 (12 public, 10 dashboard, 13 admin) |
-| API endpoints | 17 |
-| Database tables | 20+ |
-| Eloquent models | 21 |
-| UI components | 27+ (shadcn/ui based) |
-| Test coverage | 0% (no tests written) |
-| CI/CD pipelines | 0 |
+| Release objective | Included in `0.3.0` |
+|---|---|
+| Add repository-level CI/CD | Yes |
+| Add backend API feature tests | Yes |
+| Add API and SDK documentation | Yes |
+| Clean frontend lint warnings | Yes |
+| Add ADR structure and editor standards | Yes |
+| Implement authentication | No, next cycle |
+| Replace mock frontend data across key pages | No, next cycle |
+| Ship Arabic/RTL interface | No, staged roadmap item |
 
 ---
 
-## Known Gaps
+## Key Gaps Still Open
 
-1. **No authentication flow** — login/register pages exist but no auth logic
-2. **No CI/CD** — no automated testing, linting, or deployment pipelines
-3. **No tests** — test directories present but empty
-4. **Frontend uses mock data** — seed.ts provides static data, no API integration
-5. **No email service** — mail configured but no provider connected
-6. **No file storage** — no upload handling configured
-7. **No monitoring/alerting** — no error tracking or uptime monitoring
-8. **No analytics** — no user behavior tracking
-9. **No i18n** — Arabic language support not implemented yet
-10. **No rate limiting** — API endpoints unprotected
+| Gap | Business impact | Priority |
+|---|---|---|
+| Authentication flow | Blocks real member onboarding and protected workflows | Critical |
+| Frontend API integration | Prevents production data flow and operational realism | Critical |
+| Role-based access control | Limits safe separation for admin and member experiences | High |
+| Arabic and RTL support | Reduces Saudi-first product readiness | High |
+| Monitoring and analytics | Weakens visibility into failures and user behavior | High |
+| Email delivery infrastructure | Limits lifecycle, support, and transactional communication | High |
 
 ---
 
-## Next Actions
+## Delivery Posture
 
-See [TODO.md](./TODO.md) for prioritized tasks and [ROADMAP.md](./ROADMAP.md) for the development plan.
+Wosool is now moving from a **design-and-scaffold repository** toward a **delivery-capable product repository**. That transition requires continuous validation, decision logging, semantic releases, and a stronger repository operating system. The purpose of the current release is to make future feature work faster, safer, and easier to audit.

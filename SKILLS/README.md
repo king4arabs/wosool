@@ -1,55 +1,28 @@
-# SKILLS
-
-> Wosool skills reference framework — structured knowledge base for development, operations, and growth.
-
----
+# SKILLS Framework
 
 ## Purpose
 
-The SKILLS directory contains reference documents for every domain relevant to building and scaling Wosool. Each file provides:
+The `SKILLS/` directory acts as the **execution memory layer** of the Wosool repository. Each file captures repeatable judgment, implementation standards, audit patterns, and domain context so that future improvement cycles become faster and more consistent.
 
-- **Current state** of the domain in the project
-- **Standards and conventions** to follow
-- **Tools and technologies** in use or recommended
-- **Checklists** for implementation and auditing
-- **Saudi/GCC considerations** where applicable
-
----
-
-## Skills Index
-
-| File | Domain | Description |
-|------|--------|-------------|
-| [frontend.md](./frontend.md) | Frontend | Next.js, React, Tailwind, shadcn/ui |
-| [backend.md](./backend.md) | Backend | Laravel, PHP, REST API, Eloquent |
-| [database.md](./database.md) | Database | PostgreSQL, migrations, data modeling |
-| [devops.md](./devops.md) | DevOps | CI/CD, Docker, GitHub Actions |
-| [security.md](./security.md) | Security | Auth, PDPL, secrets, scanning |
-| [qa.md](./qa.md) | Quality Assurance | Testing, code quality, reviews |
-| [ai.md](./ai.md) | AI/ML | AI agents, embeddings, LLM integration |
-| [product.md](./product.md) | Product | Features, UX, roadmap |
-| [business.md](./business.md) | Business | Model, revenue, partnerships |
-| [marketing.md](./marketing.md) | Marketing | Growth, SEO, content, channels |
-| [operations.md](./operations.md) | Operations | Runbooks, monitoring, scaling |
-| [compliance.md](./compliance.md) | Compliance | PDPL, data governance, legal |
-| [integrations.md](./integrations.md) | Integrations | Third-party services, APIs, webhooks |
-| [saudi_gcc_readiness.md](./saudi_gcc_readiness.md) | Regional | Saudi/GCC localization, regulations |
+| Skill domain | Use it to guide... |
+|---|---|
+| Frontend | UI architecture, localization, component quality |
+| Backend | API evolution, validation, auth, service design |
+| Database | Schema evolution, data integrity, indexing |
+| DevOps | CI/CD, environments, delivery readiness |
+| Security | Controls, secrets, access, risk reduction |
+| QA | Validation strategy and release gates |
+| AI | Safe future AI features and operational automation |
+| Product | Prioritization and user-value framing |
+| Business | Revenue, partnerships, and ecosystem alignment |
+| Marketing | Growth loops and market-facing execution |
+| Operations | Daily enhancement loop and release discipline |
+| Compliance | Saudi/GCC regulatory awareness |
+| Integrations | Vendor and external service decisions |
+| Saudi/GCC readiness | Regional product, language, and deployment considerations |
 
 ---
 
-## How to Use
+## How to Use the Framework
 
-1. **New contributors** — Read relevant skills files for onboarding
-2. **Feature development** — Reference standards before implementing
-3. **Code review** — Verify changes align with documented conventions
-4. **Auditing** — Use checklists to assess domain readiness
-5. **Planning** — Use recommended tools/practices for roadmap decisions
-
----
-
-## Maintenance
-
-- Update skills files when conventions change
-- Add new skills files for emerging domains
-- Link from relevant code and documentation
-- Review quarterly for accuracy
+Each daily enhancement cycle should audit the codebase, review the relevant skills, implement the highest-value improvement, and then update the affected skill files so execution knowledge compounds over time.

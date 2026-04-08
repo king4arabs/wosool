@@ -1,84 +1,45 @@
 # TODO
 
-> Prioritized task backlog for Wosool. Ordered by impact and urgency.
+> Prioritized backlog for the current Wosool enhancement loop.
 
 ---
 
-## 🔴 Critical (Do Next)
+## Critical
 
-- [ ] **Set up CI/CD pipeline** — GitHub Actions for lint, test, build on push/PR
-- [ ] **Implement authentication** — Login, register, email verification with Sanctum
-- [ ] **Add backend tests** — PHPUnit feature tests for all API endpoints
-- [ ] **Connect frontend to API** — Replace mock seed.ts data with real API calls
-- [ ] **Add rate limiting** — Protect API endpoints from abuse
-
----
-
-## 🟡 High Priority
-
-- [ ] **Implement RBAC** — Activate Spatie permissions for founder/partner/admin roles
-- [ ] **Add Form Requests** — Laravel validation classes for all POST endpoints
-- [ ] **Frontend testing setup** — Vitest + React Testing Library configuration
-- [ ] **Error monitoring** — Integrate Sentry for frontend and backend
-- [ ] **Environment configuration** — Staging environment setup
-- [ ] **Security headers** — Add CSP, HSTS, X-Frame-Options
-- [ ] **API documentation** — OpenAPI/Swagger spec for all endpoints
+- [ ] Implement authentication flow with Laravel Sanctum and frontend session handling.
+- [ ] Replace seed data on high-priority public pages with live API integration.
+- [ ] Introduce role-based access control for admin and member experiences.
+- [ ] Add monitoring and analytics instrumentation.
+- [ ] Add security headers and environment hardening.
 
 ---
 
-## 🟢 Medium Priority
+## High Priority
 
-- [ ] **Founder profile CRUD** — Create, read, update, delete profiles
-- [ ] **Company profile CRUD** — Full company management
-- [ ] **Community feed** — Posts, updates, milestones
-- [ ] **Match suggestions** — Founder-to-founder matching algorithm
-- [ ] **Warm intros** — Introduction request workflow
-- [ ] **Event RSVP** — Event registration and attendance
-- [ ] **Program applications** — Application submission and review
-- [ ] **Email notifications** — Transactional emails (Resend or SendGrid)
-- [ ] **Analytics integration** — PostHog or Plausible setup
-- [ ] **Database backups** — Automated pg_dump to S3
+- [ ] Add frontend integration tests for API-backed pages.
+- [ ] Add OpenAPI specification for the public API.
+- [ ] Add Arabic language support and RTL layout primitives.
+- [ ] Add email delivery provider for applications and contact flows.
+- [ ] Introduce staging environment configuration and deployment preview discipline.
 
 ---
 
-## 🔵 Future / Nice to Have
+## Medium Priority
 
-- [ ] **Arabic language support** — i18n with RTL layout
-- [ ] **AI scorecard engine** — Founder scoring algorithm
-- [ ] **AI matching** — Smart founder pairing with embeddings
-- [ ] **Admin CMS** — Content management for news, events
-- [ ] **Appointment booking** — Calendar integration
-- [ ] **In-app messaging** — Real-time chat
-- [ ] **Push notifications** — Browser and mobile
-- [ ] **Payment integration** — Moyasar (SAR) + Stripe
-- [ ] **Mobile app** — React Native or PWA
-- [ ] **Kubernetes deployment** — Container orchestration
-- [ ] **Full observability** — Datadog or New Relic stack
+- [ ] Founder profile CRUD.
+- [ ] Company profile CRUD.
+- [ ] Event RSVP workflow.
+- [ ] Program application workflow.
+- [ ] Partner and sponsor content management.
+- [ ] Admin analytics dashboard backed by real tracking.
 
 ---
 
-## ✅ Completed
+## Completed in `0.3.0`
 
-- [x] Repository structure (monorepo)
-- [x] Frontend pages (35 routes: 12 public, 10 dashboard, 13 admin)
-- [x] Backend API (17 endpoints)
-- [x] Database schema (20+ tables)
-- [x] Eloquent models (21)
-- [x] Design system (Navy/Gold/Cream)
-- [x] Component library (shadcn/ui, 27+ components)
-- [x] Demo seed data
-- [x] Documentation framework (v0.2.0)
-- [x] SKILLS reference files
-- [x] Admin portal pages (13 pages)
-- [x] Member dashboard pages (10 pages)
-
----
-
-## Contributing
-
-When picking up a task:
-1. Move it from the appropriate priority section
-2. Create a branch: `feature/task-name` or `fix/task-name`
-3. Implement with tests
-4. Submit PR with changelog entry
-5. Mark as completed when merged
+- [x] Added repository-level CI/CD workflow.
+- [x] Added backend API feature-test foundation.
+- [x] Added API and SDK documentation.
+- [x] Added ADR index and editor configuration.
+- [x] Cleaned avoidable frontend lint warnings.
+- [x] Upgraded repository operating-system documentation for the current release.

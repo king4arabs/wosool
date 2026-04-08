@@ -1,190 +1,53 @@
 # Deployment
 
-> Wosool deployment guide and environment configuration.
+## Deployment Strategy
+
+Wosool should be deployed as a **two-surface application**: a frontend optimized for fast edge delivery and a backend optimized for secure API execution, persistence, and operational control.
+
+| Surface | Recommended default |
+|---|---|
+| Frontend | Vercel or equivalent edge-oriented platform |
+| Backend | Managed PHP-capable platform or container runtime |
+| Database | Managed PostgreSQL with secure backups |
+| Cache/queue | Redis when async and background workloads are activated |
 
 ---
 
-## Environments
+## Runtime Baseline
 
-| Environment | Purpose | URL |
-|-------------|---------|-----|
-| Development | Local development | `localhost:3000` (frontend), `localhost:8000` (backend) |
-| Staging | Pre-production testing | TBD |
-| Production | Live platform | [wosool.org](https://wosool.org) |
-
----
-
-## Local Development Setup
-
-### Prerequisites
-
-- Node.js 20+ and npm 10+
-- PHP 8.3+ and Composer 2+
-- PostgreSQL 16+
-- Redis 7+
-
-### Frontend
-
-```bash
-cd frontend
-npm install
-npm run dev          # http://localhost:3000
-```
-
-### Backend
-
-```bash
-cd backend
-composer install
-cp .env.example .env
-php artisan key:generate
-
-# Configure .env with database credentials
-php artisan migrate
-php artisan db:seed    # Load demo data
-
-php artisan serve      # http://localhost:8000
-```
-
-### Environment Variables
-
-#### Frontend (`frontend/.env.local`)
-
-```env
-NEXT_PUBLIC_API_URL=http://localhost:8000/api/v1
-NEXT_PUBLIC_SITE_URL=http://localhost:3000
-```
-
-#### Backend (`backend/.env`)
-
-```env
-APP_NAME=Wosool
-APP_ENV=local
-APP_DEBUG=true
-APP_URL=http://localhost:8000
-
-DB_CONNECTION=pgsql
-DB_HOST=127.0.0.1
-DB_PORT=5432
-DB_DATABASE=wosool
-DB_USERNAME=postgres
-DB_PASSWORD=
-
-CACHE_DRIVER=redis
-QUEUE_CONNECTION=redis
-SESSION_DRIVER=database
-
-REDIS_HOST=127.0.0.1
-REDIS_PORT=6379
-```
+| Component | Recommended runtime |
+|---|---|
+| Node.js | 22.x |
+| PHP | 8.3 |
+| Database | PostgreSQL 16+ |
+| Queue/cache | Redis 7+ |
 
 ---
 
-## Production Deployment
+## Environment Model
 
-### Recommended Stack
-
-| Component | Service | Alternative |
-|-----------|---------|-------------|
-| Frontend hosting | Vercel | Netlify, AWS Amplify |
-| Backend hosting | Railway | Render, AWS EC2 |
-| Database | Supabase PostgreSQL | AWS RDS, Railway |
-| Cache/Queue | Upstash Redis | AWS ElastiCache |
-| Storage | Supabase Storage | AWS S3, Cloudflare R2 |
-| CDN | Cloudflare | AWS CloudFront |
-| DNS | Cloudflare | AWS Route53 |
-| SSL | Cloudflare (auto) | Let's Encrypt |
-| Monitoring | Sentry | Datadog, New Relic |
-
-### Frontend (Vercel)
-
-1. Connect repository to Vercel
-2. Set root directory to `frontend/`
-3. Framework preset: Next.js
-4. Set environment variables
-5. Deploy
-
-### Backend (Railway)
-
-1. Connect repository to Railway
-2. Set root directory to `backend/`
-3. Use Nixpacks (auto-detects PHP/Laravel)
-4. Add PostgreSQL and Redis plugins
-5. Set environment variables
-6. Run migrations: `php artisan migrate --force`
-
-### Production Environment Variables
-
-```env
-# Backend production
-APP_ENV=production
-APP_DEBUG=false
-APP_URL=https://api.wosool.org
-
-# Frontend production
-NEXT_PUBLIC_API_URL=https://api.wosool.org/api/v1
-NEXT_PUBLIC_SITE_URL=https://wosool.org
-```
+| Environment | Purpose |
+|---|---|
+| Local | Feature implementation and debugging |
+| Preview | Pull request and stakeholder review |
+| Staging | Production-like validation |
+| Production | Live founder-facing service |
 
 ---
 
-## Build Commands
+## Pre-Production Checklist
 
-| Component | Command | Notes |
-|-----------|---------|-------|
-| Frontend build | `cd frontend && npm run build` | Next.js 16 with Turbopack |
-| Frontend lint | `cd frontend && npm run lint` | ESLint |
-| Backend test | `cd backend && php artisan test` | PHPUnit |
-| Backend lint | `cd backend && ./vendor/bin/pint` | Laravel Pint (PSR-12) |
-| Migrations | `cd backend && php artisan migrate` | Run on deploy |
-| Seeders | `cd backend && php artisan db:seed` | Development only |
-
----
-
-## CI/CD Pipeline (Planned)
-
-```yaml
-# .github/workflows/ci.yml (to be created)
-on: [push, pull_request]
-
-jobs:
-  frontend:
-    - npm ci
-    - npm run lint
-    - npm run build
-
-  backend:
-    - composer install
-    - php artisan test
-
-  deploy:
-    - Deploy frontend to Vercel
-    - Deploy backend to Railway
-```
+| Check | Requirement |
+|---|---|
+| CI passes | Required |
+| Environment variables documented | Required |
+| Database migration strategy reviewed | Required |
+| Rollback approach defined | Required |
+| Security headers and domain config reviewed | Required |
+| Monitoring hooks prepared | Required before launch |
 
 ---
 
-## SSL/TLS
+## Saudi-First Deployment Notes
 
-- Primary SSL via Cloudflare (Full Strict mode)
-- SSL repair script: `npm run ops:ssl:repair` (see [scripts/ssl-repair.mjs](./scripts/ssl-repair.mjs))
-- Full operational runbook: [docs/SSL_RUNBOOK.md](./docs/SSL_RUNBOOK.md)
-- Certificate monitoring via UptimeRobot (recommended)
-
----
-
-## Domain Configuration
-
-| Domain | Purpose | Provider |
-|--------|---------|----------|
-| wosool.org | Frontend (production) | Cloudflare DNS |
-| api.wosool.org | Backend API | Cloudflare DNS |
-
----
-
-## Rollback Procedures
-
-1. **Frontend:** Revert to previous Vercel deployment via dashboard
-2. **Backend:** Roll back migration with `php artisan migrate:rollback`
-3. **Database:** Restore from latest backup
-4. **Emergency:** Switch DNS to maintenance page
+Production hosting decisions should consider data residency sensitivity, enterprise procurement expectations, Arabic content support, and regional performance across Saudi Arabia and the GCC.

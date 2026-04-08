@@ -7,8 +7,6 @@ import {
   Building2,
   CalendarDays,
   Star,
-  CheckCircle,
-  Clock,
   PlusCircle,
   FileText,
   Settings,
