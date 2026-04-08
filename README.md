@@ -2,7 +2,7 @@
 
 > A premium, curated founder network and execution platform for the Saudi and GCC startup ecosystem.
 
-**Domain:** [wosool.org](https://wosool.org) | **Social:** @AboutWosool | **Version:** 0.2.0
+**Domain:** [wosool.org](https://wosool.org) | **Social:** @AboutWosool | **Version:** 0.2.1
 
 ---
 
@@ -49,7 +49,7 @@ npm run build      # Production build
 npm run lint       # Lint check
 ```
 
-### Public Pages (17 routes)
+### Public Pages (12 routes)
 
 | Path | Description |
 |------|-------------|
@@ -65,11 +65,39 @@ npm run lint       # Lint check
 | `/apply` | Apply to join |
 | `/contact` | Contact page |
 | `/login` | Member login |
-| `/dashboard` | Member dashboard |
+
+### Member Dashboard (10 routes)
+
+| Path | Description |
+|------|-------------|
+| `/dashboard` | Member dashboard overview |
 | `/dashboard/profile` | Profile editor |
+| `/dashboard/company` | Company profile management |
+| `/dashboard/community` | Community feed |
+| `/dashboard/matches` | Match suggestions |
+| `/dashboard/events` | Events and RSVPs |
+| `/dashboard/programs` | Program applications |
+| `/dashboard/messages` | Messages and notifications |
 | `/dashboard/scorecard` | Founder scorecard |
+| `/dashboard/settings` | Account settings |
+
+### Admin Portal (13 routes)
+
+| Path | Description |
+|------|-------------|
 | `/admin` | Admin overview |
-| `/admin/founders` | Admin founder management |
+| `/admin/founders` | Founder management |
+| `/admin/members` | Member management |
+| `/admin/companies` | Company management |
+| `/admin/scorecards` | Scorecard management |
+| `/admin/matches` | Match management |
+| `/admin/events` | Event management |
+| `/admin/programs` | Program management |
+| `/admin/partners` | Partner management |
+| `/admin/sponsors` | Sponsor management |
+| `/admin/news` | News management |
+| `/admin/analytics` | Analytics dashboard |
+| `/admin/settings` | Admin settings |
 
 ### Design System
 
@@ -101,13 +129,21 @@ php artisan serve     # API at http://localhost:8000
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
+| GET | `/health` | Health check |
 | GET | `/founders` | List founders |
+| GET | `/founders/{slug}` | Get founder by slug |
 | GET | `/companies` | List companies |
+| GET | `/companies/{slug}` | Get company by slug |
 | GET | `/events` | List events |
+| GET | `/events/{slug}` | Get event by slug |
 | GET | `/programs` | List programs |
+| GET | `/programs/{slug}` | Get program by slug |
 | GET | `/partners` | List partners |
 | GET | `/sponsors` | List sponsors |
 | GET | `/news` | List news items |
+| GET | `/news/{slug}` | Get news item by slug |
+| GET | `/resources` | List resources |
+| GET | `/resources/{slug}` | Get resource by slug |
 | POST | `/applications` | Submit membership application |
 | POST | `/contact` | Submit contact inquiry |
 
@@ -125,10 +161,10 @@ php artisan serve     # API at http://localhost:8000
 - [x] Repository structure and architecture
 - [x] Design system (Tailwind + component library)
 - [x] All public website pages
-- [x] Member dashboard shell
-- [x] Admin dashboard shell
+- [x] Member dashboard (10 pages)
+- [x] Admin portal (13 pages)
 - [x] Database migrations (20+ tables)
-- [x] Laravel REST API (14 endpoints)
+- [x] Laravel REST API (17 endpoints)
 - [x] Seeded demo content
 
 ### Phase 2 (Next)

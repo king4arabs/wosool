@@ -9,12 +9,12 @@
 > Shipped: v0.1.0
 
 - [x] Monorepo structure (frontend/ + backend/)
-- [x] Next.js 16 frontend with 17 routes
+- [x] Next.js 16 frontend with 35 routes (12 public, 10 dashboard, 13 admin)
 - [x] Design system (Navy/Gold/Cream, shadcn/ui)
 - [x] Laravel 13 backend with REST API
 - [x] PostgreSQL schema (15 migrations, 20+ tables)
 - [x] Seeded demo content
-- [x] Member and admin dashboard shells
+- [x] Member and admin dashboard pages (10 + 13)
 - [x] Repository operations system and documentation (v0.2.0)
 
 ---
