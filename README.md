@@ -68,6 +68,8 @@ npm run setup
 npm run verify
 ```
 
+`npm run setup` installs frontend and backend dependencies, prepares the default SQLite database, generates the Laravel app key, and runs backend migrations so the repository is ready to boot locally.
+
 To run the two application surfaces locally, use separate terminals from the repository root:
 
 ```bash
