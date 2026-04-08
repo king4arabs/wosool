@@ -2,13 +2,13 @@
 
 > A premium, curated founder network and execution platform for the Saudi and GCC startup ecosystem.
 
-**Domain:** [wosool.org](https://wosool.org) | **Social:** @AboutWosool
+**Domain:** [wosool.org](https://wosool.org) | **Social:** @AboutWosool | **Version:** 0.2.0
 
 ---
 
 ## Overview
 
-Wosool is a founders-to-founders platform that helps founders connect, grow, collaborate, and access trusted support through community, programs, introductions, events, and AI-powered workflows.
+Wosool (وصول) is a founders-to-founders platform that helps founders connect, grow, collaborate, and access trusted support through community, programs, introductions, events, and AI-powered workflows.
 
 ### Core Promise
 > *Founders helping founders build faster.*
@@ -19,20 +19,21 @@ Wosool is a founders-to-founders platform that helps founders connect, grow, col
 
 ```
 wosool/
-├── frontend/          # Next.js 15 + TypeScript + Tailwind CSS
-├── backend/           # Laravel 12 PHP API
-└── README.md
+├── frontend/          # Next.js 16 + TypeScript + Tailwind CSS 4
+├── backend/           # Laravel 13 PHP API
+├── SKILLS/            # Skills reference framework (14 files)
+└── docs & configs     # Project documentation
 ```
 
 ### Tech Stack
 
 | Layer | Technology |
 |-------|-----------|
-| Frontend | Next.js 15, TypeScript, Tailwind CSS, shadcn/ui components |
-| Backend | Laravel 12, PHP 8.3, RESTful API |
-| Database | PostgreSQL (+ pgvector for AI features) |
-| Cache/Queue | Redis |
-| Auth | Laravel Sanctum |
+| Frontend | Next.js 16, React 19, TypeScript 5, Tailwind CSS 4, shadcn/ui |
+| Backend | Laravel 13, PHP 8.3, RESTful API |
+| Database | PostgreSQL 16+ (+ pgvector for AI features) |
+| Cache/Queue | Redis 7+ |
+| Auth | Laravel Sanctum + Spatie Permission |
 
 ---
 
@@ -161,20 +162,24 @@ php artisan serve     # API at http://localhost:8000
 
 | Document | Description |
 |----------|-------------|
-| [Architecture](./docs/ARCHITECTURE.md) | System architecture, tech stack, and conventions |
-| [API Contract](./docs/API_CONTRACT.md) | REST API endpoints, auth, and response format |
-| [Database](./docs/DATABASE.md) | PostgreSQL schema, migrations, and seeders |
-| [Deployment](./docs/DEPLOYMENT.md) | Deployment guide and environment configuration |
-| [SSL Runbook](./docs/SSL_RUNBOOK.md) | SSL/TLS certificate management and repair |
-| [Security Audit](./docs/AUDIT.md) | Dependency audit and security compliance |
-| [Skills Profile](./docs/SKILLS_PROFILE.md) | Founder skills and scorecard system |
-| [Dependency Audit](./docs/DEPENDENCY_AUDIT.md) | Vulnerability assessment and remediation |
+| [Architecture](./ARCHITECTURE.md) | System architecture, tech stack, and conventions |
+| [Deployment](./DEPLOYMENT.md) | Deployment guide and environment configuration |
+| [Testing](./TESTING.md) | Testing strategy and standards |
+| [Security](./SECURITY.md) | Security policies and practices |
+| [Operations](./OPERATIONS.md) | Operational runbooks and procedures |
+| [Business Context](./BUSINESS_CONTEXT.md) | Business model and market context |
+| [Marketing & Growth](./MARKETING_GROWTH.md) | Growth strategy and channels |
+| [Decisions](./DECISIONS.md) | Architectural decision records |
+| [Project Status](./PROJECT_STATUS.md) | Current state overview |
+| [Roadmap](./ROADMAP.md) | Development plan and milestones |
+| [TODO](./TODO.md) | Prioritized task backlog |
 | [Changelog](./CHANGELOG.md) | Release history and changes |
-| [Backend Changelog](./backend/CHANGELOG.md) | Laravel framework changelog |
+| [Version](./VERSION.md) | Version tracking |
+| [SKILLS/](./SKILLS/README.md) | Skills reference framework (14 domains) |
 
 ---
 
 ## License
 
-Copyright © 2024 Wosool. All rights reserved.
+Copyright © 2026 Wosool. All rights reserved.
 
