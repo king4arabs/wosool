@@ -164,7 +164,7 @@ export default function AboutPage() {
                 key={service.title}
                 className="relative bg-[#F8F5EF] rounded-2xl p-8 hover:shadow-md transition-shadow"
               >
-                <span className="text-3xl mb-4 block" aria-hidden="true">{service.icon}</span>
+                <span className="text-3xl mb-4 block" role="img" aria-label={service.title}>{service.icon}</span>
                 <h3 className="text-lg font-bold text-[#0A1628] mb-2">{service.title}</h3>
                 <p className="text-sm text-gray-600 leading-relaxed">{service.description}</p>
               </div>

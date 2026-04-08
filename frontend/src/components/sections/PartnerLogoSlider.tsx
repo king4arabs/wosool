@@ -24,7 +24,7 @@ export function PartnerLogoSlider({ partners }: PartnerLogoSliderProps) {
 
           return (
             <a
-              key={`${partner.id}-${idx}`}
+              key={`${partner.id}-${idx < partners.length ? "first" : "second"}`}
               href={partner.website || "#"}
               target="_blank"
               rel="noopener noreferrer"
