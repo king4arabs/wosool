@@ -6,6 +6,32 @@ This project follows **Semantic Versioning** and a Keep a Changelog-inspired for
 
 ---
 
+## [0.3.1] — 2026-04-09
+
+### Added
+- Fully functional Apply form with multi-step state management, client-side validation, API submission, loading states, and success confirmation page.
+- Fully functional Contact form with state management, client-side validation, API submission, loading states, and success confirmation.
+- Terms of Service page (/terms) with comprehensive legal content for Saudi Arabia jurisdiction.
+- Privacy Policy page (/privacy) with GDPR-aligned data protection content.
+- Forgot Password page (/forgot-password) with email input, validation, and confirmation flow.
+
+### Changed
+- Apply form now includes phone field, "What do you need" field, and character counter for motivation (matching backend API contract).
+- Apply form stage options expanded to match backend: Pre-seed, Seed, Series A, Series B+, Scale-up, Exited.
+- Apply form sector options expanded with EdTech, PropTech, CleanTech.
+- Contact form field "name" consolidated from first/last to full name (matching backend API contract).
+- Step indicators in Apply form no longer allow arbitrary step jumps — validation must pass before continuing.
+
+### Fixed
+- Broken link: /terms now resolves to Terms of Service page.
+- Broken link: /privacy now resolves to Privacy Policy page.
+- Broken link: /forgot-password now resolves to password reset flow.
+- Root package.json version synchronized from 0.2.0 to 0.3.1.
+- Apply form fields now aligned with backend StoreApplicationRequest validation rules.
+- Contact form fields now aligned with backend StoreContactRequest validation rules.
+
+---
+
 ## [0.3.0] — 2026-04-08
 
 ### Added
