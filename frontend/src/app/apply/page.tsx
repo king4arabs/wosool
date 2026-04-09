@@ -145,15 +145,14 @@ export default function ApplyPage() {
   const updateField = useCallback(
     (field: keyof FormData, value: string) => {
       setFormData((prev) => ({ ...prev, [field]: value }))
-      if (errors[field]) {
-        setErrors((prev) => {
-          const next = { ...prev }
-          delete next[field]
-          return next
-        })
-      }
+      setErrors((prev) => {
+        if (!prev[field]) return prev
+        const next = { ...prev }
+        delete next[field]
+        return next
+      })
     },
-    [errors]
+    []
   )
 
   const handleStepContinue = (nextStep: number) => {
@@ -282,7 +281,7 @@ export default function ApplyPage() {
             {/* Application Form */}
             <div className="bg-[#F8F5EF] rounded-3xl p-8">
               {/* Step indicators */}
-              <div className="flex items-center gap-2 mb-8">
+              <div className="flex items-center gap-2 mb-8" role="list" aria-label="Application steps">
                 {steps.map(({ id, label }) => (
                   <div key={id} className="flex items-center gap-2">
                     <div
@@ -293,7 +292,9 @@ export default function ApplyPage() {
                           ? "bg-[#0A1628] text-white"
                           : "bg-gray-200 text-gray-500"
                       }`}
-                      aria-label={`Step ${id}: ${label}`}
+                      role="listitem"
+                      aria-label={`Step ${id}: ${label}${currentStep > id ? " (completed)" : currentStep === id ? " (current)" : " (upcoming)"}`}
+                      aria-current={currentStep === id ? "step" : undefined}
                     >
                       {currentStep > id ? "✓" : id}
                     </div>

@@ -68,15 +68,14 @@ export default function ContactPage() {
   const updateField = useCallback(
     (field: keyof ContactFormData, value: string) => {
       setFormData((prev) => ({ ...prev, [field]: value }))
-      if (errors[field]) {
-        setErrors((prev) => {
-          const next = { ...prev }
-          delete next[field]
-          return next
-        })
-      }
+      setErrors((prev) => {
+        if (!prev[field]) return prev
+        const next = { ...prev }
+        delete next[field]
+        return next
+      })
     },
-    [errors]
+    []
   )
 
   const handleSubmit = async (e: React.FormEvent) => {
