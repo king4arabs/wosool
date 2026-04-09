@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useCallback } from "react"
 import { PublicLayout } from "@/components/layout/PublicLayout"
 import { SectionHeader } from "@/components/sections/SectionHeader"
 import { Button } from "@/components/ui/button"
@@ -8,7 +8,10 @@ import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
 import { Badge } from "@/components/ui/badge"
-import { Mail, Users, Building, Newspaper } from "lucide-react"
+import { useToast } from "@/components/ui/toast"
+import { api, ApiError } from "@/lib/api"
+import { Mail, Users, Building, Newspaper, Loader2, CheckCircle } from "lucide-react"
+import Link from "next/link"
 
 const categories = [
   { icon: Mail, label: "General", value: "general", description: "General questions and enquiries" },
@@ -17,8 +20,139 @@ const categories = [
   { icon: Newspaper, label: "Media", value: "media", description: "Press and media enquiries" },
 ]
 
+interface ContactFormData {
+  name: string
+  email: string
+  category: string
+  subject: string
+  message: string
+  company: string
+}
+
+type ContactErrors = Partial<Record<keyof ContactFormData, string>>
+
+const initialFormData: ContactFormData = {
+  name: "",
+  email: "",
+  category: "general",
+  subject: "",
+  message: "",
+  company: "",
+}
+
+function validateContact(data: ContactFormData): ContactErrors {
+  const errors: ContactErrors = {}
+  if (!data.name.trim()) errors.name = "Please enter your name."
+  if (!data.email.trim()) errors.email = "Please enter your email address."
+  else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email))
+    errors.email = "Please enter a valid email address."
+  if (!data.category) errors.category = "Please select a category."
+  if (!data.subject.trim()) errors.subject = "Please enter a subject."
+  if (!data.message.trim()) errors.message = "Please enter your message."
+  if (data.message.length > 3000) errors.message = "Message must be under 3000 characters."
+  return errors
+}
+
+function FieldError({ message }: { message?: string }) {
+  if (!message) return null
+  return <p className="text-sm text-red-600 mt-1">{message}</p>
+}
+
 export default function ContactPage() {
-  const [category, setCategory] = useState("general")
+  const [formData, setFormData] = useState<ContactFormData>(initialFormData)
+  const [errors, setErrors] = useState<ContactErrors>({})
+  const [submitting, setSubmitting] = useState(false)
+  const [submitted, setSubmitted] = useState(false)
+  const { toast } = useToast()
+
+  const updateField = useCallback(
+    (field: keyof ContactFormData, value: string) => {
+      setFormData((prev) => ({ ...prev, [field]: value }))
+      if (errors[field]) {
+        setErrors((prev) => {
+          const next = { ...prev }
+          delete next[field]
+          return next
+        })
+      }
+    },
+    [errors]
+  )
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+
+    const validationErrors = validateContact(formData)
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors)
+      toast("Please fill in all required fields.", "error")
+      return
+    }
+
+    setSubmitting(true)
+    try {
+      await api.post("/contact", formData)
+      setSubmitted(true)
+      toast("Message sent successfully!", "success")
+    } catch (err) {
+      if (err instanceof ApiError && err.data && typeof err.data === "object" && "errors" in err.data) {
+        const serverErrors = (err.data as { errors: Record<string, string[]> }).errors
+        const mapped: ContactErrors = {}
+        for (const [key, messages] of Object.entries(serverErrors)) {
+          if (key in formData) {
+            mapped[key as keyof ContactFormData] = messages[0]
+          }
+        }
+        setErrors(mapped)
+        toast("Please correct the highlighted errors.", "error")
+      } else {
+        toast("Something went wrong. Please try again.", "error")
+      }
+    } finally {
+      setSubmitting(false)
+    }
+  }
+
+  if (submitted) {
+    return (
+      <PublicLayout>
+        <section className="bg-[#0A1628] text-white py-20 px-4">
+          <div className="max-w-2xl mx-auto text-center">
+            <div className="flex justify-center mb-6">
+              <div className="h-20 w-20 rounded-full bg-[#C9A84C]/20 flex items-center justify-center">
+                <CheckCircle className="h-10 w-10 text-[#C9A84C]" />
+              </div>
+            </div>
+            <h1 className="text-4xl font-bold tracking-tight mb-4">
+              Message Sent!
+            </h1>
+            <p className="text-xl text-gray-300 mb-2">
+              Thank you for reaching out. We&apos;ve received your message.
+            </p>
+            <p className="text-gray-400 mb-8">
+              Our team will respond within 2–3 business days at{" "}
+              <span className="text-white font-medium">{formData.email}</span>.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-3 justify-center">
+              <Button asChild>
+                <Link href="/">Back to Homepage</Link>
+              </Button>
+              <Button
+                variant="outline"
+                onClick={() => {
+                  setSubmitted(false)
+                  setFormData(initialFormData)
+                  setErrors({})
+                }}
+              >
+                Send Another Message
+              </Button>
+            </div>
+          </div>
+        </section>
+      </PublicLayout>
+    )
+  }
 
   return (
     <PublicLayout>
@@ -47,17 +181,17 @@ export default function ContactPage() {
                 {categories.map(({ icon: Icon, label, value, description }) => (
                   <button
                     key={value}
-                    onClick={() => setCategory(value)}
+                    onClick={() => updateField("category", value)}
                     className={`w-full flex items-start gap-3 p-4 rounded-2xl border-2 text-left transition-colors ${
-                      category === value
+                      formData.category === value
                         ? "border-[#C9A84C] bg-[#C9A84C]/5"
                         : "border-gray-100 hover:border-gray-200"
                     }`}
-                    aria-pressed={category === value}
+                    aria-pressed={formData.category === value}
                   >
                     <div
                       className={`h-8 w-8 rounded-lg flex items-center justify-center shrink-0 ${
-                        category === value ? "bg-[#C9A84C] text-[#0A1628]" : "bg-gray-100 text-gray-500"
+                        formData.category === value ? "bg-[#C9A84C] text-[#0A1628]" : "bg-gray-100 text-gray-500"
                       }`}
                     >
                       <Icon className="h-4 w-4" aria-hidden="true" />
@@ -84,39 +218,76 @@ export default function ContactPage() {
 
             {/* Form */}
             <div className="lg:col-span-3">
-              <form className="space-y-6">
+              <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="first-name">First Name</Label>
-                    <Input id="first-name" placeholder="Your first name" />
+                  <div className="space-y-2 sm:col-span-2">
+                    <Label htmlFor="name">Full Name *</Label>
+                    <Input
+                      id="name"
+                      placeholder="Your full name"
+                      value={formData.name}
+                      onChange={(e) => updateField("name", e.target.value)}
+                      aria-invalid={!!errors.name}
+                    />
+                    <FieldError message={errors.name} />
                   </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="last-name">Last Name</Label>
-                    <Input id="last-name" placeholder="Your last name" />
-                  </div>
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="contact-email">Email</Label>
-                  <Input id="contact-email" type="email" placeholder="you@company.com" />
+                  <Label htmlFor="contact-email">Email *</Label>
+                  <Input
+                    id="contact-email"
+                    type="email"
+                    placeholder="you@company.com"
+                    value={formData.email}
+                    onChange={(e) => updateField("email", e.target.value)}
+                    aria-invalid={!!errors.email}
+                  />
+                  <FieldError message={errors.email} />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="organisation">Organisation (optional)</Label>
-                  <Input id="organisation" placeholder="Your company or organisation" />
+                  <Label htmlFor="organisation">Organisation</Label>
+                  <Input
+                    id="organisation"
+                    placeholder="Your company or organisation"
+                    value={formData.company}
+                    onChange={(e) => updateField("company", e.target.value)}
+                  />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="subject">Subject</Label>
-                  <Input id="subject" placeholder="Brief subject line" />
+                  <Label htmlFor="subject">Subject *</Label>
+                  <Input
+                    id="subject"
+                    placeholder="Brief subject line"
+                    value={formData.subject}
+                    onChange={(e) => updateField("subject", e.target.value)}
+                    aria-invalid={!!errors.subject}
+                  />
+                  <FieldError message={errors.subject} />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="contact-message">Message</Label>
+                  <Label htmlFor="contact-message">Message *</Label>
                   <Textarea
                     id="contact-message"
                     placeholder="Tell us what you have in mind..."
                     className="min-h-[140px]"
+                    value={formData.message}
+                    onChange={(e) => updateField("message", e.target.value)}
+                    aria-invalid={!!errors.message}
                   />
+                  <div className="flex justify-between">
+                    <FieldError message={errors.message} />
+                    <span className="text-xs text-gray-400">{formData.message.length}/3000</span>
+                  </div>
                 </div>
-                <Button type="submit" size="lg" className="w-full">
-                  Send Message
+                <Button type="submit" size="lg" className="w-full" disabled={submitting}>
+                  {submitting ? (
+                    <>
+                      <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                      Sending…
+                    </>
+                  ) : (
+                    "Send Message"
+                  )}
                 </Button>
               </form>
             </div>
