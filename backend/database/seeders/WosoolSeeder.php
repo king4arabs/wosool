@@ -21,6 +21,10 @@ class WosoolSeeder extends Seeder
             ['name' => 'Wosool Admin', 'password' => bcrypt('wosool2024!'), 'email_verified_at' => now()]
         );
 
+        if (method_exists($admin, 'assignRole') && ! $admin->hasRole('admin')) {
+            $admin->assignRole('admin');
+        }
+
         $foundersData = [
             [
                 'name' => 'Sara Al-Rashidi', 'email' => 'sara@example.com',
@@ -131,6 +135,10 @@ class WosoolSeeder extends Seeder
             );
 
             $founder->companies()->syncWithoutDetaching([$company->id => ['role' => 'Founder & CEO', 'is_primary' => true]]);
+
+            if (method_exists($user, 'assignRole') && ! $user->hasRole('member')) {
+                $user->assignRole('member');
+            }
 
             Scorecard::firstOrCreate(
                 ['founder_profile_id' => $founder->id],

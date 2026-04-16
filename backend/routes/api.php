@@ -1,5 +1,6 @@
 <?php
 use App\Http\Controllers\Api\ApplicationController;
+use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CompanyController;
 use App\Http\Controllers\Api\ContactController;
 use App\Http\Controllers\Api\EventController;
@@ -15,7 +16,16 @@ use Illuminate\Support\Facades\Route;
 Route::get('/health', HealthController::class);
 
 Route::prefix('v1')->group(function () {
-    // Public read endpoints
+    // ── Authentication ──────────────────────────────────────────────
+    Route::post('/auth/login', [AuthController::class, 'login']);
+    Route::post('/auth/register', [AuthController::class, 'register']);
+
+    Route::middleware('auth:sanctum')->group(function () {
+        Route::post('/auth/logout', [AuthController::class, 'logout']);
+        Route::get('/auth/me', [AuthController::class, 'me']);
+    });
+
+    // ── Public read endpoints ───────────────────────────────────────
     Route::get('/founders', [FounderController::class, 'index']);
     Route::get('/founders/{slug}', [FounderController::class, 'show']);
 
@@ -37,9 +47,14 @@ Route::prefix('v1')->group(function () {
     Route::get('/resources', [ResourceController::class, 'index']);
     Route::get('/resources/{slug}', [ResourceController::class, 'show']);
 
-    // Public write endpoints (rate limited)
+    // ── Public write endpoints (rate limited) ───────────────────────
     Route::middleware('throttle:10,1')->group(function () {
         Route::post('/applications', [ApplicationController::class, 'store']);
         Route::post('/contact', [ContactController::class, 'store']);
+    });
+
+    // ── Authenticated member endpoints ──────────────────────────────
+    Route::middleware('auth:sanctum')->prefix('member')->group(function () {
+        Route::get('/profile', [FounderController::class, 'myProfile']);
     });
 });
