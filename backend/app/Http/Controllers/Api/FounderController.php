@@ -48,4 +48,21 @@ class FounderController extends Controller
 
         return response()->json($founder);
     }
+
+    /**
+     * Return the authenticated user's founder profile.
+     */
+    public function myProfile(Request $request): JsonResponse
+    {
+        $user = $request->user();
+        $profile = $user->founderProfile()
+            ?->with(['companies', 'scorecard'])
+            ->first();
+
+        if (! $profile) {
+            return response()->json(['message' => 'No founder profile found.'], 404);
+        }
+
+        return response()->json(['data' => $profile]);
+    }
 }

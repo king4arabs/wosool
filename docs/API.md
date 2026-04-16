@@ -2,16 +2,29 @@
 
 ## Overview
 
-The current Wosool API is exposed through the Laravel backend and organized around **public discovery endpoints** plus **public submission endpoints**. The contract is currently versioned as **`v1`** for public resources, while the health endpoint remains unversioned for infrastructure checks.
+The Wosool API is exposed through the Laravel backend and organized around **public discovery endpoints**, **public submission endpoints**, and **authentication endpoints**. The contract is versioned as **`v1`**. Authentication uses Laravel Sanctum in stateful SPA mode — the frontend communicates over session cookies with no bearer tokens required for first-party requests.
 
 | Base path | Purpose |
 |---|---|
 | `/api/health` | Liveness and service metadata |
+| `/api/v1/auth/*` | Authentication (login, register, logout, current user) |
 | `/api/v1/*` | Public discovery and submission contract |
+| `/api/v1/member/*` | Authenticated member endpoints |
 
 ---
 
 ## Endpoint Summary
+
+### Authentication
+
+| Method | Path | Auth | Purpose |
+|---|---|---|---|
+| POST | `/api/v1/auth/login` | No | Authenticate and start session |
+| POST | `/api/v1/auth/register` | No | Create account and start session |
+| POST | `/api/v1/auth/logout` | Yes | End session |
+| GET | `/api/v1/auth/me` | Yes | Current authenticated user |
+
+### Public Read Endpoints
 
 | Method | Path | Purpose |
 |---|---|---|
@@ -30,8 +43,66 @@ The current Wosool API is exposed through the Laravel backend and organized arou
 | GET | `/api/v1/news/{slug}` | Single published news item |
 | GET | `/api/v1/resources` | Resource listing |
 | GET | `/api/v1/resources/{slug}` | Single resource |
+
+### Public Write Endpoints (Rate Limited)
+
+| Method | Path | Purpose |
+|---|---|---|
 | POST | `/api/v1/applications` | Founder application submission |
 | POST | `/api/v1/contact` | Contact form submission |
+
+### Authenticated Member Endpoints
+
+| Method | Path | Purpose |
+|---|---|---|
+| GET | `/api/v1/member/profile` | Current user's founder profile |
+
+---
+
+## Authentication
+
+Wosool uses **Laravel Sanctum** in stateful SPA mode. The frontend Next.js app communicates with the backend through session cookies — no Authorization header or bearer token is needed for first-party requests.
+
+### Login
+
+```
+POST /api/v1/auth/login
+Content-Type: application/json
+
+{ "email": "user@example.com", "password": "secret" }
+```
+
+**Success (200):**
+```json
+{
+  "message": "Logged in successfully.",
+  "user": { "id": 1, "name": "User Name", "email": "user@example.com", "roles": ["member"] }
+}
+```
+
+### Register
+
+```
+POST /api/v1/auth/register
+Content-Type: application/json
+
+{ "name": "User Name", "email": "user@example.com", "password": "Password1", "password_confirmation": "Password1" }
+```
+
+**Success (201):**
+```json
+{
+  "message": "Account created successfully.",
+  "user": { "id": 2, "name": "User Name", "email": "user@example.com", "roles": [] }
+}
+```
+
+### Roles and Permissions
+
+| Role | Scope |
+|---|---|
+| `admin` | Full platform access (all permissions) |
+| `member` | Profile, company, community, events, programs, messages |
 
 ---
 
@@ -51,7 +122,7 @@ The current Wosool API is exposed through the Laravel backend and organized arou
 
 ## Response Notes
 
-Read endpoints return JSON collections or objects from the current API controllers. Submission endpoints return confirmation payloads and, in the case of applications, a generated reference code.
+Read endpoints return JSON collections or objects. Submission endpoints return confirmation payloads. Auth endpoints return user objects with role information.
 
 ### Health Response
 
@@ -87,8 +158,9 @@ Read endpoints return JSON collections or objects from the current API controlle
 | Control | Current state |
 |---|---|
 | Form Request validation | Implemented for submission endpoints |
-| Rate limiting | Implemented on public write endpoints |
-| Authentication | Not required for current public endpoints |
+| Rate limiting | Implemented on public write endpoints (10/min) |
+| Authentication | Sanctum SPA sessions for protected endpoints |
+| RBAC | Spatie permissions with admin and member roles |
 | OpenAPI export | Planned |
 
 ---

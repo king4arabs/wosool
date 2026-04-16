@@ -1,7 +1,7 @@
 "use client"
 
 import Link from "next/link"
-import { usePathname } from "next/navigation"
+import { usePathname, useRouter } from "next/navigation"
 import {
   LayoutDashboard,
   User,
@@ -15,9 +15,11 @@ import {
   Settings,
   Bell,
   ChevronRight,
+  LogOut,
 } from "lucide-react"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
-import { cn } from "@/lib/utils"
+import { cn, getInitials } from "@/lib/utils"
+import { useAuth } from "@/lib/auth"
 
 const navItems = [
   { href: "/dashboard", icon: LayoutDashboard, label: "Dashboard" },
@@ -38,6 +40,24 @@ export default function DashboardLayout({
   children: React.ReactNode
 }) {
   const pathname = usePathname()
+  const router = useRouter()
+  const { user, logout, isLoading } = useAuth()
+
+  const displayName = user?.name ?? "Member"
+  const initials = getInitials(displayName)
+
+  const handleLogout = async () => {
+    await logout()
+    router.push("/login")
+  }
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-[#F8F5EF] flex items-center justify-center">
+        <div className="animate-pulse text-[#0A1628] text-lg font-medium">Loading…</div>
+      </div>
+    )
+  }
 
   return (
     <div className="flex min-h-screen bg-[#F8F5EF]">
@@ -74,14 +94,21 @@ export default function DashboardLayout({
         <div className="px-3 py-4 border-t border-white/10">
           <div className="flex items-center gap-3 px-3 py-2">
             <Avatar className="h-8 w-8">
-              <AvatarFallback className="text-xs">LR</AvatarFallback>
+              <AvatarFallback className="text-xs">{initials}</AvatarFallback>
             </Avatar>
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium text-white truncate">Layla Al-Rashid</p>
-              <p className="text-xs text-gray-400 truncate">Meezan Capital</p>
+              <p className="text-sm font-medium text-white truncate">{displayName}</p>
+              <p className="text-xs text-gray-400 truncate">{user?.email}</p>
             </div>
             <ChevronRight className="h-4 w-4 text-gray-400" />
           </div>
+          <button
+            onClick={handleLogout}
+            className="flex items-center gap-3 w-full px-3 py-2 mt-1 rounded-lg text-sm font-medium text-gray-400 hover:text-white hover:bg-white/10 transition-colors"
+          >
+            <LogOut className="h-4 w-4 shrink-0" aria-hidden="true" />
+            Log out
+          </button>
         </div>
       </aside>
 
@@ -103,7 +130,7 @@ export default function DashboardLayout({
               <span className="absolute top-1.5 right-1.5 h-2 w-2 bg-[#C9A84C] rounded-full" />
             </button>
             <Avatar className="h-8 w-8">
-              <AvatarFallback className="text-xs">LR</AvatarFallback>
+              <AvatarFallback className="text-xs">{initials}</AvatarFallback>
             </Avatar>
           </div>
         </header>

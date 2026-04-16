@@ -1,14 +1,57 @@
+"use client"
+
+import { useEffect, useState } from "react"
 import { PublicLayout } from "@/components/layout/PublicLayout"
 import { SectionHeader } from "@/components/sections/SectionHeader"
 import { ProgramCard } from "@/components/sections/ProgramCard"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
-import { programs } from "@/data/seed"
+import { programs as seedPrograms } from "@/data/seed"
+import type { Program } from "@/types"
 
 const categories = ["All Programs", "Onboarding", "Peer Learning", "Growth", "Fundraising"]
 
 export default function ProgramsPage() {
+  const [programs, setPrograms] = useState<Program[]>(seedPrograms)
+  const [, setIsLoading] = useState(true)
+
+  useEffect(() => {
+    async function fetchPrograms() {
+      try {
+        const res = await fetch("/api/v1/programs", {
+          headers: { Accept: "application/json" },
+        })
+        if (res.ok) {
+          const json = await res.json()
+          const data = json.data ?? json
+          if (Array.isArray(data) && data.length > 0) {
+            setPrograms(
+              data.map((p: Record<string, unknown>) => ({
+                id: String(p.id),
+                name: String(p.name ?? ""),
+                slug: String(p.slug ?? ""),
+                description: String(p.description ?? ""),
+                category: String(p.category ?? ""),
+                duration: String(p.duration ?? ""),
+                targetStage: Array.isArray(p.target_stages) ? p.target_stages.map(String) : [],
+                applicationDeadline: p.application_deadline ? String(p.application_deadline) : undefined,
+                cohortSize: p.cohort_size ? Number(p.cohort_size) : undefined,
+                benefits: Array.isArray(p.benefits) ? p.benefits.map(String) : [],
+                isOpen: Boolean(p.is_open),
+              }))
+            )
+          }
+        }
+      } catch {
+        // Fallback to seed data
+      } finally {
+        setIsLoading(false)
+      }
+    }
+    fetchPrograms()
+  }, [])
+
   const openPrograms = programs.filter((p) => p.isOpen)
   const closedPrograms = programs.filter((p) => !p.isOpen)
 

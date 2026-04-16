@@ -1,19 +1,19 @@
 # Project Status
 
-> Last updated: 2026-04-09
+> Last updated: 2026-04-16
 
 ## Executive Summary
 
-**Wosool** is in a **pre-launch MVP hardening phase**. The repository already contains a meaningful frontend surface area, a structured Laravel API, seeded business objects, and a solid initial documentation base. The most important gap is no longer raw page creation; it is the absence of strong delivery gates, executable API coverage, and progressively replacing mock-driven frontend flows with live backend integration.
+**Wosool** is in a **pre-launch MVP hardening phase**, now with authentication and role-based access control implemented. The repository has transitioned from a design scaffold to a delivery-capable product with real user login, session management, and live API integration on key public pages.
 
 | Attribute | Value |
 |---|---|
-| Current release | `0.3.1` |
+| Current release | `0.4.0` |
 | Product stage | Pre-launch MVP hardening |
 | Primary market | Saudi Arabia |
 | Expansion path | GCC, then MENA, then global |
 | Repository profile | Product monorepo with operating-system documentation |
-| Frontend routes | 41 pages (15 public, 10 dashboard, 14 admin, 2 legal) |
+| Frontend routes | 42 pages (16 public, 10 dashboard, 14 admin, 2 legal) |
 
 ---
 
@@ -21,32 +21,34 @@
 
 | Component | Status | Assessment |
 |---|---|---|
-| Frontend application | Stable build | 41 routes compile successfully, forms are functional with validation and API integration |
-| Backend API | Structurally ready | Public resource and submission endpoints exist and are documented |
-| Database design | Strong | PostgreSQL-first schema with practical test fallback patterns |
-| Test coverage | Early | Real backend feature coverage is introduced in 0.3.0 |
-| CI/CD | New | Workflow automation added in 0.3.0 |
-| Security posture | Moderate | Rate limiting exists; broader controls remain in progress |
-| Documentation OS | Strong and improving | Core docs exist and are being aligned more tightly to real implementation |
+| Frontend application | Stable build | 42 routes compile successfully, auth-aware UI with live API integration |
+| Backend API | Auth-enabled | Sanctum SPA auth, RBAC with Spatie, protected member endpoints |
+| Database design | Strong | PostgreSQL-first schema with roles/permissions and test fallback patterns |
+| Authentication | Implemented | Sanctum SPA sessions, login/register/logout, role-based middleware |
+| Test coverage | Growing | 18 backend feature tests including auth endpoints |
+| CI/CD | Established | Workflow automation since 0.3.0 |
+| Security posture | Improved | Rate limiting, auth guards, security headers, session management |
+| Documentation OS | Strong and improving | Core docs aligned to real implementation |
 | Saudi/GCC readiness | Strategic | Market framing is in place; localization and compliance implementation remain partial |
-| Legal pages | Basic | Terms of Service and Privacy Policy pages added in 0.3.1 |
+| Legal pages | Basic | Terms of Service and Privacy Policy pages in place |
 
 ---
 
 ## Current Release Scope
 
-The `0.3.1` cycle makes the two primary user conversion flows (Apply and Contact) fully functional end-to-end, adds missing legal pages, and fixes broken links across the site.
+The `0.4.0` cycle implements authentication, role-based access control, and connects high-priority public pages to live backend API data.
 
-| Release objective | Included in `0.3.1` |
+| Release objective | Included in `0.4.0` |
 |---|---|
-| Make Apply form functional with validation and API submission | Yes |
-| Make Contact form functional with validation and API submission | Yes |
-| Add Terms of Service page | Yes |
-| Add Privacy Policy page | Yes |
-| Add Forgot Password page | Yes |
-| Fix broken internal links | Yes |
-| Implement authentication | No, next cycle |
-| Replace mock frontend data across key pages | No, next cycle |
+| Implement Sanctum SPA authentication | Yes |
+| Create login/register/logout endpoints | Yes |
+| Configure roles (admin, member) with permissions | Yes |
+| Protect dashboard and admin routes | Yes |
+| Frontend auth context and session management | Yes |
+| Auth-aware navigation and dashboard UI | Yes |
+| Connect founders/events/programs pages to live API | Yes |
+| Add register page | Yes |
+| Replace all mock frontend data | Partial, key pages done |
 | Ship Arabic/RTL interface | No, staged roadmap item |
 
 ---
@@ -55,15 +57,15 @@ The `0.3.1` cycle makes the two primary user conversion flows (Apply and Contact
 
 | Gap | Business impact | Priority |
 |---|---|---|
-| Authentication flow | Blocks real member onboarding and protected workflows | Critical |
-| Frontend API integration | Prevents production data flow and operational realism | Critical |
-| Role-based access control | Limits safe separation for admin and member experiences | High |
+| Email verification flow | Limits trust and anti-abuse capability | High |
+| Frontend API integration for remaining pages | Some pages still use seed data | High |
 | Arabic and RTL support | Reduces Saudi-first product readiness | High |
 | Monitoring and analytics | Weakens visibility into failures and user behavior | High |
 | Email delivery infrastructure | Limits lifecycle, support, and transactional communication | High |
+| Founder/company CRUD | Blocks real data management by members | Medium |
 
 ---
 
 ## Delivery Posture
 
-Wosool is now moving from a **design-and-scaffold repository** toward a **delivery-capable product repository**. That transition requires continuous validation, decision logging, semantic releases, and a stronger repository operating system. The purpose of the current release is to make future feature work faster, safer, and easier to audit.
+Wosool has crossed a critical threshold: it now has **real authentication and access control**, making it possible to build genuine member workflows. The next priorities are email verification, founder profile CRUD, and deeper API integration across remaining frontend pages.
