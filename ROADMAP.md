@@ -6,9 +6,9 @@ Wosool should mature through **sequenced execution**, not uncontrolled feature e
 
 | Phase | Focus | Status |
 |---|---|---|
-| `0.3.x` | CI/CD, tests, docs, governance, release discipline | In progress |
-| `0.4.x` | Authentication, RBAC, public-page API integration | Next |
-| `0.5.x` | Member profile CRUD, program and event workflows | Planned |
+| `0.3.x` | CI/CD, tests, docs, governance, release discipline | Complete |
+| `0.4.x` | Authentication, RBAC, public-page API integration | In progress |
+| `0.5.x` | Member profile CRUD, program and event workflows | Next |
 | `0.6.x` | Arabic/English localization, RTL, Saudi readiness rollout | Planned |
 | `0.7.x` | Analytics, monitoring, support tooling, growth instrumentation | Planned |
 | `0.8.x` | AI-enabled workflows, matching, scorecards | Future |

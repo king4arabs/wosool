@@ -6,6 +6,43 @@ This project follows **Semantic Versioning** and a Keep a Changelog-inspired for
 
 ---
 
+## [0.4.0] — 2026-04-16
+
+### Added
+- Laravel Sanctum SPA authentication with stateful session management.
+- AuthController with login, logout, register, and me (current user) endpoints.
+- Spatie Laravel Permission integration with `admin` and `member` roles.
+- 24 granular permissions covering profiles, companies, community, events, programs, and admin operations.
+- RoleAndPermissionSeeder for bootstrapping roles and permissions.
+- Permission tables migration for Spatie's role/permission system.
+- Sanctum and permission configuration files published and customized for Wosool.
+- Frontend AuthProvider context with login, register, logout, and session refresh.
+- Next.js middleware protecting `/dashboard` and `/admin` routes with session cookie check.
+- Register page (`/register`) with full form validation and API integration.
+- Auth-aware navigation header — shows Dashboard link and user name when authenticated.
+- Dashboard layout now shows authenticated user's name, email, and initials.
+- Logout button in dashboard sidebar.
+- 8 new backend auth tests covering register, login, logout, profile, and error cases.
+
+### Changed
+- Login page now wired to real Sanctum authentication API with error handling and loading states.
+- Founders page (`/founders`) now fetches live data from `/api/v1/founders` with seed data fallback.
+- Events page (`/events`) now fetches live data from `/api/v1/events` with seed data fallback.
+- Programs page (`/programs`) now fetches live data from `/api/v1/programs` with seed data fallback.
+- User model upgraded with Spatie HasRoles trait and founderProfile relationship.
+- WosoolSeeder now assigns `admin` role to admin user and `member` role to founder users.
+- DatabaseSeeder runs RoleAndPermissionSeeder before WosoolSeeder.
+- API routes reorganized with auth endpoints and member-scoped protected routes.
+- bootstrap/app.php configured with `statefulApi()` middleware for Sanctum SPA support.
+- Frontend Providers wrapper now includes AuthProvider for app-wide session state.
+- Frontend route count increased from 41 to 42 with addition of `/register`.
+
+### Fixed
+- Dashboard layout no longer shows hardcoded user name — uses real authenticated user data.
+- Header navigation no longer shows Login to authenticated users.
+
+---
+
 ## [0.3.1] — 2026-04-09
 
 ### Added

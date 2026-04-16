@@ -6,11 +6,10 @@
 
 ## Critical
 
-- [ ] Implement authentication flow with Laravel Sanctum and frontend session handling.
-- [ ] Replace seed data on high-priority public pages with live API integration.
-- [ ] Introduce role-based access control for admin and member experiences.
+- [ ] Add email verification flow for new user registrations.
+- [ ] Replace seed data on remaining public pages with live API integration.
 - [ ] Add monitoring and analytics instrumentation.
-- [ ] Add security headers and environment hardening.
+- [ ] Add security headers and environment hardening (CSP).
 
 ---
 
@@ -34,6 +33,27 @@
 - [ ] Admin analytics dashboard backed by real tracking.
 
 ---
+
+## Completed in `0.4.0`
+
+- [x] Implemented authentication flow with Laravel Sanctum SPA sessions.
+- [x] Introduced role-based access control with Spatie permissions (admin, member).
+- [x] Created login, register, logout, and profile endpoints.
+- [x] Added frontend AuthProvider context with session management.
+- [x] Added Next.js middleware to protect dashboard and admin routes.
+- [x] Connected founders, events, and programs pages to live backend API.
+- [x] Created register page with form validation.
+- [x] Made navigation and dashboard auth-aware.
+- [x] Added 8 auth endpoint tests.
+
+## Completed in `0.3.1`
+
+- [x] Functional Apply form with multi-step validation, API submission, and success state.
+- [x] Functional Contact form with validation, API submission, and success state.
+- [x] Terms of Service page.
+- [x] Privacy Policy page.
+- [x] Forgot Password page.
+- [x] Fixed broken internal links.
 
 ## Completed in `0.3.0`
 
