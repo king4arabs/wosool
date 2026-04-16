@@ -1,14 +1,58 @@
+"use client"
+
+import { useEffect, useState } from "react"
 import { PublicLayout } from "@/components/layout/PublicLayout"
 import { SectionHeader } from "@/components/sections/SectionHeader"
 import { EventCard } from "@/components/sections/EventCard"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
-import { events } from "@/data/seed"
+import { events as seedEvents } from "@/data/seed"
+import type { Event } from "@/types"
 
 const tabs = ["All", "Virtual", "In-Person", "Members Only"]
 
 export default function EventsPage() {
+  const [events, setEvents] = useState<Event[]>(seedEvents)
+  const [, setIsLoading] = useState(true)
+
+  useEffect(() => {
+    async function fetchEvents() {
+      try {
+        const res = await fetch("/api/v1/events", {
+          headers: { Accept: "application/json" },
+        })
+        if (res.ok) {
+          const json = await res.json()
+          const data = json.data ?? json
+          if (Array.isArray(data) && data.length > 0) {
+            setEvents(
+              data.map((e: Record<string, unknown>) => ({
+                id: String(e.id),
+                title: String(e.title ?? ""),
+                slug: String(e.slug ?? ""),
+                description: String(e.description ?? ""),
+                date: String(e.starts_at ?? e.date ?? ""),
+                endDate: e.ends_at ? String(e.ends_at) : undefined,
+                location: String(e.location ?? ""),
+                type: String(e.type ?? ""),
+                isVirtual: e.format === "virtual",
+                maxAttendees: e.max_attendees ? Number(e.max_attendees) : undefined,
+                isPublic: Boolean(e.is_public),
+                tags: Array.isArray(e.tags) ? e.tags.map(String) : [],
+              }))
+            )
+          }
+        }
+      } catch {
+        // Fallback to seed data
+      } finally {
+        setIsLoading(false)
+      }
+    }
+    fetchEvents()
+  }, [])
+
   const virtualEvents = events.filter((e) => e.isVirtual)
   const inPersonEvents = events.filter((e) => !e.isVirtual)
 

@@ -1,17 +1,70 @@
+"use client"
+
+import { useEffect, useState } from "react"
 import { PublicLayout } from "@/components/layout/PublicLayout"
 import { SectionHeader } from "@/components/sections/SectionHeader"
 import { FounderCard } from "@/components/sections/FounderCard"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
-import { founders } from "@/data/seed"
+import { founders as seedFounders } from "@/data/seed"
 import { Search } from "lucide-react"
+import type { Founder } from "@/types"
 
 const sectors = ["All", "Fintech", "HealthTech", "SaaS / B2B", "Logistics", "FoodTech", "HRTech"]
 const stages = ["All", "Pre-seed", "Seed", "Series A", "Scale-up", "Exited"]
 const locations = ["All", "Saudi Arabia", "UAE", "Bahrain", "Kuwait", "Qatar"]
 
 export default function FoundersPage() {
+  const [founders, setFounders] = useState<Founder[]>(seedFounders)
+  const [, setIsLoading] = useState(true)
+
+  useEffect(() => {
+    async function fetchFounders() {
+      try {
+        const res = await fetch("/api/v1/founders", {
+          headers: { Accept: "application/json" },
+        })
+        if (res.ok) {
+          const json = await res.json()
+          const data = json.data ?? json
+          if (Array.isArray(data) && data.length > 0) {
+            setFounders(
+              data.map((f: Record<string, unknown>) => ({
+                id: String(f.id),
+                name: String((f.user as Record<string, unknown>)?.name ?? f.slug ?? ""),
+                slug: String(f.slug),
+                tagline: String(f.tagline ?? ""),
+                bio: String(f.bio ?? ""),
+                location: String(f.location ?? ""),
+                sector: String(f.sector ?? ""),
+                stage: String(f.stage ?? ""),
+                avatarUrl: String(f.avatar_url ?? ""),
+                companyName:
+                  Array.isArray(f.companies) && f.companies.length > 0
+                    ? String((f.companies[0] as Record<string, unknown>).name)
+                    : "",
+                joinedAt: String(f.created_at ?? ""),
+                score: (f.scorecard as Record<string, unknown>)?.overall_score
+                  ? Number((f.scorecard as Record<string, unknown>).overall_score)
+                  : 0,
+                needs: Array.isArray(f.needs) ? f.needs.map(String) : [],
+                offers: Array.isArray(f.offers) ? f.offers.map(String) : [],
+                isVerified: Boolean(f.is_verified),
+                isFeatured: Boolean(f.is_featured),
+              }))
+            )
+          }
+        }
+      } catch {
+        // Fallback to seed data on error
+      } finally {
+        setIsLoading(false)
+      }
+    }
+    fetchFounders()
+  }, [])
+
   const featuredFounders = founders.filter((f) => f.isFeatured)
   const allFounders = founders
 

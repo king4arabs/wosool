@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation"
 import { Menu, X } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
+import { useAuth } from "@/lib/auth"
 
 const navLinks = [
   { href: "/", label: "Home" },
@@ -20,6 +21,7 @@ const navLinks = [
 
 export function Header() {
   const pathname = usePathname()
+  const { isAuthenticated, user } = useAuth()
   const [isMenuOpen, setIsMenuOpen] = React.useState(false)
   const [isScrolled, setIsScrolled] = React.useState(false)
 
@@ -70,15 +72,28 @@ export function Header() {
 
           {/* Desktop CTA */}
           <div className="hidden lg:flex items-center gap-3">
-            <Link
-              href="/login"
-              className="text-sm font-medium text-gray-300 hover:text-white transition-colors"
-            >
-              Login
-            </Link>
-            <Button asChild size="sm">
-              <Link href="/apply">Join Wosool</Link>
-            </Button>
+            {isAuthenticated ? (
+              <>
+                <span className="text-sm text-gray-300 truncate max-w-[140px]">
+                  {user?.name}
+                </span>
+                <Button asChild size="sm">
+                  <Link href="/dashboard">Dashboard</Link>
+                </Button>
+              </>
+            ) : (
+              <>
+                <Link
+                  href="/login"
+                  className="text-sm font-medium text-gray-300 hover:text-white transition-colors"
+                >
+                  Login
+                </Link>
+                <Button asChild size="sm">
+                  <Link href="/apply">Join Wosool</Link>
+                </Button>
+              </>
+            )}
           </div>
 
           {/* Mobile menu button */}
@@ -113,18 +128,28 @@ export function Header() {
               </Link>
             ))}
             <div className="pt-4 border-t border-white/10 flex flex-col gap-2">
-              <Link
-                href="/login"
-                className="block px-4 py-2 text-sm font-medium text-gray-300 hover:text-white"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                Login
-              </Link>
-              <Button asChild size="sm" className="w-full">
-                <Link href="/apply" onClick={() => setIsMenuOpen(false)}>
-                  Join Wosool
-                </Link>
-              </Button>
+              {isAuthenticated ? (
+                <Button asChild size="sm" className="w-full">
+                  <Link href="/dashboard" onClick={() => setIsMenuOpen(false)}>
+                    Dashboard
+                  </Link>
+                </Button>
+              ) : (
+                <>
+                  <Link
+                    href="/login"
+                    className="block px-4 py-2 text-sm font-medium text-gray-300 hover:text-white"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    Login
+                  </Link>
+                  <Button asChild size="sm" className="w-full">
+                    <Link href="/apply" onClick={() => setIsMenuOpen(false)}>
+                      Join Wosool
+                    </Link>
+                  </Button>
+                </>
+              )}
             </div>
           </nav>
         </div>
