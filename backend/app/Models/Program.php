@@ -25,4 +25,9 @@ class Program extends Model
     {
         return $this->hasMany(Cohort::class);
     }
+
+    public function applications(): HasMany
+    {
+        return $this->hasMany(ProgramApplication::class);
+    }
 }
