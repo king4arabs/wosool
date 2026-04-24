@@ -4,6 +4,21 @@
   "private": true,
   "description": "Wosool — Founders to Founders platform",
   "scripts": {
+    "setup": "npm run setup:frontend && npm run setup:backend",
+    "setup:frontend": "npm --prefix frontend install",
+    "setup:backend": "composer --working-dir=backend install --no-interaction --no-progress && npm --prefix backend install && npm run backend:prepare",
+    "backend:prepare": "npm run backend:env && npm run backend:database && npm run backend:migrate",
+    "backend:env": "php -r \"file_exists('backend/.env') || copy('backend/.env.example', 'backend/.env');\" && php backend/artisan key:generate --force",
+    "backend:database": "php -r \"file_exists('backend/database/database.sqlite') || touch('backend/database/database.sqlite');\"",
+    "backend:migrate": "php backend/artisan migrate --force",
+    "build": "npm run build:frontend && npm run build:backend",
+    "build:frontend": "npm --prefix frontend run build",
+    "build:backend": "npm --prefix backend run build",
+    "lint": "npm --prefix frontend run lint",
+    "test": "composer --working-dir=backend run test",
+    "verify": "npm run lint && npm run build && npm run test",
+    "dev:frontend": "npm --prefix frontend run dev",
+    "dev:backend": "composer --working-dir=backend run dev",
     "ops:ssl:repair": "node scripts/ssl-repair.mjs"
   }
 }

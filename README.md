@@ -59,6 +59,24 @@ The repository is intended to function as both a **product codebase** and a **de
 
 ## Local Development
 
+### Full Platform Bootstrap
+
+From the repository root, you can install and verify the entire platform with:
+
+```bash
+npm run setup
+npm run verify
+```
+
+`npm run setup` installs frontend and backend dependencies, prepares the default SQLite database, generates the Laravel app key, and runs backend migrations so the repository is ready to boot locally.
+
+To run the two application surfaces locally, use separate terminals from the repository root:
+
+```bash
+npm run dev:backend
+npm run dev:frontend
+```
+
 ### Frontend
 
 ```bash
@@ -74,11 +92,12 @@ npm run dev
 ```bash
 cd backend
 composer install
+npm install
 cp .env.example .env
 php artisan key:generate
 php artisan migrate
 php artisan db:seed
-php artisan serve
+composer run dev
 ```
 
 When working in a constrained environment, keep the documented runtime in sync with [DEPLOYMENT.md](./DEPLOYMENT.md) and treat CI as the authoritative validation layer.
