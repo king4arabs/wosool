@@ -55,13 +55,72 @@ The Wosool API is exposed through the Laravel backend and organized around **pub
 
 | Method | Path | Purpose |
 |---|---|---|
-| GET | `/api/v1/member/profile` | Current user's founder profile |
+| GET | `/api/v1/member/profile` | Current user's founder profile (legacy alias) |
+| GET | `/api/v1/member/founder-profile` | Show authenticated user's founder profile |
+| PUT | `/api/v1/member/founder-profile` | Create or update authenticated user's founder profile |
+| GET | `/api/v1/member/companies` | List companies linked to the authenticated user's founder profile |
+| POST | `/api/v1/member/companies` | Create a company and link it to the founder profile |
+| PUT | `/api/v1/member/companies/{company}` | Update a company owned by the founder profile |
+| DELETE | `/api/v1/member/companies/{company}` | Soft-delete a company link owned by the founder profile |
+| GET | `/api/v1/member/events/rsvps` | List the authenticated user's event RSVPs |
+| POST | `/api/v1/member/events/{slug}/rsvp` | RSVP to an event (auto-waitlist when full) |
+| DELETE | `/api/v1/member/events/{slug}/rsvp` | Cancel an event RSVP |
+| GET | `/api/v1/member/program-applications` | List the authenticated user's program applications |
+| POST | `/api/v1/member/programs/{slug}/apply` | Apply to an open program |
+
+---
+
+## Member Workflows
+
+All member endpoints require an authenticated session (Sanctum SPA cookie). They are scoped under `/api/v1/member/*`.
+
+### Founder Profile
+
+```
+PUT /api/v1/member/founder-profile
+Content-Type: application/json
+
+{
+  "tagline": "Building Islamic fintech",
+  "bio": "Ex-McKinsey, 2x founder…",
+  "sector": "FinTech",
+  "stage": "seed",
+  "needs": ["Investors", "Mentors"],
+  "offers": ["Strategy"]
+}
+```
+
+The endpoint is an upsert: it returns `201` the first time the profile is created (slug derived from the user name) and `200` on subsequent updates.
+
+### Companies
+
+```
+POST /api/v1/member/companies
+{ "name": "Acme Inc", "sector": "SaaS", "stage": "seed", "role": "CEO", "is_primary": true }
+```
+
+`PUT`/`DELETE /api/v1/member/companies/{id}` enforce ownership: only companies linked to the caller's founder profile are accessible.
+
+### Event RSVP
+
+```
+POST /api/v1/member/events/{slug}/rsvp     → { "message": "RSVP confirmed.", "status": "confirmed" }
+```
+
+When the event reaches `max_attendees`, the next RSVP is automatically waitlisted (`status: "waitlisted"`). Repeat RSVPs from the same user are idempotent. `DELETE` on the same path cancels the RSVP.
+
+### Program Application
+
+```
+POST /api/v1/member/programs/{slug}/apply
+{ "motivation": "I want to grow my company through this program.", "relevant_experience": "…" }
+```
+
+A user may apply at most once per program. Applications are rejected with `422` when the program is closed or its `application_deadline` has passed.
 
 ---
 
 ## Authentication
-
-Wosool uses **Laravel Sanctum** in stateful SPA mode. The frontend Next.js app communicates with the backend through session cookies — no Authorization header or bearer token is needed for first-party requests.
 
 ### Login
 

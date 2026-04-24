@@ -7,9 +7,9 @@ Wosool should mature through **sequenced execution**, not uncontrolled feature e
 | Phase | Focus | Status |
 |---|---|---|
 | `0.3.x` | CI/CD, tests, docs, governance, release discipline | Complete |
-| `0.4.x` | Authentication, RBAC, public-page API integration | In progress |
-| `0.5.x` | Member profile CRUD, program and event workflows | Next |
-| `0.6.x` | Arabic/English localization, RTL, Saudi readiness rollout | Planned |
+| `0.4.x` | Authentication, RBAC, public-page API integration | Complete |
+| `0.5.x` | Member profile/company CRUD, event RSVP, program applications | Complete |
+| `0.6.x` | Arabic/English localization, RTL, Saudi readiness rollout | Next |
 | `0.7.x` | Analytics, monitoring, support tooling, growth instrumentation | Planned |
 | `0.8.x` | AI-enabled workflows, matching, scorecards | Future |
 
@@ -39,10 +39,10 @@ Wosool should mature through **sequenced execution**, not uncontrolled feature e
 
 | Priority | Outcome |
 |---|---|
-| Founder/company CRUD | Enable real data management |
-| Event RSVP and applications | Unlock member utility |
-| Program workflows | Strengthen platform stickiness |
-| Email delivery | Support transactional lifecycle communication |
+| Founder/company CRUD | Members can create and manage their profile and companies through `/api/v1/member/*` |
+| Event RSVP workflow | Members can RSVP and cancel; capacity triggers waitlisting |
+| Program application workflow | Members can apply to open programs with deadline and duplicate guards |
+| Test coverage growth | 25 new backend feature tests, 43 total passing |
 
 ---
 
