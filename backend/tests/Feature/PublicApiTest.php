@@ -2,7 +2,7 @@
 
 namespace Tests\Feature;
 
-use Database\Seeders\WosoolSeeder;
+use Database\Seeders\DatabaseSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -12,7 +12,7 @@ class PublicApiTest extends TestCase
 
     public function test_founders_index_returns_paginated_data(): void
     {
-        $this->seed(WosoolSeeder::class);
+        $this->seed(DatabaseSeeder::class);
 
         $response = $this->getJson('/api/v1/founders');
 
@@ -32,7 +32,7 @@ class PublicApiTest extends TestCase
 
     public function test_founder_show_returns_seeded_record(): void
     {
-        $this->seed(WosoolSeeder::class);
+        $this->seed(DatabaseSeeder::class);
 
         $listing = $this->getJson('/api/v1/founders')->assertOk();
         $slug = $listing->json('data.0.slug');
@@ -44,7 +44,7 @@ class PublicApiTest extends TestCase
 
     public function test_programs_endpoint_returns_seeded_data(): void
     {
-        $this->seed(WosoolSeeder::class);
+        $this->seed(DatabaseSeeder::class);
 
         $response = $this->getJson('/api/v1/programs');
 

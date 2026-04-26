@@ -25,14 +25,23 @@
 
 ## Medium Priority
 
-- [ ] Founder profile CRUD.
-- [ ] Company profile CRUD.
-- [ ] Event RSVP workflow.
-- [ ] Program application workflow.
 - [ ] Partner and sponsor content management.
 - [ ] Admin analytics dashboard backed by real tracking.
+- [ ] Admin review workflow for program applications and event capacity.
+- [ ] Member-facing program application form on the dashboard.
+- [ ] Surface member's RSVPs and program applications on the dashboard home.
 
 ---
+
+## Completed in `0.5.0`
+
+- [x] Member founder profile CRUD (`GET`/`PUT` `/api/v1/member/founder-profile`).
+- [x] Member company CRUD with ownership enforcement (`/api/v1/member/companies`).
+- [x] Event RSVP workflow with capacity-aware waitlisting (`/api/v1/member/events/{slug}/rsvp`, `/member/events/rsvps`).
+- [x] Program application workflow (`/api/v1/member/programs/{slug}/apply`, `/member/program-applications`).
+- [x] Dashboard profile page wired to live API with chips and validation feedback.
+- [x] Dashboard events page wired to live RSVP/cancel endpoints.
+- [x] 25 new backend feature tests (43 total, all passing).
 
 ## Completed in `0.4.0`
 

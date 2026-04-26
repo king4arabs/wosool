@@ -2,7 +2,7 @@
 
 > A premium founders-to-founders network and execution platform designed for **Saudi Arabia first**, with deliberate expansion across the GCC, MENA, and global founder ecosystem.
 
-**Domain:** [wosool.org](https://wosool.org) | **Version:** `0.3.0` | **Stage:** Pre-launch MVP hardening
+**Domain:** [wosool.org](https://wosool.org) | **Version:** `0.5.0` | **Stage:** Pre-launch MVP hardening
 
 ---
 

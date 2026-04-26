@@ -32,8 +32,31 @@ export const api = {
     list: (params?: Record<string, string | number | boolean>) => get('/companies', params),
     bySlug: (slug: string) => get(`/companies/${slug}`),
   },
+  member: {
+    founderProfile: {
+      get: () => get('/member/founder-profile'),
+      update: (payload: Record<string, unknown>) => put('/member/founder-profile', payload),
+    },
+    companies: {
+      list: () => get('/member/companies'),
+      create: (payload: Record<string, unknown>) => post('/member/companies', payload),
+      update: (id: number, payload: Record<string, unknown>) => put(`/member/companies/${id}`, payload),
+      remove: (id: number) => del(`/member/companies/${id}`),
+    },
+    events: {
+      myRsvps: () => get('/member/events/rsvps'),
+      rsvp: (slug: string) => post(`/member/events/${slug}/rsvp`),
+      cancelRsvp: (slug: string) => del(`/member/events/${slug}/rsvp`),
+    },
+    programs: {
+      myApplications: () => get('/member/program-applications'),
+      apply: (slug: string, payload: Record<string, unknown>) => post(`/member/programs/${slug}/apply`, payload),
+    },
+  },
 }
 ```
+
+> The frontend `lib/api.ts` already sends `credentials: "include"` on every request, so member endpoints work transparently over the Sanctum session cookie.
 
 ---
 

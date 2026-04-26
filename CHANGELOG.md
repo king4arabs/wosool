@@ -6,7 +6,33 @@ This project follows **Semantic Versioning** and a Keep a Changelog-inspired for
 
 ---
 
-## [0.4.0] — 2026-04-16
+## [0.5.0] — 2026-04-24
+
+### Added
+- `program_applications` table and `ProgramApplication` model for tracking member applications to specific programs (separate from the public founder-application-to-Wosool flow).
+- Member-scoped controllers under `App\Http\Controllers\Api\Member`: `FounderProfileController`, `CompanyController`, `EventRsvpController`, `ProgramApplicationController`.
+- Form Requests for new write paths: `UpdateFounderProfileRequest`, `StoreCompanyProfileRequest`, `UpdateCompanyProfileRequest`, `StoreProgramApplicationRequest`.
+- New authenticated `/api/v1/member/*` endpoints:
+  - `GET`/`PUT` `/member/founder-profile` — show / upsert the authenticated user's founder profile.
+  - `GET`/`POST`/`PUT`/`DELETE` `/member/companies[/{company}]` — CRUD for companies linked to the founder profile.
+  - `GET` `/member/events/rsvps`, `POST`/`DELETE` `/member/events/{slug}/rsvp` — event RSVP workflow with capacity-aware waitlisting.
+  - `GET` `/member/program-applications`, `POST` `/member/programs/{slug}/apply` — program application workflow with deadline and duplicate-application checks.
+- 25 new feature tests covering founder profile CRUD, company CRUD with ownership enforcement, event RSVP (including waitlisting), and program applications.
+- Frontend `dashboard/profile` page rewritten as a functional client component that loads and persists founder profile data via the new member API, including dynamic needs/offers chips and 422 error mapping.
+- Frontend `dashboard/events` page rewritten to fetch live events, display RSVP state, and call the RSVP/cancel endpoints with toast feedback.
+
+### Changed
+- `User` model gained `eventRsvps`, `programApplications`, and `applications` relations.
+- `Program` model gained `applications` (HasMany `ProgramApplication`).
+- Frontend `lib/api.ts` now sends `credentials: "include"` on every request so member endpoints work over the Sanctum session cookie.
+
+### Fixed
+- `AuthController` now guards `$request->session()` calls with `hasSession()`, eliminating "Session store not set on request" failures when the test client bypasses the session middleware stack.
+- `PublicApiTest` now seeds via `DatabaseSeeder` so role/permission rows exist before `WosoolSeeder` calls `assignRole('admin')`. Backend test suite now reports **43/43 passing** (previously 12/18).
+
+---
+
+
 
 ### Added
 - Laravel Sanctum SPA authentication with stateful session management.

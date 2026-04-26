@@ -6,6 +6,10 @@ use App\Http\Controllers\Api\ContactController;
 use App\Http\Controllers\Api\EventController;
 use App\Http\Controllers\Api\FounderController;
 use App\Http\Controllers\Api\HealthController;
+use App\Http\Controllers\Api\Member\CompanyController as MemberCompanyController;
+use App\Http\Controllers\Api\Member\EventRsvpController;
+use App\Http\Controllers\Api\Member\FounderProfileController as MemberFounderProfileController;
+use App\Http\Controllers\Api\Member\ProgramApplicationController;
 use App\Http\Controllers\Api\NewsController;
 use App\Http\Controllers\Api\PartnerController;
 use App\Http\Controllers\Api\ProgramController;
@@ -55,6 +59,26 @@ Route::prefix('v1')->group(function () {
 
     // ── Authenticated member endpoints ──────────────────────────────
     Route::middleware('auth:sanctum')->prefix('member')->group(function () {
+        // Legacy member profile read (kept for backward compatibility)
         Route::get('/profile', [FounderController::class, 'myProfile']);
+
+        // Founder profile (member)
+        Route::get('/founder-profile', [MemberFounderProfileController::class, 'show']);
+        Route::put('/founder-profile', [MemberFounderProfileController::class, 'update']);
+
+        // Companies (member)
+        Route::get('/companies', [MemberCompanyController::class, 'index']);
+        Route::post('/companies', [MemberCompanyController::class, 'store']);
+        Route::put('/companies/{company}', [MemberCompanyController::class, 'update']);
+        Route::delete('/companies/{company}', [MemberCompanyController::class, 'destroy']);
+
+        // Event RSVPs
+        Route::get('/events/rsvps', [EventRsvpController::class, 'index']);
+        Route::post('/events/{slug}/rsvp', [EventRsvpController::class, 'store']);
+        Route::delete('/events/{slug}/rsvp', [EventRsvpController::class, 'destroy']);
+
+        // Program applications
+        Route::get('/program-applications', [ProgramApplicationController::class, 'index']);
+        Route::post('/programs/{slug}/apply', [ProgramApplicationController::class, 'store']);
     });
 });

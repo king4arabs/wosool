@@ -45,6 +45,7 @@ async function request<T>(path: string, options: RequestOptions = {}): Promise<T
   }
 
   const response = await fetch(url, {
+    credentials: "include",
     ...init,
     headers,
     body: body instanceof FormData ? body : body ? JSON.stringify(body) : undefined,
