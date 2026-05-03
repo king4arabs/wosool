@@ -1,4 +1,10 @@
 <?php
+use App\Http\Controllers\Api\Admin\ApplicationController as AdminApplicationController;
+use App\Http\Controllers\Api\Admin\CompanyController as AdminCompanyController;
+use App\Http\Controllers\Api\Admin\DashboardController as AdminDashboardController;
+use App\Http\Controllers\Api\Admin\EventController as AdminEventController;
+use App\Http\Controllers\Api\Admin\NewsController as AdminNewsController;
+use App\Http\Controllers\Api\Admin\ProgramController as AdminProgramController;
 use App\Http\Controllers\Api\ApplicationController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CompanyController;
@@ -80,5 +86,32 @@ Route::prefix('v1')->group(function () {
         // Program applications
         Route::get('/program-applications', [ProgramApplicationController::class, 'index']);
         Route::post('/programs/{slug}/apply', [ProgramApplicationController::class, 'store']);
+    });
+
+    Route::middleware(['auth:sanctum', 'admin'])->prefix('admin')->group(function () {
+        Route::get('/dashboard', AdminDashboardController::class);
+
+        Route::get('/applications', [AdminApplicationController::class, 'index']);
+        Route::patch('/applications/{application}', [AdminApplicationController::class, 'update']);
+
+        Route::get('/companies', [AdminCompanyController::class, 'index']);
+        Route::post('/companies', [AdminCompanyController::class, 'store']);
+        Route::put('/companies/{company}', [AdminCompanyController::class, 'update']);
+        Route::delete('/companies/{company}', [AdminCompanyController::class, 'destroy']);
+
+        Route::get('/events', [AdminEventController::class, 'index']);
+        Route::post('/events', [AdminEventController::class, 'store']);
+        Route::put('/events/{event}', [AdminEventController::class, 'update']);
+        Route::delete('/events/{event}', [AdminEventController::class, 'destroy']);
+
+        Route::get('/programs', [AdminProgramController::class, 'index']);
+        Route::post('/programs', [AdminProgramController::class, 'store']);
+        Route::put('/programs/{program}', [AdminProgramController::class, 'update']);
+        Route::delete('/programs/{program}', [AdminProgramController::class, 'destroy']);
+
+        Route::get('/news', [AdminNewsController::class, 'index']);
+        Route::post('/news', [AdminNewsController::class, 'store']);
+        Route::put('/news/{news}', [AdminNewsController::class, 'update']);
+        Route::delete('/news/{news}', [AdminNewsController::class, 'destroy']);
     });
 });

@@ -1,43 +1,91 @@
+"use client"
+
+import { useCallback, useEffect, useState } from "react"
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
-import { founders } from "@/data/seed"
-import { Search, Filter, CheckCircle, XCircle, Eye, Clock, UserCheck, AlertCircle } from "lucide-react"
+import { Input } from "@/components/ui/input"
+import { Select } from "@/components/ui/select"
+import { Textarea } from "@/components/ui/textarea"
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog"
+import { useToast } from "@/components/ui/toast"
+import { api } from "@/lib/api"
+import { type AdminApplication, type AdminCollectionResponse, formatDate } from "@/lib/admin"
+import { Search, CheckCircle, XCircle, Clock, UserCheck, AlertCircle } from "lucide-react"
 
-type ApplicationStatus = "pending" | "reviewing" | "approved" | "rejected" | "waitlisted"
-
-const statusBadge = (status: ApplicationStatus) => {
-  switch (status) {
-    case "pending": return <Badge variant="warning">Pending</Badge>
-    case "reviewing": return <Badge variant="secondary">Reviewing</Badge>
-    case "approved": return <Badge variant="success">Approved</Badge>
-    case "rejected": return <Badge variant="destructive">Rejected</Badge>
-    case "waitlisted": return <Badge variant="outline">Waitlisted</Badge>
-  }
+type ReviewState = {
+  status: AdminApplication["status"]
+  admin_notes: string
 }
 
-const applications = founders.map((f, i) => ({
-  id: `app-${f.id}`,
-  name: f.name,
-  company: f.companyName,
-  sector: f.sector,
-  stage: f.stage,
-  score: f.score,
-  location: f.location,
-  status: (["pending", "reviewing", "approved", "rejected", "pending", "waitlisted"] as ApplicationStatus[])[i],
-  submittedAt: new Date(new Date(f.joinedAt).getTime() - 7 * 86400000).toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" }),
-  reviewedBy: i === 2 ? "Admin" : i === 3 ? "Admin" : null,
-}))
-
-const stats = [
-  { label: "Total Applications", value: applications.length, icon: AlertCircle, color: "text-blue-600" },
-  { label: "Pending Review", value: applications.filter(a => a.status === "pending").length, icon: Clock, color: "text-amber-600" },
-  { label: "Approved", value: applications.filter(a => a.status === "approved").length, icon: UserCheck, color: "text-emerald-600" },
-  { label: "Rejected", value: applications.filter(a => a.status === "rejected").length, icon: XCircle, color: "text-red-600" },
-]
+const statusOptions: AdminApplication["status"][] = ["submitted", "reviewing", "approved", "rejected", "waitlisted"]
 
 export default function AdminMembersPage() {
+  const { toast } = useToast()
+  const [applications, setApplications] = useState<AdminApplication[]>([])
+  const [meta, setMeta] = useState<Record<string, number>>({})
+  const [search, setSearch] = useState("")
+  const [status, setStatus] = useState("")
+  const [selected, setSelected] = useState<AdminApplication | null>(null)
+  const [form, setForm] = useState<ReviewState>({ status: "submitted", admin_notes: "" })
+  const [saving, setSaving] = useState(false)
+
+  const loadApplications = useCallback(async () => {
+    const response = await api.get<AdminCollectionResponse<AdminApplication>>("/admin/applications", {
+      params: {
+        search: search || undefined,
+        status: status || undefined,
+      },
+    })
+
+    setApplications(response.data)
+    setMeta(response.meta)
+  }, [search, status])
+
+  useEffect(() => {
+    loadApplications().catch((err: Error) => toast(err.message, "error"))
+  }, [loadApplications, toast])
+
+  const openReview = (application: AdminApplication) => {
+    setSelected(application)
+    setForm({
+      status: application.status,
+      admin_notes: application.admin_notes || "",
+    })
+  }
+
+  const saveReview = async () => {
+    if (!selected) {
+      return
+    }
+
+    setSaving(true)
+    try {
+      await api.patch(`/admin/applications/${selected.id}`, form)
+      toast("Application updated.", "success")
+      setSelected(null)
+      await loadApplications()
+    } catch (err) {
+      toast(err instanceof Error ? err.message : "Could not update application.", "error")
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  const stats = [
+    { label: "Total Applications", value: meta.total || 0, icon: AlertCircle, color: "text-blue-600" },
+    { label: "Pending Review", value: (meta.submitted || 0) + (meta.reviewing || 0), icon: Clock, color: "text-amber-600" },
+    { label: "Approved", value: meta.approved || 0, icon: UserCheck, color: "text-emerald-600" },
+    { label: "Rejected", value: meta.rejected || 0, icon: XCircle, color: "text-red-600" },
+  ]
+
   return (
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
@@ -47,16 +95,11 @@ export default function AdminMembersPage() {
             Review and manage membership applications.
           </p>
         </div>
-        <div className="flex gap-2">
-          <Button variant="outline" size="sm">
-            <Filter className="h-4 w-4 mr-2" />
-            Filter
-          </Button>
-          <Button size="sm">Export</Button>
-        </div>
+        <Button variant="outline" size="sm" onClick={() => loadApplications().catch((err: Error) => toast(err.message, "error"))}>
+          Refresh
+        </Button>
       </div>
 
-      {/* Stats */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         {stats.map(({ label, value, icon: Icon, color }) => (
           <Card key={label}>
@@ -71,56 +114,46 @@ export default function AdminMembersPage() {
         ))}
       </div>
 
-      {/* Search & Filters */}
       <Card>
         <CardContent className="pt-5">
           <div className="flex flex-col sm:flex-row gap-4">
             <div className="flex-1 relative">
-              <Search
-                className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400"
-                aria-hidden="true"
-              />
-              <input
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" aria-hidden="true" />
+              <Input
                 type="search"
+                value={search}
+                onChange={(event) => setSearch(event.target.value)}
+                onKeyDown={(event) => {
+                  if (event.key === "Enter") {
+                    loadApplications().catch((err: Error) => toast(err.message, "error"))
+                  }
+                }}
                 placeholder="Search applications by name, company, or sector..."
-                className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-[#C9A84C]"
+                className="pl-10"
                 aria-label="Search applications"
               />
             </div>
             <div className="flex gap-2">
-              <select
-                className="rounded-lg border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#C9A84C]"
-                aria-label="Filter by status"
-              >
-                <option>All Status</option>
-                <option>Pending</option>
-                <option>Reviewing</option>
-                <option>Approved</option>
-                <option>Rejected</option>
-                <option>Waitlisted</option>
-              </select>
-              <select
-                className="rounded-lg border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#C9A84C]"
-                aria-label="Filter by stage"
-              >
-                <option>All Stages</option>
-                <option>Pre-seed</option>
-                <option>Seed</option>
-                <option>Series A</option>
-                <option>Scale-up</option>
-              </select>
+              <Select value={status} onChange={(event) => setStatus(event.target.value)} aria-label="Filter by status">
+                <option value="">All Status</option>
+                {statusOptions.map((option) => (
+                  <option key={option} value={option}>{option}</option>
+                ))}
+              </Select>
+              <Button variant="outline" size="sm" onClick={() => loadApplications().catch((err: Error) => toast(err.message, "error"))}>
+                Search
+              </Button>
             </div>
           </div>
         </CardContent>
       </Card>
 
-      {/* Table */}
       <Card>
         <CardHeader>
           <div className="flex items-center justify-between">
             <h3 className="font-semibold text-gray-900">All Applications ({applications.length})</h3>
             <p className="text-sm text-gray-500">
-              {applications.filter(a => a.status === "pending" || a.status === "reviewing").length} awaiting action
+              {(meta.submitted || 0) + (meta.reviewing || 0)} awaiting action
             </p>
           </div>
         </CardHeader>
@@ -132,63 +165,77 @@ export default function AdminMembersPage() {
                   <th className="text-left px-6 py-3 font-medium text-gray-500">Applicant</th>
                   <th className="text-left px-6 py-3 font-medium text-gray-500">Company</th>
                   <th className="text-left px-6 py-3 font-medium text-gray-500">Stage</th>
-                  <th className="text-left px-6 py-3 font-medium text-gray-500">Score</th>
                   <th className="text-left px-6 py-3 font-medium text-gray-500">Status</th>
                   <th className="text-left px-6 py-3 font-medium text-gray-500">Submitted</th>
                   <th className="text-left px-6 py-3 font-medium text-gray-500">Actions</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-100">
-                {applications.map((app) => {
-                  const initials = app.name
+                {applications.map((application) => {
+                  const initials = application.full_name
                     .split(" ")
-                    .map((n) => n[0])
+                    .map((part) => part[0])
                     .join("")
                     .slice(0, 2)
                     .toUpperCase()
+
                   return (
-                    <tr key={app.id} className="hover:bg-gray-50 transition-colors">
+                    <tr key={application.id} className="hover:bg-gray-50 transition-colors">
                       <td className="px-6 py-4">
                         <div className="flex items-center gap-3">
                           <Avatar className="h-8 w-8">
                             <AvatarFallback className="text-xs">{initials}</AvatarFallback>
                           </Avatar>
                           <div>
-                            <p className="font-medium text-gray-900">{app.name}</p>
-                            <p className="text-xs text-gray-400">{app.location}</p>
+                            <p className="font-medium text-gray-900">{application.full_name}</p>
+                            <p className="text-xs text-gray-400">{application.location || application.email}</p>
                           </div>
                         </div>
                       </td>
                       <td className="px-6 py-4">
-                        <p className="text-gray-700">{app.company}</p>
-                        <p className="text-xs text-gray-400">{app.sector}</p>
+                        <p className="text-gray-700">{application.company_name || "Independent"}</p>
+                        <p className="text-xs text-gray-400">{application.sector || "—"}</p>
                       </td>
                       <td className="px-6 py-4">
-                        <Badge variant="secondary">{app.stage}</Badge>
+                        <Badge variant="secondary">{application.stage || "—"}</Badge>
                       </td>
                       <td className="px-6 py-4">
-                        <div className="flex items-center gap-1">
-                          <span className="font-bold text-[#0A1628]">{app.score}</span>
-                          <span className="text-xs text-gray-400">/100</span>
-                        </div>
-                      </td>
-                      <td className="px-6 py-4">
-                        {statusBadge(app.status)}
+                        <Badge variant={application.status === "approved" ? "success" : application.status === "rejected" ? "destructive" : application.status === "waitlisted" ? "outline" : "warning"}>
+                          {application.status}
+                        </Badge>
                       </td>
                       <td className="px-6 py-4 text-gray-500 text-xs">
-                        {app.submittedAt}
+                        {formatDate(application.created_at)}
                       </td>
                       <td className="px-6 py-4">
                         <div className="flex items-center gap-2">
-                          <Button size="sm" variant="ghost" className="h-7 w-7 p-0" aria-label={`View ${app.name}`}>
-                            <Eye className="h-3.5 w-3.5" />
+                          <Button size="sm" variant="ghost" className="h-7 px-2" onClick={() => openReview(application)}>
+                            Review
                           </Button>
-                          {(app.status === "pending" || app.status === "reviewing") && (
+                          {(application.status === "submitted" || application.status === "reviewing") && (
                             <>
-                              <Button size="sm" variant="ghost" className="h-7 w-7 p-0 text-emerald-600 hover:text-emerald-700" aria-label={`Approve ${app.name}`}>
+                              <Button
+                                size="sm"
+                                variant="ghost"
+                                className="h-7 w-7 p-0 text-emerald-600 hover:text-emerald-700"
+                                aria-label={`Approve ${application.full_name}`}
+                                onClick={() => {
+                                  setSelected(application)
+                                  setForm({ status: "approved", admin_notes: application.admin_notes || "" })
+                                }}
+                              >
                                 <CheckCircle className="h-3.5 w-3.5" />
                               </Button>
-                              <Button size="sm" variant="ghost" className="h-7 w-7 p-0 text-red-500 hover:text-red-600" aria-label={`Reject ${app.name}`}>
+                              <Button
+                                size="sm"
+                                variant="ghost"
+                                className="h-7 w-7 p-0 text-red-500 hover:text-red-600"
+                                aria-label={`Reject ${application.full_name}`}
+                                onClick={() => {
+                                  setSelected(application)
+                                  setForm({ status: "rejected", admin_notes: application.admin_notes || "" })
+                                }}
+                              >
                                 <XCircle className="h-3.5 w-3.5" />
                               </Button>
                             </>
@@ -203,6 +250,69 @@ export default function AdminMembersPage() {
           </div>
         </CardContent>
       </Card>
+
+      <Dialog open={!!selected} onOpenChange={(open) => !open && setSelected(null)}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>Review application</DialogTitle>
+            <DialogDescription>
+              Update status and review notes for {selected?.full_name}.
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="space-y-4">
+            <div className="grid gap-4 sm:grid-cols-2">
+              <div>
+                <p className="text-xs uppercase tracking-wide text-gray-400 mb-1">Company</p>
+                <p className="text-sm text-gray-700">{selected?.company_name || "Independent"}</p>
+              </div>
+              <div>
+                <p className="text-xs uppercase tracking-wide text-gray-400 mb-1">Submitted</p>
+                <p className="text-sm text-gray-700">{formatDate(selected?.created_at)}</p>
+              </div>
+            </div>
+
+            <div>
+              <p className="text-xs uppercase tracking-wide text-gray-400 mb-1">Motivation</p>
+              <p className="text-sm text-gray-700">{selected?.motivation || "—"}</p>
+            </div>
+
+            <div className="grid gap-4 sm:grid-cols-2">
+              <div>
+                <label className="mb-2 block text-sm font-medium text-gray-700">Status</label>
+                <Select
+                  value={form.status}
+                  onChange={(event) => setForm((current) => ({ ...current, status: event.target.value as AdminApplication["status"] }))}
+                >
+                  {statusOptions.map((option) => (
+                    <option key={option} value={option}>{option}</option>
+                  ))}
+                </Select>
+              </div>
+              <div>
+                <p className="mb-2 block text-sm font-medium text-gray-700">Last review</p>
+                <p className="text-sm text-gray-500">
+                  {selected?.reviewer?.name ? `${selected.reviewer.name} · ${formatDate(selected.reviewed_at)}` : "Not reviewed yet"}
+                </p>
+              </div>
+            </div>
+
+            <div>
+              <label className="mb-2 block text-sm font-medium text-gray-700">Admin notes</label>
+              <Textarea
+                value={form.admin_notes}
+                onChange={(event) => setForm((current) => ({ ...current, admin_notes: event.target.value }))}
+                placeholder="Capture context for approvals, waitlists, or next steps."
+              />
+            </div>
+
+            <div className="flex justify-end gap-2">
+              <Button variant="outline" onClick={() => setSelected(null)}>Cancel</Button>
+              <Button onClick={saveReview} loading={saving}>Save</Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }

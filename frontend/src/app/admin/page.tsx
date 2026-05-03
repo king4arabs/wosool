@@ -1,7 +1,12 @@
+"use client"
+
+import { useEffect, useState } from "react"
+import Link from "next/link"
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { founders } from "@/data/seed"
+import { api } from "@/lib/api"
+import { type AdminDashboardResponse, formatDate } from "@/lib/admin"
 import {
   Users,
   Building2,
@@ -11,40 +16,31 @@ import {
   FileText,
   Settings,
 } from "lucide-react"
-import Link from "next/link"
-
-const stats = [
-  { label: "Total Members", value: "247", change: "+12 this month", icon: Users, color: "text-blue-600" },
-  { label: "Active Founders", value: "183", change: "+8 this month", icon: Star, color: "text-amber-600" },
-  { label: "Companies", value: "156", change: "+6 this month", icon: Building2, color: "text-emerald-600" },
-  { label: "Events This Month", value: "4", change: "2 upcoming", icon: CalendarDays, color: "text-purple-600" },
-]
-
-const recentApplications = founders.slice(0, 4).map((f) => ({
-  name: f.name,
-  company: f.companyName,
-  stage: f.stage,
-  sector: f.sector,
-  date: "2 days ago",
-  status: "pending" as const,
-}))
-
-const activityLog = [
-  { action: "Layla Al-Rashid joined the network", time: "1h ago", type: "member" },
-  { action: "Founder Circle Q3 cohort created", time: "3h ago", type: "program" },
-  { action: "Omar Al-Farsi profile verified", time: "5h ago", type: "verification" },
-  { action: "stc Ventures added as Platinum Sponsor", time: "1d ago", type: "sponsor" },
-  { action: "New event: AI in the GCC Roundtable", time: "2d ago", type: "event" },
-]
 
 const quickActions = [
-  { icon: PlusCircle, label: "Add Founder", href: "/admin/founders" },
-  { icon: FileText, label: "Review Applications", href: "/admin/members" },
+  { icon: PlusCircle, label: "Add Company", href: "/admin/companies" },
+  { icon: FileText, label: "Review Apps", href: "/admin/members" },
   { icon: CalendarDays, label: "Create Event", href: "/admin/events" },
   { icon: Settings, label: "Settings", href: "/admin/settings" },
 ]
 
 export default function AdminPage() {
+  const [dashboard, setDashboard] = useState<AdminDashboardResponse | null>(null)
+  const [error, setError] = useState<string | null>(null)
+
+  useEffect(() => {
+    api.get<AdminDashboardResponse>("/admin/dashboard")
+      .then(setDashboard)
+      .catch((err: Error) => setError(err.message))
+  }, [])
+
+  const stats = dashboard ? [
+    { label: "Total Members", value: dashboard.stats.total_members, change: `${dashboard.stats.pending_applications} pending`, icon: Users, color: "text-blue-600" },
+    { label: "Active Founders", value: dashboard.stats.active_founders, change: `${dashboard.stats.open_programs} open programs`, icon: Star, color: "text-amber-600" },
+    { label: "Companies", value: dashboard.stats.companies, change: `${dashboard.stats.published_news} published articles`, icon: Building2, color: "text-emerald-600" },
+    { label: "Events This Month", value: dashboard.stats.events_this_month, change: "Live seeded schedule", icon: CalendarDays, color: "text-purple-600" },
+  ] : []
+
   return (
     <div className="space-y-6">
       <div>
@@ -52,7 +48,12 @@ export default function AdminPage() {
         <p className="text-gray-500 text-sm mt-1">Welcome to the Wosool admin panel.</p>
       </div>
 
-      {/* Stats */}
+      {error && (
+        <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+          {error}
+        </div>
+      )}
+
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         {stats.map(({ label, value, change, icon: Icon, color }) => (
           <Card key={label}>
@@ -69,12 +70,11 @@ export default function AdminPage() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Recent Applications */}
         <div className="lg:col-span-2">
           <Card>
             <CardHeader>
               <div className="flex items-center justify-between">
-                <h3 className="font-semibold text-gray-900">Pending Applications</h3>
+                <h3 className="font-semibold text-gray-900">Recent Applications</h3>
                 <Button asChild variant="outline" size="sm">
                   <Link href="/admin/members">View All</Link>
                 </Button>
@@ -82,21 +82,22 @@ export default function AdminPage() {
             </CardHeader>
             <CardContent>
               <div className="space-y-3">
-                {recentApplications.map(({ name, company, stage, sector, date, status }) => (
+                {dashboard?.recent_applications.map((application) => (
                   <div
-                    key={name}
+                    key={application.id}
                     className="flex items-center gap-4 p-3 rounded-xl bg-gray-50 hover:bg-gray-100 transition-colors"
                   >
                     <div className="flex-1 min-w-0">
-                      <p className="font-medium text-sm text-gray-900 truncate">{name}</p>
-                      <p className="text-xs text-gray-500">{company} · {sector} · {stage}</p>
+                      <p className="font-medium text-sm text-gray-900 truncate">{application.full_name}</p>
+                      <p className="text-xs text-gray-500">
+                        {application.company_name || "Independent"} · {application.sector || "—"} · {application.stage || "—"}
+                      </p>
                     </div>
                     <div className="flex items-center gap-2 shrink-0">
-                      <span className="text-xs text-gray-400">{date}</span>
-                      <Badge variant={status === "pending" ? "warning" : "success"}>
-                        {status}
+                      <span className="text-xs text-gray-400">{formatDate(application.created_at)}</span>
+                      <Badge variant={application.status === "approved" ? "success" : application.status === "rejected" ? "destructive" : application.status === "waitlisted" ? "outline" : "warning"}>
+                        {application.status}
                       </Badge>
-                      <Button size="sm" variant="outline" className="h-7 text-xs">Review</Button>
                     </div>
                   </div>
                 ))}
@@ -105,7 +106,6 @@ export default function AdminPage() {
           </Card>
         </div>
 
-        {/* Activity Log + Quick Actions */}
         <div className="space-y-6">
           <Card>
             <CardHeader>
@@ -130,28 +130,25 @@ export default function AdminPage() {
 
           <Card>
             <CardHeader>
-              <h3 className="font-semibold text-gray-900">Activity Log</h3>
+              <h3 className="font-semibold text-gray-900">Recent Activity</h3>
             </CardHeader>
             <CardContent className="space-y-3">
-              {activityLog.map(({ action, time, type }) => (
-                <div key={action} className="flex items-start gap-3">
-                  <div
-                    className={`h-2 w-2 rounded-full mt-1.5 shrink-0 ${
-                      type === "member"
-                        ? "bg-blue-400"
-                        : type === "program"
-                        ? "bg-purple-400"
-                        : type === "verification"
-                        ? "bg-emerald-400"
-                        : type === "sponsor"
-                        ? "bg-amber-400"
-                        : "bg-gray-400"
-                    }`}
-                    aria-hidden="true"
-                  />
+              {dashboard?.activity.map((item) => (
+                <div key={item.id} className="flex items-start gap-3">
+                  <div className="h-2 w-2 rounded-full mt-1.5 shrink-0 bg-amber-400" aria-hidden="true" />
                   <div className="flex-1 min-w-0">
-                    <p className="text-xs text-gray-700 leading-snug">{action}</p>
-                    <p className="text-xs text-gray-400 mt-0.5">{time}</p>
+                    <p className="text-xs text-gray-700 leading-snug">
+                      {item.notes || `${item.action} on ${item.entity_type} #${item.entity_id}`}
+                    </p>
+                    <p className="text-xs text-gray-400 mt-0.5">
+                      {item.admin_name || "Admin"} · {formatDate(item.created_at, {
+                        year: "numeric",
+                        month: "short",
+                        day: "numeric",
+                        hour: "numeric",
+                        minute: "2-digit",
+                      })}
+                    </p>
                   </div>
                 </div>
               ))}

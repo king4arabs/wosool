@@ -117,7 +117,8 @@ export interface User {
   id: string
   email: string
   name: string
-  role: "member" | "admin" | "moderator"
+  role?: "member" | "admin" | "moderator"
+  roles?: string[]
   avatarUrl?: string
   founderId?: string
   companyId?: string

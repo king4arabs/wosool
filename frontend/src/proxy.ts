@@ -10,7 +10,7 @@ import type { NextRequest } from "next/server"
  * We rely on the existence of a session cookie as a fast heuristic —
  * the backend still validates the session on every API call.
  */
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl
 
   // Check for Laravel session cookie (set by Sanctum)

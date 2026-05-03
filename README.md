@@ -51,8 +51,10 @@ The repository is intended to function as both a **product codebase** and a **de
 | Public write-endpoint throttling | Implemented |
 | CI/CD workflows | Introduced in `0.3.0` |
 | Backend API test foundation | Introduced in `0.3.0` |
-| Frontend live API adoption | Planned next |
-| Authentication and RBAC | Planned next |
+| Authentication and RBAC | Implemented |
+| Member profile/company CRUD | Implemented |
+| Event RSVP and program applications | Implemented |
+| Frontend live API adoption | Partial, remaining dashboard/admin pages still being wired |
 | Arabic/English localization and RTL | Planned next |
 
 ---
@@ -69,6 +71,7 @@ npm run verify
 ```
 
 `npm run setup` installs frontend and backend dependencies, prepares the default SQLite database, generates the Laravel app key, and runs backend migrations so the repository is ready to boot locally.
+`npm run setup` installs frontend and backend dependencies, copies the backend environment file if needed, generates the Laravel app key, and runs backend migrations against your local MySQL database.
 
 To run the two application surfaces locally, use separate terminals from the repository root:
 
@@ -95,9 +98,24 @@ composer install
 npm install
 cp .env.example .env
 php artisan key:generate
+mysql -u root -p -e "CREATE DATABASE IF NOT EXISTS wosool CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
 php artisan migrate
 php artisan db:seed
 composer run dev
+```
+
+### Seeded Accounts
+
+After `php artisan db:seed`, you can sign in with:
+
+```text
+Admin  : admin@wosool.org / wosool2024!
+Member : sara@example.com / demo123!
+Member : khalid@example.com / demo123!
+Member : nora@example.com / demo123!
+Member : ahmed@example.com / demo123!
+Member : lina@example.com / demo123!
+Member : omar@example.com / demo123!
 ```
 
 When working in a constrained environment, keep the documented runtime in sync with [DEPLOYMENT.md](./DEPLOYMENT.md) and treat CI as the authoritative validation layer.
@@ -139,17 +157,17 @@ When working in a constrained environment, keep the documented runtime in sync w
 
 ---
 
-## Immediate Release Focus: `0.3.0`
+## Immediate Release Focus: `0.5.0`
 
-The `0.3.0` release is a **production-foundation hardening release**. It prioritizes the work that increases confidence, auditability, and execution speed before more complex feature delivery begins.
+The `0.5.0` release moves Wosool from authenticated prototype to a more realistic member product. The focus is on shipping real founder workflows while keeping the repository reliable enough for the next launch-readiness phase.
 
 | Priority | Why it matters |
 |---|---|
-| CI/CD | Prevents regressions and creates release discipline |
-| Backend API tests | Protects the public contract and accelerates future refactors |
-| API and SDK documentation | Aligns frontend and backend implementation |
-| Repository OS upgrades | Improves onboarding, auditability, and standards enforcement |
-| Security and operations alignment | Improves pre-launch readiness |
+| Member founder profile CRUD | Lets authenticated members manage their profile in-product |
+| Member company CRUD | Lets members manage company data with ownership enforcement |
+| Event RSVP flow | Enables real engagement and capacity-aware waitlisting |
+| Program application flow | Enables real member applications with deadline and duplicate guards |
+| Test coverage growth | Keeps the expanding member API safe to iterate on |
 
 ---
 

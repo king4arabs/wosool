@@ -1,58 +1,152 @@
+"use client"
+
+import { useCallback, useEffect, useState } from "react"
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { newsItems } from "@/data/seed"
-import { Search, Filter, FileText, Eye, Edit, Plus, Trash2 } from "lucide-react"
+import { Input } from "@/components/ui/input"
+import { Textarea } from "@/components/ui/textarea"
+import { Select } from "@/components/ui/select"
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
+import { useToast } from "@/components/ui/toast"
+import { api } from "@/lib/api"
+import { type AdminCollectionResponse, type AdminNewsItem, formatDate, fromCsvLines, toCsvLines } from "@/lib/admin"
+import { Search, FileText, Pencil, Plus, Trash2 } from "lucide-react"
 
-type ContentStatus = "published" | "draft" | "archived"
+type NewsForm = {
+  title: string
+  excerpt: string
+  content: string
+  category: string
+  author_name: string
+  image_url: string
+  tags: string
+  status: AdminNewsItem["status"]
+  published_at: string
+  is_featured: boolean
+  is_public: boolean
+}
 
-const statusBadge = (status: ContentStatus) => {
-  switch (status) {
-    case "published": return <Badge variant="success">Published</Badge>
-    case "draft": return <Badge variant="warning">Draft</Badge>
-    case "archived": return <Badge variant="secondary">Archived</Badge>
+const emptyForm: NewsForm = {
+  title: "",
+  excerpt: "",
+  content: "",
+  category: "",
+  author_name: "Wosool Team",
+  image_url: "",
+  tags: "",
+  status: "draft",
+  published_at: "",
+  is_featured: false,
+  is_public: true,
+}
+
+function toForm(article?: AdminNewsItem | null): NewsForm {
+  if (!article) return emptyForm
+  return {
+    title: article.title,
+    excerpt: article.excerpt,
+    content: article.content || "",
+    category: article.category,
+    author_name: article.author_name,
+    image_url: article.image_url || "",
+    tags: toCsvLines(article.tags),
+    status: article.status,
+    published_at: article.published_at ? article.published_at.slice(0, 16) : "",
+    is_featured: article.is_featured,
+    is_public: article.is_public,
   }
 }
 
-const tableNews = newsItems.map((n, i) => ({
-  ...n,
-  status: (["published", "published", "published", "draft", "published", "archived"] as ContentStatus[])[i],
-  publishedFormatted: new Date(n.publishedAt).toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" }),
-  views: [1240, 890, 670, 0, 520, 310][i],
-}))
-
-const stats = [
-  { label: "Total Articles", value: newsItems.length, color: "text-blue-600" },
-  { label: "Published", value: tableNews.filter(n => n.status === "published").length, color: "text-emerald-600" },
-  { label: "Drafts", value: tableNews.filter(n => n.status === "draft").length, color: "text-amber-600" },
-  { label: "Total Views", value: tableNews.reduce((sum, n) => sum + n.views, 0).toLocaleString(), color: "text-purple-600" },
-]
-
 export default function AdminNewsPage() {
+  const { toast } = useToast()
+  const [articles, setArticles] = useState<AdminNewsItem[]>([])
+  const [meta, setMeta] = useState<Record<string, number>>({})
+  const [search, setSearch] = useState("")
+  const [editing, setEditing] = useState<AdminNewsItem | null>(null)
+  const [form, setForm] = useState<NewsForm>(emptyForm)
+  const [open, setOpen] = useState(false)
+  const [saving, setSaving] = useState(false)
+
+  const loadNews = useCallback(async () => {
+    const response = await api.get<AdminCollectionResponse<AdminNewsItem>>("/admin/news", {
+      params: { search: search || undefined },
+    })
+    setArticles(response.data)
+    setMeta(response.meta)
+  }, [search])
+
+  useEffect(() => {
+    loadNews().catch((err: Error) => toast(err.message, "error"))
+  }, [loadNews, toast])
+
+  const openEditor = (article?: AdminNewsItem) => {
+    setEditing(article || null)
+    setForm(toForm(article))
+    setOpen(true)
+  }
+
+  const saveArticle = async () => {
+    setSaving(true)
+    const payload = {
+      ...form,
+      image_url: form.image_url || null,
+      tags: fromCsvLines(form.tags),
+      published_at: form.published_at || null,
+    }
+
+    try {
+      if (editing) {
+        await api.put(`/admin/news/${editing.id}`, payload)
+      } else {
+        await api.post("/admin/news", payload)
+      }
+      toast(`Article ${editing ? "updated" : "created"}.`, "success")
+      setOpen(false)
+      setEditing(null)
+      setForm(emptyForm)
+      await loadNews()
+    } catch (err) {
+      toast(err instanceof Error ? err.message : "Could not save article.", "error")
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  const deleteArticle = async (article: AdminNewsItem) => {
+    if (!window.confirm(`Delete ${article.title}?`)) return
+    try {
+      await api.delete(`/admin/news/${article.id}`)
+      toast("Article deleted.", "success")
+      await loadNews()
+    } catch (err) {
+      toast(err instanceof Error ? err.message : "Could not delete article.", "error")
+    }
+  }
+
   return (
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h2 className="text-2xl font-bold text-gray-900">News &amp; Content</h2>
-          <p className="text-gray-500 text-sm mt-1">
-            Manage articles, announcements, and content.
-          </p>
+          <p className="text-gray-500 text-sm mt-1">Manage articles, announcements, and content.</p>
         </div>
         <div className="flex gap-2">
-          <Button variant="outline" size="sm">
-            <Filter className="h-4 w-4 mr-2" />
-            Filter
-          </Button>
-          <Button size="sm">
+          <Button variant="outline" size="sm" onClick={() => loadNews().catch((err: Error) => toast(err.message, "error"))}>Refresh</Button>
+          <Button size="sm" onClick={() => openEditor()}>
             <Plus className="h-4 w-4 mr-2" />
             New Article
           </Button>
         </div>
       </div>
 
-      {/* Stats */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        {stats.map(({ label, value, color }) => (
+        {[
+          { label: "Total Articles", value: meta.total || 0, color: "text-blue-600" },
+          { label: "Published", value: meta.published || 0, color: "text-emerald-600" },
+          { label: "Drafts", value: meta.drafts || 0, color: "text-amber-600" },
+          { label: "Featured", value: meta.featured || 0, color: "text-purple-600" },
+        ].map(({ label, value, color }) => (
           <Card key={label}>
             <CardContent className="pt-6">
               <div className="flex items-center justify-between mb-3">
@@ -65,57 +159,23 @@ export default function AdminNewsPage() {
         ))}
       </div>
 
-      {/* Search & Filters */}
       <Card>
         <CardContent className="pt-5">
-          <div className="flex flex-col sm:flex-row gap-4">
+          <div className="flex gap-4">
             <div className="flex-1 relative">
-              <Search
-                className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400"
-                aria-hidden="true"
-              />
-              <input
-                type="search"
-                placeholder="Search articles by title or category..."
-                className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-[#C9A84C]"
-                aria-label="Search articles"
-              />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" aria-hidden="true" />
+              <Input value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Search articles by title or category..." className="pl-10" />
             </div>
-            <div className="flex gap-2">
-              <select
-                className="rounded-lg border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#C9A84C]"
-                aria-label="Filter by status"
-              >
-                <option>All Status</option>
-                <option>Published</option>
-                <option>Draft</option>
-                <option>Archived</option>
-              </select>
-              <select
-                className="rounded-lg border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#C9A84C]"
-                aria-label="Filter by category"
-              >
-                <option>All Categories</option>
-                <option>Founder Update</option>
-                <option>Ecosystem News</option>
-                <option>Event Recap</option>
-                <option>Program Update</option>
-                <option>Insights</option>
-                <option>Announcement</option>
-              </select>
-            </div>
+            <Button variant="outline" size="sm" onClick={() => loadNews().catch((err: Error) => toast(err.message, "error"))}>Search</Button>
           </div>
         </CardContent>
       </Card>
 
-      {/* Table */}
       <Card>
         <CardHeader>
           <div className="flex items-center justify-between">
-            <h3 className="font-semibold text-gray-900">All Articles ({tableNews.length})</h3>
-            <p className="text-sm text-gray-500">
-              {tableNews.filter(n => n.status === "draft").length} draft
-            </p>
+            <h3 className="font-semibold text-gray-900">All Articles ({articles.length})</h3>
+            <p className="text-sm text-gray-500">{meta.drafts || 0} draft</p>
           </div>
         </CardHeader>
         <CardContent className="p-0">
@@ -127,44 +187,27 @@ export default function AdminNewsPage() {
                   <th className="text-left px-6 py-3 font-medium text-gray-500">Category</th>
                   <th className="text-left px-6 py-3 font-medium text-gray-500">Status</th>
                   <th className="text-left px-6 py-3 font-medium text-gray-500">Published</th>
-                  <th className="text-left px-6 py-3 font-medium text-gray-500">Views</th>
                   <th className="text-left px-6 py-3 font-medium text-gray-500">Actions</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-100">
-                {tableNews.map((article) => (
+                {articles.map((article) => (
                   <tr key={article.id} className="hover:bg-gray-50 transition-colors">
                     <td className="px-6 py-4">
-                      <div>
-                        <p className="font-medium text-gray-900 max-w-sm truncate">{article.title}</p>
-                        <p className="text-xs text-gray-400 mt-0.5">By {article.author}</p>
-                      </div>
+                      <p className="font-medium text-gray-900 max-w-sm truncate">{article.title}</p>
+                      <p className="text-xs text-gray-400 mt-0.5">By {article.author_name}</p>
                     </td>
+                    <td className="px-6 py-4"><Badge variant="secondary">{article.category}</Badge></td>
                     <td className="px-6 py-4">
-                      <Badge variant="secondary">{article.category}</Badge>
+                      <Badge variant={article.status === "published" ? "success" : article.status === "archived" ? "secondary" : "warning"}>
+                        {article.status}
+                      </Badge>
                     </td>
-                    <td className="px-6 py-4">
-                      {statusBadge(article.status)}
-                    </td>
-                    <td className="px-6 py-4 text-gray-500 text-xs">
-                      {article.publishedFormatted}
-                    </td>
-                    <td className="px-6 py-4">
-                      <span className="font-medium text-gray-700">{article.views.toLocaleString()}</span>
-                    </td>
+                    <td className="px-6 py-4 text-gray-500 text-xs">{formatDate(article.published_at)}</td>
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-2">
-                        <Button size="sm" variant="ghost" className="h-7 w-7 p-0" aria-label={`View ${article.title}`}>
-                          <Eye className="h-3.5 w-3.5" />
-                        </Button>
-                        <Button size="sm" variant="ghost" className="h-7 w-7 p-0" aria-label={`Edit ${article.title}`}>
-                          <Edit className="h-3.5 w-3.5" />
-                        </Button>
-                        {article.status === "archived" && (
-                          <Button size="sm" variant="ghost" className="h-7 w-7 p-0 text-red-500 hover:text-red-600" aria-label={`Delete ${article.title}`}>
-                            <Trash2 className="h-3.5 w-3.5" />
-                          </Button>
-                        )}
+                        <button className="text-gray-500 hover:text-gray-700" onClick={() => openEditor(article)}><Pencil className="h-4 w-4" /></button>
+                        <button className="text-red-500 hover:text-red-700" onClick={() => deleteArticle(article)}><Trash2 className="h-4 w-4" /></button>
                       </div>
                     </td>
                   </tr>
@@ -174,6 +217,40 @@ export default function AdminNewsPage() {
           </div>
         </CardContent>
       </Card>
+
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>{editing ? "Edit article" : "Create article"}</DialogTitle>
+            <DialogDescription>Seeded editorial content is now manageable from the admin console.</DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div className="grid gap-4 sm:grid-cols-2">
+              <Input placeholder="Title" value={form.title} onChange={(event) => setForm((current) => ({ ...current, title: event.target.value }))} />
+              <Input placeholder="Category" value={form.category} onChange={(event) => setForm((current) => ({ ...current, category: event.target.value }))} />
+              <Input placeholder="Author name" value={form.author_name} onChange={(event) => setForm((current) => ({ ...current, author_name: event.target.value }))} />
+              <Input placeholder="Image URL" value={form.image_url} onChange={(event) => setForm((current) => ({ ...current, image_url: event.target.value }))} />
+              <Select value={form.status} onChange={(event) => setForm((current) => ({ ...current, status: event.target.value as AdminNewsItem["status"] }))}>
+                <option value="draft">draft</option>
+                <option value="published">published</option>
+                <option value="archived">archived</option>
+              </Select>
+              <Input type="datetime-local" value={form.published_at} onChange={(event) => setForm((current) => ({ ...current, published_at: event.target.value }))} />
+            </div>
+            <Input placeholder="Tags (comma separated)" value={form.tags} onChange={(event) => setForm((current) => ({ ...current, tags: event.target.value }))} />
+            <Textarea placeholder="Excerpt" value={form.excerpt} onChange={(event) => setForm((current) => ({ ...current, excerpt: event.target.value }))} />
+            <Textarea placeholder="Content" value={form.content} onChange={(event) => setForm((current) => ({ ...current, content: event.target.value }))} />
+            <div className="flex gap-4 text-sm text-gray-700">
+              <label className="flex items-center gap-2"><input type="checkbox" checked={form.is_featured} onChange={(event) => setForm((current) => ({ ...current, is_featured: event.target.checked }))} /> Featured</label>
+              <label className="flex items-center gap-2"><input type="checkbox" checked={form.is_public} onChange={(event) => setForm((current) => ({ ...current, is_public: event.target.checked }))} /> Public</label>
+            </div>
+            <div className="flex justify-end gap-2">
+              <Button variant="outline" onClick={() => setOpen(false)}>Cancel</Button>
+              <Button onClick={saveArticle} loading={saving}>Save</Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }

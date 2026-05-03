@@ -1,6 +1,8 @@
 <?php
 namespace Database\Seeders;
 
+use App\Models\AdminAction;
+use App\Models\Application;
 use App\Models\CompanyProfile;
 use App\Models\Event;
 use App\Models\FounderProfile;
@@ -14,11 +16,14 @@ use Illuminate\Database\Seeder;
 
 class WosoolSeeder extends Seeder
 {
+    private const ADMIN_PASSWORD = 'wosool2024!';
+    private const MEMBER_PASSWORD = 'demo123!';
+
     public function run(): void
     {
         $admin = User::firstOrCreate(
             ['email' => 'admin@wosool.org'],
-            ['name' => 'Wosool Admin', 'password' => bcrypt('wosool2024!'), 'email_verified_at' => now()]
+            ['name' => 'Wosool Admin', 'password' => bcrypt(self::ADMIN_PASSWORD), 'email_verified_at' => now()]
         );
 
         if (method_exists($admin, 'assignRole') && ! $admin->hasRole('admin')) {
@@ -97,7 +102,7 @@ class WosoolSeeder extends Seeder
         foreach ($foundersData as $data) {
             $user = User::firstOrCreate(
                 ['email' => $data['email']],
-                ['name' => $data['name'], 'password' => bcrypt('demo123!'), 'email_verified_at' => now()]
+                ['name' => $data['name'], 'password' => bcrypt(self::MEMBER_PASSWORD), 'email_verified_at' => now()]
             );
 
             $companyData = $data['company'];
@@ -218,6 +223,175 @@ class WosoolSeeder extends Seeder
             NewsItem::firstOrCreate(['slug' => $newsItemData['slug']], array_merge($newsItemData, ['is_public' => true]));
         }
 
-        $this->command->info('✅ Wosool seed data created successfully!');
+        $applicationsData = [
+            [
+                'full_name' => 'Layla Al-Rashid',
+                'email' => 'layla@applicant.example',
+                'phone' => '+966500000001',
+                'company_name' => 'Nabd Commerce',
+                'company_website' => 'https://nabd.example.com',
+                'sector' => 'Commerce',
+                'stage' => 'seed',
+                'location' => 'Riyadh, Saudi Arabia',
+                'motivation' => 'Looking for strategic intros and a peer group as we expand into B2B retail tooling.',
+                'what_you_offer' => 'Marketplace growth, retail operations, omni-channel go-to-market.',
+                'what_you_need' => 'Strategic partners, logistics intros, growth-stage investors.',
+                'linkedin_url' => 'https://linkedin.com/in/layla-al-rashid',
+                'referral_source' => 'member-referral',
+                'referrer_name' => 'Sara Al-Rashidi',
+                'status' => 'submitted',
+            ],
+            [
+                'full_name' => 'Faisal Nasser',
+                'email' => 'faisal@applicant.example',
+                'phone' => '+971500000002',
+                'company_name' => 'Qimam AI',
+                'company_website' => 'https://qimam.example.com',
+                'sector' => 'AI Infrastructure',
+                'stage' => 'series-a',
+                'location' => 'Dubai, UAE',
+                'motivation' => 'Need deeper regional founder network access and investor introductions ahead of our next raise.',
+                'what_you_offer' => 'AI engineering leadership, enterprise product strategy.',
+                'what_you_need' => 'Enterprise design partners, board-ready mentors.',
+                'linkedin_url' => 'https://linkedin.com/in/faisal-nasser',
+                'referral_source' => 'event',
+                'referrer_name' => 'Wosool Founders Dinner',
+                'status' => 'reviewing',
+                'admin_notes' => 'Strong profile. Waiting on follow-up reference call.',
+                'reviewed_by' => $admin->id,
+                'reviewed_at' => now()->subDays(1),
+            ],
+            [
+                'full_name' => 'Mariam Al-Harbi',
+                'email' => 'mariam@applicant.example',
+                'phone' => '+966500000003',
+                'company_name' => 'Bostan Fresh',
+                'company_website' => 'https://bostan.example.com',
+                'sector' => 'AgriTech',
+                'stage' => 'pre-seed',
+                'location' => 'Jeddah, Saudi Arabia',
+                'motivation' => 'Want mentorship and introductions to distribution partners.',
+                'what_you_offer' => 'Supply chain digitization and agri-ops insight.',
+                'what_you_need' => 'Pilot customers and fundraising prep.',
+                'linkedin_url' => 'https://linkedin.com/in/mariam-al-harbi',
+                'referral_source' => 'website',
+                'status' => 'approved',
+                'admin_notes' => 'Excellent fit for founder circles.',
+                'reviewed_by' => $admin->id,
+                'reviewed_at' => now()->subDays(4),
+            ],
+            [
+                'full_name' => 'Rashed Al-Hamdan',
+                'email' => 'rashed@applicant.example',
+                'phone' => '+973500000004',
+                'company_name' => 'PortLink',
+                'company_website' => 'https://portlink.example.com',
+                'sector' => 'Logistics',
+                'stage' => 'seed',
+                'location' => 'Manama, Bahrain',
+                'motivation' => 'Seeking investor readiness support and GCC expansion advice.',
+                'what_you_offer' => 'Port operations expertise and enterprise sales knowledge.',
+                'what_you_need' => 'Fundraising guidance and ecosystem introductions.',
+                'linkedin_url' => 'https://linkedin.com/in/rashed-al-hamdan',
+                'referral_source' => 'partner',
+                'referrer_name' => 'Flat6Labs Saudi Arabia',
+                'status' => 'waitlisted',
+                'admin_notes' => 'Promising, but cohort is currently full.',
+                'reviewed_by' => $admin->id,
+                'reviewed_at' => now()->subDays(2),
+            ],
+            [
+                'full_name' => 'Dana Khatib',
+                'email' => 'dana@applicant.example',
+                'phone' => '+974500000005',
+                'company_name' => 'Saha Studio',
+                'company_website' => 'https://saha.example.com',
+                'sector' => 'Health & Wellness',
+                'stage' => 'pre-seed',
+                'location' => 'Doha, Qatar',
+                'motivation' => 'Exploring community support while validating product-market fit.',
+                'what_you_offer' => 'Brand strategy and consumer wellness insights.',
+                'what_you_need' => 'Mentors and pilot design partners.',
+                'linkedin_url' => 'https://linkedin.com/in/dana-khatib',
+                'referral_source' => 'newsletter',
+                'status' => 'rejected',
+                'admin_notes' => 'Not a fit yet. Suggested reapplying after traction milestones.',
+                'reviewed_by' => $admin->id,
+                'reviewed_at' => now()->subDays(6),
+            ],
+        ];
+
+        foreach ($applicationsData as $applicationData) {
+            Application::firstOrCreate(
+                ['email' => $applicationData['email']],
+                $applicationData
+            );
+        }
+
+        $draftAndArchivedNews = [
+            [
+                'title' => 'Wosool Community Playbook: Founder Referral Guidelines',
+                'slug' => 'wosool-founder-referral-guidelines',
+                'excerpt' => 'A practical draft guide for how founders can introduce each other to partners and investors with context and care.',
+                'content' => 'Draft internal content for an upcoming community guidelines article.',
+                'category' => 'announcement',
+                'author_name' => 'Wosool Team',
+                'author_id' => $admin->id,
+                'is_featured' => false,
+                'is_public' => false,
+                'status' => 'draft',
+                'tags' => ['community', 'guidelines'],
+            ],
+            [
+                'title' => 'Archive: 2023 Ecosystem Roundup',
+                'slug' => 'archive-2023-ecosystem-roundup',
+                'excerpt' => 'A prior-year recap retained for internal reference.',
+                'content' => 'Archived content kept for admin testing and review workflows.',
+                'category' => 'editorial',
+                'author_name' => 'Wosool Editorial',
+                'author_id' => $admin->id,
+                'is_featured' => false,
+                'is_public' => false,
+                'status' => 'archived',
+                'published_at' => now()->subYear(),
+                'tags' => ['archive'],
+            ],
+        ];
+
+        foreach ($draftAndArchivedNews as $newsItemData) {
+            NewsItem::firstOrCreate(['slug' => $newsItemData['slug']], $newsItemData);
+        }
+
+        $seedActions = [
+            ['action' => 'application.updated', 'entity_type' => 'application', 'entity_id' => 2, 'notes' => 'Application moved to reviewing'],
+            ['action' => 'application.updated', 'entity_type' => 'application', 'entity_id' => 3, 'notes' => 'Application approved'],
+            ['action' => 'event.created', 'entity_type' => 'event', 'entity_id' => 1, 'notes' => 'Seeded founders dinner event'],
+            ['action' => 'news.created', 'entity_type' => 'news', 'entity_id' => 1, 'notes' => 'Seeded launch announcement'],
+        ];
+
+        foreach ($seedActions as $seedAction) {
+            AdminAction::firstOrCreate(
+                [
+                    'admin_id' => $admin->id,
+                    'action' => $seedAction['action'],
+                    'entity_type' => $seedAction['entity_type'],
+                    'entity_id' => $seedAction['entity_id'],
+                ],
+                ['notes' => $seedAction['notes']]
+            );
+        }
+
+        if ($this->command) {
+            $this->command->info('✅ Wosool seed data created successfully!');
+            $this->command->newLine();
+            $this->command->warn('Seeded login accounts');
+            $this->command->line('Admin:  admin@wosool.org / ' . self::ADMIN_PASSWORD);
+            $this->command->line('Member: sara@example.com / ' . self::MEMBER_PASSWORD);
+            $this->command->line('Member: khalid@example.com / ' . self::MEMBER_PASSWORD);
+            $this->command->line('Member: nora@example.com / ' . self::MEMBER_PASSWORD);
+            $this->command->line('Member: ahmed@example.com / ' . self::MEMBER_PASSWORD);
+            $this->command->line('Member: lina@example.com / ' . self::MEMBER_PASSWORD);
+            $this->command->line('Member: omar@example.com / ' . self::MEMBER_PASSWORD);
+        }
     }
 }
