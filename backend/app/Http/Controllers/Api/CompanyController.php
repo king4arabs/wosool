@@ -2,6 +2,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\CompanyResource;
 use App\Models\CompanyProfile;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -14,11 +15,20 @@ class CompanyController extends Controller
             ->where('status', 'active')
             ->where('is_public', true);
 
-        if ($request->has('sector')) {
+        if ($request->filled('sector')) {
             $query->where('sector', $request->sector);
         }
-        if ($request->has('stage')) {
+        if ($request->filled('stage')) {
             $query->where('stage', $request->stage);
+        }
+        if ($request->filled('search')) {
+            $search = trim((string) $request->input('search'));
+            $query->where(function ($builder) use ($search) {
+                $builder
+                    ->where('name', 'like', "%{$search}%")
+                    ->orWhere('sector', 'like', "%{$search}%")
+                    ->orWhere('location', 'like', "%{$search}%");
+            });
         }
         if ($request->boolean('hiring')) {
             $query->where('is_hiring', true);
@@ -30,11 +40,18 @@ class CompanyController extends Controller
             $query->where('is_collaborating', true);
         }
 
-        $companies = $query->orderBy('is_featured', 'desc')
-            ->orderBy('created_at', 'desc')
-            ->paginate($request->integer('per_page', 12));
+        if ($request->boolean('featured')) {
+            $query->where('is_featured', true);
+        }
 
-        return response()->json($companies);
+        $companies = $query
+            ->withCount('founders')
+            ->orderBy('is_featured', 'desc')
+            ->orderBy('created_at', 'desc')
+            ->paginate($request->integer('per_page', 12))
+            ->withQueryString();
+
+        return CompanyResource::collection($companies)->response();
     }
 
     public function show(string $slug): JsonResponse
@@ -44,6 +61,8 @@ class CompanyController extends Controller
             ->where('is_public', true)
             ->firstOrFail();
 
-        return response()->json($company);
+        return response()->json([
+            'data' => new CompanyResource($company),
+        ]);
     }
 }

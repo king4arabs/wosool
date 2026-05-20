@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\ApplicationResource;
 use App\Models\AdminAction;
 use App\Models\Application;
 use App\Models\CompanyProfile;
@@ -49,7 +50,16 @@ class DashboardController extends Controller
                 'published_news' => NewsItem::where('status', 'published')->count(),
                 'open_programs' => Program::where('is_open', true)->count(),
             ],
-            'recent_applications' => $recentApplications,
+            'application_pipeline' => [
+                'submitted' => Application::where('status', 'submitted')->count(),
+                'reviewing' => Application::where('status', 'reviewing')->count(),
+                'approved' => Application::where('status', 'approved')->count(),
+                'rejected' => Application::where('status', 'rejected')->count(),
+                'waitlisted' => Application::where('status', 'waitlisted')->count(),
+                'stale_submitted' => Application::where('status', 'submitted')->where('created_at', '<', now()->subDays(14))->count(),
+                'stale_reviewing' => Application::where('status', 'reviewing')->where('updated_at', '<', now()->subDays(14))->count(),
+            ],
+            'recent_applications' => ApplicationResource::collection($recentApplications),
             'activity' => $activity->map(fn (AdminAction $action) => [
                 'id' => $action->id,
                 'action' => $action->action,

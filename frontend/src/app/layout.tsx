@@ -1,21 +1,33 @@
 import type { Metadata, Viewport } from "next";
+import { Cairo } from "next/font/google";
+import { Manrope } from "next/font/google";
 import { Providers } from "./providers";
 import "./globals.css";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://wosool.org";
+const manrope = Manrope({
+  subsets: ["latin"],
+  variable: "--font-manrope",
+});
+const cairo = Cairo({
+  subsets: ["arabic", "latin"],
+  variable: "--font-cairo",
+});
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "Wosool — Founders to Founders",
+    default: "وصول | شبكة خاصة للمؤسسين",
     template: "%s | Wosool",
   },
   description:
-    "Wosool is a premium founders-to-founders network for ambitious entrepreneurs building in Saudi Arabia and the GCC. Apply to join a trusted community of verified founders.",
+    "وصول شبكة خاصة للمؤسسين تربط البنّائين الطموحين في السعودية والخليج بوصول نوعي وبرامج منتقاة وعلاقات عالية القيمة.",
   keywords: [
     "founders network",
     "Saudi Arabia startups",
     "GCC entrepreneurs",
+    "شبكة المؤسسين",
+    "مؤسسو السعودية",
     "founder community",
     "startup ecosystem",
     "Vision 2030",
@@ -25,9 +37,9 @@ export const metadata: Metadata = {
   creator: "Wosool",
   publisher: "Wosool",
   openGraph: {
-    title: "Wosool — Founders to Founders",
+    title: "وصول | شبكة خاصة للمؤسسين",
     description:
-      "A premium founders-to-founders network for ambitious entrepreneurs in Saudi Arabia and the GCC.",
+      "شبكة خاصة للمؤسسين الطموحين الذين يبنون شركات جادة في السعودية والخليج.",
     url: siteUrl,
     siteName: "Wosool",
     locale: "en_US",
@@ -35,9 +47,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Wosool — Founders to Founders",
+    title: "وصول | شبكة خاصة للمؤسسين",
     description:
-      "A premium founders-to-founders network for ambitious entrepreneurs in Saudi Arabia and the GCC.",
+      "شبكة خاصة للمؤسسين في السعودية والخليج.",
     creator: "@AboutWosool",
     site: "@AboutWosool",
   },
@@ -58,7 +70,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#0A1628",
+  themeColor: "#07111F",
   width: "device-width",
   initialScale: 1,
   maximumScale: 5,
@@ -70,14 +82,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" dir="ltr" className="h-full antialiased scroll-smooth">
-      <body className="min-h-full flex flex-col font-sans">
+    <html lang="ar" dir="rtl" className="h-full antialiased scroll-smooth">
+      <body className={`${manrope.variable} ${cairo.variable} min-h-full flex flex-col font-sans`}>
         <Providers>
           <a
             href="#main-content"
-            className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:px-4 focus:py-2 focus:bg-brand-gold focus:text-brand-navy focus:rounded-md focus:font-medium"
+            className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:rounded-full focus:bg-[#4056C7] focus:px-4 focus:py-2 focus:font-medium focus:text-white"
           >
-            Skip to main content
+            الانتقال إلى المحتوى الرئيسي
           </a>
           {children}
         </Providers>

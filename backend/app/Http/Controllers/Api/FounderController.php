@@ -2,6 +2,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\FounderResource;
 use App\Models\FounderProfile;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -32,21 +33,25 @@ class FounderController extends Controller
             $query->where('is_featured', true);
         }
 
-        $founders = $query->orderBy('is_featured', 'desc')
+        $founders = $query
+            ->orderBy('is_featured', 'desc')
             ->orderBy('created_at', 'desc')
-            ->paginate($request->integer('per_page', 12));
+            ->paginate($request->integer('per_page', 12))
+            ->withQueryString();
 
-        return response()->json($founders);
+        return FounderResource::collection($founders)->response();
     }
 
     public function show(string $slug): JsonResponse
     {
-        $founder = FounderProfile::with(['user', 'companies', 'scorecard.metrics'])
+        $founder = FounderProfile::with(['user', 'companies', 'scorecard'])
             ->where('slug', $slug)
             ->where('is_public', true)
             ->firstOrFail();
 
-        return response()->json($founder);
+        return response()->json([
+            'data' => new FounderResource($founder),
+        ]);
     }
 
     /**
@@ -63,6 +68,6 @@ class FounderController extends Controller
             return response()->json(['message' => 'No founder profile found.'], 404);
         }
 
-        return response()->json(['data' => $profile]);
+        return response()->json(['data' => new FounderResource($profile)]);
     }
 }

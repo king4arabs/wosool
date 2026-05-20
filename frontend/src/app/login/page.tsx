@@ -28,9 +28,10 @@ export default function LoginPage() {
 
       try {
         await login(email, password)
-        router.push(redirect)
+        router.replace(redirect)
+        router.refresh()
       } catch (err) {
-        setError(err instanceof Error ? err.message : "Login failed. Please try again.")
+        setError(err instanceof Error ? err.message : "تعذر تسجيل الدخول. يرجى المحاولة مرة أخرى.")
       } finally {
         setIsSubmitting(false)
       }
@@ -49,13 +50,13 @@ export default function LoginPage() {
               وصول
             </span>
           </Link>
-          <p className="mt-2 text-sm text-gray-500">Founders to Founders</p>
+          <p className="mt-2 text-sm text-gray-500">شبكة خاصة للمؤسسين</p>
         </div>
 
         <div className="bg-white rounded-3xl shadow-sm p-8">
-          <h1 className="text-2xl font-bold text-[#0A1628] mb-1">Welcome back</h1>
+          <h1 className="text-2xl font-bold text-[#0A1628] mb-1">مرحبًا بعودتك</h1>
           <p className="text-gray-500 text-sm mb-8">
-            Log in to access your Wosool dashboard
+            سجّل الدخول للوصول إلى حسابك ولوحة التحكم الخاصة بك
           </p>
 
           {error && (
@@ -66,11 +67,11 @@ export default function LoginPage() {
 
           <form onSubmit={handleSubmit} className="space-y-5">
             <div className="space-y-2">
-              <Label htmlFor="email">Email address</Label>
+              <Label htmlFor="email">البريد الإلكتروني</Label>
               <Input
                 id="email"
                 type="email"
-                placeholder="you@company.com"
+                placeholder="name@company.com"
                 autoComplete="email"
                 required
                 value={email}
@@ -81,12 +82,12 @@ export default function LoginPage() {
 
             <div className="space-y-2">
               <div className="flex items-center justify-between">
-                <Label htmlFor="password">Password</Label>
+                <Label htmlFor="password">كلمة المرور</Label>
                 <Link
                   href="/forgot-password"
                   className="text-xs text-[#C9A84C] hover:underline"
                 >
-                  Forgot password?
+                  هل نسيت كلمة المرور؟
                 </Link>
               </div>
               <Input
@@ -102,33 +103,33 @@ export default function LoginPage() {
             </div>
 
             <Button type="submit" size="lg" className="w-full" disabled={isSubmitting} loading={isSubmitting}>
-              {isSubmitting ? "Logging in…" : "Log In"}
+              {isSubmitting ? "جارٍ تسجيل الدخول..." : "تسجيل الدخول"}
             </Button>
           </form>
 
           <div className="mt-8 pt-6 border-t border-gray-100 text-center">
             <p className="text-sm text-gray-500 mb-4">
-              Not a Wosool member yet?
+              لا تملك حسابًا بعد؟
             </p>
             <div className="flex flex-col gap-3">
               <Button asChild variant="outline" size="sm" className="w-full">
-                <Link href="/register">Create an Account</Link>
+                <Link href="/register">إنشاء حساب</Link>
               </Button>
               <Button asChild variant="ghost" size="sm" className="w-full">
-                <Link href="/apply">Apply to Join Wosool</Link>
+                <Link href="/apply">قدّم للانضمام إلى وصول</Link>
               </Button>
             </div>
           </div>
         </div>
 
         <p className="text-center text-xs text-gray-400 mt-6">
-          By logging in, you agree to our{" "}
+          بتسجيل الدخول، فإنك توافق على{" "}
           <Link href="/terms" className="hover:text-gray-600 underline">
-            Terms
+            الشروط
           </Link>{" "}
-          and{" "}
+          و{" "}
           <Link href="/privacy" className="hover:text-gray-600 underline">
-            Privacy Policy
+            سياسة الخصوصية
           </Link>
         </p>
       </div>

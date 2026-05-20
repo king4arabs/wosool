@@ -1,6 +1,9 @@
+"use client"
+
 import Link from "next/link"
-import { ArrowRight } from "lucide-react"
+import { ArrowLeft, ArrowRight } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { useLocale } from "@/lib/locale"
 
 interface SectionHeaderProps {
   eyebrow?: string
@@ -21,6 +24,9 @@ export function SectionHeader({
   centered = false,
   light = false,
 }: SectionHeaderProps) {
+  const { direction } = useLocale()
+  const ArrowIcon = direction === "rtl" ? ArrowLeft : ArrowRight
+
   return (
     <div
       className={cn(
@@ -60,7 +66,7 @@ export function SectionHeader({
           className="inline-flex items-center gap-2 text-sm font-semibold text-[#C9A84C] hover:gap-3 transition-all shrink-0"
         >
           {ctaLabel}
-          <ArrowRight className="h-4 w-4" />
+          <ArrowIcon className="h-4 w-4" />
         </Link>
       )}
 
@@ -71,7 +77,7 @@ export function SectionHeader({
             className="inline-flex items-center gap-2 text-sm font-semibold text-[#C9A84C] hover:gap-3 transition-all"
           >
             {ctaLabel}
-            <ArrowRight className="h-4 w-4" />
+            <ArrowIcon className="h-4 w-4" />
           </Link>
         </div>
       )}

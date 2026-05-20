@@ -13,10 +13,16 @@ import type { NextRequest } from "next/server"
 export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl
 
-  // Check for Laravel session cookie (set by Sanctum)
-  const hasSession =
-    request.cookies.has("laravel_session") ||
-    request.cookies.has("wosool_session")
+  // Check for Laravel session cookie (set by Sanctum).
+  // Supports default `laravel_session` and custom names like `wosool-session`.
+  const cookieNames = request.cookies.getAll().map((cookie) => cookie.name)
+  const hasSession = cookieNames.some((name) =>
+    name === "laravel_session" ||
+    name === "wosool_session" ||
+    name === "wosool-session" ||
+    name.endsWith("_session") ||
+    name.endsWith("-session")
+  )
 
   // Protected paths
   const isProtected =

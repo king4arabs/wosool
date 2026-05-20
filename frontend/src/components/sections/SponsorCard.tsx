@@ -1,7 +1,11 @@
+"use client"
+
 import type { Sponsor } from "@/types"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { ExternalLink } from "lucide-react"
+import { getSponsorTierLabel } from "@/data/localized-seed"
+import { useLocale } from "@/lib/locale"
 
 interface SponsorCardProps {
   sponsor: Sponsor
@@ -24,12 +28,16 @@ const tierColors: Record<Sponsor["tier"], string> = {
 }
 
 export function SponsorCard({ sponsor }: SponsorCardProps) {
+  const { locale, direction } = useLocale()
   const initials = sponsor.name
     .split(" ")
     .map((n) => n[0])
     .join("")
     .slice(0, 2)
     .toUpperCase()
+
+  const visitWebsite = locale === "ar" ? "زيارة الموقع" : locale === "fr" ? "Visiter le site" : "Visit website"
+  const tierLabel = getSponsorTierLabel(sponsor.tier, locale)
 
   return (
     <Card>
@@ -44,7 +52,7 @@ export function SponsorCard({ sponsor }: SponsorCardProps) {
 
         <div className="flex items-center justify-between mb-2">
           <h3 className="font-semibold text-[#0A1628]">{sponsor.name}</h3>
-          <Badge variant={tierVariant[sponsor.tier]}>{sponsor.tier}</Badge>
+          <Badge variant={tierVariant[sponsor.tier]}>{tierLabel}</Badge>
         </div>
 
         <p className="text-sm text-gray-600 line-clamp-2 mb-3">{sponsor.description}</p>
@@ -56,8 +64,8 @@ export function SponsorCard({ sponsor }: SponsorCardProps) {
             rel="noopener noreferrer"
             className="inline-flex items-center gap-1 text-xs text-[#C9A84C] hover:underline"
           >
-            Visit website
-            <ExternalLink className="h-3 w-3" />
+            {visitWebsite}
+            <ExternalLink className={`h-3 w-3 ${direction === "rtl" ? "order-first" : ""}`} />
           </a>
         )}
       </CardContent>

@@ -1,178 +1,134 @@
+import Link from "next/link"
+import { Globe, Heart, Lightbulb, Shield, Users } from "lucide-react"
 import { PublicLayout } from "@/components/layout/PublicLayout"
 import { SectionHeader } from "@/components/sections/SectionHeader"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import Link from "next/link"
-import { Shield, Users, Heart, Lightbulb, Globe } from "lucide-react"
 
 const principles = [
   {
     icon: Shield,
-    title: "Founder-First, Always",
-    description:
-      "Every decision we make is filtered through one question: does this serve founders? Wosool exists for builders, not institutions.",
+    title: "المؤسس أولًا",
+    description: "نقيس كل قرار بسؤال واحد: هل يخلق قيمة فعلية للمؤسس؟ وصول بُني للمؤسسين، لا للمشهد الاستعراضي حولهم.",
   },
   {
     icon: Heart,
-    title: "Trust Over Scale",
-    description:
-      "We grow deliberately. We&apos;d rather have 200 deeply engaged founders than 2,000 passive members. Quality of connection matters.",
+    title: "الثقة قبل التوسع",
+    description: "نفضّل مجتمعًا أصغر وأكثر تفاعلًا على شبكة واسعة بلا عمق. جودة العلاقة أهم من عدد الأسماء.",
   },
   {
     icon: Lightbulb,
-    title: "Honest & Direct",
-    description:
-      "We tell founders what they need to hear, not what they want to hear. Candid feedback, honest assessments, no fluff.",
+    title: "وضوح بلا مجاملة",
+    description: "نؤمن بالملاحظات الصريحة والتقييم الواقعي، لأن المؤسس الجاد يحتاج إلى وضوح يساعده على اتخاذ القرار.",
   },
   {
     icon: Globe,
-    title: "Rooted in the GCC",
-    description:
-      "We celebrate the unique context of building in Saudi Arabia and the GCC. Local insight meets global ambition.",
+    title: "جذور خليجية وطموح عالمي",
+    description: "نستوعب خصوصية البناء في السعودية والخليج، ونربطها بطموح يليق بشركات تريد أن تنافس على مستوى أعلى.",
   },
   {
     icon: Users,
-    title: "Give More Than You Take",
-    description:
-      "The best communities are built on generosity. We ask every member to contribute their expertise, network, and time.",
+    title: "العطاء جزء من العضوية",
+    description: "أفضل المجتمعات تُبنى حين يشارك الأعضاء خبرتهم وشبكاتهم ووقتهم بسخاء ومسؤولية.",
   },
 ]
 
 export default function AboutPage() {
   return (
     <PublicLayout>
-      {/* Hero */}
-      <section className="bg-[#0A1628] text-white py-24 px-4">
-        <div className="max-w-4xl mx-auto text-center">
-          <Badge variant="gold" className="mb-4 uppercase tracking-widest text-xs px-4 py-1.5">
-            Our Story
+      <section className="bg-[#0A1628] px-4 py-24 text-white">
+        <div className="mx-auto max-w-4xl text-center">
+          <Badge variant="gold" className="mb-4 px-4 py-1.5 text-xs tracking-widest">
+            قصتنا
           </Badge>
-          <h1 className="text-5xl sm:text-6xl font-bold tracking-tight mb-6">
-            About Wosool
-          </h1>
-          <p className="text-xl text-gray-300 leading-relaxed max-w-2xl mx-auto">
-            We built Wosool because we believe founders in Saudi Arabia and the
-            GCC deserve a truly premium support network — not another generic
-            accelerator or events series.
+          <h1 className="mb-6 text-5xl font-bold tracking-tight sm:text-6xl">عن وصول</h1>
+          <p className="mx-auto max-w-2xl text-xl leading-relaxed text-gray-300">
+            بنينا وصول لأننا نؤمن بأن المؤسسين في السعودية والخليج يستحقون شبكة دعم أكثر نضجًا من مجرد فعاليات متكررة أو مجتمع واسع بلا قيمة عملية.
           </p>
         </div>
       </section>
 
-      {/* Mission & Vision */}
-      <section className="py-24 px-4 bg-white">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+      <section className="bg-white px-4 py-24">
+        <div className="mx-auto max-w-7xl">
+          <div className="grid grid-cols-1 items-center gap-16 lg:grid-cols-2">
             <div>
-              <p className="text-sm font-semibold text-[#C9A84C] uppercase tracking-widest mb-3">
-                Our Mission
+              <p className="mb-3 text-sm font-semibold tracking-widest text-[var(--color-logo-blue)]">رسالتنا</p>
+              <h2 className="mb-6 text-4xl font-bold text-[#0A1628]">تسريع المؤسسين الأقوى في الخليج</h2>
+              <p className="mb-6 leading-relaxed text-gray-600">
+                يربط وصول المؤسسين الطموحين بالأشخاص والبرامج والموارد التي يحتاجون إليها لبناء شركاتهم بوضوح أكبر وسرعة أعلى.
               </p>
-              <h2 className="text-4xl font-bold text-[#0A1628] mb-6">
-                To accelerate the best founders in the GCC
-              </h2>
-              <p className="text-gray-600 leading-relaxed mb-6">
-                Wosool connects ambitious founders with the people, programs, and
-                resources they need to build faster and smarter. We exist to
-                bridge the gap between founders and the support structures that
-                exist in more mature startup ecosystems.
-              </p>
-              <p className="text-gray-600 leading-relaxed">
-                Founded by entrepreneurs who&apos;ve built and scaled companies in the
-                region, Wosool is built on deep understanding of what founders
-                in Saudi Arabia and the GCC actually need.
+              <p className="leading-relaxed text-gray-600">
+                تأسس وصول على يد رواد أعمال ومشغلين يعرفون تعقيدات البناء في المنطقة، لذلك صُممت التجربة حول احتياجات واقعية لا حول افتراضات عامة.
               </p>
             </div>
-            <div className="bg-[#F8F5EF] rounded-3xl p-10">
-              <p className="text-sm font-semibold text-[#C9A84C] uppercase tracking-widest mb-3">
-                Our Vision
-              </p>
-              <h3 className="text-2xl font-bold text-[#0A1628] mb-4">
-                Saudi Arabia as a global hub for world-class founders
-              </h3>
-              <p className="text-gray-600 leading-relaxed">
-                We envision a future where the most ambitious founders in the
-                world choose Saudi Arabia and the GCC as the place to build
-                their companies — and where Wosool is the connective tissue
-                that makes this possible.
+            <div className="rounded-3xl bg-[#F7F8FB] p-10">
+              <p className="mb-3 text-sm font-semibold tracking-widest text-[var(--color-logo-blue)]">رؤيتنا</p>
+              <h3 className="mb-4 text-2xl font-bold text-[#0A1628]">السعودية والخليج كبيئة جاذبة للمؤسسين الأقوى</h3>
+              <p className="leading-relaxed text-gray-600">
+                نطمح إلى منظومة تجعل المنطقة خيارًا طبيعيًا لبناء شركات ذات مستوى عالمي، وأن يكون وصول هو الحلقة التي تربط بين الطموح والموارد والعلاقات المناسبة.
               </p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Why Wosool Exists */}
-      <section className="py-24 px-4 section-cream">
-        <div className="max-w-4xl mx-auto text-center">
-          <SectionHeader
-            eyebrow="Why We Exist"
-            heading="The gap we're closing"
-            centered
-          />
-          <div className="space-y-6 text-left">
+      <section className="section-cream px-4 py-24">
+        <div className="mx-auto max-w-4xl text-center">
+          <SectionHeader eyebrow="لماذا وُجد وصول" heading="الفجوة التي نعمل على سدّها" centered />
+          <div className="space-y-6 text-right">
             {[
-              "Most founder networks in the GCC are either too broad (10,000 LinkedIn connections) or too narrow (a closed circle of insiders). Wosool is curated, trusted, and designed for serious builders.",
-              "Founders in Saudi Arabia often face unique challenges — navigating regulatory landscapes, finding early adopters, hiring senior talent, or raising from a small pool of local investors. Generic resources don't help.",
-              "The best support founders get is from other founders who've been through it. Wosool systematises peer learning and warm introductions so you don't have to stumble upon them by chance.",
-            ].map((text, i) => (
-              <div
-                key={i}
-                className="flex gap-4 bg-white rounded-2xl p-6 shadow-sm"
-              >
-                <span className="flex-shrink-0 h-8 w-8 rounded-full bg-[#C9A84C]/20 text-[#C9A84C] flex items-center justify-center text-sm font-bold">
-                  {i + 1}
+              "كثير من شبكات المؤسسين في المنطقة إما واسعة أكثر من اللازم فتفقد القيمة، أو ضيقة أكثر من اللازم فتتحول إلى دائرة مغلقة. وصول يوازن بين الانتقاء والانفتاح المدروس.",
+              "المؤسس في السعودية والخليج يواجه تحديات لا تعالجها الموارد العامة بسهولة، من تنظيم السوق إلى الوصول المبكر إلى العملاء والشركاء والمواهب.",
+              "أفضل دعم يحصل عليه المؤسس غالبًا يأتي من مؤسس آخر مرّ بتجربة مشابهة. نحن نحول هذا الدعم من صدفة إلى بنية متاحة ومنظمة.",
+            ].map((text, index) => (
+              <div key={index} className="flex gap-4 rounded-2xl bg-white p-6 shadow-sm">
+                <span className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-[var(--color-soft-blue)] text-sm font-bold text-[var(--color-logo-blue)]">
+                  {index + 1}
                 </span>
-                <p className="text-gray-700 leading-relaxed">{text}</p>
+                <p className="leading-relaxed text-gray-700">{text}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Principles */}
-      <section className="py-24 px-4 bg-white" id="principles">
-        <div className="max-w-7xl mx-auto">
-          <SectionHeader
-            eyebrow="Our Principles"
-            heading="The values that guide everything we do"
-            centered
-          />
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <section className="bg-white px-4 py-24" id="principles">
+        <div className="mx-auto max-w-7xl">
+          <SectionHeader eyebrow="مبادئنا" heading="القيم التي توجه كل ما نقوم به" centered />
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
             {principles.map(({ icon: Icon, title, description }) => (
-              <div key={title} className="p-6 rounded-2xl bg-[#F8F5EF]">
-                <div className="h-10 w-10 rounded-xl bg-[#0A1628] flex items-center justify-center mb-4">
-                  <Icon className="h-5 w-5 text-[#C9A84C]" aria-hidden="true" />
+              <div key={title} className="rounded-2xl bg-[#F7F8FB] p-6">
+                <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-xl bg-[#0A1628]">
+                  <Icon className="h-5 w-5 text-[var(--color-logo-blue)]" />
                 </div>
-                <h3 className="font-semibold text-[#0A1628] mb-2">{title}</h3>
-                <p
-                  className="text-sm text-gray-600 leading-relaxed"
-                  dangerouslySetInnerHTML={{ __html: description }}
-                />
+                <h3 className="mb-2 font-semibold text-[#0A1628]">{title}</h3>
+                <p className="text-sm leading-relaxed text-gray-600">{description}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Community Model */}
-      <section className="py-24 px-4 bg-[#0A1628] text-white">
-        <div className="max-w-4xl mx-auto text-center">
+      <section className="bg-[#0A1628] px-4 py-24 text-white">
+        <div className="mx-auto max-w-4xl text-center">
           <SectionHeader
-            eyebrow="Community Model"
-            heading="How Wosool works"
-            subheading="Wosool operates as an invite-and-apply network. Members are vetted, verified, and matched based on their founder profile, stage, and goals."
+            eyebrow="آلية المجتمع"
+            heading="كيف تعمل شبكة وصول"
+            subheading="تعمل وصول بصيغة الدعوة أو التقديم. تتم مراجعة كل عضو والتحقق من ملفه قبل منحه حق الوصول إلى المجتمع والبرامج والتعريفات."
             centered
             light
           />
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mt-8">
+          <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-3">
             {[
-              { step: "1", title: "Apply", desc: "Submit your application and tell us about your journey." },
-              { step: "2", title: "Get Verified", desc: "Our team reviews and verifies your founder profile." },
-              { step: "3", title: "Get Connected", desc: "Access the network, programs, and matched introductions." },
+              { step: "1", title: "قدّم", desc: "شاركنا رحلتك الحالية وما الذي تبحث عنه من المجتمع." },
+              { step: "2", title: "يُراجع ملفك", desc: "يراجع الفريق الملف ويتحقق من ملاءمته لروح المجتمع وجودة الإضافة المتبادلة." },
+              { step: "3", title: "ابدأ الاستفادة", desc: "بعد القبول، تحصل على الوصول إلى الشبكة والبرامج وفرص التعارف المنتقاة." },
             ].map(({ step, title, desc }) => (
-              <div key={step} className="bg-white/5 rounded-2xl p-6">
-                <div className="h-10 w-10 rounded-full bg-[#C9A84C] text-[#0A1628] font-bold flex items-center justify-center mx-auto mb-4">
+              <div key={step} className="rounded-2xl bg-white/5 p-6">
+                <div className="mx-auto mb-4 flex h-10 w-10 items-center justify-center rounded-full bg-[var(--color-logo-blue)] font-bold text-white">
                   {step}
                 </div>
-                <h3 className="font-semibold mb-2">{title}</h3>
+                <h3 className="mb-2 font-semibold">{title}</h3>
                 <p className="text-sm text-gray-400">{desc}</p>
               </div>
             ))}
@@ -180,24 +136,19 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* Governance & Trust */}
-      <section className="py-24 px-4 section-cream">
-        <div className="max-w-4xl mx-auto">
-          <SectionHeader
-            eyebrow="Governance & Trust"
-            heading="A community built on accountability"
-            centered
-          />
-          <div className="bg-white rounded-2xl p-8 shadow-sm space-y-4">
+      <section className="section-cream px-4 py-24">
+        <div className="mx-auto max-w-4xl">
+          <SectionHeader eyebrow="الحوكمة والثقة" heading="مجتمع مبني على المساءلة" centered />
+          <div className="space-y-4 rounded-2xl bg-white p-8 shadow-sm">
             {[
-              "All members are manually reviewed before being granted access.",
-              "A Founder Score system ensures active, contributing members are recognised.",
-              "Community guidelines are enforced by a member-elected advisory council.",
-              "Conflict of interest policies apply to all introductions and referrals.",
-              "Data privacy and confidentiality are treated as sacred — we never sell member data.",
+              "تتم مراجعة جميع الأعضاء يدويًا قبل منحهم حق الوصول.",
+              "تعكس آليات التقييم والمشاركة تقدير الأعضاء الأكثر فاعلية وإضافة.",
+              "تُعامل الخصوصية والسرية باعتبارهما جزءًا أساسيًا من الثقة داخل المجتمع.",
+              "تخضع التعريفات والإحالات لمعايير واضحة تتجنب تضارب المصالح وتحفظ الجودة.",
+              "لا تُباع بيانات الأعضاء لأي طرف ثالث، ولا تُستخدم إلا في إطار الخدمة وتجربة العضوية.",
             ].map((item) => (
               <div key={item} className="flex items-start gap-3">
-                <span className="text-[#C9A84C] text-lg mt-0.5">✓</span>
+                <span className="mt-0.5 text-[var(--color-logo-blue)]">✓</span>
                 <p className="text-gray-700">{item}</p>
               </div>
             ))}
@@ -205,25 +156,17 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* Leadership Placeholder */}
-      <section className="py-24 px-4 bg-white" id="team">
-        <div className="max-w-7xl mx-auto text-center">
-          <SectionHeader
-            eyebrow="Leadership"
-            heading="The team behind Wosool"
-            centered
-          />
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {["Founder & CEO", "Head of Community", "Head of Programs"].map((role) => (
-              <div
-                key={role}
-                className="bg-[#F8F5EF] rounded-2xl p-8 flex flex-col items-center gap-4"
-              >
-                <div className="h-20 w-20 rounded-full bg-[#0A1628] flex items-center justify-center">
-                  <Users className="h-8 w-8 text-[#C9A84C]" aria-hidden="true" />
+      <section className="bg-white px-4 py-24" id="team">
+        <div className="mx-auto max-w-7xl text-center">
+          <SectionHeader eyebrow="الفريق" heading="الأشخاص وراء وصول" centered />
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {["المؤسس والرئيس التنفيذي", "قيادة المجتمع", "قيادة البرامج"].map((role) => (
+              <div key={role} className="flex flex-col items-center gap-4 rounded-2xl bg-[#F7F8FB] p-8">
+                <div className="flex h-20 w-20 items-center justify-center rounded-full bg-[#0A1628]">
+                  <Users className="h-8 w-8 text-[var(--color-logo-blue)]" />
                 </div>
                 <div className="text-center">
-                  <p className="font-semibold text-[#0A1628]">Coming Soon</p>
+                  <p className="font-semibold text-[#0A1628]">قريبًا</p>
                   <p className="text-sm text-gray-500">{role}</p>
                 </div>
               </div>
@@ -232,17 +175,12 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* CTA */}
-      <section className="py-20 px-4 bg-[#C9A84C]">
-        <div className="max-w-2xl mx-auto text-center">
-          <h2 className="text-3xl font-bold text-[#0A1628] mb-4">
-            Ready to be part of the story?
-          </h2>
-          <p className="text-[#0A1628]/70 mb-8">
-            Applications are reviewed on a rolling basis.
-          </p>
+      <section className="bg-[#EEF2FF] px-4 py-20">
+        <div className="mx-auto max-w-2xl text-center">
+          <h2 className="mb-4 text-3xl font-bold text-[#0A1628]">هل أنت مستعد لتكون جزءًا من القصة؟</h2>
+          <p className="mb-8 text-[#0A1628]/70">تُراجع الطلبات باستمرار مع مراعاة جودة الملاءمة وإضافة كل عضو للمجتمع.</p>
           <Button asChild size="lg" variant="secondary">
-            <Link href="/apply">Apply to Join Wosool</Link>
+            <Link href="/apply">قدّم للانضمام إلى وصول</Link>
           </Button>
         </div>
       </section>

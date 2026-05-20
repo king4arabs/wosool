@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\CompanyResource;
 use App\Models\AdminAction;
 use App\Models\CompanyProfile;
 use App\Support\GeneratesUniqueSlug;
@@ -40,7 +41,7 @@ class CompanyController extends Controller
         $companies = $query->latest()->get();
 
         return response()->json([
-            'data' => $companies,
+            'data' => CompanyResource::collection($companies),
             'meta' => [
                 'total' => $companies->count(),
                 'hiring' => $companies->where('is_hiring', true)->count(),
@@ -61,7 +62,7 @@ class CompanyController extends Controller
 
         return response()->json([
             'message' => 'Company created.',
-            'data' => $company->load('founders.user:id,name'),
+            'data' => new CompanyResource($company->load('founders.user:id,name')),
         ], 201);
     }
 
@@ -80,7 +81,7 @@ class CompanyController extends Controller
 
         return response()->json([
             'message' => 'Company updated.',
-            'data' => $company->fresh()->load('founders.user:id,name'),
+            'data' => new CompanyResource($company->fresh()->load('founders.user:id,name')),
         ]);
     }
 

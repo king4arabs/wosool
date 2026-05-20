@@ -14,6 +14,7 @@ export interface AdminStats {
 
 export interface AdminDashboardResponse {
   stats: AdminStats
+  application_pipeline?: Record<string, number>
   recent_applications: AdminApplication[]
   activity: AdminActivity[]
 }
@@ -133,6 +134,92 @@ export interface AdminNewsItem {
 export interface AdminCollectionResponse<T> {
   data: T[]
   meta: Record<string, number>
+  links?: {
+    next?: string | null
+    prev?: string | null
+  }
+}
+
+export interface AdminFounder {
+  id: number
+  slug: string
+  name?: string | null
+  tagline?: string | null
+  location?: string | null
+  sector?: string | null
+  stage?: string | null
+  status: string
+  is_verified: boolean
+  is_featured: boolean
+  created_at?: string | null
+  companies?: Array<{ id: number; name: string }>
+  scorecard?: { overall_score: number | null } | null
+}
+
+export interface AdminPartner {
+  id: number
+  name: string
+  slug: string
+  description?: string | null
+  logo_url?: string | null
+  website?: string | null
+  type: string
+  status: string
+  sector?: string | null
+  contact_name?: string | null
+  contact_email?: string | null
+  is_public: boolean
+  display_order: number
+}
+
+export interface AdminSponsor {
+  id: number
+  name: string
+  slug: string
+  description?: string | null
+  logo_url?: string | null
+  website?: string | null
+  tier: string
+  is_active: boolean
+  contact_name?: string | null
+  contact_email?: string | null
+  contract_start?: string | null
+  contract_end?: string | null
+  display_order: number
+}
+
+export interface AdminSettingsResponse {
+  general: {
+    site_name: string
+    site_url: string
+    site_description: string
+    timezone: string
+    default_language: string
+    maintenance_mode: boolean
+    registration_open: boolean
+  }
+  email: {
+    from_name: string
+    from_email: string
+    reply_to?: string | null
+    smtp_host?: string | null
+    notifications: Record<string, boolean>
+  }
+  security: {
+    require_2fa: boolean
+    session_timeout_minutes: number
+    password_policy: string
+    api_rate_limit: number
+  }
+}
+
+export interface AdminAnalyticsResponse {
+  data: {
+    kpis: Record<string, number>
+    monthly_signups: Array<{ month: string; value: number }>
+    sector_distribution: Array<{ sector: string; count: number }>
+    recent_activity: Array<{ metric: string; value: number }>
+  }
 }
 
 export function isAdminUser(user: User | null): boolean {

@@ -1,141 +1,107 @@
+"use client"
+
+import { useEffect, useState } from "react"
 import { PublicLayout } from "@/components/layout/PublicLayout"
 import { SectionHeader } from "@/components/sections/SectionHeader"
 import { SponsorCard } from "@/components/sections/SponsorCard"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
-import { sponsors } from "@/data/seed"
-
-const tiers = [
-  {
-    name: "Platinum",
-    price: "Premium",
-    benefits: [
-      "Prime logo placement on all materials",
-      "Speaking slot at annual summit",
-      "Exclusive founder dinner invitation",
-      "Monthly featured newsletter placement",
-      "Direct access to curated founder intros",
-    ],
-  },
-  {
-    name: "Gold",
-    price: "Standard",
-    benefits: [
-      "Logo on website and event materials",
-      "Panel seat at two annual events",
-      "Quarterly featured newsletter placement",
-      "Access to community sponsor showcase",
-    ],
-  },
-  {
-    name: "Silver",
-    price: "Entry",
-    benefits: [
-      "Logo on website",
-      "One sponsored content piece per quarter",
-      "Access to community sponsor showcase",
-    ],
-  },
-]
-
-const audienceStats = [
-  { value: "250+", label: "Verified Founders" },
-  { value: "SAR 500M+", label: "Combined Funding Raised" },
-  { value: "15", label: "Countries Represented" },
-  { value: "85%", label: "Decision Makers" },
-]
+import {
+  getSeedSponsors,
+  localizeSponsor,
+  sponsorsPageCopy,
+} from "@/data/localized-seed"
+import { getCollectionItems, type ApiSponsor, fetchJson, mapSponsor, type WrappedResponse } from "@/lib/content-api"
+import { useLocale } from "@/lib/locale"
+import type { PaginatedResponse, Sponsor } from "@/types"
 
 export default function SponsorsPage() {
+  const { locale } = useLocale()
+  const copy = sponsorsPageCopy[locale]
+  const [sponsorItems, setSponsorItems] = useState<Sponsor[]>(() => getSeedSponsors(locale))
+
+  useEffect(() => {
+    setSponsorItems(getSeedSponsors(locale))
+  }, [locale])
+
+  useEffect(() => {
+    async function loadSponsors() {
+      try {
+        const response = await fetchJson<PaginatedResponse<ApiSponsor> | WrappedResponse<ApiSponsor[]>>("/api/v1/sponsors")
+        const items = getCollectionItems(response).map((item) => localizeSponsor(mapSponsor(item), locale))
+        if (items.length > 0) {
+          setSponsorItems(items)
+        }
+      } catch {
+        // Seeded localized fallback stays in place.
+      }
+    }
+
+    void loadSponsors()
+  }, [locale])
+
   return (
     <PublicLayout>
-      {/* Hero */}
-      <section className="bg-[#0A1628] text-white py-20 px-4">
-        <div className="max-w-4xl mx-auto text-center">
-          <Badge variant="gold" className="mb-4 uppercase tracking-widest text-xs px-4 py-1.5">
-            Sponsorship
+      <section className="bg-[#0A1628] px-4 py-20 text-white">
+        <div className="mx-auto max-w-4xl text-center">
+          <Badge variant="gold" className="mb-4 px-4 py-1.5 text-xs tracking-widest">
+            {copy.badge}
           </Badge>
-          <h1 className="text-5xl font-bold tracking-tight mb-4">
-            Reach the GCC&apos;s Best Founders
-          </h1>
-          <p className="text-xl text-gray-300 max-w-2xl mx-auto">
-            Sponsoring Wosool puts your brand in front of 250+ verified,
-            ambitious founders building the next generation of GCC companies.
-          </p>
+          <h1 className="mb-4 text-5xl font-bold tracking-tight">{copy.title}</h1>
+          <p className="mx-auto max-w-2xl text-xl text-gray-300">{copy.description}</p>
         </div>
       </section>
 
-      {/* Audience Stats */}
-      <section className="py-16 px-4 bg-white">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 text-center">
-            {audienceStats.map(({ value, label }) => (
+      <section className="bg-white px-4 py-16">
+        <div className="mx-auto max-w-7xl">
+          <div className="grid grid-cols-2 gap-8 text-center lg:grid-cols-4">
+            {copy.stats.map(({ value, label }) => (
               <div key={label}>
                 <p className="text-3xl font-bold text-[#0A1628]">{value}</p>
-                <p className="text-sm text-gray-500 mt-1">{label}</p>
+                <p className="mt-1 text-sm text-gray-500">{label}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Current Sponsors */}
-      <section className="py-20 px-4 section-cream">
-        <div className="max-w-7xl mx-auto">
-          <SectionHeader eyebrow="Current Sponsors" heading="Proud Supporters of Wosool" />
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {sponsors.map((sponsor) => (
+      <section className="section-cream px-4 py-20">
+        <div className="mx-auto max-w-7xl">
+          <SectionHeader eyebrow={copy.currentEyebrow} heading={copy.currentTitle} />
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {sponsorItems.map((sponsor) => (
               <SponsorCard key={sponsor.id} sponsor={sponsor} />
             ))}
           </div>
         </div>
       </section>
 
-      {/* Tiers */}
-      <section className="py-20 px-4 bg-white">
-        <div className="max-w-7xl mx-auto">
-          <SectionHeader
-            eyebrow="Sponsorship Packages"
-            heading="Choose your level of support"
-            centered
-          />
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {tiers.map(({ name, benefits }) => (
+      <section className="bg-white px-4 py-20">
+        <div className="mx-auto max-w-7xl">
+          <SectionHeader eyebrow={copy.tiersEyebrow} heading={copy.tiersTitle} centered />
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+            {copy.tiers.map(({ name, benefits }, index) => (
               <div
                 key={name}
-                className={`rounded-2xl p-8 ${
-                  name === "Platinum"
-                    ? "bg-[#0A1628] text-white"
-                    : "bg-[#F8F5EF]"
-                }`}
+                className={`rounded-2xl p-8 ${index === 0 ? "bg-[#0A1628] text-white" : "bg-[#F7F8FB]"}`}
               >
-                <Badge
-                  variant={
-                    name === "Platinum" ? "gold" : name === "Gold" ? "warning" : "secondary"
-                  }
-                  className="mb-4"
-                >
+                <Badge variant={index === 0 ? "gold" : index === 1 ? "warning" : "secondary"} className="mb-4">
                   {name}
                 </Badge>
-                <h3
-                  className={`text-xl font-bold mb-6 ${
-                    name === "Platinum" ? "text-white" : "text-[#0A1628]"
-                  }`}
-                >
-                  {name} Sponsor
+                <h3 className={`mb-6 text-xl font-bold ${index === 0 ? "text-white" : "text-[#0A1628]"}`}>
+                  {locale === "ar" ? `باقة ${name}` : `${name} Tier`}
                 </h3>
                 <ul className="space-y-3">
-                  {benefits.map((b) => (
+                  {benefits.map((benefit) => (
                     <li
-                      key={b}
-                      className={`flex items-start gap-2 text-sm ${
-                        name === "Platinum" ? "text-gray-300" : "text-gray-600"
-                      }`}
+                      key={benefit}
+                      className={`flex items-start gap-2 text-sm ${index === 0 ? "text-gray-300" : "text-gray-600"}`}
                     >
-                      <span className="text-[#C9A84C] mt-0.5">✓</span>
-                      <span>{b}</span>
+                      <span className="mt-0.5 text-[#4056C7]">✓</span>
+                      <span>{benefit}</span>
                     </li>
                   ))}
                 </ul>
@@ -145,48 +111,39 @@ export default function SponsorsPage() {
         </div>
       </section>
 
-      {/* Inquiry Form */}
-      <section className="py-20 px-4 section-cream">
-        <div className="max-w-xl mx-auto">
-          <SectionHeader
-            eyebrow="Get in Touch"
-            heading="Sponsorship Enquiry"
-            centered
-          />
-          <form className="bg-white rounded-2xl p-8 shadow-sm space-y-6">
+      <section className="section-cream px-4 py-20">
+        <div className="mx-auto max-w-xl">
+          <SectionHeader eyebrow={copy.formEyebrow} heading={copy.formTitle} centered />
+          <form className="space-y-6 rounded-2xl bg-white p-8 shadow-sm">
             <div className="space-y-2">
-              <Label htmlFor="org-name">Organisation Name</Label>
-              <Input id="org-name" placeholder="Your company name" />
+              <Label htmlFor="org-name">{copy.formLabels.orgName}</Label>
+              <Input id="org-name" placeholder={copy.formLabels.orgPlaceholder} />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="contact-name">Contact Name</Label>
-              <Input id="contact-name" placeholder="Your full name" />
+              <Label htmlFor="contact-name">{copy.formLabels.contactName}</Label>
+              <Input id="contact-name" placeholder={copy.formLabels.contactPlaceholder} />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="contact-email">Email</Label>
-              <Input id="contact-email" type="email" placeholder="you@company.com" />
+              <Label htmlFor="contact-email">{copy.formLabels.email}</Label>
+              <Input id="contact-email" type="email" placeholder="name@company.com" />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="tier">Interested Tier</Label>
+              <Label htmlFor="tier">{copy.formLabels.tier}</Label>
               <select
                 id="tier"
-                className="flex h-10 w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#C9A84C]"
+                className="flex h-10 w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#4056C7]"
               >
-                <option>Platinum</option>
-                <option>Gold</option>
-                <option>Silver</option>
-                <option>Not sure yet</option>
+                {copy.tierOptions.map((option) => (
+                  <option key={option}>{option}</option>
+                ))}
               </select>
             </div>
             <div className="space-y-2">
-              <Label htmlFor="message">Message</Label>
-              <Textarea
-                id="message"
-                placeholder="Tell us about your sponsorship goals..."
-              />
+              <Label htmlFor="message">{copy.formLabels.message}</Label>
+              <Textarea id="message" placeholder={copy.formLabels.messagePlaceholder} />
             </div>
             <Button type="submit" className="w-full">
-              Send Enquiry
+              {copy.formLabels.submit}
             </Button>
           </form>
         </div>

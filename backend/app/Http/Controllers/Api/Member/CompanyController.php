@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\Member;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreCompanyProfileRequest;
 use App\Http\Requests\UpdateCompanyProfileRequest;
+use App\Http\Resources\CompanyResource;
 use App\Models\CompanyProfile;
 use App\Models\FounderProfile;
 use Illuminate\Auth\Access\AuthorizationException;
@@ -20,7 +21,10 @@ class CompanyController extends Controller
     public function index(Request $request): JsonResponse
     {
         $founder = $this->founderProfileOrFail($request);
-        return response()->json(['data' => $founder->companies()->get()]);
+
+        return response()->json([
+            'data' => CompanyResource::collection($founder->companies()->get()),
+        ]);
     }
 
     /**
@@ -44,7 +48,7 @@ class CompanyController extends Controller
 
         return response()->json([
             'message' => 'Company created.',
-            'data' => $company,
+            'data' => new CompanyResource($company->fresh()),
         ], 201);
     }
 
@@ -58,7 +62,7 @@ class CompanyController extends Controller
 
         return response()->json([
             'message' => 'Company updated.',
-            'data' => $company->fresh(),
+            'data' => new CompanyResource($company->fresh()),
         ]);
     }
 

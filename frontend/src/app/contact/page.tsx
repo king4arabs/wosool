@@ -14,10 +14,10 @@ import { Mail, Users, Building, Newspaper, Loader2, CheckCircle } from "lucide-r
 import Link from "next/link"
 
 const categories = [
-  { icon: Mail, label: "General", value: "general", description: "General questions and enquiries" },
-  { icon: Users, label: "Partnerships", value: "partnerships", description: "Partner with the Wosool community" },
-  { icon: Building, label: "Sponsorship", value: "sponsorship", description: "Sponsor the Wosool platform or events" },
-  { icon: Newspaper, label: "Media", value: "media", description: "Press and media enquiries" },
+  { icon: Mail, label: "استفسار عام", value: "general", description: "أسئلة عامة أو طلبات تواصل أولية" },
+  { icon: Users, label: "شراكات", value: "partnerships", description: "شراكات تدعم مجتمع وصول أو برامجه" },
+  { icon: Building, label: "رعاية", value: "sponsorship", description: "الرعاية المرتبطة بالمنصة أو الفعاليات" },
+  { icon: Newspaper, label: "إعلام", value: "media", description: "استفسارات الصحافة والظهور الإعلامي" },
 ]
 
 interface ContactFormData {
@@ -42,14 +42,14 @@ const initialFormData: ContactFormData = {
 
 function validateContact(data: ContactFormData): ContactErrors {
   const errors: ContactErrors = {}
-  if (!data.name.trim()) errors.name = "Please enter your name."
-  if (!data.email.trim()) errors.email = "Please enter your email address."
+  if (!data.name.trim()) errors.name = "يرجى إدخال الاسم."
+  if (!data.email.trim()) errors.email = "يرجى إدخال البريد الإلكتروني."
   else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email))
-    errors.email = "Please enter a valid email address."
-  if (!data.category) errors.category = "Please select a category."
-  if (!data.subject.trim()) errors.subject = "Please enter a subject."
-  if (!data.message.trim()) errors.message = "Please enter your message."
-  if (data.message.length > 3000) errors.message = "Message must be under 3000 characters."
+    errors.email = "يرجى إدخال بريد إلكتروني صحيح."
+  if (!data.category) errors.category = "يرجى اختيار التصنيف."
+  if (!data.subject.trim()) errors.subject = "يرجى كتابة عنوان الرسالة."
+  if (!data.message.trim()) errors.message = "يرجى كتابة الرسالة."
+  if (data.message.length > 3000) errors.message = "يجب ألا تتجاوز الرسالة 3000 حرف."
   return errors
 }
 
@@ -85,6 +85,7 @@ export default function ContactPage() {
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors)
       toast("Please fill in all required fields.", "error")
+      toast("يرجى استكمال جميع الحقول المطلوبة.", "error")
       return
     }
 
@@ -92,7 +93,7 @@ export default function ContactPage() {
     try {
       await api.post("/contact", formData)
       setSubmitted(true)
-      toast("Message sent successfully!", "success")
+      toast("تم إرسال الرسالة بنجاح.", "success")
     } catch (err) {
       if (err instanceof ApiError && err.data && typeof err.data === "object" && "errors" in err.data) {
         const serverErrors = (err.data as { errors: Record<string, string[]> }).errors
@@ -103,9 +104,9 @@ export default function ContactPage() {
           }
         }
         setErrors(mapped)
-        toast("Please correct the highlighted errors.", "error")
+        toast("يرجى مراجعة الحقول المعلّمة وتصحيحها.", "error")
       } else {
-        toast("Something went wrong. Please try again.", "error")
+        toast("حدث خطأ غير متوقع. يرجى المحاولة مرة أخرى.", "error")
       }
     } finally {
       setSubmitting(false)
@@ -123,18 +124,18 @@ export default function ContactPage() {
               </div>
             </div>
             <h1 className="text-4xl font-bold tracking-tight mb-4">
-              Message Sent!
+              تم إرسال الرسالة
             </h1>
             <p className="text-xl text-gray-300 mb-2">
-              Thank you for reaching out. We&apos;ve received your message.
+              شكرًا لتواصلك معنا. وصلتنا رسالتك بنجاح.
             </p>
             <p className="text-gray-400 mb-8">
-              Our team will respond within 2–3 business days at{" "}
+              سيعود إليك الفريق خلال يومي عمل إلى ثلاثة أيام عمل على{" "}
               <span className="text-white font-medium">{formData.email}</span>.
             </p>
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
               <Button asChild>
-                <Link href="/">Back to Homepage</Link>
+                <Link href="/">العودة إلى الرئيسية</Link>
               </Button>
               <Button
                 variant="outline"
@@ -144,7 +145,7 @@ export default function ContactPage() {
                   setErrors({})
                 }}
               >
-                Send Another Message
+                إرسال رسالة أخرى
               </Button>
             </div>
           </div>
@@ -159,12 +160,11 @@ export default function ContactPage() {
       <section className="bg-[#0A1628] text-white py-20 px-4">
         <div className="max-w-4xl mx-auto text-center">
           <Badge variant="gold" className="mb-4 uppercase tracking-widest text-xs px-4 py-1.5">
-            Contact
+            تواصل معنا
           </Badge>
-          <h1 className="text-5xl font-bold tracking-tight mb-4">Get in Touch</h1>
+          <h1 className="text-5xl font-bold tracking-tight mb-4">يسعدنا التواصل معك</h1>
           <p className="text-xl text-gray-300 max-w-2xl mx-auto">
-            Whether you have a question, partnership idea, or just want to learn
-            more — we&apos;d love to hear from you.
+            سواء كان لديك سؤال، أو فكرة شراكة، أو رغبة في معرفة المزيد عن وصول، فنحن جاهزون للاستماع.
           </p>
         </div>
       </section>
@@ -175,7 +175,7 @@ export default function ContactPage() {
           <div className="grid grid-cols-1 lg:grid-cols-5 gap-12">
             {/* Category Selector */}
             <div className="lg:col-span-2">
-              <SectionHeader eyebrow="Category" heading="What's this about?" />
+              <SectionHeader eyebrow="التصنيف" heading="ما طبيعة هذا التواصل؟" />
               <div className="space-y-3">
                 {categories.map(({ icon: Icon, label, value, description }) => (
                   <button
@@ -204,13 +204,12 @@ export default function ContactPage() {
               </div>
 
               <div className="mt-8 p-6 bg-[#F8F5EF] rounded-2xl">
-                <h3 className="font-semibold text-[#0A1628] mb-2">Office Hours Request</h3>
+                <h3 className="font-semibold text-[#0A1628] mb-2">طلب جلسة مباشرة</h3>
                 <p className="text-sm text-gray-600 mb-4">
-                  Want to schedule a call with the Wosool team? Use the form
-                  and select &ldquo;Office Hours&rdquo; in your message.
+                  إذا رغبت في تنسيق مكالمة مع فريق وصول، فاستخدم النموذج واذكر في رسالتك أنك تطلب جلسة مباشرة.
                 </p>
                 <p className="text-xs text-gray-400">
-                  Typical response time: 2–3 business days
+                  متوسط زمن الرد: من يومي عمل إلى ثلاثة
                 </p>
               </div>
             </div>
@@ -220,10 +219,10 @@ export default function ContactPage() {
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="space-y-2 sm:col-span-2">
-                    <Label htmlFor="name">Full Name *</Label>
+                    <Label htmlFor="name">الاسم الكامل *</Label>
                     <Input
                       id="name"
-                      placeholder="Your full name"
+                      placeholder="اكتب اسمك الكامل"
                       value={formData.name}
                       onChange={(e) => updateField("name", e.target.value)}
                       aria-invalid={!!errors.name}
@@ -232,11 +231,11 @@ export default function ContactPage() {
                   </div>
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="contact-email">Email *</Label>
+                  <Label htmlFor="contact-email">البريد الإلكتروني *</Label>
                   <Input
                     id="contact-email"
                     type="email"
-                    placeholder="you@company.com"
+                    placeholder="name@company.com"
                     value={formData.email}
                     onChange={(e) => updateField("email", e.target.value)}
                     aria-invalid={!!errors.email}
@@ -244,19 +243,19 @@ export default function ContactPage() {
                   <FieldError message={errors.email} />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="organisation">Organisation</Label>
+                  <Label htmlFor="organisation">الجهة أو الشركة</Label>
                   <Input
                     id="organisation"
-                    placeholder="Your company or organisation"
+                    placeholder="اسم الشركة أو الجهة"
                     value={formData.company}
                     onChange={(e) => updateField("company", e.target.value)}
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="subject">Subject *</Label>
+                  <Label htmlFor="subject">عنوان الرسالة *</Label>
                   <Input
                     id="subject"
-                    placeholder="Brief subject line"
+                    placeholder="عنوان مختصر وواضح"
                     value={formData.subject}
                     onChange={(e) => updateField("subject", e.target.value)}
                     aria-invalid={!!errors.subject}
@@ -264,10 +263,10 @@ export default function ContactPage() {
                   <FieldError message={errors.subject} />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="contact-message">Message *</Label>
+                  <Label htmlFor="contact-message">الرسالة *</Label>
                   <Textarea
                     id="contact-message"
-                    placeholder="Tell us what you have in mind..."
+                    placeholder="اكتب تفاصيل طلبك أو فكرتك أو استفسارك..."
                     className="min-h-[140px]"
                     value={formData.message}
                     onChange={(e) => updateField("message", e.target.value)}
@@ -282,10 +281,10 @@ export default function ContactPage() {
                   {submitting ? (
                     <>
                       <Loader2 className="h-4 w-4 animate-spin mr-2" />
-                      Sending…
+                      جارٍ الإرسال...
                     </>
                   ) : (
-                    "Send Message"
+                    "إرسال الرسالة"
                   )}
                 </Button>
               </form>
@@ -297,7 +296,7 @@ export default function ContactPage() {
       {/* Alternative contacts */}
       <section className="py-16 px-4 section-cream">
         <div className="max-w-4xl mx-auto text-center">
-          <p className="text-gray-500 text-sm mb-2">You can also reach us directly at</p>
+          <p className="text-gray-500 text-sm mb-2">يمكنك أيضًا التواصل معنا مباشرة عبر</p>
           <a
             href="mailto:hello@wosool.org"
             className="text-[#C9A84C] font-semibold hover:underline"

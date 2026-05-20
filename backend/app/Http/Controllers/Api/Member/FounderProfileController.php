@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Member;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UpdateFounderProfileRequest;
+use App\Http\Resources\FounderResource;
 use App\Models\FounderProfile;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -16,7 +17,7 @@ class FounderProfileController extends Controller
      */
     public function show(Request $request): JsonResponse
     {
-        $profile = FounderProfile::with(['companies', 'scorecard.metrics'])
+        $profile = FounderProfile::with(['companies', 'scorecard'])
             ->where('user_id', $request->user()->id)
             ->first();
 
@@ -24,7 +25,21 @@ class FounderProfileController extends Controller
             return response()->json(['message' => 'No founder profile found.'], 404);
         }
 
-        return response()->json(['data' => $profile]);
+        return response()->json([
+            'data' => [
+                'id' => $profile->id,
+                'user_id' => $profile->user_id,
+                'legal_name' => $profile->legal_name,
+                'title' => $profile->title,
+                'biography_summary' => $profile->biography_summary,
+                'skills_tags' => $profile->skills_tags ?? [],
+                'vetted_status' => (bool) $profile->vetted_status,
+                'momentum_score' => (int) $profile->momentum_score,
+                'profile_markdown' => $profile->profile_markdown,
+                'created_at' => $profile->created_at?->toIso8601String(),
+                'updated_at' => $profile->updated_at?->toIso8601String(),
+            ],
+        ]);
     }
 
     /**
@@ -46,11 +61,11 @@ class FounderProfileController extends Controller
 
         $profile->fill($data);
         $profile->save();
-        $profile->load(['companies', 'scorecard.metrics']);
+        $profile->load(['companies', 'scorecard']);
 
         return response()->json([
             'message' => $created ? 'Profile created.' : 'Profile updated.',
-            'data' => $profile,
+            'data' => new FounderResource($profile),
         ], $created ? 201 : 200);
     }
 

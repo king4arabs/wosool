@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\EventResource;
 use App\Models\AdminAction;
 use App\Models\Event;
 use App\Support\GeneratesUniqueSlug;
@@ -37,7 +38,7 @@ class EventController extends Controller
         $events = $query->orderBy('starts_at')->get();
 
         return response()->json([
-            'data' => $events,
+            'data' => EventResource::collection($events),
             'meta' => [
                 'total' => $events->count(),
                 'upcoming' => $events->where('status', 'upcoming')->count(),
@@ -60,7 +61,7 @@ class EventController extends Controller
 
         return response()->json([
             'message' => 'Event created.',
-            'data' => $event,
+            'data' => new EventResource($event),
         ], 201);
     }
 
@@ -79,7 +80,7 @@ class EventController extends Controller
 
         return response()->json([
             'message' => 'Event updated.',
-            'data' => $event->fresh(),
+            'data' => new EventResource($event->fresh()),
         ]);
     }
 

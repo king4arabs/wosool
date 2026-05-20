@@ -8,11 +8,23 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Validation\Rules\Password;
 use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
 {
+    public function csrf(Request $request): JsonResponse
+    {
+        if ($request->hasSession()) {
+            $request->session()->regenerateToken();
+        }
+
+        return response()->json([
+            'message' => 'CSRF token initialized.',
+        ]);
+    }
+
     /**
      * Authenticate user and start a session.
      */
@@ -52,11 +64,26 @@ class AuthController extends Controller
             'password' => ['required', 'confirmed', Password::min(8)->mixedCase()->numbers()],
         ]);
 
-        $user = User::create([
-            'name' => $request->input('name'),
+        $passwordHash = Hash::make($request->input('password'));
+
+        $payload = [
             'email' => $request->input('email'),
-            'password' => Hash::make($request->input('password')),
-        ]);
+        ];
+
+        if (Schema::hasColumn('users', 'name')) {
+            $payload['name'] = $request->input('name');
+        }
+        if (Schema::hasColumn('users', 'role_token')) {
+            $payload['role_token'] = 'founder';
+        }
+        if (Schema::hasColumn('users', 'password_hash')) {
+            $payload['password_hash'] = $passwordHash;
+        }
+        if (Schema::hasColumn('users', 'password')) {
+            $payload['password'] = $passwordHash;
+        }
+
+        $user = User::create($payload);
 
         Auth::login($user);
         if ($request->hasSession()) {
@@ -101,11 +128,19 @@ class AuthController extends Controller
      */
     private function formatUser(User $user): array
     {
+        $attributes = $user->getAttributes();
+        $name = (string) ($attributes['name'] ?? '');
+        if ($name === '') {
+            $name = (string) strstr($user->email, '@', true) ?: 'Member';
+        }
+
         $data = [
             'id' => $user->id,
-            'name' => $user->name,
+            'name' => $name,
             'email' => $user->email,
-            'email_verified_at' => $user->email_verified_at?->toIso8601String(),
+            'email_verified_at' => array_key_exists('email_verified_at', $attributes)
+                ? $user->email_verified_at?->toIso8601String()
+                : null,
             'created_at' => $user->created_at?->toIso8601String(),
         ];
 

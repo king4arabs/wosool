@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Member;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreProgramApplicationRequest;
+use App\Http\Resources\ProgramResource;
 use App\Models\Program;
 use App\Models\ProgramApplication;
 use Illuminate\Http\JsonResponse;
@@ -22,7 +23,17 @@ class ProgramApplicationController extends Controller
             ->orderByDesc('created_at')
             ->get();
 
-        return response()->json(['data' => $applications]);
+        return response()->json([
+            'data' => $applications->map(fn (ProgramApplication $application) => [
+                'id' => $application->id,
+                'status' => $application->status,
+                'motivation' => $application->motivation,
+                'relevant_experience' => $application->relevant_experience,
+                'created_at' => $application->created_at?->toIso8601String(),
+                'updated_at' => $application->updated_at?->toIso8601String(),
+                'program' => new ProgramResource($application->program),
+            ]),
+        ]);
     }
 
     /**

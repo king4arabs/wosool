@@ -407,7 +407,7 @@ export const partners: Partner[] = [
     slug: "svc",
     description:
       "The leading government-backed venture capital fund catalysing the Saudi startup ecosystem through direct investments and LP participation.",
-    logoUrl: "",
+    logoUrl: "/partners/svc.png",
     website: "https://svc.com.sa",
     type: "Ecosystem Partner",
     status: "Confirmed",
@@ -419,7 +419,7 @@ export const partners: Partner[] = [
     slug: "kaust",
     description:
       "World-class research university and innovation ecosystem providing knowledge resources, R&D partnerships, and deep-tech expertise.",
-    logoUrl: "",
+    logoUrl: "/partners/kaust.svg",
     website: "https://kaust.edu.sa",
     type: "Knowledge Partner",
     status: "Confirmed",
@@ -431,7 +431,7 @@ export const partners: Partner[] = [
     slug: "flat6labs",
     description:
       "Regional startup accelerator and seed-stage investor with a portfolio of 300+ startups across MENA, providing capital and mentorship.",
-    logoUrl: "",
+    logoUrl: "/partners/flat6labs.png",
     website: "https://flat6labs.com",
     type: "Community Partner",
     status: "Ecosystem-Aligned",
@@ -443,7 +443,7 @@ export const partners: Partner[] = [
     slug: "pwc-me",
     description:
       "Strategic advisory and professional services partner supporting founders with financial, legal, and growth strategy expertise.",
-    logoUrl: "",
+    logoUrl: "/partners/pwc.svg",
     website: "https://pwc.com/m1",
     type: "Strategic Supporter",
     status: "Prospective",

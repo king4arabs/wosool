@@ -50,6 +50,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, [fetchUser])
 
   const login = useCallback(async (email: string, password: string) => {
+    await fetch("/api/v1/auth/csrf-cookie", {
+      credentials: "include",
+      headers: { Accept: "application/json" },
+    })
+
     const res = await fetch("/api/v1/auth/login", {
       method: "POST",
       credentials: "include",
@@ -71,6 +76,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const register = useCallback(
     async (name: string, email: string, password: string, passwordConfirmation: string) => {
+      await fetch("/api/v1/auth/csrf-cookie", {
+        credentials: "include",
+        headers: { Accept: "application/json" },
+      })
+
       const res = await fetch("/api/v1/auth/register", {
         method: "POST",
         credentials: "include",

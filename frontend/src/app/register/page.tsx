@@ -25,7 +25,7 @@ export default function RegisterPage() {
       setError("")
 
       if (password !== passwordConfirmation) {
-        setError("Passwords do not match.")
+        setError("كلمتا المرور غير متطابقتين.")
         return
       }
 
@@ -35,7 +35,7 @@ export default function RegisterPage() {
         await register(name, email, password, passwordConfirmation)
         router.push("/dashboard")
       } catch (err) {
-        setError(err instanceof Error ? err.message : "Registration failed. Please try again.")
+        setError(err instanceof Error ? err.message : "تعذر إنشاء الحساب. يرجى المحاولة مرة أخرى.")
       } finally {
         setIsSubmitting(false)
       }
@@ -54,13 +54,13 @@ export default function RegisterPage() {
               وصول
             </span>
           </Link>
-          <p className="mt-2 text-sm text-gray-500">Founders to Founders</p>
+          <p className="mt-2 text-sm text-gray-500">شبكة خاصة للمؤسسين</p>
         </div>
 
         <div className="bg-white rounded-3xl shadow-sm p-8">
-          <h1 className="text-2xl font-bold text-[#0A1628] mb-1">Create your account</h1>
+          <h1 className="text-2xl font-bold text-[#0A1628] mb-1">أنشئ حسابك</h1>
           <p className="text-gray-500 text-sm mb-8">
-            Join Wosool and connect with founders across the GCC
+            ابدأ رحلتك داخل وصول وتواصل مع مؤسسين يبنون في السعودية والخليج
           </p>
 
           {error && (
@@ -71,11 +71,11 @@ export default function RegisterPage() {
 
           <form onSubmit={handleSubmit} className="space-y-5">
             <div className="space-y-2">
-              <Label htmlFor="name">Full name</Label>
+              <Label htmlFor="name">الاسم الكامل</Label>
               <Input
                 id="name"
                 type="text"
-                placeholder="Your full name"
+                placeholder="اكتب اسمك الكامل"
                 autoComplete="name"
                 required
                 value={name}
@@ -85,11 +85,11 @@ export default function RegisterPage() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="email">Email address</Label>
+              <Label htmlFor="email">البريد الإلكتروني</Label>
               <Input
                 id="email"
                 type="email"
-                placeholder="you@company.com"
+                placeholder="name@company.com"
                 autoComplete="email"
                 required
                 value={email}
@@ -99,11 +99,11 @@ export default function RegisterPage() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
+              <Label htmlFor="password">كلمة المرور</Label>
               <Input
                 id="password"
                 type="password"
-                placeholder="At least 8 characters"
+                placeholder="8 أحرف على الأقل"
                 autoComplete="new-password"
                 required
                 minLength={8}
@@ -112,16 +112,16 @@ export default function RegisterPage() {
                 disabled={isSubmitting}
               />
               <p className="text-xs text-gray-400">
-                Must contain uppercase, lowercase, and a number.
+                يُفضّل أن تتضمن حروفًا كبيرة وصغيرة ورقمًا واحدًا على الأقل.
               </p>
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="password_confirmation">Confirm password</Label>
+              <Label htmlFor="password_confirmation">تأكيد كلمة المرور</Label>
               <Input
                 id="password_confirmation"
                 type="password"
-                placeholder="Repeat your password"
+                placeholder="أعد إدخال كلمة المرور"
                 autoComplete="new-password"
                 required
                 value={passwordConfirmation}
@@ -131,28 +131,28 @@ export default function RegisterPage() {
             </div>
 
             <Button type="submit" size="lg" className="w-full" disabled={isSubmitting} loading={isSubmitting}>
-              {isSubmitting ? "Creating account…" : "Create Account"}
+              {isSubmitting ? "جارٍ إنشاء الحساب..." : "إنشاء الحساب"}
             </Button>
           </form>
 
           <div className="mt-8 pt-6 border-t border-gray-100 text-center">
             <p className="text-sm text-gray-500 mb-4">
-              Already have an account?
+              لديك حساب بالفعل؟
             </p>
             <Button asChild variant="outline" size="sm" className="w-full">
-              <Link href="/login">Log In</Link>
+              <Link href="/login">تسجيل الدخول</Link>
             </Button>
           </div>
         </div>
 
         <p className="text-center text-xs text-gray-400 mt-6">
-          By creating an account, you agree to our{" "}
+          بإنشاء الحساب، فإنك توافق على{" "}
           <Link href="/terms" className="hover:text-gray-600 underline">
-            Terms
+            الشروط
           </Link>{" "}
-          and{" "}
+          و{" "}
           <Link href="/privacy" className="hover:text-gray-600 underline">
-            Privacy Policy
+            سياسة الخصوصية
           </Link>
         </p>
       </div>

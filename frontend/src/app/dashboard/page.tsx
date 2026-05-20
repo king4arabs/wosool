@@ -1,259 +1,123 @@
-import { Card, CardContent, CardHeader } from "@/components/ui/card"
-import { Progress } from "@/components/ui/progress"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import { Avatar, AvatarFallback } from "@/components/ui/avatar"
+import { cookies } from "next/headers"
+import { redirect } from "next/navigation"
+import IntroRouterLedger from "@/components/dashboard/IntroRouterLedger"
+import ScorecardWidget from "@/components/dashboard/ScorecardWidget"
+import { env } from "@/lib/env"
 import {
-  Star,
-  CheckCircle,
-  Clock,
-  Sparkles,
-  MessageCircle,
-  BrainCircuit,
-  TrendingUp,
-  Calendar,
-} from "lucide-react"
-import { founders, events } from "@/data/seed"
-import Link from "next/link"
+  parseCompanyProfile,
+  parseFounderProfile,
+  parseIntroductionRequest,
+  parseScorecard,
+  type CompanyProfile,
+  type FounderProfile,
+  type IntroductionRequest,
+  type Scorecard,
+} from "@/types/platform"
 
-const priorities = [
-  { label: "Complete your Founder Score", done: false },
-  { label: "Request 2 warm introductions", done: true },
-  { label: "Join your Founder Circle", done: false },
-  { label: "Attend the Dubai Founders Dinner", done: false },
-]
+interface ApiEnvelope<T> {
+  data?: T
+  message?: string
+}
 
-const activityFeed = [
-  { text: "Omar Al-Farsi accepted your connection request", time: "2h ago", type: "connect" },
-  { text: "New event: AI in the GCC Roundtable — Sept 18", time: "5h ago", type: "event" },
-  { text: "Your Founder Score improved by 3 points", time: "1d ago", type: "score" },
-  { text: "Wosool Digest #24 is available", time: "2d ago", type: "news" },
-]
+async function apiFetch<T>(path: string): Promise<ApiEnvelope<T> | null> {
+  const cookieStore = await cookies()
+  const cookieHeader = cookieStore.toString()
 
-export default function DashboardPage() {
-  const upcomingEvents = events.slice(0, 3)
-  const matches = founders.filter((f) => f.id !== "f1").slice(0, 3)
+  const response = await fetch(`${env.apiUrl}/api/v1${path}`, {
+    method: "GET",
+    headers: {
+      Accept: "application/json",
+      Cookie: cookieHeader,
+    },
+    cache: "no-store",
+  })
+
+  if (response.status === 401) {
+    redirect("/login")
+  }
+
+  if (!response.ok) {
+    return null
+  }
+
+  return response.json() as Promise<ApiEnvelope<T>>
+}
+
+function parseIntroCollection(input: unknown): IntroductionRequest[] {
+  if (Array.isArray(input)) {
+    return input.map(parseIntroductionRequest).filter((x): x is IntroductionRequest => x !== null)
+  }
+
+  if (typeof input === "object" && input !== null && Array.isArray((input as { data?: unknown }).data)) {
+    return ((input as { data: unknown[] }).data)
+      .map(parseIntroductionRequest)
+      .filter((x): x is IntroductionRequest => x !== null)
+  }
+
+  return []
+}
+
+export default async function DashboardPage() {
+  const [profileRes, companiesRes, scorecardRes, introsRes] = await Promise.all([
+    apiFetch<unknown>("/member/founder-profile"),
+    apiFetch<unknown>("/member/companies"),
+    apiFetch<unknown>("/member/scorecard"),
+    apiFetch<unknown>("/member/introductions"),
+  ])
+
+  const founderProfile: FounderProfile | null = parseFounderProfile(profileRes?.data && typeof profileRes.data === "object" ? (profileRes.data as { data?: unknown }).data ?? profileRes.data : null)
+
+  const companiesRaw = companiesRes?.data
+  const companyListData = Array.isArray(companiesRaw)
+    ? companiesRaw
+    : Array.isArray((companiesRaw as { data?: unknown[] } | undefined)?.data)
+      ? (companiesRaw as { data: unknown[] }).data
+      : []
+
+  const companies: CompanyProfile[] = companyListData
+    .map(parseCompanyProfile)
+    .filter((x): x is CompanyProfile => x !== null)
+
+  const scorecardRaw = scorecardRes?.data && typeof scorecardRes.data === "object"
+    ? (scorecardRes.data as { data?: unknown }).data ?? scorecardRes.data
+    : null
+  const scorecard: Scorecard | null = parseScorecard(scorecardRaw)
+
+  const introsData = introsRes?.data as { inbound?: unknown; outbound?: unknown } | undefined
+  const inbound = parseIntroCollection(introsData?.inbound)
+  const outbound = parseIntroCollection(introsData?.outbound)
 
   return (
     <div className="space-y-6">
-      {/* Welcome row */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div>
-          <h2 className="text-2xl font-bold text-[#0A1628]">Good morning, Layla 👋</h2>
-          <p className="text-gray-500 text-sm mt-1">Here&apos;s what&apos;s happening in your network.</p>
+      <section className="rounded-2xl border border-[#1E293B] bg-[#121826] p-5">
+        <p className="text-xs uppercase tracking-[0.18em] text-slate-400">Wosool</p>
+        <h1 className="mt-2 text-2xl font-semibold text-slate-100">Founder Dashboard</h1>
+        <p className="mt-1 text-sm text-slate-400">
+          {founderProfile
+            ? `Welcome back, ${founderProfile.legal_name}. Your workspace is synced with live backend signals.`
+            : "Your member workspace is connected. Complete your founder profile to unlock full routing."}
+        </p>
+      </section>
+
+      <section className="grid grid-cols-1 gap-4 md:grid-cols-3">
+        <div className="rounded-xl border border-[#1E293B] bg-[#121826] p-4">
+          <p className="text-xs text-slate-400">Vetted Status</p>
+          <p className="mt-1 text-lg font-semibold text-slate-100">{founderProfile?.vetted_status ? "Vetted" : "Pending Vetting"}</p>
         </div>
-        <Button asChild>
-          <Link href="/dashboard/profile">Complete Your Profile</Link>
-        </Button>
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Left column */}
-        <div className="lg:col-span-2 space-y-6">
-          {/* Profile Completion */}
-          <Card>
-            <CardHeader>
-              <div className="flex items-center justify-between">
-                <h3 className="font-semibold text-[#0A1628]">Profile Completion</h3>
-                <span className="text-2xl font-bold text-[#C9A84C]">75%</span>
-              </div>
-            </CardHeader>
-            <CardContent>
-              <Progress value={75} className="mb-4" />
-              <div className="grid grid-cols-2 gap-2 text-sm">
-                {["Basic Info ✓", "Company Profile ✓", "Founder Story ✓", "Scorecard ●", "Needs & Offers ●", "Intro Video ●"].map(
-                  (item) => (
-                    <div key={item} className="flex items-center gap-2 text-gray-600">
-                      <span>{item.includes("✓") ? "✅" : "⚪"}</span>
-                      <span>{item.replace(" ✓", "").replace(" ●", "")}</span>
-                    </div>
-                  )
-                )}
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Founder Score Summary */}
-          <Card>
-            <CardHeader>
-              <div className="flex items-center justify-between">
-                <h3 className="font-semibold text-[#0A1628] flex items-center gap-2">
-                  <Star className="h-4 w-4 text-[#C9A84C]" />
-                  Founder Score
-                </h3>
-                <Badge variant="gold">87</Badge>
-              </div>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                {[
-                  { label: "Engagement", score: 90 },
-                  { label: "Credibility", score: 85 },
-                  { label: "Contribution", score: 82 },
-                  { label: "Network", score: 78 },
-                ].map(({ label, score }) => (
-                  <div key={label} className="text-center">
-                    <div className="text-xl font-bold text-[#0A1628]">{score}</div>
-                    <div className="text-xs text-gray-500">{label}</div>
-                    <Progress value={score} className="mt-1 h-1" />
-                  </div>
-                ))}
-              </div>
-              <div className="mt-4">
-                <Link
-                  href="/dashboard/scorecard"
-                  className="text-sm text-[#C9A84C] font-medium hover:underline flex items-center gap-1"
-                >
-                  <TrendingUp className="h-3 w-3" />
-                  View full scorecard
-                </Link>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Recommended Matches */}
-          <Card>
-            <CardHeader>
-              <h3 className="font-semibold text-[#0A1628] flex items-center gap-2">
-                <Sparkles className="h-4 w-4 text-[#C9A84C]" />
-                Recommended Matches
-              </h3>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              {matches.map((founder) => (
-                <div key={founder.id} className="flex items-center gap-3">
-                  <Avatar className="h-10 w-10">
-                    <AvatarFallback className="text-xs">
-                      {founder.name.split(" ").map((n) => n[0]).join("").slice(0, 2)}
-                    </AvatarFallback>
-                  </Avatar>
-                  <div className="flex-1 min-w-0">
-                    <p className="font-medium text-sm text-[#0A1628] truncate">{founder.name}</p>
-                    <p className="text-xs text-gray-500 truncate">{founder.companyName} · {founder.sector}</p>
-                  </div>
-                  <Button size="sm" variant="outline">
-                    <MessageCircle className="h-3 w-3 mr-1" />
-                    Intro
-                  </Button>
-                </div>
-              ))}
-              <Link
-                href="/dashboard/matches"
-                className="text-sm text-[#C9A84C] font-medium hover:underline"
-              >
-                View all matches →
-              </Link>
-            </CardContent>
-          </Card>
+        <div className="rounded-xl border border-[#1E293B] bg-[#121826] p-4">
+          <p className="text-xs text-slate-400">Linked Companies</p>
+          <p className="mt-1 text-lg font-semibold text-slate-100">{companies.length}</p>
         </div>
-
-        {/* Right column */}
-        <div className="space-y-6">
-          {/* Weekly Priorities */}
-          <Card>
-            <CardHeader>
-              <h3 className="font-semibold text-[#0A1628]">This Week&apos;s Priorities</h3>
-            </CardHeader>
-            <CardContent className="space-y-3">
-              {priorities.map(({ label, done }) => (
-                <div key={label} className="flex items-start gap-3">
-                  {done ? (
-                    <CheckCircle className="h-4 w-4 text-emerald-500 mt-0.5 shrink-0" />
-                  ) : (
-                    <div className="h-4 w-4 rounded-full border-2 border-gray-300 mt-0.5 shrink-0" />
-                  )}
-                  <span className={`text-sm ${done ? "line-through text-gray-400" : "text-gray-700"}`}>
-                    {label}
-                  </span>
-                </div>
-              ))}
-            </CardContent>
-          </Card>
-
-          {/* Upcoming Events */}
-          <Card>
-            <CardHeader>
-              <h3 className="font-semibold text-[#0A1628] flex items-center gap-2">
-                <Calendar className="h-4 w-4 text-[#C9A84C]" />
-                Upcoming Events
-              </h3>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              {upcomingEvents.map((event) => {
-                const date = new Date(event.date)
-                return (
-                  <div key={event.id} className="flex gap-3">
-                    <div className="flex-shrink-0 h-10 w-10 rounded-lg bg-[#0A1628] text-white flex flex-col items-center justify-center">
-                      <span className="text-xs text-[#C9A84C]">
-                        {date.toLocaleDateString("en-US", { month: "short" })}
-                      </span>
-                      <span className="text-sm font-bold leading-none">
-                        {date.getDate()}
-                      </span>
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium text-[#0A1628] line-clamp-1">{event.title}</p>
-                      <p className="text-xs text-gray-400">{event.isVirtual ? "Virtual" : event.location}</p>
-                    </div>
-                  </div>
-                )
-              })}
-              <Link
-                href="/dashboard/events"
-                className="text-sm text-[#C9A84C] font-medium hover:underline"
-              >
-                View calendar →
-              </Link>
-            </CardContent>
-          </Card>
-
-          {/* AI Assistant */}
-          <Card>
-            <CardHeader>
-              <h3 className="font-semibold text-[#0A1628] flex items-center gap-2">
-                <BrainCircuit className="h-4 w-4 text-[#C9A84C]" />
-                AI Assistant
-              </h3>
-            </CardHeader>
-            <CardContent>
-              <div className="bg-[#F8F5EF] rounded-xl p-4 mb-4 min-h-[80px]">
-                <p className="text-sm text-gray-600">
-                  💡 Based on your profile, I suggest connecting with{" "}
-                  <span className="font-semibold text-[#0A1628]">Sara Al-Mutairi</span> — her
-                  expertise in SaaS aligns with your growth stage.
-                </p>
-              </div>
-              <div className="flex gap-2">
-                <input
-                  type="text"
-                  placeholder="Ask the AI assistant..."
-                  className="flex-1 text-sm rounded-lg border border-gray-200 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#C9A84C]"
-                  aria-label="AI assistant input"
-                />
-                <Button size="sm">Send</Button>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Activity Feed */}
-          <Card>
-            <CardHeader>
-              <h3 className="font-semibold text-[#0A1628]">Recent Activity</h3>
-            </CardHeader>
-            <CardContent className="space-y-3">
-              {activityFeed.map(({ text, time }) => (
-                <div key={text} className="flex gap-3">
-                  <Clock className="h-3 w-3 text-gray-400 mt-1 shrink-0" />
-                  <div>
-                    <p className="text-xs text-gray-600">{text}</p>
-                    <p className="text-xs text-gray-400">{time}</p>
-                  </div>
-                </div>
-              ))}
-            </CardContent>
-          </Card>
+        <div className="rounded-xl border border-[#1E293B] bg-[#121826] p-4">
+          <p className="text-xs text-slate-400">Active Intros</p>
+          <p className="mt-1 text-lg font-semibold text-slate-100">{[...inbound, ...outbound].filter((x) => x.routing_status === "INTRO_PENDING").length}</p>
         </div>
-      </div>
+      </section>
+
+      <section className="grid grid-cols-1 gap-6 xl:grid-cols-2">
+        <ScorecardWidget initialScorecard={scorecard} />
+        <IntroRouterLedger initialInbound={inbound} initialOutbound={outbound} />
+      </section>
     </div>
   )
 }

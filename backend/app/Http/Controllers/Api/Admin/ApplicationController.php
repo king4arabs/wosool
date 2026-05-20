@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\ApplicationResource;
 use App\Models\AdminAction;
 use App\Models\Application;
 use Illuminate\Http\JsonResponse;
@@ -36,9 +37,11 @@ class ApplicationController extends Controller
         $applications = $query->latest()->paginate($request->integer('per_page', 20));
 
         return response()->json([
-            'data' => $applications->items(),
+            'data' => ApplicationResource::collection(collect($applications->items())),
             'meta' => [
                 'total' => $applications->total(),
+                'current_page' => $applications->currentPage(),
+                'per_page' => $applications->perPage(),
                 'submitted' => Application::where('status', 'submitted')->count(),
                 'reviewing' => Application::where('status', 'reviewing')->count(),
                 'approved' => Application::where('status', 'approved')->count(),
@@ -78,7 +81,7 @@ class ApplicationController extends Controller
 
         return response()->json([
             'message' => 'Application updated.',
-            'data' => $application->load('reviewer:id,name'),
+            'data' => new ApplicationResource($application->load('reviewer:id,name')),
         ]);
     }
 }

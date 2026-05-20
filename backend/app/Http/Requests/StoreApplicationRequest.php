@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\Validator;
 
 class StoreApplicationRequest extends FormRequest
 {
@@ -29,7 +30,22 @@ class StoreApplicationRequest extends FormRequest
             'linkedin_url' => 'nullable|url|max:255',
             'referral_source' => 'nullable|string|max:255',
             'referrer_name' => 'nullable|string|max:255',
+            'bot_field' => 'nullable|string|max:0',
+            'form_started_at' => 'required|integer|min:1',
         ];
+    }
+
+    public function withValidator(Validator $validator): void
+    {
+        $validator->after(function (Validator $validator): void {
+            $startedAt = (int) $this->input('form_started_at', 0);
+            $elapsedMs = (int) round(microtime(true) * 1000) - $startedAt;
+
+            // Basic anti-bot timing check: humans are unlikely to complete this flow in < 3 seconds.
+            if ($elapsedMs < 3000) {
+                $validator->errors()->add('form_started_at', 'Submission rejected. Please take a moment and try again.');
+            }
+        });
     }
 
     public function messages(): array

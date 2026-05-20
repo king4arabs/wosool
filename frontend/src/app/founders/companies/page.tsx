@@ -1,46 +1,70 @@
+"use client"
+
+import { useEffect, useState } from "react"
+import Link from "next/link"
+import { Briefcase, Search, TrendingUp, Users } from "lucide-react"
 import { PublicLayout } from "@/components/layout/PublicLayout"
 import { SectionHeader } from "@/components/sections/SectionHeader"
 import { CompanyCard } from "@/components/sections/CompanyCard"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import Link from "next/link"
-import { companies } from "@/data/seed"
-import { Search, Briefcase, TrendingUp, Users } from "lucide-react"
-
-const sectors = ["All", "Fintech", "HealthTech", "SaaS / B2B", "Logistics", "FoodTech", "HRTech"]
-const stages = ["All", "Pre-seed", "Seed", "Series A", "Scale-up"]
+import {
+  companiesPageCopy,
+  getSeedCompanies,
+  localizeCompany,
+} from "@/data/localized-seed"
+import { getCollectionItems, type ApiCompany, fetchJson, mapCompany, type WrappedResponse } from "@/lib/content-api"
+import { useLocale } from "@/lib/locale"
+import type { Company, PaginatedResponse } from "@/types"
 
 export default function CompaniesPage() {
-  const hiring = companies.filter((c) => c.isHiring)
-  const fundraising = companies.filter((c) => c.isFundraising)
-  const collaborating = companies.filter((c) => c.isCollaborating)
+  const { locale } = useLocale()
+  const copy = companiesPageCopy[locale]
+  const [companyItems, setCompanyItems] = useState<Company[]>(() => getSeedCompanies(locale))
+
+  useEffect(() => {
+    setCompanyItems(getSeedCompanies(locale))
+  }, [locale])
+
+  useEffect(() => {
+    async function loadCompanies() {
+      try {
+        const response = await fetchJson<PaginatedResponse<ApiCompany> | WrappedResponse<ApiCompany[]>>("/api/v1/companies")
+        const items = getCollectionItems(response).map((item) => localizeCompany(mapCompany(item), locale))
+        if (items.length > 0) {
+          setCompanyItems(items)
+        }
+      } catch {
+        // Seeded localized fallback stays in place.
+      }
+    }
+
+    void loadCompanies()
+  }, [locale])
+
+  const hiring = companyItems.filter((company) => company.isHiring)
+  const fundraising = companyItems.filter((company) => company.isFundraising)
+  const collaborating = companyItems.filter((company) => company.isCollaborating)
 
   return (
     <PublicLayout>
-      {/* Hero */}
-      <section className="bg-[#0A1628] text-white py-20 px-4">
-        <div className="max-w-4xl mx-auto text-center">
-          <Badge variant="gold" className="mb-4 uppercase tracking-widest text-xs px-4 py-1.5">
-            Founders&apos; Companies
+      <section className="bg-[#0A1628] px-4 py-20 text-white">
+        <div className="mx-auto max-w-4xl text-center">
+          <Badge variant="gold" className="mb-4 px-4 py-1.5 text-xs uppercase tracking-widest">
+            {copy.badge}
           </Badge>
-          <h1 className="text-5xl font-bold tracking-tight mb-4">
-            Companies Built by Wosool Members
-          </h1>
-          <p className="text-xl text-gray-300 max-w-2xl mx-auto">
-            Discover startups, growth companies, and scale-ups founded by
-            members of the Wosool network.
-          </p>
+          <h1 className="mb-4 text-5xl font-bold tracking-tight">{copy.title}</h1>
+          <p className="mx-auto max-w-2xl text-xl text-gray-300">{copy.description}</p>
         </div>
       </section>
 
-      {/* Stats */}
-      <section className="py-12 px-4 bg-white border-b border-gray-100">
-        <div className="max-w-7xl mx-auto">
+      <section className="border-b border-gray-100 bg-white px-4 py-12">
+        <div className="mx-auto max-w-7xl">
           <div className="grid grid-cols-3 gap-8 text-center">
             {[
-              { icon: Briefcase, value: `${hiring.length}`, label: "Actively Hiring" },
-              { icon: TrendingUp, value: `${fundraising.length}`, label: "Fundraising" },
-              { icon: Users, value: `${collaborating.length}`, label: "Open to Collaborate" },
+              { icon: Briefcase, value: `${hiring.length}`, label: copy.stats[0] },
+              { icon: TrendingUp, value: `${fundraising.length}`, label: copy.stats[1] },
+              { icon: Users, value: `${collaborating.length}`, label: copy.stats[2] },
             ].map(({ icon: Icon, value, label }) => (
               <div key={label} className="flex flex-col items-center gap-2">
                 <Icon className="h-5 w-5 text-[#C9A84C]" aria-hidden="true" />
@@ -52,55 +76,56 @@ export default function CompaniesPage() {
         </div>
       </section>
 
-      {/* Directory */}
-      <section className="py-20 px-4 section-cream">
-        <div className="max-w-7xl mx-auto">
-          <SectionHeader eyebrow="Directory" heading="All Companies" />
+      <section className="section-cream px-4 py-20">
+        <div className="mx-auto max-w-7xl">
+          <SectionHeader eyebrow={copy.directoryEyebrow} heading={copy.directoryTitle} />
 
-          {/* Filters */}
-          <div className="bg-white rounded-2xl p-6 shadow-sm mb-8">
-            <div className="flex flex-col lg:flex-row gap-4">
-              <div className="flex-1 relative">
+          <div className="mb-8 rounded-2xl bg-white p-6 shadow-sm">
+            <div className="flex flex-col gap-4 lg:flex-row">
+              <div className="relative flex-1">
                 <Search
                   className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400"
                   aria-hidden="true"
                 />
                 <input
                   type="search"
-                  placeholder="Search companies..."
-                  className="w-full pl-10 pr-4 py-2.5 rounded-lg border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-[#C9A84C]"
-                  aria-label="Search companies"
+                  placeholder={copy.searchPlaceholder}
+                  className="w-full rounded-lg border border-gray-200 py-2.5 pl-10 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-[#C9A84C]"
+                  aria-label={copy.searchAria}
                 />
               </div>
               <select
                 className="rounded-lg border border-gray-200 px-3 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#C9A84C]"
-                aria-label="Filter by sector"
+                aria-label={copy.searchAria}
               >
-                {sectors.map((s) => <option key={s}>{s}</option>)}
+                {copy.sectors.map((sector) => (
+                  <option key={sector}>{sector}</option>
+                ))}
               </select>
               <select
                 className="rounded-lg border border-gray-200 px-3 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#C9A84C]"
-                aria-label="Filter by stage"
+                aria-label={copy.searchAria}
               >
-                {stages.map((s) => <option key={s}>{s}</option>)}
+                {copy.stages.map((stage) => (
+                  <option key={stage}>{stage}</option>
+                ))}
               </select>
             </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
-            {companies.map((company) => (
+          <div className="mb-12 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {companyItems.map((company) => (
               <CompanyCard key={company.id} company={company} />
             ))}
           </div>
 
-          {/* Open Opportunities */}
           {hiring.length > 0 && (
             <div className="mb-12">
-              <h2 className="text-2xl font-bold text-[#0A1628] mb-6 flex items-center gap-2">
+              <h2 className="mb-6 flex items-center gap-2 text-2xl font-bold text-[#0A1628]">
                 <Briefcase className="h-5 w-5 text-[#C9A84C]" />
-                Open for Hiring
+                {copy.hiringTitle}
               </h2>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
                 {hiring.map((company) => (
                   <CompanyCard key={company.id} company={company} />
                 ))}
@@ -110,11 +135,11 @@ export default function CompaniesPage() {
 
           {fundraising.length > 0 && (
             <div>
-              <h2 className="text-2xl font-bold text-[#0A1628] mb-6 flex items-center gap-2">
+              <h2 className="mb-6 flex items-center gap-2 text-2xl font-bold text-[#0A1628]">
                 <TrendingUp className="h-5 w-5 text-[#C9A84C]" />
-                Actively Fundraising
+                {copy.fundraisingTitle}
               </h2>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
                 {fundraising.map((company) => (
                   <CompanyCard key={company.id} company={company} />
                 ))}
@@ -124,15 +149,12 @@ export default function CompaniesPage() {
         </div>
       </section>
 
-      <section className="py-20 px-4 bg-[#0A1628] text-white text-center">
-        <div className="max-w-xl mx-auto">
-          <h2 className="text-3xl font-bold mb-4">List your company</h2>
-          <p className="text-gray-300 mb-8">
-            Wosool members can list their companies and access warm introductions
-            from fellow founders.
-          </p>
+      <section className="bg-[#0A1628] px-4 py-20 text-center text-white">
+        <div className="mx-auto max-w-xl">
+          <h2 className="mb-4 text-3xl font-bold">{copy.ctaTitle}</h2>
+          <p className="mb-8 text-gray-300">{copy.ctaBody}</p>
           <Button asChild>
-            <Link href="/apply">Apply to Join</Link>
+            <Link href="/apply">{copy.cta}</Link>
           </Button>
         </div>
       </section>

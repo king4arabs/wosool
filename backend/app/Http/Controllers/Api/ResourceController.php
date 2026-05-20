@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\ResourceItemResource;
 use App\Models\Resource;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -29,15 +30,17 @@ class ResourceController extends Controller
             $query->public();
         }
 
-        $resources = $query->paginate($request->input('per_page', 15));
+        $resources = $query
+            ->paginate($request->input('per_page', 15))
+            ->withQueryString();
 
-        return response()->json($resources);
+        return ResourceItemResource::collection($resources)->response();
     }
 
     public function show(string $slug): JsonResponse
     {
         $resource = Resource::where('slug', $slug)->firstOrFail();
 
-        return response()->json(['data' => $resource]);
+        return response()->json(['data' => new ResourceItemResource($resource)]);
     }
 }

@@ -19,12 +19,11 @@ class PublicApiTest extends TestCase
         $response
             ->assertOk()
             ->assertJsonStructure([
-                'current_page',
                 'data' => [
                     ['id', 'slug'],
                 ],
-                'per_page',
-                'total',
+                'links',
+                'meta' => ['current_page', 'per_page', 'total'],
             ]);
 
         $this->assertNotEmpty($response->json('data'));
@@ -39,7 +38,7 @@ class PublicApiTest extends TestCase
 
         $this->getJson("/api/v1/founders/{$slug}")
             ->assertOk()
-            ->assertJsonPath('slug', $slug);
+            ->assertJsonPath('data.slug', $slug);
     }
 
     public function test_programs_endpoint_returns_seeded_data(): void
@@ -48,7 +47,14 @@ class PublicApiTest extends TestCase
 
         $response = $this->getJson('/api/v1/programs');
 
-        $response->assertOk();
-        $this->assertNotEmpty($response->json());
+        $response
+            ->assertOk()
+            ->assertJsonStructure([
+                'data',
+                'links',
+                'meta' => ['current_page', 'per_page', 'total'],
+            ]);
+
+        $this->assertNotEmpty($response->json('data'));
     }
 }

@@ -16,6 +16,7 @@
     "lint": "npm --prefix frontend run lint",
     "test": "composer --working-dir=backend run test",
     "verify": "npm run lint && npm run build && npm run test",
+    "dev": "./scripts/run-app.sh",
     "dev:frontend": "npm --prefix frontend run dev",
     "dev:backend": "composer --working-dir=backend run dev",
     "ops:ssl:repair": "node scripts/ssl-repair.mjs"

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\ProgramResource;
 use App\Models\AdminAction;
 use App\Models\Program;
 use App\Support\GeneratesUniqueSlug;
@@ -33,7 +34,7 @@ class ProgramController extends Controller
         $programs = $query->latest()->get();
 
         return response()->json([
-            'data' => $programs,
+            'data' => ProgramResource::collection($programs),
             'meta' => [
                 'total' => $programs->count(),
                 'open' => $programs->where('is_open', true)->count(),
@@ -54,7 +55,7 @@ class ProgramController extends Controller
 
         return response()->json([
             'message' => 'Program created.',
-            'data' => $program,
+            'data' => new ProgramResource($program),
         ], 201);
     }
 
@@ -73,7 +74,7 @@ class ProgramController extends Controller
 
         return response()->json([
             'message' => 'Program updated.',
-            'data' => $program->fresh(),
+            'data' => new ProgramResource($program->fresh()),
         ]);
     }
 

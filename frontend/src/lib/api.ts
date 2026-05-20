@@ -20,7 +20,8 @@ function buildUrl(
   path: string,
   params?: Record<string, string | number | boolean | undefined>
 ): string {
-  const url = new URL(`/api/v1${path}`, env.apiUrl)
+  const base = typeof window === "undefined" ? env.apiUrl : window.location.origin
+  const url = new URL(`/api/v1${path}`, base)
   if (params) {
     Object.entries(params).forEach(([key, value]) => {
       if (value !== undefined && value !== "") {
@@ -28,7 +29,7 @@ function buildUrl(
       }
     })
   }
-  return url.toString()
+  return typeof window === "undefined" ? url.toString() : `${url.pathname}${url.search}`
 }
 
 async function request<T>(path: string, options: RequestOptions = {}): Promise<T> {

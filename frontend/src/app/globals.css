@@ -1,59 +1,85 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #1E293B;
-  --brand-navy: #0A1628;
-  --brand-gold: #C9A84C;
-  --brand-cream: #F8F5EF;
-  --brand-dark: #1E293B;
-  --brand-gold-light: #D4B967;
-  --brand-navy-light: #1A2940;
-  --muted: #F1F5F9;
-  --muted-foreground: #64748B;
+  --background: #F8F9FC;
+  --foreground: #0F1628;
+  --color-primary-navy: #080D1A;
+  --color-deep-blue: #0F1A32;
+  --color-logo-blue: #3B52D4;
+  --color-accent: #3B52D4;
+  --color-accent-hover: #2E44C8;
+  --color-accent-soft: #EEF1FF;
+  --color-saudi-green: #3B52D4;
+  --color-saudi-green-light: #2E44C8;
+  --color-saudi-gold: #3B52D4;
+  --color-saudi-gold-light: #5B6EE8;
+  --color-surface: #FFFFFF;
+  --color-surface-warm: #F5F7FF;
+  --color-surface-soft: #EEF1FF;
+  --color-text-dark: #0F1628;
+  --color-text-muted: #5D6B8A;
+  --color-border-soft: #E4E7F0;
   --destructive: #EF4444;
   --success: #22C55E;
-  --ring: #C9A84C;
+  --ring: #3B52D4;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
 
-  --color-brand-navy: #0A1628;
-  --color-brand-gold: #C9A84C;
-  --color-brand-cream: #F8F5EF;
-  --color-brand-dark: #1E293B;
-  --color-brand-gold-light: #D4B967;
-  --color-brand-navy-light: #1A2940;
-  --color-muted: #F1F5F9;
-  --color-muted-foreground: #64748B;
+  --color-brand-navy: var(--color-primary-navy);
+  --color-brand-green: var(--color-saudi-green);
+  --color-brand-gold: var(--color-saudi-gold);
+  --color-brand-cream: var(--color-surface-warm);
+  --color-brand-dark: var(--color-text-dark);
+  --color-brand-green-light: var(--color-saudi-green-light);
+  --color-brand-gold-light: var(--color-saudi-gold-light);
+  --color-muted: var(--color-surface-soft);
+  --color-muted-foreground: var(--color-text-muted);
   --color-destructive: #EF4444;
-  --color-success: #22C55E;
+  --color-success: #10B981;
 }
 
 body {
-  background: var(--background);
+  background: #f8fafc;
   color: var(--foreground);
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-family: var(--font-manrope), -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  text-rendering: optimizeLegibility;
+}
+
+body.locale-ar {
+  font-family: var(--font-cairo), "Segoe UI", sans-serif;
+}
+
+body.locale-latin {
+  font-family: var(--font-manrope), -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 
 h1, h2, h3, h4, h5, h6 {
   font-weight: 600;
-  line-height: 1.2;
-  letter-spacing: -0.02em;
+  line-height: 1.05;
+  letter-spacing: -0.04em;
+}
+
+[dir="rtl"] h1,
+[dir="rtl"] h2,
+[dir="rtl"] h3,
+[dir="rtl"] h4,
+[dir="rtl"] h5,
+[dir="rtl"] h6 {
+  letter-spacing: 0;
 }
 
 .section-cream {
-  background-color: #F8F5EF;
+  background-color: var(--color-surface-warm);
 }
 
 .section-navy {
-  background-color: #0A1628;
+  background-color: var(--color-primary-navy);
   color: #ffffff;
 }
 
-/* Animations */
 @keyframes fade-in {
   from { opacity: 0; transform: translateY(8px); }
   to { opacity: 1; transform: translateY(0); }
@@ -108,38 +134,34 @@ h1, h2, h3, h4, h5, h6 {
 .stagger-4 { animation-delay: 0.4s; }
 .stagger-5 { animation-delay: 0.5s; }
 
-/* Focus styles */
 :focus-visible {
-  outline: 2px solid var(--brand-gold);
+  outline: 2px solid var(--color-logo-blue);
   outline-offset: 2px;
   border-radius: 4px;
 }
 
-/* Selection */
 ::selection {
-  background-color: rgba(201, 168, 76, 0.2);
-  color: var(--brand-navy);
+  background-color: rgba(31, 138, 112, 0.16);
+  color: var(--color-primary-navy);
 }
 
-/* Scrollbar */
 ::-webkit-scrollbar {
   width: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--brand-cream);
+  background: var(--color-surface-warm);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #CBD5E1;
+  background: #c7c1b5;
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #94A3B8;
+  background: #a99f90;
 }
 
-/* Skeleton loading */
 .skeleton {
   position: relative;
   overflow: hidden;
@@ -154,4 +176,200 @@ h1, h2, h3, h4, h5, h6 {
   background: linear-gradient(90deg, transparent, rgba(255,255,255,0.5), transparent);
   animation: shimmer 1.5s infinite;
   background-size: 200% 100%;
+}
+
+.premium-card {
+  border: 1px solid #E4E7F0;
+  background: #FFFFFF;
+  box-shadow:
+    0 1px 3px rgba(15, 22, 40, 0.04),
+    0 6px 20px rgba(15, 22, 40, 0.04);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.premium-card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(59, 82, 212, 0.22);
+  box-shadow:
+    0 4px 12px rgba(59, 82, 212, 0.08),
+    0 16px 40px rgba(15, 22, 40, 0.07);
+}
+
+.premium-card-dark {
+  background:
+    radial-gradient(circle at top right, rgba(59, 82, 212, 0.14), transparent 28%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.01)),
+    linear-gradient(145deg, rgba(8, 13, 26, 0.97), rgba(15, 26, 50, 0.98));
+  backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.hero-shell {
+  background:
+    radial-gradient(circle at top left, rgba(0, 108, 53, 0.15), transparent 25%),
+    radial-gradient(circle at 75% 20%, rgba(201, 168, 76, 0.12), transparent 20%),
+    radial-gradient(circle at 50% 100%, rgba(4, 9, 17, 0.4), transparent 30%),
+    linear-gradient(140deg, #040911 0%, #061126 42%, #0a1b3d 100%);
+}
+
+.cta-shell {
+  background:
+    radial-gradient(ellipse 55% 45% at 18% 18%, rgba(59, 82, 212, 0.28), transparent 55%),
+    radial-gradient(ellipse 45% 40% at 82% 82%, rgba(59, 82, 212, 0.16), transparent 55%),
+    linear-gradient(135deg, #080D1A 0%, #0F1628 52%, #1A2644 100%);
+  box-shadow: 0 36px 90px rgba(8, 13, 26, 0.4);
+}
+
+.ecosystem-canvas {
+  position: relative;
+  background: transparent;
+}
+
+.ecosystem-canvas::before {
+  display: none;
+}
+
+.ecosystem-canvas::after {
+  display: none;
+}
+
+.section-veil {
+  position: relative;
+  background: #FFFFFF;
+}
+
+.section-veil::before {
+  display: none;
+}
+
+.section-veil-tinted {
+  position: relative;
+  background: #F5F7FF;
+}
+
+.section-veil-dark {
+  position: relative;
+  background: #f8fafc;
+}
+
+.section-veil-dark::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 60% 40% at top right, rgba(59, 82, 212, 0.04), transparent 60%),
+    radial-gradient(ellipse 50% 35% at bottom left, rgba(59, 82, 212, 0.03), transparent 55%);
+}
+
+.bento-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-auto-rows: minmax(180px, auto);
+  gap: 1.5rem;
+}
+
+.bento-item {
+  position: relative;
+  overflow: hidden;
+  border-radius: 1.5rem;
+  padding: 2rem;
+  background: white;
+  border: 1px solid var(--color-border-soft);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.bento-item:hover {
+  border-color: var(--color-saudi-gold);
+  box-shadow: 0 20px 40px rgba(4, 9, 17, 0.08);
+}
+
+.pattern-sadu {
+  background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M20 0l20 20-20 20L0 20z' fill='%233B52D4' fill-opacity='0.03' fill-rule='evenodd'/%3E%3C/svg%3E");
+}
+
+.hero-logo-glow {
+  background: radial-gradient(circle, rgba(0, 108, 53, 0.2), transparent 65%);
+  filter: blur(48px);
+}
+
+.hero-mesh {
+  background:
+    radial-gradient(circle at 20% 18%, rgba(0, 108, 53, 0.1), transparent 0 20%),
+    radial-gradient(circle at 82% 16%, rgba(201, 168, 76, 0.08), transparent 0 15%),
+    radial-gradient(circle at 70% 74%, rgba(0, 108, 53, 0.15), transparent 0 18%);
+}
+
+.hero-stage {
+  min-height: 42rem;
+}
+
+.hero-ambient {
+  background: radial-gradient(circle, rgba(250, 249, 246, 0.9), rgba(245, 242, 237, 0.5) 55%, transparent 80%);
+  filter: blur(40px);
+}
+
+.hero-shape-center {
+  isolation: isolate;
+}
+
+.hero-floor-wrap {
+  perspective: 1100px;
+}
+
+.hero-floor-grid {
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.24) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.24) 1px, transparent 1px);
+  background-size: 44px 44px;
+  transform-origin: center top;
+  transform: rotateX(76deg);
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow:
+    inset 0 40px 80px rgba(255, 240, 215, 0.1),
+    0 -40px 120px rgba(143, 124, 232, 0.18);
+}
+
+.hero-floor-blocks {
+  background-image:
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.2), rgba(182, 158, 255, 0.08)),
+    repeating-linear-gradient(
+      to right,
+      rgba(255, 255, 255, 0.18) 0 34px,
+      transparent 34px 52px
+    );
+  background-size: 100% 100%, 100% 30px;
+  opacity: 0.78;
+  transform-origin: center bottom;
+}
+
+.hero-floor-blocks-left {
+  clip-path: polygon(0 100%, 0 35%, 100% 0, 100% 100%);
+  transform: perspective(1000px) rotateX(64deg) skewX(-18deg);
+}
+
+.hero-floor-blocks-right {
+  clip-path: polygon(0 0, 100% 35%, 100% 100%, 0 100%);
+  transform: perspective(1000px) rotateX(64deg) skewX(18deg);
+}
+
+.hero-floor-glow {
+  background: radial-gradient(circle, rgba(255, 226, 187, 0.72), rgba(169, 149, 255, 0.22) 50%, transparent 72%);
+  filter: blur(28px);
+}
+
+.hero-floor-fade {
+  background: linear-gradient(to bottom, transparent 0%, rgba(10, 23, 48, 0.08) 42%, rgba(7, 17, 31, 0.3) 100%);
+}
+
+@media (max-width: 1024px) {
+  .hero-stage {
+    min-height: 32rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .hero-stage {
+    min-height: 26rem;
+  }
 }

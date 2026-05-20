@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Member;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\EventResource;
 use App\Models\Event;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -20,7 +21,7 @@ class EventRsvpController extends Controller
             ->orderBy('starts_at')
             ->get();
 
-        return response()->json(['data' => $rsvps]);
+        return response()->json(['data' => EventResource::collection($rsvps)]);
     }
 
     /**

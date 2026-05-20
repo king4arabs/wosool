@@ -11,6 +11,16 @@ const nextConfig: NextConfig = {
         hostname: "api.wosool.org",
         pathname: "/storage/**",
       },
+      {
+        protocol: "https",
+        hostname: "logo.clearbit.com",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "ipomedia.kaust.edu.sa",
+        pathname: "/files/assets/img/**",
+      },
     ],
   },
   async headers() {

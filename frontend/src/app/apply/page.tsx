@@ -1,66 +1,84 @@
 "use client"
 
-import { useState, useCallback } from "react"
+import { useState, useCallback, useEffect } from "react"
 import { PublicLayout } from "@/components/layout/PublicLayout"
 import { SectionHeader } from "@/components/sections/SectionHeader"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
-import { Badge } from "@/components/ui/badge"
 import { useToast } from "@/components/ui/toast"
 import { api, ApiError } from "@/lib/api"
-import { CheckCircle, ChevronDown, ChevronUp, Loader2, PartyPopper } from "lucide-react"
+import { CheckCircle, CheckCircle2, ChevronDown, ChevronUp, Loader2, PartyPopper } from "lucide-react"
 import Link from "next/link"
 
 const criteria = [
-  "You are an active founder or co-founder of a company",
-  "Your company is incorporated or in the process of incorporation",
-  "You are building in or with a focus on Saudi Arabia or the GCC",
-  "You have at least 6 months of runway or are actively raising",
-  "You are committed to contributing to the community, not just consuming",
+  "أن تكون مؤسسًا أو شريكًا مؤسسًا نشطًا في شركة قائمة أو قيد التأسيس.",
+  "أن تكون الشركة مسجلة أو في طريقها إلى التسجيل النظامي.",
+  "أن يكون نشاطك موجهًا إلى السعودية أو الخليج، أو مبنيًا داخلهما.",
+  "أن تملك وضوحًا تشغيليًا مع مسار تمويلي أو تشغيلي جاد للمرحلة المقبلة.",
+  "أن تدخل المجتمع بروح المشاركة والإضافة، لا بهدف الاستفادة الأحادية فقط.",
 ]
 
 const faqs = [
   {
-    q: "How long does the application take?",
-    a: "The application form takes about 10–15 minutes. We review applications on a rolling basis and typically respond within 5–7 business days.",
+    q: "كم يستغرق تقديم الطلب؟",
+    a: "يستغرق النموذج عادة بين 10 و15 دقيقة. نراجع الطلبات بشكل مستمر، ويصل الرد غالبًا خلال خمسة إلى سبعة أيام عمل.",
   },
   {
-    q: "Is there a membership fee?",
-    a: "Wosool is currently invite-and-apply access. Pricing details are shared after your application is reviewed. We offer multiple tiers to accommodate different stages.",
+    q: "هل توجد رسوم عضوية؟",
+    a: "الوصول إلى المجتمع يتم حاليًا عبر الدعوة أو التقديم. تُشارك تفاصيل الرسوم والخيارات المتاحة بعد مراجعة الطلب بحسب المرحلة وملاءمة العضوية.",
   },
   {
-    q: "Can I apply if I'm pre-product?",
-    a: "Yes, as long as you have a clear concept, are actively building, and are committed to the GCC market. Pre-seed and pre-product founders are welcome.",
+    q: "هل يمكنني التقديم إذا كنت ما زلت قبل إطلاق المنتج؟",
+    a: "نعم، ما دمت تملك تصورًا واضحًا، وتعمل بجدية على البناء، ولديك اهتمام فعلي بالسوق السعودي أو الخليجي.",
   },
   {
-    q: "What happens after I apply?",
-    a: "You'll receive a confirmation email. Our team reviews your application and may schedule a brief onboarding call before granting access.",
+    q: "ماذا يحدث بعد إرسال الطلب؟",
+    a: "ستتلقى رسالة تأكيد أولية، ثم يراجع الفريق طلبك وقد يتواصل معك لترتيب مكالمة تعريفية قصيرة قبل إتمام القبول.",
   },
 ]
 
 const steps = [
-  { id: 1, label: "Personal Info" },
-  { id: 2, label: "Company Info" },
-  { id: 3, label: "Goals & Motivation" },
+  { id: 1, label: "البيانات الشخصية" },
+  { id: 2, label: "بيانات الشركة" },
+  { id: 3, label: "الأهداف والدوافع" },
 ]
 
 const sectors = [
-  "Fintech",
-  "HealthTech",
-  "SaaS / B2B",
-  "E-commerce",
-  "Logistics",
-  "FoodTech",
-  "HRTech",
-  "EdTech",
-  "PropTech",
-  "CleanTech",
-  "Other",
+  "التقنية المالية",
+  "التقنية الصحية",
+  "برمجيات الأعمال",
+  "التجارة الإلكترونية",
+  "اللوجستيات",
+  "تقنية الغذاء",
+  "تقنية الموارد البشرية",
+  "تقنية التعليم",
+  "تقنية العقار",
+  "التقنيات النظيفة",
+  "أخرى",
 ]
 
-const stages = ["Pre-seed", "Seed", "Series A", "Series B+", "Scale-up", "Exited"]
+const stages = [
+  { label: "ما قبل البذرة", value: "Pre-seed" },
+  { label: "البذرة", value: "Seed" },
+  { label: "السلسلة A", value: "Series A" },
+  { label: "السلسلة B+", value: "Series B+" },
+  { label: "التوسّع", value: "Scale-up" },
+  { label: "مؤسس متخارج", value: "Exited" },
+]
+
+const stageValueByLabel: Record<string, string> = {
+  "ما قبل البذرة": "Pre-seed",
+  "البذرة": "Seed",
+  "السلسلة A": "Series A",
+  "السلسلة B+": "Series B+",
+  "التوسّع": "Scale-up",
+  "مؤسس متخارج": "Exited",
+}
+
+const APPLY_FORM_SESSION_KEY = "wosool_apply_form_v1"
+const APPLY_FORM_STARTED_AT_KEY = "wosool_apply_started_at"
 
 interface FormData {
   full_name: string
@@ -77,6 +95,7 @@ interface FormData {
   what_you_need: string
   referral_source: string
   referrer_name: string
+  bot_field: string
 }
 
 type FormErrors = Partial<Record<keyof FormData, string>>
@@ -88,7 +107,7 @@ const initialFormData: FormData = {
   location: "",
   linkedin_url: "",
   company_name: "",
-  sector: "Fintech",
+  sector: "التقنية المالية",
   stage: "Pre-seed",
   company_website: "",
   motivation: "",
@@ -96,33 +115,34 @@ const initialFormData: FormData = {
   what_you_need: "",
   referral_source: "",
   referrer_name: "",
+  bot_field: "",
 }
 
 function validateStep(step: number, data: FormData): FormErrors {
   const errors: FormErrors = {}
 
   if (step === 1) {
-    if (!data.full_name.trim()) errors.full_name = "Please enter your full name."
-    if (!data.email.trim()) errors.email = "Please enter your email address."
+    if (!data.full_name.trim()) errors.full_name = "يرجى إدخال الاسم الكامل."
+    if (!data.email.trim()) errors.email = "يرجى إدخال البريد الإلكتروني."
     else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email))
-      errors.email = "Please enter a valid email address."
-    if (!data.phone.trim()) errors.phone = "Please enter your phone number."
-    if (!data.location.trim()) errors.location = "Please enter your location."
+      errors.email = "يرجى إدخال بريد إلكتروني صحيح."
+    if (!data.phone.trim()) errors.phone = "يرجى إدخال رقم الهاتف."
+    if (!data.location.trim()) errors.location = "يرجى إدخال الموقع."
     if (data.linkedin_url && !/^https?:\/\/.+/.test(data.linkedin_url))
-      errors.linkedin_url = "Please enter a valid URL."
+      errors.linkedin_url = "يرجى إدخال رابط صحيح."
   }
 
   if (step === 2) {
-    if (!data.company_name.trim()) errors.company_name = "Please enter your company name."
-    if (!data.sector.trim()) errors.sector = "Please select your sector."
-    if (!data.stage.trim()) errors.stage = "Please select your company stage."
+    if (!data.company_name.trim()) errors.company_name = "يرجى إدخال اسم الشركة."
+    if (!data.sector.trim()) errors.sector = "يرجى اختيار القطاع."
+    if (!data.stage.trim()) errors.stage = "يرجى اختيار المرحلة."
     if (data.company_website && !/^https?:\/\/.+/.test(data.company_website))
-      errors.company_website = "Please enter a valid URL."
+      errors.company_website = "يرجى إدخال رابط صحيح."
   }
 
   if (step === 3) {
-    if (!data.motivation.trim()) errors.motivation = "Please tell us why you want to join Wosool."
-    if (data.motivation.length > 2000) errors.motivation = "Motivation must be under 2000 characters."
+    if (!data.motivation.trim()) errors.motivation = "أخبرنا لماذا ترغب في الانضمام إلى وصول."
+    if (data.motivation.length > 2000) errors.motivation = "يجب ألا تتجاوز هذه الإجابة 2000 حرف."
   }
 
   return errors
@@ -130,8 +150,14 @@ function validateStep(step: number, data: FormData): FormErrors {
 
 function FieldError({ message }: { message?: string }) {
   if (!message) return null
-  return <p className="text-sm text-red-600 mt-1">{message}</p>
+  return <p className="text-xs text-red-500 mt-1 font-medium">{message}</p>
 }
+
+const inputClass =
+  "flex h-10 w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-800 placeholder:text-slate-400 focus:outline-none focus:border-[#3B52D4] focus:ring-1 focus:ring-[#3B52D4] transition-colors"
+
+const selectClass =
+  "flex h-10 w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-700 focus:outline-none focus:border-[#3B52D4] focus:ring-1 focus:ring-[#3B52D4] transition-colors"
 
 export default function ApplyPage() {
   const [currentStep, setCurrentStep] = useState(1)
@@ -141,6 +167,40 @@ export default function ApplyPage() {
   const [submitting, setSubmitting] = useState(false)
   const [submitted, setSubmitted] = useState(false)
   const { toast } = useToast()
+
+  const normalizeStage = useCallback((stage: string): string => {
+    if (stages.some((entry) => entry.value === stage)) return stage
+    return stageValueByLabel[stage] || "Pre-seed"
+  }, [])
+
+  useEffect(() => {
+    const saved = sessionStorage.getItem(APPLY_FORM_SESSION_KEY)
+    if (!saved) {
+      if (!sessionStorage.getItem(APPLY_FORM_STARTED_AT_KEY)) {
+        sessionStorage.setItem(APPLY_FORM_STARTED_AT_KEY, String(Date.now()))
+      }
+      return
+    }
+
+    try {
+      const parsed = JSON.parse(saved) as Partial<FormData>
+      setFormData((prev) => ({
+        ...prev,
+        ...parsed,
+        stage: normalizeStage(String(parsed.stage || prev.stage)),
+      }))
+    } catch {
+      sessionStorage.removeItem(APPLY_FORM_SESSION_KEY)
+    }
+
+    if (!sessionStorage.getItem(APPLY_FORM_STARTED_AT_KEY)) {
+      sessionStorage.setItem(APPLY_FORM_STARTED_AT_KEY, String(Date.now()))
+    }
+  }, [normalizeStage])
+
+  useEffect(() => {
+    sessionStorage.setItem(APPLY_FORM_SESSION_KEY, JSON.stringify(formData))
+  }, [formData])
 
   const updateField = useCallback(
     (field: keyof FormData, value: string) => {
@@ -168,7 +228,6 @@ export default function ApplyPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
-    // Validate all steps
     const allErrors = {
       ...validateStep(1, formData),
       ...validateStep(2, formData),
@@ -176,20 +235,28 @@ export default function ApplyPage() {
     }
     if (Object.keys(allErrors).length > 0) {
       setErrors(allErrors)
-      // Go back to the first step with errors
       if (allErrors.full_name || allErrors.email || allErrors.phone || allErrors.location || allErrors.linkedin_url)
         setCurrentStep(1)
       else if (allErrors.company_name || allErrors.sector || allErrors.stage || allErrors.company_website)
         setCurrentStep(2)
-      toast("Please fill in all required fields.", "error")
+      toast("يرجى استكمال جميع الحقول المطلوبة.", "error")
       return
     }
 
     setSubmitting(true)
     try {
-      await api.post("/applications", formData)
+      const startedAt = Number(sessionStorage.getItem(APPLY_FORM_STARTED_AT_KEY) || Date.now())
+      const payload = {
+        ...formData,
+        stage: normalizeStage(formData.stage),
+        form_started_at: startedAt,
+      }
+
+      await api.post("/applications", payload)
       setSubmitted(true)
-      toast("Application submitted successfully!", "success")
+      sessionStorage.removeItem(APPLY_FORM_SESSION_KEY)
+      sessionStorage.removeItem(APPLY_FORM_STARTED_AT_KEY)
+      toast("تم إرسال الطلب بنجاح.", "success")
     } catch (err) {
       if (err instanceof ApiError && err.data && typeof err.data === "object" && "errors" in err.data) {
         const serverErrors = (err.data as { errors: Record<string, string[]> }).errors
@@ -200,42 +267,63 @@ export default function ApplyPage() {
           }
         }
         setErrors(mapped)
-        toast("Please correct the highlighted errors.", "error")
+        toast("يرجى مراجعة الحقول المعلّمة وتصحيحها.", "error")
       } else {
-        toast("Something went wrong. Please try again.", "error")
+        toast("حدث خطأ غير متوقع. يرجى المحاولة مرة أخرى.", "error")
       }
     } finally {
       setSubmitting(false)
     }
   }
 
+  // ── Submitted state ──────────────────────────────────────────────────────────
   if (submitted) {
     return (
       <PublicLayout>
-        <section className="bg-[#0A1628] text-white py-20 px-4">
-          <div className="max-w-2xl mx-auto text-center">
-            <div className="flex justify-center mb-6">
-              <div className="h-20 w-20 rounded-full bg-[#C9A84C]/20 flex items-center justify-center">
-                <PartyPopper className="h-10 w-10 text-[#C9A84C]" />
+        <section className="relative min-h-[80vh] bg-slate-50/60 px-4 py-24 flex items-center">
+          {/* Ambient glows */}
+          <div className="pointer-events-none absolute inset-0" aria-hidden="true">
+            <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[600px] h-[600px] rounded-full bg-[#3B52D4]/5 blur-[140px]" />
+          </div>
+          <div className="relative mx-auto max-w-lg w-full text-center">
+            <div
+              className="bg-white/90 backdrop-blur-sm border border-slate-200/80 rounded-2xl px-8 py-14"
+              style={{ boxShadow: "0 8px 40px -8px rgba(59,82,212,0.1)" }}
+            >
+              <div className="flex justify-center mb-6">
+                <div className="h-20 w-20 rounded-full bg-[#EEF1FF] border border-[#E4E7F0] flex items-center justify-center">
+                  <PartyPopper className="h-9 w-9 text-[#3B52D4]" />
+                </div>
               </div>
-            </div>
-            <h1 className="text-4xl font-bold tracking-tight mb-4">
-              Application Submitted!
-            </h1>
-            <p className="text-xl text-gray-300 mb-2">
-              Thank you, {formData.full_name.split(" ")[0]}! We&apos;ve received your application.
-            </p>
-            <p className="text-gray-400 mb-8">
-              Our team will review it and get back to you within 5–7 business days
-              at <span className="text-white font-medium">{formData.email}</span>.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-3 justify-center">
-              <Button asChild>
-                <Link href="/">Back to Homepage</Link>
-              </Button>
-              <Button asChild variant="outline">
-                <Link href="/founders">Explore Founders</Link>
-              </Button>
+              <div className="inline-flex items-center gap-2 bg-[#EEF1FF] border border-[#E4E7F0] px-3 py-1 rounded-full text-xs font-bold text-[#3B52D4] mb-4">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#3B52D4]" />
+                تم بنجاح
+              </div>
+              <h1 className="text-3xl font-black text-slate-900 tracking-tight mb-3">
+                تم إرسال الطلب
+              </h1>
+              <p className="text-base text-slate-600 mb-2 leading-relaxed">
+                شكرًا لك، <span className="font-bold text-slate-900">{formData.full_name.split(" ")[0]}</span>! لقد استلمنا طلبك بنجاح.
+              </p>
+              <p className="text-sm text-slate-500 mb-8 leading-relaxed">
+                سيقوم الفريق بمراجعته والرد عليك خلال خمسة إلى سبعة أيام عمل عبر{" "}
+                <span className="font-medium text-[#3B52D4]">{formData.email}</span>.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-3 justify-center">
+                <Button
+                  asChild
+                  className="rounded-xl bg-[#3B52D4] hover:bg-[#2E44C8] text-white font-bold shadow-md shadow-[#3B52D4]/20"
+                >
+                  <Link href="/">العودة إلى الرئيسية</Link>
+                </Button>
+                <Button
+                  asChild
+                  variant="outline"
+                  className="rounded-xl border-slate-200 text-slate-700 hover:border-[#3B52D4]/40 hover:text-[#3B52D4] font-bold"
+                >
+                  <Link href="/founders">استكشف المؤسسين</Link>
+                </Button>
+              </div>
             </div>
           </div>
         </section>
@@ -243,183 +331,276 @@ export default function ApplyPage() {
     )
   }
 
+  // ── Progress percentage ───────────────────────────────────────────────────────
+  const progressPct = ((currentStep - 1) / (steps.length - 1)) * 100
+
   return (
     <PublicLayout>
-      {/* Hero */}
-      <section className="bg-[#0A1628] text-white py-20 px-4">
-        <div className="max-w-4xl mx-auto text-center">
-          <Badge variant="gold" className="mb-4 uppercase tracking-widest text-xs px-4 py-1.5">
-            Apply to Join
-          </Badge>
-          <h1 className="text-5xl font-bold tracking-tight mb-4">
-            Join the Wosool Network
+      {/* ── Hero ── */}
+      <section className="relative overflow-hidden bg-slate-50/60 px-4 pt-28 pb-16">
+        {/* Ambient glows */}
+        <div className="pointer-events-none absolute inset-0" aria-hidden="true">
+          <div className="absolute top-0 right-1/4 w-[500px] h-[500px] rounded-full bg-[#3B52D4]/5 blur-[140px]" />
+          <div className="absolute bottom-0 left-1/4 w-[400px] h-[400px] rounded-full bg-[#14b8a6]/4 blur-[140px]" />
+          <div className="absolute inset-0 bg-[radial-gradient(rgba(59,82,212,0.06)_1px,transparent_1px)] bg-[size:28px_28px] [mask-image:radial-gradient(ellipse_80%_80%_at_50%_40%,black_10%,transparent_70%)]" />
+        </div>
+
+        <div className="relative mx-auto max-w-3xl text-center">
+          {/* Badge */}
+          <div className="inline-flex items-center gap-2 bg-[#EEF1FF] border border-[#E4E7F0] px-3 py-1 rounded-full text-xs font-bold text-[#3B52D4] mb-6">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#3B52D4] animate-pulse" />
+            قدّم للانضمام
+          </div>
+
+          <h1 className="text-4xl lg:text-5xl font-black text-slate-900 tracking-tight leading-[1.15] mb-5">
+            انضم إلى شبكة{" "}
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#3B52D4] to-indigo-500">
+              وصول
+            </span>
           </h1>
-          <p className="text-xl text-gray-300 max-w-2xl mx-auto">
-            Applications are reviewed on a rolling basis. We accept founders at
-            all stages — from pre-seed to exited.
+          <p className="text-base lg:text-lg text-slate-600 max-w-xl mx-auto leading-relaxed">
+            تُراجع الطلبات بشكل مستمر. نستقبل المؤسسين في مراحل مختلفة، من البدايات المبكرة حتى من أسسوا وباعوا شركاتهم سابقًا.
           </p>
+
+          {/* Trust chips */}
+          <div className="flex flex-wrap items-center justify-center gap-3 mt-8">
+            {[
+              "250+ مؤسس",
+              "15+ برنامج",
+              "3 صناديق نشطة",
+            ].map((chip) => (
+              <div
+                key={chip}
+                className="inline-flex items-center gap-1.5 bg-white border border-slate-200/80 px-3 py-1.5 rounded-full text-xs font-bold text-slate-600"
+                style={{ boxShadow: "0 2px 8px -2px rgba(59,82,212,0.06)" }}
+              >
+                <span className="w-1.5 h-1.5 rounded-full bg-[#3B52D4]" />
+                {chip}
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
-      {/* Why Join */}
+      {/* ── Criteria + Form ── */}
       <section className="py-16 px-4 bg-white">
-        <div className="max-w-4xl mx-auto">
+        <div className="max-w-5xl mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
-            {/* Criteria */}
+
+            {/* Left: Criteria */}
             <div>
-              <SectionHeader eyebrow="Eligibility" heading="Who We Accept" />
-              <div className="space-y-4">
+              <SectionHeader eyebrow="الملاءمة" heading="من الذي نرحب به في المجتمع؟" />
+              <div className="space-y-4 mt-2">
                 {criteria.map((item) => (
                   <div key={item} className="flex items-start gap-3">
-                    <CheckCircle className="h-5 w-5 text-[#C9A84C] mt-0.5 shrink-0" />
-                    <p className="text-gray-700">{item}</p>
+                    <div className="mt-0.5 shrink-0 h-5 w-5 rounded-full bg-[#EEF1FF] border border-[#E4E7F0] flex items-center justify-center">
+                      <CheckCircle2 className="h-3 w-3 text-[#3B52D4]" />
+                    </div>
+                    <p className="text-sm text-slate-600 leading-relaxed">{item}</p>
                   </div>
                 ))}
               </div>
+
+              {/* What to expect card */}
+              <div
+                className="mt-10 rounded-2xl border border-slate-200/60 bg-[#EEF1FF]/40 p-6"
+                style={{ boxShadow: "0 2px 12px -2px rgba(59,82,212,0.04)" }}
+              >
+                <div className="flex items-center gap-2 mb-3">
+                  <span className="w-2 h-2 rounded-full bg-[#3B52D4]" />
+                  <span className="text-xs font-extrabold text-[#3B52D4] uppercase tracking-widest">ما يمكن توقعه</span>
+                </div>
+                <p className="text-sm text-slate-600 leading-relaxed">
+                  مراجعة دقيقة تستغرق من 5 إلى 7 أيام عمل، تليها مكالمة تعريفية قصيرة مع الفريق إن كان الطلب مناسبًا.
+                </p>
+              </div>
             </div>
 
-            {/* Application Form */}
-            <div className="bg-[#F8F5EF] rounded-3xl p-8">
+            {/* Right: Multi-step form */}
+            <div
+              className="bg-white/90 backdrop-blur-sm border border-slate-200/80 rounded-2xl p-7"
+              style={{ boxShadow: "0 4px 24px -4px rgba(59,82,212,0.08), 0 1px 4px rgba(59,82,212,0.04)" }}
+            >
+              {/* Step header row */}
+              <div className="flex items-center justify-between mb-1">
+                <span className="text-xs font-bold text-slate-400">
+                  الخطوة {currentStep} من {steps.length}
+                </span>
+                <span className="text-xs font-bold text-[#3B52D4]">{steps[currentStep - 1].label}</span>
+              </div>
+
+              {/* Progress bar */}
+              <div className="h-1 w-full bg-slate-100 rounded-full mb-6 overflow-hidden">
+                <div
+                  className="h-full bg-[#3B52D4] rounded-full transition-all duration-500"
+                  style={{ width: `${progressPct === 0 ? 10 : progressPct}%` }}
+                />
+              </div>
+
               {/* Step indicators */}
-              <div className="flex items-center gap-2 mb-8" role="list" aria-label="Application steps">
+              <div className="flex items-center gap-1 mb-7" role="list" aria-label="Application steps">
                 {steps.map(({ id, label }) => (
-                  <div key={id} className="flex items-center gap-2">
+                  <div key={id} className="flex items-center gap-1 flex-1 last:flex-none">
                     <div
-                      className={`h-8 w-8 rounded-full text-sm font-bold flex items-center justify-center transition-colors ${
+                      className={`h-7 w-7 rounded-full text-xs font-extrabold flex items-center justify-center shrink-0 transition-all ${
                         currentStep === id
-                          ? "bg-[#C9A84C] text-[#0A1628]"
+                          ? "bg-[#3B52D4] text-white shadow-md shadow-[#3B52D4]/30"
                           : currentStep > id
-                          ? "bg-[#0A1628] text-white"
-                          : "bg-gray-200 text-gray-500"
+                          ? "bg-slate-900 text-white"
+                          : "bg-slate-100 text-slate-400"
                       }`}
                       role="listitem"
-                      aria-label={`Step ${id}: ${label}${currentStep > id ? " (completed)" : currentStep === id ? " (current)" : " (upcoming)"}`}
+                      aria-label={`الخطوة ${id}: ${label}`}
                       aria-current={currentStep === id ? "step" : undefined}
                     >
-                      {currentStep > id ? "✓" : id}
+                      {currentStep > id ? (
+                        <CheckCircle className="h-3.5 w-3.5" />
+                      ) : (
+                        id
+                      )}
                     </div>
-                    <span className="text-xs text-gray-500 hidden sm:block">{label}</span>
+                    <span
+                      className={`text-[10px] font-bold hidden sm:block ${
+                        currentStep === id ? "text-[#3B52D4]" : "text-slate-400"
+                      }`}
+                    >
+                      {label}
+                    </span>
                     {id < steps.length && (
-                      <div className="w-6 h-px bg-gray-300 mx-1" aria-hidden="true" />
+                      <div className="flex-1 h-px bg-slate-200 mx-1" aria-hidden="true" />
                     )}
                   </div>
                 ))}
               </div>
 
-              {/* Step 1: Personal Info */}
+              {/* ── Step 1: Personal Info ── */}
               {currentStep === 1 && (
                 <div className="space-y-4">
-                  <h3 className="text-lg font-semibold text-[#0A1628] mb-4">Personal Information</h3>
-                  <div className="space-y-2">
-                    <Label htmlFor="full-name">Full Name *</Label>
+                  <h3 className="text-base font-extrabold text-slate-900 mb-1">البيانات الشخصية</h3>
+                  <div className="space-y-1.5">
+                    <Label htmlFor="full-name" className="text-xs font-bold text-slate-600">الاسم الكامل *</Label>
                     <Input
                       id="full-name"
-                      placeholder="Your full name"
+                      placeholder="اكتب اسمك الكامل"
                       value={formData.full_name}
                       onChange={(e) => updateField("full_name", e.target.value)}
                       aria-invalid={!!errors.full_name}
+                      className={inputClass}
                     />
                     <FieldError message={errors.full_name} />
                   </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="email">Email *</Label>
+                  <div className="space-y-1.5">
+                    <Label htmlFor="email" className="text-xs font-bold text-slate-600">البريد الإلكتروني *</Label>
                     <Input
                       id="email"
                       type="email"
-                      placeholder="you@company.com"
+                      placeholder="name@company.com"
                       value={formData.email}
                       onChange={(e) => updateField("email", e.target.value)}
                       aria-invalid={!!errors.email}
+                      className={inputClass}
                     />
                     <FieldError message={errors.email} />
                   </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="phone">Phone *</Label>
-                    <Input
-                      id="phone"
-                      type="tel"
-                      placeholder="+966 5XX XXX XXXX"
-                      value={formData.phone}
-                      onChange={(e) => updateField("phone", e.target.value)}
-                      aria-invalid={!!errors.phone}
-                    />
-                    <FieldError message={errors.phone} />
+                  <div className="grid grid-cols-2 gap-3">
+                    <div className="space-y-1.5">
+                      <Label htmlFor="phone" className="text-xs font-bold text-slate-600">رقم الهاتف *</Label>
+                      <Input
+                        id="phone"
+                        type="tel"
+                        placeholder="+966 5XX XXX XXXX"
+                        value={formData.phone}
+                        onChange={(e) => updateField("phone", e.target.value)}
+                        aria-invalid={!!errors.phone}
+                        className={inputClass}
+                      />
+                      <FieldError message={errors.phone} />
+                    </div>
+                    <div className="space-y-1.5">
+                      <Label htmlFor="location" className="text-xs font-bold text-slate-600">الموقع *</Label>
+                      <Input
+                        id="location"
+                        placeholder="الرياض، السعودية"
+                        value={formData.location}
+                        onChange={(e) => updateField("location", e.target.value)}
+                        aria-invalid={!!errors.location}
+                        className={inputClass}
+                      />
+                      <FieldError message={errors.location} />
+                    </div>
                   </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="location">Location *</Label>
-                    <Input
-                      id="location"
-                      placeholder="City, Country"
-                      value={formData.location}
-                      onChange={(e) => updateField("location", e.target.value)}
-                      aria-invalid={!!errors.location}
-                    />
-                    <FieldError message={errors.location} />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="linkedin">LinkedIn URL</Label>
+                  <div className="space-y-1.5">
+                    <Label htmlFor="linkedin" className="text-xs font-bold text-slate-600">رابط لينكدإن</Label>
                     <Input
                       id="linkedin"
                       placeholder="https://linkedin.com/in/yourname"
                       value={formData.linkedin_url}
                       onChange={(e) => updateField("linkedin_url", e.target.value)}
                       aria-invalid={!!errors.linkedin_url}
+                      className={inputClass}
                     />
                     <FieldError message={errors.linkedin_url} />
                   </div>
-                  <Button onClick={() => handleStepContinue(2)} className="w-full" type="button">
-                    Continue to Company Info →
-                  </Button>
+                  <button
+                    onClick={() => handleStepContinue(2)}
+                    type="button"
+                    className="w-full mt-2 py-3 bg-[#3B52D4] hover:bg-[#2E44C8] text-white font-bold text-sm rounded-xl transition shadow-md shadow-[#3B52D4]/20"
+                  >
+                    المتابعة إلى بيانات الشركة
+                  </button>
                 </div>
               )}
 
-              {/* Step 2: Company Info */}
+              {/* ── Step 2: Company Info ── */}
               {currentStep === 2 && (
                 <div className="space-y-4">
-                  <h3 className="text-lg font-semibold text-[#0A1628] mb-4">Company Information</h3>
-                  <div className="space-y-2">
-                    <Label htmlFor="company-name">Company Name *</Label>
+                  <h3 className="text-base font-extrabold text-slate-900 mb-1">بيانات الشركة</h3>
+                  <div className="space-y-1.5">
+                    <Label htmlFor="company-name" className="text-xs font-bold text-slate-600">اسم الشركة *</Label>
                     <Input
                       id="company-name"
-                      placeholder="Your company name"
+                      placeholder="اسم الشركة"
                       value={formData.company_name}
                       onChange={(e) => updateField("company_name", e.target.value)}
                       aria-invalid={!!errors.company_name}
+                      className={inputClass}
                     />
                     <FieldError message={errors.company_name} />
                   </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="sector">Sector *</Label>
-                    <select
-                      id="sector"
-                      value={formData.sector}
-                      onChange={(e) => updateField("sector", e.target.value)}
-                      className="flex h-10 w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#C9A84C]"
-                      aria-invalid={!!errors.sector}
-                    >
-                      {sectors.map((s) => (
-                        <option key={s} value={s}>{s}</option>
-                      ))}
-                    </select>
-                    <FieldError message={errors.sector} />
+                  <div className="grid grid-cols-2 gap-3">
+                    <div className="space-y-1.5">
+                      <Label htmlFor="sector" className="text-xs font-bold text-slate-600">القطاع *</Label>
+                      <select
+                        id="sector"
+                        value={formData.sector}
+                        onChange={(e) => updateField("sector", e.target.value)}
+                        className={selectClass}
+                        aria-invalid={!!errors.sector}
+                      >
+                        {sectors.map((s) => (
+                          <option key={s} value={s}>{s}</option>
+                        ))}
+                      </select>
+                      <FieldError message={errors.sector} />
+                    </div>
+                    <div className="space-y-1.5">
+                      <Label htmlFor="stage" className="text-xs font-bold text-slate-600">المرحلة *</Label>
+                      <select
+                        id="stage"
+                        value={formData.stage}
+                        onChange={(e) => updateField("stage", e.target.value)}
+                        className={selectClass}
+                        aria-invalid={!!errors.stage}
+                      >
+                        {stages.map((s) => (
+                          <option key={s.value} value={s.value}>{s.label}</option>
+                        ))}
+                      </select>
+                      <FieldError message={errors.stage} />
+                    </div>
                   </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="stage">Stage *</Label>
-                    <select
-                      id="stage"
-                      value={formData.stage}
-                      onChange={(e) => updateField("stage", e.target.value)}
-                      className="flex h-10 w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#C9A84C]"
-                      aria-invalid={!!errors.stage}
-                    >
-                      {stages.map((s) => (
-                        <option key={s} value={s}>{s}</option>
-                      ))}
-                    </select>
-                    <FieldError message={errors.stage} />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="website">Website</Label>
+                  <div className="space-y-1.5">
+                    <Label htmlFor="website" className="text-xs font-bold text-slate-600">الموقع الإلكتروني</Label>
                     <Input
                       id="website"
                       type="url"
@@ -427,80 +608,120 @@ export default function ApplyPage() {
                       value={formData.company_website}
                       onChange={(e) => updateField("company_website", e.target.value)}
                       aria-invalid={!!errors.company_website}
+                      className={inputClass}
                     />
                     <FieldError message={errors.company_website} />
                   </div>
-                  <div className="flex gap-3">
-                    <Button variant="outline" onClick={() => setCurrentStep(1)} type="button" className="flex-1">
-                      ← Back
-                    </Button>
-                    <Button onClick={() => handleStepContinue(3)} type="button" className="flex-1">
-                      Continue →
-                    </Button>
+                  <div className="flex gap-3 mt-2">
+                    <button
+                      type="button"
+                      onClick={() => setCurrentStep(1)}
+                      className="flex-1 py-3 bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 font-bold text-sm rounded-xl transition"
+                    >
+                      رجوع
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleStepContinue(3)}
+                      className="flex-1 py-3 bg-[#3B52D4] hover:bg-[#2E44C8] text-white font-bold text-sm rounded-xl transition shadow-md shadow-[#3B52D4]/20"
+                    >
+                      متابعة
+                    </button>
                   </div>
                 </div>
               )}
 
-              {/* Step 3: Goals */}
+              {/* ── Step 3: Goals ── */}
               {currentStep === 3 && (
                 <form onSubmit={handleSubmit} className="space-y-4">
-                  <h3 className="text-lg font-semibold text-[#0A1628] mb-4">Goals & Motivation</h3>
-                  <div className="space-y-2">
-                    <Label htmlFor="motivation">Why do you want to join Wosool? *</Label>
+                  <input
+                    type="text"
+                    name="company_fax"
+                    tabIndex={-1}
+                    autoComplete="off"
+                    className="absolute -left-[9999px] opacity-0 pointer-events-none"
+                    value={formData.bot_field}
+                    onChange={(e) => updateField("bot_field", e.target.value)}
+                    aria-hidden="true"
+                  />
+                  <h3 className="text-base font-extrabold text-slate-900 mb-1">الأهداف والدوافع</h3>
+                  <div className="space-y-1.5">
+                    <Label htmlFor="motivation" className="text-xs font-bold text-slate-600">
+                      لماذا ترغب في الانضمام إلى وصول؟ *
+                    </Label>
                     <Textarea
                       id="motivation"
-                      placeholder="Tell us what you're looking to get from the community..."
-                      className="min-h-[100px]"
+                      placeholder="أخبرنا بما تتطلع إليه من المجتمع وما الذي سيصنع لك فرقًا حقيقيًا..."
+                      className="min-h-[90px] rounded-xl border-slate-200 bg-slate-50 text-sm placeholder:text-slate-400 focus:border-[#3B52D4] focus:ring-1 focus:ring-[#3B52D4] resize-none"
                       value={formData.motivation}
                       onChange={(e) => updateField("motivation", e.target.value)}
                       aria-invalid={!!errors.motivation}
                     />
                     <div className="flex justify-between">
                       <FieldError message={errors.motivation} />
-                      <span className="text-xs text-gray-400">{formData.motivation.length}/2000</span>
+                      <span className="text-[10px] text-slate-400 font-medium ml-auto">
+                        {formData.motivation.length}/2000
+                      </span>
                     </div>
                   </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="offer">What can you offer other founders?</Label>
+                  <div className="space-y-1.5">
+                    <Label htmlFor="offer" className="text-xs font-bold text-slate-600">
+                      ما الذي يمكنك تقديمه لبقية المؤسسين؟
+                    </Label>
                     <Textarea
                       id="offer"
-                      placeholder="Your expertise, experience, or network..."
+                      placeholder="خبراتك، علاقاتك، أو المجالات التي يمكنك أن تضيف فيها..."
+                      className="rounded-xl border-slate-200 bg-slate-50 text-sm placeholder:text-slate-400 focus:border-[#3B52D4] focus:ring-1 focus:ring-[#3B52D4] resize-none"
                       value={formData.what_you_offer}
                       onChange={(e) => updateField("what_you_offer", e.target.value)}
                     />
                   </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="need">What do you need most right now?</Label>
+                  <div className="space-y-1.5">
+                    <Label htmlFor="need" className="text-xs font-bold text-slate-600">
+                      ما أكثر ما تحتاج إليه الآن؟
+                    </Label>
                     <Textarea
                       id="need"
-                      placeholder="Fundraising advice, technical talent, market access..."
+                      placeholder="دعم في الاستثمار، مواهب تقنية، وصول إلى السوق، شراكات..."
+                      className="rounded-xl border-slate-200 bg-slate-50 text-sm placeholder:text-slate-400 focus:border-[#3B52D4] focus:ring-1 focus:ring-[#3B52D4] resize-none"
                       value={formData.what_you_need}
                       onChange={(e) => updateField("what_you_need", e.target.value)}
                     />
                   </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="referral">How did you hear about Wosool?</Label>
+                  <div className="space-y-1.5">
+                    <Label htmlFor="referral" className="text-xs font-bold text-slate-600">
+                      كيف سمعت عن وصول؟
+                    </Label>
                     <Input
                       id="referral"
-                      placeholder="Referral, LinkedIn, event, etc."
+                      placeholder="إحالة، لينكدإن، فعالية، صديق، جهة شريكة..."
                       value={formData.referral_source}
                       onChange={(e) => updateField("referral_source", e.target.value)}
+                      className={inputClass}
                     />
                   </div>
-                  <div className="flex gap-3">
-                    <Button variant="outline" onClick={() => setCurrentStep(2)} type="button" className="flex-1">
-                      ← Back
-                    </Button>
-                    <Button type="submit" className="flex-1" disabled={submitting}>
+                  <div className="flex gap-3 mt-2">
+                    <button
+                      type="button"
+                      onClick={() => setCurrentStep(2)}
+                      className="flex-1 py-3 bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 font-bold text-sm rounded-xl transition"
+                    >
+                      رجوع
+                    </button>
+                    <button
+                      type="submit"
+                      disabled={submitting}
+                      className="flex-1 py-3 bg-[#3B52D4] hover:bg-[#2E44C8] disabled:opacity-50 text-white font-bold text-sm rounded-xl transition shadow-md shadow-[#3B52D4]/20 flex items-center justify-center gap-2"
+                    >
                       {submitting ? (
                         <>
-                          <Loader2 className="h-4 w-4 animate-spin mr-2" />
-                          Submitting…
+                          <Loader2 className="h-4 w-4 animate-spin" />
+                          جارٍ الإرسال...
                         </>
                       ) : (
-                        "Submit Application"
+                        "إرسال الطلب"
                       )}
-                    </Button>
+                    </button>
                   </div>
                 </form>
               )}
@@ -509,27 +730,34 @@ export default function ApplyPage() {
         </div>
       </section>
 
-      {/* FAQ */}
-      <section className="py-20 px-4 section-cream">
+      {/* ── FAQ ── */}
+      <section className="py-20 px-4 bg-slate-50/60">
+        <div className="pointer-events-none absolute inset-0" aria-hidden="true" />
         <div className="max-w-2xl mx-auto">
-          <SectionHeader eyebrow="FAQ" heading="Common Questions" centered />
-          <div className="space-y-3">
+          <SectionHeader eyebrow="الأسئلة الشائعة" heading="أسئلة متكررة" centered />
+          <div className="space-y-3 mt-2">
             {faqs.map(({ q, a }, i) => (
-              <div key={i} className="bg-white rounded-2xl overflow-hidden shadow-sm">
+              <div
+                key={i}
+                className="bg-white rounded-2xl overflow-hidden border border-slate-200/70 transition-all duration-200 hover:border-[#3B52D4]/30"
+                style={{ boxShadow: "0 2px 8px -2px rgba(59,82,212,0.04)" }}
+              >
                 <button
                   onClick={() => setOpenFaq(openFaq === i ? null : i)}
-                  className="w-full flex items-center justify-between px-6 py-4 text-left font-semibold text-[#0A1628] hover:bg-gray-50 transition-colors"
+                  className="w-full flex items-center justify-between px-5 py-4 text-right font-bold text-sm text-slate-800 hover:bg-slate-50/60 transition-colors"
                   aria-expanded={openFaq === i}
                 >
                   <span>{q}</span>
                   {openFaq === i ? (
-                    <ChevronUp className="h-4 w-4 text-[#C9A84C] shrink-0" />
+                    <ChevronUp className="h-4 w-4 text-[#3B52D4] shrink-0 transition-transform" />
                   ) : (
-                    <ChevronDown className="h-4 w-4 text-[#C9A84C] shrink-0" />
+                    <ChevronDown className="h-4 w-4 text-[#3B52D4] shrink-0 transition-transform" />
                   )}
                 </button>
                 {openFaq === i && (
-                  <div className="px-6 pb-4 text-gray-600 text-sm leading-relaxed">{a}</div>
+                  <div className="px-5 pb-5 text-sm text-slate-500 leading-relaxed border-t border-slate-100 pt-3">
+                    {a}
+                  </div>
                 )}
               </div>
             ))}

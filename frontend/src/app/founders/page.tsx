@@ -1,97 +1,120 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { PublicLayout } from "@/components/layout/PublicLayout"
-import { SectionHeader } from "@/components/sections/SectionHeader"
-import { FounderCard } from "@/components/sections/FounderCard"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
 import Link from "next/link"
-import { founders as seedFounders } from "@/data/seed"
-import { Search } from "lucide-react"
-import type { Founder } from "@/types"
-
-const sectors = ["All", "Fintech", "HealthTech", "SaaS / B2B", "Logistics", "FoodTech", "HRTech"]
-const stages = ["All", "Pre-seed", "Seed", "Series A", "Scale-up", "Exited"]
-const locations = ["All", "Saudi Arabia", "UAE", "Bahrain", "Kuwait", "Qatar"]
+import { Search, SlidersHorizontal, ArrowLeft, ArrowRight } from "lucide-react"
+import { PublicLayout } from "@/components/layout/PublicLayout"
+import { FounderCard } from "@/components/sections/FounderCard"
+import { Button } from "@/components/ui/button"
+import { foundersPageCopy, getSeedFounders, localizeFounder } from "@/data/localized-seed"
+import { getCollectionItems, type ApiFounder, fetchJson, mapFounder, type WrappedResponse } from "@/lib/content-api"
+import { useLocale } from "@/lib/locale"
+import type { Founder, PaginatedResponse } from "@/types"
 
 export default function FoundersPage() {
-  const [founders, setFounders] = useState<Founder[]>(seedFounders)
-  const [, setIsLoading] = useState(true)
+  const { locale, direction } = useLocale()
+  const copy = foundersPageCopy[locale]
+  const [founders, setFounders] = useState<Founder[]>(() => getSeedFounders(locale))
+  const [search, setSearch] = useState("")
+  const [sector, setSector] = useState(copy.sectors[0])
+  const [stage, setStage] = useState(copy.stages[0])
+  const [location, setLocation] = useState(copy.locations[0])
+  const ArrowIcon = direction === "rtl" ? ArrowLeft : ArrowRight
+
+  useEffect(() => {
+    setFounders(getSeedFounders(locale))
+    setSector(copy.sectors[0])
+    setStage(copy.stages[0])
+    setLocation(copy.locations[0])
+  }, [locale])
 
   useEffect(() => {
     async function fetchFounders() {
       try {
-        const res = await fetch("/api/v1/founders", {
-          headers: { Accept: "application/json" },
-        })
-        if (res.ok) {
-          const json = await res.json()
-          const data = json.data ?? json
-          if (Array.isArray(data) && data.length > 0) {
-            setFounders(
-              data.map((f: Record<string, unknown>) => ({
-                id: String(f.id),
-                name: String((f.user as Record<string, unknown>)?.name ?? f.slug ?? ""),
-                slug: String(f.slug),
-                tagline: String(f.tagline ?? ""),
-                bio: String(f.bio ?? ""),
-                location: String(f.location ?? ""),
-                sector: String(f.sector ?? ""),
-                stage: String(f.stage ?? ""),
-                avatarUrl: String(f.avatar_url ?? ""),
-                companyName:
-                  Array.isArray(f.companies) && f.companies.length > 0
-                    ? String((f.companies[0] as Record<string, unknown>).name)
-                    : "",
-                joinedAt: String(f.created_at ?? ""),
-                score: (f.scorecard as Record<string, unknown>)?.overall_score
-                  ? Number((f.scorecard as Record<string, unknown>).overall_score)
-                  : 0,
-                needs: Array.isArray(f.needs) ? f.needs.map(String) : [],
-                offers: Array.isArray(f.offers) ? f.offers.map(String) : [],
-                isVerified: Boolean(f.is_verified),
-                isFeatured: Boolean(f.is_featured),
-              }))
-            )
-          }
-        }
+        const response = await fetchJson<PaginatedResponse<ApiFounder> | WrappedResponse<ApiFounder[]>>("/api/v1/founders")
+        const items = getCollectionItems(response).map((item) => localizeFounder(mapFounder(item), locale))
+        if (items.length > 0) setFounders(items)
       } catch {
-        // Fallback to seed data on error
-      } finally {
-        setIsLoading(false)
+        // seeded fallback stays
       }
     }
-    fetchFounders()
-  }, [])
+    void fetchFounders()
+  }, [locale])
 
   const featuredFounders = founders.filter((f) => f.isFeatured)
-  const allFounders = founders
+
+  const filtered = founders.filter((f) => {
+    const q = search.toLowerCase()
+    const matchSearch =
+      !q || f.name.toLowerCase().includes(q) || f.companyName.toLowerCase().includes(q) || f.tagline.toLowerCase().includes(q)
+    const matchSector = sector === copy.sectors[0] || f.sector === sector
+    const matchStage  = stage  === copy.stages[0]  || f.stage  === stage
+    const matchLoc    = location === copy.locations[0] || f.location.includes(location)
+    return matchSearch && matchSector && matchStage && matchLoc
+  })
+
+  const selectClass =
+    "rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-xs font-bold text-slate-700 focus:outline-none focus:border-[#3B52D4] focus:ring-1 focus:ring-[#3B52D4] transition-colors"
 
   return (
     <PublicLayout>
-      {/* Hero */}
-      <section className="bg-[#0A1628] text-white py-20 px-4">
-        <div className="max-w-4xl mx-auto text-center">
-          <Badge variant="gold" className="mb-4 uppercase tracking-widest text-xs px-4 py-1.5">
-            Founders Directory
-          </Badge>
-          <h1 className="text-5xl font-bold tracking-tight mb-4">Meet Our Founders</h1>
-          <p className="text-xl text-gray-300 max-w-2xl mx-auto">
-            250+ verified founders building companies across Saudi Arabia, UAE,
-            and the broader GCC region.
+      {/* ── Hero ── */}
+      <section className="relative overflow-hidden bg-slate-50/60 px-4 pt-28 pb-20">
+        <div className="pointer-events-none absolute inset-0" aria-hidden="true">
+          <div className="absolute top-0 right-1/4 w-[500px] h-[500px] rounded-full bg-[#3B52D4]/5 blur-[140px]" />
+          <div className="absolute bottom-0 left-1/4 w-[400px] h-[400px] rounded-full bg-indigo-400/4 blur-[140px]" />
+          <div className="absolute inset-0 bg-[radial-gradient(rgba(59,82,212,0.06)_1px,transparent_1px)] bg-[size:28px_28px] [mask-image:radial-gradient(ellipse_80%_80%_at_50%_40%,black_10%,transparent_70%)]" />
+        </div>
+
+        <div className="relative mx-auto max-w-3xl text-center">
+          <div className="inline-flex items-center gap-2 bg-[#EEF1FF] border border-[#E4E7F0] px-3 py-1 rounded-full text-xs font-bold text-[#3B52D4] mb-6">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#3B52D4] animate-pulse" />
+            {copy.badge}
+          </div>
+
+          <h1 className="text-4xl lg:text-5xl font-black text-slate-900 tracking-tight leading-[1.15] mb-5">
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#3B52D4] to-indigo-500">
+              {copy.title.split(" ").slice(0, 2).join(" ")}
+            </span>{" "}
+            {copy.title.split(" ").slice(2).join(" ")}
+          </h1>
+
+          <p className="text-base lg:text-lg text-slate-600 max-w-2xl mx-auto leading-relaxed">
+            {copy.description}
           </p>
+
+          {/* Stats */}
+          <div className="flex flex-wrap items-center justify-center gap-3 mt-8">
+            {[
+              locale === "ar" ? "250+ مؤسس موثّق" : "250+ verified founders",
+              locale === "ar" ? "10+ قطاع"        : "10+ sectors",
+              locale === "ar" ? "6 دول خليجية"    : "6 GCC countries",
+            ].map((chip) => (
+              <div
+                key={chip}
+                className="inline-flex items-center gap-1.5 bg-white border border-slate-200/80 px-3 py-1.5 rounded-full text-xs font-bold text-slate-600"
+                style={{ boxShadow: "0 2px 8px -2px rgba(59,82,212,0.06)" }}
+              >
+                <span className="w-1.5 h-1.5 rounded-full bg-[#3B52D4]" />
+                {chip}
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
-      {/* Featured Founders */}
-      <section className="py-20 px-4 bg-white">
-        <div className="max-w-7xl mx-auto">
-          <SectionHeader
-            eyebrow="Featured Members"
-            heading="Spotlight founders"
-          />
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      {/* ── Featured Founders ── */}
+      <section className="py-16 px-4 bg-white">
+        <div className="mx-auto max-w-7xl">
+          <div className="mb-10">
+            <div className="inline-flex items-center gap-2 bg-[#EEF1FF] border border-[#E4E7F0] px-3 py-1 rounded-full text-xs font-bold text-[#3B52D4] mb-3">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#3B52D4]" />
+              {copy.featuredEyebrow}
+            </div>
+            <h2 className="text-2xl lg:text-3xl font-black text-slate-900 tracking-tight">{copy.featuredTitle}</h2>
+          </div>
+
+          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {featuredFounders.map((founder) => (
               <FounderCard key={founder.id} founder={founder} />
             ))}
@@ -99,90 +122,151 @@ export default function FoundersPage() {
         </div>
       </section>
 
-      {/* Directory with Filters */}
-      <section className="py-20 px-4 section-cream">
-        <div className="max-w-7xl mx-auto">
-          <SectionHeader
-            eyebrow="Directory"
-            heading="All Founders"
-          />
+      {/* ── Full Directory ── */}
+      <section className="py-16 px-4 bg-[#F5F7FF]">
+        <div className="mx-auto max-w-7xl">
+          <div className="mb-8">
+            <div className="inline-flex items-center gap-2 bg-white border border-slate-200 px-3 py-1 rounded-full text-xs font-bold text-slate-500 mb-3">
+              {copy.directoryEyebrow}
+            </div>
+            <h2 className="text-2xl lg:text-3xl font-black text-slate-900 tracking-tight">{copy.directoryTitle}</h2>
+          </div>
 
-          {/* Search & Filters */}
-          <div className="bg-white rounded-2xl p-6 shadow-sm mb-8">
-            <div className="flex flex-col lg:flex-row gap-4">
-              <div className="flex-1 relative">
-                <Search
-                  className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400"
-                  aria-hidden="true"
-                />
+          {/* Search + filters */}
+          <div
+            className="mb-8 bg-white/90 backdrop-blur-sm border border-slate-200/80 rounded-2xl p-4"
+            style={{ boxShadow: "0 2px 12px -2px rgba(15,22,40,0.06)" }}
+          >
+            <div className="flex flex-col gap-3 lg:flex-row">
+              {/* Search input */}
+              <div className="relative flex-1">
+                <Search className="absolute start-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-slate-400" />
                 <input
                   type="search"
-                  placeholder="Search founders by name, company, or keyword..."
-                  className="w-full pl-10 pr-4 py-2.5 rounded-lg border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-[#C9A84C]"
-                  aria-label="Search founders"
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  placeholder={copy.searchPlaceholder}
+                  aria-label={copy.searchAria}
+                  className="w-full rounded-xl border border-slate-200 bg-slate-50 py-2 ps-9 pe-4 text-xs font-medium text-slate-700 placeholder:text-slate-400 focus:outline-none focus:border-[#3B52D4] focus:ring-1 focus:ring-[#3B52D4] transition-colors"
                 />
               </div>
-              <div className="flex flex-wrap gap-3">
+
+              {/* Filter selects */}
+              <div className="flex items-center gap-2 flex-wrap">
+                <div className="flex items-center gap-1.5 text-xs text-slate-400">
+                  <SlidersHorizontal className="h-3 w-3" />
+                </div>
                 <select
-                  className="rounded-lg border border-gray-200 px-3 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#C9A84C]"
-                  aria-label="Filter by sector"
+                  value={sector}
+                  onChange={(e) => setSector(e.target.value)}
+                  className={selectClass}
                 >
-                  {sectors.map((s) => (
-                    <option key={s}>{s}</option>
-                  ))}
+                  {copy.sectors.map((item) => <option key={item}>{item}</option>)}
                 </select>
                 <select
-                  className="rounded-lg border border-gray-200 px-3 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#C9A84C]"
-                  aria-label="Filter by stage"
+                  value={stage}
+                  onChange={(e) => setStage(e.target.value)}
+                  className={selectClass}
                 >
-                  {stages.map((s) => (
-                    <option key={s}>{s}</option>
-                  ))}
+                  {copy.stages.map((item) => <option key={item}>{item}</option>)}
                 </select>
                 <select
-                  className="rounded-lg border border-gray-200 px-3 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#C9A84C]"
-                  aria-label="Filter by location"
+                  value={location}
+                  onChange={(e) => setLocation(e.target.value)}
+                  className={selectClass}
                 >
-                  {locations.map((l) => (
-                    <option key={l}>{l}</option>
-                  ))}
+                  {copy.locations.map((item) => <option key={item}>{item}</option>)}
                 </select>
               </div>
             </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
-            {allFounders.map((founder) => (
-              <FounderCard key={founder.id} founder={founder} />
-            ))}
+          {/* Results count */}
+          <div className="mb-6 flex items-center justify-between gap-3">
+            <p className="text-xs text-slate-500 font-medium">
+              {copy.results.replace("{count}", String(filtered.length))}
+            </p>
+            {filtered.length !== founders.length && (
+              <button
+                onClick={() => { setSearch(""); setSector(copy.sectors[0]); setStage(copy.stages[0]); setLocation(copy.locations[0]) }}
+                className="text-xs font-bold text-[#3B52D4] hover:underline"
+              >
+                {locale === "ar" ? "إعادة ضبط" : "Reset"}
+              </button>
+            )}
           </div>
 
-          <div className="text-center">
-            <p className="text-gray-500 text-sm mb-4">
-              Showing {allFounders.length} of 250+ founders. Members-only profiles require login.
+          {filtered.length === 0 ? (
+            <div className="flex items-center justify-center h-48 rounded-2xl border border-dashed border-slate-200 bg-white">
+              <p className="text-sm text-slate-400 font-medium">
+                {locale === "ar" ? "لا توجد نتائج مطابقة" : "No matching founders found"}
+              </p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+              {filtered.map((founder) => (
+                <FounderCard key={founder.id} founder={founder} />
+              ))}
+            </div>
+          )}
+
+          {/* Sign-in nudge */}
+          <div
+            className="mt-10 flex flex-col sm:flex-row items-center justify-between gap-4 bg-white/90 border border-slate-200/80 rounded-2xl px-6 py-4"
+            style={{ boxShadow: "0 2px 12px -2px rgba(15,22,40,0.06)" }}
+          >
+            <p className="text-xs text-slate-500 font-medium max-w-sm leading-relaxed">
+              {locale === "ar"
+                ? "بعض الملفات الكاملة متاحة للأعضاء فقط. سجّل دخولك للوصول إلى التفاصيل والتواصل المباشر."
+                : "Full profiles are available to members only. Sign in to access details and direct introductions."}
             </p>
-            <Button asChild variant="secondary">
-              <Link href="/login">Login to See All Founders</Link>
+            <Button
+              asChild
+              variant="outline"
+              className="rounded-xl border-slate-200 text-slate-700 hover:border-[#3B52D4]/40 hover:text-[#3B52D4] font-bold shrink-0 text-xs"
+            >
+              <Link href="/login" className="flex items-center gap-2">
+                {copy.login}
+                <ArrowIcon className="h-3.5 w-3.5" />
+              </Link>
             </Button>
           </div>
         </div>
       </section>
 
-      {/* Book a Discussion CTA */}
-      <section className="py-20 px-4 bg-[#0A1628] text-white text-center">
-        <div className="max-w-xl mx-auto">
-          <h2 className="text-3xl font-bold mb-4">Want a warm introduction?</h2>
-          <p className="text-gray-300 mb-8">
-            Members can request curated introductions through the platform. Not
-            a member yet? Apply to join.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button asChild>
-              <Link href="/apply">Apply to Join</Link>
-            </Button>
-            <Button asChild variant="outline" className="border-white/30 text-white hover:bg-white/10 hover:text-white">
-              <Link href="/contact">Book a Discussion</Link>
-            </Button>
+      {/* ── CTA ── */}
+      <section className="py-20 px-4 bg-slate-50/60">
+        <div className="mx-auto max-w-2xl">
+          <div
+            className="bg-white/90 backdrop-blur-sm border border-slate-200/80 rounded-2xl px-8 py-12 text-center relative overflow-hidden"
+            style={{ boxShadow: "0 8px 40px -8px rgba(59,82,212,0.1)" }}
+          >
+            <div className="pointer-events-none absolute inset-0" aria-hidden="true">
+              <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[400px] h-[200px] rounded-full bg-[#3B52D4]/6 blur-[80px]" />
+            </div>
+            <div className="relative">
+              <div className="inline-flex items-center gap-2 bg-[#EEF1FF] border border-[#E4E7F0] px-3 py-1 rounded-full text-xs font-bold text-[#3B52D4] mb-5">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#3B52D4] animate-pulse" />
+                {locale === "ar" ? "انضم للشبكة" : "Join the network"}
+              </div>
+              <h2 className="text-3xl font-black text-slate-900 tracking-tight mb-3">{copy.ctaTitle}</h2>
+              <p className="text-sm text-slate-500 mb-8 leading-relaxed max-w-md mx-auto">{copy.ctaBody}</p>
+              <div className="flex flex-col sm:flex-row gap-3 justify-center">
+                <Button
+                  asChild
+                  className="rounded-xl bg-[#3B52D4] hover:bg-[#2E44C8] text-white font-bold shadow-md shadow-[#3B52D4]/20"
+                >
+                  <Link href="/apply">{copy.apply}</Link>
+                </Button>
+                <Button
+                  asChild
+                  variant="outline"
+                  className="rounded-xl border-slate-200 text-slate-700 hover:border-[#3B52D4]/40 hover:text-[#3B52D4] font-bold"
+                >
+                  <Link href="/contact">{copy.contact}</Link>
+                </Button>
+              </div>
+            </div>
           </div>
         </div>
       </section>

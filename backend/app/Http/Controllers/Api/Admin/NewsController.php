@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\NewsItemResource;
 use App\Models\AdminAction;
 use App\Models\NewsItem;
 use App\Support\GeneratesUniqueSlug;
@@ -38,7 +39,7 @@ class NewsController extends Controller
         $articles = $query->latest('published_at')->latest()->get();
 
         return response()->json([
-            'data' => $articles,
+            'data' => NewsItemResource::collection($articles),
             'meta' => [
                 'total' => $articles->count(),
                 'published' => $articles->where('status', 'published')->count(),
@@ -61,7 +62,7 @@ class NewsController extends Controller
 
         return response()->json([
             'message' => 'Article created.',
-            'data' => $article,
+            'data' => new NewsItemResource($article),
         ], 201);
     }
 
@@ -80,7 +81,7 @@ class NewsController extends Controller
 
         return response()->json([
             'message' => 'Article updated.',
-            'data' => $news->fresh(),
+            'data' => new NewsItemResource($news->fresh()),
         ]);
     }
 

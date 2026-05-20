@@ -18,6 +18,7 @@ class WosoolSeeder extends Seeder
 {
     private const ADMIN_PASSWORD = 'wosool2024!';
     private const MEMBER_PASSWORD = 'demo123!';
+    private const APPROVED_TEST_PASSWORD = 'Secret#123';
 
     public function run(): void
     {
@@ -157,6 +158,15 @@ class WosoolSeeder extends Seeder
                     'calculated_at' => now(),
                 ]
             );
+        }
+
+        $approvedTestUser = User::updateOrCreate(
+            ['email' => 'user@test.com'],
+            ['name' => 'Approved Test User', 'password' => bcrypt(self::APPROVED_TEST_PASSWORD), 'email_verified_at' => now()]
+        );
+
+        if (method_exists($approvedTestUser, 'assignRole') && ! $approvedTestUser->hasRole('member')) {
+            $approvedTestUser->assignRole('member');
         }
 
         $eventsData = [
@@ -328,6 +338,31 @@ class WosoolSeeder extends Seeder
             );
         }
 
+        Application::firstOrCreate(
+            ['email' => 'user@test.com'],
+            [
+                'user_id' => $approvedTestUser->id,
+                'full_name' => 'Approved Test User',
+                'email' => 'user@test.com',
+                'phone' => '+212600000000',
+                'company_name' => 'Wosool Test Company',
+                'company_website' => 'https://example.com',
+                'sector' => 'Technology',
+                'stage' => 'seed',
+                'location' => 'Rabat, Morocco',
+                'motivation' => 'Seeded approved account for QA and local testing flows.',
+                'what_you_offer' => 'QA feedback and product testing.',
+                'what_you_need' => 'Access to approved member workflows.',
+                'linkedin_url' => 'https://linkedin.com/in/approved-test-user',
+                'referral_source' => 'internal',
+                'referrer_name' => 'Seeder',
+                'status' => 'approved',
+                'admin_notes' => 'Auto-approved seeded testing account.',
+                'reviewed_by' => $admin->id,
+                'reviewed_at' => now(),
+            ]
+        );
+
         $draftAndArchivedNews = [
             [
                 'title' => 'Wosool Community Playbook: Founder Referral Guidelines',
@@ -392,6 +427,7 @@ class WosoolSeeder extends Seeder
             $this->command->line('Member: ahmed@example.com / ' . self::MEMBER_PASSWORD);
             $this->command->line('Member: lina@example.com / ' . self::MEMBER_PASSWORD);
             $this->command->line('Member: omar@example.com / ' . self::MEMBER_PASSWORD);
+            $this->command->line('Member: user@test.com / ' . self::APPROVED_TEST_PASSWORD . ' (approved)');
         }
     }
 }

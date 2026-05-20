@@ -18,11 +18,11 @@ export default function ForgotPasswordPage() {
     setError("")
 
     if (!email.trim()) {
-      setError("Please enter your email address.")
+      setError("يرجى إدخال بريدك الإلكتروني.")
       return
     }
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      setError("Please enter a valid email address.")
+      setError("يرجى إدخال بريد إلكتروني صحيح.")
       return
     }
 
@@ -52,28 +52,28 @@ export default function ForgotPasswordPage() {
                 <Mail className="h-7 w-7 text-[#C9A84C]" />
               </div>
             </div>
-            <h1 className="text-2xl font-bold text-[#0A1628] mb-2">Check Your Email</h1>
+            <h1 className="text-2xl font-bold text-[#0A1628] mb-2">تحقق من بريدك الإلكتروني</h1>
             <p className="text-gray-500 text-sm mb-6">
-              If an account exists for <span className="font-medium text-[#0A1628]">{email}</span>,
-              you&apos;ll receive a password reset link shortly.
+              إذا كان هناك حساب مرتبط بعنوان <span className="font-medium text-[#0A1628]">{email}</span>،
+              فستصلك خلال دقائق رسالة تتضمن رابط إعادة تعيين كلمة المرور.
             </p>
             <Button asChild variant="outline" className="w-full">
               <Link href="/login">
-                <ArrowLeft className="h-4 w-4 mr-2" />
-                Back to Login
+                <ArrowLeft className="ml-2 h-4 w-4" />
+                العودة إلى تسجيل الدخول
               </Link>
             </Button>
           </div>
 
           <p className="text-center text-xs text-gray-400 mt-6">
-            Didn&apos;t receive an email? Check your spam folder or{" "}
+            لم تصلك الرسالة؟ تحقق من مجلد الرسائل غير المرغوب فيها أو{" "}
             <button
               onClick={() => {
                 setSubmitted(false)
               }}
               className="text-[#C9A84C] hover:underline"
             >
-              try again
+              أعد المحاولة
             </button>
           </p>
         </div>
@@ -92,23 +92,22 @@ export default function ForgotPasswordPage() {
               وصول
             </span>
           </Link>
-          <p className="mt-2 text-sm text-gray-500">Founders to Founders</p>
+          <p className="mt-2 text-sm text-gray-500">شبكة خاصة للمؤسسين</p>
         </div>
 
         <div className="bg-white rounded-3xl shadow-sm p-8">
-          <h1 className="text-2xl font-bold text-[#0A1628] mb-1">Reset Password</h1>
+          <h1 className="text-2xl font-bold text-[#0A1628] mb-1">إعادة تعيين كلمة المرور</h1>
           <p className="text-gray-500 text-sm mb-8">
-            Enter the email address associated with your account and we&apos;ll send
-            you a link to reset your password.
+            أدخل البريد الإلكتروني المرتبط بحسابك وسنرسل إليك رابطًا لإعادة تعيين كلمة المرور.
           </p>
 
           <form onSubmit={handleSubmit} className="space-y-5">
             <div className="space-y-2">
-              <Label htmlFor="email">Email address</Label>
+              <Label htmlFor="email">البريد الإلكتروني</Label>
               <Input
                 id="email"
                 type="email"
-                placeholder="you@company.com"
+                placeholder="name@company.com"
                 autoComplete="email"
                 value={email}
                 onChange={(e) => {
@@ -124,10 +123,10 @@ export default function ForgotPasswordPage() {
               {submitting ? (
                 <>
                   <Loader2 className="h-4 w-4 animate-spin mr-2" />
-                  Sending…
+                  جارٍ الإرسال...
                 </>
               ) : (
-                "Send Reset Link"
+                "إرسال رابط إعادة التعيين"
               )}
             </Button>
           </form>
@@ -138,7 +137,7 @@ export default function ForgotPasswordPage() {
               className="text-sm text-[#C9A84C] hover:underline inline-flex items-center gap-1"
             >
               <ArrowLeft className="h-3 w-3" />
-              Back to Login
+              العودة إلى تسجيل الدخول
             </Link>
           </div>
         </div>

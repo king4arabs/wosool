@@ -1,88 +1,144 @@
+"use client"
+
 import Link from "next/link"
 import type { Event } from "@/types"
-import { Card, CardContent, CardFooter } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import { MapPin, Video, Users, Calendar } from "lucide-react"
+import { MapPin, Video, Users, ArrowLeft, ArrowRight } from "lucide-react"
+import { useLocale } from "@/lib/locale"
 
 interface EventCardProps {
   event: Event
 }
 
-function formatEventDate(dateStr: string) {
+function formatEventDate(dateStr: string, intlLocale: string) {
   const date = new Date(dateStr)
   return {
-    day: date.toLocaleDateString("en-US", { day: "numeric" }),
-    month: date.toLocaleDateString("en-US", { month: "short" }),
-    time: date.toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" }),
-    full: date.toLocaleDateString("en-US", { weekday: "long", year: "numeric", month: "long", day: "numeric" }),
+    day:   date.toLocaleDateString(intlLocale, { day:   "2-digit" }),
+    month: date.toLocaleDateString(intlLocale, { month: "short"   }).toUpperCase(),
+    time:  date.toLocaleTimeString(intlLocale, { hour:  "2-digit", minute: "2-digit" }),
+    full:  date.toLocaleDateString(intlLocale, { weekday: "long",  year: "numeric", month: "long", day: "numeric" }),
   }
 }
 
 export function EventCard({ event }: EventCardProps) {
-  const dateInfo = formatEventDate(event.date)
+  const { locale, direction } = useLocale()
+  const intlLocale = locale === "ar" ? "ar-SA" : locale === "fr" ? "fr-FR" : "en-US"
+  const d = formatEventDate(event.date, intlLocale)
+  const ArrowIcon = direction === "rtl" ? ArrowLeft : ArrowRight
+
+  const copy = {
+    ar: { virtual: "عن بُعد", inPerson: "حضوري", membersOnly: "أعضاء فقط",
+          limited: `${event.maxAttendees ?? 0} مقعد`, rsvp: "سجّل حضورك", details: "عرض التفاصيل" },
+    en: { virtual: "Virtual", inPerson: "In-person", membersOnly: "Members only",
+          limited: `${event.maxAttendees ?? 0} seats`, rsvp: "RSVP", details: "View details" },
+    fr: { virtual: "En ligne", inPerson: "Présentiel", membersOnly: "Membres seulement",
+          limited: `${event.maxAttendees ?? 0} places`, rsvp: "RSVP", details: "Voir les détails" },
+  }[locale]
+
+  const isOpen = !!event.registrationUrl
 
   return (
-    <Card className="flex flex-col h-full">
-      <CardContent className="flex-1 pt-6">
-        <div className="flex gap-4 mb-4">
-          {/* Date block */}
+    <div
+      className="group flex flex-col h-full bg-white border border-slate-200/80 rounded-2xl overflow-hidden transition-all duration-300 hover:-translate-y-1"
+      style={{ boxShadow: "0 2px 12px -2px rgba(15,22,40,0.06)" }}
+      onMouseEnter={(e) => {
+        const el = e.currentTarget as HTMLDivElement
+        el.style.boxShadow = "0 8px 32px -4px rgba(59,82,212,0.12), 0 2px 8px -2px rgba(15,22,40,0.04)"
+        el.style.borderColor = "rgba(59,82,212,0.22)"
+      }}
+      onMouseLeave={(e) => {
+        const el = e.currentTarget as HTMLDivElement
+        el.style.boxShadow = "0 2px 12px -2px rgba(15,22,40,0.06)"
+        el.style.borderColor = "rgba(226,232,240,0.8)"
+      }}
+    >
+      {/* Top accent */}
+      <div className="h-0.5 w-full bg-gradient-to-r from-[#3B52D4]/60 to-transparent" />
+
+      <div className="flex flex-col flex-1 p-5 gap-4">
+        {/* Date block + title */}
+        <div className="flex gap-3 items-start">
           <div
-            className="flex flex-col items-center justify-center bg-[#0A1628] text-white rounded-xl p-3 h-16 w-16 shrink-0"
-            aria-label={dateInfo.full}
+            className="flex flex-col items-center justify-center rounded-xl shrink-0 h-14 w-14 border"
+            style={{ background: "#EEF1FF", borderColor: "#E4E7F0" }}
+            aria-label={d.full}
           >
-            <span className="text-xs font-medium text-[#C9A84C] uppercase">{dateInfo.month}</span>
-            <span className="text-2xl font-bold leading-none">{dateInfo.day}</span>
+            <span className="text-[9px] font-extrabold uppercase tracking-widest text-[#3B52D4]">{d.month}</span>
+            <span className="text-xl font-black text-slate-900 leading-none">{d.day}</span>
           </div>
 
           <div className="flex-1 min-w-0">
-            <h3 className="font-semibold text-[#0A1628] line-clamp-2 mb-1">{event.title}</h3>
-            <div className="flex items-center gap-1 text-xs text-gray-400">
-              <Calendar className="h-3 w-3" />
-              <span>{dateInfo.time}</span>
-            </div>
+            <h3 className="text-sm font-black text-slate-900 line-clamp-2 leading-snug mb-1">{event.title}</h3>
+            <span className="text-[10px] text-slate-400 font-medium">{d.time}</span>
           </div>
         </div>
 
-        <p className="text-sm text-gray-600 mb-4 line-clamp-2">{event.description}</p>
+        {/* Description */}
+        <p className="text-xs text-slate-500 leading-relaxed line-clamp-2 flex-1">{event.description}</p>
 
-        <div className="flex items-center gap-2 flex-wrap mb-4">
-          <Badge variant={event.isVirtual ? "secondary" : "outline"}>
-            {event.isVirtual ? "Virtual" : "In-Person"}
-          </Badge>
-          {!event.isPublic && <Badge variant="default">Members Only</Badge>}
-        </div>
+        {/* Tags row */}
+        <div className="flex flex-wrap gap-1.5">
+          <span
+            className="inline-flex items-center gap-1 text-[10px] font-bold px-2.5 py-1 rounded-full border"
+            style={
+              event.isVirtual
+                ? { background: "#EFF6FF", color: "#1d4ed8", borderColor: "#BFDBFE" }
+                : { background: "#F0FDF4", color: "#166534", borderColor: "#BBF7D0" }
+            }
+          >
+            {event.isVirtual
+              ? <Video className="h-2.5 w-2.5" />
+              : <MapPin className="h-2.5 w-2.5" />
+            }
+            {event.isVirtual ? copy.virtual : copy.inPerson}
+          </span>
 
-        <div className="flex items-center gap-2 text-xs text-gray-500">
-          {event.isVirtual ? (
-            <Video className="h-3 w-3 shrink-0" />
-          ) : (
-            <MapPin className="h-3 w-3 shrink-0" />
+          {!event.isPublic && (
+            <span className="text-[10px] font-bold px-2.5 py-1 rounded-full bg-[#EEF1FF] text-[#3B52D4] border border-[#E4E7F0]">
+              {copy.membersOnly}
+            </span>
           )}
-          <span>{event.location}</span>
+
+          {event.maxAttendees && (
+            <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2.5 py-1 rounded-full bg-slate-50 text-slate-500 border border-slate-200">
+              <Users className="h-2.5 w-2.5" />
+              {copy.limited}
+            </span>
+          )}
         </div>
 
-        {event.maxAttendees && (
-          <div className="flex items-center gap-2 text-xs text-gray-400 mt-1">
-            <Users className="h-3 w-3" />
-            <span>Limited to {event.maxAttendees} attendees</span>
-          </div>
-        )}
-      </CardContent>
+        {/* Location */}
+        <div className="flex items-center gap-1.5 text-[11px] text-slate-400 font-medium">
+          {event.isVirtual
+            ? <Video className="h-3 w-3 shrink-0" />
+            : <MapPin className="h-3 w-3 shrink-0" />
+          }
+          <span className="truncate">{event.location}</span>
+        </div>
+      </div>
 
-      <CardFooter>
-        {event.registrationUrl ? (
-          <Button asChild size="sm" className="w-full">
-            <a href={event.registrationUrl} target="_blank" rel="noopener noreferrer">
-              RSVP
-            </a>
-          </Button>
+      {/* CTA */}
+      <div className="px-5 pb-5">
+        {isOpen ? (
+          <a
+            href={event.registrationUrl!}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center justify-between w-full px-4 py-2.5 rounded-xl text-xs font-bold text-white transition-all"
+            style={{ background: "#3B52D4", boxShadow: "0 4px 12px -2px rgba(59,82,212,0.3)" }}
+          >
+            {copy.rsvp}
+            <ArrowIcon className="h-3.5 w-3.5" />
+          </a>
         ) : (
-          <Button asChild variant="outline" size="sm" className="w-full">
-            <Link href={`/events/${event.slug}`}>Learn More</Link>
-          </Button>
+          <Link
+            href={`/events/${event.slug}`}
+            className="flex items-center justify-between w-full px-4 py-2.5 rounded-xl border border-slate-200 text-xs font-bold text-slate-600 bg-white transition-all hover:border-[#3B52D4]/40 hover:text-[#3B52D4] hover:bg-[#EEF1FF]/40"
+          >
+            {copy.details}
+            <ArrowIcon className="h-3.5 w-3.5" />
+          </Link>
         )}
-      </CardFooter>
-    </Card>
+      </div>
+    </div>
   )
 }
