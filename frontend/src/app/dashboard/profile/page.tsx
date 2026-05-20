@@ -1,6 +1,7 @@
 "use client"
 
 import { useCallback, useEffect, useState } from "react"
+import { useSearchParams } from "next/navigation"
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -11,6 +12,8 @@ import { Badge } from "@/components/ui/badge"
 import { Save } from "lucide-react"
 import { api, ApiError } from "@/lib/api"
 import { useToast } from "@/components/ui/toast"
+import { useLocale } from "@/lib/locale"
+import { dashboardDictionary } from "@/lib/dashboard-i18n"
 
 interface FounderProfile {
   id?: number
@@ -32,6 +35,10 @@ const STAGES = ["pre-seed", "seed", "series-a", "scale-up", "exited"]
 
 export default function ProfilePage() {
   const { toast } = useToast()
+  const { locale } = useLocale()
+  const copy = dashboardDictionary[locale].profile
+  const searchParams = useSearchParams()
+  const isOnboarding = searchParams.get("onboarding") === "1"
   const [profile, setProfile] = useState<FounderProfile>({
     tagline: "",
     bio: "",
@@ -62,7 +69,7 @@ export default function ProfilePage() {
         if (err instanceof ApiError && err.status === 404) {
           // No profile yet — keep blank form
         } else if (!cancelled) {
-          toast("Could not load your profile.", "error")
+          toast(copy.loadError, "error")
         }
       } finally {
         if (!cancelled) setIsLoading(false)
@@ -72,7 +79,7 @@ export default function ProfilePage() {
     return () => {
       cancelled = true
     }
-  }, [toast])
+  }, [copy.loadError, toast])
 
   const updateField = useCallback(
     <K extends keyof FounderProfile>(field: K, value: FounderProfile[K]) => {
@@ -130,39 +137,51 @@ export default function ProfilePage() {
         payload
       )
       setProfile({ ...res.data, needs: res.data.needs ?? [], offers: res.data.offers ?? [] })
-      toast(res.message ?? "Profile saved.", "success")
+      toast(res.message ?? copy.saveSuccess, "success")
     } catch (err) {
       if (err instanceof ApiError && err.status === 422) {
         const data = err.data as { errors?: Record<string, string[]> } | null
         if (data?.errors) {
           const flat: Record<string, string> = {}
           for (const [k, v] of Object.entries(data.errors)) {
-            flat[k] = v[0] ?? "Invalid value."
+            flat[k] = v[0] ?? copy.invalidValue
           }
           setErrors(flat)
         }
-        toast("Please correct the highlighted fields.", "error")
+        toast(copy.saveValidation, "error")
       } else {
-        toast("Could not save profile. Please try again.", "error")
+        toast(copy.saveError, "error")
       }
     } finally {
       setIsSaving(false)
     }
-  }, [profile, toast])
+  }, [copy.invalidValue, copy.saveError, copy.saveSuccess, copy.saveValidation, profile, toast])
 
   if (isLoading) {
-    return <div className="max-w-3xl text-sm text-gray-500">Loading profile…</div>
+    return <div className="max-w-3xl text-sm text-gray-500">{copy.loading}</div>
   }
 
   return (
     <div className="max-w-3xl space-y-8">
+      {isOnboarding ? (
+        <Card className="border-blue-200 bg-blue-50">
+          <CardContent className="py-4">
+            <p className="text-sm font-semibold text-blue-900">
+              {locale === "ar"
+                ? "معالج الانضمام: أكمل ملفك الشخصي أولًا للوصول إلى جميع أقسام لوحة التحكم."
+                : "Onboarding wizard: complete your profile first to unlock full dashboard navigation."}
+            </p>
+          </CardContent>
+        </Card>
+      ) : null}
+
       <Card>
         <CardHeader>
-          <h3 className="font-semibold text-[#0A1628]">Personal Information</h3>
+          <h3 className="font-semibold text-[#0A1628]">{copy.personalInfo}</h3>
         </CardHeader>
         <CardContent className="space-y-6">
           <div className="space-y-2">
-            <Label htmlFor="p-tagline">Tagline</Label>
+            <Label htmlFor="p-tagline">{copy.tagline}</Label>
             <Input
               id="p-tagline"
               value={profile.tagline ?? ""}
@@ -173,7 +192,7 @@ export default function ProfilePage() {
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="p-location">Location</Label>
+              <Label htmlFor="p-location">{copy.location}</Label>
               <Input
                 id="p-location"
                 value={profile.location ?? ""}
@@ -181,7 +200,7 @@ export default function ProfilePage() {
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="p-linkedin">LinkedIn URL</Label>
+              <Label htmlFor="p-linkedin">{copy.linkedin}</Label>
               <Input
                 id="p-linkedin"
                 type="url"
@@ -196,7 +215,7 @@ export default function ProfilePage() {
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="p-twitter">Twitter URL</Label>
+              <Label htmlFor="p-twitter">{copy.twitter}</Label>
               <Input
                 id="p-twitter"
                 type="url"
@@ -209,7 +228,7 @@ export default function ProfilePage() {
               )}
             </div>
             <div className="space-y-2">
-              <Label htmlFor="p-website">Website URL</Label>
+              <Label htmlFor="p-website">{copy.website}</Label>
               <Input
                 id="p-website"
                 type="url"
@@ -227,11 +246,11 @@ export default function ProfilePage() {
 
       <Card>
         <CardHeader>
-          <h3 className="font-semibold text-[#0A1628]">Professional Background</h3>
+          <h3 className="font-semibold text-[#0A1628]">{copy.professionalBackground}</h3>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="p-bio">Bio</Label>
+            <Label htmlFor="p-bio">{copy.bio}</Label>
             <Textarea
               id="p-bio"
               className="min-h-[120px]"
@@ -243,14 +262,14 @@ export default function ProfilePage() {
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="p-sector">Sector</Label>
+              <Label htmlFor="p-sector">{copy.sector}</Label>
               <select
                 id="p-sector"
                 value={profile.sector ?? ""}
                 onChange={(e) => updateField("sector", e.target.value)}
                 className="flex h-10 w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#C9A84C]"
               >
-                <option value="">Select sector…</option>
+                <option value="">{copy.selectSector}</option>
                 {SECTORS.map((s) => (
                   <option key={s} value={s}>
                     {s}
@@ -259,14 +278,14 @@ export default function ProfilePage() {
               </select>
             </div>
             <div className="space-y-2">
-              <Label htmlFor="p-stage">Stage</Label>
+              <Label htmlFor="p-stage">{copy.stage}</Label>
               <select
                 id="p-stage"
                 value={profile.stage ?? ""}
                 onChange={(e) => updateField("stage", e.target.value)}
                 className="flex h-10 w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#C9A84C]"
               >
-                <option value="">Select stage…</option>
+                <option value="">{copy.selectStage}</option>
                 {STAGES.map((s) => (
                   <option key={s} value={s}>
                     {s}
@@ -280,14 +299,14 @@ export default function ProfilePage() {
 
       <Card>
         <CardHeader>
-          <h3 className="font-semibold text-[#0A1628]">Needs &amp; Offers</h3>
+          <h3 className="font-semibold text-[#0A1628]">{copy.needsOffers}</h3>
           <p className="text-sm text-gray-500 mt-1">
-            Tell the network what you&apos;re looking for and what you can give back.
+            {copy.needsOffersDesc}
           </p>
         </CardHeader>
         <CardContent className="space-y-6">
           <div>
-            <Label>What I Need</Label>
+            <Label>{copy.whatINeed}</Label>
             <div className="flex flex-wrap gap-2 mt-3 mb-3">
               {(profile.needs ?? []).map((need) => (
                 <Badge key={need} variant="outline" className="gap-1">
@@ -295,7 +314,7 @@ export default function ProfilePage() {
                   <button
                     type="button"
                     className="text-gray-400 hover:text-red-500 ml-1"
-                    aria-label={`Remove ${need}`}
+                    aria-label={`${copy.remove} ${need}`}
                     onClick={() => removeNeed(need)}
                   >
                     ×
@@ -305,7 +324,7 @@ export default function ProfilePage() {
             </div>
             <div className="flex gap-2">
               <Input
-                placeholder="Add a need (e.g., 'Regulatory guidance')"
+                placeholder={copy.addNeed}
                 value={needInput}
                 onChange={(e) => setNeedInput(e.target.value)}
                 onKeyDown={(e) => {
@@ -316,13 +335,13 @@ export default function ProfilePage() {
                 }}
               />
               <Button type="button" variant="outline" onClick={addNeed}>
-                Add
+                {copy.add}
               </Button>
             </div>
           </div>
           <Separator />
           <div>
-            <Label>What I Offer</Label>
+            <Label>{copy.whatIOffer}</Label>
             <div className="flex flex-wrap gap-2 mt-3 mb-3">
               {(profile.offers ?? []).map((offer) => (
                 <Badge key={offer} variant="success" className="gap-1">
@@ -330,7 +349,7 @@ export default function ProfilePage() {
                   <button
                     type="button"
                     className="text-gray-400 hover:text-red-500 ml-1"
-                    aria-label={`Remove ${offer}`}
+                    aria-label={`${copy.remove} ${offer}`}
                     onClick={() => removeOffer(offer)}
                   >
                     ×
@@ -340,7 +359,7 @@ export default function ProfilePage() {
             </div>
             <div className="flex gap-2">
               <Input
-                placeholder="Add something you offer (e.g., 'Fundraising strategy')"
+                placeholder={copy.addOffer}
                 value={offerInput}
                 onChange={(e) => setOfferInput(e.target.value)}
                 onKeyDown={(e) => {
@@ -351,7 +370,7 @@ export default function ProfilePage() {
                 }}
               />
               <Button type="button" variant="outline" onClick={addOffer}>
-                Add
+                {copy.add}
               </Button>
             </div>
           </div>
@@ -361,7 +380,7 @@ export default function ProfilePage() {
       <div className="flex justify-end">
         <Button size="lg" onClick={onSave} disabled={isSaving}>
           <Save className="h-4 w-4 mr-2" />
-          {isSaving ? "Saving…" : "Save Profile"}
+          {isSaving ? copy.saving : copy.saveProfile}
         </Button>
       </div>
     </div>

@@ -12,7 +12,7 @@ return new class extends Migration {
             $table->string('role')->nullable();
             $table->boolean('is_primary')->default(true);
             $table->timestamps();
-            $table->unique(['founder_profile_id', 'company_profile_id']);
+            $table->unique(['founder_profile_id', 'company_profile_id'], 'fcl_founder_company_uniq');
         });
     }
     public function down(): void { Schema::dropIfExists('founder_company_links'); }

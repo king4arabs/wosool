@@ -15,12 +15,24 @@ interface AuthContextValue {
   isLoading: boolean
   isAuthenticated: boolean
   login: (email: string, password: string) => Promise<void>
-  register: (name: string, email: string, password: string, passwordConfirmation: string) => Promise<void>
+  register: (name: string, email: string, password: string, passwordConfirmation: string, inviteToken?: string) => Promise<void>
   logout: () => Promise<void>
   refresh: () => Promise<void>
 }
 
 const AuthContext = createContext<AuthContextValue | undefined>(undefined)
+const LOCALE_STORAGE_KEY = "wosool-locale"
+
+function resolveLocaleHeader(): string {
+  if (typeof window === "undefined") return "ar"
+  return window.localStorage.getItem(LOCALE_STORAGE_KEY) || "ar"
+}
+
+function timeoutSignal(ms: number): AbortSignal {
+  const controller = new AbortController()
+  setTimeout(() => controller.abort(), ms)
+  return controller.signal
+}
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null)
@@ -30,11 +42,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     try {
       const res = await fetch("/api/v1/auth/me", {
         credentials: "include",
-        headers: { Accept: "application/json" },
+        headers: { Accept: "application/json", "X-Locale": resolveLocaleHeader() },
+        signal: timeoutSignal(7000),
       })
       if (res.ok) {
         const data = await res.json()
-        setUser(data.user)
+        setUser(data.user ? { ...data.user, roleToken: data.user.role_token, isAdmin: data.user.is_admin } : null)
       } else {
         setUser(null)
       }
@@ -52,7 +65,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const login = useCallback(async (email: string, password: string) => {
     await fetch("/api/v1/auth/csrf-cookie", {
       credentials: "include",
-      headers: { Accept: "application/json" },
+      headers: { Accept: "application/json", "X-Locale": resolveLocaleHeader() },
+      signal: timeoutSignal(7000),
     })
 
     const res = await fetch("/api/v1/auth/login", {
@@ -61,8 +75,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
+        "X-Locale": resolveLocaleHeader(),
       },
       body: JSON.stringify({ email, password }),
+      signal: timeoutSignal(10000),
     })
 
     if (!res.ok) {
@@ -71,14 +87,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
 
     const data = await res.json()
-    setUser(data.user)
+    setUser(data.user ? { ...data.user, roleToken: data.user.role_token, isAdmin: data.user.is_admin } : null)
   }, [])
 
   const register = useCallback(
-    async (name: string, email: string, password: string, passwordConfirmation: string) => {
+    async (name: string, email: string, password: string, passwordConfirmation: string, inviteToken?: string) => {
       await fetch("/api/v1/auth/csrf-cookie", {
         credentials: "include",
-        headers: { Accept: "application/json" },
+        headers: { Accept: "application/json", "X-Locale": resolveLocaleHeader() },
+        signal: timeoutSignal(7000),
       })
 
       const res = await fetch("/api/v1/auth/register", {
@@ -87,13 +104,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         headers: {
           "Content-Type": "application/json",
           Accept: "application/json",
+          "X-Locale": resolveLocaleHeader(),
         },
         body: JSON.stringify({
           name,
           email,
           password,
           password_confirmation: passwordConfirmation,
+          invite_token: inviteToken || undefined,
         }),
+        signal: timeoutSignal(12000),
       })
 
       if (!res.ok) {
@@ -107,18 +127,30 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
 
       const data = await res.json()
-      setUser(data.user)
+      setUser(data.user ? { ...data.user, roleToken: data.user.role_token, isAdmin: data.user.is_admin } : null)
     },
     []
   )
 
   const logout = useCallback(async () => {
-    await fetch("/api/v1/auth/logout", {
-      method: "POST",
-      credentials: "include",
-      headers: { Accept: "application/json" },
-    })
-    setUser(null)
+    try {
+      // Ensure CSRF token is present for state-changing request.
+      await fetch("/api/v1/auth/csrf-cookie", {
+        credentials: "include",
+        headers: { Accept: "application/json", "X-Locale": resolveLocaleHeader() },
+        signal: timeoutSignal(7000),
+      })
+
+      await fetch("/api/v1/auth/logout", {
+        method: "POST",
+        credentials: "include",
+        headers: { Accept: "application/json", "X-Locale": resolveLocaleHeader() },
+        signal: timeoutSignal(7000),
+      })
+    } finally {
+      // Always clear client auth state even if backend session is already invalid.
+      setUser(null)
+    }
   }, [])
 
   const value = useMemo<AuthContextValue>(

@@ -18,7 +18,7 @@ export function AdminGuard({ children }: { children: React.ReactNode }) {
   if (isLoading) {
     return (
       <div className="flex min-h-[50vh] items-center justify-center text-sm text-gray-500">
-        Loading admin workspace...
+        جاري تحميل لوحة الأدمن...
       </div>
     )
   }
@@ -26,7 +26,7 @@ export function AdminGuard({ children }: { children: React.ReactNode }) {
   if (!isAdminUser(user)) {
     return (
       <div className="flex min-h-[50vh] items-center justify-center text-sm text-gray-500">
-        Checking access...
+        جاري التحقق من الصلاحيات...
       </div>
     )
   }

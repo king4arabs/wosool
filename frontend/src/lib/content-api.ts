@@ -301,7 +301,18 @@ export async function fetchJson<T>(input: string, init?: RequestInit): Promise<T
   })
 
   if (!response.ok) {
-    throw new Error(`Request failed: ${response.status}`)
+    const errorPayload = await response.json().catch(() => null) as {
+      message?: string
+      errors?: Record<string, string[]>
+    } | null
+
+    const firstFieldError = errorPayload?.errors
+      ? Object.values(errorPayload.errors).flat()[0]
+      : null
+
+    throw new Error(
+      firstFieldError || errorPayload?.message || `Request failed: ${response.status}`
+    )
   }
 
   return response.json()

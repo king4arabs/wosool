@@ -21,7 +21,7 @@ class ScorecardController extends Controller
             ->first();
 
         if (! $profile?->scorecard) {
-            return response()->json(['message' => 'No scorecard found.'], 404);
+            return response()->json(['message' => __('messages.scorecard.not_found')], 404);
         }
 
         return response()->json([
@@ -73,7 +73,7 @@ class ScorecardController extends Controller
             ->first();
 
         if (! $profile) {
-            return response()->json(['message' => 'Founder profile not found.'], 404);
+            return response()->json(['message' => __('messages.scorecard.founder_not_found')], 404);
         }
 
         $computed = $engine->computeForFounderProfile($profile);
@@ -118,7 +118,7 @@ class ScorecardController extends Controller
         );
 
         return response()->json([
-            'message' => 'Scorecard recalculated successfully.',
+            'message' => __('messages.scorecard.recalculated'),
             'data' => new ScorecardResource($scorecard),
         ]);
     }

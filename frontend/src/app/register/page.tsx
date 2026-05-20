@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useCallback } from "react"
-import { useRouter } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -10,10 +10,13 @@ import { useAuth } from "@/lib/auth"
 
 export default function RegisterPage() {
   const router = useRouter()
+  const searchParams = useSearchParams()
   const { register } = useAuth()
+  const inviteToken = searchParams.get("invite") || ""
+  const invitedEmail = searchParams.get("email") || ""
 
   const [name, setName] = useState("")
-  const [email, setEmail] = useState("")
+  const [email, setEmail] = useState(invitedEmail)
   const [password, setPassword] = useState("")
   const [passwordConfirmation, setPasswordConfirmation] = useState("")
   const [error, setError] = useState("")
@@ -32,7 +35,7 @@ export default function RegisterPage() {
       setIsSubmitting(true)
 
       try {
-        await register(name, email, password, passwordConfirmation)
+        await register(name, email, password, passwordConfirmation, inviteToken || undefined)
         router.push("/dashboard")
       } catch (err) {
         setError(err instanceof Error ? err.message : "تعذر إنشاء الحساب. يرجى المحاولة مرة أخرى.")
@@ -40,7 +43,7 @@ export default function RegisterPage() {
         setIsSubmitting(false)
       }
     },
-    [name, email, password, passwordConfirmation, register, router]
+    [name, email, password, passwordConfirmation, register, router, inviteToken]
   )
 
   return (
@@ -62,6 +65,11 @@ export default function RegisterPage() {
           <p className="text-gray-500 text-sm mb-8">
             ابدأ رحلتك داخل وصول وتواصل مع مؤسسين يبنون في السعودية والخليج
           </p>
+          {inviteToken ? (
+            <div className="mb-6 rounded-lg bg-emerald-50 border border-emerald-200 px-4 py-3 text-sm text-emerald-800">
+              رابط الدعوة الخاص بك مفعّل تلقائيًا. أكمل إنشاء الحساب بنفس البريد.
+            </div>
+          ) : null}
 
           {error && (
             <div className="mb-6 rounded-lg bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-700" role="alert">
@@ -94,7 +102,7 @@ export default function RegisterPage() {
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                disabled={isSubmitting}
+                disabled={isSubmitting || Boolean(inviteToken)}
               />
             </div>
 

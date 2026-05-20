@@ -21,7 +21,7 @@ class IntroductionController extends Controller
 
         if (! $founder) {
             return response()->json([
-                'message' => 'Founder profile not found for authenticated user.',
+                'message' => __('messages.intro.founder_not_found'),
             ], 404);
         }
 
@@ -69,7 +69,7 @@ class IntroductionController extends Controller
 
         if (! $sourceFounder) {
             return response()->json([
-                'message' => 'Founder profile not found for authenticated user.',
+                'message' => __('messages.intro.founder_not_found'),
             ], 404);
         }
 
@@ -80,10 +80,10 @@ class IntroductionController extends Controller
 
         if ($activePendingCount >= 3) {
             return response()->json([
-                'message' => 'Maximum active introduction requests reached.',
+                'message' => __('messages.intro.active_limit_reached'),
                 'errors' => [
                     'active_pending_limit' => [
-                        'You already have 3 active INTRO_PENDING requests. Approve, decline, or wait for expiration before creating a new route.',
+                        __('messages.intro.active_limit_detail'),
                     ],
                 ],
                 'meta' => [
@@ -133,7 +133,7 @@ class IntroductionController extends Controller
         $intro->load(['sourceFounder', 'targetFounder']);
 
         return response()->json([
-            'message' => 'Introduction route created successfully.',
+            'message' => __('messages.intro.created'),
             'data' => new IntroductionResource($intro),
         ], 201);
     }
@@ -144,19 +144,19 @@ class IntroductionController extends Controller
 
         if (! $founder) {
             return response()->json([
-                'message' => 'Founder profile not found for authenticated user.',
+                'message' => __('messages.intro.founder_not_found'),
             ], 404);
         }
 
         if ($intro->target_founder_id !== $founder->id) {
             return response()->json([
-                'message' => 'You are not authorized to approve this introduction route.',
+                'message' => __('messages.intro.approve_unauthorized'),
             ], 403);
         }
 
         if ($intro->routing_status !== 'INTRO_PENDING') {
             return response()->json([
-                'message' => 'Only INTRO_PENDING routes can be approved.',
+                'message' => __('messages.intro.approve_invalid_status'),
                 'errors' => [
                     'routing_status' => [
                         'Current status is '.$intro->routing_status.'.',
@@ -169,13 +169,7 @@ class IntroductionController extends Controller
             'routing_status' => 'INTRO_APPROVED',
         ]);
 
-        $locale = $request->getPreferredLanguage(['en', 'fr', 'ar']) ?? app()->getLocale();
-
-        $localizedMessages = [
-            'en' => 'Introduction route approved successfully.',
-            'fr' => 'La mise en relation a ete approuvee avec succes.',
-            'ar' => 'تمت الموافقة على طلب الربط بنجاح.',
-        ];
+        $locale = app()->getLocale();
 
         AnalyticsEvent::track(
             eventName: 'introduction.approved',
@@ -184,7 +178,7 @@ class IntroductionController extends Controller
             entityId: $intro->id,
             properties: [
                 'locale' => $locale,
-                'message' => $localizedMessages[$locale] ?? $localizedMessages['en'],
+                'message' => __('messages.intro.approved'),
                 'source_founder_id' => $intro->source_founder_id,
                 'target_founder_id' => $intro->target_founder_id,
             ],
@@ -200,7 +194,7 @@ class IntroductionController extends Controller
         $intro->load(['sourceFounder', 'targetFounder']);
 
         return response()->json([
-            'message' => $localizedMessages[$locale] ?? $localizedMessages['en'],
+            'message' => __('messages.intro.approved'),
             'data' => new IntroductionResource($intro),
         ]);
     }
@@ -213,19 +207,19 @@ class IntroductionController extends Controller
 
         if (! $founder) {
             return response()->json([
-                'message' => 'Founder profile not found for authenticated user.',
+                'message' => __('messages.intro.founder_not_found'),
             ], 404);
         }
 
         if (! in_array($founder->id, [$intro->source_founder_id, $intro->target_founder_id], true)) {
             return response()->json([
-                'message' => 'You are not authorized to decline this introduction route.',
+                'message' => __('messages.intro.decline_unauthorized'),
             ], 403);
         }
 
         if ($intro->routing_status !== 'INTRO_PENDING') {
             return response()->json([
-                'message' => 'Only INTRO_PENDING routes can be declined.',
+                'message' => __('messages.intro.decline_invalid_status'),
                 'errors' => [
                     'routing_status' => [
                         'Current status is '.$intro->routing_status.'.',
@@ -258,7 +252,7 @@ class IntroductionController extends Controller
         $intro->load(['sourceFounder', 'targetFounder']);
 
         return response()->json([
-            'message' => 'Introduction route declined successfully.',
+            'message' => __('messages.intro.declined'),
             'data' => new IntroductionResource($intro),
         ]);
     }

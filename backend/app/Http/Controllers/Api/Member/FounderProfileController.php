@@ -22,7 +22,7 @@ class FounderProfileController extends Controller
             ->first();
 
         if (! $profile) {
-            return response()->json(['message' => 'No founder profile found.'], 404);
+            return response()->json(['message' => __('messages.founder.profile_not_found')], 404);
         }
 
         return response()->json([
@@ -64,7 +64,7 @@ class FounderProfileController extends Controller
         $profile->load(['companies', 'scorecard']);
 
         return response()->json([
-            'message' => $created ? 'Profile created.' : 'Profile updated.',
+            'message' => $created ? __('messages.founder.profile_created') : __('messages.founder.profile_updated'),
             'data' => new FounderResource($profile),
         ], $created ? 201 : 200);
     }

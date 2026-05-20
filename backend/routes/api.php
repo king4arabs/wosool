@@ -5,6 +5,8 @@ use App\Http\Controllers\Api\Admin\CompanyController as AdminCompanyController;
 use App\Http\Controllers\Api\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Api\Admin\EventController as AdminEventController;
 use App\Http\Controllers\Api\Admin\FounderController as AdminFounderController;
+use App\Http\Controllers\Api\Admin\IntroductionController as AdminIntroductionController;
+use App\Http\Controllers\Api\Admin\ScorecardController as AdminScorecardController;
 use App\Http\Controllers\Api\Admin\MatchController as AdminMatchController;
 use App\Http\Controllers\Api\Admin\NewsController as AdminNewsController;
 use App\Http\Controllers\Api\Admin\PartnerController as AdminPartnerController;
@@ -26,6 +28,7 @@ use App\Http\Controllers\Api\Member\FounderProfileController as MemberFounderPro
 use App\Http\Controllers\Api\Member\MatchController as MemberMatchController;
 use App\Http\Controllers\Api\Member\ProgramApplicationController;
 use App\Http\Controllers\Api\Member\ScorecardController as MemberScorecardController;
+use App\Http\Controllers\Api\Member\SettingsController as MemberSettingsController;
 use App\Http\Controllers\Api\Member\ThreadController as MemberThreadController;
 use App\Http\Controllers\Api\NewsController;
 use App\Http\Controllers\Api\PartnerController;
@@ -76,7 +79,7 @@ Route::prefix('v1')->group(function () {
     });
 
     // ── Authenticated member endpoints ──────────────────────────────
-    Route::middleware('auth:sanctum')->prefix('member')->group(function () {
+    Route::middleware(['auth:sanctum', 'member'])->prefix('member')->group(function () {
         Route::get('/dashboard', MemberDashboardController::class);
 
         // Legacy member profile read (kept for backward compatibility)
@@ -118,6 +121,10 @@ Route::prefix('v1')->group(function () {
         Route::post('/introductions', [IntroductionController::class, 'store']);
         Route::patch('/introductions/{intro}/approve', [IntroductionController::class, 'approve']);
         Route::patch('/introductions/{intro}/decline', [IntroductionController::class, 'decline']);
+
+        // Member settings and privacy
+        Route::get('/settings', [MemberSettingsController::class, 'show']);
+        Route::put('/settings', [MemberSettingsController::class, 'update']);
     });
 
     Route::middleware(['auth:sanctum', 'admin'])->prefix('admin')->group(function () {
@@ -125,6 +132,11 @@ Route::prefix('v1')->group(function () {
         Route::get('/analytics', AdminAnalyticsController::class);
         Route::get('/founders', [AdminFounderController::class, 'index']);
         Route::get('/matches', [AdminMatchController::class, 'index']);
+        Route::get('/intros', [AdminIntroductionController::class, 'index']);
+        Route::patch('/intros/{intro}', [AdminIntroductionController::class, 'update']);
+        Route::get('/scorecards', [AdminScorecardController::class, 'index']);
+        Route::get('/scorecards/{scorecard}', [AdminScorecardController::class, 'show']);
+        Route::patch('/scorecards/{scorecard}/override', [AdminScorecardController::class, 'override']);
         Route::get('/settings', [AdminSettingsController::class, 'show']);
         Route::put('/settings', [AdminSettingsController::class, 'update']);
 

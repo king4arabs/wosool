@@ -1,23 +1,27 @@
 "use client"
 
 import { useState, useCallback } from "react"
+import Link from "next/link"
 import { PublicLayout } from "@/components/layout/PublicLayout"
-import { SectionHeader } from "@/components/sections/SectionHeader"
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
-import { Label } from "@/components/ui/label"
-import { Badge } from "@/components/ui/badge"
 import { useToast } from "@/components/ui/toast"
 import { api, ApiError } from "@/lib/api"
-import { Mail, Users, Building, Newspaper, Loader2, CheckCircle } from "lucide-react"
-import Link from "next/link"
+import {
+  Mail,
+  Users,
+  Building,
+  Newspaper,
+  Loader2,
+  PartyPopper,
+  Clock,
+  MessageSquare,
+} from "lucide-react"
 
 const categories = [
-  { icon: Mail, label: "استفسار عام", value: "general", description: "أسئلة عامة أو طلبات تواصل أولية" },
-  { icon: Users, label: "شراكات", value: "partnerships", description: "شراكات تدعم مجتمع وصول أو برامجه" },
-  { icon: Building, label: "رعاية", value: "sponsorship", description: "الرعاية المرتبطة بالمنصة أو الفعاليات" },
-  { icon: Newspaper, label: "إعلام", value: "media", description: "استفسارات الصحافة والظهور الإعلامي" },
+  { icon: Mail,      label: "استفسار عام",  value: "general",      description: "أسئلة عامة أو طلبات تواصل أولية" },
+  { icon: Users,     label: "شراكات",       value: "partnerships", description: "شراكات تدعم مجتمع وصول أو برامجه" },
+  { icon: Building,  label: "رعاية",        value: "sponsorship",  description: "الرعاية المرتبطة بالمنصة أو الفعاليات" },
+  { icon: Newspaper, label: "إعلام",        value: "media",        description: "استفسارات الصحافة والظهور الإعلامي" },
 ]
 
 interface ContactFormData {
@@ -42,25 +46,33 @@ const initialFormData: ContactFormData = {
 
 function validateContact(data: ContactFormData): ContactErrors {
   const errors: ContactErrors = {}
-  if (!data.name.trim()) errors.name = "يرجى إدخال الاسم."
-  if (!data.email.trim()) errors.email = "يرجى إدخال البريد الإلكتروني."
+  if (!data.name.trim())    errors.name    = "يرجى إدخال الاسم."
+  if (!data.email.trim())   errors.email   = "يرجى إدخال البريد الإلكتروني."
   else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email))
     errors.email = "يرجى إدخال بريد إلكتروني صحيح."
-  if (!data.category) errors.category = "يرجى اختيار التصنيف."
-  if (!data.subject.trim()) errors.subject = "يرجى كتابة عنوان الرسالة."
-  if (!data.message.trim()) errors.message = "يرجى كتابة الرسالة."
+  if (!data.category)       errors.category = "يرجى اختيار التصنيف."
+  if (!data.subject.trim()) errors.subject  = "يرجى كتابة عنوان الرسالة."
+  if (!data.message.trim()) errors.message  = "يرجى كتابة الرسالة."
   if (data.message.length > 3000) errors.message = "يجب ألا تتجاوز الرسالة 3000 حرف."
   return errors
 }
 
 function FieldError({ message }: { message?: string }) {
   if (!message) return null
-  return <p className="text-sm text-red-600 mt-1">{message}</p>
+  return (
+    <p className="flex items-center gap-1.5 text-xs text-red-500 font-medium mt-1">
+      <span className="w-1 h-1 rounded-full bg-red-500 shrink-0" />
+      {message}
+    </p>
+  )
 }
 
+const inputClass =
+  "flex h-10 w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-800 placeholder:text-slate-400 focus:outline-none focus:border-[#3B52D4] focus:ring-1 focus:ring-[#3B52D4] transition-colors"
+
 export default function ContactPage() {
-  const [formData, setFormData] = useState<ContactFormData>(initialFormData)
-  const [errors, setErrors] = useState<ContactErrors>({})
+  const [formData, setFormData]   = useState<ContactFormData>(initialFormData)
+  const [errors, setErrors]       = useState<ContactErrors>({})
   const [submitting, setSubmitting] = useState(false)
   const [submitted, setSubmitted] = useState(false)
   const { toast } = useToast()
@@ -80,15 +92,12 @@ export default function ContactPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-
     const validationErrors = validateContact(formData)
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors)
-      toast("Please fill in all required fields.", "error")
       toast("يرجى استكمال جميع الحقول المطلوبة.", "error")
       return
     }
-
     setSubmitting(true)
     try {
       await api.post("/contact", formData)
@@ -99,9 +108,7 @@ export default function ContactPage() {
         const serverErrors = (err.data as { errors: Record<string, string[]> }).errors
         const mapped: ContactErrors = {}
         for (const [key, messages] of Object.entries(serverErrors)) {
-          if (key in formData) {
-            mapped[key as keyof ContactFormData] = messages[0]
-          }
+          if (key in formData) mapped[key as keyof ContactFormData] = messages[0]
         }
         setErrors(mapped)
         toast("يرجى مراجعة الحقول المعلّمة وتصحيحها.", "error")
@@ -113,40 +120,51 @@ export default function ContactPage() {
     }
   }
 
+  // ── Submitted ────────────────────────────────────────────────────────────────
   if (submitted) {
     return (
       <PublicLayout>
-        <section className="bg-[#0A1628] text-white py-20 px-4">
-          <div className="max-w-2xl mx-auto text-center">
-            <div className="flex justify-center mb-6">
-              <div className="h-20 w-20 rounded-full bg-[#C9A84C]/20 flex items-center justify-center">
-                <CheckCircle className="h-10 w-10 text-[#C9A84C]" />
+        <section className="relative min-h-[80vh] bg-slate-50/60 px-4 py-24 flex items-center">
+          <div className="pointer-events-none absolute inset-0" aria-hidden="true">
+            <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[600px] h-[600px] rounded-full bg-[#3B52D4]/5 blur-[140px]" />
+          </div>
+          <div className="relative mx-auto max-w-lg w-full text-center">
+            <div
+              className="bg-white/90 backdrop-blur-sm border border-slate-200/80 rounded-2xl px-8 py-14"
+              style={{ boxShadow: "0 8px 40px -8px rgba(59,82,212,0.1)" }}
+            >
+              <div className="flex justify-center mb-6">
+                <div className="h-20 w-20 rounded-full bg-[#EEF1FF] border border-[#E4E7F0] flex items-center justify-center">
+                  <PartyPopper className="h-9 w-9 text-[#3B52D4]" />
+                </div>
               </div>
-            </div>
-            <h1 className="text-4xl font-bold tracking-tight mb-4">
-              تم إرسال الرسالة
-            </h1>
-            <p className="text-xl text-gray-300 mb-2">
-              شكرًا لتواصلك معنا. وصلتنا رسالتك بنجاح.
-            </p>
-            <p className="text-gray-400 mb-8">
-              سيعود إليك الفريق خلال يومي عمل إلى ثلاثة أيام عمل على{" "}
-              <span className="text-white font-medium">{formData.email}</span>.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-3 justify-center">
-              <Button asChild>
-                <Link href="/">العودة إلى الرئيسية</Link>
-              </Button>
-              <Button
-                variant="outline"
-                onClick={() => {
-                  setSubmitted(false)
-                  setFormData(initialFormData)
-                  setErrors({})
-                }}
-              >
-                إرسال رسالة أخرى
-              </Button>
+              <div className="inline-flex items-center gap-2 bg-[#EEF1FF] border border-[#E4E7F0] px-3 py-1 rounded-full text-xs font-bold text-[#3B52D4] mb-4">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#3B52D4]" />
+                تم بنجاح
+              </div>
+              <h1 className="text-3xl font-black text-slate-900 tracking-tight mb-3">تم إرسال الرسالة</h1>
+              <p className="text-base text-slate-600 mb-2 leading-relaxed">
+                شكرًا لتواصلك معنا. وصلتنا رسالتك بنجاح.
+              </p>
+              <p className="text-sm text-slate-500 mb-8 leading-relaxed">
+                سيعود إليك الفريق خلال يومي إلى ثلاثة أيام عمل على{" "}
+                <span className="font-medium text-[#3B52D4]">{formData.email}</span>.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-3 justify-center">
+                <Button
+                  asChild
+                  className="rounded-xl bg-[#3B52D4] hover:bg-[#2E44C8] text-white font-bold shadow-md shadow-[#3B52D4]/20"
+                >
+                  <Link href="/">العودة إلى الرئيسية</Link>
+                </Button>
+                <Button
+                  variant="outline"
+                  className="rounded-xl border-slate-200 text-slate-700 hover:border-[#3B52D4]/40 hover:text-[#3B52D4] font-bold"
+                  onClick={() => { setSubmitted(false); setFormData(initialFormData); setErrors({}) }}
+                >
+                  إرسال رسالة أخرى
+                </Button>
+              </div>
             </div>
           </div>
         </section>
@@ -154,74 +172,143 @@ export default function ContactPage() {
     )
   }
 
+  // ── Main page ─────────────────────────────────────────────────────────────────
   return (
     <PublicLayout>
-      {/* Hero */}
-      <section className="bg-[#0A1628] text-white py-20 px-4">
-        <div className="max-w-4xl mx-auto text-center">
-          <Badge variant="gold" className="mb-4 uppercase tracking-widest text-xs px-4 py-1.5">
+      {/* ── Hero ── */}
+      <section className="relative overflow-hidden bg-slate-50/60 px-4 pt-28 pb-16">
+        <div className="pointer-events-none absolute inset-0" aria-hidden="true">
+          <div className="absolute top-0 right-1/4 w-[500px] h-[500px] rounded-full bg-[#3B52D4]/5 blur-[140px]" />
+          <div className="absolute bottom-0 left-1/4 w-[400px] h-[400px] rounded-full bg-indigo-400/4 blur-[140px]" />
+          <div className="absolute inset-0 bg-[radial-gradient(rgba(59,82,212,0.06)_1px,transparent_1px)] bg-[size:28px_28px] [mask-image:radial-gradient(ellipse_80%_80%_at_50%_40%,black_10%,transparent_70%)]" />
+        </div>
+
+        <div className="relative mx-auto max-w-3xl text-center">
+          <div className="inline-flex items-center gap-2 bg-[#EEF1FF] border border-[#E4E7F0] px-3 py-1 rounded-full text-xs font-bold text-[#3B52D4] mb-6">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#3B52D4] animate-pulse" />
             تواصل معنا
-          </Badge>
-          <h1 className="text-5xl font-bold tracking-tight mb-4">يسعدنا التواصل معك</h1>
-          <p className="text-xl text-gray-300 max-w-2xl mx-auto">
+          </div>
+          <h1 className="text-4xl lg:text-5xl font-black text-slate-900 tracking-tight leading-[1.15] mb-5">
+            يسعدنا{" "}
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#3B52D4] to-indigo-500">
+              التواصل معك
+            </span>
+          </h1>
+          <p className="text-base lg:text-lg text-slate-600 max-w-xl mx-auto leading-relaxed">
             سواء كان لديك سؤال، أو فكرة شراكة، أو رغبة في معرفة المزيد عن وصول، فنحن جاهزون للاستماع.
           </p>
+
+          {/* Info chips */}
+          <div className="flex flex-wrap items-center justify-center gap-3 mt-8">
+            <div
+              className="inline-flex items-center gap-1.5 bg-white border border-slate-200/80 px-3 py-1.5 rounded-full text-xs font-bold text-slate-600"
+              style={{ boxShadow: "0 2px 8px -2px rgba(59,82,212,0.06)" }}
+            >
+              <Clock className="h-3 w-3 text-[#3B52D4]" />
+              الرد خلال ٢–٣ أيام عمل
+            </div>
+            <div
+              className="inline-flex items-center gap-1.5 bg-white border border-slate-200/80 px-3 py-1.5 rounded-full text-xs font-bold text-slate-600"
+              style={{ boxShadow: "0 2px 8px -2px rgba(59,82,212,0.06)" }}
+            >
+              <MessageSquare className="h-3 w-3 text-[#3B52D4]" />
+              <a href="mailto:hello@wosool.org" className="hover:text-[#3B52D4] transition-colors">
+                hello@wosool.org
+              </a>
+            </div>
+          </div>
         </div>
       </section>
 
-      {/* Contact Form */}
-      <section className="py-20 px-4 bg-white">
-        <div className="max-w-4xl mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-5 gap-12">
-            {/* Category Selector */}
-            <div className="lg:col-span-2">
-              <SectionHeader eyebrow="التصنيف" heading="ما طبيعة هذا التواصل؟" />
-              <div className="space-y-3">
-                {categories.map(({ icon: Icon, label, value, description }) => (
+      {/* ── Form section ── */}
+      <section className="py-16 px-4 bg-white">
+        <div className="mx-auto max-w-5xl">
+          <div className="grid grid-cols-1 lg:grid-cols-5 gap-10 items-start">
+
+            {/* Left: category selector + hint */}
+            <div className="lg:col-span-2 space-y-4">
+              <div className="mb-6">
+                <div className="inline-flex items-center gap-2 bg-[#EEF1FF] border border-[#E4E7F0] px-3 py-1 rounded-full text-xs font-bold text-[#3B52D4] mb-3">
+                  التصنيف
+                </div>
+                <h2 className="text-xl font-black text-slate-900 tracking-tight">ما طبيعة هذا التواصل؟</h2>
+              </div>
+
+              {categories.map(({ icon: Icon, label, value, description }) => {
+                const active = formData.category === value
+                return (
                   <button
                     key={value}
+                    type="button"
                     onClick={() => updateField("category", value)}
-                    className={`w-full flex items-start gap-3 p-4 rounded-2xl border-2 text-left transition-colors ${
-                      formData.category === value
-                        ? "border-[#C9A84C] bg-[#C9A84C]/5"
-                        : "border-gray-100 hover:border-gray-200"
-                    }`}
-                    aria-pressed={formData.category === value}
+                    aria-pressed={active}
+                    className="w-full flex items-start gap-3 p-4 rounded-2xl border text-start transition-all duration-200"
+                    style={
+                      active
+                        ? {
+                            borderColor: "rgba(59,82,212,0.4)",
+                            background: "#EEF1FF",
+                            boxShadow: "0 4px 16px -4px rgba(59,82,212,0.12)",
+                          }
+                        : {
+                            borderColor: "#E2E8F0",
+                            background: "white",
+                          }
+                    }
                   >
                     <div
-                      className={`h-8 w-8 rounded-lg flex items-center justify-center shrink-0 ${
-                        formData.category === value ? "bg-[#C9A84C] text-[#0A1628]" : "bg-gray-100 text-gray-500"
-                      }`}
+                      className="h-9 w-9 rounded-xl flex items-center justify-center shrink-0 transition-all"
+                      style={
+                        active
+                          ? { background: "#3B52D4", color: "white" }
+                          : { background: "#F8FAFC", color: "#94a3b8" }
+                      }
                     >
                       <Icon className="h-4 w-4" aria-hidden="true" />
                     </div>
                     <div>
-                      <p className="font-semibold text-sm text-[#0A1628]">{label}</p>
-                      <p className="text-xs text-gray-500">{description}</p>
+                      <p className={`text-sm font-black mb-0.5 ${active ? "text-[#3B52D4]" : "text-slate-900"}`}>
+                        {label}
+                      </p>
+                      <p className="text-xs text-slate-500 leading-relaxed">{description}</p>
                     </div>
                   </button>
-                ))}
-              </div>
+                )
+              })}
 
-              <div className="mt-8 p-6 bg-[#F8F5EF] rounded-2xl">
-                <h3 className="font-semibold text-[#0A1628] mb-2">طلب جلسة مباشرة</h3>
-                <p className="text-sm text-gray-600 mb-4">
-                  إذا رغبت في تنسيق مكالمة مع فريق وصول، فاستخدم النموذج واذكر في رسالتك أنك تطلب جلسة مباشرة.
+              {/* Hint card */}
+              <div
+                className="mt-2 p-5 bg-[#F5F7FF] border border-[#E4E7F0] rounded-2xl"
+              >
+                <div className="inline-flex items-center gap-1.5 bg-[#EEF1FF] border border-[#E4E7F0] px-2.5 py-1 rounded-full text-[10px] font-extrabold text-[#3B52D4] mb-3">
+                  جلسة مباشرة
+                </div>
+                <h3 className="text-sm font-black text-slate-900 mb-1.5">طلب جلسة مباشرة</h3>
+                <p className="text-xs text-slate-500 leading-relaxed mb-3">
+                  إذا رغبت في تنسيق مكالمة مع فريق وصول، اذكر في رسالتك أنك تطلب جلسة مباشرة.
                 </p>
-                <p className="text-xs text-gray-400">
-                  متوسط زمن الرد: من يومي عمل إلى ثلاثة
-                </p>
+                <div className="flex items-center gap-1.5 text-[11px] text-slate-400 font-medium">
+                  <Clock className="h-3 w-3" />
+                  متوسط زمن الرد: يومان إلى ثلاثة أيام عمل
+                </div>
               </div>
             </div>
 
-            {/* Form */}
+            {/* Right: Form */}
             <div className="lg:col-span-3">
-              <form onSubmit={handleSubmit} className="space-y-6">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div className="space-y-2 sm:col-span-2">
-                    <Label htmlFor="name">الاسم الكامل *</Label>
-                    <Input
+              <div
+                className="bg-white/90 backdrop-blur-sm border border-slate-200/80 rounded-2xl p-7"
+                style={{ boxShadow: "0 4px 24px -4px rgba(59,82,212,0.07)" }}
+              >
+                <form onSubmit={handleSubmit} className="space-y-5" noValidate>
+                  {/* Name */}
+                  <div className="space-y-1.5">
+                    <label htmlFor="name" className="text-xs font-bold text-slate-600">
+                      الاسم الكامل <span className="text-red-400">*</span>
+                    </label>
+                    <input
                       id="name"
+                      className={inputClass}
                       placeholder="اكتب اسمك الكامل"
                       value={formData.name}
                       onChange={(e) => updateField("name", e.target.value)}
@@ -229,80 +316,93 @@ export default function ContactPage() {
                     />
                     <FieldError message={errors.name} />
                   </div>
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="contact-email">البريد الإلكتروني *</Label>
-                  <Input
-                    id="contact-email"
-                    type="email"
-                    placeholder="name@company.com"
-                    value={formData.email}
-                    onChange={(e) => updateField("email", e.target.value)}
-                    aria-invalid={!!errors.email}
-                  />
-                  <FieldError message={errors.email} />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="organisation">الجهة أو الشركة</Label>
-                  <Input
-                    id="organisation"
-                    placeholder="اسم الشركة أو الجهة"
-                    value={formData.company}
-                    onChange={(e) => updateField("company", e.target.value)}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="subject">عنوان الرسالة *</Label>
-                  <Input
-                    id="subject"
-                    placeholder="عنوان مختصر وواضح"
-                    value={formData.subject}
-                    onChange={(e) => updateField("subject", e.target.value)}
-                    aria-invalid={!!errors.subject}
-                  />
-                  <FieldError message={errors.subject} />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="contact-message">الرسالة *</Label>
-                  <Textarea
-                    id="contact-message"
-                    placeholder="اكتب تفاصيل طلبك أو فكرتك أو استفسارك..."
-                    className="min-h-[140px]"
-                    value={formData.message}
-                    onChange={(e) => updateField("message", e.target.value)}
-                    aria-invalid={!!errors.message}
-                  />
-                  <div className="flex justify-between">
-                    <FieldError message={errors.message} />
-                    <span className="text-xs text-gray-400">{formData.message.length}/3000</span>
+
+                  {/* Email + Company */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="space-y-1.5">
+                      <label htmlFor="contact-email" className="text-xs font-bold text-slate-600">
+                        البريد الإلكتروني <span className="text-red-400">*</span>
+                      </label>
+                      <input
+                        id="contact-email"
+                        type="email"
+                        className={inputClass}
+                        placeholder="name@company.com"
+                        value={formData.email}
+                        onChange={(e) => updateField("email", e.target.value)}
+                        aria-invalid={!!errors.email}
+                      />
+                      <FieldError message={errors.email} />
+                    </div>
+                    <div className="space-y-1.5">
+                      <label htmlFor="organisation" className="text-xs font-bold text-slate-600">
+                        الجهة أو الشركة
+                      </label>
+                      <input
+                        id="organisation"
+                        className={inputClass}
+                        placeholder="اسم الشركة أو الجهة"
+                        value={formData.company}
+                        onChange={(e) => updateField("company", e.target.value)}
+                      />
+                    </div>
                   </div>
-                </div>
-                <Button type="submit" size="lg" className="w-full" disabled={submitting}>
-                  {submitting ? (
-                    <>
-                      <Loader2 className="h-4 w-4 animate-spin mr-2" />
-                      جارٍ الإرسال...
-                    </>
-                  ) : (
-                    "إرسال الرسالة"
-                  )}
-                </Button>
-              </form>
+
+                  {/* Subject */}
+                  <div className="space-y-1.5">
+                    <label htmlFor="subject" className="text-xs font-bold text-slate-600">
+                      عنوان الرسالة <span className="text-red-400">*</span>
+                    </label>
+                    <input
+                      id="subject"
+                      className={inputClass}
+                      placeholder="عنوان مختصر وواضح"
+                      value={formData.subject}
+                      onChange={(e) => updateField("subject", e.target.value)}
+                      aria-invalid={!!errors.subject}
+                    />
+                    <FieldError message={errors.subject} />
+                  </div>
+
+                  {/* Message */}
+                  <div className="space-y-1.5">
+                    <label htmlFor="contact-message" className="text-xs font-bold text-slate-600">
+                      الرسالة <span className="text-red-400">*</span>
+                    </label>
+                    <textarea
+                      id="contact-message"
+                      rows={5}
+                      className={inputClass + " h-auto resize-none py-3"}
+                      placeholder="اكتب تفاصيل طلبك أو فكرتك أو استفسارك..."
+                      value={formData.message}
+                      onChange={(e) => updateField("message", e.target.value)}
+                      aria-invalid={!!errors.message}
+                    />
+                    <div className="flex items-start justify-between gap-2">
+                      <FieldError message={errors.message} />
+                      <span
+                        className={`text-[11px] font-medium shrink-0 ${
+                          formData.message.length > 2800 ? "text-amber-500" : "text-slate-400"
+                        }`}
+                      >
+                        {formData.message.length}/3000
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Submit */}
+                  <button
+                    type="submit"
+                    disabled={submitting}
+                    className="flex items-center justify-center gap-2 w-full h-11 rounded-xl bg-[#3B52D4] hover:bg-[#2E44C8] text-white text-sm font-bold transition-all shadow-md shadow-[#3B52D4]/20 disabled:opacity-60 disabled:cursor-not-allowed"
+                  >
+                    {submitting && <Loader2 className="h-4 w-4 animate-spin" />}
+                    {submitting ? "جارٍ الإرسال..." : "إرسال الرسالة"}
+                  </button>
+                </form>
+              </div>
             </div>
           </div>
-        </div>
-      </section>
-
-      {/* Alternative contacts */}
-      <section className="py-16 px-4 section-cream">
-        <div className="max-w-4xl mx-auto text-center">
-          <p className="text-gray-500 text-sm mb-2">يمكنك أيضًا التواصل معنا مباشرة عبر</p>
-          <a
-            href="mailto:hello@wosool.org"
-            className="text-[#C9A84C] font-semibold hover:underline"
-          >
-            hello@wosool.org
-          </a>
         </div>
       </section>
     </PublicLayout>

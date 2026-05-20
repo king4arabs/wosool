@@ -3,12 +3,14 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Application;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Schema;
+use Throwable;
 use Illuminate\Validation\Rules\Password;
 use Illuminate\Validation\ValidationException;
 
@@ -21,7 +23,7 @@ class AuthController extends Controller
         }
 
         return response()->json([
-            'message' => 'CSRF token initialized.',
+            'message' => __('messages.auth.csrf_initialized'),
         ]);
     }
 
@@ -37,7 +39,7 @@ class AuthController extends Controller
 
         if (! Auth::attempt($request->only('email', 'password'), $request->boolean('remember'))) {
             throw ValidationException::withMessages([
-                'email' => ['The provided credentials are incorrect.'],
+                'email' => [__('messages.auth.invalid_credentials')],
             ]);
         }
 
@@ -48,7 +50,7 @@ class AuthController extends Controller
         $user = Auth::user();
 
         return response()->json([
-            'message' => 'Logged in successfully.',
+            'message' => __('messages.auth.login_success'),
             'user' => $this->formatUser($user),
         ]);
     }
@@ -62,7 +64,29 @@ class AuthController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|email|max:255|unique:users',
             'password' => ['required', 'confirmed', Password::min(8)->mixedCase()->numbers()],
+            'invite_token' => 'nullable|string|max:150',
         ]);
+
+        $inviteToken = trim((string) $request->input('invite_token', ''));
+
+        $application = Application::query()
+            ->whereRaw('LOWER(email) = ?', [strtolower($request->input('email'))])
+            ->latest('id')
+            ->first();
+
+        if (! $application || $application->status !== 'approved') {
+            throw ValidationException::withMessages([
+                'email' => [__('messages.auth.email_not_approved')],
+            ]);
+        }
+
+        if ($inviteToken !== '') {
+            if (! hash_equals((string) ($application->invite_token ?? ''), $inviteToken)) {
+                throw ValidationException::withMessages([
+                    'invite_token' => [__('messages.auth.invalid_invite_token')],
+                ]);
+            }
+        }
 
         $passwordHash = Hash::make($request->input('password'));
 
@@ -85,13 +109,29 @@ class AuthController extends Controller
 
         $user = User::create($payload);
 
+        if (method_exists($user, 'assignRole') && ! $user->hasRole('member')) {
+            try {
+                $user->assignRole('member');
+            } catch (Throwable) {
+                // Role seeding might not be initialized in some environments.
+            }
+        }
+
+        if (is_null($application->user_id)) {
+            $application->update(['user_id' => $user->id]);
+        }
+
+        if ($inviteToken !== '' && ! is_null($application->invite_token)) {
+            $application->forceFill(['invite_token' => null])->save();
+        }
+
         Auth::login($user);
         if ($request->hasSession()) {
             $request->session()->regenerate();
         }
 
         return response()->json([
-            'message' => 'Account created successfully.',
+            'message' => __('messages.auth.account_created'),
             'user' => $this->formatUser($user),
         ], 201);
     }
@@ -109,7 +149,7 @@ class AuthController extends Controller
         }
 
         return response()->json([
-            'message' => 'Logged out successfully.',
+            'message' => __('messages.auth.logout_success'),
         ]);
     }
 
@@ -134,19 +174,25 @@ class AuthController extends Controller
             $name = (string) strstr($user->email, '@', true) ?: 'Member';
         }
 
+        $roles = method_exists($user, 'getRoleNames')
+            ? $user->getRoleNames()->toArray()
+            : [];
+
+        $roleToken = (string) ($attributes['role_token'] ?? '');
+        $isAdmin = in_array('admin', $roles, true) || $roleToken === 'admin';
+
         $data = [
             'id' => $user->id,
             'name' => $name,
             'email' => $user->email,
+            'role_token' => $roleToken !== '' ? $roleToken : null,
+            'is_admin' => $isAdmin,
             'email_verified_at' => array_key_exists('email_verified_at', $attributes)
                 ? $user->email_verified_at?->toIso8601String()
                 : null,
             'created_at' => $user->created_at?->toIso8601String(),
+            'roles' => $roles,
         ];
-
-        if (method_exists($user, 'getRoleNames')) {
-            $data['roles'] = $user->getRoleNames()->toArray();
-        }
 
         return $data;
     }

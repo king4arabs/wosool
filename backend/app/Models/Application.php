@@ -27,10 +27,13 @@ class Application extends Model
         'admin_notes',
         'reviewed_by',
         'reviewed_at',
+        'invite_token',
+        'invite_sent_at',
     ];
 
     protected $casts = [
         'reviewed_at' => 'datetime',
+        'invite_sent_at' => 'datetime',
     ];
 
     public function user(): BelongsTo

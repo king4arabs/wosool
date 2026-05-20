@@ -20,22 +20,71 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { cn } from "@/lib/utils"
 import { useAuth } from "@/lib/auth"
 import { AdminGuard } from "@/components/admin/AdminGuard"
+import { useLocale } from "@/lib/locale"
+
+const adminLabels = {
+  ar: {
+    nav: {
+      "/admin": "نظرة عامة",
+      "/admin/members": "طلبات العضوية",
+      "/admin/founders": "المؤسسون",
+      "/admin/companies": "الشركات",
+      "/admin/scorecards": "التقييمات",
+      "/admin/matches": "التوافق",
+      "/admin/intros": "التعريفات",
+      "/admin/events": "الفعاليات",
+      "/admin/programs": "البرامج",
+      "/admin/partners": "الشركاء",
+      "/admin/sponsors": "الرعاة",
+      "/admin/news": "الأخبار",
+      "/admin/analytics": "التحليلات",
+      "/admin/settings": "الإعدادات",
+    },
+    panel: "لوحة الأدمن",
+    management: "الإدارة",
+    site: "عرض الموقع",
+    fallback: "الإدارة",
+  },
+  en: {
+    nav: {
+      "/admin": "Overview",
+      "/admin/members": "Membership Requests",
+      "/admin/founders": "Founders",
+      "/admin/companies": "Companies",
+      "/admin/scorecards": "Scorecards",
+      "/admin/matches": "Matches",
+      "/admin/intros": "Introductions",
+      "/admin/events": "Events",
+      "/admin/programs": "Programs",
+      "/admin/partners": "Partners",
+      "/admin/sponsors": "Sponsors",
+      "/admin/news": "News",
+      "/admin/analytics": "Analytics",
+      "/admin/settings": "Settings",
+    },
+    panel: "Admin Panel",
+    management: "Management",
+    site: "View Site",
+    fallback: "Admin",
+  },
+} as const
 
 const adminNavItems = [
-  { href: "/admin", icon: LayoutDashboard, label: "Overview" },
-  { href: "/admin/members", icon: Users, label: "Members" },
-  { href: "/admin/founders", icon: Trophy, label: "Founders" },
-  { href: "/admin/companies", icon: Building2, label: "Companies" },
-  { href: "/admin/scorecards", icon: Star, label: "Scorecards" },
-  { href: "/admin/matches", icon: Sparkles, label: "Matches" },
-  { href: "/admin/events", icon: CalendarDays, label: "Events" },
-  { href: "/admin/programs", icon: GraduationCap, label: "Programs" },
-  { href: "/admin/partners", icon: Handshake, label: "Partners" },
-  { href: "/admin/sponsors", icon: Trophy, label: "Sponsors" },
-  { href: "/admin/news", icon: Newspaper, label: "News" },
-  { href: "/admin/analytics", icon: BarChart3, label: "Analytics" },
-  { href: "/admin/settings", icon: Settings, label: "Settings" },
-]
+  { href: "/admin", icon: LayoutDashboard },
+  { href: "/admin/members", icon: Users },
+  { href: "/admin/founders", icon: Trophy },
+  { href: "/admin/companies", icon: Building2 },
+  { href: "/admin/scorecards", icon: Star },
+  { href: "/admin/matches", icon: Sparkles },
+  { href: "/admin/intros", icon: Handshake },
+  { href: "/admin/events", icon: CalendarDays },
+  { href: "/admin/programs", icon: GraduationCap },
+  { href: "/admin/partners", icon: Handshake },
+  { href: "/admin/sponsors", icon: Trophy },
+  { href: "/admin/news", icon: Newspaper },
+  { href: "/admin/analytics", icon: BarChart3 },
+  { href: "/admin/settings", icon: Settings },
+] as const
 
 export default function AdminLayout({
   children,
@@ -44,6 +93,9 @@ export default function AdminLayout({
 }) {
   const pathname = usePathname()
   const { user } = useAuth()
+  const { locale } = useLocale()
+  const activeLocale = locale === "en" ? "en" : "ar"
+  const copy = adminLabels[activeLocale]
 
   const initials = user?.name
     ?.split(" ")
@@ -54,22 +106,22 @@ export default function AdminLayout({
 
   return (
     <AdminGuard>
-      <div className="flex min-h-screen bg-gray-50">
+      <div className="flex min-h-screen bg-gray-50" dir={activeLocale === "ar" ? "rtl" : "ltr"}>
         <aside
-          className="hidden lg:flex flex-col w-64 bg-[#1E293B] text-white fixed top-0 left-0 bottom-0 z-50"
+          className="hidden lg:flex flex-col w-64 bg-[#1E293B] text-white fixed top-0 right-0 bottom-0 z-50"
           aria-label="Admin navigation"
         >
           <div className="flex items-center gap-2 px-6 py-5 border-b border-white/10">
             <Link href="/admin" className="flex items-center gap-2">
               <span className="text-lg font-bold text-white">Wosool</span>
               <span className="text-xs bg-red-500 text-white rounded px-1.5 py-0.5 font-medium">
-                Admin
+                {copy.management}
               </span>
             </Link>
           </div>
 
           <nav className="flex-1 px-3 py-4 overflow-y-auto">
-            {adminNavItems.map(({ href, icon: Icon, label }) => (
+            {adminNavItems.map(({ href, icon: Icon }) => (
               <Link
                 key={href}
                 href={href}
@@ -81,7 +133,7 @@ export default function AdminLayout({
                 )}
               >
                 <Icon className="h-4 w-4 shrink-0" aria-hidden="true" />
-                {label}
+                {copy.nav[href]}
               </Link>
             ))}
           </nav>
@@ -99,14 +151,14 @@ export default function AdminLayout({
           </div>
         </aside>
 
-        <div className="flex-1 lg:ml-64 flex flex-col">
+        <div className="flex-1 lg:mr-64 flex flex-col">
           <header className="bg-white border-b border-gray-200 sticky top-0 z-40 px-6 py-4 flex items-center justify-between">
             <div className="flex items-center gap-3">
               <span className="text-xs bg-red-100 text-red-700 rounded px-2 py-1 font-semibold">
-                Admin Panel
+                {copy.panel}
               </span>
               <h1 className="text-base font-semibold text-gray-700">
-                {adminNavItems.find((n) => n.href === pathname)?.label ?? "Admin"}
+                {(copy.nav as Record<string, string>)[pathname] ?? copy.fallback}
               </h1>
             </div>
             <div className="flex items-center gap-3">
@@ -114,7 +166,7 @@ export default function AdminLayout({
                 href="/"
                 className="text-sm text-gray-500 hover:text-gray-700"
               >
-                ← View Site
+                {copy.site}
               </Link>
               <Avatar className="h-8 w-8">
                 <AvatarFallback className="text-xs bg-red-500 text-white">{initials}</AvatarFallback>

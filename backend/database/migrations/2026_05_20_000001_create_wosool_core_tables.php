@@ -9,8 +9,29 @@ return new class extends Migration
 {
     public function up(): void
     {
-        DB::statement('CREATE EXTENSION IF NOT EXISTS vector');
+        // This codebase already has a richer baseline schema created by the
+        // 2024 migrations (slug-based founder/company models, etc). If that
+        // schema exists, skip this legacy replacement migration to avoid
+        // destructive table shape drift that breaks seeders and models.
+        if (
+            Schema::hasTable('founder_profiles') &&
+            Schema::hasTable('company_profiles') &&
+            Schema::hasColumn('founder_profiles', 'slug') &&
+            Schema::hasColumn('company_profiles', 'slug')
+        ) {
+            return;
+        }
 
+        $driver = DB::getDriverName();
+        $isPgsql = $driver === 'pgsql';
+
+        if ($isPgsql) {
+            DB::statement('CREATE EXTENSION IF NOT EXISTS vector');
+        }
+
+        Schema::disableForeignKeyConstraints();
+
+        Schema::dropIfExists('scorecard_metrics');
         Schema::dropIfExists('introductions_ledger');
         Schema::dropIfExists('scorecards');
         Schema::dropIfExists('founder_company_links');
@@ -18,40 +39,62 @@ return new class extends Migration
         Schema::dropIfExists('founder_profiles');
         Schema::dropIfExists('users');
 
+        Schema::enableForeignKeyConstraints();
+
         Schema::create('users', function (Blueprint $table): void {
             $table->id();
+            $table->string('name');
             $table->string('email')->unique();
-            $table->string('password_hash');
-            $table->enum('role_token', ['admin', 'founder', 'mentor', 'partner', 'sponsor'])->index();
+            $table->timestamp('email_verified_at')->nullable();
+            $table->string('password')->nullable();
+            $table->string('password_hash')->nullable();
+            $table->rememberToken();
+            $table->enum('role_token', ['admin', 'founder', 'mentor', 'partner', 'sponsor'])->default('founder')->index();
             $table->timestamps();
         });
 
-        Schema::create('founder_profiles', function (Blueprint $table): void {
+        Schema::create('founder_profiles', function (Blueprint $table) use ($isPgsql): void {
             $table->id();
             $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
             $table->string('legal_name');
             $table->string('title');
             $table->text('biography_summary');
-            $table->jsonb('skills_tags');
+            if ($isPgsql) {
+                $table->jsonb('skills_tags');
+            } else {
+                $table->json('skills_tags');
+            }
             $table->boolean('vetted_status')->default(false)->index();
             $table->integer('momentum_score')->default(0)->index();
             $table->text('profile_markdown');
             $table->timestamps();
         });
 
-        Schema::create('company_profiles', function (Blueprint $table): void {
+        Schema::create('company_profiles', function (Blueprint $table) use ($isPgsql): void {
             $table->id();
             $table->string('legal_name');
             $table->string('domain_url')->nullable();
             $table->enum('operational_stage', ['pre-seed', 'seed', 'series-a', 'series-b'])->index();
             $table->string('sector')->index();
             $table->string('hq_location');
-            $table->jsonb('tech_stack_tokens');
-            $table->jsonb('metrics_summary');
+            if ($isPgsql) {
+                $table->jsonb('tech_stack_tokens');
+                $table->jsonb('metrics_summary');
+            } else {
+                $table->json('tech_stack_tokens');
+                $table->json('metrics_summary');
+            }
             $table->timestamps();
         });
 
-        DB::statement('ALTER TABLE company_profiles ADD COLUMN vector_embedding_payload vector(1536)');
+        if ($isPgsql) {
+            DB::statement('ALTER TABLE company_profiles ADD COLUMN vector_embedding_payload vector(1536)');
+        } else {
+            // Fallback storage for non-PostgreSQL dev/test environments.
+            Schema::table('company_profiles', function (Blueprint $table): void {
+                $table->longText('vector_embedding_payload')->nullable();
+            });
+        }
 
         Schema::create('founder_company_links', function (Blueprint $table): void {
             $table->foreignId('founder_profile_id')->constrained('founder_profiles')->cascadeOnDelete();
@@ -59,7 +102,7 @@ return new class extends Migration
             $table->primary(['founder_profile_id', 'company_profile_id'], 'founder_company_links_pk');
         });
 
-        Schema::create('scorecards', function (Blueprint $table): void {
+        Schema::create('scorecards', function (Blueprint $table) use ($isPgsql): void {
             $table->id();
             $table->foreignId('founder_profile_id')->unique()->constrained('founder_profiles')->cascadeOnDelete();
             $table->integer('aggregate_score')->default(0);
@@ -67,7 +110,11 @@ return new class extends Migration
             $table->integer('growth')->default(0);
             $table->integer('readiness')->default(0);
             $table->integer('support_delta')->default(0);
-            $table->jsonb('historical_logs');
+            if ($isPgsql) {
+                $table->jsonb('historical_logs');
+            } else {
+                $table->json('historical_logs');
+            }
             $table->timestamps();
         });
 
@@ -87,11 +134,16 @@ return new class extends Migration
 
     public function down(): void
     {
+        Schema::disableForeignKeyConstraints();
+
+        Schema::dropIfExists('scorecard_metrics');
         Schema::dropIfExists('introductions_ledger');
         Schema::dropIfExists('scorecards');
         Schema::dropIfExists('founder_company_links');
         Schema::dropIfExists('company_profiles');
         Schema::dropIfExists('founder_profiles');
         Schema::dropIfExists('users');
+
+        Schema::enableForeignKeyConstraints();
     }
 };

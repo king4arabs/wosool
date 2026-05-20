@@ -119,6 +119,8 @@ export interface User {
   name: string
   role?: "member" | "admin" | "moderator"
   roles?: string[]
+  roleToken?: "admin" | "founder" | "mentor" | "partner" | "sponsor"
+  isAdmin?: boolean
   avatarUrl?: string
   founderId?: string
   companyId?: string
@@ -136,7 +138,7 @@ export interface Application {
   sector: string
   stage: string
   motivation: string
-  status: "submitted" | "reviewing" | "approved" | "rejected" | "waitlisted"
+  status: "submitted" | "reviewing" | "approved" | "rejected" | "waitlisted" | "request_more_info"
   referenceId: string
   submittedAt: string
 }

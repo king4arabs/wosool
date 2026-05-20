@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\Application;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -12,6 +13,18 @@ class AuthEndpointsTest extends TestCase
 
     public function test_user_can_register_with_valid_data(): void
     {
+        Application::create([
+            'full_name' => 'Test User',
+            'email' => 'test@example.com',
+            'phone' => '+966500000000',
+            'company_name' => 'Test Co',
+            'sector' => 'SaaS',
+            'stage' => 'Seed',
+            'location' => 'Riyadh',
+            'motivation' => 'Join network',
+            'status' => 'approved',
+        ]);
+
         $response = $this->postJson('/api/v1/auth/register', [
             'name' => 'Test User',
             'email' => 'test@example.com',
@@ -41,10 +54,47 @@ class AuthEndpointsTest extends TestCase
     public function test_register_rejects_duplicate_email(): void
     {
         User::factory()->create(['email' => 'taken@example.com']);
+        Application::create([
+            'full_name' => 'Taken User',
+            'email' => 'taken@example.com',
+            'phone' => '+966500000010',
+            'company_name' => 'Taken Co',
+            'sector' => 'SaaS',
+            'stage' => 'Seed',
+            'location' => 'Riyadh',
+            'motivation' => 'Join network',
+            'status' => 'approved',
+        ]);
 
         $response = $this->postJson('/api/v1/auth/register', [
             'name' => 'Another User',
             'email' => 'taken@example.com',
+            'password' => 'Password1',
+            'password_confirmation' => 'Password1',
+        ]);
+
+        $response
+            ->assertUnprocessable()
+            ->assertJsonValidationErrors(['email']);
+    }
+
+    public function test_register_requires_approved_application(): void
+    {
+        Application::create([
+            'full_name' => 'Pending User',
+            'email' => 'pending@example.com',
+            'phone' => '+966500000011',
+            'company_name' => 'Pending Co',
+            'sector' => 'SaaS',
+            'stage' => 'Seed',
+            'location' => 'Riyadh',
+            'motivation' => 'Join network',
+            'status' => 'submitted',
+        ]);
+
+        $response = $this->postJson('/api/v1/auth/register', [
+            'name' => 'Pending User',
+            'email' => 'pending@example.com',
             'password' => 'Password1',
             'password_confirmation' => 'Password1',
         ]);

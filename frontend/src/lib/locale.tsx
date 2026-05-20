@@ -2,12 +2,11 @@
 
 import * as React from "react"
 
-export type Locale = "ar" | "en" | "fr"
+export type Locale = "ar" | "en"
 
 export const localeOptions = [
   { code: "ar" as const, nativeLabel: "العربية", direction: "rtl" as const },
   { code: "en" as const, nativeLabel: "English", direction: "ltr" as const },
-  { code: "fr" as const, nativeLabel: "Français", direction: "ltr" as const },
 ]
 
 interface LocaleContextValue {
@@ -41,11 +40,13 @@ export function LocaleProvider({ children }: { children: React.ReactNode }) {
     document.body.classList.toggle("locale-latin", locale !== "ar")
     document.body.dataset.locale = locale
     document.body.dataset.direction = direction
+    document.cookie = `${STORAGE_KEY}=${locale}; path=/; max-age=31536000; samesite=lax`
   }, [locale])
 
   const setLocale = React.useCallback((nextLocale: Locale) => {
     setLocaleState(nextLocale)
     window.localStorage.setItem(STORAGE_KEY, nextLocale)
+    document.cookie = `${STORAGE_KEY}=${nextLocale}; path=/; max-age=31536000; samesite=lax`
   }, [])
 
   const value = React.useMemo(

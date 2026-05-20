@@ -36,8 +36,13 @@ async function request<T>(path: string, options: RequestOptions = {}): Promise<T
   const { params, body, headers: customHeaders, ...init } = options
 
   const url = buildUrl(path, params)
+  const resolvedLocale = typeof window !== "undefined"
+    ? window.localStorage.getItem("wosool-locale") || "ar"
+    : "ar"
+
   const headers: HeadersInit = {
     Accept: "application/json",
+    "X-Locale": resolvedLocale,
     ...customHeaders,
   }
 

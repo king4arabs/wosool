@@ -12,6 +12,24 @@ class FounderProfile extends Model
 {
     protected $fillable = [
         'user_id',
+        'slug',
+        'tagline',
+        'bio',
+        'location',
+        'country_code',
+        'sector',
+        'stage',
+        'linkedin_url',
+        'twitter_url',
+        'website_url',
+        'needs',
+        'offers',
+        'skills',
+        'is_verified',
+        'is_featured',
+        'is_public',
+        'status',
+        'avatar_url',
         'legal_name',
         'title',
         'biography_summary',
@@ -24,7 +42,13 @@ class FounderProfile extends Model
     protected function casts(): array
     {
         return [
+            'needs' => 'array',
+            'offers' => 'array',
+            'skills' => 'array',
             'skills_tags' => 'array',
+            'is_verified' => 'boolean',
+            'is_featured' => 'boolean',
+            'is_public' => 'boolean',
             'vetted_status' => 'boolean',
             'momentum_score' => 'integer',
             'created_at' => 'datetime',

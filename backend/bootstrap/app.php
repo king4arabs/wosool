@@ -13,8 +13,10 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->statefulApi();
+        $middleware->api(prepend: [\App\Http\Middleware\SetLocaleFromHeader::class]);
         $middleware->alias([
             'admin' => \App\Http\Middleware\EnsureUserIsAdmin::class,
+            'member' => \App\Http\Middleware\EnsureUserHasMemberAccess::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

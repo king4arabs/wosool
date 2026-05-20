@@ -34,11 +34,9 @@ export function proxy(request: NextRequest) {
     return NextResponse.redirect(loginUrl)
   }
 
-  // Redirect logged-in users away from login/register
-  const isAuthPage = pathname === "/login" || pathname === "/register"
-  if (isAuthPage && hasSession) {
-    return NextResponse.redirect(new URL("/dashboard", request.url))
-  }
+  // Do not force-redirect /login or /register based only on cookie presence.
+  // Cookie can exist while backend session is already invalid, which causes
+  // redirect loops (/login -> /dashboard -> /login).
 
   return NextResponse.next()
 }

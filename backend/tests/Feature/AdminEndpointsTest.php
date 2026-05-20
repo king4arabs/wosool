@@ -117,6 +117,22 @@ class AdminEndpointsTest extends TestCase
         ]);
     }
 
+    public function test_admin_can_request_more_information_on_application(): void
+    {
+        $this->seed(DatabaseSeeder::class);
+
+        $admin = User::where('email', 'admin@wosool.org')->firstOrFail();
+        $application = Application::firstOrFail();
+
+        $this->actingAs($admin)
+            ->patchJson("/api/v1/admin/applications/{$application->id}", [
+                'status' => 'request_more_info',
+                'admin_notes' => 'Please provide updated traction metrics.',
+            ])
+            ->assertOk()
+            ->assertJsonPath('data.status', 'request_more_info');
+    }
+
     public function test_admin_can_load_analytics_and_settings(): void
     {
         $this->seed(DatabaseSeeder::class);

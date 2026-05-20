@@ -45,10 +45,13 @@ export interface AdminApplication {
   linkedin_url?: string | null
   referral_source?: string | null
   referrer_name?: string | null
-  status: "submitted" | "reviewing" | "approved" | "rejected" | "waitlisted"
+  status: "submitted" | "reviewing" | "approved" | "rejected" | "waitlisted" | "request_more_info"
   admin_notes?: string | null
   reviewed_at?: string | null
   reviewer?: { id: number; name: string } | null
+  invite_token?: string | null
+  invite_url?: string | null
+  invite_sent_at?: string | null
   created_at: string
 }
 
@@ -223,7 +226,8 @@ export interface AdminAnalyticsResponse {
 }
 
 export function isAdminUser(user: User | null): boolean {
-  return Boolean(user?.roles?.includes("admin"))
+  if (!user) return false
+  return Boolean(user.roles?.includes("admin") || user.roleToken === "admin" || user.isAdmin)
 }
 
 export function formatDate(value?: string | null, options?: Intl.DateTimeFormatOptions) {

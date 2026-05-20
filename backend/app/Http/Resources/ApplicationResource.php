@@ -32,6 +32,13 @@ class ApplicationResource extends JsonResource
             'reviewed_at' => isset($attributes['reviewed_at']) && $this->reviewed_at
                 ? $this->reviewed_at->toIso8601String()
                 : null,
+            'invite_token' => $attributes['invite_token'] ?? null,
+            'invite_sent_at' => isset($attributes['invite_sent_at']) && $this->invite_sent_at
+                ? $this->invite_sent_at->toIso8601String()
+                : null,
+            'invite_url' => isset($attributes['invite_token']) && $attributes['invite_token']
+                ? rtrim((string) config('app.frontend_url'), '/') . '/register?email=' . urlencode((string) ($attributes['email'] ?? '')) . '&invite=' . urlencode((string) $attributes['invite_token'])
+                : null,
             'reviewer' => $this->whenLoaded('reviewer', fn () => [
                 'id' => $this->reviewer?->id,
                 'name' => $this->reviewer?->name,
