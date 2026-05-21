@@ -8,6 +8,19 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 class CompanyProfile extends Model
 {
     protected $fillable = [
+        'name',
+        'description',
+        'website',
+        'stage',
+        'location',
+        'founded_year',
+        'team_size',
+        'is_hiring',
+        'is_fundraising',
+        'is_collaborating',
+        'is_public',
+        'slug',
+        'status',
         'legal_name',
         'domain_url',
         'operational_stage',
@@ -23,6 +36,10 @@ class CompanyProfile extends Model
         return [
             'tech_stack_tokens' => 'array',
             'metrics_summary' => 'array',
+            'is_hiring' => 'boolean',
+            'is_fundraising' => 'boolean',
+            'is_collaborating' => 'boolean',
+            'is_public' => 'boolean',
             'created_at' => 'datetime',
             'updated_at' => 'datetime',
         ];

@@ -122,4 +122,102 @@ class ScorecardController extends Controller
             'data' => new ScorecardResource($scorecard),
         ]);
     }
+
+    public function submitUpdate(Request $request, ScorecardComputationEngine $engine): JsonResponse
+    {
+        $validated = $request->validate([
+            'title' => ['nullable', 'string', 'max:220'],
+            'update_text' => ['required', 'string', 'max:12000'],
+            'sector' => ['nullable', 'string', 'max:80'],
+            'priority' => ['nullable', 'in:normal,urgent'],
+        ]);
+
+        $profile = FounderProfile::with('scorecard')
+            ->where('user_id', $request->user()->id)
+            ->first();
+
+        if (! $profile) {
+            return response()->json(['message' => __('messages.scorecard.founder_not_found')], 404);
+        }
+
+        $computed = $engine->computeForFounderProfile($profile);
+
+        $scorecard = DB::transaction(function () use ($profile, $computed, $validated): Scorecard {
+            $scorecard = $profile->scorecard ?? new Scorecard(['founder_profile_id' => $profile->id]);
+            $currentLogs = is_array($scorecard->historical_logs) ? $scorecard->historical_logs : [];
+
+            $currentLogs[] = [
+                'label' => now()->format('M Y'),
+                'title' => $validated['title'] ?? null,
+                'update_text' => $validated['update_text'],
+                'sector' => $validated['sector'] ?? null,
+                'priority' => $validated['priority'] ?? 'normal',
+                'aggregate_score' => $computed['aggregate_score'],
+                'momentum' => $computed['momentum'],
+                'growth' => $computed['growth'],
+                'readiness' => $computed['readiness'],
+                'support_delta' => $computed['support_delta'],
+                'calculated_at' => now()->toIso8601String(),
+            ];
+
+            $scorecard->fill([
+                'aggregate_score' => $computed['aggregate_score'],
+                'momentum' => $computed['momentum'],
+                'growth' => $computed['growth'],
+                'readiness' => $computed['readiness'],
+                'support_delta' => $computed['support_delta'],
+                'historical_logs' => $currentLogs,
+            ]);
+            $scorecard->save();
+
+            return $scorecard->fresh();
+        });
+
+        AnalyticsEvent::track(
+            eventName: 'scorecard_update_submitted',
+            userId: $request->user()->id,
+            entityType: 'scorecard',
+            entityId: $scorecard->id,
+            properties: [
+                'founder_profile_id' => $profile->id,
+                'sector' => $validated['sector'] ?? null,
+                'priority' => $validated['priority'] ?? 'normal',
+            ],
+        );
+
+        return response()->json([
+            'message' => 'Scorecard update submitted.',
+            'data' => new ScorecardResource($scorecard),
+        ], 201);
+    }
+
+    public function shareInvestorProfile(Request $request): JsonResponse
+    {
+        $profile = FounderProfile::with('scorecard')
+            ->where('user_id', $request->user()->id)
+            ->first();
+
+        if (! $profile?->scorecard) {
+            return response()->json(['message' => __('messages.scorecard.not_found')], 404);
+        }
+
+        AnalyticsEvent::track(
+            eventName: 'scorecard_share_investor_profile',
+            userId: $request->user()->id,
+            entityType: 'scorecard',
+            entityId: $profile->scorecard->id,
+            properties: [
+                'founder_profile_id' => $profile->id,
+                'aggregate_score' => $profile->scorecard->aggregate_score,
+            ],
+        );
+
+        return response()->json([
+            'message' => 'Investor profile share action recorded.',
+            'data' => [
+                'status' => 'queued',
+                'scorecard_id' => $profile->scorecard->id,
+            ],
+        ]);
+    }
 }

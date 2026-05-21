@@ -12,9 +12,91 @@ import { Separator } from "@/components/ui/separator"
 import { api, ApiError } from "@/lib/api"
 import { useToast } from "@/components/ui/toast"
 import { Save, Globe, Users, Briefcase } from "lucide-react"
+import { useLocale } from "@/lib/locale"
 
 const sectors = ["Fintech", "HealthTech", "SaaS / B2B", "Logistics", "FoodTech", "HRTech", "EdTech", "CleanTech"]
 const stages = ["Pre-seed", "Seed", "Series A", "Series B", "Scale-up", "Exited"]
+
+const companyWizardCopy = {
+  ar: {
+    loading: "جاري تحميل ملف الشركة…",
+    loadError: "تعذر تحميل ملف شركتك.",
+    requiredTitle: "يلزم إكمال ملف المؤسس",
+    requiredBody: "أكمل ملف المؤسس أولًا، ثم ستتمكن من إدارة بيانات شركتك هنا.",
+    requiredCta: "إكمال ملف المؤسس",
+    multiCompanies: "لديك {count} شركات مرتبطة. هذه الصفحة تعدّل الشركة الأساسية حاليًا.",
+    identityTitle: "هوية الشركة",
+    name: "اسم الشركة",
+    description: "الوصف",
+    sector: "القطاع",
+    stage: "المرحلة",
+    selectSector: "اختر القطاع…",
+    selectStage: "اختر المرحلة…",
+    detailsTitle: "تفاصيل الشركة",
+    location: "الموقع",
+    foundedYear: "سنة التأسيس",
+    teamSize: "حجم الفريق",
+    website: "الموقع الإلكتروني",
+    statusTitle: "الحالة والظهور",
+    statusDesc: "أخبر المجتمع بما الذي شركتك منفتحة عليه حاليًا.",
+    hiring: "نوظف الآن",
+    hiringDesc: "إظهار شارة التوظيف في ملف الشركة",
+    fundraising: "نجمع تمويلًا حاليًا",
+    fundraisingDesc: "إظهار اهتمامك للمستثمرين بجولة تمويل",
+    collaborating: "منفتحون على التعاون",
+    collaboratingDesc: "إظهار اهتمامك بالشراكات والمشاريع المشتركة",
+    hiringBadge: "توظيف",
+    fundraisingBadge: "تمويل",
+    collaboratingBadge: "تعاون",
+    saveSuccess: "تم حفظ ملف الشركة.",
+    saveError: "تعذر حفظ ملف الشركة. حاول مرة أخرى.",
+    fixFields: "يرجى تصحيح الحقول المظللة.",
+    nameRequired: "اسم الشركة مطلوب.",
+    addName: "يرجى إضافة اسم الشركة.",
+    invalidValue: "قيمة غير صالحة.",
+    create: "إنشاء ملف الشركة",
+    save: "حفظ ملف الشركة",
+  },
+  en: {
+    loading: "Loading company profile…",
+    loadError: "Could not load your company profile.",
+    requiredTitle: "Founder Profile Required",
+    requiredBody: "Create your founder profile first, then you'll be able to manage your company information here.",
+    requiredCta: "Complete Founder Profile",
+    multiCompanies: "You have {count} linked companies. This page is currently editing your primary company profile.",
+    identityTitle: "Company Identity",
+    name: "Company Name",
+    description: "Description",
+    sector: "Sector",
+    stage: "Stage",
+    selectSector: "Select sector…",
+    selectStage: "Select stage…",
+    detailsTitle: "Company Details",
+    location: "Location",
+    foundedYear: "Founded Year",
+    teamSize: "Team Size",
+    website: "Website",
+    statusTitle: "Status & Visibility",
+    statusDesc: "Let the community know what your company is currently open to.",
+    hiring: "We're Hiring",
+    hiringDesc: "Show a hiring badge on your company profile",
+    fundraising: "Currently Fundraising",
+    fundraisingDesc: "Signal to investors that you're raising a round",
+    collaborating: "Open to Collaboration",
+    collaboratingDesc: "Show interest in partnerships and joint projects",
+    hiringBadge: "Hiring",
+    fundraisingBadge: "Fundraising",
+    collaboratingBadge: "Collaborating",
+    saveSuccess: "Company profile saved.",
+    saveError: "Could not save company profile. Please try again.",
+    fixFields: "Please correct the highlighted fields.",
+    nameRequired: "Company name is required.",
+    addName: "Please add your company name.",
+    invalidValue: "Invalid value.",
+    create: "Create Company Profile",
+    save: "Save Company Profile",
+  },
+} as const
 
 interface MemberCompany {
   id: number
@@ -84,6 +166,8 @@ function toFormState(company?: MemberCompany): CompanyFormState {
 
 export default function CompanyPage() {
   const { toast } = useToast()
+  const { locale } = useLocale()
+  const copy = companyWizardCopy[locale]
   const [companyId, setCompanyId] = useState<number | null>(null)
   const [companyCount, setCompanyCount] = useState(0)
   const [founderProfileRequired, setFounderProfileRequired] = useState(false)
@@ -111,12 +195,12 @@ export default function CompanyPage() {
         setCompanyCount(0)
         setForm(emptyForm)
       } else {
-        toast("Could not load your company profile.", "error")
+        toast(copy.loadError, "error")
       }
     } finally {
       setIsLoading(false)
     }
-  }, [toast])
+  }, [copy.loadError, toast])
 
   useEffect(() => {
     loadCompany()
@@ -137,8 +221,8 @@ export default function CompanyPage() {
 
   const onSave = useCallback(async () => {
     if (!form.name.trim()) {
-      setErrors({ name: "Company name is required." })
-      toast("Please add your company name.", "error")
+      setErrors({ name: copy.nameRequired })
+      toast(copy.addName, "error")
       return
     }
 
@@ -170,7 +254,7 @@ export default function CompanyPage() {
       setCompanyId(res.data.id)
       setForm(toFormState(res.data))
       setFounderProfileRequired(false)
-      toast(res.message ?? "Company profile saved.", "success")
+      toast(res.message ?? copy.saveSuccess, "success")
       await loadCompany()
     } catch (err) {
       if (err instanceof ApiError && err.status === 422) {
@@ -183,21 +267,21 @@ export default function CompanyPage() {
               : key === "team_size"
                 ? "teamSize"
                 : key
-            nextErrors[mappedKey] = messages[0] ?? "Invalid value."
+            nextErrors[mappedKey] = messages[0] ?? copy.invalidValue
           }
           setErrors(nextErrors)
         }
-        toast(data?.message ?? "Please correct the highlighted fields.", "error")
+        toast(data?.message ?? copy.fixFields, "error")
       } else {
-        toast("Could not save company profile. Please try again.", "error")
+        toast(copy.saveError, "error")
       }
     } finally {
       setIsSaving(false)
     }
-  }, [companyId, form, loadCompany, toast])
+  }, [companyId, copy.addName, copy.fixFields, copy.invalidValue, copy.nameRequired, copy.saveError, copy.saveSuccess, form, loadCompany, toast])
 
   if (isLoading) {
-    return <div className="max-w-3xl text-sm text-gray-500">Loading company profile…</div>
+    return <div className="max-w-3xl text-sm text-gray-500">{copy.loading}</div>
   }
 
   if (founderProfileRequired) {
@@ -205,14 +289,14 @@ export default function CompanyPage() {
       <div className="max-w-3xl space-y-6">
         <Card>
           <CardHeader>
-            <h3 className="font-semibold text-[#0A1628]">Founder Profile Required</h3>
+            <h3 className="font-semibold text-[#0A1628]">{copy.requiredTitle}</h3>
           </CardHeader>
           <CardContent className="space-y-4">
             <p className="text-sm text-gray-600">
-              Create your founder profile first, then you&apos;ll be able to manage your company information here.
+              {copy.requiredBody}
             </p>
             <Button asChild>
-              <Link href="/dashboard/profile">Complete Founder Profile</Link>
+              <Link href="/dashboard/profile">{copy.requiredCta}</Link>
             </Button>
           </CardContent>
         </Card>
@@ -224,7 +308,7 @@ export default function CompanyPage() {
     <div className="max-w-3xl space-y-8">
       {companyCount > 1 && (
         <div className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900">
-          You have {companyCount} linked companies. This page is currently editing your primary company profile.
+          {copy.multiCompanies.replace("{count}", String(companyCount))}
         </div>
       )}
 
@@ -232,12 +316,12 @@ export default function CompanyPage() {
         <CardHeader>
           <h3 className="font-semibold text-[#0A1628] flex items-center gap-2">
             <Briefcase className="h-4 w-4 text-[#C9A84C]" />
-            Company Identity
+            {copy.identityTitle}
           </h3>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="c-name">Company Name</Label>
+            <Label htmlFor="c-name">{copy.name}</Label>
             <Input
               id="c-name"
               value={form.name}
@@ -247,7 +331,7 @@ export default function CompanyPage() {
             {errors.name && <p className="text-xs text-red-600">{errors.name}</p>}
           </div>
           <div className="space-y-2">
-            <Label htmlFor="c-description">Description</Label>
+            <Label htmlFor="c-description">{copy.description}</Label>
             <Textarea
               id="c-description"
               className="min-h-[120px]"
@@ -259,14 +343,14 @@ export default function CompanyPage() {
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="c-sector">Sector</Label>
+              <Label htmlFor="c-sector">{copy.sector}</Label>
               <select
                 id="c-sector"
                 value={form.sector}
                 onChange={(e) => updateField("sector", e.target.value)}
                 className="flex h-10 w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#C9A84C]"
               >
-                <option value="">Select sector…</option>
+                <option value="">{copy.selectSector}</option>
                 {sectors.map((s) => (
                   <option key={s} value={s}>
                     {s}
@@ -275,14 +359,14 @@ export default function CompanyPage() {
               </select>
             </div>
             <div className="space-y-2">
-              <Label htmlFor="c-stage">Stage</Label>
+              <Label htmlFor="c-stage">{copy.stage}</Label>
               <select
                 id="c-stage"
                 value={form.stage}
                 onChange={(e) => updateField("stage", e.target.value)}
                 className="flex h-10 w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#C9A84C]"
               >
-                <option value="">Select stage…</option>
+                <option value="">{copy.selectStage}</option>
                 {stages.map((s) => (
                   <option key={s} value={s}>
                     {s}
@@ -298,13 +382,13 @@ export default function CompanyPage() {
         <CardHeader>
           <h3 className="font-semibold text-[#0A1628] flex items-center gap-2">
             <Users className="h-4 w-4 text-[#C9A84C]" />
-            Company Details
+            {copy.detailsTitle}
           </h3>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="c-location">Location</Label>
+              <Label htmlFor="c-location">{copy.location}</Label>
               <Input
                 id="c-location"
                 value={form.location}
@@ -312,7 +396,7 @@ export default function CompanyPage() {
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="c-founded">Founded Year</Label>
+              <Label htmlFor="c-founded">{copy.foundedYear}</Label>
               <Input
                 id="c-founded"
                 type="number"
@@ -325,7 +409,7 @@ export default function CompanyPage() {
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="c-team-size">Team Size</Label>
+              <Label htmlFor="c-team-size">{copy.teamSize}</Label>
               <Input
                 id="c-team-size"
                 type="number"
@@ -337,7 +421,7 @@ export default function CompanyPage() {
               {errors.teamSize && <p className="text-xs text-red-600">{errors.teamSize}</p>}
             </div>
             <div className="space-y-2">
-              <Label htmlFor="c-website">Website</Label>
+              <Label htmlFor="c-website">{copy.website}</Label>
               <div className="relative">
                 <Globe className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
                 <Input
@@ -357,9 +441,9 @@ export default function CompanyPage() {
 
       <Card>
         <CardHeader>
-          <h3 className="font-semibold text-[#0A1628]">Status &amp; Visibility</h3>
+          <h3 className="font-semibold text-[#0A1628]">{copy.statusTitle}</h3>
           <p className="text-sm text-gray-500 mt-1">
-            Let the community know what your company is currently open to.
+            {copy.statusDesc}
           </p>
         </CardHeader>
         <CardContent className="space-y-5">
@@ -367,25 +451,25 @@ export default function CompanyPage() {
             {
               id: "c-hiring",
               field: "isHiring" as const,
-              label: "We're Hiring",
-              description: "Show a hiring badge on your company profile",
-              badge: "Hiring",
+              label: copy.hiring,
+              description: copy.hiringDesc,
+              badge: copy.hiringBadge,
               badgeVariant: "success" as const,
             },
             {
               id: "c-fundraising",
               field: "isFundraising" as const,
-              label: "Currently Fundraising",
-              description: "Signal to investors that you're raising a round",
-              badge: "Fundraising",
+              label: copy.fundraising,
+              description: copy.fundraisingDesc,
+              badge: copy.fundraisingBadge,
               badgeVariant: "warning" as const,
             },
             {
               id: "c-collaborating",
               field: "isCollaborating" as const,
-              label: "Open to Collaboration",
-              description: "Show interest in partnerships and joint projects",
-              badge: "Collaborating",
+              label: copy.collaborating,
+              description: copy.collaboratingDesc,
+              badge: copy.collaboratingBadge,
               badgeVariant: "secondary" as const,
             },
           ].map((toggle) => (
@@ -415,7 +499,7 @@ export default function CompanyPage() {
       <div className="flex justify-end">
         <Button size="lg" onClick={onSave} loading={isSaving}>
           <Save className="h-4 w-4" />
-          {companyId === null ? "Create Company Profile" : "Save Company Profile"}
+          {companyId === null ? copy.create : copy.save}
         </Button>
       </div>
     </div>

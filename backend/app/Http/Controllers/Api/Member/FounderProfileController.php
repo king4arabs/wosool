@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\UpdateFounderProfileRequest;
 use App\Http\Resources\FounderResource;
 use App\Models\FounderProfile;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -29,13 +30,25 @@ class FounderProfileController extends Controller
             'data' => [
                 'id' => $profile->id,
                 'user_id' => $profile->user_id,
-                'legal_name' => $profile->legal_name,
-                'title' => $profile->title,
-                'biography_summary' => $profile->biography_summary,
-                'skills_tags' => $profile->skills_tags ?? [],
-                'vetted_status' => (bool) $profile->vetted_status,
-                'momentum_score' => (int) $profile->momentum_score,
-                'profile_markdown' => $profile->profile_markdown,
+                'legal_name' => $this->modelAttr($profile, ['legal_name', 'name', 'tagline', 'slug'], ''),
+                'title' => $this->modelAttr($profile, ['title', 'tagline'], ''),
+                'biography_summary' => $this->modelAttr($profile, ['biography_summary', 'bio']),
+                'skills_tags' => $this->modelAttr($profile, ['skills_tags', 'skills'], []),
+                'vetted_status' => (bool) $this->modelAttr($profile, ['vetted_status', 'is_verified'], false),
+                'momentum_score' => (int) $this->modelAttr($profile, ['momentum_score'], 0),
+                'profile_markdown' => $this->modelAttr($profile, ['profile_markdown', 'bio']),
+                'tagline' => $this->modelAttr($profile, ['tagline']),
+                'bio' => $this->modelAttr($profile, ['bio']),
+                'location' => $this->modelAttr($profile, ['location']),
+                'country_code' => $this->modelAttr($profile, ['country_code']),
+                'sector' => $this->modelAttr($profile, ['sector']),
+                'stage' => $this->modelAttr($profile, ['stage']),
+                'linkedin_url' => $this->modelAttr($profile, ['linkedin_url']),
+                'twitter_url' => $this->modelAttr($profile, ['twitter_url']),
+                'website_url' => $this->modelAttr($profile, ['website_url']),
+                'needs' => $this->modelAttr($profile, ['needs'], []),
+                'offers' => $this->modelAttr($profile, ['offers'], []),
+                'is_public' => (bool) $this->modelAttr($profile, ['is_public'], true),
                 'created_at' => $profile->created_at?->toIso8601String(),
                 'updated_at' => $profile->updated_at?->toIso8601String(),
             ],
@@ -78,5 +91,17 @@ class FounderProfileController extends Controller
             $slug = $base . '-' . $i++;
         }
         return $slug;
+    }
+
+    private function modelAttr(Model $model, array $keys, mixed $default = null): mixed
+    {
+        $attributes = $model->getAttributes();
+        foreach ($keys as $key) {
+            if (array_key_exists($key, $attributes)) {
+                return $attributes[$key];
+            }
+        }
+
+        return $default;
     }
 }

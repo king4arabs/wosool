@@ -17,6 +17,13 @@ class ScorecardResource extends JsonResource
             'id' => $this->id,
             'founder_profile_id' => $this->founder_profile_id,
             'aggregate_score' => (int) ($this->aggregate_score ?? 0),
+            // Flat aliases used by dashboard clients that bind metrics directly.
+            'momentum_score' => (int) ($this->momentum ?? 0),
+            'fundraising_score' => (int) ($this->readiness ?? 0),
+            'growth_score' => (int) ($this->growth ?? 0),
+            'support_need_score' => (int) ($this->support_delta ?? 0),
+            // Latest free-text operational update derived from historical logs when present.
+            'latest_update_text' => $this->latestUpdateText($latestLog),
             'tracking' => [
                 'momentum' => (int) ($this->momentum ?? 0),
                 'growth' => (int) ($this->growth ?? 0),
@@ -49,6 +56,16 @@ class ScorecardResource extends JsonResource
         $last = end($logs);
 
         return is_array($last) ? $last : [];
+    }
+
+    private function latestUpdateText(array $latestLog): ?string
+    {
+        $candidate = data_get($latestLog, 'update_text')
+            ?? data_get($latestLog, 'latest_update_text')
+            ?? data_get($latestLog, 'notes')
+            ?? data_get($latestLog, 'summary');
+
+        return is_string($candidate) && trim($candidate) !== '' ? trim($candidate) : null;
     }
 
     private function trendDirection(int $current, int $previous): string

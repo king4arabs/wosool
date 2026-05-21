@@ -12,6 +12,7 @@ use App\Http\Controllers\Api\Admin\NewsController as AdminNewsController;
 use App\Http\Controllers\Api\Admin\PartnerController as AdminPartnerController;
 use App\Http\Controllers\Api\Admin\ProgramController as AdminProgramController;
 use App\Http\Controllers\Api\Admin\SettingsController as AdminSettingsController;
+use App\Http\Controllers\Api\Admin\SocietyModerationController as AdminSocietyModerationController;
 use App\Http\Controllers\Api\Admin\SponsorController as AdminSponsorController;
 use App\Http\Controllers\Api\ApplicationController;
 use App\Http\Controllers\Api\AuthController;
@@ -28,6 +29,7 @@ use App\Http\Controllers\Api\Member\FounderProfileController as MemberFounderPro
 use App\Http\Controllers\Api\Member\MatchController as MemberMatchController;
 use App\Http\Controllers\Api\Member\ProgramApplicationController;
 use App\Http\Controllers\Api\Member\ScorecardController as MemberScorecardController;
+use App\Http\Controllers\Api\Member\SocietyPostController as MemberSocietyPostController;
 use App\Http\Controllers\Api\Member\SettingsController as MemberSettingsController;
 use App\Http\Controllers\Api\Member\ThreadController as MemberThreadController;
 use App\Http\Controllers\Api\NewsController;
@@ -108,6 +110,8 @@ Route::prefix('v1')->group(function () {
         Route::get('/scorecard', [MemberScorecardController::class, 'show']);
         Route::get('/scorecard/history', [MemberScorecardController::class, 'history']);
         Route::post('/scorecard/recalculate', [MemberScorecardController::class, 'recalculate']);
+        Route::post('/scorecard/updates', [MemberScorecardController::class, 'submitUpdate']);
+        Route::post('/scorecard/actions/share-investor-profile', [MemberScorecardController::class, 'shareInvestorProfile']);
         Route::get('/matches', [MemberMatchController::class, 'index']);
         Route::post('/matches/{match}/accept', [MemberMatchController::class, 'accept']);
         Route::post('/matches/{match}/decline', [MemberMatchController::class, 'decline']);
@@ -121,6 +125,22 @@ Route::prefix('v1')->group(function () {
         Route::post('/introductions', [IntroductionController::class, 'store']);
         Route::patch('/introductions/{intro}/approve', [IntroductionController::class, 'approve']);
         Route::patch('/introductions/{intro}/decline', [IntroductionController::class, 'decline']);
+
+        // Society module
+        Route::get('/society/posts', [MemberSocietyPostController::class, 'index']);
+        Route::post('/society/posts', [MemberSocietyPostController::class, 'store']);
+        Route::get('/society/posts/{post}', [MemberSocietyPostController::class, 'show']);
+        Route::patch('/society/posts/{post}', [MemberSocietyPostController::class, 'update']);
+        Route::delete('/society/posts/{post}', [MemberSocietyPostController::class, 'destroy']);
+        Route::post('/society/posts/{post}/reactions', [MemberSocietyPostController::class, 'addReaction']);
+        Route::delete('/society/posts/{post}/reactions/{type}', [MemberSocietyPostController::class, 'removeReaction']);
+        Route::get('/society/posts/{post}/comments', [MemberSocietyPostController::class, 'comments']);
+        Route::post('/society/posts/{post}/comments', [MemberSocietyPostController::class, 'addComment']);
+        Route::post('/society/posts/{post}/save', [MemberSocietyPostController::class, 'savePost']);
+        Route::delete('/society/posts/{post}/save', [MemberSocietyPostController::class, 'unsavePost']);
+        Route::post('/society/posts/{post}/report', [MemberSocietyPostController::class, 'report']);
+        Route::post('/society/posts/{post}/help-offers', [MemberSocietyPostController::class, 'helpOffer']);
+        Route::post('/society/posts/{post}/ai-match', [MemberSocietyPostController::class, 'aiMatch']);
 
         // Member settings and privacy
         Route::get('/settings', [MemberSettingsController::class, 'show']);
@@ -172,5 +192,12 @@ Route::prefix('v1')->group(function () {
         Route::post('/sponsors', [AdminSponsorController::class, 'store']);
         Route::put('/sponsors/{sponsor}', [AdminSponsorController::class, 'update']);
         Route::delete('/sponsors/{sponsor}', [AdminSponsorController::class, 'destroy']);
+
+        // Society moderation
+        Route::get('/society/posts', [AdminSocietyModerationController::class, 'posts']);
+        Route::patch('/society/posts/{post}/status', [AdminSocietyModerationController::class, 'updatePostStatus']);
+        Route::get('/society/reports', [AdminSocietyModerationController::class, 'reports']);
+        Route::patch('/society/reports/{report}/resolve', [AdminSocietyModerationController::class, 'resolveReport']);
+        Route::get('/society/metrics', [AdminSocietyModerationController::class, 'metrics']);
     });
 });

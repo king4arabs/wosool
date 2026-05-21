@@ -1,8 +1,9 @@
 "use client"
 
 import { useEffect, useState } from "react"
+import Image from "next/image"
 import Link from "next/link"
-import { usePathname, useRouter } from "next/navigation"
+import { usePathname, useRouter, useSearchParams } from "next/navigation"
 import {
   LayoutDashboard,
   User,
@@ -32,7 +33,7 @@ const navItems = [
   { href: "/dashboard/profile",  icon: User,            key: "profile" },
   { href: "/dashboard/company",  icon: Building2,       key: "company" },
   { href: "/dashboard/scorecard",icon: Star,            key: "scorecard" },
-  { href: "/dashboard/community",icon: Users,           key: "community" },
+  { href: "/dashboard/society",  icon: Users,           key: "society" },
   { href: "/dashboard/matches",  icon: Sparkles,        key: "matches" },
   { href: "/dashboard/events",   icon: CalendarDays,    key: "events" },
   { href: "/dashboard/programs", icon: GraduationCap,   key: "programs" },
@@ -42,14 +43,23 @@ const navItems = [
 
 const onboardingNavItems = [
   { href: "/dashboard/profile", icon: User, key: "profile" },
+  { href: "/dashboard/company", icon: Building2, key: "company" },
 ] as const
 
 interface DashboardGateResponse {
   data?: {
+    account_approved?: boolean
     profile_completion?: number
+    company_completion?: number
     profile?: { id?: number } | null
+    companies?: Array<unknown>
   }
 }
+
+const onboardingAllowedPaths = new Set([
+  "/dashboard/profile",
+  "/dashboard/company",
+])
 
 function SidebarContent({
   pathname,
@@ -144,9 +154,54 @@ function SidebarContent({
   )
 }
 
+function DashboardFullscreenLoader({
+  locale,
+  label,
+}: {
+  locale: "ar" | "en"
+  label: string
+}) {
+  return (
+    <div
+      className="min-h-screen bg-slate-50 flex items-center justify-center px-6"
+      dir={locale === "ar" ? "rtl" : "ltr"}
+    >
+      <div className="relative w-full max-w-sm rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
+        <div
+          className="pointer-events-none absolute -top-10 -end-10 h-28 w-28 rounded-full opacity-40"
+          style={{ background: "radial-gradient(circle, rgba(59,82,212,0.25), transparent 70%)" }}
+          aria-hidden="true"
+        />
+        <div className="flex flex-col items-center gap-5 text-center">
+          <div className="flex h-16 w-16 items-center justify-center rounded-2xl border border-[#E4E7F0] bg-[#EEF1FF]">
+            <Image
+              src="/wosool-network-logo.png"
+              alt="Wosool logo"
+              width={44}
+              height={44}
+              className="h-11 w-11 object-contain"
+              priority
+            />
+          </div>
+          <div className="space-y-2">
+            <div className="text-base font-black tracking-tight text-slate-900">
+              WOSOOL
+            </div>
+            <p className="text-xs font-medium text-slate-500">{label}</p>
+          </div>
+          <div className="h-1.5 w-40 overflow-hidden rounded-full bg-[#EEF1FF]">
+            <div className="h-full w-1/2 animate-pulse rounded-full bg-[#3B52D4]" />
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
   const router = useRouter()
+  const searchParams = useSearchParams()
   const { user, logout, isLoading } = useAuth()
   const { locale, setLocale } = useLocale()
   const activeLocale = resolveDashboardLocale(locale)
@@ -154,6 +209,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const [mobileOpen, setMobileOpen] = useState(false)
   const [isCheckingOnboarding, setIsCheckingOnboarding] = useState(true)
   const [onboardingRequired, setOnboardingRequired] = useState(true)
+  const hasOnboardingQuery = searchParams.get("onboarding") === "1"
 
   function cycleLocale() {
     const idx = localeOptions.findIndex((o) => o.code === locale)
@@ -200,20 +256,27 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         }
 
         const payload = (await response.json().catch(() => null)) as DashboardGateResponse | null
-        const completion = payload?.data?.profile_completion ?? 0
+        const accountApproved = Boolean(payload?.data?.account_approved)
         const hasProfile = Boolean(payload?.data?.profile?.id)
-        const needsOnboarding = !hasProfile || completion < 100
+        const companiesCount = Array.isArray(payload?.data?.companies) ? payload!.data!.companies!.length : 0
+        // Unlock full dashboard when the account is approved and the user has both
+        // a founder profile and at least one company linked.
+        const needsOnboarding = !accountApproved || !hasProfile || companiesCount === 0
 
-        if (!cancelled) {
-          setOnboardingRequired(needsOnboarding)
-          if (needsOnboarding && pathname !== "/dashboard/profile") {
-            router.replace("/dashboard/profile?onboarding=1")
+          if (!cancelled) {
+            setOnboardingRequired(needsOnboarding)
+            if (needsOnboarding && !onboardingAllowedPaths.has(pathname)) {
+              router.replace("/dashboard/profile?onboarding=1")
+            }
+
+            if (!needsOnboarding && pathname === "/dashboard/profile" && hasOnboardingQuery) {
+              router.replace("/dashboard/profile")
+            }
           }
-        }
       } catch {
         if (!cancelled) {
           setOnboardingRequired(true)
-          if (pathname !== "/dashboard/profile") {
+          if (!onboardingAllowedPaths.has(pathname)) {
             router.replace("/dashboard/profile?onboarding=1")
           }
         }
@@ -226,11 +289,11 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     return () => {
       cancelled = true
     }
-  }, [isLoading, locale, pathname, router, user])
+  }, [hasOnboardingQuery, isLoading, locale, pathname, router, user])
 
   useEffect(() => {
     if (!onboardingRequired) return
-    if (pathname === "/dashboard/settings") {
+    if (!onboardingAllowedPaths.has(pathname)) {
       router.replace("/dashboard/profile?onboarding=1")
     }
   }, [onboardingRequired, pathname, router])
@@ -246,14 +309,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   }
 
   if (isLoading || isCheckingOnboarding) {
-    return (
-      <div className="min-h-screen bg-slate-50 flex items-center justify-center" dir={activeLocale === "ar" ? "rtl" : "ltr"}>
-        <div className="flex items-center gap-3">
-          <span className="w-2 h-2 rounded-full bg-[#3B52D4] animate-pulse" />
-          <span className="text-slate-600 text-sm font-bold">{copy.layout.loading}</span>
-        </div>
-      </div>
-    )
+    return <DashboardFullscreenLoader locale={activeLocale} label={copy.layout.loading} />
   }
 
   if (!user) {
@@ -324,7 +380,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
         {/* Top bar */}
         <header
-          className="bg-white/85 backdrop-blur-md border-b border-slate-200/80 sticky top-0 z-40"
+          className="h-16 flex items-center justify-between px-6 mb-4 glass-panel rounded-2xl shrink-0 bg-white/90 shadow-sm mt-4"
           style={{ boxShadow: "0 2px 8px -2px rgba(59,82,212,0.05)" }}
         >
           <div className="mx-auto max-w-screen-2xl px-4 sm:px-6 py-3.5 flex items-center gap-3">

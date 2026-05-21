@@ -7,6 +7,7 @@ use App\Http\Resources\EventResource;
 use App\Http\Resources\MatchResource;
 use App\Http\Resources\NewsItemResource;
 use App\Http\Resources\ProgramResource;
+use App\Models\Application;
 use App\Models\Appointment;
 use App\Models\Event;
 use App\Models\FounderMatch;
@@ -14,8 +15,10 @@ use App\Models\FounderProfile;
 use App\Models\IntroductionLedger;
 use App\Models\NewsItem;
 use App\Models\Program;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Schema;
 
 class DashboardController extends Controller
 {
@@ -33,8 +36,8 @@ class DashboardController extends Controller
             ->get();
 
         $upcomingRsvps = $user->eventRsvps()
-            ->whereIn('status', ['upcoming', 'live'])
-            ->orderBy('starts_at')
+            ->whereIn('events.status', ['upcoming', 'live'])
+            ->orderBy('events.starts_at')
             ->limit(3)
             ->get();
 
@@ -80,24 +83,26 @@ class DashboardController extends Controller
                 ->limit(3)
                 ->get();
 
-            $introRequests = [
-                'pending_count' => IntroductionLedger::query()
-                    ->where('routing_status', 'INTRO_PENDING')
-                    ->where(function ($builder) use ($profile) {
-                        $builder
-                            ->where('source_founder_id', $profile->id)
-                            ->orWhere('target_founder_id', $profile->id);
-                    })
-                    ->count(),
-                'inbound_count' => IntroductionLedger::query()
-                    ->where('target_founder_id', $profile->id)
-                    ->where('routing_status', 'INTRO_PENDING')
-                    ->count(),
-                'outbound_count' => IntroductionLedger::query()
-                    ->where('source_founder_id', $profile->id)
-                    ->where('routing_status', 'INTRO_PENDING')
-                    ->count(),
-            ];
+            if (Schema::hasTable('introductions_ledger')) {
+                $introRequests = [
+                    'pending_count' => IntroductionLedger::query()
+                        ->where('routing_status', 'INTRO_PENDING')
+                        ->where(function ($builder) use ($profile) {
+                            $builder
+                                ->where('source_founder_id', $profile->id)
+                                ->orWhere('target_founder_id', $profile->id);
+                        })
+                        ->count(),
+                    'inbound_count' => IntroductionLedger::query()
+                        ->where('target_founder_id', $profile->id)
+                        ->where('routing_status', 'INTRO_PENDING')
+                        ->count(),
+                    'outbound_count' => IntroductionLedger::query()
+                        ->where('source_founder_id', $profile->id)
+                        ->where('routing_status', 'INTRO_PENDING')
+                        ->count(),
+                ];
+            }
         }
 
         $upcomingAppointments = Appointment::query()
@@ -111,8 +116,26 @@ class DashboardController extends Controller
             ->limit(3)
             ->get();
 
+        // Treat explicit member/admin access as approved, then fall back to applications table.
+        $hasMemberRole = method_exists($user, 'hasRole') && ($user->hasRole('member') || $user->hasRole('admin'));
+        $hasMemberToken = in_array((string) ($user->role_token ?? ''), ['founder', 'admin'], true);
+        $hasFounderProfile = $profile !== null;
+        $accountApproved = $hasMemberRole || $hasMemberToken || $hasFounderProfile;
+
+        if (! $accountApproved && Schema::hasTable('applications')) {
+            $accountApproved = Application::query()
+                ->where(function ($query) use ($user) {
+                    $query
+                        ->where('user_id', $user->id)
+                        ->orWhere('email', $user->email);
+                })
+                ->where('status', 'approved')
+                ->exists();
+        }
+
         return response()->json([
             'data' => [
+                'account_approved' => $accountApproved,
                 'profile' => $profile ? [
                     'id' => $profile->id,
                     'name' => $user->name,
@@ -132,9 +155,9 @@ class DashboardController extends Controller
                 ],
                 'companies' => $profile?->companies->map(fn ($company) => [
                     'id' => $company->id,
-                    'name' => $company->name,
-                    'stage' => $company->stage,
-                    'sector' => $company->sector,
+                    'name' => $this->modelAttr($company, ['name', 'legal_name']),
+                    'stage' => $this->modelAttr($company, ['stage', 'operational_stage']),
+                    'sector' => $this->modelAttr($company, ['sector']),
                     'is_primary' => (bool) ($company->pivot?->is_primary ?? false),
                 ]) ?? [],
                 'upcoming_rsvps' => EventResource::collection($upcomingRsvps),
@@ -211,14 +234,16 @@ class DashboardController extends Controller
         }
 
         $scores = $profile->companies->map(function ($company): int {
+            // Base completion on fields members actually fill in the current company wizard.
             $fields = [
-                $company->legal_name,
-                $company->domain_url,
-                $company->operational_stage,
-                $company->sector,
-                $company->hq_location,
-                ! empty($company->tech_stack_tokens),
-                ! empty($company->metrics_summary),
+                $this->modelAttr($company, ['legal_name', 'name']),
+                $this->modelAttr($company, ['domain_url', 'website_url']),
+                $this->modelAttr($company, ['operational_stage', 'stage']),
+                $this->modelAttr($company, ['sector']),
+                $this->modelAttr($company, ['hq_location', 'location']),
+                $this->modelAttr($company, ['description']),
+                $this->modelAttr($company, ['founded_year']),
+                $this->modelAttr($company, ['team_size']),
             ];
             $completed = collect($fields)->filter(fn ($value) => filled($value))->count();
 
@@ -226,6 +251,18 @@ class DashboardController extends Controller
         });
 
         return (int) round($scores->avg() ?? 0);
+    }
+
+    private function modelAttr(Model $model, array $keys, mixed $default = null): mixed
+    {
+        $attributes = $model->getAttributes();
+        foreach ($keys as $key) {
+            if (array_key_exists($key, $attributes)) {
+                return $attributes[$key];
+            }
+        }
+
+        return $default;
     }
 
     private function recommendedActions(?FounderProfile $profile): array
