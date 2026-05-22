@@ -148,9 +148,9 @@ class DashboardController extends Controller
                 'company_completion' => $this->companyCompleteness($profile),
                 'founder_score_summary' => [
                     'aggregate_score' => $profile?->scorecard?->aggregate_score,
-                    'momentum_score' => $profile?->scorecard?->momentum_score,
-                    'growth_score' => $profile?->scorecard?->growth_score,
-                    'readiness_score' => $profile?->scorecard?->readiness_score,
+                    'momentum_score' => $profile?->scorecard?->momentum,
+                    'growth_score' => $profile?->scorecard?->growth,
+                    'readiness_score' => $profile?->scorecard?->readiness,
                     'support_delta' => $profile?->scorecard?->support_delta,
                 ],
                 'companies' => $profile?->companies->map(fn ($company) => [

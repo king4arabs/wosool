@@ -29,11 +29,8 @@ class MemberScorecardSocietyTest extends TestCase
             'stage' => 'seed',
             'status' => 'active',
             'is_public' => true,
-            'legal_name' => 'Member Founder',
-            'title' => 'CEO',
-            'biography_summary' => 'Summary',
-            'profile_markdown' => 'Profile markdown',
-            'skills_tags' => ['ops'],
+            'needs' => ['advice'],
+            'offers' => ['mentorship'],
         ]);
 
         return $user;

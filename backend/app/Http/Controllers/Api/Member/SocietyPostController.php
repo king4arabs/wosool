@@ -33,7 +33,7 @@ class SocietyPostController extends Controller
         $perPage = (int) ($validated['per_page'] ?? 15);
 
         $query = SocietyPost::query()
-            ->with(['author:id,name', 'founderProfile:id,user_id,legal_name,title', 'companyProfile:id,legal_name,sector'])
+            ->with(['author:id,name', 'founderProfile', 'companyProfile'])
             ->withCount(['reactions', 'comments', 'helpOffers', 'reports'])
             ->with('reactions')
             ->where('moderation_status', 'published');
@@ -113,7 +113,7 @@ class SocietyPostController extends Controller
             ]
         );
 
-        $post->load(['author:id,name', 'founderProfile:id,user_id,legal_name,title', 'companyProfile:id,legal_name,sector', 'reactions'])
+        $post->load(['author:id,name', 'founderProfile', 'companyProfile', 'reactions'])
             ->loadCount(['reactions', 'comments', 'helpOffers', 'reports']);
 
         return response()->json([
@@ -128,7 +128,7 @@ class SocietyPostController extends Controller
             return response()->json(['message' => 'Post not available.'], 404);
         }
 
-        $post->load(['author:id,name', 'founderProfile:id,user_id,legal_name,title', 'companyProfile:id,legal_name,sector', 'reactions'])
+        $post->load(['author:id,name', 'founderProfile', 'companyProfile', 'reactions'])
             ->loadCount(['reactions', 'comments', 'helpOffers', 'reports']);
 
         return response()->json(['data' => new SocietyPostResource($post)]);

@@ -63,6 +63,11 @@ class User extends Authenticatable
         return $this->hasMany(ProgramApplication::class);
     }
 
+    public function programParticipants(): HasMany
+    {
+        return $this->hasMany(ProgramParticipant::class);
+    }
+
     public function eventRsvps(): BelongsToMany
     {
         return $this->belongsToMany(Event::class, 'event_rsvps')

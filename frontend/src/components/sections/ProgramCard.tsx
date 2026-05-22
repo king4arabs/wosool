@@ -113,7 +113,7 @@ export function ProgramCard({ program }: ProgramCardProps) {
       {/* Footer CTA */}
       <div className="px-6 pb-6">
         <Link
-          href={`/programs#${program.slug}`}
+          href={`/programs/${program.slug}`}
           className="flex items-center justify-between w-full px-4 py-2.5 rounded-xl text-xs font-bold transition-all border"
           style={
             program.isOpen

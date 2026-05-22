@@ -88,7 +88,7 @@ class ScorecardComputationEngine
     public function computeForFounderProfile(FounderProfile $profile): array
     {
         try {
-            $profile->loadMissing(['companies', 'user']);
+            $profile->loadMissing(['companies', 'user', 'scorecard']);
 
             $profileCompleteness = $this->computeProfileCompletenessScore($profile);
 
@@ -108,6 +108,37 @@ class ScorecardComputationEngine
                     'impact' => (int) Arr::get((array) json_decode((string) $event->properties, true), 'impact', 1),
                 ])
                 ->all();
+
+            // Backfill signal from stored scorecard logs so older updates still
+            // influence recomputation even if no explicit analytics event exists.
+            $historicalLogs = is_array($profile->scorecard?->historical_logs) ? $profile->scorecard->historical_logs : [];
+            $backfilledMilestones = collect($historicalLogs)
+                ->filter(fn ($entry): bool => is_array($entry))
+                ->map(function (array $entry): array {
+                    $updateText = strtolower((string) Arr::get($entry, 'update_text', ''));
+                    $impact = (int) Arr::get($entry, 'impact', 0);
+
+                    if ($impact === 0 && $updateText !== '') {
+                        $impact = 3;
+                        if (
+                            str_contains($updateText, 'million') ||
+                            str_contains($updateText, 'مليون') ||
+                            str_contains($updateText, 'revenue') ||
+                            str_contains($updateText, 'إيراد') ||
+                            str_contains($updateText, 'ايراد')
+                        ) {
+                            $impact += 8;
+                        }
+                    }
+
+                    return [
+                        'created_at' => (string) Arr::get($entry, 'calculated_at', now()->toIso8601String()),
+                        'impact' => max(-25, min($impact, 25)),
+                    ];
+                })
+                ->all();
+
+            $milestoneLogs = [...$milestoneLogs, ...$backfilledMilestones];
 
             $eventCheckIns = DB::table('event_rsvps')
                 ->where('user_id', $profile->user_id)
@@ -142,16 +173,45 @@ class ScorecardComputationEngine
 
     private function computeProfileCompletenessScore(FounderProfile $profile): int
     {
+        $attrs = $profile->getAttributes();
+        $legacyOrNewName = (string) (
+            $attrs['legal_name']
+            ?? $attrs['name']
+            ?? $attrs['tagline']
+            ?? ''
+        );
+        $legacyOrNewTitle = (string) (
+            $attrs['title']
+            ?? ''
+        );
+        $legacyOrNewBioSummary = (string) (
+            $attrs['biography_summary']
+            ?? $attrs['bio']
+            ?? ''
+        );
+        $legacyOrNewProfileMarkdown = (string) (
+            $attrs['profile_markdown']
+            ?? $attrs['bio']
+            ?? ''
+        );
+
+        $skillsTags = $attrs['skills_tags'] ?? $attrs['skills'] ?? [];
+        if (is_string($skillsTags)) {
+            $decoded = json_decode($skillsTags, true);
+            $skillsTags = is_array($decoded) ? $decoded : [];
+        }
+
         $fields = [
-            $profile->legal_name,
-            $profile->title,
-            $profile->biography_summary,
-            $profile->profile_markdown,
+            $legacyOrNewName,
+            $legacyOrNewTitle,
+            $legacyOrNewBioSummary,
+            $legacyOrNewProfileMarkdown,
         ];
 
         $completed = collect($fields)->filter(fn ($value): bool => filled($value))->count();
-        $skillsScore = is_array($profile->skills_tags) && count($profile->skills_tags) > 0 ? 1 : 0;
-        $vettedScore = $profile->vetted_status ? 1 : 0;
+        $skillsScore = is_array($skillsTags) && count($skillsTags) > 0 ? 1 : 0;
+        $vettedRaw = $attrs['vetted_status'] ?? $attrs['is_verified'] ?? false;
+        $vettedScore = (bool) $vettedRaw ? 1 : 0;
         $companyScore = $profile->companies->isNotEmpty() ? 1 : 0;
 
         $totalAvailable = count($fields) + 3;
@@ -170,11 +230,14 @@ class ScorecardComputationEngine
 
         foreach ($milestoneLogs as $log) {
             $impact = (int) Arr::get((array) $log, 'impact', 1);
-            $points += $this->clampInt($impact, 1, 5);
+            $points += $this->clampInt($impact, -25, 25);
         }
 
-        // 30 points over the active period maps to 100.
-        return $this->normalizePercent(($points / 30) * 100);
+        // Signed mapping: negative milestone flow drags score below 50,
+        // positive flow pushes it above 50, capped safely between 0..100.
+        $velocity = 50 + (($points / 120) * 50);
+
+        return $this->normalizePercent($velocity);
     }
 
     private function computeEventCheckInsScore(array $eventCheckIns): int

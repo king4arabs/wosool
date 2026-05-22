@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\Admin\AnalyticsController as AdminAnalyticsControll
 use App\Http\Controllers\Api\Admin\CompanyController as AdminCompanyController;
 use App\Http\Controllers\Api\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Api\Admin\EventController as AdminEventController;
+use App\Http\Controllers\Api\Admin\EventRegistrationController as AdminEventRegistrationController;
 use App\Http\Controllers\Api\Admin\FounderController as AdminFounderController;
 use App\Http\Controllers\Api\Admin\IntroductionController as AdminIntroductionController;
 use App\Http\Controllers\Api\Admin\ScorecardController as AdminScorecardController;
@@ -11,9 +12,11 @@ use App\Http\Controllers\Api\Admin\MatchController as AdminMatchController;
 use App\Http\Controllers\Api\Admin\NewsController as AdminNewsController;
 use App\Http\Controllers\Api\Admin\PartnerController as AdminPartnerController;
 use App\Http\Controllers\Api\Admin\ProgramController as AdminProgramController;
+use App\Http\Controllers\Api\Admin\ProgramManagementController as AdminProgramManagementController;
 use App\Http\Controllers\Api\Admin\SettingsController as AdminSettingsController;
 use App\Http\Controllers\Api\Admin\SocietyModerationController as AdminSocietyModerationController;
 use App\Http\Controllers\Api\Admin\SponsorController as AdminSponsorController;
+use App\Http\Controllers\Api\Admin\ChatModerationController as AdminChatModerationController;
 use App\Http\Controllers\Api\ApplicationController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CompanyController;
@@ -25,6 +28,8 @@ use App\Http\Controllers\Api\IntroductionController;
 use App\Http\Controllers\Api\Member\CompanyController as MemberCompanyController;
 use App\Http\Controllers\Api\Member\DashboardController as MemberDashboardController;
 use App\Http\Controllers\Api\Member\EventRsvpController;
+use App\Http\Controllers\Api\Member\EventInteractionController;
+use App\Http\Controllers\Api\Member\EventCatalogController;
 use App\Http\Controllers\Api\Member\FounderProfileController as MemberFounderProfileController;
 use App\Http\Controllers\Api\Member\MatchController as MemberMatchController;
 use App\Http\Controllers\Api\Member\ProgramApplicationController;
@@ -32,6 +37,8 @@ use App\Http\Controllers\Api\Member\ScorecardController as MemberScorecardContro
 use App\Http\Controllers\Api\Member\SocietyPostController as MemberSocietyPostController;
 use App\Http\Controllers\Api\Member\SettingsController as MemberSettingsController;
 use App\Http\Controllers\Api\Member\ThreadController as MemberThreadController;
+use App\Http\Controllers\Api\Member\ChatRoomController as MemberChatRoomController;
+use App\Http\Controllers\Api\Member\HelpRequestController as MemberHelpRequestController;
 use App\Http\Controllers\Api\NewsController;
 use App\Http\Controllers\Api\PartnerController;
 use App\Http\Controllers\Api\ProgramController;
@@ -61,6 +68,7 @@ Route::prefix('v1')->group(function () {
 
     Route::get('/events', [EventController::class, 'index']);
     Route::get('/events/{slug}', [EventController::class, 'show']);
+    Route::get('/events/{slug}/calendar.ics', [EventController::class, 'calendarIcs']);
 
     Route::get('/programs', [ProgramController::class, 'index']);
     Route::get('/programs/{slug}', [ProgramController::class, 'show']);
@@ -98,13 +106,22 @@ Route::prefix('v1')->group(function () {
         Route::delete('/companies/{company}', [MemberCompanyController::class, 'destroy']);
 
         // Event RSVPs
+        Route::get('/events/catalog', [EventCatalogController::class, 'index']);
         Route::get('/events/rsvps', [EventRsvpController::class, 'index']);
+        Route::get('/events/{slug}/registration-status', [EventRsvpController::class, 'registrationStatus']);
         Route::post('/events/{slug}/rsvp', [EventRsvpController::class, 'store']);
         Route::delete('/events/{slug}/rsvp', [EventRsvpController::class, 'destroy']);
+        Route::post('/events/{slug}/save', [EventInteractionController::class, 'save']);
+        Route::delete('/events/{slug}/save', [EventInteractionController::class, 'unsave']);
+        Route::post('/events/{slug}/share', [EventInteractionController::class, 'share']);
+        Route::post('/events/{slug}/track', [EventInteractionController::class, 'track']);
+        Route::get('/events/{slug}/discussion', [EventInteractionController::class, 'discussion']);
+        Route::post('/events/{slug}/discussion', [EventInteractionController::class, 'sendDiscussion']);
 
         // Program applications
         Route::get('/program-applications', [ProgramApplicationController::class, 'index']);
         Route::post('/programs/{slug}/apply', [ProgramApplicationController::class, 'store']);
+        Route::get('/programs/my-programs', [ProgramApplicationController::class, 'myPrograms']);
 
         // Phase 2 modules
         Route::get('/scorecard', [MemberScorecardController::class, 'show']);
@@ -119,6 +136,28 @@ Route::prefix('v1')->group(function () {
         Route::post('/threads', [MemberThreadController::class, 'store']);
         Route::get('/threads/{thread}', [MemberThreadController::class, 'show']);
         Route::post('/threads/{thread}/messages', [MemberThreadController::class, 'send']);
+
+        // Chat rooms (real-time ready)
+        Route::get('/chat/rooms', [MemberChatRoomController::class, 'index']);
+        Route::get('/chat/rooms/{room}', [MemberChatRoomController::class, 'show']);
+        Route::post('/chat/rooms', [MemberChatRoomController::class, 'store']);
+        Route::post('/chat/rooms/{room}/messages', [MemberChatRoomController::class, 'sendMessage']);
+        Route::patch('/chat/messages/{message}', [MemberChatRoomController::class, 'updateMessage']);
+        Route::delete('/chat/messages/{message}', [MemberChatRoomController::class, 'deleteMessage']);
+        Route::post('/chat/rooms/{room}/typing', [MemberChatRoomController::class, 'typing']);
+        Route::post('/chat/rooms/{room}/read', [MemberChatRoomController::class, 'read']);
+        Route::post('/chat/rooms/{room}/participants', [MemberChatRoomController::class, 'addParticipant']);
+        Route::delete('/chat/rooms/{room}/participants/{user}', [MemberChatRoomController::class, 'removeParticipant']);
+        Route::patch('/chat/rooms/{room}/status', [MemberChatRoomController::class, 'updateStatus']);
+
+        // Help requests
+        Route::post('/help-requests', [MemberHelpRequestController::class, 'store']);
+        Route::get('/help-requests', [MemberHelpRequestController::class, 'index']);
+        Route::get('/help-requests/{helpRequest}', [MemberHelpRequestController::class, 'show']);
+        Route::patch('/help-requests/{helpRequest}', [MemberHelpRequestController::class, 'update']);
+        Route::post('/help-requests/{helpRequest}/suggest-helpers', [MemberHelpRequestController::class, 'suggestHelpers']);
+        Route::post('/help-requests/{helpRequest}/invite-helper', [MemberHelpRequestController::class, 'inviteHelper']);
+        Route::post('/help-requests/{helpRequest}/resolve', [MemberHelpRequestController::class, 'resolve']);
 
         // Introductions workflow
         Route::get('/introductions', [IntroductionController::class, 'index']);
@@ -147,6 +186,29 @@ Route::prefix('v1')->group(function () {
         Route::put('/settings', [MemberSettingsController::class, 'update']);
     });
 
+    // Chat/help alias routes (non-member-prefixed) for WebSocket clients and mobile integrations
+    Route::middleware(['auth:sanctum'])->group(function () {
+        Route::get('/chat/rooms', [MemberChatRoomController::class, 'index']);
+        Route::get('/chat/rooms/{room}', [MemberChatRoomController::class, 'show']);
+        Route::post('/chat/rooms', [MemberChatRoomController::class, 'store']);
+        Route::post('/chat/rooms/{room}/messages', [MemberChatRoomController::class, 'sendMessage']);
+        Route::patch('/chat/messages/{message}', [MemberChatRoomController::class, 'updateMessage']);
+        Route::delete('/chat/messages/{message}', [MemberChatRoomController::class, 'deleteMessage']);
+        Route::post('/chat/rooms/{room}/typing', [MemberChatRoomController::class, 'typing']);
+        Route::post('/chat/rooms/{room}/read', [MemberChatRoomController::class, 'read']);
+        Route::post('/chat/rooms/{room}/participants', [MemberChatRoomController::class, 'addParticipant']);
+        Route::delete('/chat/rooms/{room}/participants/{user}', [MemberChatRoomController::class, 'removeParticipant']);
+        Route::patch('/chat/rooms/{room}/status', [MemberChatRoomController::class, 'updateStatus']);
+
+        Route::post('/help-requests', [MemberHelpRequestController::class, 'store']);
+        Route::get('/help-requests', [MemberHelpRequestController::class, 'index']);
+        Route::get('/help-requests/{helpRequest}', [MemberHelpRequestController::class, 'show']);
+        Route::patch('/help-requests/{helpRequest}', [MemberHelpRequestController::class, 'update']);
+        Route::post('/help-requests/{helpRequest}/suggest-helpers', [MemberHelpRequestController::class, 'suggestHelpers']);
+        Route::post('/help-requests/{helpRequest}/invite-helper', [MemberHelpRequestController::class, 'inviteHelper']);
+        Route::post('/help-requests/{helpRequest}/resolve', [MemberHelpRequestController::class, 'resolve']);
+    });
+
     Route::middleware(['auth:sanctum', 'admin'])->prefix('admin')->group(function () {
         Route::get('/dashboard', AdminDashboardController::class);
         Route::get('/analytics', AdminAnalyticsController::class);
@@ -172,11 +234,25 @@ Route::prefix('v1')->group(function () {
         Route::post('/events', [AdminEventController::class, 'store']);
         Route::put('/events/{event}', [AdminEventController::class, 'update']);
         Route::delete('/events/{event}', [AdminEventController::class, 'destroy']);
+        Route::get('/events/{event}/registrations', [AdminEventRegistrationController::class, 'index']);
+        Route::patch('/events/{event}/registrations/{userId}', [AdminEventRegistrationController::class, 'updateStatus']);
+        Route::get('/events/{event}/registrations/export', [AdminEventRegistrationController::class, 'exportCsv']);
 
         Route::get('/programs', [AdminProgramController::class, 'index']);
         Route::post('/programs', [AdminProgramController::class, 'store']);
         Route::put('/programs/{program}', [AdminProgramController::class, 'update']);
         Route::delete('/programs/{program}', [AdminProgramController::class, 'destroy']);
+        Route::get('/programs/{program}/dashboard', [AdminProgramManagementController::class, 'dashboard']);
+        Route::get('/programs/{program}/applications', [AdminProgramManagementController::class, 'applications']);
+        Route::patch('/programs/{program}/applications/{application}', [AdminProgramManagementController::class, 'updateApplication']);
+        Route::get('/programs/{program}/applications/export', [AdminProgramManagementController::class, 'exportApplicationsCsv']);
+        Route::get('/programs/{program}/cohorts', [AdminProgramManagementController::class, 'cohorts']);
+        Route::post('/programs/{program}/cohorts', [AdminProgramManagementController::class, 'createCohort']);
+        Route::get('/programs/{program}/sessions', [AdminProgramManagementController::class, 'sessions']);
+        Route::post('/programs/{program}/sessions', [AdminProgramManagementController::class, 'createSession']);
+        Route::get('/programs/{program}/participants', [AdminProgramManagementController::class, 'participants']);
+        Route::patch('/programs/{program}/participants/{participant}', [AdminProgramManagementController::class, 'updateParticipantProgress']);
+        Route::post('/programs/{program}/sessions/{session}/attendance', [AdminProgramManagementController::class, 'markAttendance']);
 
         Route::get('/news', [AdminNewsController::class, 'index']);
         Route::post('/news', [AdminNewsController::class, 'store']);
@@ -199,5 +275,10 @@ Route::prefix('v1')->group(function () {
         Route::get('/society/reports', [AdminSocietyModerationController::class, 'reports']);
         Route::patch('/society/reports/{report}/resolve', [AdminSocietyModerationController::class, 'resolveReport']);
         Route::get('/society/metrics', [AdminSocietyModerationController::class, 'metrics']);
+
+        // Chat moderation
+        Route::get('/chat/rooms', [AdminChatModerationController::class, 'rooms']);
+        Route::patch('/chat/rooms/{room}/status', [AdminChatModerationController::class, 'updateRoomStatus']);
+        Route::get('/chat/help-requests/unresolved', [AdminChatModerationController::class, 'unresolvedHelpRequests']);
     });
 });

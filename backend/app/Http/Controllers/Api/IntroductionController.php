@@ -8,13 +8,21 @@ use App\Http\Resources\IntroductionResource;
 use App\Models\AnalyticsEvent;
 use App\Models\FounderProfile;
 use App\Models\IntroductionLedger;
+use App\Models\Message;
+use App\Models\Scorecard;
+use App\Services\ChatRoomService;
 use Carbon\CarbonImmutable;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
 
 class IntroductionController extends Controller
 {
+    private const MONTHLY_INTRO_CREDIT_LIMIT = 3;
+
     public function index(Request $request): JsonResponse
     {
         $founder = $this->resolveFounderProfile($request);
@@ -41,6 +49,12 @@ class IntroductionController extends Controller
             ->paginate($perPage, ['*'], 'inbound_page')
             ->withQueryString();
 
+        $consumedCreditsThisMonth = IntroductionLedger::query()
+            ->where('source_founder_id', $founder->id)
+            ->whereNotNull('source_credit_consumed_at')
+            ->whereBetween('source_credit_consumed_at', [now()->startOfMonth(), now()->endOfMonth()])
+            ->count();
+
         return response()->json([
             'data' => [
                 'outbound' => IntroductionResource::collection($outbound->items()),
@@ -58,6 +72,11 @@ class IntroductionController extends Controller
                     'last_page' => $inbound->lastPage(),
                     'per_page' => $inbound->perPage(),
                     'total' => $inbound->total(),
+                ],
+                'credits' => [
+                    'monthly_limit' => self::MONTHLY_INTRO_CREDIT_LIMIT,
+                    'used' => $consumedCreditsThisMonth,
+                    'remaining' => max(0, self::MONTHLY_INTRO_CREDIT_LIMIT - $consumedCreditsThisMonth),
                 ],
             ],
         ]);
@@ -165,8 +184,117 @@ class IntroductionController extends Controller
             ], 422);
         }
 
-        $intro->update([
-            'routing_status' => 'INTRO_APPROVED',
+        $sourceFounder = FounderProfile::query()->with('user')->find($intro->source_founder_id);
+        $targetFounder = FounderProfile::query()->with('user')->find($intro->target_founder_id);
+
+        if (! $sourceFounder || ! $targetFounder || ! $sourceFounder->user || ! $targetFounder->user) {
+            return response()->json([
+                'message' => 'Unable to complete introduction workflow due to missing founder users.',
+            ], 422);
+        }
+
+        $consumedCreditsThisMonth = IntroductionLedger::query()
+            ->where('source_founder_id', $sourceFounder->id)
+            ->whereNotNull('source_credit_consumed_at')
+            ->whereBetween('source_credit_consumed_at', [now()->startOfMonth(), now()->endOfMonth()])
+            ->count();
+
+        if (is_null($intro->source_credit_consumed_at) && $consumedCreditsThisMonth >= self::MONTHLY_INTRO_CREDIT_LIMIT) {
+            return response()->json([
+                'message' => 'Monthly introduction credit limit reached for requester.',
+                'errors' => [
+                    'credits' => ['No remaining monthly introduction credits.'],
+                ],
+                'meta' => [
+                    'limit' => self::MONTHLY_INTRO_CREDIT_LIMIT,
+                    'used' => $consumedCreditsThisMonth,
+                    'remaining' => 0,
+                ],
+            ], 422);
+        }
+
+        $threadId = (string) Str::uuid();
+
+        DB::transaction(function () use ($intro, $sourceFounder, $targetFounder, $threadId): void {
+            $intro->update([
+                'routing_status' => 'INTRO_APPROVED',
+                'source_credit_consumed_at' => $intro->source_credit_consumed_at ?? now(),
+                'thread_id' => $intro->thread_id ?? $threadId,
+                'intro_email_sent_at' => $intro->intro_email_sent_at ?? now(),
+            ]);
+
+            $channelThreadId = $intro->thread_id ?? $threadId;
+
+            Message::create([
+                'thread_id' => $channelThreadId,
+                'sender_id' => $sourceFounder->user_id,
+                'recipient_id' => $targetFounder->user_id,
+                'body' => 'تم فتح قناة تواصل مباشرة عبر منصة وصول. يسعدنا بدء النقاش حول طلب التقديم.',
+            ]);
+
+            Message::create([
+                'thread_id' => $channelThreadId,
+                'sender_id' => $targetFounder->user_id,
+                'recipient_id' => $sourceFounder->user_id,
+                'body' => 'تم قبول الربط. جاهز/ة للمساعدة، يمكننا تنسيق خطوات العمل هنا مباشرة.',
+            ]);
+
+            $helperScorecard = Scorecard::query()->firstOrCreate(
+                ['founder_profile_id' => $targetFounder->id],
+                [
+                    'aggregate_score' => 0,
+                    'momentum' => 0,
+                    'growth' => 0,
+                    'readiness' => 0,
+                    'support_delta' => 0,
+                    'historical_logs' => [],
+                ]
+            );
+
+            $helperScorecard->aggregate_score = min(100, (int) $helperScorecard->aggregate_score + 3);
+            $helperScorecard->momentum = min(100, (int) $helperScorecard->momentum + 2);
+
+            $logs = is_array($helperScorecard->historical_logs) ? $helperScorecard->historical_logs : [];
+            $logs[] = [
+                'timestamp' => now()->toIso8601String(),
+                'event' => 'introduction.approved',
+                'community_points' => 3,
+                'intro_id' => $intro->id,
+                'note' => 'Accepted helping another founder via direct introduction.',
+            ];
+            $helperScorecard->historical_logs = array_slice($logs, -50);
+            $helperScorecard->save();
+        });
+
+        $this->sendIntroEmailIfPossible(
+            $sourceFounder->user->email,
+            $targetFounder->user->email,
+            (string) ($sourceFounder->user->name ?? $sourceFounder->legal_name ?? 'Founder A'),
+            (string) ($targetFounder->user->name ?? $targetFounder->legal_name ?? 'Founder B')
+        );
+
+        /** @var ChatRoomService $chatRooms */
+        $chatRooms = app(ChatRoomService::class);
+        $introRoom = $chatRooms->ensureRoom([
+            'type' => 'intro_room',
+            'title' => 'غرفة ربط مباشر بين المؤسسين',
+            'description' => 'تم إنشاء هذه الغرفة بعد قبول طلب الربط.',
+            'created_by_user_id' => $request->user()?->id,
+            'owner_user_id' => $sourceFounder->user_id,
+            'related_type' => 'introduction',
+            'related_id' => $intro->id,
+            'visibility' => 'private',
+            'is_ai_assisted' => true,
+        ], [
+            ['user_id' => $sourceFounder->user_id, 'role' => 'owner'],
+            ['user_id' => $targetFounder->user_id, 'role' => 'participant'],
+        ]);
+
+        Message::create([
+            'thread_id' => $introRoom->uuid,
+            'sender_id' => $sourceFounder->user_id,
+            'recipient_id' => $targetFounder->user_id,
+            'body' => 'غرفة الربط المباشر جاهزة. يمكنكم متابعة النقاش هنا أيضًا.',
         ]);
 
         $locale = app()->getLocale();
@@ -181,6 +309,9 @@ class IntroductionController extends Controller
                 'message' => __('messages.intro.approved'),
                 'source_founder_id' => $intro->source_founder_id,
                 'target_founder_id' => $intro->target_founder_id,
+                'thread_id' => $intro->fresh()->thread_id,
+                'source_credit_consumed_at' => $intro->fresh()->source_credit_consumed_at?->toIso8601String(),
+                'intro_email_sent_at' => $intro->fresh()->intro_email_sent_at?->toIso8601String(),
             ],
         );
 
@@ -198,8 +329,6 @@ class IntroductionController extends Controller
             'data' => new IntroductionResource($intro),
         ]);
     }
-
-
 
     public function decline(Request $request, IntroductionLedger $intro): JsonResponse
     {
@@ -266,5 +395,35 @@ class IntroductionController extends Controller
         }
 
         return $user->founderProfile()->first();
+    }
+
+    private function sendIntroEmailIfPossible(string $sourceEmail, string $targetEmail, string $sourceName, string $targetName): void
+    {
+        if (! $this->canSendEmail()) {
+            return;
+        }
+
+        try {
+            Mail::raw(
+                "Wosool Intro: {$sourceName} is now connected with {$targetName}.\n\nYou can continue directly via in-platform messages.",
+                static function ($message) use ($sourceEmail, $targetEmail): void {
+                    $message
+                        ->to([$sourceEmail, $targetEmail])
+                        ->subject('Wosool Intro Connection');
+                }
+            );
+        } catch (\Throwable $exception) {
+            Log::warning('Failed to send intro email.', [
+                'source_email' => $sourceEmail,
+                'target_email' => $targetEmail,
+                'error' => $exception->getMessage(),
+            ]);
+        }
+    }
+
+    private function canSendEmail(): bool
+    {
+        return filled(config('mail.mailers.smtp.host'))
+            && filled(config('mail.from.address'));
     }
 }

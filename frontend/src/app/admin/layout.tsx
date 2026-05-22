@@ -15,6 +15,7 @@ import {
   BarChart3,
   Settings,
   Trophy,
+  MessageCircle,
 } from "lucide-react"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { cn } from "@/lib/utils"
@@ -37,6 +38,7 @@ const adminLabels = {
       "/admin/partners": "الشركاء",
       "/admin/sponsors": "الرعاة",
       "/admin/news": "الأخبار",
+      "/admin/chat": "إشراف المحادثات",
       "/admin/analytics": "التحليلات",
       "/admin/settings": "الإعدادات",
     },
@@ -59,6 +61,7 @@ const adminLabels = {
       "/admin/partners": "Partners",
       "/admin/sponsors": "Sponsors",
       "/admin/news": "News",
+      "/admin/chat": "Chat Moderation",
       "/admin/analytics": "Analytics",
       "/admin/settings": "Settings",
     },
@@ -82,6 +85,7 @@ const adminNavItems = [
   { href: "/admin/partners", icon: Handshake },
   { href: "/admin/sponsors", icon: Trophy },
   { href: "/admin/news", icon: Newspaper },
+  { href: "/admin/chat", icon: MessageCircle },
   { href: "/admin/analytics", icon: BarChart3 },
   { href: "/admin/settings", icon: Settings },
 ] as const

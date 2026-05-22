@@ -20,7 +20,7 @@ class SocietyModerationController extends Controller
         ]);
 
         $query = SocietyPost::query()
-            ->with(['author:id,name', 'founderProfile:id,legal_name,title', 'companyProfile:id,legal_name,sector', 'reactions'])
+            ->with(['author:id,name', 'founderProfile', 'companyProfile', 'reactions'])
             ->withCount(['reactions', 'comments', 'helpOffers', 'reports'])
             ->orderByDesc('created_at');
 

@@ -99,15 +99,31 @@ export interface ApiEvent {
 export interface ApiProgram {
   id: number
   name: string
+  title?: string | null
   slug: string
   description?: string | null
+  short_description?: string | null
+  full_description?: string | null
+  program_type?: string | null
   category: string
   duration?: string | null
+  format?: string | null
+  language?: string | null
+  city_region?: string | null
   target_stages?: string[] | null
   cohort_size?: number | null
+  capacity?: number | null
   benefits?: string[] | null
+  tags?: string[] | null
   is_open: boolean
+  visibility?: string | null
+  status_flow?: string | null
+  objective?: string | null
+  who_it_is_for?: string | null
+  expected_outcomes?: string | null
   application_deadline?: string | null
+  starts_at?: string | null
+  ends_at?: string | null
 }
 
 export interface ApiPartner {
@@ -218,9 +234,9 @@ export function mapEvent(event: ApiEvent): Event {
 export function mapProgram(program: ApiProgram): Program {
   return {
     id: String(program.id),
-    name: program.name,
+    name: program.title || program.name,
     slug: program.slug,
-    description: program.description ?? "",
+    description: program.short_description ?? program.description ?? "",
     category: program.category,
     duration: program.duration ?? "",
     targetStage: program.target_stages ?? [],

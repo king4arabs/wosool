@@ -1,146 +1,152 @@
 "use client"
 
-import { useEffect, useMemo, useState } from "react"
+import { useEffect, useState } from "react"
+import Link from "next/link"
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Progress } from "@/components/ui/progress"
 import { api } from "@/lib/api"
-import { mapProgram, type ApiProgram, type WrappedResponse } from "@/lib/content-api"
-import type { Program, PaginatedResponse } from "@/types"
-import { CheckCircle, Clock, GraduationCap, Users, CalendarDays } from "lucide-react"
 
-type ProgramApplicationsResponse = {
-  data: Array<{
+type ProgramItem = {
+  id?: number
+  status?: string
+  submitted_at?: string
+  progress?: number
+  at_risk?: boolean
+  next_session?: { title?: string; starts_at?: string | null } | null
+  cohort?: { id: number; name: string } | null
+  program: {
     id: number
-    status: string
-    created_at: string
-    program?: { data?: ApiProgram } | ApiProgram
-  }>
-}
-
-function unwrapProgram(program?: { data?: ApiProgram } | ApiProgram): ApiProgram | undefined {
-  if (!program) return undefined
-  const wrapped = program as { data?: ApiProgram }
-  if (wrapped.data) {
-    return wrapped.data
+    name: string
+    slug: string
+    category?: string
+    starts_at?: string | null
+    ends_at?: string | null
   }
-  return program as ApiProgram
 }
 
-export default function ProgramsPage() {
-  const [programs, setPrograms] = useState<Program[]>([])
-  const [applications, setApplications] = useState<ProgramApplicationsResponse["data"]>([])
+type MyProgramsResponse = {
+  data: {
+    applied_programs: ProgramItem[]
+    enrolled_programs: ProgramItem[]
+    completed_programs: ProgramItem[]
+    recommended_programs: Array<{ id: number; name: string; slug: string; category?: string }>
+  }
+}
+
+const statusMap: Record<string, string> = {
+  submitted: "تم الإرسال",
+  pending_review: "قيد المراجعة",
+  accepted: "مقبول",
+  rejected: "مرفوض",
+  waitlisted: "قائمة الانتظار",
+  enrolled: "ملتحق",
+  completed: "مكتمل",
+  in_progress: "قيد التنفيذ",
+}
+
+export default function DashboardProgramsPage() {
+  const [data, setData] = useState<MyProgramsResponse["data"] | null>(null)
+  const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
-    Promise.all([
-      api.get<PaginatedResponse<ApiProgram> | WrappedResponse<ApiProgram[]>>("/programs"),
-      api.get<ProgramApplicationsResponse>("/member/program-applications").catch(() => ({ data: [] })),
-    ])
-      .then(([programResponse, applicationResponse]) => {
-        const items = Array.isArray((programResponse as WrappedResponse<ApiProgram[]>).data)
-          ? (programResponse as WrappedResponse<ApiProgram[]>).data
-          : (programResponse as PaginatedResponse<ApiProgram>).data
-        setPrograms(items.map(mapProgram))
-        setApplications(applicationResponse.data)
-      })
+    setLoading(true)
+    api.get<MyProgramsResponse>("/member/programs/my-programs")
+      .then((res) => setData(res.data))
       .catch((err: Error) => setError(err.message))
+      .finally(() => setLoading(false))
   }, [])
 
-  const appliedIds = useMemo(
-    () =>
-      new Set(
-        applications
-          .map((item) => unwrapProgram(item.program)?.id)
-          .filter((value): value is number => Boolean(value))
-      ),
-    [applications]
-  )
+  if (loading) return <div className="py-16 text-center text-slate-500">جارٍ تحميل برامجي...</div>
+  if (error) return <div className="py-16 text-center text-rose-600">{error}</div>
 
-  const myPrograms = applications
-  const availablePrograms = programs.filter((program) => !appliedIds.has(Number(program.id)))
-
-  if (error) {
-    return <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">{error}</div>
-  }
+  const applied = data?.applied_programs || []
+  const enrolled = data?.enrolled_programs || []
+  const completed = data?.completed_programs || []
+  const recommended = data?.recommended_programs || []
 
   return (
-    <div className="max-w-4xl space-y-6">
+    <div className="max-w-5xl mx-auto space-y-6">
+      <div>
+        <h1 className="text-2xl font-black text-slate-900">برامجي</h1>
+        <p className="text-sm text-slate-500 mt-1">تابع طلباتك، تقدمك، والجلسات القادمة في مكان واحد.</p>
+      </div>
+
       <Tabs defaultValue="enrolled">
         <TabsList>
-          <TabsTrigger value="enrolled">My Applications ({myPrograms.length})</TabsTrigger>
-          <TabsTrigger value="available">Available ({availablePrograms.length})</TabsTrigger>
+          <TabsTrigger value="enrolled">الملتحق بها ({enrolled.length})</TabsTrigger>
+          <TabsTrigger value="applied">طلبات الانضمام ({applied.length})</TabsTrigger>
+          <TabsTrigger value="completed">المكتملة ({completed.length})</TabsTrigger>
+          <TabsTrigger value="recommended">الموصى بها ({recommended.length})</TabsTrigger>
         </TabsList>
 
-        <TabsContent value="enrolled" className="mt-6 space-y-6">
-          {myPrograms.length === 0 && <p className="text-sm text-gray-500">You have not applied to any programs yet.</p>}
-          {myPrograms.map((entry) => {
-            const program = unwrapProgram(entry.program)
-            if (!program) return null
-            const mapped = mapProgram(program)
-            return (
-              <Card key={entry.id}>
-                <CardHeader>
-                  <div className="flex items-start justify-between gap-4">
-                    <div>
-                      <h3 className="font-semibold text-[#0A1628] text-lg">{mapped.name}</h3>
-                      <p className="text-sm text-gray-500 mt-1">{mapped.category} · {mapped.duration}</p>
-                    </div>
-                    <Badge variant={entry.status === "submitted" ? "warning" : "secondary"}>{entry.status}</Badge>
-                  </div>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <p className="text-sm text-gray-600">{mapped.description}</p>
-                  <div className="rounded-lg bg-[#F8F5EF] px-4 py-3 text-sm text-gray-700">
-                    Applied on {new Date(entry.created_at).toLocaleDateString("en-US")}
-                  </div>
-                </CardContent>
-              </Card>
-            )
-          })}
-        </TabsContent>
-
-        <TabsContent value="available" className="mt-6 space-y-4">
-          {availablePrograms.map((program) => (
-            <Card key={program.id}>
+        <TabsContent value="enrolled" className="mt-5 space-y-4">
+          {enrolled.length === 0 ? <p className="text-sm text-slate-500">لا توجد برامج ملتحق بها حالياً.</p> : null}
+          {enrolled.map((item) => (
+            <Card key={`${item.program.id}-${item.id}`}>
               <CardHeader>
-                <div className="flex items-start justify-between gap-4">
+                <div className="flex items-center justify-between gap-4">
                   <div>
-                    <h3 className="font-semibold text-[#0A1628] text-lg flex items-center gap-2">
-                      <GraduationCap className="h-5 w-5 text-[#C9A84C]" />
-                      {program.name}
-                    </h3>
-                    <p className="text-sm text-gray-500 mt-1">{program.category}</p>
+                    <h3 className="font-bold text-slate-900">{item.program.name}</h3>
+                    <p className="text-xs text-slate-500">{item.program.category || "برنامج"}</p>
                   </div>
-                  <Badge variant={program.isOpen ? "success" : "secondary"}>{program.isOpen ? "Open" : "Closed"}</Badge>
+                  <Badge variant={item.at_risk ? "destructive" : "success"}>{item.at_risk ? "بحاجة متابعة" : (statusMap[item.status || ""] || item.status || "—")}</Badge>
                 </div>
               </CardHeader>
-              <CardContent className="space-y-4">
-                <p className="text-sm text-gray-600">{program.description}</p>
-
-                <div className="flex flex-wrap gap-4 text-xs text-gray-500">
-                  <span className="flex items-center gap-1"><Clock className="h-3 w-3" />{program.duration}</span>
-                  {program.cohortSize && <span className="flex items-center gap-1"><Users className="h-3 w-3" />Cohort of {program.cohortSize}</span>}
-                  {program.applicationDeadline && <span className="flex items-center gap-1"><CalendarDays className="h-3 w-3" />Deadline: {new Date(program.applicationDeadline).toLocaleDateString("en-US")}</span>}
+              <CardContent className="space-y-3">
+                <div>
+                  <div className="flex items-center justify-between text-xs text-slate-500 mb-1"><span>نسبة الإنجاز</span><span>{item.progress || 0}%</span></div>
+                  <Progress value={item.progress || 0} />
                 </div>
+                <p className="text-xs text-slate-500">الجلسة القادمة: {item.next_session?.title ? `${item.next_session.title} — ${item.next_session.starts_at ? new Date(item.next_session.starts_at).toLocaleString("ar-SA") : ""}` : "لا توجد جلسة مجدولة"}</p>
+                <Link href={`/programs/${item.program.slug}`} className="text-sm font-semibold text-[#3B52D4]">عرض البرنامج</Link>
+              </CardContent>
+            </Card>
+          ))}
+        </TabsContent>
 
-                <div className="flex flex-wrap gap-2">
-                  {program.targetStage.map((stage) => (
-                    <Badge key={stage} variant="outline">{stage}</Badge>
-                  ))}
+        <TabsContent value="applied" className="mt-5 space-y-4">
+          {applied.length === 0 ? <p className="text-sm text-slate-500">لا توجد طلبات انضمام.</p> : null}
+          {applied.map((item) => (
+            <Card key={item.id}>
+              <CardContent className="p-4 flex items-center justify-between gap-3">
+                <div>
+                  <p className="font-semibold text-slate-900">{item.program.name}</p>
+                  <p className="text-xs text-slate-500">تاريخ التقديم: {item.submitted_at ? new Date(item.submitted_at).toLocaleDateString("ar-SA") : "—"}</p>
                 </div>
+                <Badge variant="warning">{statusMap[item.status || ""] || item.status || "—"}</Badge>
+              </CardContent>
+            </Card>
+          ))}
+        </TabsContent>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
-                  {program.benefits.map((benefit) => (
-                    <div key={benefit} className="flex items-center gap-2 text-sm text-gray-600">
-                      <CheckCircle className="h-3.5 w-3.5 text-[#C9A84C] shrink-0" />
-                      {benefit}
-                    </div>
-                  ))}
+        <TabsContent value="completed" className="mt-5 space-y-4">
+          {completed.length === 0 ? <p className="text-sm text-slate-500">لا توجد برامج مكتملة بعد.</p> : null}
+          {completed.map((item) => (
+            <Card key={`${item.program.id}-${item.id}`}>
+              <CardContent className="p-4 flex items-center justify-between gap-3">
+                <div>
+                  <p className="font-semibold text-slate-900">{item.program.name}</p>
+                  <p className="text-xs text-slate-500">برنامج مكتمل</p>
                 </div>
+                <Badge variant="success">مكتمل</Badge>
+              </CardContent>
+            </Card>
+          ))}
+        </TabsContent>
 
-                <Button disabled={!program.isOpen}>Apply from Program Page</Button>
+        <TabsContent value="recommended" className="mt-5 space-y-3">
+          {recommended.length === 0 ? <p className="text-sm text-slate-500">لا توجد توصيات حالياً.</p> : null}
+          {recommended.map((item) => (
+            <Card key={item.id}>
+              <CardContent className="p-4 flex items-center justify-between gap-3">
+                <div>
+                  <p className="font-semibold text-slate-900">{item.name}</p>
+                  <p className="text-xs text-slate-500">{item.category || "برنامج"}</p>
+                </div>
+                <Link href={`/programs/${item.slug}`} className="text-sm font-semibold text-[#3B52D4]">عرض</Link>
               </CardContent>
             </Card>
           ))}

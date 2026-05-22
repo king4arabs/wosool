@@ -16,12 +16,17 @@ class IntroductionLedger extends Model
         'payload_context_brief',
         'tracking_notes',
         'expires_at',
+        'source_credit_consumed_at',
+        'intro_email_sent_at',
+        'thread_id',
     ];
 
     protected function casts(): array
     {
         return [
             'expires_at' => 'datetime',
+            'source_credit_consumed_at' => 'datetime',
+            'intro_email_sent_at' => 'datetime',
             'created_at' => 'datetime',
             'updated_at' => 'datetime',
         ];

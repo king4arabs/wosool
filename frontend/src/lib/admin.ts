@@ -84,17 +84,51 @@ export interface AdminEvent {
   title: string
   slug: string
   description?: string | null
+  short_description?: string | null
+  full_description?: string | null
   starts_at: string
   ends_at?: string | null
+  registration_deadline?: string | null
+  timezone?: string | null
   location: string
+  venue_name?: string | null
+  city?: string | null
+  country?: string | null
+  google_maps_url?: string | null
   type: string
+  category?: string | null
   format: "virtual" | "in-person"
+  mode?: "in-person" | "online" | "hybrid"
   virtual_link?: string | null
+  online_meeting_url?: string | null
   image_url?: string | null
+  cover_image_url?: string | null
+  gallery_images?: string[] | null
   max_attendees?: number | null
+  capacity_limit?: number | null
   is_public: boolean
+  visibility?: "public" | "members_only" | "founder_only" | "invite_only" | "circle_only"
   requires_rsvp: boolean
-  status: "draft" | "upcoming" | "live" | "completed" | "cancelled"
+  rsvp_required?: boolean
+  waitlist_enabled?: boolean
+  allow_public_registration?: boolean
+  allow_guest_registration?: boolean
+  requires_approval?: boolean
+  auto_approve_trusted_members?: boolean
+  organizer_type?: "wosool" | "founder" | "partner" | "sponsor" | "external_ecosystem"
+  organizer_name?: string | null
+  organizer_reference_id?: number | null
+  status: "draft" | "upcoming" | "live" | "completed" | "cancelled" | "pending_approval" | "hidden"
+  status_flow?: "draft" | "pending_review" | "published" | "registration_closed" | "live_now" | "completed" | "cancelled" | "archived"
+  targeting_rules?: Record<string, unknown> | null
+  invites?: Record<string, unknown> | null
+  featured_attendees?: Array<Record<string, unknown>> | null
+  sponsor_partner_blocks?: Array<Record<string, unknown>> | null
+  ai_settings?: Record<string, unknown> | null
+  rsvp_settings?: Record<string, unknown> | null
+  agenda?: Array<Record<string, unknown>> | null
+  speakers?: Array<Record<string, unknown>> | null
+  resources?: Array<Record<string, unknown>> | null
   tags?: string[] | null
   rsvp_count?: number
   created_at?: string
@@ -103,17 +137,35 @@ export interface AdminEvent {
 export interface AdminProgram {
   id: number
   name: string
+  title?: string | null
   slug: string
   description?: string | null
+  short_description?: string | null
+  full_description?: string | null
+  program_type?: string | null
   category: string
   duration?: string | null
+  format?: string | null
+  language?: string | null
+  city_region?: string | null
   target_stages?: string[] | null
   cohort_size?: number | null
+  capacity?: number | null
   benefits?: string[] | null
+  tags?: string[] | null
   is_open: boolean
+  visibility?: string | null
+  status_flow?: string | null
+  objective?: string | null
+  who_it_is_for?: string | null
+  expected_outcomes?: string | null
   application_deadline?: string | null
+  starts_at?: string | null
+  ends_at?: string | null
   applications_count?: number
   cohorts_count?: number
+  participants_count?: number
+  sessions_count?: number
   created_at?: string
 }
 

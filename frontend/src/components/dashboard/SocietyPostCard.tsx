@@ -14,26 +14,27 @@ export type SocietyPost = {
     company?: { name?: string | null; sector?: string | null } | null
   } | null
   counts?: { comments?: number; reactions?: number; help_offers?: number } | null
+  viewer_state?: { is_owner?: boolean } | null
 }
 
 export function SocietyPostCard({
   post,
   onHelp,
   onSave,
-  onReact,
+  onReactSelect,
   onComment,
   onShare,
-  onReport,
+  onReportOrDelete,
   onMatch,
   loading,
 }: {
   post: SocietyPost
   onHelp: () => void
   onSave: () => void
-  onReact: () => void
+  onReactSelect: (type: "like" | "insightful" | "support") => void
   onComment: () => void
   onShare: () => void
-  onReport: () => void
+  onReportOrDelete: () => void
   onMatch: () => void
   loading?: boolean
 }) {
@@ -65,7 +66,17 @@ export function SocietyPostCard({
         <div className="text-slate-400 text-[11px]">
           التفاعلات: <span className="font-mono font-bold text-slate-700">{post.counts?.reactions ?? 0}</span> • التعليقات: <span className="font-mono font-bold text-slate-700">{post.counts?.comments ?? 0}</span>
         </div>
-        <SocietyPostActionsBar onHelp={onHelp} onSave={onSave} onReact={onReact} onComment={onComment} onShare={onShare} onReport={onReport} onMatch={onMatch} loading={loading} />
+        <SocietyPostActionsBar
+          onHelp={onHelp}
+          onSave={onSave}
+          onReactSelect={onReactSelect}
+          onComment={onComment}
+          onShare={onShare}
+          onReportOrDelete={onReportOrDelete}
+          onMatch={onMatch}
+          isOwner={Boolean(post.viewer_state?.is_owner)}
+          loading={loading}
+        />
       </div>
     </div>
   )

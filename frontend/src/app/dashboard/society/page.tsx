@@ -5,7 +5,6 @@ import { api } from "@/lib/api"
 import { StrategicHeaderCard } from "@/components/dashboard/StrategicHeaderCard"
 import { FeedFilterBar } from "@/components/dashboard/FeedFilterBar"
 import { SocietyPostCard, type SocietyPost } from "@/components/dashboard/SocietyPostCard"
-import { SocietyAutoUpdateBanner } from "@/components/dashboard/SocietyAutoUpdateBanner"
 import { SocietyComposerModal, type SocietyPostForm } from "@/components/dashboard/SocietyComposerModal"
 
 type FeedResponse = {
@@ -30,6 +29,7 @@ export default function SocietyPage() {
   const [tab, setTab] = useState<"all" | "asks" | "offers">("all")
   const [sector, setSector] = useState("")
   const [loadingActionId, setLoadingActionId] = useState<number | null>(null)
+  const [deleteTargetPost, setDeleteTargetPost] = useState<SocietyPost | null>(null)
   const [meta, setMeta] = useState<{ current_page: number; last_page: number; total: number }>({ current_page: 1, last_page: 1, total: 0 })
 
   async function loadPosts() {
@@ -80,10 +80,10 @@ export default function SocietyPage() {
     }
   }
 
-  async function reactToPost(postId: number) {
+  async function reactToPost(postId: number, reactionType: "like" | "insightful" | "support") {
     setLoadingActionId(postId)
     try {
-      await api.post(`/member/society/posts/${postId}/reactions`, { reaction_type: "like" })
+      await api.post(`/member/society/posts/${postId}/reactions`, { reaction_type: reactionType })
       await loadPosts()
     } finally {
       setLoadingActionId(null)
@@ -109,6 +109,17 @@ export default function SocietyPage() {
       return
     }
     await navigator.clipboard.writeText(url)
+  }
+
+  async function deletePost(postId: number) {
+    setLoadingActionId(postId)
+    try {
+      await api.delete(`/member/society/posts/${postId}`)
+      setDeleteTargetPost(null)
+      await loadPosts()
+    } finally {
+      setLoadingActionId(null)
+    }
   }
 
   const counts = useMemo(() => {
@@ -141,22 +152,22 @@ export default function SocietyPage() {
               post={post}
               onHelp={() => postAction(post.id, "help")}
               onSave={() => postAction(post.id, "save")}
-              onReact={() => reactToPost(post.id)}
+              onReactSelect={(type) => reactToPost(post.id, type)}
               onComment={() => commentOnPost(post.id)}
               onShare={() => sharePost(post.id).catch(() => null)}
-              onReport={() => postAction(post.id, "report")}
+              onReportOrDelete={() => {
+                if (post.viewer_state?.is_owner) {
+                  setDeleteTargetPost(post)
+                  return
+                }
+                postAction(post.id, "report")
+              }}
               onMatch={() => postAction(post.id, "match")}
               loading={loadingActionId === post.id}
             />
           ))}
 
           {posts.length === 0 ? <div className="rounded-xl bg-white border border-slate-200 p-6 text-sm text-slate-500">لا توجد منشورات بعد. ابدأ أول منشور داخل المجتمع.</div> : null}
-
-          <SocietyAutoUpdateBanner
-            title="تحديث المنصة: تم رصد إنجازات جديدة في المجتمع وسيتم تحديث المطابقات آليًا."
-            subtitle="يتم تحديث قراءة المجتمع ومؤشرات بطاقة الأداء عند توفر إشارات تشغيلية جديدة."
-            cta="إرسال تهنئة فورية"
-          />
         </div>
 
         <div className="pt-4 flex items-center justify-between border-t border-slate-200 text-xs">
@@ -175,6 +186,35 @@ export default function SocietyPage() {
         submitting={isSubmitting}
         submitError={submitError}
       />
+
+      {deleteTargetPost ? (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 p-4 backdrop-blur-sm">
+          <div className="w-full max-w-md rounded-2xl border border-slate-200 bg-white shadow-2xl">
+            <div className="border-b border-slate-100 px-5 py-4">
+              <h3 className="text-sm font-bold text-slate-900">تأكيد حذف المنشور</h3>
+              <p className="mt-1 text-xs text-slate-500">سيتم أرشفة هذا المنشور ولن يظهر للأعضاء بعد الحذف.</p>
+            </div>
+            <div className="px-5 py-4">
+              <p className="line-clamp-2 text-xs text-slate-600">"{deleteTargetPost.title}"</p>
+            </div>
+            <div className="flex items-center justify-end gap-2 border-t border-slate-100 px-5 py-4">
+              <button
+                onClick={() => setDeleteTargetPost(null)}
+                className="rounded-lg border border-slate-200 bg-white px-4 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50"
+              >
+                إلغاء
+              </button>
+              <button
+                onClick={() => deletePost(deleteTargetPost.id)}
+                disabled={loadingActionId === deleteTargetPost.id}
+                className="rounded-lg bg-rose-600 px-4 py-2 text-xs font-semibold text-white hover:bg-rose-700 disabled:opacity-60"
+              >
+                {loadingActionId === deleteTargetPost.id ? "جارٍ الحذف..." : "تأكيد الحذف"}
+              </button>
+            </div>
+          </div>
+        </div>
+      ) : null}
     </div>
   )
 }
