@@ -29,14 +29,6 @@ const detailCopy = {
     read: "Read story",
     minRead: "min read",
   },
-  fr: {
-    back: "Retour aux actualités",
-    notFound: "Article introuvable",
-    notFoundBody: "Cet article n'est peut-être plus disponible.",
-    more: "Autres lectures du réseau",
-    read: "Lire l'article",
-    minRead: "min de lecture",
-  },
 } as const
 
 // ── Category color mapping ─────────────────────────────────────────────────────

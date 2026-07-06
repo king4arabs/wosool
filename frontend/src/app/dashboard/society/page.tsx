@@ -195,7 +195,7 @@ export default function SocietyPage() {
               <p className="mt-1 text-xs text-slate-500">سيتم أرشفة هذا المنشور ولن يظهر للأعضاء بعد الحذف.</p>
             </div>
             <div className="px-5 py-4">
-              <p className="line-clamp-2 text-xs text-slate-600">"{deleteTargetPost.title}"</p>
+              <p className="line-clamp-2 text-xs text-slate-600">&ldquo;{deleteTargetPost.title}&rdquo;</p>
             </div>
             <div className="flex items-center justify-end gap-2 border-t border-slate-100 px-5 py-4">
               <button

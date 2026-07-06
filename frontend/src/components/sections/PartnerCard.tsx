@@ -21,7 +21,7 @@ export function PartnerCard({ partner }: PartnerCardProps) {
   const initials = partner.name.split(" ").map((n) => n[0]).join("").slice(0, 2).toUpperCase()
   const statusLabel = getPartnerStatusLabel(partner.status, locale)
   const s = statusStyle[partner.status]
-  const visitLabel = locale === "ar" ? "زيارة الموقع" : locale === "fr" ? "Visiter" : "Visit website"
+  const visitLabel = locale === "ar" ? "زيارة الموقع" : "Visit website"
 
   return (
     <div

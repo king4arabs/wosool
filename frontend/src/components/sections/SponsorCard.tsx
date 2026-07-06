@@ -36,7 +36,7 @@ export function SponsorCard({ sponsor }: SponsorCardProps) {
     .slice(0, 2)
     .toUpperCase()
 
-  const visitWebsite = locale === "ar" ? "زيارة الموقع" : locale === "fr" ? "Visiter le site" : "Visit website"
+  const visitWebsite = locale === "ar" ? "زيارة الموقع" : "Visit website"
   const tierLabel = getSponsorTierLabel(sponsor.tier, locale)
 
   return (

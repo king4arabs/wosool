@@ -22,6 +22,7 @@ export default function FoundersPage() {
   const ArrowIcon = direction === "rtl" ? ArrowLeft : ArrowRight
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- reset directory state when the locale changes
     setFounders(getSeedFounders(locale))
     setSector(copy.sectors[0])
     setStage(copy.stages[0])

@@ -31,7 +31,7 @@ function formatDate(dateStr: string, locale: string) {
 
 export function NewsCard({ item }: NewsCardProps) {
   const { locale } = useLocale()
-  const intlLocale = locale === "ar" ? "ar" : locale === "fr" ? "fr-FR" : "en-US"
+  const intlLocale = locale === "ar" ? "ar" : "en-US"
   const localized = getLocalizedNewsContent(item, locale)
   const variant = categoryVariant[item.category] ?? "secondary"
 

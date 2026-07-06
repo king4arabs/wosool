@@ -682,7 +682,7 @@ const partnerDetails = {
 } as const
 
 function formatEventDate(date: string, locale: Locale) {
-  const parserLocale = locale === "ar" ? "ar" : locale === "fr" ? "fr-FR" : "en-US"
+  const parserLocale = locale === "ar" ? "ar" : "en-US"
   const parsed = new Date(date)
   return {
     month: parsed.toLocaleString(parserLocale, { month: "short" }).toUpperCase(),
@@ -1048,7 +1048,7 @@ export default function HomePage() {
                   </div>
                   <div>
                     <div className="text-xs font-semibold tracking-[0.18em] text-[#3B52D4]">
-                      {locale === "ar" ? `مرحلة ${index + 1}` : locale === "fr" ? `Étape ${index + 1}` : `Stage ${index + 1}`}
+                      {locale === "ar" ? `مرحلة ${index + 1}` : `Stage ${index + 1}`}
                     </div>
                     <h3 className="mt-4 text-xl font-semibold text-[#0F1628]">{item.title}</h3>
                     <p className="mt-4 text-sm leading-7 text-[#5D6B8A]">{item.description}</p>
@@ -1320,7 +1320,7 @@ export default function HomePage() {
                     </div>
                     <div className="flex-1">
                       <div className="text-xs font-semibold tracking-[0.16em] text-[#3B52D4]">
-                        {event.isPublic ? (locale === "ar" ? "دعوة ممتدة" : locale === "fr" ? "Accès étendu" : "Open invitation") : (locale === "ar" ? "دعوة خاصة" : locale === "fr" ? "Salon privé" : "Private room")}
+                        {event.isPublic ? (locale === "ar" ? "دعوة ممتدة" : "Open invitation") : (locale === "ar" ? "دعوة خاصة" : "Private room")}
                       </div>
                       <h3 className="mt-2 text-lg font-semibold text-[#0F1628]">{details.title}</h3>
                       <div className="mt-3 flex flex-wrap gap-3 text-xs text-[#8B95A9]">
@@ -1409,7 +1409,7 @@ export default function HomePage() {
                         rel="noreferrer"
                         className="inline-flex items-center gap-2 text-sm font-semibold text-[#3B52D4] transition-colors hover:text-[#2E44C8]"
                       >
-                        {locale === "ar" ? "زيارة الجهة" : locale === "fr" ? "Voir le partenaire" : "Visit partner"}
+                        {locale === "ar" ? "زيارة الجهة" : "Visit partner"}
                         <ArrowIcon className="h-3.5 w-3.5" />
                       </a>
                     </div>
@@ -1446,7 +1446,7 @@ export default function HomePage() {
             {latestNews.map((article, index) => {
               const details = getLocalizedNewsContent(article, locale)
               const dateStr = new Date(details.publishedAt).toLocaleDateString(
-                locale === "ar" ? "ar" : locale === "fr" ? "fr-FR" : "en-US",
+                locale === "ar" ? "ar" : "en-US",
                 { month: "long", day: "numeric", year: "numeric" }
               )
 
@@ -1511,9 +1511,7 @@ export default function HomePage() {
               <div className="mx-auto mt-6 max-w-xl rounded-xl border border-slate-200/60 bg-slate-50 px-5 py-3 text-sm text-slate-500">
                 {locale === "ar"
                   ? "شبكة انتقائية للمؤسسين الجادين، تُراجع بعناية للحفاظ على الجودة والثقة داخل المنظومة."
-                  : locale === "fr"
-                    ? "Un réseau sélectif, étudié avec rigueur pour préserver la qualité et la confiance du cercle."
-                    : "A selective circle reviewed with care to preserve trust, relevance, and institutional quality."}
+                  : "A selective circle reviewed with care to preserve trust, relevance, and institutional quality."}
               </div>
               <div className="mt-10 flex flex-col justify-center gap-4 sm:flex-row">
                 <Button
