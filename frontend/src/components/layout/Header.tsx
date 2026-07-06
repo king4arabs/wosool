@@ -16,6 +16,7 @@ const headerCopy = {
       { href: "/", label: "الرئيسية" },
       { href: "/programs", label: "البرامج" },
       { href: "/founders", label: "الأعضاء" },
+      { href: "/entrepreneurs", label: "روّاد الأعمال" },
       { href: "/events", label: "الفعاليات" },
       { href: "/partners", label: "الشركاء" },
       { href: "/news", label: "الرؤى" },
@@ -31,6 +32,7 @@ const headerCopy = {
       { href: "/", label: "Home" },
       { href: "/programs", label: "Programs" },
       { href: "/founders", label: "Members" },
+      { href: "/entrepreneurs", label: "Entrepreneurs" },
       { href: "/events", label: "Events" },
       { href: "/partners", label: "Partners" },
       { href: "/news", label: "Insights" },
@@ -40,21 +42,6 @@ const headerCopy = {
     apply: "Apply to join",
     dashboard: "Dashboard",
     languageLabel: "Language",
-  },
-  fr: {
-    navLinks: [
-      { href: "/", label: "Accueil" },
-      { href: "/programs", label: "Programmes" },
-      { href: "/founders", label: "Membres" },
-      { href: "/events", label: "Événements" },
-      { href: "/partners", label: "Partenaires" },
-      { href: "/news", label: "Insights" },
-    ],
-    tagline: "Réseau privé de fondateurs",
-    login: "Connexion",
-    apply: "Postuler",
-    dashboard: "Tableau de bord",
-    languageLabel: "Langue",
   },
 } as const
 

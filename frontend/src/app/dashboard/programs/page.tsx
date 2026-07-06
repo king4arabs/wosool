@@ -52,7 +52,7 @@ export default function DashboardProgramsPage() {
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
-    setLoading(true)
+    // loading starts as true; no synchronous setState needed here
     api.get<MyProgramsResponse>("/member/programs/my-programs")
       .then((res) => setData(res.data))
       .catch((err: Error) => setError(err.message))

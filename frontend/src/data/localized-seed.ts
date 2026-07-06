@@ -5,16 +5,11 @@ import type { Company, Event, Founder, Partner, Program, Sponsor } from "@/types
 type LocalizedValue<T> = {
   ar: T
   en: T
-  fr?: T
 }
 
 type PartialLocalizedRecord<T> = Record<string, LocalizedValue<Partial<T>>>
 
 function getLocalizedValue<T>(value: LocalizedValue<T>, locale: Locale): T {
-  if (locale === "fr") {
-    return value.fr ?? value.en
-  }
-
   return value[locale]
 }
 
@@ -458,26 +453,6 @@ export const foundersPageCopy: Record<Locale, {
     apply: "Apply to join",
     contact: "Contact the team",
   },
-  fr: {
-    badge: "Founder Directory",
-    title: "Meet the founders in the Wosool network",
-    description: "A curated community of verified founders building across Saudi Arabia and the GCC, with meaningful diversity in sectors and operating stages.",
-    featuredEyebrow: "Featured Members",
-    featuredTitle: "Founders in focus",
-    directoryEyebrow: "Directory",
-    directoryTitle: "All founders",
-    searchPlaceholder: "Search by founder, company, or keyword",
-    searchAria: "Search founders",
-    sectors: ["All sectors", "Fintech", "HealthTech", "B2B SaaS", "Logistics", "FoodTech", "HRTech"],
-    stages: ["All stages", "Pre-seed", "Seed", "Series A", "Scale-up", "Exited Founder"],
-    locations: ["All locations", "Saudi Arabia", "UAE", "Bahrain", "Kuwait", "Qatar"],
-    results: "Showing {count} profiles right now. Some full profiles remain available to signed-in members only.",
-    login: "Sign in to view more",
-    ctaTitle: "Looking for the right introduction?",
-    ctaBody: "Wosool members can request curated introductions through the platform. If you're not a member yet, start with an application.",
-    apply: "Apply to join",
-    contact: "Contact the team",
-  },
 }
 
 export const companiesPageCopy: Record<Locale, {
@@ -531,23 +506,6 @@ export const companiesPageCopy: Record<Locale, {
     ctaBody: "Wosool members can showcase their companies inside the network and benefit from warmer introductions and more targeted collaborations.",
     cta: "Apply to join",
   },
-  fr: {
-    badge: "Member Companies",
-    title: "Companies built by Wosool members",
-    description: "Discover startups and growth companies founded by members of the Wosool network across different sectors and markets.",
-    stats: ["Actively hiring", "Fundraising", "Open to collaborate"],
-    directoryEyebrow: "Directory",
-    directoryTitle: "All companies",
-    searchPlaceholder: "Search by company or sector",
-    searchAria: "Search companies",
-    sectors: ["All sectors", "Fintech", "HealthTech", "B2B SaaS", "Logistics", "FoodTech", "HRTech"],
-    stages: ["All stages", "Pre-seed", "Seed", "Series A", "Scale-up"],
-    hiringTitle: "Companies hiring now",
-    fundraisingTitle: "Companies currently fundraising",
-    ctaTitle: "Add your company to the network",
-    ctaBody: "Wosool members can showcase their companies inside the network and benefit from warmer introductions and more targeted collaborations.",
-    cta: "Apply to join",
-  },
 }
 
 export const eventsPageCopy: Record<Locale, {
@@ -583,22 +541,6 @@ export const eventsPageCopy: Record<Locale, {
     memberCta: "قدّم للانضمام",
   },
   en: {
-    badge: "Events Calendar",
-    title: "Meet founders who share the same level of intent",
-    description: "From private dinners to focused virtual sessions, Wosool events are designed to create deeper conversations and more useful relationships.",
-    tabs: ["All events", "Virtual", "In person", "Members only"],
-    eyebrow: "Upcoming",
-    heading: "All events",
-    virtualTitle: "Virtual events",
-    inPersonTitle: "In-person events",
-    ctaTitle: "Have an event idea for the community?",
-    ctaBody: "Wosool members can suggest or host events with the team. Share the concept and we'll help evaluate and shape it.",
-    cta: "Suggest an event",
-    memberTitle: "Join for access to private events",
-    memberBody: "A large part of the Wosool calendar is reserved for members. Join the network for priority access and private invitations.",
-    memberCta: "Apply to join",
-  },
-  fr: {
     badge: "Events Calendar",
     title: "Meet founders who share the same level of intent",
     description: "From private dinners to focused virtual sessions, Wosool events are designed to create deeper conversations and more useful relationships.",
@@ -678,28 +620,6 @@ export const programsPageCopy: Record<Locale, {
     ctaBody: "Join Wosool for priority access to upcoming cohorts, programs, and the support layer that matches your stage.",
     cta: "Apply to join",
   },
-  fr: {
-    badge: "Programs",
-    title: "Structured support for every stage",
-    description: "From onboarding to fundraising readiness, Wosool programs are built to give founders what they actually need at the right time.",
-    categories: ["All programs", "Onboarding", "Peer learning", "Growth", "Fundraising"],
-    openEyebrow: "Open now",
-    openTitle: "Programs accepting applications",
-    openBody: "These programs are currently open for the current or upcoming cohort.",
-    laterEyebrow: "Later",
-    laterTitle: "Programs opening soon",
-    laterBody: "Follow these programs and prepare for the next application window.",
-    workflowEyebrow: "How it works",
-    workflowTitle: "Programs designed around founder needs",
-    workflowSteps: [
-      { step: "Apply", desc: "Choose the right program and submit a short application explaining your stage, need, and goal." },
-      { step: "Join your cohort", desc: "We assemble focused groups with strong relevance between members." },
-      { step: "Move with momentum", desc: "Use the sessions, practical milestones, and ongoing support after the program ends." },
-    ],
-    ctaTitle: "Ready to accelerate?",
-    ctaBody: "Join Wosool for priority access to upcoming cohorts, programs, and the support layer that matches your stage.",
-    cta: "Apply to join",
-  },
 }
 
 export const partnersPageCopy: Record<Locale, {
@@ -737,23 +657,6 @@ export const partnersPageCopy: Record<Locale, {
     cta: "تواصل معنا",
   },
   en: {
-    badge: "Partners & Supporters",
-    title: "Partners that support founders with real depth",
-    description: "Wosool works with institutions and ecosystem players that bring practical expertise, meaningful access, and long-term credibility to the community.",
-    types: ["Ecosystem partner", "Knowledge partner", "Community partner", "Strategic support"],
-    sectionEyebrow: "Our partners",
-    sectionTitle: "Organizations behind the network's value",
-    accessEyebrow: "Partner sessions",
-    accessTitle: "Direct access to specialist expertise",
-    accessBody: "Wosool members can book focused sessions with selected partners for legal, financial, or strategic support.",
-    accessTopics: ["Legal & compliance", "Financial advisory", "Strategic growth"],
-    accessHint: "Available to members based on announced schedules",
-    accessCta: "Sign in to book",
-    ctaTitle: "Interested in partnering with Wosool?",
-    ctaBody: "If your organization can genuinely support founders through expertise, access, or high-value services, we'd love to start the conversation.",
-    cta: "Contact us",
-  },
-  fr: {
     badge: "Partners & Supporters",
     title: "Partners that support founders with real depth",
     description: "Wosool works with institutions and ecosystem players that bring practical expertise, meaningful access, and long-term credibility to the community.",
@@ -856,64 +759,6 @@ export const sponsorsPageCopy: Record<Locale, {
     tierOptions: ["بلاتيني", "ذهبي", "فضي", "أحتاج إلى توصية"],
   },
   en: {
-    badge: "Sponsorship",
-    title: "High-trust access to Gulf founders",
-    description: "Sponsoring Wosool gives your organization meaningful visibility with a curated group of serious founders inside a trusted, decision-relevant environment.",
-    stats: [
-      { value: "250+", label: "Verified founders" },
-      { value: "SAR 500M+", label: "Capital raised by members" },
-      { value: "15", label: "Markets represented" },
-      { value: "85%", label: "Decision makers" },
-    ],
-    currentEyebrow: "Current sponsors",
-    currentTitle: "Organizations we're proud to feature",
-    tiersEyebrow: "Sponsorship tiers",
-    tiersTitle: "Choose the right level of presence",
-    tiers: [
-      {
-        name: "Platinum",
-        benefits: [
-          "Primary visual presence across the program or event materials and channels.",
-          "Priority visibility in major events and selected community initiatives.",
-          "Private invitations to high-value founder gatherings.",
-          "Regular visibility in newsletters and relevant editorial assets.",
-          "Access to curated introduction opportunities within a structured framework.",
-        ],
-      },
-      {
-        name: "Gold",
-        benefits: [
-          "Clear visibility on the site and across sponsored event materials.",
-          "Participation in selected events throughout the year.",
-          "Recurring placement in newsletters or community content.",
-          "Inclusion across partner and sponsor surfaces.",
-        ],
-      },
-      {
-        name: "Silver",
-        benefits: [
-          "Listed on the site within the sponsor category.",
-          "Opportunity for sponsored content or introductory brand presence when relevant.",
-          "Presence across sponsor-facing community surfaces.",
-        ],
-      },
-    ],
-    formEyebrow: "Contact us",
-    formTitle: "Sponsorship inquiry",
-    formLabels: {
-      orgName: "Organization name",
-      orgPlaceholder: "Company or institution name",
-      contactName: "Contact name",
-      contactPlaceholder: "Full name",
-      email: "Email",
-      tier: "Tier of interest",
-      message: "Additional details",
-      messagePlaceholder: "Tell us about your sponsorship goals and the kind of presence you're looking for.",
-      submit: "Send inquiry",
-    },
-    tierOptions: ["Platinum", "Gold", "Silver", "I need a recommendation"],
-  },
-  fr: {
     badge: "Sponsorship",
     title: "High-trust access to Gulf founders",
     description: "Sponsoring Wosool gives your organization meaningful visibility with a curated group of serious founders inside a trusted, decision-relevant environment.",

@@ -76,41 +76,6 @@ const footerCopy = {
     terms: "Terms of Use",
     contact: "Contact",
   },
-  fr: {
-    description:
-      "Un réseau sélectif pour fondateurs, opérateurs, investisseurs et partenaires qui bâtissent des entreprises ambitieuses en Arabie saoudite et dans le Golfe.",
-    columns: {
-      Plateforme: [
-        { href: "/founders", label: "Réseau des membres" },
-        { href: "/founders/companies", label: "Entreprises des membres" },
-        { href: "/events", label: "Événements" },
-        { href: "/apply", label: "Postuler" },
-      ],
-      Programmes: [
-        { href: "/programs", label: "Tous les programmes" },
-        { href: "/programs#founder-circles", label: "Cercles de fondateurs" },
-        { href: "/programs#growth-track", label: "Parcours croissance" },
-        { href: "/programs#fundraising", label: "Préparation à la levée" },
-      ],
-      Communauté: [
-        { href: "/news", label: "Actualités & insights" },
-        { href: "/partners", label: "Partenaires" },
-        { href: "/sponsors", label: "Sponsors" },
-        { href: "/contact", label: "Contact" },
-      ],
-      Société: [
-        { href: "/about", label: "À propos de Wosool" },
-        { href: "/about#principles", label: "Nos principes" },
-        { href: "/about#team", label: "Équipe dirigeante" },
-        { href: "/contact", label: "Nous contacter" },
-      ],
-    },
-    tagline: "Réseau privé de fondateurs",
-    copyright: "Tous droits réservés.",
-    privacy: "Confidentialité",
-    terms: "Conditions d’utilisation",
-    contact: "Contact",
-  },
 } as const
 
 export function Footer() {

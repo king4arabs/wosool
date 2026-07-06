@@ -14,6 +14,8 @@
     "build:frontend": "npm --prefix frontend run build",
     "build:backend": "npm --prefix backend run build",
     "lint": "npm --prefix frontend run lint",
+    "type-check": "npm --prefix frontend run type-check",
+    "validate:entrepreneurs": "npm --prefix frontend run validate:entrepreneurs",
     "test": "composer --working-dir=backend run test",
     "verify": "npm run lint && npm run build && npm run test",
     "dev": "./scripts/run-app.sh",

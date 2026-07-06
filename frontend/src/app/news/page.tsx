@@ -42,27 +42,12 @@ const pageCopy = {
       { value: "100%",label: "Founder-focused" },
     ],
   },
-  fr: {
-    badge:       "Insights",
-    eyebrow:     "Contenu analytique de l'écosystème",
-    title:       "Des analyses utiles pour les fondateurs",
-    highlight:   "fondateurs",
-    description: "Signaux marché, décisions de croissance et mises à jour fiables pour une exécution plus claire.",
-    latestLabel: "Dernières parutions",
-    read:        "Lire l'article",
-    featured:    "À la une",
-    metrics: [
-      { value: "12+", label: "Analyses"         },
-      { value: "4",   label: "Axes de croissance"},
-      { value: "100%",label: "Orienté fondateurs"},
-    ],
-  },
 } as const
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 function formatDate(dateStr: string, locale: string) {
   return new Date(dateStr).toLocaleDateString(
-    locale === "ar" ? "ar-SA" : locale === "fr" ? "fr-FR" : "en-US",
+    locale === "ar" ? "ar-SA" : "en-US",
     { year: "numeric", month: "short", day: "numeric" }
   )
 }

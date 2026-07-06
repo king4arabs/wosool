@@ -38,6 +38,7 @@ export default function AdminIntrosPage() {
   }
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- async data fetch; state updates happen after await
     void load()
   }, [])
 

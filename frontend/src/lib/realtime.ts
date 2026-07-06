@@ -25,19 +25,17 @@ export function getEcho(token?: string) {
     forceTLS: scheme === "https",
     enabledTransports: ["ws", "wss"],
     authEndpoint: `${env.apiUrl}/broadcasting/auth`,
-    auth: token
-      ? {
-          headers: {
+    auth: {
+      headers: token
+        ? {
             Authorization: `Bearer ${token}`,
             Accept: "application/json",
-          },
-        }
-      : {
-          headers: {
+          }
+        : {
             Accept: "application/json",
           },
-          withCredentials: true,
-        },
+    },
+    ...(token ? {} : { withCredentials: true }),
   })
 
   return echoInstance
