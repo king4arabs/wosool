@@ -12,7 +12,7 @@ npm run dev
 ```
 
 The app expects the Laravel backend to be available for live API-backed routes such as authentication, profile management, event RSVP, and program applications.
-For local development, the backend now defaults to a MySQL database defined in `backend/.env`.
+For local development, the backend defaults to SQLite; run `npm run setup` at the repository root before starting both services. The Cairo and Manrope fonts are bundled locally, so production builds do not need access to Google Fonts.
 
 ## Key Notes
 
