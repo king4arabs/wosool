@@ -11,7 +11,11 @@ class PartnerResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'name' => $this->name,
+            'name' => (app()->getLocale() === 'ar' ? $this->name_ar : $this->name_en) ?: $this->name,
+            'name_ar' => $this->name_ar, 'name_en' => $this->name_en,
+            'identity_status' => $this->identity_status, 'asset_status' => $this->asset_status, 'designation_status' => $this->designation_status,
+            'logo_source_url' => $this->logo_source_url,
+            'approval_note' => $this->when($request->is('api/v1/admin/*'), $this->approval_note),
             'slug' => $this->slug,
             'description' => $this->description,
             'logo_url' => $this->logo_url,

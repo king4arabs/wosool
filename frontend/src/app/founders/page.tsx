@@ -6,7 +6,7 @@ import { Search, SlidersHorizontal, ArrowLeft, ArrowRight } from "lucide-react"
 import { PublicLayout } from "@/components/layout/PublicLayout"
 import { FounderCard } from "@/components/sections/FounderCard"
 import { Button } from "@/components/ui/button"
-import { foundersPageCopy, getSeedFounders, localizeFounder } from "@/data/localized-seed"
+import { foundersPageCopy, localizeFounder } from "@/data/localized-seed"
 import { getCollectionItems, type ApiFounder, fetchJson, mapFounder, type WrappedResponse } from "@/lib/content-api"
 import { useLocale } from "@/lib/locale"
 import type { Founder, PaginatedResponse } from "@/types"
@@ -14,7 +14,7 @@ import type { Founder, PaginatedResponse } from "@/types"
 export default function FoundersPage() {
   const { locale, direction } = useLocale()
   const copy = foundersPageCopy[locale]
-  const [founders, setFounders] = useState<Founder[]>(() => getSeedFounders(locale))
+  const [founders, setFounders] = useState<Founder[]>([])
   const [search, setSearch] = useState("")
   const [sector, setSector] = useState(copy.sectors[0])
   const [stage, setStage] = useState(copy.stages[0])
@@ -23,7 +23,7 @@ export default function FoundersPage() {
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect -- reset directory state when the locale changes
-    setFounders(getSeedFounders(locale))
+    setFounders([])
     setSector(copy.sectors[0])
     setStage(copy.stages[0])
     setLocation(copy.locations[0])
@@ -34,9 +34,9 @@ export default function FoundersPage() {
       try {
         const response = await fetchJson<PaginatedResponse<ApiFounder> | WrappedResponse<ApiFounder[]>>("/api/v1/founders")
         const items = getCollectionItems(response).map((item) => localizeFounder(mapFounder(item), locale))
-        if (items.length > 0) setFounders(items)
+        setFounders(items)
       } catch {
-        // seeded fallback stays
+        // No invented fallback records.
       }
     }
     void fetchFounders()
@@ -84,23 +84,7 @@ export default function FoundersPage() {
             {copy.description}
           </p>
 
-          {/* Stats */}
-          <div className="flex flex-wrap items-center justify-center gap-3 mt-8">
-            {[
-              locale === "ar" ? "250+ مؤسس موثّق" : "250+ verified founders",
-              locale === "ar" ? "10+ قطاع"        : "10+ sectors",
-              locale === "ar" ? "6 دول خليجية"    : "6 GCC countries",
-            ].map((chip) => (
-              <div
-                key={chip}
-                className="inline-flex items-center gap-1.5 bg-white border border-slate-200/80 px-3 py-1.5 rounded-full text-xs font-bold text-slate-600"
-                style={{ boxShadow: "0 2px 8px -2px rgba(59,82,212,0.06)" }}
-              >
-                <span className="w-1.5 h-1.5 rounded-full bg-[#3B52D4]" />
-                {chip}
-              </div>
-            ))}
-          </div>
+
         </div>
       </section>
 

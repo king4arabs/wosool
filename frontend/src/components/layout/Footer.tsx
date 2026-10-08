@@ -18,9 +18,9 @@ const footerCopy = {
       ],
       "البرامج": [
         { href: "/programs", label: "جميع البرامج" },
-        { href: "/programs/founder-circles", label: "دوائر المؤسسين" },
-        { href: "/programs/growth-track", label: "مسار النمو" },
-        { href: "/programs/fundraising-readiness", label: "الجاهزية للاستثمار" },
+        { href: "/accelerator", label: "EO Accelerator" },
+        { href: "/opportunities", label: "فرص ريادة الأعمال" },
+        { href: "/accelerator#eligibility", label: "معايير الملاءمة" },
       ],
       "المجتمع": [
         { href: "/news", label: "الأخبار والرؤى" },
@@ -53,9 +53,9 @@ const footerCopy = {
       ],
       Programs: [
         { href: "/programs", label: "All programs" },
-        { href: "/programs/founder-circles", label: "Founder circles" },
-        { href: "/programs/growth-track", label: "Growth track" },
-        { href: "/programs/fundraising-readiness", label: "Fundraising readiness" },
+        { href: "/accelerator", label: "EO Accelerator" },
+        { href: "/opportunities", label: "Entrepreneurship opportunities" },
+        { href: "/accelerator#eligibility", label: "Eligibility criteria" },
       ],
       Community: [
         { href: "/news", label: "News & insights" },

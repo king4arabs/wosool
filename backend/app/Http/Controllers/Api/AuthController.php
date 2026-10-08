@@ -10,9 +10,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Schema;
-use Throwable;
 use Illuminate\Validation\Rules\Password;
 use Illuminate\Validation\ValidationException;
+use Throwable;
 
 class AuthController extends Controller
 {
@@ -187,6 +187,7 @@ class AuthController extends Controller
             'email' => $user->email,
             'role_token' => $roleToken !== '' ? $roleToken : null,
             'is_admin' => $isAdmin,
+            'is_accelerator_applicant' => (bool) $user->is_accelerator_applicant,
             'email_verified_at' => array_key_exists('email_verified_at', $attributes)
                 ? $user->email_verified_at?->toIso8601String()
                 : null,

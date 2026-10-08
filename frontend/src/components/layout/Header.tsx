@@ -14,16 +14,16 @@ const headerCopy = {
   ar: {
     navLinks: [
       { href: "/", label: "الرئيسية" },
-      { href: "/programs", label: "البرامج" },
+      { href: "/accelerator", label: "EO Accelerator" },
+      { href: "/opportunities", label: "فرص ريادة الأعمال" },
       { href: "/founders", label: "الأعضاء" },
-      { href: "/entrepreneurs", label: "روّاد الأعمال" },
       { href: "/events", label: "الفعاليات" },
       { href: "/partners", label: "الشركاء" },
       { href: "/news", label: "الرؤى" },
     ],
     tagline: "من مؤسس إلى مؤسس",
     login: "تسجيل الدخول",
-    apply: "قدّم للانضمام",
+    apply: "قدّم للمسرّعة",
     dashboard: "لوحة التحكم",
     languageLabel: "اللغة",
     navigation: "التنقل الرئيسي",
@@ -33,16 +33,16 @@ const headerCopy = {
   en: {
     navLinks: [
       { href: "/", label: "Home" },
-      { href: "/programs", label: "Programs" },
+      { href: "/accelerator", label: "EO Accelerator" },
+      { href: "/opportunities", label: "Opportunities" },
       { href: "/founders", label: "Members" },
-      { href: "/entrepreneurs", label: "Entrepreneurs" },
       { href: "/events", label: "Events" },
       { href: "/partners", label: "Partners" },
       { href: "/news", label: "Insights" },
     ],
     tagline: "Private founders network",
     login: "Login",
-    apply: "Apply to join",
+    apply: "Apply to Accelerator",
     dashboard: "Dashboard",
     languageLabel: "Language",
     navigation: "Main navigation",
@@ -212,7 +212,7 @@ export function Header() {
                   size="sm"
                   className="rounded-xl bg-[#3B52D4] hover:bg-[#2E44C8] text-white text-xs font-bold shadow-md shadow-[#3B52D4]/20"
                 >
-                  <Link href="/dashboard">{copy.dashboard}</Link>
+                  <Link href={user?.isAdmin ? "/admin" : user?.roles?.includes("accelerator-reviewer") ? "/review" : user?.is_accelerator_applicant ? "/accelerator/apply" : "/dashboard"}>{copy.dashboard}</Link>
                 </Button>
               </>
             ) : (
@@ -228,7 +228,7 @@ export function Header() {
                   size="sm"
                   className="rounded-xl bg-[#3B52D4] hover:bg-[#2E44C8] text-white text-xs font-bold shadow-md shadow-[#3B52D4]/20"
                 >
-                  <Link href="/apply">{copy.apply}</Link>
+                  <Link href="/accelerator/apply">{copy.apply}</Link>
                 </Button>
               </>
             )}
@@ -283,7 +283,7 @@ export function Header() {
                   size="sm"
                   className="w-full rounded-xl bg-[#3B52D4] hover:bg-[#2E44C8] text-white font-bold"
                 >
-                  <Link href="/dashboard" onClick={() => setIsMenuOpen(false)}>
+                  <Link href={user?.isAdmin ? "/admin" : user?.roles?.includes("accelerator-reviewer") ? "/review" : user?.is_accelerator_applicant ? "/accelerator/apply" : "/dashboard"} onClick={() => setIsMenuOpen(false)}>
                     {copy.dashboard}
                   </Link>
                 </Button>
@@ -301,7 +301,7 @@ export function Header() {
                     size="sm"
                     className="w-full rounded-xl bg-[#3B52D4] hover:bg-[#2E44C8] text-white font-bold"
                   >
-                    <Link href="/apply" onClick={() => setIsMenuOpen(false)}>
+                    <Link href="/accelerator/apply" onClick={() => setIsMenuOpen(false)}>
                       {copy.apply}
                     </Link>
                   </Button>

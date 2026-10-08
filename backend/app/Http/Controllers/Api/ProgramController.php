@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
@@ -59,7 +60,7 @@ class ProgramController extends Controller
 
     public function show(string $slug): JsonResponse
     {
-        $program = Program::with(['cohorts', 'sessions', 'resources'])->where('slug', $slug)->firstOrFail();
+        $program = Program::with(['resources' => fn ($q) => $q->where('visibility', 'public')->where('is_archived', false)])->where('slug', $slug)->whereIn('visibility', ['public', 'members_only', 'founder_only'])->firstOrFail();
 
         AnalyticsEvent::track(
             eventName: 'program_viewed',

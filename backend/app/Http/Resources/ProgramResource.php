@@ -15,6 +15,7 @@ class ProgramResource extends JsonResource
             if (! array_key_exists($key, $attributes)) {
                 return $fallback;
             }
+
             return $this->resource->{$key} ?? $fallback;
         };
 
@@ -53,9 +54,9 @@ class ProgramResource extends JsonResource
             'eligibility_criteria' => $get('eligibility_criteria', []),
             'application_process' => $get('application_process', []),
             'faqs' => $get('faqs', []),
-            'targeting_rules' => $get('targeting_rules', []),
-            'ai_settings' => $get('ai_settings', []),
-            'settings' => $get('settings', []),
+            'targeting_rules' => $this->when($request->is('api/v1/admin/*'), fn () => $get('targeting_rules', [])),
+            'ai_settings' => $this->when($request->is('api/v1/admin/*'), fn () => $get('ai_settings', [])),
+            'settings' => $this->when($request->is('api/v1/admin/*'), fn () => $get('settings', [])),
             'cohorts_count' => $this->whenCounted('cohorts'),
             'applications_count' => $this->whenCounted('applications'),
             'cohorts' => $this->whenLoaded('cohorts', fn () => $this->cohorts->map(fn ($cohort) => [

@@ -1,5 +1,16 @@
 # Changelog
 
+## EO Accelerator gateway — 2026-10-08
+
+- Add bilingual discovery, verified applicant accounts, server-saved multi-step applications, review/audit lifecycle, onboarding and cohort resources.
+- Add reviewer/admin operations for cohorts, sessions, attendance, mentor assignments and milestones.
+- Add 18 source-backed ecosystem entries with preview/import/provenance/editorial review and historical opportunity handling.
+- Prepare requested partner order and three unmodified official assets behind identity/designation/asset approval.
+- Remove fictional public fallback records and fixed membership/program counts from affected routes.
+- Add private response headers, readiness checks, privacy request handling and release/recovery documentation.
+- Deployment requires existing host access and the documented staging, email, policy and browser gates.
+
+
 All notable changes to **Wosool** are documented here.
 
 This project follows **Semantic Versioning** and a Keep a Changelog-inspired format.

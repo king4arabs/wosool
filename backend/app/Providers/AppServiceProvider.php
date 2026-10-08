@@ -23,11 +23,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        ResetPassword::createUrlUsing(fn ($user, string $token) =>
-            rtrim(config('app.frontend_url'), '/').'/reset-password?'.http_build_query([
-                'token' => $token,
-                'email' => $user->getEmailForPasswordReset(),
-            ])
+        ResetPassword::createUrlUsing(fn ($user, string $token) => rtrim(config('app.frontend_url'), '/').'/reset-password?'.http_build_query([
+            'token' => $token,
+            'email' => $user->getEmailForPasswordReset(),
+        ])
         );
 
         // Enforce strict model behavior in non-production environments
@@ -46,9 +45,7 @@ class AppServiceProvider extends ServiceProvider
             DB::listen(function ($query) {
                 if ($query->time > 1000) {
                     logger()->warning('Slow query detected', [
-                        'sql' => $query->sql,
                         'time' => $query->time,
-                        'bindings' => $query->bindings,
                     ]);
                 }
             });

@@ -362,23 +362,7 @@ export default function ApplyPage() {
             تُراجع الطلبات بشكل مستمر. نستقبل المؤسسين في مراحل مختلفة، من البدايات المبكرة حتى من أسسوا وباعوا شركاتهم سابقًا.
           </p>
 
-          {/* Trust chips */}
-          <div className="flex flex-wrap items-center justify-center gap-3 mt-8">
-            {[
-              "250+ مؤسس",
-              "15+ برنامج",
-              "3 صناديق نشطة",
-            ].map((chip) => (
-              <div
-                key={chip}
-                className="inline-flex items-center gap-1.5 bg-white border border-slate-200/80 px-3 py-1.5 rounded-full text-xs font-bold text-slate-600"
-                style={{ boxShadow: "0 2px 8px -2px rgba(59,82,212,0.06)" }}
-              >
-                <span className="w-1.5 h-1.5 rounded-full bg-[#3B52D4]" />
-                {chip}
-              </div>
-            ))}
-          </div>
+
         </div>
       </section>
 

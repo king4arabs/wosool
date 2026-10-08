@@ -264,3 +264,10 @@ Read endpoints return JSON collections or objects. Submission endpoints return c
 ## Contract Evolution Guidance
 
 The API should continue evolving through backward-compatible additions where possible. Breaking contract changes should trigger a versioning review, an ADR entry, and a changelog update.
+
+
+## EO Accelerator gateway (2026-10-08)
+
+See `backend/routes/gateway.php` and [operations](ACCELERATOR_OPERATIONS.md). Public: `GET /api/v1/accelerator`, `POST /api/v1/accelerator/eligibility`, `GET /api/v1/ecosystem`, `GET /api/v1/ecosystem/{slug}`. New accounts: `POST /api/v1/auth/applicant-register`; authenticated verification/resend use `/auth/email/*`. Verified owners use `GET/PUT /applicant/application`, `POST /applicant/application/submit`, and `POST /applicant/application/onboard`. Save/transition bodies require the current revision; conflict returns 409.
+
+Assigned reviewers use `GET /review/accelerator` and `PATCH /review/accelerator/{application}`. Admin-only `/admin/accelerator/*` manages settings/resources/participants, while existing `/admin/programs/*` manages cohorts/sessions/attendance. `/admin/ecosystem` and `/admin/ecosystem/{record}` expose the editorial workflow. Applicants submit `/applicant/privacy-requests`; admins list/resolve through `/admin/privacy-requests`. All these paths have the `/api/v1` prefix. `GET /api/ready` is an unauthenticated, detail-free readiness check distinct from liveness.

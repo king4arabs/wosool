@@ -41,3 +41,9 @@ npm --prefix backend audit --audit-level=high
 - Canonical URLs, crawler exclusions, sitemap, and production asset delivery.
 
 Build and unit-test success do not establish browser rendering quality, actual SMTP delivery, or successful production deployment. Record those checks separately.
+
+## EO Accelerator regression coverage
+
+`AcceleratorGatewayTest` covers verified account creation, signed account-bound/expiring verification, private server-saved drafts and revision conflicts, complete review/information-request/onboarding lifecycle, assigned reviewer and final-decision boundaries, cohort isolation, configured eligibility, import preview/idempotency/editorial locks, partner approval, public resource privacy, privacy request handling, private cache headers/readiness, participant resources/mentors/milestones/attendance, notification completed-delivery deduplication and paused intake. Tests use in-memory SQLite with notification/mail fakes or mocks; no real applicant email is sent.
+
+Frontend gateway tests validate signed verification path handling. See [the release report](docs/EO_ACCELERATOR_RELEASE_2026-10-08.md) for actual results and [browser acceptance](docs/ACCELERATOR_OPERATIONS.md#browser-acceptance-gate) for the remaining hosted visual/email checks.

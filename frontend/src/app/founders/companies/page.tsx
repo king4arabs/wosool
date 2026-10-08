@@ -10,7 +10,6 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import {
   companiesPageCopy,
-  getSeedCompanies,
   localizeCompany,
 } from "@/data/localized-seed"
 import { getCollectionItems, type ApiCompany, fetchJson, mapCompany, type WrappedResponse } from "@/lib/content-api"
@@ -20,11 +19,8 @@ import type { Company, PaginatedResponse } from "@/types"
 export default function CompaniesPage() {
   const { locale } = useLocale()
   const copy = companiesPageCopy[locale]
-  const [companyItems, setCompanyItems] = useState<Company[]>(() => getSeedCompanies(locale))
+  const [companyItems, setCompanyItems] = useState<Company[]>([])
 
-  useEffect(() => {
-    setCompanyItems(getSeedCompanies(locale))
-  }, [locale])
 
   useEffect(() => {
     async function loadCompanies() {
@@ -35,7 +31,7 @@ export default function CompaniesPage() {
           setCompanyItems(items)
         }
       } catch {
-        // Seeded localized fallback stays in place.
+        // No invented fallback records.
       }
     }
 

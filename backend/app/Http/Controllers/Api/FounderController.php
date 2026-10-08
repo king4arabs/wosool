@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
@@ -11,7 +12,7 @@ class FounderController extends Controller
 {
     public function index(Request $request): JsonResponse
     {
-        $query = FounderProfile::with(['user', 'companies', 'scorecard'])
+        $query = FounderProfile::with(['user', 'companies' => fn ($q) => $q->where('is_public', true), 'scorecard'])
             ->where('status', 'active')
             ->where('is_public', true);
 
@@ -24,9 +25,9 @@ class FounderController extends Controller
         if ($request->has('search')) {
             $search = $request->search;
             $query->where(function ($q) use ($search) {
-                $q->whereHas('user', fn($u) => $u->where('name', 'like', "%{$search}%"))
-                  ->orWhere('tagline', 'like', "%{$search}%")
-                  ->orWhere('bio', 'like', "%{$search}%");
+                $q->whereHas('user', fn ($u) => $u->where('name', 'like', "%{$search}%"))
+                    ->orWhere('tagline', 'like', "%{$search}%")
+                    ->orWhere('bio', 'like', "%{$search}%");
             });
         }
         if ($request->boolean('featured')) {
@@ -44,7 +45,7 @@ class FounderController extends Controller
 
     public function show(string $slug): JsonResponse
     {
-        $founder = FounderProfile::with(['user', 'companies', 'scorecard'])
+        $founder = FounderProfile::with(['user', 'companies' => fn ($q) => $q->where('is_public', true), 'scorecard'])
             ->where('slug', $slug)
             ->where('is_public', true)
             ->firstOrFail();
