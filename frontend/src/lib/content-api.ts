@@ -1,3 +1,4 @@
+import { sessionFetch } from "./session-request"
 import type {
   Company,
   Event,
@@ -306,7 +307,7 @@ export function mapNewsItem(item: ApiNewsItem): NewsItem {
 }
 
 export async function fetchJson<T>(input: string, init?: RequestInit): Promise<T> {
-  const response = await fetch(input, {
+  const response = await sessionFetch(input, {
     ...init,
     headers: {
       Accept: "application/json",

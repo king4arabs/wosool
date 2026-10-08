@@ -74,7 +74,7 @@ class FounderProfileController extends Controller
 
         $profile->fill($data);
         $profile->save();
-        $profile->load(['companies', 'scorecard']);
+        $profile->load(['user', 'companies', 'scorecard']);
 
         return response()->json([
             'message' => $created ? __('messages.founder.profile_created') : __('messages.founder.profile_updated'),

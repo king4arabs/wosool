@@ -43,6 +43,10 @@ class EventResource extends JsonResource
         $discussionThreadId = $this->eventAttr('discussion_thread_id');
         $postEventRecap = $this->eventAttr('post_event_recap');
 
+        // These namespaces are protected by backend member/admin middleware.
+        $memberOrAdmin = $request->is('api/v1/member/*', 'api/v1/admin/*');
+        $admin = $request->is('api/v1/admin/*');
+
         return [
             'id' => $this->id,
             'title' => $this->title,
@@ -65,8 +69,8 @@ class EventResource extends JsonResource
             'category' => is_string($category) ? $category : null,
             'format' => $this->format,
             'mode' => is_string($mode) ? $mode : null,
-            'virtual_link' => $this->virtual_link,
-            'online_meeting_url' => is_string($onlineMeetingUrl) ? $onlineMeetingUrl : null,
+            'virtual_link' => $this->when($memberOrAdmin, $this->virtual_link),
+            'online_meeting_url' => $this->when($memberOrAdmin, is_string($onlineMeetingUrl) ? $onlineMeetingUrl : null),
             'image_url' => $this->image_url,
             'cover_image_url' => is_string($coverImageUrl) ? $coverImageUrl : null,
             'gallery_images' => is_array($galleryImages) ? $galleryImages : [],
@@ -87,13 +91,13 @@ class EventResource extends JsonResource
             'organizer_type' => is_string($organizerType) ? $organizerType : null,
             'organizer_name' => is_string($organizerName) ? $organizerName : null,
             'organizer_reference_id' => is_numeric($organizerReferenceId) ? (int) $organizerReferenceId : null,
-            'targeting_rules' => is_array($targetingRules) ? $targetingRules : [],
-            'invites' => is_array($invites) ? $invites : [],
+            'targeting_rules' => $this->when($admin, is_array($targetingRules) ? $targetingRules : []),
+            'invites' => $this->when($admin, is_array($invites) ? $invites : []),
             'featured_attendees' => is_array($featuredAttendees) ? $featuredAttendees : [],
             'sponsor_partner_blocks' => is_array($sponsorPartnerBlocks) ? $sponsorPartnerBlocks : [],
-            'ai_settings' => is_array($aiSettings) ? $aiSettings : [],
-            'rsvp_settings' => is_array($rsvpSettings) ? $rsvpSettings : [],
-            'discussion_thread_id' => is_string($discussionThreadId) ? $discussionThreadId : null,
+            'ai_settings' => $this->when($admin, is_array($aiSettings) ? $aiSettings : []),
+            'rsvp_settings' => $this->when($admin, is_array($rsvpSettings) ? $rsvpSettings : []),
+            'discussion_thread_id' => $this->when($memberOrAdmin, is_string($discussionThreadId) ? $discussionThreadId : null),
             'post_event_recap' => is_string($postEventRecap) ? $postEventRecap : null,
             'agenda' => $this->whenLoaded('agendaItems', fn () => $this->agendaItems->map(fn ($item) => [
                 'id' => $item->id,

@@ -12,6 +12,7 @@ class SubmissionEndpointsTest extends TestCase
     public function test_application_submission_succeeds_with_valid_payload(): void
     {
         $payload = [
+            'form_started_at' => (int) (microtime(true) * 1000) - 10000,
             'full_name' => 'Alya Al-Harbi',
             'email' => 'alya@example.com',
             'phone' => '+966500000000',

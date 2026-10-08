@@ -25,7 +25,7 @@ class MemberFounderProfileTest extends TestCase
 
     public function test_show_returns_404_when_no_profile_exists(): void
     {
-        $user = User::factory()->create();
+        $user = User::factory()->member()->create();
         $this->actingAs($user)
             ->getJson('/api/v1/member/founder-profile')
             ->assertNotFound();
@@ -33,7 +33,7 @@ class MemberFounderProfileTest extends TestCase
 
     public function test_update_creates_profile_when_missing(): void
     {
-        $user = User::factory()->create(['name' => 'Layla Test']);
+        $user = User::factory()->member()->create(['name' => 'Layla Test']);
 
         $response = $this->actingAs($user)->putJson('/api/v1/member/founder-profile', [
             'tagline' => 'Building the future',
@@ -47,7 +47,7 @@ class MemberFounderProfileTest extends TestCase
         $response
             ->assertCreated()
             ->assertJsonPath('data.tagline', 'Building the future')
-            ->assertJsonPath('data.user_id', $user->id);
+            ->assertJsonPath('data.user.id', $user->id);
 
         $this->assertDatabaseHas('founder_profiles', [
             'user_id' => $user->id,
@@ -57,7 +57,7 @@ class MemberFounderProfileTest extends TestCase
 
     public function test_update_modifies_existing_profile(): void
     {
-        $user = User::factory()->create();
+        $user = User::factory()->member()->create();
         FounderProfile::create([
             'user_id' => $user->id,
             'slug' => 'existing-founder',
@@ -79,7 +79,7 @@ class MemberFounderProfileTest extends TestCase
 
     public function test_update_validates_url_fields(): void
     {
-        $user = User::factory()->create();
+        $user = User::factory()->member()->create();
 
         $this->actingAs($user)
             ->putJson('/api/v1/member/founder-profile', ['linkedin_url' => 'not-a-url'])

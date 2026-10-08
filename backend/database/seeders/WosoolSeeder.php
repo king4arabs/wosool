@@ -22,6 +22,10 @@ class WosoolSeeder extends Seeder
 
     public function run(): void
     {
+        if (app()->environment('production')) {
+            throw new \RuntimeException('Demo accounts must not be seeded in production. Provision real users through the approved membership process.');
+        }
+
         $admin = User::firstOrCreate(
             ['email' => 'admin@wosool.org'],
             ['name' => 'Wosool Admin', 'password' => bcrypt(self::ADMIN_PASSWORD), 'email_verified_at' => now()]

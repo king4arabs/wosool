@@ -26,6 +26,10 @@ const nextConfig: NextConfig = {
   async headers() {
     return [
       {
+        source: "/:path(admin|dashboard|login|register|forgot-password|reset-password)/:rest*",
+        headers: [{ key: "X-Robots-Tag", value: "noindex, nofollow" }],
+      },
+      {
         source: "/(.*)",
         headers: [
           { key: "X-Frame-Options", value: "DENY" },
@@ -41,10 +45,14 @@ const nextConfig: NextConfig = {
           },
         ],
       },
+      {
+        source: "/reset-password",
+        headers: [{ key: "Referrer-Policy", value: "no-referrer" }, { key: "Cache-Control", value: "no-store" }],
+      },
     ];
   },
   async rewrites() {
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+    const apiUrl = (process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000").replace(/\/+$/, "");
     return [
       {
         source: "/api/:path*",

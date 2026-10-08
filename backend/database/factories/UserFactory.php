@@ -12,6 +12,13 @@ use Illuminate\Support\Str;
  */
 class UserFactory extends Factory
 {
+    public function member(): static
+    {
+        return $this->afterCreating(function (User $user): void {
+            $user->assignRole(\Spatie\Permission\Models\Role::findOrCreate('member', 'web'));
+        });
+    }
+
     /**
      * The current password being used by the factory.
      */

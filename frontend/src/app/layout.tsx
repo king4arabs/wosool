@@ -36,17 +36,21 @@ export const metadata: Metadata = {
   authors: [{ name: "Wosool", url: siteUrl }],
   creator: "Wosool",
   publisher: "Wosool",
+  icons: { icon: "/wosool-network-logo.png", apple: "/wosool-network-logo.png" },
   openGraph: {
     title: "وصول | شبكة خاصة للمؤسسين",
     description:
       "شبكة خاصة للمؤسسين الطموحين الذين يبنون شركات جادة في السعودية والخليج.",
-    url: siteUrl,
+    url: "./",
     siteName: "Wosool",
-    locale: "en_US",
+    locale: "ar_SA",
+    alternateLocale: ["en_US"],
+    images: [{ url: "/wosool-network-logo.png", alt: "Wosool | وصول" }],
     type: "website",
   },
   twitter: {
-    card: "summary_large_image",
+    card: "summary",
+    images: ["/wosool-network-logo.png"],
     title: "وصول | شبكة خاصة للمؤسسين",
     description:
       "شبكة خاصة للمؤسسين في السعودية والخليج.",
@@ -65,7 +69,7 @@ export const metadata: Metadata = {
     },
   },
   alternates: {
-    canonical: siteUrl,
+    canonical: "./",
   },
 };
 

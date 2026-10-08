@@ -4,15 +4,20 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class CompanyProfile extends Model
 {
+    use SoftDeletes;
+
     protected $fillable = [
         'name',
         'description',
         'website',
         'stage',
         'location',
+        'country_code',
+        'is_featured',
         'founded_year',
         'team_size',
         'is_hiring',
@@ -40,6 +45,7 @@ class CompanyProfile extends Model
             'is_fundraising' => 'boolean',
             'is_collaborating' => 'boolean',
             'is_public' => 'boolean',
+            'is_featured' => 'boolean',
             'created_at' => 'datetime',
             'updated_at' => 'datetime',
         ];

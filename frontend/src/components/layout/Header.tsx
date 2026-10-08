@@ -26,6 +26,9 @@ const headerCopy = {
     apply: "قدّم للانضمام",
     dashboard: "لوحة التحكم",
     languageLabel: "اللغة",
+    navigation: "التنقل الرئيسي",
+    openMenu: "فتح قائمة التنقل",
+    closeMenu: "إغلاق قائمة التنقل",
   },
   en: {
     navLinks: [
@@ -42,6 +45,9 @@ const headerCopy = {
     apply: "Apply to join",
     dashboard: "Dashboard",
     languageLabel: "Language",
+    navigation: "Main navigation",
+    openMenu: "Open navigation menu",
+    closeMenu: "Close navigation menu",
   },
 } as const
 
@@ -101,13 +107,34 @@ export function Header() {
   const { locale, setLocale, direction } = useLocale()
   const [isMenuOpen, setIsMenuOpen] = React.useState(false)
   const [isScrolled, setIsScrolled] = React.useState(false)
+  const menuButton = React.useRef<HTMLButtonElement>(null)
   const copy = headerCopy[locale]
+  const isActive = (href: string) => href === "/" ? pathname === "/" : pathname === href || pathname.startsWith(`${href}/`)
 
   React.useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 20)
+    handleScroll()
     window.addEventListener("scroll", handleScroll, { passive: true })
     return () => window.removeEventListener("scroll", handleScroll)
   }, [])
+
+  React.useEffect(() => {
+    if (!isMenuOpen) return
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setIsMenuOpen(false)
+        menuButton.current?.focus()
+      }
+    }
+    const desktop = window.matchMedia("(min-width: 1280px)")
+    const closeOnDesktop = () => { if (desktop.matches) setIsMenuOpen(false) }
+    window.addEventListener("keydown", closeOnEscape)
+    desktop.addEventListener("change", closeOnDesktop)
+    return () => {
+      window.removeEventListener("keydown", closeOnEscape)
+      desktop.removeEventListener("change", closeOnDesktop)
+    }
+  }, [isMenuOpen])
 
   return (
     <header
@@ -151,14 +178,15 @@ export function Header() {
           </Link>
 
           {/* Desktop nav */}
-          <nav className="hidden items-center gap-1 lg:flex" aria-label="Main navigation">
+          <nav className="hidden items-center gap-1 xl:flex" aria-label={copy.navigation}>
             {copy.navLinks.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
+                aria-current={isActive(link.href) ? "page" : undefined}
                 className={cn(
-                  "rounded-full px-4 py-2 text-xs font-bold transition-colors",
-                  pathname === link.href
+                  "rounded-full px-3 py-3 text-xs font-bold transition-colors",
+                  isActive(link.href)
                     ? "text-[#3B52D4]"
                     : "text-slate-600 hover:text-[#3B52D4]"
                 )}
@@ -169,7 +197,7 @@ export function Header() {
           </nav>
 
           {/* Desktop actions */}
-          <div className="hidden items-center gap-3 lg:flex">
+          <div className="hidden items-center gap-3 xl:flex">
             <LanguageSelect
               locale={locale}
               direction={direction}
@@ -208,10 +236,13 @@ export function Header() {
 
           {/* Mobile hamburger */}
           <button
-            className="p-2 text-slate-600 transition-colors hover:text-slate-900 lg:hidden"
+            ref={menuButton}
+            type="button"
+            className="flex h-11 w-11 items-center justify-center rounded-xl text-slate-600 transition-colors hover:bg-slate-100 hover:text-slate-900 xl:hidden"
             onClick={() => setIsMenuOpen((open) => !open)}
-            aria-label="Toggle navigation menu"
+            aria-label={isMenuOpen ? copy.closeMenu : copy.openMenu}
             aria-expanded={isMenuOpen}
+            aria-controls="mobile-navigation"
           >
             {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
           </button>
@@ -220,8 +251,8 @@ export function Header() {
 
       {/* Mobile menu */}
       {isMenuOpen && (
-        <div className="border-t border-slate-200 bg-white lg:hidden">
-          <nav className="space-y-1 px-4 py-4" aria-label="Mobile navigation">
+        <div id="mobile-navigation" className="max-h-[calc(100dvh-72px)] overflow-y-auto overscroll-contain border-t border-slate-200 bg-white shadow-lg xl:hidden">
+          <nav className="space-y-1 px-4 py-4" aria-label={copy.navigation}>
             <LanguageSelect
               locale={locale}
               direction={direction}
@@ -233,9 +264,10 @@ export function Header() {
               <Link
                 key={link.href}
                 href={link.href}
+                aria-current={isActive(link.href) ? "page" : undefined}
                 className={cn(
                   "block rounded-xl px-4 py-3 text-sm font-bold transition-colors",
-                  pathname === link.href
+                  isActive(link.href)
                     ? "bg-[#EEF1FF] text-[#3B52D4]"
                     : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
                 )}

@@ -81,7 +81,7 @@ return new class extends Migration
         if ($hasProfileCompleteness) {
             DB::table('scorecards')
                 ->where('support_delta', 0)
-                ->update(['support_delta' => DB::raw('GREATEST(0, 100 - profile_completeness)')]);
+                ->update(['support_delta' => DB::raw('CASE WHEN profile_completeness < 100 THEN 100 - profile_completeness ELSE 0 END')]);
         }
     }
 
