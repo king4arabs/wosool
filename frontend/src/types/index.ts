@@ -114,6 +114,7 @@ export interface NewsItem {
 }
 
 export interface User {
+  email_verified_at?: string | null;
   id: string
   email: string
   name: string

@@ -2,7 +2,9 @@
 
 [![CI](https://github.com/king4arabs/wosool/actions/workflows/ci.yml/badge.svg)](https://github.com/king4arabs/wosool/actions/workflows/ci.yml)
 
-**A founder-to-founder network for Saudi Arabia and the GCC.** Wosool brings together founder profiles, membership, introductions, programs, events, and a private community.
+**Founders to Founders.** Wosool is the digital gateway for **EO Riyadh Accelerator**, alongside its Saudi/GCC founder network. The Accelerator journey lives at **https://wosool.org/EOA**: discovery, eligibility, verified accounts, private applications, committee review, onboarding and participant development.
+
+**Saudi Founders. Global Connections. Extraordinary Growth.** Read the [EOA operating guide](docs/EOA.md) and [verified research register](docs/EOA-RESEARCH.md) before opening an intake.
 
 [Website](https://wosool.org) · [API reference](docs/API.md) · [Deployment guide](DEPLOYMENT.md) · [Security policy](SECURITY.md)
 
@@ -20,6 +22,8 @@ npm run setup
 npm run dev
 ```
 
+Install the closed/draft Accelerator and sourced organizations with `php backend/artisan eoa:install`. For email verification and notifications, run a queue worker from `backend/` with `php artisan queue:work --tries=5`; the default log mailer does not deliver email.
+
 Open [http://localhost:3000](http://localhost:3000). Check the API at [http://localhost:8000/api/health](http://localhost:8000/api/health). `npm run dev` starts both services on a Bash-compatible system; alternatively, use `npm run dev:frontend` and `npm run dev:backend` in separate terminals.
 
 `npm run setup` installs locked dependencies, creates `backend/.env` if absent, generates a Laravel key only if missing, creates the SQLite file, and runs migrations. It refuses to prepare a production environment and **does not seed demo accounts**. The frontend example environment points to the local API; update `frontend/.env.local` if your API runs elsewhere.
@@ -34,12 +38,13 @@ The supplied `backend/.env.example` selects SQLite. To use MySQL or PostgreSQL i
 
 | Surface | Capabilities |
 | --- | --- |
+| EO Accelerator `/EOA` | Bilingual discovery, USD/SAR self-check, private versioned applications and evidence, assigned review, onboarding, cohorts, learning, goals, coach workspace and audited operations |
 | Public site | Founder and company discovery, programs, events, news, contact and membership applications |
 | Member workspace | Profile and company management, event RSVPs, program applications, introductions, scorecards and community features |
 | Admin | Application review, member and content management, event/program administration and moderation |
 | Platform | Arabic/English interfaces, RTL/LTR support, responsive layouts, SEO metadata and optional realtime messaging |
 
-**Readiness:** This is a pre-launch product, not a claim that the live host or every integration is configured. Some directories use fallback or fictional showcase content; some screens remain Arabic-first. Password recovery requires a real mail transport to deliver messages (`MAIL_MAILER=log` does not send email). Check content and translations before public use.
+**Readiness:** This is a pre-launch product, not a claim that the live host or every integration is configured. Production seed fallbacks for founder/company/partner/sponsor/program/event/news lists are disabled. The separate entrepreneurs showcase is explicitly fictional; some legacy screens remain Arabic-first. EOA is bilingual, but browser and deployed-email checks are release requirements. Password recovery requires a real mail transport to deliver messages (`MAIL_MAILER=log` does not send email). Check content and translations before public use.
 
 ## How it works
 
@@ -66,7 +71,8 @@ Never commit real `.env` files, passwords, API keys, reset tokens, or database e
 | `APP_ENV`, `APP_DEBUG` | `production` and `false` on the live backend |
 | `APP_KEY` | Laravel encryption key; generate once, retain securely across releases |
 | `APP_URL` | Backend URL |
-| `FRONTEND_URL` | Frontend origin used to construct password reset links |
+| `FRONTEND_URL` | Frontend origin used for password reset and signed EOA verification links |
+| `NEXT_PUBLIC_ENABLE_DEMO_CONTENT` | Opt-in local fictional fallback content; ignored in production builds |
 | `DB_*` | Database connection settings |
 | `SANCTUM_STATEFUL_DOMAINS` | Frontend hosts, including local ports where applicable; no URL scheme |
 | `SESSION_DOMAIN`, `SESSION_SECURE_COOKIE` | Session cookie domain and HTTPS behavior appropriate to the deployment |
@@ -99,9 +105,12 @@ Run these from the repository root:
 
 ## Deployment and operations
 
-The Next.js server and Laravel API deploy separately; repository CI **does not deploy**. Follow [DEPLOYMENT.md](DEPLOYMENT.md) for configuration, release order, verification and rollback. Preserve `APP_KEY`, back up the database, configure real mail delivery and never run the demonstration seeder in production. Optional queue workers and Reverb must be configured and supervised independently.
+The Next.js server and Laravel API deploy separately; repository CI **does not deploy**. Follow [DEPLOYMENT.md](DEPLOYMENT.md) for configuration, release order, verification and rollback. Preserve `APP_KEY`, back up the database, configure real mail delivery and never run the demonstration seeder in production. EOA notification queue workers are required and must be supervised. Reverb remains optional. Keep EOA collection/intake closed until the local data notice, program decisions, roles and sending service are approved/configured.
 
 ## Documentation
+
+- [EOA operations](docs/EOA.md) — setup, roles, workflows, approvals, privacy, deployment and release checklist
+- [EOA research](docs/EOA-RESEARCH.md) — official requirements, factual corrections, organization sources and logos
 
 - [API reference](docs/API.md) — routes and authentication
 - [Architecture](ARCHITECTURE.md) — application boundaries

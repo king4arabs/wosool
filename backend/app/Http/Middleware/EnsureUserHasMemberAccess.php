@@ -16,6 +16,10 @@ class EnsureUserHasMemberAccess
             abort(response()->json(['message' => 'Authentication required.'], 401));
         }
 
+        if ($user->hasRole('eoa_applicant') && ! $user->hasAnyRole(['member','admin'])) {
+            abort(403, 'Use the EO Accelerator workspace. Wosool membership is separate.');
+        }
+
         $hasMemberRole = method_exists($user, 'hasRole') && ($user->hasRole('member') || $user->hasRole('admin'));
         $hasMemberToken = in_array((string) ($user->role_token ?? ''), ['founder', 'admin'], true);
 

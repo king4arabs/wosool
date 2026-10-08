@@ -4,13 +4,16 @@ import { useEffect, useMemo, useState } from "react"
 import Link from "next/link"
 import { ArrowLeft, ArrowRight, Clock, User, Sparkles, BookOpen, Zap } from "lucide-react"
 import { PublicLayout } from "@/components/layout/PublicLayout"
-import { newsItems } from "@/data/seed"
+import { newsItems as sampleNewsItems } from "@/data/seed"
+import { demoContentEnabled } from "@/lib/demo-content"
 import { fetchJson, getCollectionItems, mapNewsItem, type ApiNewsItem } from "@/lib/content-api"
 import { getLocalizedNewsContent } from "@/lib/news-content"
 import { useLocale } from "@/lib/locale"
 import type { NewsItem, PaginatedResponse } from "@/types"
 
 // ── i18n ──────────────────────────────────────────────────────────────────────
+const newsItems = demoContentEnabled ? sampleNewsItems : []
+
 const pageCopy = {
   ar: {
     badge:       "الرؤى",

@@ -40,9 +40,10 @@ const copy = {
   },
 }
 
-export function PasswordRecovery({ mode }: { mode: "forgot" | "reset" }) {
+export function PasswordRecovery({ mode, eoa = false }: { mode: "forgot" | "reset"; eoa?: boolean }) {
   const { locale, direction, setLocale } = useLocale()
   const t = copy[locale]
+  const Container = eoa ? "section" : "main"
   const params = useSearchParams()
   const token = params.get("token") || ""
   const [email, setEmail] = useState(mode === "reset" ? params.get("email") || "" : "")
@@ -72,10 +73,10 @@ export function PasswordRecovery({ mode }: { mode: "forgot" | "reset" }) {
   }
 
   return (
-    <main id="main-content" className="flex min-h-screen items-center justify-center bg-[#F5F7FF] px-4 py-12" dir={direction}>
+    <Container id={eoa ? "eoa-recovery" : "main-content"} className="flex min-h-screen items-center justify-center bg-[#F5F7FF] px-4 py-12" dir={direction}>
       <div className="w-full max-w-md">
         <div className="mb-8 flex items-center justify-between">
-          <Link href="/" aria-label={t.home} className="flex items-center gap-3 text-xl font-black text-slate-900">
+          <Link href={eoa ? "/EOA" : "/"} aria-label={t.home} className="flex items-center gap-3 text-xl font-black text-slate-900">
             <Image src="/wosool-network-logo.png" alt="" width={40} height={40} /> WOSOOL
           </Link>
           <button type="button" lang={locale === "ar" ? "en" : "ar"} onClick={() => setLocale(locale === "ar" ? "en" : "ar")} className="min-h-11 rounded-xl border border-slate-200 bg-white px-4 text-sm text-slate-700">
@@ -88,7 +89,7 @@ export function PasswordRecovery({ mode }: { mode: "forgot" | "reset" }) {
               <CheckCircle2 className="mx-auto h-12 w-12 text-[#3B52D4]" aria-hidden="true" />
               <h1 id="recovery-title" className="text-2xl font-bold text-slate-900">{mode === "reset" ? t.savedTitle : t.sentTitle}</h1>
               <p className="text-sm leading-7 text-slate-600">{mode === "reset" ? t.saved : t.sent}</p>
-              <Button asChild className="w-full"><Link href="/login">{t.back}</Link></Button>
+              <Button asChild className="w-full"><Link href={eoa ? "/EOA/account" : "/login"}>{t.back}</Link></Button>
               {mode === "forgot" && <button type="button" onClick={() => setComplete(false)} className="min-h-11 text-sm text-[#3B52D4]">{t.retry}</button>}
             </div>
           ) : (
@@ -97,7 +98,7 @@ export function PasswordRecovery({ mode }: { mode: "forgot" | "reset" }) {
               <h1 id="recovery-title" className="text-2xl font-bold text-slate-900">{mode === "reset" ? t.reset : t.forgot}</h1>
               <p id="password-guidance" className="mt-3 text-sm leading-7 text-slate-600">{mode === "reset" ? t.guidance : t.introduction}</p>
               {invalidLink ? (
-                <div className="mt-6 space-y-4"><p role="alert" className="text-sm text-red-700">{t.invalid}</p><Button asChild><Link href="/forgot-password">{t.retry}</Link></Button></div>
+                <div className="mt-6 space-y-4"><p role="alert" className="text-sm text-red-700">{t.invalid}</p><Button asChild><Link href={eoa ? "/EOA/forgot-password" : "/forgot-password"}>{t.retry}</Link></Button></div>
               ) : (
                 <form onSubmit={submit} className="mt-6 space-y-5" aria-busy={pending}>
                   <div className="space-y-2"><Label htmlFor="email">{t.email}</Label><Input id="email" name="email" type="email" dir="ltr" autoComplete="email" required maxLength={255} value={email} onChange={(e) => setEmail(e.target.value)} /></div>
@@ -109,11 +110,11 @@ export function PasswordRecovery({ mode }: { mode: "forgot" | "reset" }) {
                   <Button type="submit" disabled={pending} className="min-h-11 w-full">{pending && <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />}{pending ? t.pending : mode === "reset" ? t.save : t.send}</Button>
                 </form>
               )}
-              <Link href="/login" className="mt-6 block py-2 text-center text-sm text-[#3B52D4]">{t.back}</Link>
+              <Link href={eoa ? "/EOA/account" : "/login"} className="mt-6 block py-2 text-center text-sm text-[#3B52D4]">{t.back}</Link>
             </>
           )}
         </section>
       </div>
-    </main>
+    </Container>
   )
 }
