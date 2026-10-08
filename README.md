@@ -10,7 +10,7 @@
 
 **Prerequisites:** Node.js 22.12+ (22.x) or 24.x with npm; PHP 8.3+ with Composer 2 and the required extensions (`mbstring`, `dom`, `curl`, `pdo_sqlite`). The local setup uses SQLite and requires no database server.
 
-From the repository root:
+Clone the repository and start both services:
 
 ```bash
 git clone https://github.com/king4arabs/wosool.git
