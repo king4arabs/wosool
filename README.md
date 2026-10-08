@@ -77,7 +77,7 @@ Never commit real `.env` files, passwords, API keys, reset tokens, or database e
 
 Changing `NEXT_PUBLIC_*` settings requires rebuilding the frontend. After backend configuration changes, clear/rebuild Laravel's configuration cache as described in [DEPLOYMENT.md](DEPLOYMENT.md).
 
-## Development commands
+## Develop and verify
 
 Run these from the repository root:
 
@@ -88,34 +88,30 @@ Run these from the repository root:
 | `npm run dev:frontend` / `npm run dev:backend` | Start one application |
 | `npm run lint` | Frontend ESLint checks |
 | `npm run type-check` | TypeScript validation |
-| `npm run test:frontend` | Redirect, session/CSRF, and event-date regression tests |
+| `npm run test:frontend` | Frontend regression tests |
 | `npm run test:backend` | Laravel feature and unit tests |
 | `npm run test` | Both test suites |
 | `npm run validate:entrepreneurs` | Validate the demonstration directory dataset |
 | `npm run build` | Next.js production build and Laravel's Vite assets |
 | `npm run verify` | Lint, types, both test suites, data validation, and both builds |
 
-## Testing and CI
+[CI](.github/workflows/ci.yml) checks both apps on pushes to `main`, pull requests and manual runs, including dependency audits. Laravel tests use an in-memory SQLite database. See [TESTING.md](TESTING.md) for coverage and manual checks; passing CI does not establish browser quality, email delivery or production readiness.
 
-[CI](.github/workflows/ci.yml) runs on pushes to `main`, pull requests, and manual dispatch. It validates frontend lint/types/tests/data/build, audits production npm dependencies, and audits backend PHP/npm dependencies, runs backend tests, and builds backend assets. Backend tests use an isolated in-memory SQLite database from `backend/phpunit.xml`.
+## Deployment and operations
 
-See [TESTING.md](TESTING.md) for coverage and manual acceptance checks. An automated build or unit test is not a substitute for Arabic/English, mobile, email-delivery, and authenticated staging checks.
+The Next.js server and Laravel API deploy separately; repository CI **does not deploy**. Follow [DEPLOYMENT.md](DEPLOYMENT.md) for configuration, release order, verification and rollback. Preserve `APP_KEY`, back up the database, configure real mail delivery and never run the demonstration seeder in production. Optional queue workers and Reverb must be configured and supervised independently.
 
-The runtime is patched to Next.js 16.4.0. The existing ESLint 16.2.2 configuration and React Hooks 7.0.1 rules are retained so a runtime security update does not silently introduce a different lint policy across unrelated screens. Known development-only dependency advisories are recorded in [the review](docs/REVIEW_2026-10-08.md).
+## Documentation
 
-## Deployment
-
-Follow [DEPLOYMENT.md](DEPLOYMENT.md). Deploy the Laravel API and Next.js server as separate applications. The API requires its database, protected environment, writable Laravel storage, mail configuration, and optional workers. The frontend requires a Node.js process and a correct API origin.
-
-Deploy backend changes and migrations before exposing new frontend account-recovery routes. Do not run the demonstration seeder on production. Preserve `APP_KEY`, keep a database backup and prior release available, and verify real login, reset-link delivery, and health endpoints after rollout.
+- [API reference](docs/API.md) — routes and authentication
+- [Architecture](ARCHITECTURE.md) — application boundaries
+- [Testing](TESTING.md) — automated and manual checks
+- [Deployment](DEPLOYMENT.md) — production release procedure
+- [Security policy](SECURITY.md) — controls and private vulnerability reporting
+- [Changelog](CHANGELOG.md) and [roadmap](ROADMAP.md) — releases and planned work
 
 ## Contributing and support
 
-1. Start from current `main` and use a focused branch.
-2. Read [ARCHITECTURE.md](ARCHITECTURE.md), [SECURITY.md](SECURITY.md), and any applicable `AGENTS.md`.
-3. Include regression tests for meaningful behavior changes, and keep Arabic/English and RTL/LTR behavior in mind.
-4. Run the relevant checks, update documentation and the changelog, and open a pull request with the problem, solution, and validation results.
-
-Report ordinary bugs through [GitHub issues](https://github.com/king4arabs/wosool/issues). Include reproducible steps without personal data or secrets. Report security issues privately following [SECURITY.md](SECURITY.md).
+Use a focused branch from `main`. Include regression tests for behavior changes; check Arabic/English and RTL/LTR behavior, run relevant checks and describe validation in your pull request. Report bugs via [GitHub issues](https://github.com/king4arabs/wosool/issues) without personal data or secrets; report vulnerabilities privately via the [security policy](SECURITY.md).
 
 Licensed under the [MIT License](LICENSE).
