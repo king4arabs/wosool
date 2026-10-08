@@ -14,7 +14,7 @@ export function PublicLayout({ children }: PublicLayoutProps) {
   return (
     <div className="flex min-h-screen flex-col" dir={direction} lang={locale}>
       <Header />
-      <main id="main-content" className="flex-1 pt-16" role="main">
+      <main id="main-content" tabIndex={-1} className="min-w-0 flex-1 pt-[72px]">
         {children}
       </main>
       <Footer />

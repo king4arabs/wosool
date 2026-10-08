@@ -6,6 +6,8 @@ import Link from "next/link"
 import { Loader2, Eye, EyeOff } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { useAuth } from "@/lib/auth"
+import { safeRedirect } from "@/lib/navigation"
+import { sessionFetch } from "@/lib/session-request"
 
 export default function LoginPage() {
   const router = useRouter()
@@ -18,7 +20,7 @@ export default function LoginPage() {
   const [error, setError] = useState("")
   const [isSubmitting, setIsSubmitting] = useState(false)
 
-  const redirect = searchParams.get("redirect") || "/dashboard"
+  const redirect = safeRedirect(searchParams.get("redirect"))
 
   const handleSubmit = useCallback(
     async (e: React.FormEvent) => {
@@ -27,11 +29,10 @@ export default function LoginPage() {
       setIsSubmitting(true)
       try {
         await login(email, password)
-        const meRes = await fetch('/api/v1/auth/me', {
+        const meRes = await sessionFetch('/api/v1/auth/me', {
           credentials: 'include',
           headers: {
             Accept: 'application/json',
-            'X-Locale': window.localStorage.getItem('wosool-locale') || 'ar',
           },
         })
         const mePayload = await meRes.json().catch(() => null)

@@ -1,37 +1,23 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import Link from "next/link"
 import { PublicLayout } from "@/components/layout/PublicLayout"
 import { EventCard } from "@/components/sections/EventCard"
 import { Button } from "@/components/ui/button"
-import { eventsPageCopy, getSeedEvents, localizeEvent } from "@/data/localized-seed"
-import { getCollectionItems, type ApiEvent, fetchJson, mapEvent, type WrappedResponse } from "@/lib/content-api"
+import { eventsPageCopy } from "@/data/localized-seed"
+import { usePublicEvents } from "@/lib/use-public-events"
+import { isPastEvent } from "@/lib/event-time"
 import { useLocale } from "@/lib/locale"
-import type { Event, PaginatedResponse } from "@/types"
 
 export default function EventsPage() {
   const { locale } = useLocale()
   const copy = eventsPageCopy[locale]
-  const [events, setEvents] = useState<Event[]>(() => getSeedEvents(locale))
   const [activeTab, setActiveTab] = useState(0)
-
-  useEffect(() => {
-    setEvents(getSeedEvents(locale))
-  }, [locale])
-
-  useEffect(() => {
-    async function fetchEvents() {
-      try {
-        const response = await fetchJson<PaginatedResponse<ApiEvent> | WrappedResponse<ApiEvent[]>>("/api/v1/events")
-        const items = getCollectionItems(response).map((item) => localizeEvent(mapEvent(item), locale))
-        if (items.length > 0) setEvents(items)
-      } catch {
-        // seeded fallback stays
-      }
-    }
-    void fetchEvents()
-  }, [locale])
+  const [period, setPeriod] = useState<"upcoming" | "past">("upcoming")
+  const { events: allEvents, loading, error, retry } = usePublicEvents(period)
+  const events = allEvents.filter((event) => isPastEvent(event) === (period === "past"))
+    .sort((a, b) => period === "past" ? Date.parse(b.date) - Date.parse(a.date) : Date.parse(a.date) - Date.parse(b.date))
 
   const virtualEvents   = events.filter((e) =>  e.isVirtual)
   const inPersonEvents  = events.filter((e) => !e.isVirtual)
@@ -92,14 +78,21 @@ export default function EventsPage() {
 
       {/* ── Tab filter ── */}
       <div
-        className="sticky top-16 z-40 bg-white/90 backdrop-blur-md border-b border-slate-200/60 px-4 py-3.5"
+        className="sticky top-[72px] z-40 bg-white/90 backdrop-blur-md border-b border-slate-200/60 px-4 py-3.5"
         style={{ boxShadow: "0 2px 8px -2px rgba(15,22,40,0.04)" }}
       >
         <div className="mx-auto max-w-7xl">
+          <div className="mb-3 flex gap-2" aria-label={locale === "ar" ? "الفترة" : "Event period"}>
+            {(["upcoming", "past"] as const).map((value) => <button key={value} type="button" aria-pressed={period === value} onClick={() => setPeriod(value)} className={`min-h-11 rounded-xl px-4 text-sm font-bold ${period === value ? "bg-slate-900 text-white" : "bg-slate-100 text-slate-700"}`}>
+              {value === "upcoming" ? (locale === "ar" ? "الفعاليات القادمة" : "Upcoming events") : (locale === "ar" ? "الفعاليات السابقة" : "Past events")}
+            </button>)}
+          </div>
           <div className="flex items-center gap-2 overflow-x-auto scrollbar-none">
             {copy.tabs.map((tab, i) => (
               <button
                 key={tab}
+                type="button"
+                aria-pressed={activeTab === i}
                 onClick={() => setActiveTab(i)}
                 className="whitespace-nowrap rounded-full px-4 py-2 text-xs font-bold transition-all"
                 style={
@@ -124,16 +117,18 @@ export default function EventsPage() {
                 <span className="w-1.5 h-1.5 rounded-full bg-[#3B52D4] animate-pulse" />
                 {copy.eyebrow}
               </div>
-              <h2 className="text-2xl lg:text-3xl font-black text-slate-900 tracking-tight">{copy.heading}</h2>
+              <h2 className="text-2xl lg:text-3xl font-black text-slate-900 tracking-tight">{period === "past" ? (locale === "ar" ? "الفعاليات السابقة" : "Past events") : copy.heading}</h2>
             </div>
             <span className="shrink-0 text-xs font-bold text-slate-400 bg-slate-100 px-3 py-1 rounded-full">
               {filtered.length}
             </span>
           </div>
 
-          {filtered.length === 0 ? (
+          {loading ? <p role="status" className="py-12 text-center text-slate-600">{locale === "ar" ? "جارٍ تحميل الفعاليات…" : "Loading events…"}</p> : error ? (
+            <div className="rounded-2xl border border-slate-200 p-8 text-center"><p role="alert" className="text-slate-700">{locale === "ar" ? "تعذر تحميل الفعاليات. حاول مجددًا." : "Unable to load events. Please try again."}</p><Button type="button" onClick={retry} className="mt-4">{locale === "ar" ? "إعادة المحاولة" : "Try again"}</Button></div>
+          ) : filtered.length === 0 ? (
             <div className="flex items-center justify-center h-48 rounded-2xl border border-dashed border-slate-200 bg-slate-50">
-              <p className="text-sm text-slate-400 font-medium">
+              <p className="text-sm text-slate-600 font-medium">
                 {locale === "ar" ? "لا توجد فعاليات في هذه الفئة" : "No events in this category"}
               </p>
             </div>

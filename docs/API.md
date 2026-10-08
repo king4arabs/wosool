@@ -19,6 +19,9 @@ The Wosool API is exposed through the Laravel backend and organized around **pub
 
 | Method | Path | Auth | Purpose |
 |---|---|---|---|
+| GET | `/api/v1/auth/csrf-cookie` | No | Initialize the session CSRF cookie |
+| POST | `/api/v1/auth/forgot-password` | No | Request a recovery email (generic response) |
+| POST | `/api/v1/auth/reset-password` | No | Consume a recovery token and change the password |
 | POST | `/api/v1/auth/login` | No | Authenticate and start session |
 | POST | `/api/v1/auth/register` | No | Create account and start session |
 | POST | `/api/v1/auth/logout` | Yes | End session |
@@ -34,7 +37,8 @@ The Wosool API is exposed through the Laravel backend and organized around **pub
 | GET | `/api/v1/companies` | Paginated public companies |
 | GET | `/api/v1/companies/{slug}` | Single company |
 | GET | `/api/v1/events` | Public events listing |
-| GET | `/api/v1/events/{slug}` | Single event |
+| GET | `/api/v1/events/{slug}` | Single published public event |
+| GET | `/api/v1/events/{slug}/calendar.ics` | Calendar download for a published public event |
 | GET | `/api/v1/programs` | Program listing |
 | GET | `/api/v1/programs/{slug}` | Single program |
 | GET | `/api/v1/partners` | Partner listing |
@@ -72,7 +76,7 @@ The Wosool API is exposed through the Laravel backend and organized around **pub
 
 ## Member Workflows
 
-All member endpoints require an authenticated session (Sanctum SPA cookie). They are scoped under `/api/v1/member/*`.
+All member endpoints require an authenticated session (Sanctum SPA cookie) and an approved member/admin role. They are scoped under `/api/v1/member/*`.
 
 ### Founder Profile
 
@@ -103,11 +107,14 @@ POST /api/v1/member/companies
 
 ### Event RSVP
 
-```
-POST /api/v1/member/events/{slug}/rsvp     → { "message": "RSVP confirmed.", "status": "confirmed" }
+```http
+POST /api/v1/member/events/{slug}/rsvp
+Content-Type: application/json
+
+{ "attendance_type": "in_person", "calendar_sync_option": "none" }
 ```
 
-When the event reaches `max_attendees`, the next RSVP is automatically waitlisted (`status: "waitlisted"`). Repeat RSVPs from the same user are idempotent. `DELETE` on the same path cancels the RSVP.
+Attendance type is required (`in_person`, `online`, or `hybrid`). The response includes the registration state, such as `approved`, `pending_approval`, or `waitlisted`. Capacity and approval rules depend on event configuration. Ended, cancelled, closed, and ineligible events are rejected. Repeat registrations reuse the user's registration; `DELETE` on the same path marks it `cancelled_by_user`.
 
 ### Program Application
 
@@ -121,6 +128,30 @@ A user may apply at most once per program. Applications are rejected with `422` 
 ---
 
 ## Authentication
+
+### Session and CSRF
+
+Initialize `GET /api/v1/auth/csrf-cookie` before a browser session write. Include cookies, send `Accept: application/json`, and echo the URL-decoded `XSRF-TOKEN` cookie in the `X-XSRF-TOKEN` header on unsafe requests. First-party browser calls use the frontend `/api` proxy. Use `X-Locale: ar` or `X-Locale: en` for translated responses.
+
+### Password recovery
+
+```http
+POST /api/v1/auth/forgot-password
+Content-Type: application/json
+
+{ "email": "user@example.com" }
+```
+
+A syntactically valid email receives the same `200` message whether the account exists or the broker has already sent a link. A configured mail transport is required for delivery. Links use the configured `FRONTEND_URL`, not an incoming Host header.
+
+```http
+POST /api/v1/auth/reset-password
+Content-Type: application/json
+
+{ "email": "user@example.com", "token": "token-from-email", "password": "NewPassword1", "password_confirmation": "NewPassword1" }
+```
+
+Passwords require at least eight characters, uppercase and lowercase letters, and a number. Invalid/expired/used tokens return `422`; valid resets return `200`, rotate the remember token, and revoke database-backed sessions. Login is required after recovery. Both endpoints are limited to five requests per minute per client IP, with additional broker email throttling.
 
 ### Login
 
@@ -141,6 +172,8 @@ Content-Type: application/json
 
 ### Register
 
+Registration requires an approved membership application matching the email address. An accepted application provisions member access; an ordinary unapproved account cannot use member endpoints.
+
 ```
 POST /api/v1/auth/register
 Content-Type: application/json
@@ -152,7 +185,7 @@ Content-Type: application/json
 ```json
 {
   "message": "Account created successfully.",
-  "user": { "id": 2, "name": "User Name", "email": "user@example.com", "roles": [] }
+  "user": { "id": 2, "name": "User Name", "email": "user@example.com", "roles": ["member"] }
 }
 ```
 
@@ -171,13 +204,17 @@ Content-Type: application/json
 |---|---|
 | `/founders` | `search`, `stage`, `sector`, `featured`, `per_page` |
 | `/companies` | `search`, `stage`, `sector`, `featured`, `per_page` |
-| `/events` | `upcoming`, `type`, `per_page` |
+| `/events` | `period` (`upcoming`, `past`, `today`, `this_week`, `this_month`), `type`, `mode`, `format`, `q`, `category`, `tag`, `per_page` (1–100) |
 | `/programs` | `open` |
 | `/partners` | `type` |
 | `/news` | `category`, `featured`, `per_page` |
 | `/resources` | `type`, `category`, `members_only`, `per_page` |
 
 ---
+
+## Event visibility and dates
+
+Public list, detail, and calendar endpoints require public visibility and a published lifecycle state. Draft and private records return `404` on direct URLs. Internal invitations/settings and meeting join links are omitted from public JSON. Completed events are included in `period=past`; default/upcoming listings exclude them. `upcoming` uses the event end time, falling back to its start time, and sorts soonest first. `past` sorts most recent first.
 
 ## Response Notes
 
@@ -217,7 +254,7 @@ Read endpoints return JSON collections or objects. Submission endpoints return c
 | Control | Current state |
 |---|---|
 | Form Request validation | Implemented for submission endpoints |
-| Rate limiting | Implemented on public write endpoints (10/min) |
+| Rate limiting | Applications/contact/login: 10/min; registration/recovery: 5/min |
 | Authentication | Sanctum SPA sessions for protected endpoints |
 | RBAC | Spatie permissions with admin and member roles |
 | OpenAPI export | Planned |

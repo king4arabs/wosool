@@ -1,32 +1,30 @@
-# Security
+# Security policy
 
-## Security Posture
+## Reporting a vulnerability
 
-Wosool should be operated as a trust-sensitive platform because it handles founder identities, company information, inbound applications, and future member workflows. The immediate goal is to establish a practical baseline before launch.
+Report security issues privately to the repository owner using GitHub private vulnerability reporting when enabled. If that feature is unavailable, use the contact form at https://wosool.org/contact to request a private reporting channel. Do not include exploit details, credentials, personal data, or reset tokens in public issues.
 
-| Control area | Current state |
-|---|---|
-| Input validation | Implemented on public submission endpoints |
-| Public write throttling | Implemented |
-| Secret management | Manual and environment-driven |
-| CI security checks | Partial, to expand |
-| Auth and authorization | Planned |
-| Monitoring and alerting | Planned |
+## Implemented controls
 
----
+- Laravel Sanctum sessions and backend member/admin authorization.
+- Form Request validation and throttling for public submissions, login, registration, and password recovery.
+- Same-origin CSRF token handling in the shared frontend API clients.
+- Laravel password broker with hashed, expiring, single-use reset tokens and generic request responses. Successful recovery rotates remember tokens and revokes database-backed sessions.
+- Local-only demonstration seeding and idempotent local application-key preparation.
+- Company ownership checks and soft deletion; event visibility filtering and ended-event registration rejection.
+- Security response headers and no-index headers on account, member, and administrative pages.
+- Lockfiles, frontend production-dependency auditing in CI, and backend regression tests.
 
-## Immediate Security Priorities
+## Operating requirements
 
-| Priority | Reason |
-|---|---|
-| Ship CI/CD | Reduces uncontrolled regressions |
-| Maintain request validation coverage | Protects the public input surface |
-| Add security headers | Improves baseline browser protections |
-| Formalize secret handling | Reduces accidental leakage risk |
-| Prepare auth and RBAC rollout | Required before real user onboarding |
+Keep `APP_DEBUG=false` and HTTPS enabled in production. Store secrets outside source control, preserve `APP_KEY`, use least-privilege database accounts, configure a real mail provider, and restrict trusted hosts/proxies at the web server. A frontend redirect or robots exclusion is not an authorization control.
 
----
+The public repository includes known demonstration credentials inside development seeders. Never provision those accounts in production. Review any existing installation separately; the production seeder guard does not remove accounts that were created earlier.
 
-## Saudi and Enterprise Considerations
+Do not log application bodies, credentials, or password reset URLs. Configure monitoring, backups, recovery procedures, and retention controls for founder/application data. This document is an implementation guide, not a compliance certification.
 
-Security controls should align with Saudi trust expectations, enterprise partnership due diligence, and future PDPL-sensitive workflows. Bilingual policies, auditable operational procedures, and clear incident handling should be treated as product enablers rather than compliance afterthoughts.
+## Dependency maintenance
+
+Run `npm --prefix frontend audit --omit=dev` and `composer --working-dir=backend audit` for releases. Review development-tool advisories separately, and update dependencies through tested, compatible changes. Never force a framework downgrade merely to obtain a clean audit output.
+
+See [the October review](docs/REVIEW_2026-10-08.md) for the current audit and validation limitations.

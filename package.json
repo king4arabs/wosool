@@ -1,26 +1,31 @@
 {
   "name": "wosool",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "private": true,
   "description": "Wosool — Founders to Founders platform",
   "scripts": {
     "setup": "npm run setup:frontend && npm run setup:backend",
-    "setup:frontend": "npm --prefix frontend install",
-    "setup:backend": "composer --working-dir=backend install --no-interaction --no-progress && npm --prefix backend install && npm run backend:prepare",
+    "setup:frontend": "npm --prefix frontend ci",
+    "setup:backend": "composer --working-dir=backend install --no-interaction --no-progress && npm --prefix backend ci && npm run backend:prepare",
     "backend:prepare": "npm run backend:env && npm run backend:migrate",
-    "backend:env": "php -r \"file_exists('backend/.env') || copy('backend/.env.example', 'backend/.env'); if (preg_match('/^DB_CONNECTION=sqlite$/m', file_get_contents('backend/.env'))) { file_exists('backend/database/database.sqlite') || touch('backend/database/database.sqlite'); } if (preg_match('/^APP_KEY=\\s*$/m', file_get_contents('backend/.env'))) { passthru('php backend/artisan key:generate --force', $status); exit($status); }\"",
-    "backend:migrate": "php backend/artisan migrate --force",
+    "backend:env": "php scripts/prepare-backend.php",
+    "backend:migrate": "php backend/artisan migrate",
     "build": "npm run build:frontend && npm run build:backend",
     "build:frontend": "npm --prefix frontend run build",
     "build:backend": "npm --prefix backend run build",
     "lint": "npm --prefix frontend run lint",
     "type-check": "npm --prefix frontend run type-check",
     "validate:entrepreneurs": "npm --prefix frontend run validate:entrepreneurs",
-    "test": "composer --working-dir=backend run test",
-    "verify": "npm run lint && npm run build && npm run test",
+    "test": "npm run test:frontend && npm run test:backend",
+    "verify": "npm run lint && npm run type-check && npm run test && npm run validate:entrepreneurs && npm run build",
     "dev": "./scripts/run-app.sh",
     "dev:frontend": "npm --prefix frontend run dev",
-    "dev:backend": "composer --working-dir=backend run dev",
-    "ops:ssl:repair": "node scripts/ssl-repair.mjs"
+    "dev:backend": "php backend/artisan serve --host=127.0.0.1",
+    "ops:ssl:repair": "node scripts/ssl-repair.mjs",
+    "test:frontend": "npm --prefix frontend test",
+    "test:backend": "composer --working-dir=backend run test"
+  },
+  "engines": {
+    "node": "^22.12.0 || ^24.0.0"
   }
 }

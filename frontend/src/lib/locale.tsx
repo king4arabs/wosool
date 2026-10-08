@@ -26,9 +26,11 @@ export function LocaleProvider({ children }: { children: React.ReactNode }) {
   const [locale, setLocaleState] = React.useState<Locale>("ar")
 
   React.useEffect(() => {
-    const stored = window.localStorage.getItem(STORAGE_KEY) as Locale | null
-    if (stored && localeOptions.some((option) => option.code === stored)) {
-      setLocaleState(stored)
+    try {
+      const stored = window.localStorage.getItem(STORAGE_KEY) as Locale | null
+      if (stored && localeOptions.some((option) => option.code === stored)) setLocaleState(stored)
+    } catch {
+      // Language switching remains available when browser storage is disabled.
     }
   }, [])
 
@@ -45,7 +47,11 @@ export function LocaleProvider({ children }: { children: React.ReactNode }) {
 
   const setLocale = React.useCallback((nextLocale: Locale) => {
     setLocaleState(nextLocale)
-    window.localStorage.setItem(STORAGE_KEY, nextLocale)
+    try {
+      window.localStorage.setItem(STORAGE_KEY, nextLocale)
+    } catch {
+      // Keep the selected language in memory when persistence is unavailable.
+    }
     document.cookie = `${STORAGE_KEY}=${nextLocale}; path=/; max-age=31536000; samesite=lax`
   }, [])
 

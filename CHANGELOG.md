@@ -6,6 +6,31 @@ This project follows **Semantic Versioning** and a Keep a Changelog-inspired for
 
 ---
 
+## [0.6.0] — 2026-10-08
+
+### Added
+- Real Arabic/English password recovery with expiring, single-use Laravel reset tokens and rate limits.
+- Public sitemap, crawler rules, per-page metadata, private-route no-index headers, and new frontend regression tests.
+- Repository-root CI for both applications and documented local/production setup.
+
+### Changed
+- Update compatible Laravel/PHP dependencies and backend asset dependencies to address fresh security advisories.
+- Refined homepage hierarchy and mobile navigation; replaced the sample testimonial with useful navigation and sourced homepage content from the public API.
+- Events now use API data, upcoming/past filters, explicit empty/error states, and Riyadh time.
+- Updated Next.js to 16.4.0 and compatible runtime dependencies; retained the established lint rules.
+- Rewrote README, deployment, testing, and security documentation to reflect the actual architecture.
+
+### Fixed
+- Shared session requests now send Sanctum CSRF headers; login redirects reject external/script URLs.
+- Ended events reject RSVPs; public list, detail, and calendar routes enforce visibility/publishing rules and omit private event fields.
+- Company models accept validated admin fields and preserve soft-deletion records.
+- SQLite-compatible scorecard migration and member/API test fixtures restored backend validation.
+- Local setup preserves existing application keys; production rejects demonstration seeding.
+
+### Deployment notes
+- Deploy backend migrations and configure mail delivery before the new recovery UI.
+- Source publication and live deployment must be verified separately; CI does not deploy production.
+
 ## [0.5.0] — 2026-04-24
 
 ### Added

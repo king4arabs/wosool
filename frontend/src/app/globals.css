@@ -52,7 +52,7 @@ body {
   text-rendering: optimizeLegibility;
 }
 
-body.locale-ar {
+html[lang="ar"] body, body.locale-ar {
   font-family: var(--font-cairo), "Segoe UI", sans-serif;
 }
 
@@ -73,6 +73,31 @@ h1, h2, h3, h4, h5, h6 {
 [dir="rtl"] h5,
 [dir="rtl"] h6 {
   letter-spacing: 0;
+  line-height: 1.5;
+}
+
+html {
+  scroll-padding-top: 88px;
+}
+
+input, select, textarea {
+  scroll-margin-top: 100px;
+}
+
+@media (max-width: 640px) {
+  input, select, textarea {
+    font-size: 16px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto !important; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
 
 .section-cream {

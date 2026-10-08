@@ -26,12 +26,12 @@ fi
 
 if [[ ! -x "backend/node_modules/.bin/vite" ]]; then
   echo "Installing backend npm dependencies ..."
-  npm --prefix backend install
+  npm --prefix backend ci
 fi
 
 if [[ ! -d "frontend/node_modules" ]]; then
   echo "Installing frontend npm dependencies ..."
-  npm --prefix frontend install
+  npm --prefix frontend ci
 fi
 
 shutdown() {
@@ -54,7 +54,7 @@ trap shutdown INT TERM EXIT
 
 REVERB_PID=""
 REVERB_PORT="${REVERB_PORT:-8080}"
-if (
+if [[ "${RUN_REVERB:-0}" == "1" ]] && (
   cd backend
   php artisan list --raw 2>/dev/null | grep -q "^reverb:start"
 ); then
@@ -69,7 +69,7 @@ if (
     REVERB_PID=$!
   fi
 else
-  echo "Reverb command not found. Skipping realtime server startup (install laravel/reverb to enable it)."
+  echo "Realtime server not started. Set RUN_REVERB=1 after configuring Laravel Reverb."
 fi
 
 echo "Starting backend on http://localhost:8000 ..."

@@ -18,9 +18,9 @@ const footerCopy = {
       ],
       "البرامج": [
         { href: "/programs", label: "جميع البرامج" },
-        { href: "/programs#founder-circles", label: "دوائر المؤسسين" },
-        { href: "/programs#growth-track", label: "مسار النمو" },
-        { href: "/programs#fundraising", label: "الجاهزية للاستثمار" },
+        { href: "/programs/founder-circles", label: "دوائر المؤسسين" },
+        { href: "/programs/growth-track", label: "مسار النمو" },
+        { href: "/programs/fundraising-readiness", label: "الجاهزية للاستثمار" },
       ],
       "المجتمع": [
         { href: "/news", label: "الأخبار والرؤى" },
@@ -53,9 +53,9 @@ const footerCopy = {
       ],
       Programs: [
         { href: "/programs", label: "All programs" },
-        { href: "/programs#founder-circles", label: "Founder circles" },
-        { href: "/programs#growth-track", label: "Growth track" },
-        { href: "/programs#fundraising", label: "Fundraising readiness" },
+        { href: "/programs/founder-circles", label: "Founder circles" },
+        { href: "/programs/growth-track", label: "Growth track" },
+        { href: "/programs/fundraising-readiness", label: "Fundraising readiness" },
       ],
       Community: [
         { href: "/news", label: "News & insights" },

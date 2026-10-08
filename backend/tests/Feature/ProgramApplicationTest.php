@@ -38,7 +38,7 @@ class ProgramApplicationTest extends TestCase
 
     public function test_member_can_apply_to_open_program(): void
     {
-        $user = User::factory()->create();
+        $user = User::factory()->member()->create();
         $program = $this->makeProgram();
 
         $response = $this->actingAs($user)->postJson(
@@ -50,13 +50,13 @@ class ProgramApplicationTest extends TestCase
         $this->assertDatabaseHas('program_applications', [
             'program_id' => $program->id,
             'user_id' => $user->id,
-            'status' => 'submitted',
+            'status' => 'pending_review',
         ]);
     }
 
     public function test_motivation_is_required_and_min_length(): void
     {
-        $user = User::factory()->create();
+        $user = User::factory()->member()->create();
         $program = $this->makeProgram();
 
         $this->actingAs($user)
@@ -67,7 +67,7 @@ class ProgramApplicationTest extends TestCase
 
     public function test_member_cannot_apply_to_closed_program(): void
     {
-        $user = User::factory()->create();
+        $user = User::factory()->member()->create();
         $program = $this->makeProgram(['is_open' => false]);
 
         $this->actingAs($user)
@@ -80,7 +80,7 @@ class ProgramApplicationTest extends TestCase
 
     public function test_member_cannot_apply_after_deadline(): void
     {
-        $user = User::factory()->create();
+        $user = User::factory()->member()->create();
         $program = $this->makeProgram(['application_deadline' => now()->subDay()]);
 
         $this->actingAs($user)
@@ -93,7 +93,7 @@ class ProgramApplicationTest extends TestCase
 
     public function test_member_cannot_apply_twice_to_same_program(): void
     {
-        $user = User::factory()->create();
+        $user = User::factory()->member()->create();
         $program = $this->makeProgram();
         $payload = ['motivation' => 'I want to grow my company through this program.'];
 
@@ -108,7 +108,7 @@ class ProgramApplicationTest extends TestCase
 
     public function test_member_can_list_their_applications(): void
     {
-        $user = User::factory()->create();
+        $user = User::factory()->member()->create();
         $program = $this->makeProgram();
         $this->actingAs($user)->postJson(
             "/api/v1/member/programs/{$program->slug}/apply",

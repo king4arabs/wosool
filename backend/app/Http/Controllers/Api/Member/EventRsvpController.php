@@ -158,6 +158,12 @@ class EventRsvpController extends Controller
             ]);
         }
 
+        if (now()->greaterThanOrEqualTo($event->ends_at ?? $event->starts_at)) {
+            throw ValidationException::withMessages([
+                'event' => ['This event has ended and is no longer accepting RSVPs.'],
+            ]);
+        }
+
         $existing = $event->attendees()->where('users.id', $user->id)->first();
 
         if ($existing && ! in_array((string) $existing->pivot->status, ['cancelled', 'cancelled_by_user'], true)) {

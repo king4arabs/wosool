@@ -1,4 +1,5 @@
 import { env } from "./env"
+import { currentLocale, sessionFetch } from "./session-request"
 
 export class ApiError extends Error {
   constructor(
@@ -36,9 +37,7 @@ async function request<T>(path: string, options: RequestOptions = {}): Promise<T
   const { params, body, headers: customHeaders, ...init } = options
 
   const url = buildUrl(path, params)
-  const resolvedLocale = typeof window !== "undefined"
-    ? window.localStorage.getItem("wosool-locale") || "ar"
-    : "ar"
+  const resolvedLocale = currentLocale()
 
   const headers: HeadersInit = {
     Accept: "application/json",
@@ -50,7 +49,7 @@ async function request<T>(path: string, options: RequestOptions = {}): Promise<T
     ;(headers as Record<string, string>)["Content-Type"] = "application/json"
   }
 
-  const response = await fetch(url, {
+  const response = await sessionFetch(url, {
     credentials: "include",
     ...init,
     headers,

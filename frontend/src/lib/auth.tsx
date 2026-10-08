@@ -9,6 +9,7 @@ import {
   useState,
 } from "react"
 import type { User } from "@/types"
+import { currentLocale, sessionFetch } from "./session-request"
 
 interface AuthContextValue {
   user: User | null
@@ -21,11 +22,9 @@ interface AuthContextValue {
 }
 
 const AuthContext = createContext<AuthContextValue | undefined>(undefined)
-const LOCALE_STORAGE_KEY = "wosool-locale"
 
 function resolveLocaleHeader(): string {
-  if (typeof window === "undefined") return "ar"
-  return window.localStorage.getItem(LOCALE_STORAGE_KEY) || "ar"
+  return currentLocale()
 }
 
 function timeoutSignal(ms: number): AbortSignal {
@@ -40,7 +39,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const fetchUser = useCallback(async () => {
     try {
-      const res = await fetch("/api/v1/auth/me", {
+      const res = await sessionFetch("/api/v1/auth/me", {
         credentials: "include",
         headers: { Accept: "application/json", "X-Locale": resolveLocaleHeader() },
         signal: timeoutSignal(7000),
@@ -63,13 +62,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, [fetchUser])
 
   const login = useCallback(async (email: string, password: string) => {
-    await fetch("/api/v1/auth/csrf-cookie", {
+    await sessionFetch("/api/v1/auth/csrf-cookie", {
       credentials: "include",
       headers: { Accept: "application/json", "X-Locale": resolveLocaleHeader() },
       signal: timeoutSignal(7000),
     })
 
-    const res = await fetch("/api/v1/auth/login", {
+    const res = await sessionFetch("/api/v1/auth/login", {
       method: "POST",
       credentials: "include",
       headers: {
@@ -92,13 +91,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const register = useCallback(
     async (name: string, email: string, password: string, passwordConfirmation: string, inviteToken?: string) => {
-      await fetch("/api/v1/auth/csrf-cookie", {
+      await sessionFetch("/api/v1/auth/csrf-cookie", {
         credentials: "include",
         headers: { Accept: "application/json", "X-Locale": resolveLocaleHeader() },
         signal: timeoutSignal(7000),
       })
 
-      const res = await fetch("/api/v1/auth/register", {
+      const res = await sessionFetch("/api/v1/auth/register", {
         method: "POST",
         credentials: "include",
         headers: {
@@ -135,13 +134,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const logout = useCallback(async () => {
     try {
       // Ensure CSRF token is present for state-changing request.
-      await fetch("/api/v1/auth/csrf-cookie", {
+      await sessionFetch("/api/v1/auth/csrf-cookie", {
         credentials: "include",
         headers: { Accept: "application/json", "X-Locale": resolveLocaleHeader() },
         signal: timeoutSignal(7000),
       })
 
-      await fetch("/api/v1/auth/logout", {
+      await sessionFetch("/api/v1/auth/logout", {
         method: "POST",
         credentials: "include",
         headers: { Accept: "application/json", "X-Locale": resolveLocaleHeader() },

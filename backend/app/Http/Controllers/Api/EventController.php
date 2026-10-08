@@ -6,6 +6,7 @@ use App\Http\Resources\EventResource;
 use App\Models\AnalyticsEvent;
 use App\Models\Event;
 use App\Models\EventBookmark;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 use Illuminate\Http\Request;
@@ -15,30 +16,17 @@ class EventController extends Controller
 {
     public function index(Request $request): JsonResponse
     {
-        $query = Event::query()
-            ->withCount('attendees');
+        $past = $request->input('period') === 'past';
+        $query = $this->publicEvents($past)->withCount('attendees');
 
-        $hasVisibility = Schema::hasColumn('events', 'visibility');
-        $hasStatusFlow = Schema::hasColumn('events', 'status_flow');
-
-        if ($hasVisibility && $hasStatusFlow) {
-            $query
-                ->where(function ($builder) {
-                    $builder
-                        ->where('visibility', 'public')
-                        ->orWhere('is_public', true);
-                })
-                ->where(function ($builder) {
-                    $builder
-                        ->whereIn('status_flow', ['published', 'registration_closed', 'live_now'])
-                        ->orWhere(function ($sub) {
-                            $sub->whereNull('status_flow')->whereIn('status', ['upcoming', 'live']);
-                        });
-                });
-        } else {
-            $query
-                ->where('is_public', true)
-                ->whereIn('status', ['upcoming', 'live']);
+        if (in_array($request->input('period'), ['upcoming', 'past'], true)) {
+            $operator = $past ? '<=' : '>';
+            $query->where(function ($builder) use ($operator) {
+                $builder->where('ends_at', $operator, now())
+                    ->orWhere(function ($sub) use ($operator) {
+                        $sub->whereNull('ends_at')->where('starts_at', $operator, now());
+                    });
+            });
         }
 
         if ($request->filled('type')) {
@@ -58,11 +46,11 @@ class EventController extends Controller
             $now = now();
             match ($request->period) {
                 'today' => $query->whereDate('starts_at', $now->toDateString()),
-                'this_week' => $query->whereBetween('starts_at', [$now->startOfWeek(), $now->endOfWeek()]),
+                'this_week' => $query->whereBetween('starts_at', [$now->copy()->startOfWeek(), $now->copy()->endOfWeek()]),
                 'this_month' => $query->whereMonth('starts_at', $now->month)->whereYear('starts_at', $now->year),
                 default => null,
             };
-        }        
+        }
 
         if ($request->filled('q')) {
             $q = trim((string) $request->input('q'));
@@ -85,8 +73,8 @@ class EventController extends Controller
         }
 
         $events = $query
-            ->orderBy('starts_at')
-            ->paginate($request->integer('per_page', 10))
+            ->orderBy('starts_at', $past ? 'desc' : 'asc')
+            ->paginate(max(1, min(100, $request->integer('per_page', 10))))
             ->withQueryString();
 
         $authUser = $request->user();
@@ -110,16 +98,9 @@ class EventController extends Controller
 
     public function show(string $slug): JsonResponse
     {
-        $event = Event::query()
+        $event = $this->publicEvents(includeCompleted: true)
             ->with(['agendaItems', 'speakers', 'resources'])
             ->where('slug', $slug)
-            ->where(function ($builder) {
-                if (Schema::hasColumn('events', 'visibility')) {
-                    $builder->where('visibility', 'public')->orWhere('is_public', true);
-                    return;
-                }
-                $builder->where('is_public', true);
-            })
             ->firstOrFail();
 
         $event->relevance_score = $this->computeRelevanceScore($event);
@@ -140,7 +121,7 @@ class EventController extends Controller
 
     public function calendarIcs(string $slug): Response
     {
-        $event = Event::query()->where('slug', $slug)->firstOrFail();
+        $event = $this->publicEvents(includeCompleted: true)->where('slug', $slug)->firstOrFail();
 
         $start = optional($event->starts_at)->utc()->format('Ymd\THis\Z');
         $end = optional($event->ends_at ?: $event->starts_at?->copy()->addHour())->utc()->format('Ymd\THis\Z');
@@ -162,6 +143,35 @@ class EventController extends Controller
             'Content-Type' => 'text/calendar; charset=utf-8',
             'Content-Disposition' => 'attachment; filename="' . $event->slug . '.ics"',
         ]);
+    }
+
+    private function publicEvents(bool $includeCompleted = false): Builder
+    {
+        $statuses = ['published', 'registration_closed', 'live_now'];
+        $legacyStatuses = ['upcoming', 'live'];
+        if ($includeCompleted) {
+            $statuses[] = 'completed';
+            $legacyStatuses[] = 'completed';
+        }
+
+        $query = Event::query()->where('is_public', true);
+        if (Schema::hasColumn('events', 'visibility')) {
+            $query->where(function ($builder) {
+                $builder->where('visibility', 'public')->orWhereNull('visibility');
+            });
+        }
+        if (Schema::hasColumn('events', 'status_flow')) {
+            $query->where(function ($builder) use ($statuses, $legacyStatuses) {
+                $builder->whereIn('status_flow', $statuses)
+                    ->orWhere(function ($legacy) use ($legacyStatuses) {
+                        $legacy->whereNull('status_flow')->whereIn('status', $legacyStatuses);
+                    });
+            });
+        } else {
+            $query->whereIn('status', $legacyStatuses);
+        }
+
+        return $query;
     }
 
     private function computeRelevanceScore(Event $event): int

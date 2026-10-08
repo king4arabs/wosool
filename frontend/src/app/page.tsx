@@ -2,15 +2,15 @@
 
 import Image from "next/image"
 import Link from "next/link"
+import { UpcomingEvents } from "@/components/sections/UpcomingEvents"
 import { PublicLayout } from "@/components/layout/PublicLayout"
 import { Button } from "@/components/ui/button"
-import { companies, events, founders, newsItems, partners } from "@/data/seed"
+import { useHomeContent } from "@/lib/use-home-content"
 import { getLocalizedNewsContent } from "@/lib/news-content"
-import { type Locale, useLocale } from "@/lib/locale"
+import { useLocale } from "@/lib/locale"
 import {
   ArrowLeft,
   ArrowRight,
-  CalendarDays,
   CheckCircle2,
   ChevronLeft,
   ChevronRight,
@@ -29,9 +29,9 @@ const homeCopy = {
     apply: "قدّم للانضمام",
     explore: "استكشف الشبكة",
     trustMetrics: [
-      { value: "250+", label: "مؤسس" },
-      { value: "15+", label: "برنامج" },
-      { value: "3", label: "صناديق نشطة" },
+      { value: "علاقات", label: "من مؤسس إلى مؤسس" },
+      { value: "برامج", label: "للتعلم والنمو" },
+      { value: "فرص", label: "للتواصل والتعاون" },
     ],
     accessLabel: "دخول انتقائي",
     accessTitle: "ثقة مؤسسية بروح مجتمع يعرف كيف يصنع الأثر.",
@@ -152,9 +152,9 @@ const homeCopy = {
     apply: "Apply to join",
     explore: "Explore the network",
     trustMetrics: [
-      { value: "250+", label: "Founders" },
-      { value: "15+", label: "Programs" },
-      { value: "3", label: "Active funds" },
+      { value: "Connect", label: "Founder to founder" },
+      { value: "Learn", label: "Focused programs" },
+      { value: "Grow", label: "Shared opportunities" },
     ],
     accessLabel: "Selective access",
     accessTitle: "Institutional trust with the warmth of a serious founder community.",
@@ -400,7 +400,7 @@ const heroSectionCopy = {
     subtitle:
       "شبكة منتقاة للمؤسسين والمشغلين والمستثمرين والشركاء الذين يبنون شركات جادة ويبحثون عن علاقات ذات قيمة حقيقية في المنطقة.",
     steps: [
-      { num: "01", title: "سجّل", desc: "أنشئ ملفك الشخصي وانضم للمجتمع" },
+      { num: "01", title: "قدّم طلبك", desc: "عرّفنا بك وبالشركة التي تبنيها" },
       { num: "02", title: "تواصل", desc: "ارتبط بمؤسسين موجودين في الشبكة" },
       { num: "03", title: "استعرض", desc: "اكتشف أعمالهم كأنك تقلّب كتاباً" },
     ],
@@ -413,7 +413,7 @@ const heroSectionCopy = {
     subtitle:
       "A curated network for founders, operators, investors, and partners building serious companies and seeking trusted relationships across the region.",
     steps: [
-      { num: "01", title: "Register", desc: "Create your profile and join the community" },
+      { num: "01", title: "Apply", desc: "Tell us about you and your company" },
       { num: "02", title: "Connect", desc: "Link with founders already in the network" },
       { num: "03", title: "Explore", desc: "Browse their work like reading a book" },
     ],
@@ -432,268 +432,6 @@ const heroSectionCopy = {
     ],
   },
 } as const
-
-const founderDetails = {
-  f1: {
-    ar: {
-      role: "الشريك المؤسس والرئيسة التنفيذية، Meezan Capital",
-      bio: "تقود بناء حلول مالية متوافقة مع الشريعة وتربط بين الابتكار المالي والاحتياجات الواقعية للشركات والأفراد في السوق السعودي.",
-      sector: "تقنية مالية",
-      stage: "السلسلة A",
-      location: "الرياض، السعودية",
-    },
-    en: {
-      role: "Founder & CEO, Meezan Capital",
-      bio: "Building Shariah-compliant financial products with a clear focus on access, trust, and practical adoption across Saudi Arabia.",
-      sector: "Fintech",
-      stage: "Series A",
-      location: "Riyadh, Saudi Arabia",
-    },
-    fr: {
-      role: "Fondatrice et CEO, Meezan Capital",
-      bio: "Elle développe des produits financiers conformes à la charia, pensés pour l’accès, la confiance et l’adoption concrète en Arabie saoudite.",
-      sector: "Fintech",
-      stage: "Série A",
-      location: "Riyad, Arabie saoudite",
-    },
-  },
-  f2: {
-    ar: {
-      role: "المؤسس، Shifaa Health",
-      bio: "يبني منصة صحية تربط بين الرعاية المتخصصة والتشخيص المدعوم بالتقنية لخدمة المرضى في الخليج بصورة أكثر كفاءة.",
-      sector: "تقنية صحية",
-      stage: "البذرة",
-      location: "دبي، الإمارات",
-    },
-    en: {
-      role: "Founder, Shifaa Health",
-      bio: "Scaling a healthcare platform that combines specialist access, patient trust, and technology-led diagnostics across the GCC.",
-      sector: "HealthTech",
-      stage: "Seed",
-      location: "Dubai, UAE",
-    },
-    fr: {
-      role: "Fondateur, Shifaa Health",
-      bio: "Il développe une plateforme de santé qui combine accès aux spécialistes, confiance des patients et outils diagnostiques technologiques dans le Golfe.",
-      sector: "HealthTech",
-      stage: "Amorçage",
-      location: "Dubaï, Émirats arabes unis",
-    },
-  },
-  f3: {
-    ar: {
-      role: "المؤسسة، Amal Ops",
-      bio: "تعمل على أتمتة العمليات الخلفية للشركات الصغيرة والمتوسطة عبر منتجات ذكاء اصطناعي واضحة القيمة وسهلة التطبيق.",
-      sector: "برمجيات أعمال",
-      stage: "ما قبل البذرة",
-      location: "الرياض، السعودية",
-    },
-    en: {
-      role: "Founder, Amal Ops",
-      bio: "Creating AI-powered operations software that helps regional SMEs simplify back-office complexity and move faster.",
-      sector: "B2B SaaS",
-      stage: "Pre-seed",
-      location: "Riyadh, Saudi Arabia",
-    },
-    fr: {
-      role: "Fondatrice, Amal Ops",
-      bio: "Elle crée des outils IA pour simplifier les opérations internes des PME régionales et réduire la friction du quotidien.",
-      sector: "SaaS B2B",
-      stage: "Pré-amorçage",
-      location: "Riyad, Arabie saoudite",
-    },
-  },
-} as const
-
-const companyDetails = {
-  c1: {
-    ar: {
-      sector: "تقنية مالية",
-      stage: "السلسلة A",
-      location: "الرياض، السعودية",
-      description: "حلول تمويل متوافقة مع الشريعة تخدم الأفراد والمنشآت الصغيرة والمتوسطة داخل السعودية وبقية الخليج.",
-    },
-    en: {
-      sector: "Fintech",
-      stage: "Series A",
-      location: "Riyadh, Saudi Arabia",
-      description: "Shariah-compliant credit and finance products serving underserved consumers and SMEs across Saudi Arabia and the GCC.",
-    },
-    fr: {
-      sector: "Fintech",
-      stage: "Série A",
-      location: "Riyad, Arabie saoudite",
-      description: "Des solutions de financement conformes à la charia pour les particuliers et PME en Arabie saoudite et dans le Golfe.",
-    },
-  },
-  c2: {
-    ar: {
-      sector: "تقنية صحية",
-      stage: "البذرة",
-      location: "دبي، الإمارات",
-      description: "منصة رعاية صحية رقمية تجمع بين الوصول إلى الأطباء المتخصصين والتشخيص المدعوم بالتقنية.",
-    },
-    en: {
-      sector: "HealthTech",
-      stage: "Seed",
-      location: "Dubai, UAE",
-      description: "A digital health platform combining specialist care access with technology-assisted diagnostics and preventive workflows.",
-    },
-    fr: {
-      sector: "HealthTech",
-      stage: "Amorçage",
-      location: "Dubaï, Émirats arabes unis",
-      description: "Une plateforme de santé numérique qui réunit accès aux spécialistes et diagnostics assistés par la technologie.",
-    },
-  },
-  c3: {
-    ar: {
-      sector: "برمجيات أعمال",
-      stage: "ما قبل البذرة",
-      location: "الرياض، السعودية",
-      description: "منصة أتمتة تشغيلية تساعد الشركات الصغيرة والمتوسطة على تنظيم المحاسبة والامتثال والموارد البشرية في مكان واحد.",
-    },
-    en: {
-      sector: "B2B SaaS",
-      stage: "Pre-seed",
-      location: "Riyadh, Saudi Arabia",
-      description: "An AI-enabled operations platform helping SMEs unify finance, compliance, and HR workflows in one place.",
-    },
-    fr: {
-      sector: "SaaS B2B",
-      stage: "Pré-amorçage",
-      location: "Riyad, Arabie saoudite",
-      description: "Une plateforme d’opérations assistée par IA qui réunit finance, conformité et RH pour les PME.",
-    },
-  },
-} as const
-
-const eventDetails = {
-  e1: {
-    ar: {
-      title: "انطلاق دوائر المؤسسين في الرياض",
-      location: "الرياض، السعودية",
-      description: "جلسة إطلاق لمجموعة جديدة من المؤسسين لوضع الأهداف، وبناء الثقة، وتحديد إيقاع عمل مشترك خلال الأسابيع المقبلة.",
-    },
-    en: {
-      title: "Founder Circles Riyadh Kickoff",
-      location: "Riyadh, Saudi Arabia",
-      description: "A launch session for the next Riyadh circle cohort to set goals, build trust, and establish a strong working cadence.",
-    },
-    fr: {
-      title: "Lancement des cercles de fondateurs à Riyad",
-      location: "Riyad, Arabie saoudite",
-      description: "Une session d’ouverture pour la nouvelle cohorte à Riyad afin d’aligner les objectifs et poser un rythme de travail commun.",
-    },
-  },
-  e2: {
-    ar: {
-      title: "ساعات مكتبية: ماستر كلاس في جمع الاستثمار",
-      location: "عن بُعد",
-      description: "جلسات فردية ومجموعات صغيرة مع مستثمر متمرس حول العروض الاستثمارية، الجاهزية للفحص، وديناميكيات التمويل في الخليج.",
-    },
-    en: {
-      title: "Expert Office Hours: Fundraising Masterclass",
-      location: "Virtual",
-      description: "Small-group and one-on-one sessions with a seasoned investor covering decks, diligence readiness, and GCC fundraising dynamics.",
-    },
-    fr: {
-      title: "Office hours experts: masterclass levée de fonds",
-      location: "En ligne",
-      description: "Des sessions en petit groupe et en individuel avec un investisseur expérimenté sur le pitch, la due diligence et les codes du Golfe.",
-    },
-  },
-  e3: {
-    ar: {
-      title: "عشاء وصول للمؤسسين - دبي",
-      location: "دبي، الإمارات",
-      description: "عشاء خاص لأعضاء وصول وضيوف مختارين في دبي، يركز على الحوار الصريح والتعارف النوعي ضمن أجواء هادئة.",
-    },
-    en: {
-      title: "Wosool Founders Dinner - Dubai",
-      location: "Dubai, UAE",
-      description: "An intimate dinner for Wosool members and selected guests in Dubai, built around candid conversation and useful introductions.",
-    },
-    fr: {
-      title: "Dîner des fondateurs Wosool - Dubaï",
-      location: "Dubaï, Émirats arabes unis",
-      description: "Un dîner privé pour les membres Wosool et quelques invités sélectionnés, pensé pour favoriser les échanges sincères et utiles.",
-    },
-  },
-} as const
-
-const partnerDetails = {
-  pt1: {
-    ar: {
-      type: "شريك منظومة",
-      description: "جهة رائدة في تمويل رأس المال الجريء مدعومة حكوميًا وتسهم في تسريع المشهد الريادي السعودي عبر الاستثمار وبناء المسارات.",
-    },
-    en: {
-      type: "Ecosystem partner",
-      description: "A leading government-backed venture capital platform catalysing the Saudi startup ecosystem through capital and strategic participation.",
-    },
-    fr: {
-      type: "Partenaire écosystème",
-      description: "Une plateforme de capital-risque soutenue par l’État, au cœur de l’accélération de l’écosystème saoudien.",
-    },
-  },
-  pt2: {
-    ar: {
-      type: "شريك معرفي",
-      description: "جامعة ومنظومة ابتكار عالمية توفر موارد معرفية وشراكات بحث وتطوير وخبرة عميقة في التقنيات المتقدمة.",
-    },
-    en: {
-      type: "Knowledge partner",
-      description: "A world-class university and innovation ecosystem bringing deep research capability, talent, and technical insight.",
-    },
-    fr: {
-      type: "Partenaire connaissance",
-      description: "Une université de référence et un écosystème d’innovation qui apportent recherche, talents et expertise technique.",
-    },
-  },
-  pt3: {
-    ar: {
-      type: "شريك مجتمع",
-      description: "مسرعة ومستثمر مبكر إقليمي يدعم المؤسسين عبر رأس المال، الإرشاد، والانضباط التنفيذي في مراحل النمو الأولى.",
-    },
-    en: {
-      type: "Community partner",
-      description: "A regional accelerator and early-stage investor supporting founders with capital, mentorship, and operating discipline.",
-    },
-    fr: {
-      type: "Partenaire communauté",
-      description: "Un accélérateur régional et investisseur early-stage qui accompagne les fondateurs avec capital et mentorat.",
-    },
-  },
-  pt4: {
-    ar: {
-      type: "دعم استراتيجي",
-      description: "شريك استشاري يقدم خبرة مالية وقانونية وتشغيلية للشركات التي تستعد للنمو المؤسسي والتوسع.",
-    },
-    en: {
-      type: "Strategic supporter",
-      description: "An advisory partner bringing financial, legal, and growth-strategy support to companies preparing for scaled execution.",
-    },
-    fr: {
-      type: "Soutien stratégique",
-      description: "Un partenaire conseil qui apporte expertise financière, juridique et stratégique aux entreprises en phase d’accélération.",
-    },
-  },
-} as const
-
-function formatEventDate(date: string, locale: Locale) {
-  const parserLocale = locale === "ar" ? "ar" : "en-US"
-  const parsed = new Date(date)
-  return {
-    month: parsed.toLocaleString(parserLocale, { month: "short" }).toUpperCase(),
-    day: parsed.toLocaleString(parserLocale, { day: "2-digit" }),
-    full: parsed.toLocaleDateString(parserLocale, {
-      month: "long",
-      day: "numeric",
-      year: "numeric",
-    }),
-  }
-}
 
 function SectionIntro({
   eyebrow,
@@ -741,11 +479,11 @@ function SectionIntro({
 
 export default function HomePage() {
   const { locale, direction } = useLocale()
+  const { companies, founders, newsItems, partners } = useHomeContent()
   const copy = homeCopy[locale]
   const heroCopy = heroSectionCopy[locale]
-  const featuredFounders = founders.filter((founder) => founder.isFeatured).slice(0, 3)
+  const featuredFounders = [...founders].sort((a, b) => Number(b.isFeatured) - Number(a.isFeatured)).slice(0, 3)
   const featuredCompanies = companies.slice(0, 3)
-  const upcomingEvents = events.slice(0, 3)
   const ecosystemPartners = partners.slice(0, 4)
   const latestNews = newsItems.slice(0, 3)
   const ArrowIcon = direction === "rtl" ? ArrowLeft : ArrowRight
@@ -822,7 +560,7 @@ export default function HomePage() {
           />
         </div>
 
-        <div className="relative mx-auto max-w-7xl py-20 lg:py-28">
+        <div className="relative mx-auto max-w-7xl py-12 sm:py-16 lg:py-20">
           <div id="ecosystem" className="absolute top-0" />
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
@@ -835,7 +573,7 @@ export default function HomePage() {
               </div>
 
               {/* Headline */}
-              <h1 className="text-4xl lg:text-5xl font-black text-slate-900 leading-[1.2] tracking-tight">
+              <h1 className="text-4xl sm:text-5xl xl:text-6xl font-black text-slate-900 leading-[1.2] tracking-tight">
                 {heroCopy.titleLead}{" "}
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#3B52D4] to-indigo-500">
                   {heroCopy.titleHighlight}
@@ -843,7 +581,7 @@ export default function HomePage() {
                 {heroCopy.titleTail ? <> {heroCopy.titleTail}</> : null}
               </h1>
 
-              <p className="text-sm lg:text-base text-slate-600 leading-relaxed max-w-xl">
+              <p className="text-base lg:text-lg text-slate-600 leading-relaxed max-w-xl">
                 {heroCopy.subtitle}
               </p>
 
@@ -882,7 +620,7 @@ export default function HomePage() {
               </div>
 
               {/* Trust metrics */}
-              <div className="flex gap-6 pt-2">
+              <div className="flex flex-wrap gap-4 pt-2">
                 {copy.trustMetrics.map((metric, i) => (
                   <div key={metric.label} className="flex items-center gap-3">
                     {i > 0 && <div className="w-px h-8 bg-slate-200" />}
@@ -895,72 +633,29 @@ export default function HomePage() {
               </div>
             </div>
 
-            {/* ── RIGHT: Glass card ── */}
-            <div className="lg:col-span-5">
-              <div
-                className="w-full bg-white/80 backdrop-blur-sm border border-slate-200/70 rounded-2xl p-6 transition duration-300 hover:rotate-0"
-                style={{
-                  boxShadow: "0 20px 25px -5px rgba(59,82,212,0.04), 0 10px 10px -5px rgba(59,82,212,0.02)",
-                  transform: "rotate(1deg)",
-                }}
-              >
-                <div className="flex items-center justify-between border-b border-slate-100 pb-4 mb-4">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-xl bg-[#EEF1FF] border border-[#E4E7F0] text-[#3B52D4] flex items-center justify-center">
-                      <svg className="w-5 h-5" viewBox="0 0 512 512" fill="currentColor">
-                        <path d="M120 160c-33.1 0-60 26.9-60 60s26.9 60 60 60c11.3 0 21.9-3.1 31-8.5l68.5 68.5c-5.4 9.1-8.5 19.7-8.5 31 0 33.1 26.9 60 60 60s60-26.9 60-60c0-11.3-3.1-21.9-8.5-31l68.5-68.5c9.1 5.4 19.7 8.5 31 8.5 33.1 0 60-26.9 60-60s-26.9-60-60-60-60 26.9-60 60c0 11.3 3.1 21.9 8.5 31l-68.5 68.5c-9.1-5.4-19.7-8.5-31-8.5s-21.9 3.1-31 8.5L151 222.5c5.4-9.1 8.5-19.7 8.5-31 0-33.1-26.9-60-60-60z" />
-                      </svg>
-                    </div>
-                    <div>
-                      <h4 className="text-xs font-extrabold text-slate-900">
-                        {locale === "ar" ? "محمد بنعمر" : "Mohammed B."}
-                      </h4>
-                      <p className="text-[10px] text-slate-400 font-semibold">
-                        {locale === "ar" ? "مؤسس منصة رابح للتمويل" : "Founder, Rabeh Finance"}
-                      </p>
-                    </div>
-                  </div>
-                  <span className="text-[10px] bg-[#EEF1FF] text-[#3B52D4] px-2 py-0.5 rounded-full font-bold border border-[#E4E7F0]">
-                    Fintech
-                  </span>
-                </div>
-
-                <p className="text-xs text-slate-600 leading-relaxed mb-4">
-                  {locale === "ar"
-                    ? "\"ارتبطت بـ 14 مؤسس تقني نشط عبر شبكة وصول لتبادل الخبرات وتسريع النمو.\""
-                    : "\"Connected with 14 active tech founders through Wosool to exchange expertise and accelerate growth.\""}
-                </p>
-
-                <div className="h-1.5 w-full bg-slate-100 rounded-full overflow-hidden">
-                  <div className="w-4/5 h-full bg-[#3B52D4] rounded-full" />
-                </div>
-                <div className="flex justify-between items-center mt-2.5 text-[10px] text-slate-400 font-bold">
-                  <span>
-                    {locale === "ar" ? "معدل الارتباط بالمنظومة" : "Network connection rate"}
-                  </span>
-                  <span className="text-[#3B52D4] flex items-center gap-1">
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#3B52D4]" />
-                    {locale === "ar" ? "موثق  " : "Live & verified"}
-                  </span>
-                </div>
-
-                {/* Mini founder grid */}
-                <div className="mt-4 pt-4 border-t border-slate-100 grid grid-cols-3 gap-2">
-                  {[
-                    { initials: "عس", label: locale === "ar" ? "LegalTech" : "LegalTech" },
-                    { initials: "سأ", label: "ClimateTech" },
-                    { initials: "رج", label: "EdTech" },
-                  ].map((item) => (
-                    <div key={item.initials} className="text-center">
-                      <div className="w-8 h-8 rounded-xl bg-slate-950 text-white flex items-center justify-center text-[10px] font-bold mx-auto mb-1">
-                        {item.initials}
-                      </div>
-                      <span className="text-[9px] text-slate-400 font-bold">{item.label}</span>
-                    </div>
-                  ))}
+            <aside className="lg:col-span-5 rounded-3xl border border-slate-200 bg-white p-6 shadow-xl shadow-indigo-900/5 sm:p-8" aria-labelledby="network-paths-title">
+              <div className="mb-6 flex items-center gap-4">
+                <Image src="/wosool-network-logo.png" alt="" width={52} height={52} />
+                <div>
+                  <p className="text-xs font-bold text-[#3B52D4]">WOSOOL / وصول</p>
+                  <h2 id="network-paths-title" className="mt-2 text-xl font-bold text-slate-900">{locale === "ar" ? "خطوتك التالية تبدأ بعلاقة" : "Your next step starts with a connection"}</h2>
                 </div>
               </div>
-            </div>
+              <div className="space-y-3">
+                {[
+                  { href: "/founders", icon: Handshake, title: locale === "ar" ? "تعرّف على المؤسسين" : "Meet the founders", body: locale === "ar" ? "اكتشف الخبرات والاهتمامات المشتركة." : "Discover shared interests and operating experience." },
+                  { href: "/programs", icon: Sparkles, title: locale === "ar" ? "اعثر على برنامجك" : "Find your program", body: locale === "ar" ? "استكشف مسارات التعلم والنمو." : "Explore focused learning and growth opportunities." },
+                  { href: "/events", icon: CheckCircle2, title: locale === "ar" ? "انضم إلى اللقاءات" : "Join the conversation", body: locale === "ar" ? "تابع فعاليات المجتمع القادمة." : "See upcoming community gatherings." },
+                ].map(({ href, icon: Icon, title, body }) => (
+                  <Link key={href} href={href} className="group flex items-center gap-4 rounded-2xl border border-slate-100 bg-slate-50 p-4 transition-colors hover:border-indigo-200 hover:bg-[#EEF1FF]">
+                    <Icon className="h-5 w-5 shrink-0 text-[#3B52D4]" aria-hidden="true" />
+                    <div className="min-w-0 flex-1"><h3 className="text-sm font-bold text-slate-900">{title}</h3><p className="mt-1 text-xs leading-6 text-slate-600">{body}</p></div>
+                    <ArrowIcon className="h-4 w-4 shrink-0 text-[#3B52D4]" aria-hidden="true" />
+                  </Link>
+                ))}
+              </div>
+              <p className="mt-6 border-t border-slate-100 pt-5 text-sm leading-7 text-slate-600">{locale === "ar" ? "من مؤسس إلى مؤسس. خبرة مشتركة، علاقات موثوقة، وخطوات عملية للنمو." : "Founder to founder. Shared experience, trusted relationships, and practical steps forward."}</p>
+            </aside>
           </div>
         </div>
       </section>
@@ -1122,7 +817,7 @@ export default function HomePage() {
       </section>
 
       {/* ── Founders ── */}
-      <section className="section-veil relative z-10 px-4 py-24 sm:px-6 sm:py-28 lg:px-8 lg:py-32">
+      {featuredFounders.length > 0 && (<section className="section-veil relative z-10 px-4 py-24 sm:px-6 sm:py-28 lg:px-8 lg:py-32">
         <div className="relative mx-auto max-w-7xl">
           <SectionIntro
             eyebrow={copy.founders.eyebrow}
@@ -1133,7 +828,7 @@ export default function HomePage() {
             {leadFounder ? (
               <article className="premium-card relative overflow-hidden rounded-2xl p-8 sm:p-10">
                 {(() => {
-                  const details = founderDetails[leadFounder.id as keyof typeof founderDetails][locale]
+                  const details = { role: leadFounder.tagline || leadFounder.companyName, bio: leadFounder.bio, sector: leadFounder.sector, stage: leadFounder.stage, location: leadFounder.location }
                   const initials = leadFounder.name
                     .split(" ")
                     .map((part) => part[0])
@@ -1187,7 +882,7 @@ export default function HomePage() {
 
             <div className="grid gap-4">
               {supportingFounders.map((founder) => {
-                const details = founderDetails[founder.id as keyof typeof founderDetails][locale]
+                const details = { role: founder.tagline || founder.companyName, bio: founder.bio }
                 const initials = founder.name
                   .split(" ")
                   .map((part) => part[0])
@@ -1211,10 +906,10 @@ export default function HomePage() {
             </div>
           </div>
         </div>
-      </section>
+      </section>)}
 
       {/* ── Companies ── */}
-      <section className="section-veil-tinted relative z-10 px-4 py-24 sm:px-6 sm:py-28 lg:px-8 lg:py-32">
+      {featuredCompanies.length > 0 && (<section className="section-veil-tinted relative z-10 px-4 py-24 sm:px-6 sm:py-28 lg:px-8 lg:py-32">
         <div className="relative mx-auto max-w-7xl">
           <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
             <div>
@@ -1236,7 +931,7 @@ export default function HomePage() {
 
           <div className="mt-14 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {featuredCompanies.map((company, index) => {
-              const details = companyDetails[company.id as keyof typeof companyDetails][locale]
+              const details = company
               const statuses = [
                 company.isHiring ? copy.companies.statuses.isHiring : null,
                 company.isFundraising ? copy.companies.statuses.isFundraising : null,
@@ -1296,7 +991,7 @@ export default function HomePage() {
             })}
           </div>
         </div>
-      </section>
+      </section>)}
 
       {/* ── Events ── */}
       <section className="section-veil relative z-10 px-4 py-24 sm:px-6 sm:py-28 lg:px-8 lg:py-32">
@@ -1306,51 +1001,12 @@ export default function HomePage() {
             title={copy.events.title}
             description={copy.events.description}
           />
-          <div className="grid gap-5 lg:grid-cols-3">
-            {upcomingEvents.map((event) => {
-              const details = eventDetails[event.id as keyof typeof eventDetails][locale]
-              const eventDate = formatEventDate(event.date, locale)
-
-              return (
-                <article key={event.id} className="premium-card flex h-full flex-col rounded-2xl p-7">
-                  <div className="flex items-start gap-5">
-                    <div className="min-w-[76px] rounded-xl border border-[#E4E7F0] bg-[#F5F7FF] px-3 py-4 text-center">
-                      <div className="text-[10px] font-bold uppercase tracking-[0.18em] text-[#3B52D4]">{eventDate.month}</div>
-                      <div className="mt-1.5 text-2xl font-bold text-[#0F1628]">{eventDate.day}</div>
-                    </div>
-                    <div className="flex-1">
-                      <div className="text-xs font-semibold tracking-[0.16em] text-[#3B52D4]">
-                        {event.isPublic ? (locale === "ar" ? "دعوة ممتدة" : "Open invitation") : (locale === "ar" ? "دعوة خاصة" : "Private room")}
-                      </div>
-                      <h3 className="mt-2 text-lg font-semibold text-[#0F1628]">{details.title}</h3>
-                      <div className="mt-3 flex flex-wrap gap-3 text-xs text-[#8B95A9]">
-                        <span className="inline-flex items-center gap-1.5">
-                          <MapPin className="h-3.5 w-3.5 text-[#3B52D4]/60" />
-                          {details.location}
-                        </span>
-                        <span className="inline-flex items-center gap-1.5">
-                          <CalendarDays className="h-3.5 w-3.5 text-[#3B52D4]/60" />
-                          {eventDate.full}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                  <p className="mt-5 flex-1 text-sm leading-7 text-[#5D6B8A]">{details.description}</p>
-                  <div className="mt-6 flex items-center justify-between gap-4 border-t border-[#E4E7F0] pt-5">
-                    <div className="text-xs text-[#8B95A9]">{event.type}</div>
-                    <Button asChild variant="ghost" className="h-auto px-0 py-0 text-sm font-semibold text-[#3B52D4] hover:bg-transparent hover:text-[#2E44C8]">
-                      <Link href="/events">{copy.events.rsvp}</Link>
-                    </Button>
-                  </div>
-                </article>
-              )
-            })}
-          </div>
+          <UpcomingEvents />
         </div>
       </section>
 
       {/* ── Partners ── */}
-      <section className="section-veil-tinted relative z-10 px-4 py-20 sm:px-6 sm:py-20 lg:px-8 lg:py-24">
+      {ecosystemPartners.length > 0 && (<section className="section-veil-tinted relative z-10 px-4 py-20 sm:px-6 sm:py-20 lg:px-8 lg:py-24">
         <div className="relative mx-auto max-w-7xl">
           <SectionIntro
             eyebrow={copy.partners.eyebrow}
@@ -1388,7 +1044,7 @@ export default function HomePage() {
 
             <div className="grid gap-px bg-[#E4E7F0] lg:grid-cols-2">
               {ecosystemPartners.map((partner) => {
-                const details = partnerDetails[partner.id as keyof typeof partnerDetails][locale]
+                const details = partner
 
                 return (
                   <article key={partner.id} className="flex min-h-[200px] flex-col bg-white p-7 sm:p-8">
@@ -1419,10 +1075,10 @@ export default function HomePage() {
             </div>
           </div>
         </div>
-      </section>
+      </section>)}
 
       {/* ── News ── */}
-      <section className="section-veil relative z-10 overflow-hidden px-4 py-24 sm:px-6 sm:py-28 lg:px-8 lg:py-32">
+      {latestNews.length > 0 && (<section className="section-veil relative z-10 overflow-hidden px-4 py-24 sm:px-6 sm:py-28 lg:px-8 lg:py-32">
         <div className="relative mx-auto max-w-7xl">
           <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
             <div>
@@ -1493,7 +1149,7 @@ export default function HomePage() {
             })}
           </div>
         </div>
-      </section>
+      </section>)}
 
       {/* ── CTA ── */}
       <section className="section-veil relative z-10 px-4 pb-24 pt-8 sm:px-6 lg:px-8 lg:pb-32">

@@ -1,47 +1,43 @@
 # Testing
 
-## Testing Strategy
+## Automated checks
 
-Wosool uses a layered testing approach intended to improve reliability without slowing early-stage delivery. The immediate priority is protecting the current public API contract and ensuring the frontend remains buildable and lint-clean.
+From the repository root after local setup:
 
-Local application development defaults to file-backed SQLite, while the PHPUnit suite intentionally stays on in-memory SQLite for speed and isolation.
+```bash
+npm run verify
+```
 
-| Test layer | Current status | Purpose |
-|---|---|---|
-| Frontend lint | Active | Catch obvious code-quality issues |
-| Frontend production build | Active | Validate route and bundle integrity |
-| Backend feature tests | Introduced in `0.3.0` | Protect public endpoint behavior |
-| Backend unit tests | Minimal | Expand as domain logic deepens |
-| End-to-end tests | Not started | Add after auth and live flows mature |
+The command runs ESLint, TypeScript, frontend regression tests, Laravel tests, the entrepreneur dataset validator, and both production builds. CI is defined in `.github/workflows/ci.yml`; workflows nested under `backend/.github/` are not executed by GitHub for this monorepo.
 
----
+| Coverage | Purpose |
+| --- | --- |
+| Frontend session requests | CSRF cookie decoding/bootstrap, custom headers, same-origin token handling |
+| Authentication navigation | Reject external, script, malformed, and looping redirects |
+| Event dates | Expired/invalid dates, ongoing events, ordering, and timezone-independent boundaries |
+| Backend authentication | Registration eligibility, login, role boundaries, account recovery and rate limiting |
+| Password recovery | Real notification dispatch through the broker, frontend link origin, password validation, expired and single-use tokens |
+| Public/member/admin API | Submission validation, profile/company ownership, event RSVP, program applications, settings, moderation and authorization |
+| Dataset validation | Explicitly fictional entrepreneur profiles and avatar/data constraints |
 
-## Current Quality Gate
+The Laravel suite uses in-memory SQLite and the array mail driver. Notifications are faked in password tests; running the tests does not send user email. Positive member fixtures use `User::factory()->member()`; an ordinary factory user must remain forbidden from member endpoints.
 
-A release should not be considered healthy unless these checks pass:
+The production dependency checks are:
 
-| Check | Command |
-|---|---|
-| Frontend lint | `cd frontend && npm run lint` |
-| Frontend build | `cd frontend && npm run build` |
-| Backend tests | `cd backend && php artisan test` |
-| CI workflow | GitHub Actions on push and pull request |
+```bash
+npm --prefix frontend audit --omit=dev --audit-level=high
+composer --working-dir=backend audit
+npm --prefix backend audit --audit-level=high
+```
 
----
+## Manual release checks
 
-## Backend Test Focus
+- Public homepage and content links at mobile, tablet and desktop widths.
+- Arabic/English navigation, RTL/LTR alignment, keyboard-only use, focus visibility, Escape to close the mobile menu, and reduced-motion settings.
+- Application/contact validation errors preserve entered data and never claim success when the API fails.
+- A real staging account can log in, navigate, log out, request a reset email, and use that link once.
+- Upcoming/past event dates use Riyadh time; registration is rejected after the event ends.
+- Backend API outage gives an actionable event error/empty state and does not create fictional homepage membership evidence.
+- Canonical URLs, crawler exclusions, sitemap, and production asset delivery.
 
-The first backend test wave should concentrate on:
-
-| Area | Why it matters |
-|---|---|
-| Health endpoint | Supports infrastructure confidence |
-| Public read endpoints | Protects the current discovery contract |
-| Submission endpoints | Protects user-facing form workflows |
-| Validation failures | Prevents silent contract drift |
-
----
-
-## Next Testing Priorities
-
-After `0.3.0`, testing should expand to frontend component tests, integration tests for public pages consuming the API, authenticated flow tests, and eventually end-to-end coverage for critical funnel journeys.
+Build and unit-test success do not establish browser rendering quality, actual SMTP delivery, or successful production deployment. Record those checks separately.

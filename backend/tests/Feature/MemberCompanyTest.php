@@ -21,7 +21,7 @@ class MemberCompanyTest extends TestCase
 
     private function userWithFounder(): User
     {
-        $user = User::factory()->create();
+        $user = User::factory()->member()->create();
         FounderProfile::create([
             'user_id' => $user->id,
             'slug' => 'founder-' . $user->id,
@@ -57,7 +57,7 @@ class MemberCompanyTest extends TestCase
 
     public function test_create_requires_founder_profile(): void
     {
-        $user = User::factory()->create();
+        $user = User::factory()->member()->create();
         $this->actingAs($user)
             ->postJson('/api/v1/member/companies', ['name' => 'X'])
             ->assertStatus(422);
