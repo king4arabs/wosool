@@ -70,8 +70,7 @@ npm run setup
 npm run verify
 ```
 
-`npm run setup` installs frontend and backend dependencies, prepares the default SQLite database, generates the Laravel app key, and runs backend migrations so the repository is ready to boot locally.
-`npm run setup` installs frontend and backend dependencies, copies the backend environment file if needed, generates the Laravel app key, and runs backend migrations against your local MySQL database.
+`npm run setup` installs frontend and backend dependencies, copies the backend environment file if needed, prepares the default SQLite database, generates an app key if missing, and runs backend migrations. An existing `backend/.env` is preserved; configure it before setup if you prefer MySQL or PostgreSQL.
 
 To run the two application surfaces locally, use separate terminals from the repository root:
 
@@ -97,12 +96,14 @@ cd backend
 composer install
 npm install
 cp .env.example .env
+touch database/database.sqlite
 php artisan key:generate
-mysql -u root -p -e "CREATE DATABASE IF NOT EXISTS wosool CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
 php artisan migrate
 php artisan db:seed
 composer run dev
 ```
+
+To use MySQL or PostgreSQL instead, configure `DB_CONNECTION` and the matching database credentials in `backend/.env` and create the database before running migrations.
 
 ### Seeded Accounts
 

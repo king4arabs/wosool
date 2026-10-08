@@ -1,6 +1,10 @@
+@import "@fontsource-variable/cairo/wght.css";
+@import "@fontsource-variable/manrope/wght.css";
 @import "tailwindcss";
 
 :root {
+  --font-cairo: "Cairo Variable";
+  --font-manrope: "Manrope Variable";
   --background: #F8F9FC;
   --foreground: #0F1628;
   --color-primary-navy: #080D1A;

@@ -8,8 +8,8 @@ The backend is a **Laravel 13** API serving public content, authentication, and 
 composer install
 npm install
 cp .env.example .env
+touch database/database.sqlite
 php artisan key:generate
-mysql -u root -p -e "CREATE DATABASE IF NOT EXISTS wosool CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
 php artisan migrate
 php artisan db:seed
 composer run dev
@@ -39,16 +39,13 @@ The current member API routes are defined in [routes/api.php](./routes/api.php).
 
 ## Default Local Database
 
-Local development now defaults to MySQL via `.env.example`.
+Local development defaults to SQLite via `.env.example`; `npm run setup` creates the database file automatically.
 
 ```text
-DB_CONNECTION=mysql
-DB_HOST=127.0.0.1
-DB_PORT=3306
-DB_DATABASE=wosool
-DB_USERNAME=root
-DB_PASSWORD=
+DB_CONNECTION=sqlite
 ```
+
+For MySQL or PostgreSQL, configure `DB_CONNECTION`, `DB_HOST`, `DB_PORT`, `DB_DATABASE`, `DB_USERNAME`, and `DB_PASSWORD` in your own `.env` and create the database before migrating.
 
 ## Seeded Accounts
 

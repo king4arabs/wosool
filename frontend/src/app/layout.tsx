@@ -1,18 +1,8 @@
 import type { Metadata, Viewport } from "next";
-import { Cairo } from "next/font/google";
-import { Manrope } from "next/font/google";
 import { Providers } from "./providers";
 import "./globals.css";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://wosool.org";
-const manrope = Manrope({
-  subsets: ["latin"],
-  variable: "--font-manrope",
-});
-const cairo = Cairo({
-  subsets: ["arabic", "latin"],
-  variable: "--font-cairo",
-});
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -83,7 +73,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ar" dir="rtl" className="h-full antialiased scroll-smooth">
-      <body className={`${manrope.variable} ${cairo.variable} min-h-full flex flex-col font-sans`}>
+      <body className="min-h-full flex flex-col font-sans">
         <Providers>
           <a
             href="#main-content"

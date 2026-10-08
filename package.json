@@ -8,7 +8,7 @@
     "setup:frontend": "npm --prefix frontend install",
     "setup:backend": "composer --working-dir=backend install --no-interaction --no-progress && npm --prefix backend install && npm run backend:prepare",
     "backend:prepare": "npm run backend:env && npm run backend:migrate",
-    "backend:env": "php -r \"file_exists('backend/.env') || copy('backend/.env.example', 'backend/.env');\" && php backend/artisan key:generate --force",
+    "backend:env": "php -r \"file_exists('backend/.env') || copy('backend/.env.example', 'backend/.env'); if (preg_match('/^DB_CONNECTION=sqlite$/m', file_get_contents('backend/.env'))) { file_exists('backend/database/database.sqlite') || touch('backend/database/database.sqlite'); } if (preg_match('/^APP_KEY=\\s*$/m', file_get_contents('backend/.env'))) { passthru('php backend/artisan key:generate --force', $status); exit($status); }\"",
     "backend:migrate": "php backend/artisan migrate --force",
     "build": "npm run build:frontend && npm run build:backend",
     "build:frontend": "npm --prefix frontend run build",

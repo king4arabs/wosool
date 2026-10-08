@@ -4,7 +4,7 @@
 
 Wosool uses a layered testing approach intended to improve reliability without slowing early-stage delivery. The immediate priority is protecting the current public API contract and ensuring the frontend remains buildable and lint-clean.
 
-Local application development now defaults to MySQL, while the PHPUnit suite intentionally stays on in-memory SQLite for speed and isolation.
+Local application development defaults to file-backed SQLite, while the PHPUnit suite intentionally stays on in-memory SQLite for speed and isolation.
 
 | Test layer | Current status | Purpose |
 |---|---|---|
