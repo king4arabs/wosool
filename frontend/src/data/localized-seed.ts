@@ -1,4 +1,5 @@
 import { companies, events, founders, partners, programs, sponsors } from "@/data/seed"
+import { demoContentEnabled } from "@/lib/demo-content"
 import type { Locale } from "@/lib/locale"
 import type { Company, Event, Founder, Partner, Program, Sponsor } from "@/types"
 
@@ -347,26 +348,32 @@ export function localizeSponsor(sponsor: Sponsor, locale: Locale): Sponsor {
 }
 
 export function getSeedFounders(locale: Locale) {
+  if (!demoContentEnabled) return []
   return founders.map((founder) => localizeFounder(founder, locale))
 }
 
 export function getSeedCompanies(locale: Locale) {
+  if (!demoContentEnabled) return []
   return companies.map((company) => localizeCompany(company, locale))
 }
 
 export function getSeedEvents(locale: Locale) {
+  if (!demoContentEnabled) return []
   return events.map((event) => localizeEvent(event, locale))
 }
 
 export function getSeedPrograms(locale: Locale) {
+  if (!demoContentEnabled) return []
   return programs.map((program) => localizeProgram(program, locale))
 }
 
 export function getSeedPartners(locale: Locale) {
+  if (!demoContentEnabled) return []
   return partners.map((partner) => localizePartner(partner, locale))
 }
 
 export function getSeedSponsors(locale: Locale) {
+  if (!demoContentEnabled) return []
   return sponsors.map((sponsor) => localizeSponsor(sponsor, locale))
 }
 

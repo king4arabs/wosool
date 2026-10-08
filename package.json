@@ -7,7 +7,7 @@
     "setup": "npm run setup:frontend && npm run setup:backend",
     "setup:frontend": "npm --prefix frontend ci",
     "setup:backend": "composer --working-dir=backend install --no-interaction --no-progress && npm --prefix backend ci && npm run backend:prepare",
-    "backend:prepare": "npm run backend:env && npm run backend:migrate",
+    "backend:prepare": "npm run backend:env && npm run backend:migrate && npm run eoa:install",
     "backend:env": "php scripts/prepare-backend.php",
     "backend:migrate": "php backend/artisan migrate",
     "build": "npm run build:frontend && npm run build:backend",
@@ -23,7 +23,8 @@
     "dev:backend": "php backend/artisan serve --host=127.0.0.1",
     "ops:ssl:repair": "node scripts/ssl-repair.mjs",
     "test:frontend": "npm --prefix frontend test",
-    "test:backend": "composer --working-dir=backend run test"
+    "test:backend": "composer --working-dir=backend run test",
+    "eoa:install": "php backend/artisan eoa:install"
   },
   "engines": {
     "node": "^22.12.0 || ^24.0.0"

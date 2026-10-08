@@ -13,6 +13,12 @@ import type { NextRequest } from "next/server"
 export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl
 
+  if (/^\/eoa(?:\/|$)/.test(pathname)) {
+    const canonical = request.nextUrl.clone();
+    canonical.pathname = pathname.replace(/^\/eoa/, "/EOA");
+    return NextResponse.redirect(canonical, 308);
+  }
+
   // Check for Laravel session cookie (set by Sanctum).
   // Supports default `laravel_session` and custom names like `wosool-session`.
   const cookieNames = request.cookies.getAll().map((cookie) => cookie.name)
@@ -42,5 +48,5 @@ export function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/dashboard/:path*", "/admin/:path*", "/login", "/register"],
+  matcher: ["/eoa/:path*","/dashboard/:path*", "/admin/:path*", "/login", "/register"],
 }

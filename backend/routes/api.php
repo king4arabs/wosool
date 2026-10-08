@@ -285,3 +285,5 @@ Route::prefix('v1')->group(function () {
         Route::get('/chat/help-requests/unresolved', [AdminChatModerationController::class, 'unresolvedHelpRequests']);
     });
 });
+
+require __DIR__.'/eoa.php';

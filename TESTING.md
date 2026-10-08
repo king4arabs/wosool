@@ -41,3 +41,9 @@ npm --prefix backend audit --audit-level=high
 - Canonical URLs, crawler exclusions, sitemap, and production asset delivery.
 
 Build and unit-test success do not establish browser rendering quality, actual SMTP delivery, or successful production deployment. Record those checks separately.
+
+## EO Accelerator
+
+`backend/tests/Feature/EoaPlatformTest.php` exercises verification/signature expiry, network isolation, private/versioned/encrypted drafts, required evidence and consent, scoped document/reviewer access, decisions and notifications, onboarding and official/fee confirmation, coach/cohort isolation, privacy/publication approvals, operational edits and inquiry handling. `frontend/src/lib/eoa.test.ts` checks USD/SAR eligibility boundaries, including the incorrect SAR250,000 equivalence and the US$1m progression boundary.
+
+See [the EOA verification matrix](docs/EOA.md#release-and-validation) for required browser, real mail, production-engine and deployment checks. API tests use faked notification delivery and SQLite; do not report them as live integration tests.

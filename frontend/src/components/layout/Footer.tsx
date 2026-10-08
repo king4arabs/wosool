@@ -17,6 +17,7 @@ const footerCopy = {
         { href: "/apply", label: "قدّم للانضمام" },
       ],
       "البرامج": [
+        { href: "/EOA", label: "EO Riyadh Accelerator" },
         { href: "/programs", label: "جميع البرامج" },
         { href: "/programs/founder-circles", label: "دوائر المؤسسين" },
         { href: "/programs/growth-track", label: "مسار النمو" },
@@ -35,7 +36,7 @@ const footerCopy = {
         { href: "/contact", label: "اتصل بنا" },
       ],
     },
-    tagline: "شبكة خاصة للمؤسسين",
+    tagline: "من مؤسس إلى مؤسس",
     copyright: "جميع الحقوق محفوظة.",
     privacy: "سياسة الخصوصية",
     terms: "شروط الاستخدام",
@@ -52,6 +53,7 @@ const footerCopy = {
         { href: "/apply", label: "Apply to join" },
       ],
       Programs: [
+        { href: "/EOA", label: "EO Riyadh Accelerator" },
         { href: "/programs", label: "All programs" },
         { href: "/programs/founder-circles", label: "Founder circles" },
         { href: "/programs/growth-track", label: "Growth track" },
@@ -70,7 +72,7 @@ const footerCopy = {
         { href: "/contact", label: "Get in touch" },
       ],
     },
-    tagline: "Private founders network",
+    tagline: "Founders to Founders",
     copyright: "All rights reserved.",
     privacy: "Privacy Policy",
     terms: "Terms of Use",

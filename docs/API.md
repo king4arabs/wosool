@@ -264,3 +264,24 @@ Read endpoints return JSON collections or objects. Submission endpoints return c
 ## Contract Evolution Guidance
 
 The API should continue evolving through backward-compatible additions where possible. Breaking contract changes should trigger a versioning review, an ADR entry, and a changelog update.
+
+## EO Riyadh Accelerator
+
+EOA API routes are defined in `backend/routes/eoa.php` at `/api/v1/eoa`. Frontend routes are independently namespaced at `/EOA`.
+
+| Route | Access / purpose |
+| --- | --- |
+| `GET /program` | Public verified facts, approved local content and confirmed partner logos |
+| `POST /auth/register`, `POST /auth/resend`, `GET /auth/verify/{id}/{hash}` | Consent, rate limits, signed verification; registration requires an approved data notice |
+| `GET/PUT /application`, `POST /application/submit` | Own versioned draft/submission; writes require verified email |
+| `POST /documents`, `GET/DELETE /documents/{id}` | Private evidence; owner or assigned authorized review for download |
+| `GET /participant`, `POST /onboarding`, `PUT /progress` | Own enrollment, checklist and progress |
+| `POST /sessions/{id}/register`, `POST /feedback`, `PATCH /notifications/{id}` | Scoped participant actions |
+| `GET /review`, `GET/PATCH /review/{id}`, `POST /review/{id}/assign` | Staff/assigned reviewers; lead-only final decisions |
+| `GET /operations`, `PUT /operations/settings` | Staff read; leadership controls program/privacy/fee approvals |
+| `POST /operations/create/{type}`, `PATCH /operations/update/{type}/{id}` | Scoped cohorts, sessions, groups, resources and announcements |
+| `PATCH /operations/participants/{id}`, `PATCH /operations/organizations/{id}` | Leadership financial/enrollment and partner confirmations |
+| `PATCH /operations/inquiries/{id}` | Staff manual handling state; does not send email |
+| `GET /coach`, `PATCH /coach/{participant}` | Assigned coaching/progress/attendance without financial information |
+
+Requests use Sanctum cookies/CSRF and the existing same-origin API helper. Stale application versions return 409; validation returns 422; forbidden roles/assignments return 403. Missing program setup returns 404; unapproved data collection returns 503 with an explanatory message. Global/local requirements and external dependencies are documented in [EOA.md](EOA.md).

@@ -81,6 +81,7 @@ class ProgramManagementController extends Controller
     public function updateApplication(Request $request, Program $program, ProgramApplication $application): JsonResponse
     {
         abort_unless($application->program_id === $program->id, 404);
+        abort_if($program->slug === \App\Services\Eoa\ProgramService::SLUG, 409, 'Use the EOA workspace to preserve review and enrollment controls.');
 
         $data = $request->validate([
             'action' => ['required', 'in:accept,reject,waitlist,request_more_info,withdraw,enroll,assign_to_cohort,add_internal_note'],
