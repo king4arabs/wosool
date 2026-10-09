@@ -2,7 +2,7 @@
 
 [![CI](https://github.com/king4arabs/wosool/actions/workflows/ci.yml/badge.svg)](https://github.com/king4arabs/wosool/actions/workflows/ci.yml)
 
-Wosool is the digital gateway for **EO Riyadh Accelerator**, alongside its existing Saudi/GCC founder community.
+Wosool is the digital gateway for Founders to Founders and powered **EO Riyadh Accelerator**, alongside its existing Saudi/GCC founder community.
 
 **Saudi Founders. Global Connections. Extraordinary Growth.**
 
