@@ -11,6 +11,7 @@ export interface Founder {
   linkedinUrl?: string
   twitterUrl?: string
   companyName: string
+  primaryCompany?: Company
   joinedAt: string
   score: number
   needs: string[]

@@ -1,0 +1,49 @@
+.home { color:#17223a; background:#fff; }
+.container { width:min(1200px,calc(100% - 48px)); margin-inline:auto; }
+.hero { background:radial-gradient(ellipse at 90% 0%,#e5ebff 0,transparent 50%),#f7f8fc; border-bottom:1px solid #e5e9f3; }
+.heroGrid { display:grid; grid-template-columns:1.3fr 1fr; align-items:center; gap:80px; padding-block:88px; }
+.eyebrow { font-size:12px; font-weight:750; letter-spacing:.06em; color:#4055bc; margin-bottom:16px; }
+.hero h1 { font-size:clamp(48px,6.8vw,88px); line-height:1.22; font-weight:800; letter-spacing:-.045em; }
+.hero h1 span { color:#3b52d4; }
+.intro { font-size:20px; line-height:1.8; font-weight:650; margin-top:24px; }
+.lead { font-size:16px; line-height:1.95; color:#59677c; max-width:660px; margin-top:16px; }
+.actions { display:flex; flex-wrap:wrap; gap:12px; margin-top:30px; }
+.primary,.secondary { min-height:48px; display:inline-flex; align-items:center; justify-content:center; gap:12px; padding:12px 24px; font-weight:700; font-size:14px; border-radius:10px; }
+.primary { background:#3b52d4; color:#fff; border:1px solid #3b52d4; }
+.primary:hover { background:#2f43b5; }
+.secondary { background:#fff; border:1px solid #ced6e7; color:#253758; }
+.secondary:hover { border-color:#3b52d4; }
+.note { font-size:12px; line-height:1.9; color:#64748b; margin-top:18px; max-width:540px; }
+.heroPanel { padding:36px; border-radius:24px; background:#101d36; color:#fff; box-shadow:0 25px 65px #13245016; }
+.panelBrand { display:flex; align-items:center; gap:14px; font-size:12px; letter-spacing:.14em; color:#c5d0e8; }
+.panelBrand img { background:white; padding:6px; border-radius:12px; }
+.heroPanel h2 { font-size:32px; line-height:1.5; font-weight:750; margin-top:32px; }
+.heroPanel>p { font-size:15px; color:#c0cee3; line-height:1.9; margin-top:12px; }
+.heroPanel ul { margin-top:24px; }
+.heroPanel li { display:flex; align-items:center; gap:18px; padding-block:16px; border-top:1px solid #ffffff1c; font-size:14px; }
+.heroPanel li span { color:#95a8ef; font-size:12px; }
+.heroPanel>a { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-top:24px; color:#d0d9ff; font-size:13px; min-height:44px; }
+.section { padding-block:80px; }
+.home section:not([aria-labelledby="community-partners-title"]) h2 { font-size:clamp(27px,3vw,39px); line-height:1.5; font-weight:750; letter-spacing:-.025em; }
+.benefits { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:32px; margin-top:36px; }
+.benefits article { border-top:1px solid #dfe4ef; padding-top:28px; }
+.benefits svg { color:#3b52d4; margin-bottom:20px; }
+.benefits h3,.steps h3 { font-size:20px; font-weight:700; margin-bottom:12px; }
+.benefits p,.steps p { font-size:15px; line-height:1.95; color:#617087; }
+.founders { padding-block:64px; background:#f5f7fc; border-block:1px solid #e8ecf5; scroll-margin-top:90px; }
+.sectionHead { display:flex; align-items:end; justify-content:space-between; gap:24px; }
+.textLink { display:inline-flex; align-items:center; gap:10px; color:#344bc1; font-size:14px; font-weight:700; min-height:44px; padding-block:12px; }
+.sectionHead>.textLink { flex-shrink:0; }
+.empty { margin-block:24px; border:1px dashed #cbd3e5; background:#fff; padding:32px; border-radius:16px; color:#617087; }
+.empty .textLink { margin-inline-start:16px; }
+.steps { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:40px; margin-block:36px; }
+.steps li { border-top:1px solid #dfe4ef; padding-top:24px; }
+.steps li>span { display:block; font-size:13px; color:#4055bc; margin-bottom:16px; }
+.events { padding-block:64px; background:#fafbfe; border-block:1px solid #e8ecf5; }
+.program { display:flex; align-items:center; gap:40px; justify-content:space-between; border:1px solid #dce3f2; border-inline-start:4px solid #3b52d4; border-radius:16px; padding:32px; }
+.program>div { max-width:780px; }
+.program p:not(.eyebrow) { font-size:14px; color:#617087; line-height:1.95; margin-top:16px; }
+.program>a { flex-shrink:0; }
+.news { padding-bottom:80px; }
+@media(max-width:1000px) { .heroGrid { gap:32px; padding-block:60px; }.heroPanel { padding:24px; }.program { flex-direction:column; align-items:start; } }
+@media(max-width:720px) { .container { width:calc(100% - 36px); }.heroGrid,.benefits,.steps { grid-template-columns:1fr; }.heroGrid {padding-block:44px;}.hero h1 {font-size:54px;}.section {padding-block:52px;}.sectionHead {display:block;}.heroPanel h2 {font-size:28px;}.benefits,.steps {gap:28px;}.program {padding:24px;}.founders {padding-block:44px;} }

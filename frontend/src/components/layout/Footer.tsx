@@ -2,8 +2,11 @@
 
 import Image from "next/image"
 import Link from "next/link"
-import { Globe, AtSign, Share2 } from "lucide-react"
+import { ArrowUpRight, ArrowUp, Globe, Camera, AtSign } from "lucide-react"
 import { useLocale } from "@/lib/locale"
+import { usePathname } from "next/navigation"
+import { publicJourney } from "@/lib/navigation"
+import styles from "./footer.module.css"
 
 const footerCopy = {
   ar: {
@@ -28,11 +31,11 @@ const footerCopy = {
         { href: "/sponsors", label: "الرعاة" },
         { href: "/contact", label: "تواصل معنا" },
       ],
-      "الشركة": [
+      "عن وصول": [
         { href: "/about", label: "عن وصول" },
-        { href: "/about#principles", label: "مبادئنا" },
-        { href: "/about#team", label: "القيادة" },
-        { href: "/contact", label: "اتصل بنا" },
+        { href: "/login", label: "حسابي" },
+        { href: "/privacy", label: "الخصوصية" },
+        { href: "/terms", label: "شروط الاستخدام" },
       ],
     },
     tagline: "من مؤسس إلى مؤسس",
@@ -63,11 +66,11 @@ const footerCopy = {
         { href: "/sponsors", label: "Sponsors" },
         { href: "/contact", label: "Contact" },
       ],
-      Company: [
+      "About Wosool": [
         { href: "/about", label: "About Wosool" },
-        { href: "/about#principles", label: "Our principles" },
-        { href: "/about#team", label: "Leadership" },
-        { href: "/contact", label: "Get in touch" },
+        { href: "/login", label: "My account" },
+        { href: "/privacy", label: "Privacy" },
+        { href: "/terms", label: "Terms of use" },
       ],
     },
     tagline: "Founders to Founders",
@@ -81,13 +84,18 @@ const footerCopy = {
 export function Footer() {
   const { locale } = useLocale()
   const copy = footerCopy[locale]
+  const { isEoa } = publicJourney(usePathname())
   const footerColumns = Object.entries(copy.columns) as Array<
     [string, Array<{ href: string; label: string }>]
   >
 
   return (
-    <footer className="bg-white border-t border-slate-200/60 text-slate-700" aria-label="Site footer">
+    <footer className={styles.footer} aria-label={locale === "ar" ? "تذييل الموقع" : "Site footer"}>
       <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+        {!isEoa && <div className={styles.invitation}>
+          <div><p>{locale === "ar" ? "من مؤسس إلى مؤسس" : "FOUNDERS TO FOUNDERS"}</p><h2>{locale === "ar" ? "ابنِ علاقات تستحق وقتك." : "Make your next connection count."}</h2><span>{locale === "ar" ? "شارك تجربتك. تعرّف على مجتمعك. وابنِ ما هو قادم." : "Share your experience. Find your community. Build what comes next."}</span></div>
+          <Link href="/apply">{locale === "ar" ? "انضم إلى وصول" : "Join Wosool"}<ArrowUpRight size={20} /></Link>
+        </div>}
         <div className="grid grid-cols-1 gap-12 md:grid-cols-2 lg:grid-cols-6">
           <div className="lg:col-span-2">
             <Link href="/" className="mb-5 inline-flex items-center gap-3">
@@ -132,7 +140,7 @@ export function Footer() {
                 aria-label="Wosool on Instagram"
                 className="rounded-full p-2 text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-700"
               >
-                <Share2 className="h-4 w-4" />
+                <Camera className="h-4 w-4" />
               </a>
             </div>
           </div>
@@ -162,7 +170,7 @@ export function Footer() {
           <p className="text-sm text-slate-400">
             © {new Date().getFullYear()} Wosool. {copy.copyright}
           </p>
-          <div className="flex items-center gap-6">
+          <div className="flex flex-wrap items-center justify-center gap-6">
             <Link href="/privacy" className="text-sm text-slate-400 transition-colors hover:text-[#3B52D4]">
               {copy.privacy}
             </Link>
@@ -172,6 +180,9 @@ export function Footer() {
             <Link href="/contact" className="text-sm text-slate-400 transition-colors hover:text-[#3B52D4]">
               {copy.contact}
             </Link>
+            <button type="button" className={styles.backTop} onClick={() => { window.scrollTo({ top: 0, behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth" }); document.getElementById("main-content")?.focus({ preventScroll: true }) }}>
+              {locale === "ar" ? "إلى الأعلى" : "Back to top"}<ArrowUp size={16} />
+            </button>
           </div>
         </div>
       </div>

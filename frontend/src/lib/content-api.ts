@@ -181,6 +181,7 @@ export function mapFounder(founder: ApiFounder): Founder {
     stage: founder.stage ?? "",
     avatarUrl: founder.avatar_url ?? "",
     companyName: founder.companies?.[0]?.name ?? "",
+    primaryCompany: founder.companies?.[0] ? mapCompany(founder.companies[0]) : undefined,
     joinedAt: founder.created_at ?? "",
     score: founder.scorecard?.overall_score ?? 0,
     needs: founder.needs ?? [],

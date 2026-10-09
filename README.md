@@ -116,4 +116,4 @@ Remaining external dependencies: configured hosting/deployment access, productio
 
 Use a focused branch from main, preserve unrelated work, add regression coverage, check Arabic/English, and document verification in the PR.
 
-[API](docs/API.md) · [Architecture](ARCHITECTURE.md) · [Testing](TESTING.md) · [Security](SECURITY.md) · [Changelog](CHANGELOG.md)
+[Community homepage](docs/COMMUNITY-HOMEPAGE.md) · [API](docs/API.md) · [Architecture](ARCHITECTURE.md) · [Testing](TESTING.md) · [Security](SECURITY.md) · [Changelog](CHANGELOG.md)
