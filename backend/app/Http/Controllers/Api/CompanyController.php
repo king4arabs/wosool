@@ -12,7 +12,7 @@ class CompanyController extends Controller
 {
     public function index(Request $request): JsonResponse
     {
-        $query = CompanyProfile::with(['founders' => fn ($q) => $q->where('is_public', true)->with('user')])
+        $query = CompanyProfile::with(['founders' => fn ($q) => $q->where('is_public', true)->where('status', 'active')->with('user')])
             ->where('status', 'active')
             ->where('is_public', true);
 
@@ -47,6 +47,7 @@ class CompanyController extends Controller
 
         $companies = $query
             ->withCount('founders')
+            ->orderByRaw("CASE WHEN country_code = 'SA' THEN 0 WHEN country_code IN ('AE','BH','KW','OM','QA') THEN 1 WHEN country_code IN ('EG','JO','LB','MA','TN','DZ','IQ','PS','LY','SD','YE','SY') THEN 2 ELSE 3 END")
             ->orderBy('is_featured', 'desc')
             ->orderBy('created_at', 'desc')
             ->paginate(max(1, min(100, $request->integer('per_page', 12))))
@@ -57,7 +58,7 @@ class CompanyController extends Controller
 
     public function show(string $slug): JsonResponse
     {
-        $company = CompanyProfile::with(['founders' => fn ($q) => $q->where('is_public', true)->with('user')])
+        $company = CompanyProfile::with(['founders' => fn ($q) => $q->where('is_public', true)->where('status', 'active')->with('user')])
             ->where('slug', $slug)
             ->where('status', 'active')
             ->where('is_public', true)

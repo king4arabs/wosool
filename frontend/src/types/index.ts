@@ -10,6 +10,8 @@ export interface Founder {
   avatarUrl: string
   linkedinUrl?: string
   twitterUrl?: string
+  position?: string
+  countryCode?: string
   companyName: string
   primaryCompany?: Company
   joinedAt: string
@@ -25,6 +27,8 @@ export interface Founder {
 }
 
 export interface Company {
+  countryCode?: string
+  founders?: Founder[]
   id: string
   name: string
   slug: string

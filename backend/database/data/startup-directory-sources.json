@@ -1,0 +1,92 @@
+[
+  {
+    "key": "misk",
+    "label": "Misk",
+    "url": "https://hub.misk.org.sa/en/programs/entrepreneurship/misk-launchpad/",
+    "status": "qualified",
+    "candidate": "Swarm Robotics",
+    "reviewed_at": "2026-10-09",
+    "review_note": "Company-specific annual revenue statement found; reporting year unspecified."
+  },
+  {
+    "key": "code",
+    "label": "CODE by MCIT",
+    "url": "https://code.mcit.gov.sa/",
+    "status": "research_pending",
+    "candidate": null,
+    "reviewed_at": "2026-10-09",
+    "review_note": "Official Tech Founders announcements identify program totals, not business-specific revenue."
+  },
+  {
+    "key": "monshaat",
+    "label": "Monshaat",
+    "url": "https://www.monshaat.gov.sa/en/node/407842",
+    "status": "research_pending",
+    "candidate": null,
+    "reviewed_at": "2026-10-09",
+    "review_note": "Biban coverage establishes event scope; investment deals and aggregate participation do not establish individual revenue."
+  },
+  {
+    "key": "multiverse",
+    "label": "Multiverse by MCIT",
+    "url": "https://www.spa.gov.sa/en/N2411086",
+    "status": "research_pending",
+    "candidate": null,
+    "reviewed_at": "2026-10-09",
+    "review_note": "Official London trip coverage identifies sectors and 20 startups; individual revenue evidence still needed. Do not confuse with the UK company Multiverse."
+  },
+  {
+    "key": "impact46",
+    "label": "Impact46",
+    "url": "https://impact46.sa/",
+    "status": "qualified",
+    "candidate": "Rasan",
+    "reviewed_at": "2026-10-09",
+    "review_note": "User supplied Impact 64. Official domain and brand are Impact46; some page titles say Impact64. Rasan identified among IPO-backed businesses."
+  },
+  {
+    "key": "falak",
+    "label": "Falak Investment Hub",
+    "url": "https://www.falak.sa/en/startups",
+    "status": "revenue_pending",
+    "candidate": "Mohtwize",
+    "reviewed_at": "2026-10-09",
+    "review_note": "Named portfolio candidate. Published portfolio/cohort revenue totals cannot be allocated to individual businesses."
+  },
+  {
+    "key": "lamarka",
+    "label": "Lamarka",
+    "url": "https://amplifaihealth.com/news/amplifai-health-secures-strategic-funding-to-scale-ai-powered-diabetic-foot-screening",
+    "status": "revenue_pending",
+    "candidate": "Amplifai Health",
+    "reviewed_at": "2026-10-09",
+    "review_note": "Company names Lamarka among backers. Funding and device approval are not earned revenue."
+  },
+  {
+    "key": "the-garage",
+    "label": "The Garage",
+    "url": "https://thegarage.sa/garage-programs",
+    "status": "research_pending",
+    "candidate": null,
+    "reviewed_at": "2026-10-09",
+    "review_note": "Accelerator sales eligibility and aggregate hub revenue are insufficient without named-company evidence."
+  },
+  {
+    "key": "leap",
+    "label": "LEAP",
+    "url": "https://www.insights.onegiantleap.com/blogs/a-year-after-rocket-fuel-lisans-growth-story/",
+    "status": "qualified",
+    "candidate": "Lisan; Verofax",
+    "reviewed_at": "2026-10-09",
+    "review_note": "LEAP founder stories provide dated company-specific revenue/ARR; historical periods remain explicit."
+  },
+  {
+    "key": "gitex",
+    "label": "GITEX / Expand North Star",
+    "url": "https://plus.gitex.com/newfront/exhibitor/thiqa-education",
+    "status": "qualified",
+    "candidate": "Thiqa Education",
+    "reviewed_at": "2026-10-09",
+    "review_note": "Indexed exhibitor profile reports cumulative AED 8M+ revenue. Direct page fetch returned 502; preserve self-reported provenance and recheck."
+  }
+]

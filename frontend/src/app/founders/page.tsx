@@ -6,6 +6,7 @@ import { Search, SlidersHorizontal, ArrowLeft, ArrowRight } from "lucide-react"
 import { usePublicCollection } from "@/lib/use-public-collection"
 import { CollectionStatus } from "@/components/sections/CollectionStatus"
 import { PublicLayout } from "@/components/layout/PublicLayout"
+import { CardBrowser } from "@/components/sections/CardBrowser"
 import { FounderCard } from "@/components/sections/FounderCard"
 import { Button } from "@/components/ui/button"
 import { foundersPageCopy, localizeFounder } from "@/data/localized-seed"
@@ -90,11 +91,7 @@ export default function FoundersPage() {
             <h2 className="text-2xl lg:text-3xl font-black text-slate-900 tracking-tight">{copy.featuredTitle}</h2>
           </div>
 
-          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {featuredFounders.map((founder) => (
-              <FounderCard key={founder.id} founder={founder} />
-            ))}
-          </div>
+          <CardBrowser key={`${search}-${sector}-${stage}-${location}`} items={featuredFounders.map(founder => ({ id: founder.id, content: <FounderCard founder={founder} /> }))} />
         </div>
       </section>
 
@@ -182,11 +179,7 @@ export default function FoundersPage() {
               </p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-              {filtered.map((founder) => (
-                <FounderCard key={founder.id} founder={founder} />
-              ))}
-            </div>
+            <CardBrowser key={`${search}-${sector}-${stage}-${location}`} items={filtered.map(founder => ({ id: founder.id, content: <FounderCard founder={founder} /> }))} />
           )}
 
           {/* Sign-in nudge */}

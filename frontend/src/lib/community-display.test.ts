@@ -19,3 +19,15 @@ test("founder cards retain the company relationship and assets from the public A
   assert.equal(founder.primaryCompany?.logoUrl, "/logo.svg")
   assert.equal(founder.primaryCompany?.website, "https://example.com")
 })
+
+test('public cards preserve social links and the primary company position', () => {
+  const founder = mapFounder({ id: 8, slug: 'founder', name: 'Founder', is_verified: false, is_featured: false, linkedin_url: 'https://www.linkedin.com/in/example/', twitter_url: 'https://x.com/example', country_code: 'SA', companies: [
+    {id:1,name:'Other',slug:'other',is_hiring:false,is_fundraising:false,is_collaborating:false},
+    {id:2,name:'Primary',slug:'primary',is_hiring:false,is_fundraising:false,is_collaborating:false,pivot:{role:'Co-founder',is_primary:true}}
+  ] })
+  assert.equal(founder.companyName, 'Primary')
+  assert.equal(founder.position, 'Co-founder')
+  assert.equal(founder.linkedinUrl, 'https://www.linkedin.com/in/example/')
+  assert.equal(founder.twitterUrl, 'https://x.com/example')
+  assert.equal(founder.countryCode, 'SA')
+})

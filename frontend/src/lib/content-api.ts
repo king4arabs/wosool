@@ -41,6 +41,9 @@ export interface ApiScorecard {
 }
 
 export interface ApiCompany {
+  country_code?: string | null
+  founders?: ApiFounder[]
+  pivot?: { role?: string | null; is_primary?: boolean }
   id: number
   name: string
   slug: string
@@ -62,6 +65,10 @@ export interface ApiCompany {
 }
 
 export interface ApiFounder {
+  country_code?: string | null
+  position?: string | null
+  linkedin_url?: string | null
+  twitter_url?: string | null
   id: number
   slug: string
   name?: string | null
@@ -171,7 +178,12 @@ export interface WrappedResponse<T> {
 }
 
 export function mapFounder(founder: ApiFounder): Founder {
+  const company = founder.companies?.find(company => company.pivot?.is_primary) ?? founder.companies?.[0]
   return {
+    position: company?.pivot?.role ?? founder.position ?? undefined,
+    countryCode: founder.country_code ?? undefined,
+    linkedinUrl: founder.linkedin_url ?? undefined,
+    twitterUrl: founder.twitter_url ?? undefined,
     id: String(founder.id),
     name: founder.name ?? founder.user?.name ?? founder.slug,
     slug: founder.slug,
@@ -181,8 +193,8 @@ export function mapFounder(founder: ApiFounder): Founder {
     sector: founder.sector ?? "",
     stage: founder.stage ?? "",
     avatarUrl: founder.avatar_url ?? "",
-    companyName: founder.companies?.[0]?.name ?? "",
-    primaryCompany: founder.companies?.[0] ? mapCompany(founder.companies[0]) : undefined,
+    companyName: company?.name ?? "",
+    primaryCompany: company ? mapCompany(company) : undefined,
     joinedAt: founder.created_at ?? "",
     score: founder.scorecard?.overall_score ?? 0,
     needs: founder.needs ?? [],
@@ -196,6 +208,8 @@ export function mapFounder(founder: ApiFounder): Founder {
 
 export function mapCompany(company: ApiCompany): Company {
   return {
+    countryCode: company.country_code ?? undefined,
+    founders: company.founders?.map(mapFounder),
     id: String(company.id),
     name: company.name,
     slug: company.slug,

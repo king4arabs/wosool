@@ -1,0 +1,841 @@
+[
+  {
+    "slug": "foodics",
+    "company_name_en": "Foodics",
+    "company_name_ar": "فودكس",
+    "country_en": "Saudi Arabia",
+    "country_ar": "السعودية",
+    "country_code": "SA",
+    "region": "Saudi Arabia",
+    "sector_en": "Restaurant technology",
+    "sector_ar": "تقنيات المطاعم",
+    "founder_name_en": "Ahmad AlZaini",
+    "founder_name_ar": "أحمد الزيني",
+    "role_en": "Co-founder & CEO",
+    "role_ar": "شريك مؤسس ورئيس تنفيذي",
+    "company_brief_en": "Cloud software that brings restaurant point of sale, operations and payments together.",
+    "company_brief_ar": "حلول سحابية تجمع نقاط البيع وإدارة عمليات المطاعم والمدفوعات.",
+    "founder_brief_en": "Co-founded Foodics to build technology for restaurant operators.",
+    "founder_brief_ar": "شارك في تأسيس فودكس لتطوير تقنيات تدعم تشغيل المطاعم.",
+    "website": "https://www.foodics.com/",
+    "source_url": "https://www.foodics.com/press/foodics-completes-full-acquisition-of-norma-a-greek-data-intelligence-company-expanding-its-dedicated-ai-division/",
+    "logo_url": "https://logowik.com/content/uploads/images/foodics9346.jpg",
+    "portrait_url": null,
+    "company_socials": [
+      {
+        "label": "LinkedIn",
+        "url": "https://www.linkedin.com/company/foodics/"
+      }
+    ],
+    "founder_socials": [
+      {
+        "label": "LinkedIn",
+        "url": "https://www.linkedin.com/in/alzaini/"
+      }
+    ],
+    "reviewed_at": "2026-10-09",
+    "review_due_at": "2027-01-07",
+    "sources": [
+      "https://www.foodics.com/press/foodics-completes-full-acquisition-of-norma-a-greek-data-intelligence-company-expanding-its-dedicated-ai-division/",
+      "https://logowik.com/foodics-logo-vector-svg-pdf-ai-eps-cdr-free-download-14989.html",
+      "https://www.foodics.com/press/foodics-signs-partnership-with-american-express-saudi-arabia/",
+      "https://www.linkedin.com/posts/foodics_the-h1-2025-performance-numbers-are-in-proud-activity-7354120078851747840--28Z"
+    ],
+    "asset_sources": [
+      {
+        "kind": "logo",
+        "url": "https://logowik.com/content/uploads/images/foodics9346.jpg",
+        "page": "https://logowik.com/foodics-logo-vector-svg-pdf-ai-eps-cdr-free-download-14989.html"
+      }
+    ],
+    "business_type": "technology",
+    "focus_area_en": "Restaurant point of sale, operations and merchant payments",
+    "focus_area_ar": "نقاط بيع المطاعم وتشغيلها ومدفوعات التجار",
+    "website_status": "active",
+    "website_verified_at": "2026-10-09",
+    "website_verification_method": "official_site_content_review",
+    "ecosystem_sources": [],
+    "revenue_status": "reported",
+    "revenue_evidence": {
+      "source_url": "https://www.linkedin.com/posts/foodics_the-h1-2025-performance-numbers-are-in-proud-activity-7354120078851747840--28Z",
+      "period": "H1 2025",
+      "summary_en": "Foodics reported 29% year-on-year ARR growth. No absolute revenue amount was disclosed.",
+      "summary_ar": "أعلنت فودكس نمو الإيرادات السنوية المتكررة بنسبة 29٪ مقارنة بالعام السابق، دون الإفصاح عن مبلغها.",
+      "reviewed_at": "2026-10-09"
+    }
+  },
+  {
+    "slug": "unifonic",
+    "company_name_en": "Unifonic",
+    "company_name_ar": "يونيفونيك",
+    "country_en": "Saudi Arabia",
+    "country_ar": "السعودية",
+    "country_code": "SA",
+    "region": "Saudi Arabia",
+    "sector_en": "Customer communications",
+    "sector_ar": "تقنيات التواصل مع العملاء",
+    "founder_name_en": "Ahmed Hamdan",
+    "founder_name_ar": "أحمد حمدان",
+    "role_en": "Co-founder & CEO",
+    "role_ar": "شريك مؤسس ورئيس تنفيذي",
+    "company_brief_en": "A customer-experience platform connecting business messaging, automation and engagement channels.",
+    "company_brief_ar": "منصة لتجربة العملاء تربط رسائل الشركات والأتمتة وقنوات التفاعل.",
+    "founder_brief_en": "Software engineer who co-founded Unifonic to improve business communications in the region.",
+    "founder_brief_ar": "مهندس برمجيات شارك في تأسيس يونيفونيك لتحسين اتصالات الشركات في المنطقة.",
+    "website": "https://www.unifonic.com/",
+    "source_url": "https://www.unifonic.com/en/about",
+    "logo_url": "/startup-directory/unifonic-logo.png",
+    "portrait_url": "/startup-directory/unifonic-portrait.png",
+    "company_socials": [
+      {
+        "label": "LinkedIn",
+        "url": "https://linkedin.com/company/unifonic/"
+      },
+      {
+        "label": "X",
+        "url": "https://www.twitter.com/Unifonic"
+      }
+    ],
+    "founder_socials": [],
+    "reviewed_at": "2026-10-09",
+    "review_due_at": "2027-01-07",
+    "sources": [
+      "https://www.unifonic.com/en/about"
+    ],
+    "asset_sources": [
+      {
+        "kind": "logo",
+        "url": "https://www.unifonic.com/hs-fs/hubfs/UNI_Logo_RGB-01.png?width=1408&height=243&name=UNI_Logo_RGB-01.png",
+        "page": "https://www.unifonic.com/en/about"
+      },
+      {
+        "kind": "portrait",
+        "url": "https://www.unifonic.com/hubfs/About-%20Ahmed.png",
+        "page": "https://www.unifonic.com/en/about"
+      },
+      {
+        "kind": "portrait_variant",
+        "url": "https://www.unifonic.com/hs-fs/hubfs/About-%20Ahmed.png?width=256&name=About-%20Ahmed.png",
+        "page": "https://www.unifonic.com/en/about"
+      }
+    ],
+    "business_type": "technology",
+    "focus_area_en": "Business messaging, customer engagement and automation",
+    "focus_area_ar": "رسائل الأعمال وتفاعل العملاء والأتمتة",
+    "website_status": "active",
+    "website_verified_at": "2026-10-09",
+    "website_verification_method": "official_site_content_review",
+    "ecosystem_sources": [],
+    "revenue_status": "pending",
+    "revenue_evidence": null
+  },
+  {
+    "slug": "salla",
+    "company_name_en": "Salla",
+    "company_name_ar": "سلة",
+    "country_en": "Saudi Arabia",
+    "country_ar": "السعودية",
+    "country_code": "SA",
+    "region": "Saudi Arabia",
+    "sector_en": "E-commerce",
+    "sector_ar": "التجارة الإلكترونية",
+    "founder_name_en": "Nawaf Hariri",
+    "founder_name_ar": "نواف الحريري",
+    "role_en": "Co-founder",
+    "role_ar": "شريك مؤسس",
+    "company_brief_en": "An e-commerce platform for building stores and managing payments, inventory and shipping integrations.",
+    "company_brief_ar": "منصة لإنشاء المتاجر الإلكترونية وإدارة المدفوعات والمخزون وتكاملات الشحن.",
+    "founder_brief_en": "Co-founded Salla with Salman Butt in 2016, drawing on their technology experience.",
+    "founder_brief_ar": "شارك مع سلمان بُت في تأسيس سلة عام 2016 انطلاقاً من خبرتهما التقنية.",
+    "website": "https://salla.com/",
+    "source_url": "https://stv.vc/blog/en/investing-in-salla",
+    "logo_url": "/startup-directory/salla-logo.png",
+    "portrait_url": null,
+    "company_socials": [],
+    "founder_socials": [],
+    "reviewed_at": "2026-10-09",
+    "review_due_at": "2027-01-07",
+    "sources": [
+      "https://stv.vc/blog/en/investing-in-salla",
+      "https://salla.com/"
+    ],
+    "asset_sources": [
+      {
+        "kind": "logo",
+        "url": "https://images.squarespace-cdn.com/content/v1/5abdf4e6c3c16a2a7cfb472b/1606217059592-DN40B4DAWSIL3M73XWUD/logosalla.png",
+        "page": "https://stv.vc/blog/en/investing-in-salla"
+      }
+    ],
+    "business_type": "technology",
+    "focus_area_en": "Online storefronts and merchant commerce infrastructure",
+    "focus_area_ar": "المتاجر الإلكترونية والبنية التشغيلية للتجار",
+    "website_status": "active",
+    "website_verified_at": "2026-10-09",
+    "website_verification_method": "official_site_content_review",
+    "ecosystem_sources": [],
+    "revenue_status": "pending",
+    "revenue_evidence": null
+  },
+  {
+    "slug": "tamara",
+    "company_name_en": "Tamara",
+    "company_name_ar": "تمارا",
+    "country_en": "Saudi Arabia",
+    "country_ar": "السعودية",
+    "country_code": "SA",
+    "region": "Saudi Arabia",
+    "sector_en": "Financial technology",
+    "sector_ar": "التقنية المالية",
+    "founder_name_en": "Abdulmajeed Alsukhan",
+    "founder_name_ar": "عبدالمجيد الصخّان",
+    "role_en": "Co-founder",
+    "role_ar": "شريك مؤسس",
+    "company_brief_en": "A financial technology company offering shopping and payment services to consumers and merchants.",
+    "company_brief_ar": "شركة تقنية مالية تقدم خدمات التسوق والدفع للمستهلكين والتجار.",
+    "founder_brief_en": "One of Tamara’s co-founders, focused on improving the shopping and payment experience.",
+    "founder_brief_ar": "أحد مؤسسي تمارا، يركز على تطوير تجربة التسوق والدفع.",
+    "website": "https://tamara.co/en-sa",
+    "source_url": "https://www.tamara.co/en-AE/tamara-series-b",
+    "logo_url": "/startup-directory/tamara-logo.svg",
+    "portrait_url": null,
+    "company_socials": [
+      {
+        "label": "Instagram",
+        "url": "https://www.instagram.com/usetamaraen"
+      },
+      {
+        "label": "LinkedIn",
+        "url": "https://www.linkedin.com/company/tamara/"
+      },
+      {
+        "label": "X",
+        "url": "https://x.com/usetamaraen?s=21"
+      }
+    ],
+    "founder_socials": [],
+    "reviewed_at": "2026-10-09",
+    "review_due_at": "2027-01-07",
+    "sources": [
+      "https://www.tamara.co/en-AE/tamara-series-b",
+      "https://files.tamara.co/public/financial-reports/financial-statement-2nd-quarter-2025_20250807.pdf"
+    ],
+    "asset_sources": [
+      {
+        "kind": "logo",
+        "url": "https://cdn.prod.website-files.com/67c184892f7a84b971ff49d9/68931b49f2808979578bdc64_tamara-text-logo-black-en.svg",
+        "page": "https://tamara.co/en-sa"
+      }
+    ],
+    "business_type": "technology",
+    "focus_area_en": "Consumer instalments and merchant checkout",
+    "focus_area_ar": "تقسيط مشتريات الأفراد والدفع لدى التجار",
+    "website_status": "active",
+    "website_verified_at": "2026-10-09",
+    "website_verification_method": "official_site_content_review",
+    "ecosystem_sources": [],
+    "revenue_status": "financial_statement",
+    "revenue_evidence": {
+      "source_url": "https://files.tamara.co/public/financial-reports/financial-statement-2nd-quarter-2025_20250807.pdf",
+      "period": "H1 2025",
+      "summary_en": "Tamara Finance Company reported SAR 495.93 million total revenue for the six months ended 30 June 2025; interim figures are unaudited. This is the finance entity, not a group-wide estimate.",
+      "summary_ar": "أعلنت شركة تمارا للتمويل إيرادات إجمالية قدرها 495.93 مليون ريال للنصف الأول من 2025 في قوائم أولية غير مدققة؛ الرقم يخص شركة التمويل وليس تقديراً للمجموعة.",
+      "reviewed_at": "2026-10-09"
+    }
+  },
+  {
+    "slug": "huspy",
+    "company_name_en": "Huspy",
+    "company_name_ar": "هسبي",
+    "country_en": "United Arab Emirates",
+    "country_ar": "الإمارات",
+    "country_code": "AE",
+    "region": "GCC",
+    "sector_en": "Property technology",
+    "sector_ar": "التقنية العقارية",
+    "founder_name_en": "Jad Antoun",
+    "founder_name_ar": "جاد أنطون",
+    "role_en": "Co-founder & CEO",
+    "role_ar": "شريك مؤسس ورئيس تنفيذي",
+    "company_brief_en": "A property technology business helping customers navigate home buying and mortgage financing.",
+    "company_brief_ar": "شركة تقنية عقارية تساعد العملاء في رحلة شراء المنازل والتمويل العقاري.",
+    "founder_brief_en": "Co-founded Huspy to simplify the home-buying journey through technology.",
+    "founder_brief_ar": "شارك في تأسيس هسبي لتبسيط رحلة شراء المنازل باستخدام التقنية.",
+    "website": "https://www.huspy.com/",
+    "source_url": "https://www.huspy.com/about",
+    "logo_url": "/startup-directory/huspy-logo.svg",
+    "portrait_url": null,
+    "company_socials": [
+      {
+        "label": "Instagram",
+        "url": "https://www.instagram.com/gohuspy/"
+      },
+      {
+        "label": "LinkedIn",
+        "url": "https://www.linkedin.com/company/huspy"
+      }
+    ],
+    "founder_socials": [],
+    "reviewed_at": "2026-10-09",
+    "review_due_at": "2027-01-07",
+    "sources": [
+      "https://www.huspy.com/about",
+      "https://huspy.com/blog/huspy-among-top-10-uae-startups-by-linkedin"
+    ],
+    "asset_sources": [
+      {
+        "kind": "logo",
+        "url": "https://www.huspy.com/images/primary-logo.svg",
+        "page": "https://www.huspy.com/about"
+      }
+    ],
+    "business_type": "technology",
+    "focus_area_en": "Home financing and property transactions",
+    "focus_area_ar": "تمويل المنازل والمعاملات العقارية",
+    "website_status": "active",
+    "website_verified_at": "2026-10-09",
+    "website_verification_method": "official_site_content_review",
+    "ecosystem_sources": [],
+    "revenue_status": "reported",
+    "revenue_evidence": {
+      "source_url": "https://huspy.com/blog/huspy-among-top-10-uae-startups-by-linkedin",
+      "period": "2022 announcement",
+      "summary_en": "Huspy described revenue growth in its 2022 company announcement; no revenue amount was disclosed. Historical evidence, not a current revenue estimate.",
+      "summary_ar": "ذكرت هسبي نمو إيراداتها في إعلانها لعام 2022 دون ذكر مبلغ. دليل تاريخي وليس تقديراً لإيراداتها الحالية.",
+      "reviewed_at": "2026-10-09"
+    }
+  },
+  {
+    "slug": "kitopi",
+    "company_name_en": "Kitopi",
+    "company_name_ar": "كيتوبي",
+    "country_en": "United Arab Emirates",
+    "country_ar": "الإمارات",
+    "country_code": "AE",
+    "region": "GCC",
+    "sector_en": "Food & hospitality",
+    "sector_ar": "الأغذية والضيافة",
+    "founder_name_en": "Mohamad Ballout",
+    "founder_name_ar": "محمد بلّوط",
+    "role_en": "Co-founder & CEO",
+    "role_ar": "شريك مؤسس ورئيس تنفيذي",
+    "company_brief_en": "A hospitality company developing and operating food brands across restaurants and delivery locations.",
+    "company_brief_ar": "شركة ضيافة تطوّر وتشغّل علامات غذائية عبر المطاعم ومواقع تجهيز طلبات التوصيل.",
+    "founder_brief_en": "Co-founded the Dubai-born company, combining food operations and technology.",
+    "founder_brief_ar": "شارك في تأسيس الشركة التي انطلقت من دبي وجمعت تشغيل الأعمال الغذائية والتقنية.",
+    "website": "https://www.kitopi.com/",
+    "source_url": "https://www.kitopi.com/leadership",
+    "logo_url": "/startup-directory/kitopi-logo.png",
+    "portrait_url": "/startup-directory/kitopi-portrait.jpg",
+    "company_socials": [
+      {
+        "label": "X",
+        "url": "https://twitter.com/kitopihq"
+      },
+      {
+        "label": "Instagram",
+        "url": "https://www.instagram.com/thisiskitopi/"
+      },
+      {
+        "label": "LinkedIn",
+        "url": "https://www.linkedin.com/company/kitopi/"
+      }
+    ],
+    "founder_socials": [],
+    "reviewed_at": "2026-10-09",
+    "review_due_at": "2027-01-07",
+    "sources": [
+      "https://www.kitopi.com/leadership",
+      "https://www.kitopi.com/our-story"
+    ],
+    "asset_sources": [
+      {
+        "kind": "logo",
+        "url": "https://static.wixstatic.com/media/eef487_5f05bc8c14a048349c1d7ced028dc782~mv2.png",
+        "page": "https://www.kitopi.com/leadership"
+      },
+      {
+        "kind": "portrait",
+        "url": "https://static.wixstatic.com/media/eef487_6d9b983fc4da4e64baa291ff41b39c9d~mv2.jpg",
+        "page": "https://www.kitopi.com/leadership"
+      },
+      {
+        "kind": "portrait_variant",
+        "url": "https://static.wixstatic.com/media/eef487_6d9b983fc4da4e64baa291ff41b39c9d~mv2.jpg/v1/crop/x_0,y_37,w_870,h_870/fill/w_180,h_180,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/M1%205_edited_edited.jpg",
+        "page": "https://www.kitopi.com/leadership"
+      }
+    ],
+    "business_type": "traditional",
+    "focus_area_en": "Restaurant brands, food preparation and delivery",
+    "focus_area_ar": "العلامات التجارية للمطاعم وإعداد الطعام وتوصيله",
+    "website_status": "active",
+    "website_verified_at": "2026-10-09",
+    "website_verification_method": "official_site_content_review",
+    "ecosystem_sources": [],
+    "revenue_status": "pending",
+    "revenue_evidence": null
+  },
+  {
+    "slug": "paymob",
+    "company_name_en": "Paymob",
+    "company_name_ar": "باي موب",
+    "country_en": "Egypt",
+    "country_ar": "مصر",
+    "country_code": "EG",
+    "region": "MENA",
+    "sector_en": "Financial technology",
+    "sector_ar": "التقنية المالية",
+    "founder_name_en": "Islam Shawky",
+    "founder_name_ar": "إسلام شوقي",
+    "role_en": "Co-founder & CEO",
+    "role_ar": "شريك مؤسس ورئيس تنفيذي",
+    "company_brief_en": "Payment infrastructure and acceptance tools for online and in-person businesses.",
+    "company_brief_ar": "بنية تحتية وحلول لقبول المدفوعات للشركات عبر الإنترنت ونقاط البيع.",
+    "founder_brief_en": "Co-founded Paymob to help businesses access digital payment services.",
+    "founder_brief_ar": "شارك في تأسيس باي موب لتمكين الشركات من الوصول إلى خدمات الدفع الرقمي.",
+    "website": "https://www.paymob.com/",
+    "source_url": "https://www.paymob.com/en/about-us",
+    "logo_url": "https://egyptinnovate-prod-upload-bucket.obs.af-north-1.myhuaweicloud.com/37927/01KKTFAHN3XAV1PBSE3GSDCVCZ.jpg",
+    "portrait_url": null,
+    "company_socials": [],
+    "founder_socials": [],
+    "reviewed_at": "2026-10-09",
+    "review_due_at": "2027-01-07",
+    "sources": [
+      "https://www.paymob.com/en/about-us",
+      "https://egyptinnovate.com/en/news/paymob-raises-50-million-series-b-funding-round",
+      "https://www.mubadala.com/en/news/mubadala-invests-in-the-35-million-pre-series-c-round-in-paymob"
+    ],
+    "asset_sources": [
+      {
+        "kind": "logo",
+        "url": "https://egyptinnovate-prod-upload-bucket.obs.af-north-1.myhuaweicloud.com/37927/01KKTFAHN3XAV1PBSE3GSDCVCZ.jpg",
+        "page": "https://egyptinnovate.com/en/news/paymob-raises-50-million-series-b-funding-round"
+      }
+    ],
+    "business_type": "technology",
+    "focus_area_en": "Merchant payment acceptance and payment infrastructure",
+    "focus_area_ar": "قبول مدفوعات التجار والبنية التحتية للمدفوعات",
+    "website_status": "active",
+    "website_verified_at": "2026-10-09",
+    "website_verification_method": "official_site_content_review",
+    "ecosystem_sources": [],
+    "revenue_status": "reported",
+    "revenue_evidence": {
+      "source_url": "https://www.mubadala.com/en/news/mubadala-invests-in-the-35-million-pre-series-c-round-in-paymob",
+      "period": "18 months to September 2026",
+      "summary_en": "Mubadala reported threefold consolidated revenue growth across Paymob’s four markets. No absolute revenue amount was disclosed.",
+      "summary_ar": "أفادت مبادلة بنمو إيرادات باي موب المجمعة ثلاثة أضعاف عبر أربع أسواق، دون الإفصاح عن مبلغ الإيرادات.",
+      "reviewed_at": "2026-10-09"
+    }
+  },
+  {
+    "slug": "canva",
+    "company_name_en": "Canva",
+    "company_name_ar": "كانفا",
+    "country_en": "Australia",
+    "country_ar": "أستراليا",
+    "country_code": "AU",
+    "region": "Global",
+    "sector_en": "Design software",
+    "sector_ar": "برمجيات التصميم",
+    "founder_name_en": "Melanie Perkins",
+    "founder_name_ar": "ميلاني بيركنز",
+    "role_en": "Co-founder & CEO",
+    "role_ar": "شريكة مؤسسة ورئيسة تنفيذية",
+    "company_brief_en": "A visual communication platform for creating designs, presentations and collaborative content.",
+    "company_brief_ar": "منصة للتواصل المرئي وإنشاء التصاميم والعروض والمحتوى التعاوني.",
+    "founder_brief_en": "Co-founded Canva with a mission to make design accessible to everyone.",
+    "founder_brief_ar": "شاركت في تأسيس كانفا بهدف إتاحة التصميم للجميع.",
+    "website": "https://www.canva.com/",
+    "source_url": "https://www.canva.com/newsroom/news/author/melanie-perkins/",
+    "logo_url": "/startup-directory/canva-logo.webp",
+    "portrait_url": null,
+    "company_socials": [],
+    "founder_socials": [
+      {
+        "label": "LinkedIn",
+        "url": "https://www.linkedin.com/in/melanieperkins/"
+      },
+      {
+        "label": "X",
+        "url": "https://twitter.com/melaniecanva"
+      }
+    ],
+    "reviewed_at": "2026-10-09",
+    "review_due_at": "2027-01-07",
+    "sources": [
+      "https://www.canva.com/newsroom/news/author/melanie-perkins/",
+      "https://wegic.ai/blog/favicon-guide",
+      "https://www.canva.com/newsroom/news/Why-Canva-challenging-HQ-privilege/",
+      "https://www.canva.com/newsroom/news/canva-2025-wrap/"
+    ],
+    "asset_sources": [
+      {
+        "kind": "logo",
+        "url": "https://cdn.wegic.ai/cms/seo/img/favicon-guide/0E636568.png?args=pr%3Asharp%2Fq%3A60&format=webp",
+        "page": "https://wegic.ai/blog/favicon-guide"
+      }
+    ],
+    "business_type": "technology",
+    "focus_area_en": "Visual design and collaborative communication software",
+    "focus_area_ar": "برمجيات التصميم المرئي والتواصل التعاوني",
+    "website_status": "active",
+    "website_verified_at": "2026-10-09",
+    "website_verification_method": "official_site_content_review",
+    "ecosystem_sources": [],
+    "revenue_status": "reported",
+    "revenue_evidence": {
+      "source_url": "https://www.canva.com/newsroom/news/canva-2025-wrap/",
+      "period": "2025 review",
+      "summary_en": "Canva’s own 2025 review reports reaching USD 3.5 billion in revenue. This is a company-reported figure.",
+      "summary_ar": "ذكر تقرير كانفا عن عام 2025 وصول الإيرادات إلى 3.5 مليار دولار؛ الرقم معلن من الشركة.",
+      "reviewed_at": "2026-10-09"
+    }
+  },
+  {
+    "slug": "swarm-robotics",
+    "company_name_en": "Swarm Robotics",
+    "company_name_ar": "سوارم روبوتكس",
+    "country_en": "Saudi Arabia",
+    "country_ar": "السعودية",
+    "country_code": "SA",
+    "region": "Saudi Arabia",
+    "sector_en": "Industrial automation",
+    "sector_ar": "الأتمتة الصناعية",
+    "founder_name_en": "Mohammed Bukhamsin",
+    "founder_name_ar": "محمد بوخمسين",
+    "role_en": "Co-founder & CEO",
+    "role_ar": "شريك مؤسس ورئيس تنفيذي",
+    "company_brief_en": "Riyadh-based integrator of robotic arms, mobile robots and industrial automation.",
+    "company_brief_ar": "شركة في الرياض لدمج الأذرع الروبوتية والروبوتات المتنقلة وأنظمة الأتمتة الصناعية.",
+    "founder_brief_en": "Leads Swarm Robotics; Misk identifies Mohammed and Abdulelah Bokhamseen in its founder story.",
+    "founder_brief_ar": "يقود سوارم روبوتكس؛ تعرض مسك قصة تأسيس محمد وعبدالإله بوخمسين.",
+    "website": "https://swarmrobotics.io/",
+    "source_url": "https://swarmrobotics.io/about",
+    "logo_url": "https://swarmrobotics.io/_app/immutable/assets/swarm-logo.5jvVSQNz.svg",
+    "portrait_url": "https://swarmrobotics.io/_app/immutable/assets/ceo-headshot.B4se3ipc.png",
+    "company_socials": [
+      {
+        "label": "LinkedIn",
+        "url": "https://www.linkedin.com/company/swarm-robotics-io/"
+      }
+    ],
+    "founder_socials": [],
+    "reviewed_at": "2026-10-09",
+    "review_due_at": "2027-01-07",
+    "sources": [
+      "https://swarmrobotics.io/about",
+      "https://hub.misk.org.sa/en/programs/entrepreneurship/misk-launchpad/",
+      "https://www.linkedin.com/company/swarm-robotics-io/"
+    ],
+    "asset_sources": [
+      {
+        "kind": "logo",
+        "url": "https://swarmrobotics.io/_app/immutable/assets/swarm-logo.5jvVSQNz.svg",
+        "page": "https://swarmrobotics.io/about"
+      },
+      {
+        "kind": "portrait",
+        "url": "https://swarmrobotics.io/_app/immutable/assets/ceo-headshot.B4se3ipc.png",
+        "page": "https://swarmrobotics.io/about"
+      }
+    ],
+    "business_type": "technology",
+    "focus_area_en": "Manufacturing and logistics robotics",
+    "focus_area_ar": "روبوتات التصنيع والخدمات اللوجستية",
+    "website_status": "active",
+    "website_verified_at": "2026-10-09",
+    "website_verification_method": "official_site_content_review",
+    "ecosystem_sources": [
+      {
+        "key": "misk",
+        "label": "Misk",
+        "url": "https://hub.misk.org.sa/en/programs/entrepreneurship/misk-launchpad/",
+        "relationship_en": "Launchpad founder testimonial",
+        "relationship_ar": "قصة مؤسسين في مسك الانطلاق"
+      }
+    ],
+    "revenue_status": "reported",
+    "revenue_evidence": {
+      "source_url": "https://hub.misk.org.sa/en/programs/entrepreneurship/misk-launchpad/",
+      "period": "Annual revenue; year not specified by Misk",
+      "summary_en": "Misk reports annual revenue above USD 200,000. The testimonial does not specify the reporting year.",
+      "summary_ar": "تذكر مسك إيرادات سنوية تتجاوز 200 ألف دولار دون تحديد السنة المالية.",
+      "reviewed_at": "2026-10-09"
+    }
+  },
+  {
+    "slug": "rasan",
+    "company_name_en": "Rasan",
+    "company_name_ar": "رسن",
+    "country_en": "Saudi Arabia",
+    "country_ar": "السعودية",
+    "country_code": "SA",
+    "region": "Saudi Arabia",
+    "sector_en": "Financial technology",
+    "sector_ar": "التقنية المالية",
+    "founder_name_en": "Moayad Alfallaj",
+    "founder_name_ar": "مؤيد الفلاج",
+    "role_en": "Co-founder & Chairman",
+    "role_ar": "شريك مؤسس ورئيس مجلس الإدارة",
+    "company_brief_en": "Saudi technology group operating insurance and financial-service platforms including Tameeni and Treza.",
+    "company_brief_ar": "مجموعة تقنية سعودية تدير منصات للتأمين والخدمات المالية، منها تأميني وتريزا.",
+    "founder_brief_en": "Co-founded Rasan and is listed as chairman on its current leadership page.",
+    "founder_brief_ar": "شارك في تأسيس رسن ويشغل رئاسة مجلس الإدارة وفق صفحة القيادة الحالية.",
+    "website": "https://rasan.sa/en",
+    "source_url": "https://rasan.sa/en/about",
+    "logo_url": "https://rasan.sa/_assets/imgs/kCL0EjSWHz-112.jpeg",
+    "portrait_url": null,
+    "company_socials": [],
+    "founder_socials": [],
+    "reviewed_at": "2026-10-09",
+    "review_due_at": "2027-01-07",
+    "sources": [
+      "https://rasan.sa/en/about",
+      "https://rasan.sa/en/investor-relations/investment-case",
+      "https://impact46.sa/",
+      "https://www.rasanglobal.com/en/ipo/"
+    ],
+    "asset_sources": [
+      {
+        "kind": "logo",
+        "url": "https://rasan.sa/_assets/imgs/kCL0EjSWHz-112.jpeg",
+        "page": "https://rasan.sa/en/about"
+      }
+    ],
+    "business_type": "technology",
+    "focus_area_en": "Insurance comparison and financial-service platforms",
+    "focus_area_ar": "مقارنة التأمين ومنصات الخدمات المالية",
+    "website_status": "active",
+    "website_verified_at": "2026-10-09",
+    "website_verification_method": "official_site_content_review",
+    "ecosystem_sources": [
+      {
+        "key": "impact46",
+        "label": "Impact46",
+        "url": "https://impact46.sa/",
+        "relationship_en": "Investor identifies Rasan among its IPO-backed businesses",
+        "relationship_ar": "تذكر الجهة رسن ضمن الشركات التي دعمت طرحها"
+      }
+    ],
+    "revenue_status": "reported",
+    "revenue_evidence": {
+      "source_url": "https://rasan.sa/en/investor-relations/investment-case",
+      "period": "Historical investor disclosure: 2020–2023",
+      "summary_en": "Rasan’s investor page documents positive revenue and revenue growth. No amount is reproduced because the page contains inconsistent year labels.",
+      "summary_ar": "توثق صفحة علاقات المستثمرين إيرادات ونمواً في الإيرادات. لم ننقل مبلغاً لوجود اختلاف في تسميات السنوات على الصفحة.",
+      "reviewed_at": "2026-10-09"
+    }
+  },
+  {
+    "slug": "lisan",
+    "company_name_en": "Lisan",
+    "company_name_ar": "لسان",
+    "country_en": "United Arab Emirates",
+    "country_ar": "الإمارات",
+    "country_code": "AE",
+    "region": "GCC",
+    "sector_en": "Enterprise software",
+    "sector_ar": "برمجيات المؤسسات",
+    "founder_name_en": "Noor Alasadi",
+    "founder_name_ar": "نور الأسدي",
+    "role_en": "Founder & CEO",
+    "role_ar": "مؤسس ورئيس تنفيذي",
+    "company_brief_en": "Arabic-focused enterprise software for writing, translation, meetings and institutional workflows.",
+    "company_brief_ar": "برمجيات مؤسسية تركز على العربية في الكتابة والترجمة والاجتماعات وسير العمل.",
+    "founder_brief_en": "Founded Lisan and describes its approach to enterprise Arabic AI in LEAP’s founder interview.",
+    "founder_brief_ar": "أسس لسان وشرح نهجها في الذكاء الاصطناعي العربي للمؤسسات في مقابلة ليب.",
+    "website": "https://www.lisan.com/",
+    "source_url": "https://www.lisan.com/company/",
+    "logo_url": "/startup-directory/lisan-logo.svg",
+    "portrait_url": null,
+    "company_socials": [
+      {
+        "label": "LinkedIn",
+        "url": "https://www.linkedin.com/company/lisanai/"
+      }
+    ],
+    "founder_socials": [],
+    "reviewed_at": "2026-10-09",
+    "review_due_at": "2027-01-07",
+    "sources": [
+      "https://www.lisan.com/company/",
+      "https://www.insights.onegiantleap.com/blogs/a-year-after-rocket-fuel-lisans-growth-story/",
+      "https://www.linkedin.com/company/lisanai/",
+      "https://www.lisan.com/company/brand/"
+    ],
+    "asset_sources": [
+      {
+        "kind": "logo",
+        "url": "https://lisan.com/assets/lisan-mark.svg",
+        "page": "https://www.lisan.com/company/brand/"
+      }
+    ],
+    "business_type": "technology",
+    "focus_area_en": "Arabic enterprise productivity and secure deployment",
+    "focus_area_ar": "إنتاجية المؤسسات بالعربية والنشر الآمن",
+    "website_status": "active",
+    "website_verified_at": "2026-10-09",
+    "website_verification_method": "official_site_content_review",
+    "ecosystem_sources": [
+      {
+        "key": "leap",
+        "label": "LEAP",
+        "url": "https://www.insights.onegiantleap.com/blogs/a-year-after-rocket-fuel-lisans-growth-story/",
+        "relationship_en": "2025 Rocket Fuel Shooting Star winner",
+        "relationship_ar": "فائز بجائزة النجم الصاعد في روكيت فيول 2025"
+      }
+    ],
+    "revenue_status": "reported",
+    "revenue_evidence": {
+      "source_url": "https://www.insights.onegiantleap.com/blogs/a-year-after-rocket-fuel-lisans-growth-story/",
+      "period": "18 August 2026 report; ARR",
+      "summary_en": "LEAP reports approximately USD 2.6 million in annual recurring revenue (ARR). ARR is an annualized recurring metric, not recognized annual revenue.",
+      "summary_ar": "أفادت ليب بإيرادات سنوية متكررة تقارب 2.6 مليون دولار. هذا مقياس سنوي متكرر وليس إيرادات سنوية محققة محاسبياً.",
+      "reviewed_at": "2026-10-09"
+    },
+    "logo_tone": "dark"
+  },
+  {
+    "slug": "verofax",
+    "company_name_en": "Verofax",
+    "company_name_ar": "فيروفاكس",
+    "country_en": "United Arab Emirates",
+    "country_ar": "الإمارات",
+    "country_code": "AE",
+    "region": "GCC",
+    "sector_en": "Enterprise software",
+    "sector_ar": "برمجيات المؤسسات",
+    "founder_name_en": "Wassim Merheby",
+    "founder_name_ar": "وسيم مرعبي",
+    "role_en": "Co-founder & CEO",
+    "role_ar": "شريك مؤسس ورئيس تنفيذي",
+    "company_brief_en": "Enterprise AI and product-traceability tools for customer engagement and operations.",
+    "company_brief_ar": "أدوات ذكاء اصطناعي مؤسسية وتتبع المنتجات لتفاعل العملاء والعمليات.",
+    "founder_brief_en": "Co-founded Verofax after a career in sales and marketing; leads the company as CEO.",
+    "founder_brief_ar": "شارك في تأسيس فيروفاكس بعد العمل في المبيعات والتسويق ويقودها رئيساً تنفيذياً.",
+    "website": "https://verofax.com/",
+    "source_url": "https://verofax.com/our-team/",
+    "logo_url": "https://verofax.com/wp-content/uploads/2025/03/logo-white.png",
+    "portrait_url": null,
+    "company_socials": [],
+    "founder_socials": [
+      {
+        "label": "LinkedIn",
+        "url": "https://www.linkedin.com/in/wassimmerheby/"
+      }
+    ],
+    "reviewed_at": "2026-10-09",
+    "review_due_at": "2027-01-07",
+    "sources": [
+      "https://verofax.com/our-team/",
+      "https://www.insights.onegiantleap.com/blogs/rocket-fuelled-results-verofax-is-scaling-up/",
+      "https://verofax.com/"
+    ],
+    "asset_sources": [
+      {
+        "kind": "logo",
+        "url": "https://verofax.com/wp-content/uploads/2025/03/logo-white.png",
+        "page": "https://verofax.com/"
+      }
+    ],
+    "business_type": "technology",
+    "focus_area_en": "Customer service automation and product traceability",
+    "focus_area_ar": "أتمتة خدمة العملاء وتتبع المنتجات",
+    "website_status": "active",
+    "website_verified_at": "2026-10-09",
+    "website_verification_method": "official_site_content_review",
+    "ecosystem_sources": [
+      {
+        "key": "leap",
+        "label": "LEAP",
+        "url": "https://www.insights.onegiantleap.com/blogs/rocket-fuelled-results-verofax-is-scaling-up/",
+        "relationship_en": "2023 Rocket Fuel AI award winner",
+        "relationship_ar": "فائز بجائزة الذكاء الاصطناعي في روكيت فيول 2023"
+      }
+    ],
+    "revenue_status": "reported",
+    "revenue_evidence": {
+      "source_url": "https://www.insights.onegiantleap.com/blogs/rocket-fuelled-results-verofax-is-scaling-up/",
+      "period": "2022 revenue; interview published 25 July 2023",
+      "summary_en": "The founder reported revenue exceeding USD 1 million in 2022. This is historical, self-reported revenue, not a current estimate.",
+      "summary_ar": "ذكر المؤسس إيرادات تتجاوز مليون دولار في 2022. هذا تصريح تاريخي من المؤسس وليس تقديراً حالياً.",
+      "reviewed_at": "2026-10-09"
+    },
+    "logo_tone": "dark"
+  },
+  {
+    "slug": "thiqa-education",
+    "company_name_en": "Thiqa Education",
+    "company_name_ar": "ثقة للتعليم",
+    "country_en": "United Arab Emirates",
+    "country_ar": "الإمارات",
+    "country_code": "AE",
+    "region": "GCC",
+    "sector_en": "Education services",
+    "sector_ar": "الخدمات التعليمية",
+    "founder_name_en": "Omar Bakri",
+    "founder_name_ar": "عمر بكري",
+    "role_en": "Founder & CEO",
+    "role_ar": "مؤسس ورئيس تنفيذي",
+    "company_brief_en": "Tutoring provider offering home and online lessons, tutor development and educational support.",
+    "company_brief_ar": "مقدم لخدمات التدريس المنزلي وعبر الإنترنت وتطوير المعلمين والدعم التعليمي.",
+    "founder_brief_en": "Founded Thiqa Education to professionalize private tutoring and support tutor development.",
+    "founder_brief_ar": "أسس ثقة للتعليم لتطوير مهنية التدريس الخصوصي ودعم تأهيل المعلمين.",
+    "website": "https://thiqaeducation.com/en",
+    "source_url": "https://thiqaeducation.com/en/about",
+    "logo_url": "/startup-directory/thiqa-logo.svg",
+    "portrait_url": null,
+    "company_socials": [
+      {
+        "label": "LinkedIn",
+        "url": "https://www.linkedin.com/company/thiqa-tutoring/"
+      }
+    ],
+    "founder_socials": [
+      {
+        "label": "LinkedIn",
+        "url": "https://ae.linkedin.com/in/omarbakri25"
+      }
+    ],
+    "reviewed_at": "2026-10-09",
+    "review_due_at": "2027-01-07",
+    "sources": [
+      "https://thiqaeducation.com/en/about",
+      "https://plus.gitex.com/newfront/exhibitor/thiqa-education",
+      "https://forbesmiddleeastevents.com/team-members/omar-osama-bakri/",
+      "https://www.linkedin.com/posts/thiqa-tutoring_startupsuccess-seedinvestment-bebantv-activity-7167238252314271744-j96z",
+      "https://ae.linkedin.com/in/omarbakri25"
+    ],
+    "asset_sources": [
+      {
+        "kind": "logo",
+        "url": "https://thiqaeducation.com/logo.svg",
+        "page": "https://thiqaeducation.com/en/about"
+      }
+    ],
+    "business_type": "traditional",
+    "focus_area_en": "Private tutoring and tutor training; technology-enabled services",
+    "focus_area_ar": "الدروس الخصوصية وتدريب المعلمين؛ خدمات مدعومة بالتقنية",
+    "website_status": "active",
+    "website_verified_at": "2026-10-09",
+    "website_verification_method": "official_site_content_review",
+    "ecosystem_sources": [
+      {
+        "key": "gitex",
+        "label": "GITEX / Expand North Star",
+        "url": "https://plus.gitex.com/newfront/exhibitor/thiqa-education",
+        "relationship_en": "Expand North Star 2025 exhibitor",
+        "relationship_ar": "عارض في إكسباند نورث ستار 2025"
+      }
+    ],
+    "revenue_status": "reported",
+    "revenue_evidence": {
+      "source_url": "https://plus.gitex.com/newfront/exhibitor/thiqa-education",
+      "period": "Cumulative to Expand North Star 2025 listing",
+      "summary_en": "The exhibitor profile reports cumulative revenue above AED 8 million. This is exhibitor-reported and is not an annual or audited figure.",
+      "summary_ar": "يذكر ملف العارض إيرادات تراكمية تتجاوز 8 ملايين درهم. الرقم معلن من العارض وليس سنوياً أو مدققاً.",
+      "reviewed_at": "2026-10-09"
+    }
+  }
+]

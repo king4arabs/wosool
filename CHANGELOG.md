@@ -196,3 +196,14 @@ This project follows **Semantic Versioning** and a Keep a Changelog-inspired for
 
 ### Added
 - Initial monorepo structure with frontend, backend, schema, design system, and demo content.
+
+## 2026-10-09 — Sourced founder and startup cards
+
+- Unified logo-first cards with portraits, roles, separate briefs and safe social/website links.
+- Two-row manual sliders, selectable rows and page navigation across community and researched directories.
+- Added eight sourced Saudi-first startup/scaleup profiles, an idempotent database import and review dates.
+- Preserved public relationship privacy and removed invented numeric scores from public cards.
+
+- Expanded research to 13 businesses, with 10 eligible for publication; added Misk, Impact46, LEAP and GITEX profiles and a ten-source research queue.
+- Added technology/traditional classification, business focus, server-side search/filtering, website review dates and linked revenue evidence with publication gates.
+- Preserved pending evidence without publishing it; scheduled reviews now cover all requested sources.

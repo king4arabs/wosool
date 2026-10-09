@@ -52,6 +52,7 @@ Route::get('/health', HealthController::class);
 Route::get('/ready', [HealthController::class, 'ready']);
 
 Route::prefix('v1')->group(function () {
+    Route::get('/startup-directory', [\App\Http\Controllers\Api\StartupDirectoryController::class, 'index'])->middleware('throttle:60,1');
     // ── Authentication ──────────────────────────────────────────────
     Route::get('/auth/csrf-cookie', [AuthController::class, 'csrf']);
     Route::post('/auth/login', [AuthController::class, 'login'])->middleware('throttle:10,1');
