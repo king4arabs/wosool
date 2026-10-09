@@ -1,5 +1,7 @@
 # API Documentation
 
+**EO Accelerator integration, 2026-10-09:** `/api/v1/eoa/*` is the canonical application, review and participant API. The earlier gateway registration/draft/submission/onboarding/review/operations write endpoints return HTTP 410; their data is retained and owned legacy reads remain private and read-only. Ecosystem/editorial/privacy APIs remain available. See [EOA operations](EOA.md) and [integration notes](EOA-INTEGRATION-2026-10-09.md). Authenticated `GET/POST /api/v1/eoa/privacy-requests` provides owned data-rights requests and resolution tracking.
+
 ## Overview
 
 The Wosool API is exposed through the Laravel backend and organized around **public discovery endpoints**, **public submission endpoints**, and **authentication endpoints**. The contract is versioned as **`v1`**. Authentication uses Laravel Sanctum in stateful SPA mode — the frontend communicates over session cookies with no bearer tokens required for first-party requests.

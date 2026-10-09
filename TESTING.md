@@ -2,6 +2,8 @@
 
 ## Automated checks
 
+CI also syntax-checks all PHP application/configuration/migration/route/test files. Integration regressions cover retired gateway writes, canonical `/EOA` account routing, legacy data retention/ownership, isolated reviewer access, generic-admin bypass prevention and private data-rights requests. Browser/deployed-mail acceptance is a separate release requirement, not inferred from the unit suite.
+
 From the repository root after local setup:
 
 ```bash

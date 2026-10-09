@@ -193,6 +193,9 @@ class AcceleratorGatewayTest extends TestCase
         $this->assertSame('Gateway Test Company', $row->fresh()->gateway_payload['company_name']);
         $this->assertNull($row->fresh()->eoa_data);
         $this->assertArrayNotHasKey('gateway_payload', $row->toArray());
+        $row->update(['status' => 'accepted']);
+        ProgramResource::create(['program_id' => $row->program_id, 'title' => 'Enrolled only', 'visibility' => 'enrolled_only', 'url' => 'https://example.test/private']);
+        $this->getJson('/api/v1/applicant/application')->assertOk()->assertJsonCount(0, 'data.resources')->assertJsonCount(0, 'data.sessions');
     }
 
     public function test_legacy_review_assignment_never_grants_access_to_canonical_application(): void
