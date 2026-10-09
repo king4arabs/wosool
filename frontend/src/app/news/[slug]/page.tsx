@@ -6,11 +6,15 @@ import { useParams } from "next/navigation"
 import { ArrowLeft, ArrowRight, ChevronLeft, ChevronRight, Clock, User, Tag, BookOpen } from "lucide-react"
 import { PublicLayout } from "@/components/layout/PublicLayout"
 import { Button } from "@/components/ui/button"
+import { newsItems as sampleNewsItems } from "@/data/seed"
+import { demoContentEnabled } from "@/lib/demo-content"
 import { fetchJson, mapNewsItem, type ApiNewsItem } from "@/lib/content-api"
 import { getLocalizedNewsContent } from "@/lib/news-content"
 import { useLocale } from "@/lib/locale"
 
 // ── i18n ──────────────────────────────────────────────────────────────────────
+const newsItems = demoContentEnabled ? sampleNewsItems : []
+
 const detailCopy = {
   ar: {
     back: "العودة إلى الأخبار",

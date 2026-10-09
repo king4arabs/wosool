@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class ProgramParticipant extends Model
 {
     protected $fillable = [
-        'program_id',
+        'eoa_onboarding', 'eoa_finance', 'eoa_group_id', 'program_id',
         'user_id',
         'cohort_id',
         'application_id',
@@ -20,7 +20,11 @@ class ProgramParticipant extends Model
         'completed_at',
     ];
 
+    protected $hidden = ['eoa_finance'];
+
     protected $casts = [
+        'eoa_onboarding' => 'array',
+        'eoa_finance' => 'encrypted:array',
         'completion_percentage' => 'integer',
         'at_risk' => 'boolean',
         'enrolled_at' => 'datetime',

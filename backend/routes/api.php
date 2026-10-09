@@ -289,3 +289,4 @@ Route::prefix('v1')->group(function () {
 });
 
 require __DIR__.'/gateway.php';
+require __DIR__.'/eoa.php';

@@ -83,6 +83,7 @@ class ProgramManagementController extends Controller
     {
         abort_unless($application->program_id === $program->id, 404);
         abort_if($program->slug === AcceleratorGateway::SLUG, 409, 'Use the audited accelerator review workspace.');
+        abort_if($program->slug === \App\Services\Eoa\ProgramService::SLUG, 409, 'Use the EOA workspace to preserve review and enrollment controls.');
 
         $data = $request->validate([
             'action' => ['required', 'in:accept,reject,waitlist,request_more_info,withdraw,enroll,assign_to_cohort,add_internal_note'],

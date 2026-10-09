@@ -17,6 +17,15 @@ This project follows **Semantic Versioning** and a Keep a Changelog-inspired for
 
 ---
 
+## [Unreleased] — EO Riyadh Accelerator
+
+- Add the Arabic/English `/EOA` gateway, Cairo layouts, official program facts, eligibility self-check and approval-controlled partner logos.
+- Add verified accounts, encrypted versioned applications, private evidence, assigned committee review, interviews, decisions, onboarding, official/financial confirmation and participant services.
+- Add cohort/session/material/group operations, coach coordination, notifications, inquiries, bilingual local terms and audit records with scoped roles.
+- Import seven sourced ecosystem organizations without overwriting local decisions; correct the USD/SAR distinction and RDIA/CODE identities. Keep partnerships and unapproved local decisions in draft.
+- Disable production fictional list fallbacks, protect legacy EOA access paths, repair the dependency lock and resolve the existing EventResource class-name collision.
+- Document deployment, mail/queue dependencies, privacy approvals, backup/rollback and remaining browser/hosting verification. No production deployment is implied.
+
 ## [0.6.0] — 2026-10-08
 
 ### Added

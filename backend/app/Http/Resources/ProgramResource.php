@@ -19,6 +19,12 @@ class ProgramResource extends JsonResource
             return $this->resource->{$key} ?? $fallback;
         };
 
+        if ($this->slug === \App\Services\Eoa\ProgramService::SLUG) {
+            $this->resource->unsetRelation('sessions');
+            $this->resource->unsetRelation('resources');
+            $this->resource->unsetRelation('cohorts');
+        }
+
         $startsAt = $get('starts_at');
         $endsAt = $get('ends_at');
 
@@ -57,6 +63,9 @@ class ProgramResource extends JsonResource
             'targeting_rules' => $this->when($request->is('api/v1/admin/*'), fn () => $get('targeting_rules', [])),
             'ai_settings' => $this->when($request->is('api/v1/admin/*'), fn () => $get('ai_settings', [])),
             'settings' => $this->when($request->is('api/v1/admin/*'), fn () => $get('settings', [])),
+            'targeting_rules' => $get('targeting_rules', []),
+            'ai_settings' => $get('ai_settings', []),
+            'settings' => $this->slug === \App\Services\Eoa\ProgramService::SLUG ? [] : $get('settings', []),
             'cohorts_count' => $this->whenCounted('cohorts'),
             'applications_count' => $this->whenCounted('applications'),
             'cohorts' => $this->whenLoaded('cohorts', fn () => $this->cohorts->map(fn ($cohort) => [

@@ -12,6 +12,11 @@ export const metadata: Metadata = {
   },
   description:
     "وصول بوابة اكتشاف ريادة الأعمال السعودية والتقديم لبرنامج EO Riyadh Accelerator ومتابعة رحلة المؤسس.",
+    default: "وصول | من مؤسس إلى مؤسس • EO Accelerator",
+    template: "%s | Wosool",
+  },
+  description:
+    "Wosool — Founders to Founders. بوابتك الرقمية إلى EO Riyadh Accelerator: تعلم ونمو وعلاقات عالمية للمؤسسين.",
   keywords: [
     "founders network",
     "Saudi Arabia startups",
@@ -29,6 +34,7 @@ export const metadata: Metadata = {
   icons: { icon: "/wosool-network-logo.png", apple: "/wosool-network-logo.png" },
   openGraph: {
     title: "وصول | بوابة ريادة الأعمال وEO Accelerator",
+    title: "وصول | من مؤسس إلى مؤسس • EO Accelerator",
     description:
       "شبكة خاصة للمؤسسين الطموحين الذين يبنون شركات جادة في السعودية والخليج.",
     url: "./",
@@ -42,6 +48,7 @@ export const metadata: Metadata = {
     card: "summary",
     images: ["/wosool-network-logo.png"],
     title: "وصول | بوابة ريادة الأعمال وEO Accelerator",
+    title: "وصول | من مؤسس إلى مؤسس • EO Accelerator",
     description:
       "شبكة خاصة للمؤسسين في السعودية والخليج.",
     creator: "@AboutWosool",

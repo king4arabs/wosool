@@ -271,3 +271,23 @@ The API should continue evolving through backward-compatible additions where pos
 See `backend/routes/gateway.php` and [operations](ACCELERATOR_OPERATIONS.md). Public: `GET /api/v1/accelerator`, `POST /api/v1/accelerator/eligibility`, `GET /api/v1/ecosystem`, `GET /api/v1/ecosystem/{slug}`. New accounts: `POST /api/v1/auth/applicant-register`; authenticated verification/resend use `/auth/email/*`. Verified owners use `GET/PUT /applicant/application`, `POST /applicant/application/submit`, and `POST /applicant/application/onboard`. Save/transition bodies require the current revision; conflict returns 409.
 
 Assigned reviewers use `GET /review/accelerator` and `PATCH /review/accelerator/{application}`. Admin-only `/admin/accelerator/*` manages settings/resources/participants, while existing `/admin/programs/*` manages cohorts/sessions/attendance. `/admin/ecosystem` and `/admin/ecosystem/{record}` expose the editorial workflow. Applicants submit `/applicant/privacy-requests`; admins list/resolve through `/admin/privacy-requests`. All these paths have the `/api/v1` prefix. `GET /api/ready` is an unauthenticated, detail-free readiness check distinct from liveness.
+## EO Riyadh Accelerator
+
+EOA API routes are defined in `backend/routes/eoa.php` at `/api/v1/eoa`. Frontend routes are independently namespaced at `/EOA`.
+
+| Route | Access / purpose |
+| --- | --- |
+| `GET /program` | Public verified facts, approved local content and confirmed partner logos |
+| `POST /auth/register`, `POST /auth/resend`, `GET /auth/verify/{id}/{hash}` | Consent, rate limits, signed verification; registration requires an approved data notice |
+| `GET/PUT /application`, `POST /application/submit` | Own versioned draft/submission; writes require verified email |
+| `POST /documents`, `GET/DELETE /documents/{id}` | Private evidence; owner or assigned authorized review for download |
+| `GET /participant`, `POST /onboarding`, `PUT /progress` | Own enrollment, checklist and progress |
+| `POST /sessions/{id}/register`, `POST /feedback`, `PATCH /notifications/{id}` | Scoped participant actions |
+| `GET /review`, `GET/PATCH /review/{id}`, `POST /review/{id}/assign` | Staff/assigned reviewers; lead-only final decisions |
+| `GET /operations`, `PUT /operations/settings` | Staff read; leadership controls program/privacy/fee approvals |
+| `POST /operations/create/{type}`, `PATCH /operations/update/{type}/{id}` | Scoped cohorts, sessions, groups, resources and announcements |
+| `PATCH /operations/participants/{id}`, `PATCH /operations/organizations/{id}` | Leadership financial/enrollment and partner confirmations |
+| `PATCH /operations/inquiries/{id}` | Staff manual handling state; does not send email |
+| `GET /coach`, `PATCH /coach/{participant}` | Assigned coaching/progress/attendance without financial information |
+
+Requests use Sanctum cookies/CSRF and the existing same-origin API helper. Stale application versions return 409; validation returns 422; forbidden roles/assignments return 403. Missing program setup returns 404; unapproved data collection returns 503 with an explanatory message. Global/local requirements and external dependencies are documented in [EOA.md](EOA.md).

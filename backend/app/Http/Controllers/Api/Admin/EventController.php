@@ -7,7 +7,7 @@ use App\Http\Resources\EventResource;
 use App\Models\AdminAction;
 use App\Models\Event;
 use App\Models\EventAgendaItem;
-use App\Models\EventResource;
+use App\Models\EventResource as EventResourceModel;
 use App\Models\EventSpeaker;
 use App\Support\GeneratesUniqueSlug;
 use Illuminate\Http\JsonResponse;
@@ -279,7 +279,7 @@ class EventController extends Controller
         if (array_key_exists('resources', $data)) {
             $event->resources()->delete();
             foreach ($data['resources'] ?? [] as $index => $resource) {
-                EventResource::create([
+                EventResourceModel::create([
                     'event_id' => $event->id,
                     'title' => $resource['title'],
                     'resource_type' => $resource['resource_type'] ?? 'document',

@@ -18,6 +18,8 @@ class EnsureUserHasMemberAccess
 
         if ($user->is_accelerator_applicant && ! $user->hasAnyRole(['member', 'admin'])) {
             abort(403, 'Approved community membership is required.');
+        if ($user->hasRole('eoa_applicant') && ! $user->hasAnyRole(['member','admin'])) {
+            abort(403, 'Use the EO Accelerator workspace. Wosool membership is separate.');
         }
 
         $hasMemberRole = method_exists($user, 'hasRole') && ($user->hasRole('member') || $user->hasRole('admin'));

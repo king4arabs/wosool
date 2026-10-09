@@ -26,6 +26,7 @@ const nextConfig: NextConfig = {
   async headers() {
     return [
       { source: "/accelerator/apply", headers: [{ key: "X-Robots-Tag", value: "noindex, nofollow" }, { key: "Cache-Control", value: "private, no-store" }] },
+      { source: "/EOA/:path(account|apply|admin|coach|forgot-password|reset-password)", headers: [{ key: "X-Robots-Tag", value: "noindex, nofollow" }, { key: "Cache-Control", value: "no-store" }] },
       {
         source: "/:path(admin|dashboard|review|verify-email|login|register|forgot-password|reset-password)/:rest*",
         headers: [{ key: "X-Robots-Tag", value: "noindex, nofollow" }, { key: "Cache-Control", value: "private, no-store" }],
@@ -46,6 +47,7 @@ const nextConfig: NextConfig = {
           },
         ],
       },
+      { source: "/EOA/reset-password", headers: [{ key: "Referrer-Policy", value: "no-referrer" }, { key: "Cache-Control", value: "no-store" }] },
       {
         source: "/:path(reset-password|verify-email)",
         headers: [{ key: "Referrer-Policy", value: "no-referrer" }, { key: "Cache-Control", value: "no-store" }],

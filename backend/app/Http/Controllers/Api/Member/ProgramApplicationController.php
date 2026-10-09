@@ -127,6 +127,7 @@ class ProgramApplicationController extends Controller
         $program = Program::where('slug', $slug)->firstOrFail();
         abort_if($slug === AcceleratorGateway::SLUG, 409, 'Use the verified accelerator application journey.');
         $user = $request->user();
+        abort_if($program->slug === \App\Services\Eoa\ProgramService::SLUG, 409, 'Use /EOA/apply for the verified EO Accelerator application.');
 
         if (! $program->is_open) {
             throw ValidationException::withMessages([
