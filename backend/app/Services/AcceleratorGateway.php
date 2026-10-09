@@ -40,7 +40,7 @@ class AcceleratorGateway
     public static function defaults(): array
     {
         return ['min_revenue_usd' => 250000, 'max_revenue_usd' => 999999, 'allow_venture_backed' => true,
-            'intake_enabled' => true, 'global_fee_usd' => 1750, 'local_fee' => null, 'local_dates' => null,
+            'intake_enabled' => false, 'global_fee_usd' => 1750, 'local_fee' => null, 'local_dates' => null,
             'source_url' => 'https://eonetwork.org/accelerator/faqs/', 'verified_at' => '2026-10-08'];
     }
 
@@ -48,9 +48,8 @@ class AcceleratorGateway
     {
         $program ??= Program::where('slug', self::SLUG)->first();
         $settings = array_replace(self::defaults(), ($program?->settings ?? [])['gateway'] ?? []);
-        if (app()->isProduction() && ! config('gateway.privacy_ready')) {
-            $settings['intake_enabled'] = false;
-        }
+        // Compatibility discovery only; /EOA owns all intake approvals and writes.
+        $settings['intake_enabled'] = false;
 
         return $settings;
     }

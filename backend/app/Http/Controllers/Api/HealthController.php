@@ -15,7 +15,10 @@ class HealthController extends Controller
         try {
             DB::select('select 1');
             DB::table('ecosystem_records')->limit(1)->count();
-            $ready = Program::where('slug', AcceleratorGateway::SLUG)->exists();
+            DB::table('eoa_documents')->limit(1)->count();
+            DB::table('eoa_notifications')->limit(1)->count();
+            $ready = Program::where('slug', AcceleratorGateway::SLUG)->exists()
+                && count(array_diff(array_keys(app('migrator')->getMigrationFiles(database_path('migrations'))), app('migration.repository')->getRan())) === 0;
         } catch (\Throwable) {
             $ready = false;
         }

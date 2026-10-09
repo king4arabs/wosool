@@ -8,13 +8,13 @@ import { Globe, Menu, X } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { useAuth } from "@/lib/auth"
+import { workspacePath } from "@/lib/navigation"
 import { localeOptions, type Locale, useLocale } from "@/lib/locale"
 
 const headerCopy = {
   ar: {
     navLinks: [
       { href: "/", label: "الرئيسية" },
-      { href: "/accelerator", label: "EO Accelerator" },
       { href: "/opportunities", label: "فرص ريادة الأعمال" },
       { href: "/EOA", label: "EO Accelerator" },
       { href: "/founders", label: "الأعضاء" },
@@ -24,7 +24,6 @@ const headerCopy = {
     ],
     tagline: "من مؤسس إلى مؤسس",
     login: "تسجيل الدخول",
-    apply: "قدّم للمسرّعة",
     apply: "تقدم للمسرّعة",
     dashboard: "لوحة التحكم",
     languageLabel: "اللغة",
@@ -35,7 +34,6 @@ const headerCopy = {
   en: {
     navLinks: [
       { href: "/", label: "Home" },
-      { href: "/accelerator", label: "EO Accelerator" },
       { href: "/opportunities", label: "Opportunities" },
       { href: "/EOA", label: "EO Accelerator" },
       { href: "/founders", label: "Members" },
@@ -112,6 +110,7 @@ export function Header() {
   const [isScrolled, setIsScrolled] = React.useState(false)
   const menuButton = React.useRef<HTMLButtonElement>(null)
   const copy = headerCopy[locale]
+  const workspace = workspacePath(user)
   const isActive = (href: string) => href === "/" ? pathname === "/" : pathname === href || pathname.startsWith(`${href}/`)
 
   React.useEffect(() => {
@@ -215,8 +214,7 @@ export function Header() {
                   size="sm"
                   className="rounded-xl bg-[#3B52D4] hover:bg-[#2E44C8] text-white text-xs font-bold shadow-md shadow-[#3B52D4]/20"
                 >
-                  <Link href={user?.isAdmin ? "/admin" : user?.roles?.includes("accelerator-reviewer") ? "/review" : user?.is_accelerator_applicant ? "/accelerator/apply" : "/dashboard"}>{copy.dashboard}</Link>
-                  <Link href={user?.roles?.some(r => r.startsWith("eoa_")) ? "/EOA/account" : "/dashboard"}>{copy.dashboard}</Link>
+                  <Link href={workspace}>{copy.dashboard}</Link>
                 </Button>
               </>
             ) : (
@@ -232,7 +230,6 @@ export function Header() {
                   size="sm"
                   className="rounded-xl bg-[#3B52D4] hover:bg-[#2E44C8] text-white text-xs font-bold shadow-md shadow-[#3B52D4]/20"
                 >
-                  <Link href="/accelerator/apply">{copy.apply}</Link>
                   <Link href="/EOA/apply">{copy.apply}</Link>
                 </Button>
               </>
@@ -288,8 +285,7 @@ export function Header() {
                   size="sm"
                   className="w-full rounded-xl bg-[#3B52D4] hover:bg-[#2E44C8] text-white font-bold"
                 >
-                  <Link href={user?.isAdmin ? "/admin" : user?.roles?.includes("accelerator-reviewer") ? "/review" : user?.is_accelerator_applicant ? "/accelerator/apply" : "/dashboard"} onClick={() => setIsMenuOpen(false)}>
-                  <Link href={user?.roles?.some(r => r.startsWith("eoa_")) ? "/EOA/account" : "/dashboard"} onClick={() => setIsMenuOpen(false)}>
+                  <Link href={workspace} onClick={() => setIsMenuOpen(false)}>
                     {copy.dashboard}
                   </Link>
                 </Button>
@@ -307,7 +303,6 @@ export function Header() {
                     size="sm"
                     className="w-full rounded-xl bg-[#3B52D4] hover:bg-[#2E44C8] text-white font-bold"
                   >
-                    <Link href="/accelerator/apply" onClick={() => setIsMenuOpen(false)}>
                     <Link href="/EOA/apply" onClick={() => setIsMenuOpen(false)}>
                       {copy.apply}
                     </Link>

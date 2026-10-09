@@ -56,6 +56,8 @@ jobs:
           cache: npm
           cache-dependency-path: backend/package-lock.json
       - run: composer install --no-interaction --prefer-dist --no-progress
+      - name: Check PHP syntax across application and migrations
+        run: rg --files app bootstrap config database routes tests -g '*.php' -0 | xargs -0 -n1 php -l
       - run: composer audit
       - run: composer run test
       - run: npm ci

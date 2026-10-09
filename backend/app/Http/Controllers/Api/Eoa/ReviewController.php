@@ -51,6 +51,7 @@ class ReviewController extends Controller
 
         return DB::transaction(function () use ($request, $application, $data) {
             $item = ProgramService::program()->applications()->lockForUpdate()->findOrFail($application);
+            ApplicationController::assertCanonical($item);
             abort_unless(Access::application($request->user(), $item), 403);
             if (in_array($data['status'], ['accepted', 'waitlisted', 'rejected'])) {
                 abort_unless(Access::lead($request->user()), 403);

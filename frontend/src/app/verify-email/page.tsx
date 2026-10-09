@@ -62,7 +62,7 @@ function Verify() {
           {ar ? "تسجيل الدخول" : "Sign in"}
         </Link>
       ) : (
-        <Link className="gateway-button mt-6" href="/accelerator/apply">
+        <Link className="gateway-button mt-6" href="/EOA/apply">
           {ar ? "متابعة الطلب" : "Continue application"}
         </Link>
       )}

@@ -2,7 +2,7 @@
 
 Wosool has two deployable applications: `frontend/` is a Next.js Node.js server; `backend/` is a Laravel API with a database. Repository CI validates code and does not perform production deployment. Existing host names and process-manager services must be confirmed in the hosting account before a release.
 
-For the EO Accelerator release, follow [gateway operations](docs/ACCELERATOR_OPERATIONS.md) as well: role provisioning, preview-first imports, privacy readiness, supervised verification/status mail, and same-engine staging recovery are required before live intake.
+For EO Accelerator, the authoritative workflow is [EOA operations](docs/EOA.md). Read the [October 9 integration notes](docs/EOA-INTEGRATION-2026-10-09.md) before release: legacy gateway writes are retired, existing data is retained, and EOA settings govern privacy/intake approvals.
 
 ## Runtime and configuration
 
@@ -10,7 +10,7 @@ For the EO Accelerator release, follow [gateway operations](docs/ACCELERATOR_OPE
 | --- | --- |
 | Frontend | Node.js 22.12+ (22.x) or 24.x; production origin `https://wosool.org` |
 | Backend | PHP 8.3+, Composer 2; web root must point to `backend/public/` |
-| Database | MySQL by default; production engine changes require a separate migration review |
+| Database | SQLite in the local template; verify and preserve the deployed engine before migration |
 | Workers | Supervise queue workers when jobs are used; Reverb only when configured |
 
 Set frontend values **before building**:

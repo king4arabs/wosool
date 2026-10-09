@@ -23,12 +23,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        ResetPassword::createUrlUsing(fn ($user, string $token) => rtrim(config('app.frontend_url'), '/').'/reset-password?'.http_build_query([
-            'token' => $token,
-            'email' => $user->getEmailForPasswordReset(),
-        ])
         ResetPassword::createUrlUsing(fn ($user, string $token) =>
-            rtrim(config('app.frontend_url'), '/').($user->hasAnyRole(['eoa_applicant','eoa_lead','eoa_staff','eoa_reviewer','eoa_coach']) ? '/EOA/reset-password?' : '/reset-password?').http_build_query([
+            rtrim(config('app.frontend_url'), '/').($user->is_accelerator_applicant || $user->hasAnyRole(['eoa_applicant','eoa_lead','eoa_staff','eoa_reviewer','eoa_coach']) ? '/EOA/reset-password?' : '/reset-password?').http_build_query([
                 'token' => $token,
                 'email' => $user->getEmailForPasswordReset(),
             ])

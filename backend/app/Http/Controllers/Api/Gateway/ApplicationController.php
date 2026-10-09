@@ -36,9 +36,10 @@ class ApplicationController extends Controller
     public function show(Request $request)
     {
         $program = Gateway::program();
-        $application = ProgramApplication::where('program_id', $program->id)->where('user_id', $request->user()->id)->first();
+        $application = ProgramApplication::where('program_id', $program->id)->where('user_id', $request->user()->id)
+            ->whereNotNull('gateway_payload')->whereNull('eoa_data')->first();
 
-        return response()->json(['data' => $application ? $this->present($application) : null]);
+        return response()->json(['data' => $application ? $this->present($application) : null, 'read_only' => true, 'canonical_url' => '/EOA/account']);
     }
 
     public function save(GatewayApplicationRequest $request)

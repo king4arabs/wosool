@@ -6,7 +6,7 @@ import { Eye, EyeOff } from "lucide-react";
 import { PublicLayout } from "@/components/layout/PublicLayout";
 import { useAuth } from "@/lib/auth";
 import { useLocale } from "@/lib/locale";
-import { safeRedirect } from "@/lib/navigation";
+import { safeRedirect, workspacePath } from "@/lib/navigation";
 import { api } from "@/lib/api";
 
 export default function LoginPage() {
@@ -34,21 +34,10 @@ export default function LoginPage() {
           is_accelerator_applicant?: boolean;
         };
       }>("/auth/me");
-      const admin =
-        me.user.is_admin ||
-        me.user.role_token === "admin" ||
-        me.user.roles?.includes("admin");
-      const reviewer = me.user.roles?.includes("accelerator-reviewer");
       router.replace(
         params.get("redirect")
-          ? safeRedirect(params.get("redirect"))
-          : admin
-            ? "/admin"
-            : reviewer
-              ? "/review"
-              : me.user.is_accelerator_applicant
-                ? "/accelerator/apply"
-                : "/dashboard",
+          ? safeRedirect(params.get("redirect"), workspacePath(me.user))
+          : workspacePath(me.user),
       );
       router.refresh();
     } catch {
@@ -133,7 +122,7 @@ export default function LoginPage() {
             </button>
             <Link
               className="gateway-button-secondary w-full"
-              href="/accelerator/apply"
+              href="/EOA/apply"
             >
               {t(
                 "إنشاء حساب للتقديم إلى المسرّعة",

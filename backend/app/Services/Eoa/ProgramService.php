@@ -57,7 +57,7 @@ class ProgramService
             'revenue_min_usd' => 250000, 'revenue_max_usd' => 999999,
             'annual_global_fee_usd' => 1750, 'duration_years' => 2,
             'learning_days_per_year' => 4, 'accountability' => 'monthly',
-            'verified_at' => '2026-10-08',
+            'verified_at' => '2026-10-09',
             'sources' => ['https://eonetwork.org/accelerator', 'https://eonetwork.org/accelerator/faqs/'],
         ];
     }

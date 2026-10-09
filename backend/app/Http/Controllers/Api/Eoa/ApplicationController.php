@@ -16,6 +16,7 @@ class ApplicationController extends Controller
 {
     public static function present(ProgramApplication $application): array
     {
+        self::assertCanonical($application);
         return [
             'id' => $application->id, 'status' => $application->status,
             'version' => $application->eoa_version, 'fields' => $application->eoa_data ?? [],
@@ -24,6 +25,12 @@ class ApplicationController extends Controller
             'decision_reason' => $application->decision_reason,
             'documents' => DB::table('eoa_documents')->where('application_id', $application->id)->get(['id', 'name', 'size', 'created_at']),
         ];
+    }
+
+    public static function assertCanonical(ProgramApplication $application): void
+    {
+        abort_if($application->getRawOriginal('gateway_payload') !== null, 409,
+            'Your earlier application is preserved and requires a staff-reviewed transfer before editing. Contact the program team. / طلبك السابق محفوظ ويتطلب نقلاً معتمداً من الفريق قبل تعديله.');
     }
 
     public function show(Request $request)
@@ -46,6 +53,7 @@ class ApplicationController extends Controller
             if (! $application) {
                 $application = $program->applications()->create(['user_id' => $request->user()->id, 'motivation' => '', 'status' => 'draft', 'eoa_version' => 0]);
             }
+            self::assertCanonical($application);
             abort_unless(in_array($application->status, ['draft', 'information_requested'], true), 409, 'This application is locked for review.');
             abort_unless($application->eoa_version === $request->integer('version'), 409, 'A newer draft exists. Reload before saving.');
             $fields = $request->safe()->except('version');
@@ -65,6 +73,7 @@ class ApplicationController extends Controller
 
         return DB::transaction(function () use ($request, $program) {
             $application = $program->applications()->where('user_id', $request->user()->id)->lockForUpdate()->firstOrFail();
+            self::assertCanonical($application);
             abort_unless(in_array($application->status, ['draft', 'information_requested'], true), 409, 'Already submitted.');
             abort_unless($request->integer('version') === $application->eoa_version, 409, 'A newer draft exists. Reload before submitting.');
             Validator::make($application->eoa_data ?? [], ApplicationRequest::fields(true))->validate();
@@ -83,6 +92,7 @@ class ApplicationController extends Controller
 
         return DB::transaction(function () use ($request) {
             $application = ProgramService::program()->applications()->where('user_id', $request->user()->id)->lockForUpdate()->firstOrFail();
+            self::assertCanonical($application);
             abort_unless(in_array($application->status, ['draft', 'information_requested'], true), 409);
             abort_if(DB::table('eoa_documents')->where('application_id', $application->id)->count() >= 5, 422, 'Maximum five documents.');
             $file = $request->file('document');

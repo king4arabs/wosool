@@ -12,6 +12,7 @@ import {
 } from '@/lib/eoa'
 import { Field, Notice, useEoaProgram } from './Shared'
 import { ParticipantWorkspace } from './Participant'
+import { PrivacyRequests } from './PrivacyRequests'
 
 type AccountData = {
   data: Participant | null
@@ -386,6 +387,7 @@ function AccountSession() {
             {account?.data && (
               <ParticipantWorkspace participant={account.data} reload={load} />
             )}
+            <PrivacyRequests />
           </>
         )}
       </div>

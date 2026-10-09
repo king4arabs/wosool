@@ -19,9 +19,8 @@ const footerCopy = {
       "البرامج": [
         { href: "/EOA", label: "EO Riyadh Accelerator" },
         { href: "/programs", label: "جميع البرامج" },
-        { href: "/accelerator", label: "EO Accelerator" },
         { href: "/opportunities", label: "فرص ريادة الأعمال" },
-        { href: "/accelerator#eligibility", label: "معايير الملاءمة" },
+        { href: "/EOA/eligibility", label: "معايير الملاءمة" },
       ],
       "المجتمع": [
         { href: "/news", label: "الأخبار والرؤى" },
@@ -55,9 +54,8 @@ const footerCopy = {
       Programs: [
         { href: "/EOA", label: "EO Riyadh Accelerator" },
         { href: "/programs", label: "All programs" },
-        { href: "/accelerator", label: "EO Accelerator" },
         { href: "/opportunities", label: "Entrepreneurship opportunities" },
-        { href: "/accelerator#eligibility", label: "Eligibility criteria" },
+        { href: "/EOA/eligibility", label: "Eligibility criteria" },
       ],
       Community: [
         { href: "/news", label: "News & insights" },

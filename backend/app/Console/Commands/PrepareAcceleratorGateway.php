@@ -32,10 +32,7 @@ class PrepareAcceleratorGateway extends Command
         $report = ['mode' => $this->option('apply') ? 'applied' : 'preview', 'program' => Program::where('slug', Gateway::SLUG)->exists() ? 'unchanged' : 'add', 'partners_added' => [], 'partners_unchanged' => []];
         DB::transaction(function () use ($assets, &$report) {
             if ($this->option('apply')) {
-                Program::firstOrCreate(['slug' => Gateway::SLUG], [
-                    'name' => 'EO Riyadh Accelerator', 'title' => 'EO Riyadh Accelerator', 'category' => 'growth', 'description' => 'Wosool local application and review gateway. EO enrolment remains subject to EO approval.',
-                    'language' => 'ar', 'is_open' => true, 'visibility' => 'public', 'status_flow' => 'published', 'city_region' => 'Riyadh',
-                    'settings' => ['gateway' => Gateway::defaults()]]);
+                $this->call('eoa:install');
             }
             foreach ($assets as $asset) {
                 if (! is_array($asset) || empty($asset['slug'])) {

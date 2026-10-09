@@ -63,9 +63,6 @@ class ProgramResource extends JsonResource
             'targeting_rules' => $this->when($request->is('api/v1/admin/*'), fn () => $get('targeting_rules', [])),
             'ai_settings' => $this->when($request->is('api/v1/admin/*'), fn () => $get('ai_settings', [])),
             'settings' => $this->when($request->is('api/v1/admin/*'), fn () => $get('settings', [])),
-            'targeting_rules' => $get('targeting_rules', []),
-            'ai_settings' => $get('ai_settings', []),
-            'settings' => $this->slug === \App\Services\Eoa\ProgramService::SLUG ? [] : $get('settings', []),
             'cohorts_count' => $this->whenCounted('cohorts'),
             'applications_count' => $this->whenCounted('applications'),
             'cohorts' => $this->whenLoaded('cohorts', fn () => $this->cohorts->map(fn ($cohort) => [

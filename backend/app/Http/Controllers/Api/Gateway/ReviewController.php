@@ -21,6 +21,7 @@ class ReviewController extends Controller
         abort_unless($admin || $request->user()->hasRole('accelerator-reviewer'), 403);
         $program = Gateway::program();
         $query = ProgramApplication::where('program_id', $program->id)->whereNot('status', 'draft')
+            ->whereNotNull('gateway_payload')->whereNull('eoa_data')
             ->when(! $admin, fn ($q) => $q->where('assigned_reviewer_id', $request->user()->id));
         $request->validate(['status' => ['nullable', Rule::in(array_keys(Gateway::TRANSITIONS))]]);
         if ($request->filled('status')) {
@@ -99,6 +100,7 @@ class ReviewController extends Controller
         $data = $request->validate(['status' => 'required|in:in_review,completed,declined', 'resolution' => 'required|string|max:2000']);
         abort_unless(DB::table('privacy_requests')->where('id', $id)->exists(), 404);
         DB::table('privacy_requests')->where('id', $id)->update($data + ['resolved_by' => $request->user()->id, 'resolved_at' => now(), 'updated_at' => now()]);
+        AdminAction::log($request->user()->id, 'eoa.privacy_request', 'privacy_request', $id, null, null, ['status' => $data['status']]);
 
         return response()->json(['message' => 'Request updated.']);
     }

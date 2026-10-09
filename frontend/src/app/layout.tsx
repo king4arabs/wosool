@@ -7,11 +7,6 @@ const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://wosool.org";
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "وصول | بوابة ريادة الأعمال وEO Accelerator",
-    template: "%s | Wosool",
-  },
-  description:
-    "وصول بوابة اكتشاف ريادة الأعمال السعودية والتقديم لبرنامج EO Riyadh Accelerator ومتابعة رحلة المؤسس.",
     default: "وصول | من مؤسس إلى مؤسس • EO Accelerator",
     template: "%s | Wosool",
   },
@@ -33,7 +28,6 @@ export const metadata: Metadata = {
   publisher: "Wosool",
   icons: { icon: "/wosool-network-logo.png", apple: "/wosool-network-logo.png" },
   openGraph: {
-    title: "وصول | بوابة ريادة الأعمال وEO Accelerator",
     title: "وصول | من مؤسس إلى مؤسس • EO Accelerator",
     description:
       "شبكة خاصة للمؤسسين الطموحين الذين يبنون شركات جادة في السعودية والخليج.",
@@ -47,7 +41,6 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary",
     images: ["/wosool-network-logo.png"],
-    title: "وصول | بوابة ريادة الأعمال وEO Accelerator",
     title: "وصول | من مؤسس إلى مؤسس • EO Accelerator",
     description:
       "شبكة خاصة للمؤسسين في السعودية والخليج.",

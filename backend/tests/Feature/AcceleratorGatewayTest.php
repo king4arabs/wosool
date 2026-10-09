@@ -53,24 +53,7 @@ class AcceleratorGatewayTest extends TestCase
             'current_challenge' => 'Execution focus.', 'expected_outcome' => 'Build a stronger operating system.', 'availability_confirmed' => true, 'consent' => true];
     }
 
-    private function submit(User $user): array
-    {
-        $saved = $this->actingAs($user)->putJson('/api/v1/applicant/application', ['revision' => 0, 'payload' => $this->payload()])->assertOk()->json('data');
 
-        return $this->postJson('/api/v1/applicant/application/submit', ['revision' => $saved['revision']])->assertOk()->json('data');
-    }
-
-    public function test_registration_queues_verification_without_granting_community_access(): void
-    {
-        Notification::fake();
-        $r = $this->postJson('/api/v1/auth/applicant-register', ['name' => 'Founder', 'email' => 'new@example.test', 'password' => 'StrongPassword123', 'password_confirmation' => 'StrongPassword123', 'consent' => true])->assertCreated();
-        $u = User::findOrFail($r->json('user.id'));
-        Notification::assertSentTo($u, VerifyApplicantEmail::class);
-        $this->assertTrue($u->is_accelerator_applicant);
-        $this->assertFalse($u->hasVerifiedEmail());
-        $this->actingAs($u)->getJson('/api/v1/member/dashboard')->assertForbidden();
-        $this->getJson('/api/v1/applicant/application')->assertForbidden();
-    }
 
     public function test_verification_requires_valid_signature_matching_account_and_expiry(): void
     {
@@ -85,63 +68,8 @@ class AcceleratorGatewayTest extends TestCase
         $this->getJson($path)->assertOk();
     }
 
-    public function test_drafts_are_private_and_stale_updates_do_not_overwrite(): void
-    {
-        $u = $this->applicant();
-        $other = $this->applicant();
-        $this->actingAs($u)->putJson('/api/v1/applicant/application', ['revision' => 0, 'payload' => ['company_name' => 'Private draft']])->assertOk()->assertJsonPath('data.revision', 1);
-        $this->putJson('/api/v1/applicant/application', ['revision' => 0, 'payload' => ['company_name' => 'Stale']])->assertConflict();
-        $this->postJson('/api/v1/applicant/application/submit', ['revision' => 1])->assertUnprocessable();
-        $this->actingAs($other)->getJson('/api/v1/applicant/application')->assertOk()->assertJsonPath('data', null);
-        $this->actingAs($u)->getJson('/api/v1/applicant/application')->assertJsonPath('data.gateway_payload.company_name', 'Private draft');
-        $this->putJson('/api/v1/applicant/application', ['revision' => 1, 'payload' => ['user_id' => $other->id]])->assertUnprocessable();
-    }
 
-    public function test_full_review_information_request_and_onboarding_journey(): void
-    {
-        $u = $this->applicant();
-        $admin = $this->admin();
-        $a = $this->submit($u);
-        $id = $a['id'];
-        $this->assertDatabaseHas('founder_profiles', ['user_id' => $u->id, 'is_public' => false]);
-        $this->getJson('/api/v1/member/dashboard')->assertForbidden();
-        $this->getJson('/api/v1/founders')->assertJsonCount(0, 'data');
-        $this->actingAs($admin)->patchJson("/api/v1/review/accelerator/$id", ['revision' => $a['revision'], 'status' => 'accepted'])->assertUnprocessable();
-        $a = $this->patchJson("/api/v1/review/accelerator/$id", ['revision' => $a['revision'], 'status' => 'under_review'])->assertOk()->json('data');
-        $this->patchJson("/api/v1/review/accelerator/$id", ['revision' => $a['revision'], 'status' => 'information_requested'])->assertUnprocessable();
-        $a = $this->patchJson("/api/v1/review/accelerator/$id", ['revision' => $a['revision'], 'status' => 'information_requested', 'message' => 'Please clarify your goals.'])->assertOk()->json('data');
-        $saved = $this->actingAs($u)->putJson('/api/v1/applicant/application', ['revision' => $a['revision'], 'payload' => $this->payload()])->assertOk()->json('data');
-        $a = $this->postJson('/api/v1/applicant/application/submit', ['revision' => $saved['revision']])->assertOk()->json('data');
-        foreach (['under_review', 'shortlisted', 'accepted'] as $status) {
-            $a = $this->actingAs($admin)->patchJson("/api/v1/review/accelerator/$id", ['revision' => $a['revision'], 'status' => $status])->assertOk()->json('data');
-        }
-        $this->actingAs($u)->postJson('/api/v1/applicant/application/onboard', ['revision' => $a['revision'], 'acknowledged' => true])->assertOk()->assertJsonPath('data.status', 'onboarded');
-        $this->travel(61)->seconds();
-        $this->postJson('/api/v1/applicant/application/onboard', ['revision' => $a['revision'], 'acknowledged' => true])->assertConflict();
-        $this->assertDatabaseCount('program_participants', 1);
-        $this->assertDatabaseCount('company_profiles', 1);
-        $this->assertDatabaseCount('application_events', 8);
-    }
 
-    public function test_reviewer_sees_only_assigned_applications_and_cannot_accept_or_assign_foreign_cohort(): void
-    {
-        $u = $this->applicant();
-        $a = $this->submit($u);
-        $reviewer = User::factory()->create();
-        $reviewer->assignRole('accelerator-reviewer');
-        $this->actingAs($reviewer)->getJson('/api/v1/review/accelerator')->assertOk()->assertJsonCount(0, 'data');
-        $this->patchJson('/api/v1/review/accelerator/'.$a['id'], ['revision' => $a['revision'], 'status' => 'under_review'])->assertForbidden();
-        $a = $this->actingAs($this->admin())->patchJson('/api/v1/review/accelerator/'.$a['id'], ['revision' => $a['revision'], 'assigned_reviewer_id' => $reviewer->id, 'message' => 'Internal context'])->assertOk()->json('data');
-        $this->actingAs($u)->getJson('/api/v1/applicant/application')->assertJsonMissing(['message' => 'Internal context']);
-        $this->actingAs($reviewer)->getJson('/api/v1/review/accelerator')->assertJsonCount(1, 'data');
-        foreach (['under_review', 'shortlisted'] as $s) {
-            $a = $this->patchJson('/api/v1/review/accelerator/'.$a['id'], ['revision' => $a['revision'], 'status' => $s])->assertOk()->json('data');
-        }
-        $this->patchJson('/api/v1/review/accelerator/'.$a['id'], ['revision' => $a['revision'], 'status' => 'accepted'])->assertForbidden();
-        $p = Program::create(['slug' => 'other', 'name' => 'Other', 'category' => 'growth']);
-        $c = Cohort::create(['program_id' => $p->id, 'name' => 'Foreign']);
-        $this->actingAs($this->admin())->patchJson('/api/v1/review/accelerator/'.$a['id'], ['revision' => $a['revision'], 'cohort_id' => $c->id])->assertUnprocessable();
-    }
 
     public function test_eligibility_bounds_and_venture_path_are_server_configured(): void
     {
@@ -192,6 +120,11 @@ class AcceleratorGatewayTest extends TestCase
         $this->getJson('/api/v1/admin/privacy-requests')->assertForbidden();
         $this->actingAs($this->admin())->patchJson('/api/v1/admin/privacy-requests/1', ['status' => 'in_review', 'resolution' => 'Assess retention obligations.'])->assertOk();
         $this->assertDatabaseHas('users', ['id' => $u->id]);
+        $this->actingAs($u)->getJson('/api/v1/eoa/privacy-requests')->assertOk()->assertJsonPath('data.0.status', 'in_review');
+        $this->postJson('/api/v1/eoa/privacy-requests', ['type' => 'deletion'])->assertCreated();
+        $this->assertDatabaseCount('privacy_requests', 1);
+        $this->actingAs($this->applicant())->getJson('/api/v1/eoa/privacy-requests')->assertJsonCount(0, 'data');
+        $this->assertDatabaseHas('admin_actions', ['action' => 'eoa.privacy_request']);
     }
 
     public function test_private_responses_disable_caching_and_readiness_is_real(): void
@@ -204,31 +137,6 @@ class AcceleratorGatewayTest extends TestCase
         $this->getJson('/api/ready')->assertStatus(503);
     }
 
-    public function test_program_operations_are_admin_only_and_cohort_scoped(): void
-    {
-        $p = Gateway::program();
-        $u = $this->applicant();
-        $admin = $this->admin();
-        $this->actingAs($u)->getJson('/api/v1/admin/accelerator/operations')->assertForbidden();
-        $this->actingAs($admin)->getJson('/api/v1/admin/accelerator/operations')->assertOk();
-        $c = Cohort::create(['program_id' => $p->id, 'name' => 'Local cohort']);
-        $other = Program::create(['slug' => 'foreign-program', 'name' => 'Other', 'category' => 'growth']);
-        $foreign = Cohort::create(['program_id' => $other->id, 'name' => 'Other cohort']);
-        $this->postJson('/api/v1/admin/accelerator/resources', ['title' => 'Wrong', 'url' => 'https://example.test/guide', 'cohort_id' => $foreign->id])->assertUnprocessable();
-        $this->postJson('/api/v1/admin/accelerator/resources', ['title' => 'Safe guide', 'url' => 'https://example.test/guide', 'cohort_id' => $c->id])->assertOk();
-        $a = ProgramApplication::create(['program_id' => $p->id, 'user_id' => $u->id, 'status' => 'onboarded', 'motivation' => 'Test learning', 'cohort_id' => $c->id]);
-        ProgramParticipant::create(['program_id' => $p->id, 'user_id' => $u->id, 'application_id' => $a->id, 'cohort_id' => $c->id, 'status' => 'enrolled']);
-        $mentor = User::factory()->create();
-        $mentor->assignRole('mentor');
-        $this->putJson('/api/v1/admin/accelerator/participant', ['user_id' => $u->id, 'mentor_user_id' => $mentor->id, 'milestones' => [['title' => 'Growth plan', 'completed' => false]]])->assertOk();
-        $session = $this->postJson('/api/v1/admin/programs/'.$p->id.'/sessions', ['title' => 'Learning day', 'session_type' => 'workshop', 'starts_at' => '2027-01-01T13:00:00+03:00', 'cohort_id' => $c->id])->assertCreated()->json('data.id');
-        $this->assertDatabaseHas('program_sessions', ['id' => $session, 'starts_at' => '2027-01-01 10:00:00']);
-        $this->postJson('/api/v1/admin/programs/'.$p->id.'/sessions/'.$session.'/attendance', ['user_id' => $u->id, 'status' => 'attended'])->assertOk();
-        $this->postJson('/api/v1/admin/programs/'.$p->id.'/sessions/'.$session.'/attendance', ['user_id' => $mentor->id, 'status' => 'attended'])->assertUnprocessable();
-        $this->actingAs($u)->getJson('/api/v1/applicant/application')->assertOk()
-            ->assertJsonPath('data.resources.0.title', 'Safe guide')->assertJsonPath('data.mentors.0.name', $mentor->name)
-            ->assertJsonPath('data.milestones.0.title', 'Growth plan');
-    }
 
     public function test_notifications_retry_without_repeating_completed_delivery_or_internal_notes(): void
     {
@@ -245,13 +153,78 @@ class AcceleratorGatewayTest extends TestCase
         $this->assertNull($internal->fresh()->notification_sent_at);
     }
 
-    public function test_paused_intake_rejects_new_accounts_and_submission(): void
+
+
+    public function test_retired_writes_cannot_bypass_canonical_approvals_or_create_enrollment(): void
     {
-        $p = Gateway::program();
-        $p->update(['settings' => ['gateway' => ['intake_enabled' => false]]]);
-        $this->postJson('/api/v1/auth/applicant-register', ['name' => 'Founder', 'email' => 'paused@example.test', 'password' => 'StrongPassword123', 'password_confirmation' => 'StrongPassword123', 'consent' => true])->assertStatus(503);
-        $u = $this->applicant();
-        $this->actingAs($u)->putJson('/api/v1/applicant/application', ['revision' => 0, 'payload' => $this->payload()])->assertOk();
-        $this->postJson('/api/v1/applicant/application/submit', ['revision' => 1])->assertConflict();
+        $this->postJson('/api/v1/auth/applicant-register', [])->assertStatus(410)->assertJsonPath('url', '/EOA/account');
+        $user = $this->applicant();
+        $application = ProgramApplication::create(['program_id' => Gateway::program()->id, 'user_id' => $user->id,
+            'status' => 'accepted', 'motivation' => '', 'eoa_data' => ['company_name' => 'Protected'], 'eoa_version' => 3]);
+        $this->actingAs($user);
+        foreach ([['PUT', '/api/v1/applicant/application'], ['POST', '/api/v1/applicant/application/submit'], ['POST', '/api/v1/applicant/application/onboard']] as [$method, $url]) {
+            $this->json($method, $url, ['revision' => 0, 'acknowledged' => true, 'payload' => $this->payload()])->assertStatus(410);
+        }
+        $this->actingAs($this->admin());
+        foreach ([['PATCH', '/api/v1/review/accelerator/'.$application->id], ['PUT', '/api/v1/admin/accelerator/settings'],
+            ['PUT', '/api/v1/admin/accelerator/participant'], ['POST', '/api/v1/admin/accelerator/resources']] as [$method, $url]) {
+            $this->json($method, $url, ['status' => 'accepted', 'intake_enabled' => true])->assertStatus(410);
+        }
+        $this->assertSame('accepted', $application->fresh()->status);
+        $this->assertSame(3, $application->fresh()->eoa_version);
+        $this->assertDatabaseCount('program_participants', 0);
+        $this->getJson('/api/v1/accelerator')->assertJsonPath('data.intake_enabled', false);
+    }
+
+    public function test_legacy_data_stays_private_read_only_and_cannot_be_silently_overwritten(): void
+    {
+        $owner = $this->applicant();
+        $row = ProgramApplication::create(['program_id' => Gateway::program()->id, 'user_id' => $owner->id,
+            'status' => 'draft', 'motivation' => '', 'gateway_payload' => $this->payload(), 'revision' => 4]);
+        $this->actingAs($owner)->getJson('/api/v1/applicant/application')
+            ->assertOk()->assertJsonPath('read_only', true)->assertJsonPath('data.gateway_payload.company_name', 'Gateway Test Company');
+        $this->actingAs($this->applicant())->getJson('/api/v1/applicant/application')->assertJsonPath('data', null);
+        $this->actingAs($owner)->getJson('/api/v1/eoa/application')->assertConflict();
+        Gateway::program()->update(['settings' => ['eoa' => [
+            'privacy_status' => 'approved', 'privacy_approval_reference' => 'test', 'privacy_notice_version' => 'v1',
+            'privacy_notice_ar' => 'إشعار تجريبي', 'privacy_notice_en' => 'Test notice',
+        ]]]);
+        $this->putJson('/api/v1/eoa/application', ['version' => 0, 'company_name' => 'Overwrite'])->assertConflict();
+        $this->assertSame('Gateway Test Company', $row->fresh()->gateway_payload['company_name']);
+        $this->assertNull($row->fresh()->eoa_data);
+        $this->assertArrayNotHasKey('gateway_payload', $row->toArray());
+    }
+
+    public function test_legacy_review_assignment_never_grants_access_to_canonical_application(): void
+    {
+        $reviewer = User::factory()->create();
+        $reviewer->assignRole('accelerator-reviewer');
+        $row = ProgramApplication::create(['program_id' => Gateway::program()->id, 'user_id' => $this->applicant()->id,
+            'status' => 'submitted', 'motivation' => '', 'eoa_data' => ['company_name' => 'Private'], 'eoa_version' => 1,
+            'eoa_submitted_at' => now(), 'assigned_reviewer_id' => $reviewer->id]);
+        $this->actingAs($reviewer)->getJson('/api/v1/review/accelerator')->assertOk()->assertJsonCount(0, 'data');
+        $this->getJson('/api/v1/eoa/review/'.$row->id)->assertForbidden();
+    }
+
+    public function test_preparation_is_closed_and_preserves_existing_approved_settings(): void
+    {
+        $program = Gateway::program();
+        $this->assertFalse($program->is_open);
+        $this->assertSame('draft', $program->status_flow);
+        $program->update(['settings' => ['eoa' => ['approval_reference' => 'preserve-me']]]);
+        $this->artisan('wosool:prepare-gateway --apply')->assertSuccessful();
+        $this->assertSame('preserve-me', $program->fresh()->settings['eoa']['approval_reference']);
+        $this->assertDatabaseCount('programs', 1);
+    }
+
+    public function test_generic_program_admin_cannot_bypass_eoa_controls(): void
+    {
+        $program = Gateway::program();
+        $this->actingAs($this->admin());
+        $this->putJson('/api/v1/admin/programs/'.$program->id, ['name' => 'Changed', 'category' => 'growth', 'is_open' => true])->assertConflict();
+        $this->postJson('/api/v1/admin/programs/'.$program->id.'/cohorts', ['name' => 'Unapproved'])->assertConflict();
+        $this->deleteJson('/api/v1/admin/programs/'.$program->id)->assertConflict();
+        $this->assertFalse($program->fresh()->is_open);
+        $this->assertDatabaseCount('cohorts', 0);
     }
 }
