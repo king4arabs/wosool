@@ -43,7 +43,7 @@ export function ParticipantWorkspace({
     }
   }
   return (
-    <div className="eoa-space">
+    <div id="participant-workspace" className="eoa-space">
       <div className="eoa-section-head">
         <h2>{ar ? 'مساحة المشارك' : 'Participant workspace'}</h2>
         <span className="eoa-badge">{statusLabel(p.status, ar)}</span>

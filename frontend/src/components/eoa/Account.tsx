@@ -13,6 +13,7 @@ import {
 } from '@/lib/eoa'
 import { Field, Notice, useEoaProgram } from './Shared'
 import { ParticipantWorkspace } from './Participant'
+import { EoaProgress } from './Progress'
 import { PrivacyRequests } from './PrivacyRequests'
 
 type AccountData = {
@@ -39,9 +40,11 @@ function AccountSession() {
   const [notice, setNotice] = useState('')
   const [busy, setBusy] = useState(false)
   const [application, setApplication] = useState<EoaApplication | null>(null)
+  const [accountLoaded, setAccountLoaded] = useState(false)
+  const [accountFailed, setAccountFailed] = useState(false)
   const [account, setAccount] = useState<AccountData | null>(null)
   const load = useCallback(async () => {
-    if (!user) return
+    if (!user?.email_verified_at) return
     try {
       const [a, p] = await Promise.all([
         api.get<{ data: EoaApplication | null }>('/eoa/application'),
@@ -49,7 +52,11 @@ function AccountSession() {
       ])
       setApplication(a.data)
       setAccount(p)
+      setAccountLoaded(true)
+      setAccountFailed(false)
+      setError('')
     } catch (e) {
+      setAccountFailed(true)
       setError(errorText(e))
     }
   }, [user])
@@ -339,7 +346,7 @@ function AccountSession() {
               </button>
             </div>
             {!user.email_verified_at && (
-              <div className="eoa-card eoa-space">
+              <div id="verify-email" className="eoa-card eoa-space">
                 <h3>{ar ? 'وثّق بريدك الإلكتروني' : 'Verify your email'}</h3>
                 <p>
                   {ar
@@ -365,7 +372,10 @@ function AccountSession() {
                 </div>
               </div>
             )}
-            <div className="eoa-two-grid eoa-space">
+            {user.email_verified_at && !accountLoaded && !accountFailed && <Notice>{ar ? 'جارٍ تحميل رحلتك…' : 'Loading your journey…'}</Notice>}
+            {accountFailed && <Notice error>{ar ? 'تعذر تحديث حالة رحلتك.' : 'Your journey status could not be refreshed.'} <button type="button" className="eoa-text-link" onClick={() => void load()}>{ar ? 'إعادة المحاولة' : 'Try again'}</button></Notice>}
+            {(!user.email_verified_at || accountLoaded) && <EoaProgress status={application?.status} verified={Boolean(user.email_verified_at)} participantStatus={account?.data?.status} onboardingComplete={Boolean(account?.data?.onboarding.completed_at)} ar={ar} />}
+            {accountLoaded && <div id="application-updates" className="eoa-two-grid eoa-space">
               <div className="eoa-card">
                 <span className="eoa-eyebrow">
                   {ar ? 'حالة الطلب' : 'APPLICATION STATUS'}
@@ -423,6 +433,7 @@ function AccountSession() {
                 ))}
               </div>
             </div>
+            }
             {account?.data && (
               <ParticipantWorkspace participant={account.data} reload={load} />
             )}
