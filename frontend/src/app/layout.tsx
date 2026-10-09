@@ -7,11 +7,11 @@ const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://wosool.org";
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "وصول | من مؤسس إلى مؤسس • EO Accelerator",
+    default: "Wosool — Founders to Founders | وصول — من مؤسس إلى مؤسس",
     template: "%s | Wosool",
   },
   description:
-    "Wosool — Founders to Founders. بوابتك الرقمية إلى EO Riyadh Accelerator: تعلم ونمو وعلاقات عالمية للمؤسسين.",
+    "Wosool — Founders to Founders. A founder community for connections, learning and collaboration in Saudi Arabia and the GCC. وصول — مجتمع المؤسسين للتواصل والتعلم والتعاون.",
   keywords: [
     "founders network",
     "Saudi Arabia startups",
@@ -28,7 +28,7 @@ export const metadata: Metadata = {
   publisher: "Wosool",
   icons: { icon: "/wosool-network-logo.png", apple: "/wosool-network-logo.png" },
   openGraph: {
-    title: "وصول | من مؤسس إلى مؤسس • EO Accelerator",
+    title: "Wosool — Founders to Founders | وصول — من مؤسس إلى مؤسس",
     description:
       "شبكة خاصة للمؤسسين الطموحين الذين يبنون شركات جادة في السعودية والخليج.",
     url: "./",
@@ -41,7 +41,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary",
     images: ["/wosool-network-logo.png"],
-    title: "وصول | من مؤسس إلى مؤسس • EO Accelerator",
+    title: "Wosool — Founders to Founders | وصول — من مؤسس إلى مؤسس",
     description:
       "شبكة خاصة للمؤسسين في السعودية والخليج.",
     creator: "@AboutWosool",

@@ -5,7 +5,7 @@ import { ArrowUpRight, ArrowLeft, Check, MoveUpRight } from 'lucide-react'
 import { useLocale } from '@/lib/locale'
 import { Notice, PartnerStrip, useEoaProgram } from './Shared'
 
-export function EoaLanding({ home = false }: { home?: boolean }) {
+export function EoaLanding() {
   const { locale } = useLocale()
   const ar = locale === 'ar'
   const { program } = useEoaProgram()
@@ -20,11 +20,7 @@ export function EoaLanding({ home = false }: { home?: boolean }) {
               WOSOOL / EO RIYADH ACCELERATOR
             </div>
             <h1>
-              {home
-                ? ar
-                  ? 'من مؤسس إلى مؤسس.'
-                  : 'Founders to Founders.'
-                : ar
+              {ar
                   ? 'مؤسسون سعوديون.\nنمو بلا حدود.'
                   : 'Saudi founders.\nExtraordinary growth.'}
             </h1>

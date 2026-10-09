@@ -1,6 +1,6 @@
 # EO Riyadh Accelerator on Wosool
 
-Wosool is the local digital gateway for **EO Riyadh Accelerator**: “Saudi Founders. Global Connections. Extraordinary Growth.” All program pages, accounts, applications, administration, coaching and recovery pages live under **`/EOA`**, preserving the uppercase path. Lowercase `/eoa/...` redirects to the canonical path. The homepage introduces this gateway while retaining the wider Wosool network routes.
+**Wosool.org remains “Founders to Founders,”** the main founder-community website and membership journey. **Wosool.org/EOA is the digital gateway for EO Riyadh Accelerator**: “Saudi Founders. Global Connections. Extraordinary Growth.” All Accelerator pages, accounts, applications, administration, coaching and recovery pages live under **`/EOA`**, preserving the uppercase path. Lowercase `/eoa/...` redirects to the canonical path. A navigation link connects the two experiences; community membership does not confer Accelerator admission.
 
 EO Riyadh provides chapter leadership and governance. EO Accelerator provides the applicable program framework. Wosool supports discovery, applications, coordination and participant services. Operating partners deliver only their approved scope. Mohammed Alsolami is identified as EO Riyadh Membership & Accelerator Chair, as supplied by project leadership. Application, local acceptance, official Accelerator enrollment and subsequent EO membership are distinct events.
 
