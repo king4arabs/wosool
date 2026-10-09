@@ -1,35 +1,25 @@
 "use client"
 
-import { useEffect, useState } from "react"
 import Link from "next/link"
+import { usePublicCollection } from "@/lib/use-public-collection"
+import { CollectionStatus } from "@/components/sections/CollectionStatus"
 import { PublicLayout } from "@/components/layout/PublicLayout"
 import { PartnerCard } from "@/components/sections/PartnerCard"
 import { Button } from "@/components/ui/button"
 import { localizePartner, partnersPageCopy } from "@/data/localized-seed"
-import { getCollectionItems, type ApiPartner, fetchJson, mapPartner, type WrappedResponse } from "@/lib/content-api"
+import { type ApiPartner, mapPartner } from "@/lib/content-api"
 import { useLocale } from "@/lib/locale"
-import type { PaginatedResponse, Partner } from "@/types"
 
 const topicIcons: Record<number, string> = { 0: "⚖️", 1: "📊", 2: "🚀" }
 
 export default function PartnersPage() {
   const { locale } = useLocale()
   const copy = partnersPageCopy[locale]
-  const [partnerItems, setPartnerItems] = useState<Partner[]>([])
+  const collection = usePublicCollection<ApiPartner>("/partners")
+  const partnerItems = collection.items.map(item => localizePartner(mapPartner(item), locale))
 
 
-  useEffect(() => {
-    async function loadPartners() {
-      try {
-        const response = await fetchJson<PaginatedResponse<ApiPartner> | WrappedResponse<ApiPartner[]>>("/api/v1/partners")
-        const items = getCollectionItems(response).map((item) => localizePartner(mapPartner(item), locale))
-        setPartnerItems(items)
-      } catch {
-        // No invented fallback records.
-      }
-    }
-    void loadPartners()
-  }, [locale])
+
 
   return (
     <PublicLayout>
@@ -73,6 +63,7 @@ export default function PartnersPage() {
           </div>
         </div>
       </section>
+      {collection.error && <CollectionStatus {...collection} hasMore={false} empty={false} />}
 
       {/* ── Partners grid ── */}
       <section className="py-16 px-4 bg-white">
@@ -112,7 +103,7 @@ export default function PartnersPage() {
               >
                 <div className="text-2xl mb-3">{topicIcons[i] ?? "💡"}</div>
                 <h3 className="text-sm font-black text-slate-900 mb-1">{topic}</h3>
-                <p className="text-[11px] text-slate-400 font-medium">{copy.accessHint}</p>
+                <p className="text-xs text-slate-400 font-medium">{copy.accessHint}</p>
               </div>
             ))}
           </div>
@@ -155,6 +146,7 @@ export default function PartnersPage() {
           </div>
         </div>
       </section>
+      {!collection.error && <CollectionStatus {...collection} empty={partnerItems.length === 0} />}
     </PublicLayout>
   )
 }

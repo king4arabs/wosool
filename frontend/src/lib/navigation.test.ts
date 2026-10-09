@@ -20,10 +20,10 @@ test('community and Accelerator navigation retain separate application and accou
 
 test('all Accelerator accounts return to the canonical workspace without granting admin access', () => {
   for (const role of ['eoa_applicant', 'eoa_lead', 'eoa_staff', 'eoa_reviewer', 'eoa_coach', 'accelerator-reviewer']) {
-    assert.equal(workspacePath({ roles: [role] }), '/EOA/account')
+    assert.equal(workspacePath({ roles: [role] }), '/dashboard/eoa')
   }
-  assert.equal(workspacePath({ is_accelerator_applicant: true }), '/EOA/account')
+  assert.equal(workspacePath({ is_accelerator_applicant: true }), '/dashboard/eoa')
   assert.equal(workspacePath({ roles: ['member'] }), '/dashboard')
   assert.equal(workspacePath({ roles: ['admin', 'eoa_applicant'] }), '/admin')
-  assert.equal(safeRedirect('//evil.test', workspacePath({ roles: ['eoa_applicant'] })), '/EOA/account')
+  assert.equal(safeRedirect('//evil.test', workspacePath({ roles: ['eoa_applicant'] })), '/dashboard/eoa')
 })

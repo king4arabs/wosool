@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class ProgramApplication extends Model
 {
     protected $fillable = [
+        'eoa_track_id',
         'gateway_payload', 'revision', 'submitted_at', 'consented_at', 'consent_version', 'assigned_reviewer_id', 'company_profile_id',
         'eoa_data', 'eoa_version', 'eoa_submitted_at', 'program_id', 'user_id', 'cohort_id', 'motivation', 'relevant_experience',
         'why_join', 'current_challenge', 'expected_outcome',

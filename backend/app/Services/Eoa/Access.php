@@ -8,6 +8,11 @@ use Illuminate\Support\Facades\DB;
 
 class Access
 {
+    public static function platformAdmin(User $user): bool
+    {
+        return ($user->getAttributes()['role_token'] ?? '') === 'admin' || $user->hasRole('admin');
+    }
+
     public static function lead(User $user): bool
     {
         return ($user->getAttributes()['role_token'] ?? '') === 'admin' || $user->hasAnyRole(['admin', 'eoa_lead']);

@@ -1,6 +1,7 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { usePublicCollection } from "@/lib/use-public-collection"
+import { CollectionStatus } from "@/components/sections/CollectionStatus"
 import { PublicLayout } from "@/components/layout/PublicLayout"
 import { SectionHeader } from "@/components/sections/SectionHeader"
 import { SponsorCard } from "@/components/sections/SponsorCard"
@@ -13,31 +14,17 @@ import {
   localizeSponsor,
   sponsorsPageCopy,
 } from "@/data/localized-seed"
-import { getCollectionItems, type ApiSponsor, fetchJson, mapSponsor, type WrappedResponse } from "@/lib/content-api"
+import { type ApiSponsor, mapSponsor } from "@/lib/content-api"
 import { useLocale } from "@/lib/locale"
-import type { PaginatedResponse, Sponsor } from "@/types"
 
 export default function SponsorsPage() {
   const { locale } = useLocale()
   const copy = sponsorsPageCopy[locale]
-  const [sponsorItems, setSponsorItems] = useState<Sponsor[]>([])
+  const collection = usePublicCollection<ApiSponsor>("/sponsors")
+  const sponsorItems = collection.items.map(item => localizeSponsor(mapSponsor(item), locale))
 
 
-  useEffect(() => {
-    async function loadSponsors() {
-      try {
-        const response = await fetchJson<PaginatedResponse<ApiSponsor> | WrappedResponse<ApiSponsor[]>>("/api/v1/sponsors")
-        const items = getCollectionItems(response).map((item) => localizeSponsor(mapSponsor(item), locale))
-        if (items.length > 0) {
-          setSponsorItems(items)
-        }
-      } catch {
-        // No invented fallback records.
-      }
-    }
 
-    void loadSponsors()
-  }, [locale])
 
   return (
     <PublicLayout>
@@ -50,6 +37,7 @@ export default function SponsorsPage() {
           <p className="mx-auto max-w-2xl text-xl text-gray-300">{copy.description}</p>
         </div>
       </section>
+      {collection.error && <CollectionStatus {...collection} hasMore={false} empty={false} />}
 
       <section className="bg-white px-4 py-16">
         <div className="mx-auto max-w-7xl">
@@ -144,6 +132,7 @@ export default function SponsorsPage() {
           </form>
         </div>
       </section>
+      {!collection.error && <CollectionStatus {...collection} empty={sponsorItems.length === 0} />}
     </PublicLayout>
   )
 }

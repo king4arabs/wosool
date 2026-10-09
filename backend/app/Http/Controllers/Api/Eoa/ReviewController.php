@@ -29,7 +29,7 @@ class ReviewController extends Controller
         return response()->json(['data' => $query->latest()->paginate(30)->through(fn ($a) => [
             'id' => $a->id, 'status' => $a->status, 'version' => $a->eoa_version, 'name' => $a->user->name, 'email' => $a->user->email,
             'company_name' => $a->eoa_data['company_name'] ?? '', 'submitted_at' => $a->eoa_submitted_at,
-        ]), 'capabilities' => ['lead' => Access::lead($request->user()), 'staff' => Access::staff($request->user())]]);
+        ]), 'capabilities' => ['lead' => Access::lead($request->user()), 'staff' => Access::staff($request->user()), 'manage_roles' => Access::platformAdmin($request->user())]]);
     }
 
     public function show(Request $request, int $application)
@@ -43,6 +43,7 @@ class ReviewController extends Controller
     public function update(Request $request, int $application)
     {
         $data = $request->validate([
+            'track_id' => 'nullable|integer',
             'status' => 'required|in:under_review,information_requested,interview,accepted,waitlisted,rejected',
             'version' => 'required|integer|min:1', 'message' => 'required|string|max:2000',
             'internal_note' => 'nullable|string|max:4000', 'interview_at' => 'required_if:status,interview|nullable|date|after:now',
@@ -65,17 +66,20 @@ class ReviewController extends Controller
                 'waitlisted' => ['under_review', 'interview', 'accepted', 'rejected'],
             ];
             abort_unless(in_array($data['status'], $transitions[$item->status] ?? []), 409, 'Invalid review transition.');
+            if ($data['status'] === 'accepted') {
+                abort_unless(! empty($data['track_id']) && DB::table('eoa_tracks')->where('program_id', $item->program_id)->where('id', $data['track_id'])->where('is_active', true)->lockForUpdate()->first(), 422, 'Choose an active EOA track before acceptance.');
+            }
             $before = $item->status;
             $message = $data['message'];
             if ($data['status'] === 'interview') {
                 $message .= ' | '.$data['interview_at'].' | '.$data['interview_location'];
             }
-            $item->update(['status' => $data['status'], 'decision_reason' => $message, 'internal_note' => $data['internal_note'] ?? $item->internal_note,
+            $item->update(['eoa_track_id' => $data['status'] === 'accepted' ? $data['track_id'] : $item->eoa_track_id, 'status' => $data['status'], 'decision_reason' => $message, 'internal_note' => $data['internal_note'] ?? $item->internal_note,
                 'reviewed_by' => $request->user()->id, 'reviewed_at' => now(), 'eoa_version' => $item->eoa_version + 1]);
             if ($data['status'] === 'accepted') {
-                ProgramParticipant::firstOrCreate(['program_id' => $item->program_id, 'user_id' => $item->user_id], ['application_id' => $item->id, 'status' => 'onboarding']);
+                ProgramParticipant::firstOrCreate(['program_id' => $item->program_id, 'user_id' => $item->user_id], ['application_id' => $item->id, 'eoa_track_id' => $item->eoa_track_id, 'status' => 'onboarding']);
             }
-            AdminAction::log($request->user()->id, 'eoa.review', 'program_application', $item->id, null, ['status' => $before], ['status' => $item->status]);
+            AdminAction::log($request->user()->id, 'eoa.review', 'program_application', $item->id, null, ['status' => $before], ['status' => $item->status, 'track_id' => $item->eoa_track_id]);
             ProgramService::notify($item->user()->firstOrFail(), 'review_updated', 'Your application has an update / يوجد تحديث على طلبك. Open your account for details.');
 
             return response()->json(['data' => ApplicationController::present($item)]);

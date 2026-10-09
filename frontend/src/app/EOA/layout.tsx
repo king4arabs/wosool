@@ -4,7 +4,7 @@ import { EoaNav } from '@/components/eoa/Shared'
 export const metadata: Metadata = {
   title: 'EO Riyadh Accelerator | مسرّعة رواد الأعمال',
   description:
-    'Wosool — Founders to Founders. Discover EO Riyadh Accelerator, check eligibility and prepare your application. وصول بوابتك الرقمية إلى EO Riyadh Accelerator.',
+    'EO Riyadh Accelerator connects founders globally and supports growth toward US$1 million in annual revenue and EO membership readiness. تعلّم ونمو وعلاقات عالمية للمؤسسين.',
   alternates: { canonical: '/EOA' },
   openGraph: {
     title: 'EO Riyadh Accelerator',

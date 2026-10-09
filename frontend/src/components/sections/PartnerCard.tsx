@@ -48,17 +48,17 @@ export function PartnerCard({ partner }: PartnerCardProps) {
         </div>
         <div className="flex-1 min-w-0">
           <h3 className="text-sm font-black text-slate-900 truncate">{partner.name}</h3>
-          <p className="text-[10px] text-slate-400 font-medium mt-0.5">{partner.sector}</p>
+          <p className="text-xs text-slate-400 font-medium mt-0.5">{partner.sector}</p>
         </div>
       </div>
 
       {/* Badges */}
       <div className="flex flex-wrap gap-1.5 mb-3">
-        <span className="text-[10px] font-bold px-2.5 py-1 rounded-full bg-slate-50 text-slate-500 border border-slate-200">
+        <span className="text-xs font-bold px-2.5 py-1 rounded-full bg-slate-50 text-slate-500 border border-slate-200">
           {partner.type}
         </span>
         <span
-          className="text-[10px] font-bold px-2.5 py-1 rounded-full border"
+          className="text-xs font-bold px-2.5 py-1 rounded-full border"
           style={{ background: s.bg, color: s.text, borderColor: s.border }}
         >
           {statusLabel}
@@ -76,7 +76,7 @@ export function PartnerCard({ partner }: PartnerCardProps) {
           href={partner.website}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex items-center gap-1.5 text-[11px] font-bold text-[#3B52D4] hover:underline transition-colors"
+          className="inline-flex items-center gap-1.5 text-xs font-bold text-[#3B52D4] hover:underline transition-colors"
         >
           {visitLabel}
           <ExternalLink className="h-3 w-3" />

@@ -23,6 +23,7 @@ class ApplicationController extends Controller
             'submitted_at' => $application->eoa_submitted_at?->toIso8601String(),
             'updated_at' => $application->updated_at?->toIso8601String(),
             'decision_reason' => $application->decision_reason,
+            'track' => $application->eoa_track_id ? DB::table('eoa_tracks')->where('id', $application->eoa_track_id)->first(['id', 'name_ar', 'name_en']) : null,
             'documents' => DB::table('eoa_documents')->where('application_id', $application->id)->get(['id', 'name', 'size', 'created_at']),
         ];
     }

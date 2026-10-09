@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -35,18 +35,18 @@ export default function HelpRequestsPage() {
     allow_ai_matching: true,
   })
 
-  async function load() {
+  const load = useCallback(async () => {
     try {
       const res = await api.get<{ data: HelpRequest[] }>("/member/help-requests")
       setItems(res.data || [])
     } catch (e) {
       toast(e instanceof Error ? e.message : "تعذر تحميل الطلبات", "error")
     }
-  }
+  }, [toast])
 
   useEffect(() => {
     void load()
-  }, [])
+  }, [load])
 
   async function submit() {
     setLoading(true)
@@ -85,7 +85,7 @@ export default function HelpRequestsPage() {
             </CardHeader>
             <CardContent className="text-sm text-slate-600 flex items-center justify-between">
               <div>{item.category} • {item.urgency} • {new Date(item.created_at).toLocaleDateString("ar-SA")}</div>
-              {item.chat_room_id ? <a className="text-[#3B52D4] font-semibold" href="/dashboard/messages">فتح الغرفة</a> : null}
+              {item.chat_room_id ? <a className="text-[#3B52D4] font-semibold" href={`/dashboard/messages?room=${item.chat_room_id}`}>فتح الغرفة</a> : null}
             </CardContent>
           </Card>
         ))}
@@ -113,7 +113,7 @@ export default function HelpRequestsPage() {
               <option value="founder_circle">مشارك مع دائرة المؤسسين</option>
               <option value="community_public">عام داخل المجتمع</option>
             </Select>
-            <label className="flex items-center gap-2 text-sm"><input type="checkbox" checked={form.allow_ai_matching} onChange={(e) => setForm((p) => ({ ...p, allow_ai_matching: e.target.checked }))} /> السماح للذكاء الاصطناعي باقتراح مساعدين</label>
+            <label className="flex items-center gap-2 text-sm"><input type="checkbox" checked={form.allow_ai_matching} onChange={(e) => setForm((p) => ({ ...p, allow_ai_matching: e.target.checked }))} /> السماح باقتراح أعضاء للمساعدة</label>
             <div className="flex justify-end gap-2"><Button variant="outline" onClick={() => setOpen(false)}>إلغاء</Button><Button onClick={submit} disabled={loading}>{loading ? "جارٍ الإنشاء..." : "إنشاء"}</Button></div>
           </div>
         </DialogContent>

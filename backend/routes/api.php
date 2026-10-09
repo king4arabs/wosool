@@ -219,6 +219,7 @@ Route::prefix('v1')->group(function () {
         Route::get('/analytics', AdminAnalyticsController::class);
         Route::get('/founders', [AdminFounderController::class, 'index']);
         Route::get('/matches', [AdminMatchController::class, 'index']);
+        Route::post('/matches', [AdminMatchController::class, 'store']);
         Route::get('/intros', [AdminIntroductionController::class, 'index']);
         Route::patch('/intros/{intro}', [AdminIntroductionController::class, 'update']);
         Route::get('/scorecards', [AdminScorecardController::class, 'index']);

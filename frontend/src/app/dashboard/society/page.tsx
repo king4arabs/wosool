@@ -1,6 +1,10 @@
 "use client"
 
-import { FormEvent, useEffect, useMemo, useState } from "react"
+import { FormEvent, useCallback, useEffect, useMemo, useState } from "react"
+import Link from "next/link"
+import { useSearchParams } from "next/navigation"
+import { useLocale } from "@/lib/locale"
+import { useToast } from "@/components/ui/toast"
 import { api } from "@/lib/api"
 import { StrategicHeaderCard } from "@/components/dashboard/StrategicHeaderCard"
 import { FeedFilterBar } from "@/components/dashboard/FeedFilterBar"
@@ -21,6 +25,13 @@ const INITIAL_FORM: SocietyPostForm = {
 }
 
 export default function SocietyPage() {
+  const { locale, direction } = useLocale()
+  const ar = locale === "ar"
+  const { toast } = useToast()
+  const postId = Number(useSearchParams().get("post"))
+  const [page, setPage] = useState(1)
+  const [loading, setLoading] = useState(true)
+  const [loadError, setLoadError] = useState<string | null>(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitError, setSubmitError] = useState<string | null>(null)
@@ -32,17 +43,30 @@ export default function SocietyPage() {
   const [deleteTargetPost, setDeleteTargetPost] = useState<SocietyPost | null>(null)
   const [meta, setMeta] = useState<{ current_page: number; last_page: number; total: number }>({ current_page: 1, last_page: 1, total: 0 })
 
-  async function loadPosts() {
-    const params: Record<string, string> = { tab, sort: "latest" }
-    if (sector) params.sector = sector
-    const res = await api.get<FeedResponse>("/member/society/posts", { params })
-    setPosts(res.data ?? [])
-    setMeta(res.meta ?? { current_page: 1, last_page: 1, total: res.data?.length ?? 0 })
-  }
+  const loadPosts = useCallback(async (signal?: AbortSignal) => {
+    setLoading(true); setLoadError(null)
+    try {
+      if (postId > 0) {
+        const response = await api.get<{ data: SocietyPost }>(`/member/society/posts/${postId}`, { signal })
+        if (signal?.aborted) return
+        setPosts([response.data]); setMeta({ current_page: 1, last_page: 1, total: 1 })
+      } else {
+        const response = await api.get<FeedResponse>("/member/society/posts", { params: { tab, sector, page, sort: "latest" }, signal })
+        if (signal?.aborted) return
+        setPosts(response.data ?? [])
+        setMeta(response.meta ?? { current_page: 1, last_page: 1, total: response.data?.length ?? 0 })
+      }
+    } catch (error) { if (!signal?.aborted) setLoadError(error instanceof Error ? error.message : "Unable to load posts") }
+    finally { if (!signal?.aborted) setLoading(false) }
+  }, [page, tab, sector, postId])
 
   useEffect(() => {
-    loadPosts().catch(() => setPosts([]))
-  }, [tab, sector])
+    const controller = new AbortController()
+    void loadPosts(controller.signal)
+    return () => controller.abort()
+  }, [loadPosts])
+
+  function actionError(error: unknown) { toast(error instanceof Error ? error.message : (ar ? "تعذر إتمام الإجراء." : "Unable to complete the action."), "error") }
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -71,11 +95,15 @@ export default function SocietyPage() {
     setLoadingActionId(postId)
     try {
       if (action === "help") await api.post(`/member/society/posts/${postId}/help-offers`, { message: "أستطيع المساعدة" })
-      if (action === "save") await api.post(`/member/society/posts/${postId}/save`)
+      if (action === "save") {
+        const saved = posts.find(post => post.id === postId)?.viewer_state?.saved
+        if (saved) await api.delete(`/member/society/posts/${postId}/save`)
+        else await api.post(`/member/society/posts/${postId}/save`)
+      }
       if (action === "report") await api.post(`/member/society/posts/${postId}/report`, { reason: "review_needed" })
       if (action === "match") await api.post(`/member/society/posts/${postId}/ai-match`)
       await loadPosts()
-    } finally {
+    } catch (error) { actionError(error) } finally {
       setLoadingActionId(null)
     }
   }
@@ -85,7 +113,7 @@ export default function SocietyPage() {
     try {
       await api.post(`/member/society/posts/${postId}/reactions`, { reaction_type: reactionType })
       await loadPosts()
-    } finally {
+    } catch (error) { actionError(error) } finally {
       setLoadingActionId(null)
     }
   }
@@ -97,7 +125,7 @@ export default function SocietyPage() {
     try {
       await api.post(`/member/society/posts/${postId}/comments`, { content: content.trim() })
       await loadPosts()
-    } finally {
+    } catch (error) { actionError(error) } finally {
       setLoadingActionId(null)
     }
   }
@@ -109,6 +137,7 @@ export default function SocietyPage() {
       return
     }
     await navigator.clipboard.writeText(url)
+    toast(ar ? "تم نسخ الرابط." : "Link copied.", "success")
   }
 
   async function deletePost(postId: number) {
@@ -117,7 +146,7 @@ export default function SocietyPage() {
       await api.delete(`/member/society/posts/${postId}`)
       setDeleteTargetPost(null)
       await loadPosts()
-    } finally {
+    } catch (error) { actionError(error) } finally {
       setLoadingActionId(null)
     }
   }
@@ -130,12 +159,12 @@ export default function SocietyPage() {
   }, [posts])
 
   return (
-    <div className="relative min-h-screen antialiased bg-slate-50 text-slate-900 flex flex-col" dir="rtl">
+    <div className="relative min-h-screen antialiased bg-slate-50 text-slate-900 flex flex-col" dir={direction}>
       <main className="max-w-4xl w-full mx-auto flex-1 px-4 py-6 space-y-6">
         <StrategicHeaderCard
           badge="خلاصة التنفيذ الحية"
           title="مجتمع البُناة المشترك (Society Feed)"
-          subtitle="تبادل مباشر وعالي الإشارة للمسائل التشغيلية اليومية والمطابقة الفورية عبر الـ AI."
+          subtitle="شارك خبراتك وتحدياتك، وتواصل مع المؤسسين المناسبين."
           cta={
             <button id="openModalBtn" onClick={() => setIsModalOpen(true)} className="w-full sm:w-auto bg-[#3B52D4] hover:bg-[#2E44C8] text-white font-semibold text-xs px-4 py-2.5 rounded-lg shadow-sm transition-colors text-center shrink-0">
               + مشاركة طلب دعم أو إنجاز جديد
@@ -143,8 +172,11 @@ export default function SocietyPage() {
           }
         />
 
-        <FeedFilterBar tab={tab} onTab={setTab} sector={sector} onSector={setSector} counts={counts} />
+        <FeedFilterBar tab={tab} onTab={value => { setPage(1); setTab(value) }} sector={sector} onSector={value => { setPage(1); setSector(value) }} counts={counts} />
 
+        {postId > 0 && <Link href="/dashboard/society" className="underline">{ar ? "عرض جميع المنشورات" : "View all posts"}</Link>}
+        {loading && <p role="status">{ar ? "جارٍ تحميل المنشورات…" : "Loading posts…"}</p>}
+        {loadError && <div role="alert" className="rounded-xl border border-rose-200 bg-rose-50 p-4"><p>{loadError}</p><button className="mt-3 underline" onClick={() => void loadPosts()}>{ar ? "إعادة المحاولة" : "Try again"}</button></div>}
         <div className="space-y-4">
           {posts.map((post) => (
             <SocietyPostCard
@@ -154,7 +186,7 @@ export default function SocietyPage() {
               onSave={() => postAction(post.id, "save")}
               onReactSelect={(type) => reactToPost(post.id, type)}
               onComment={() => commentOnPost(post.id)}
-              onShare={() => sharePost(post.id).catch(() => null)}
+              onShare={() => sharePost(post.id).catch(error => { if (!(error instanceof Error && error.name === "AbortError")) actionError(error) })}
               onReportOrDelete={() => {
                 if (post.viewer_state?.is_owner) {
                   setDeleteTargetPost(post)
@@ -167,13 +199,13 @@ export default function SocietyPage() {
             />
           ))}
 
-          {posts.length === 0 ? <div className="rounded-xl bg-white border border-slate-200 p-6 text-sm text-slate-500">لا توجد منشورات بعد. ابدأ أول منشور داخل المجتمع.</div> : null}
+          {!loading && !loadError && posts.length === 0 ? <div className="rounded-xl bg-white border border-slate-200 p-6 text-sm text-slate-500">لا توجد منشورات بعد. ابدأ أول منشور داخل المجتمع.</div> : null}
         </div>
 
         <div className="pt-4 flex items-center justify-between border-t border-slate-200 text-xs">
-          <button className="bg-white border border-slate-200 text-slate-400 py-1.5 px-3 rounded-md cursor-not-allowed" disabled>الصفحة السابقة</button>
+          <button className="bg-white border border-slate-200 text-slate-600 py-2 px-3 rounded-md disabled:opacity-40" disabled={page <= 1 || loading || postId > 0} onClick={() => setPage(value => value - 1)}>الصفحة السابقة</button>
           <span className="text-slate-500 font-medium">عرض {posts.length} من أصل {meta.total} منشور</span>
-          <button className="bg-white border border-slate-200 hover:bg-slate-50 text-slate-600 font-semibold py-1.5 px-3 rounded-md transition-colors">الصفحة التالية</button>
+          <button disabled={page >= meta.last_page || loading || postId > 0} onClick={() => setPage(value => value + 1)} className="bg-white border border-slate-200 hover:bg-slate-50 text-slate-600 font-semibold py-2 px-3 rounded-md transition-colors disabled:opacity-40">الصفحة التالية</button>
         </div>
       </main>
 

@@ -63,7 +63,7 @@ function DateBlock({ iso }: { iso: string }) {
   const month = d.toLocaleDateString("ar-SA", { month: "short" })
   return (
     <div className="flex-shrink-0 w-14 h-14 rounded-xl bg-[#EEF1FF] border border-[#E4E7F0] flex flex-col items-center justify-center gap-0.5">
-      <span className="text-[10px] font-extrabold text-[#3B52D4] uppercase leading-none">{month}</span>
+      <span className="text-xs font-extrabold text-[#3B52D4] uppercase leading-none">{month}</span>
       <span className="text-xl font-black text-[#3B52D4] leading-none">{day}</span>
     </div>
   )
@@ -102,7 +102,7 @@ function EventCard({
             <div className="flex items-start justify-between gap-2 mb-1.5">
               <h3 className="text-sm font-black text-slate-900 leading-snug">{event.title}</h3>
               {isRegistered && (
-                <span className="inline-flex items-center gap-1 rounded-full border border-emerald-200 bg-emerald-50 px-2 py-0.5 text-[10px] font-extrabold text-emerald-700">
+                <span className="inline-flex items-center gap-1 rounded-full border border-emerald-200 bg-emerald-50 px-2 py-0.5 text-xs font-extrabold text-emerald-700">
                   <CheckCircle2 className="h-2.5 w-2.5" />
                   مسجل
                 </span>
@@ -110,13 +110,13 @@ function EventCard({
             </div>
 
             <div className="flex flex-wrap items-center gap-1.5 mb-2.5">
-              <span className="inline-flex items-center gap-1 rounded-full border border-slate-200 bg-slate-50 px-2 py-0.5 text-[10px] font-extrabold text-slate-600">
+              <span className="inline-flex items-center gap-1 rounded-full border border-slate-200 bg-slate-50 px-2 py-0.5 text-xs font-extrabold text-slate-600">
                 {isVirtual ? <Video className="h-2.5 w-2.5" /> : <MapPin className="h-2.5 w-2.5" />}
                 {isVirtual ? "عن بُعد" : (event.type ?? "حضوري")}
               </span>
-              {event.is_public === false && <span className="inline-flex items-center gap-1 rounded-full border border-[#E4E7F0] bg-[#EEF1FF] px-2 py-0.5 text-[10px] font-extrabold text-[#3B52D4]">للأعضاء فقط</span>}
+              {event.is_public === false && <span className="inline-flex items-center gap-1 rounded-full border border-[#E4E7F0] bg-[#EEF1FF] px-2 py-0.5 text-xs font-extrabold text-[#3B52D4]">للأعضاء فقط</span>}
               {(event.tags ?? []).map((tag) => (
-                <span key={tag} className="rounded-full border border-slate-200 bg-slate-50 px-2 py-0.5 text-[10px] font-bold text-slate-500">{tag}</span>
+                <span key={tag} className="rounded-full border border-slate-200 bg-slate-50 px-2 py-0.5 text-xs font-bold text-slate-500">{tag}</span>
               ))}
             </div>
 
@@ -125,11 +125,11 @@ function EventCard({
             {event.why_recommended && (
               <div className="flex items-start gap-1.5 mb-2.5 rounded-lg bg-[#EEF1FF] border border-[#E4E7F0] px-2.5 py-1.5">
                 <Sparkles className="h-3 w-3 text-[#3B52D4] shrink-0 mt-0.5" />
-                <p className="text-[11px] font-bold text-[#3B52D4] leading-relaxed">{event.why_recommended}</p>
+                <p className="text-xs font-bold text-[#3B52D4] leading-relaxed">{event.why_recommended}</p>
               </div>
             )}
 
-            <div className="flex flex-wrap items-center gap-3 text-[11px] text-slate-400 font-medium mb-4">
+            <div className="flex flex-wrap items-center gap-3 text-xs text-slate-400 font-medium mb-4">
               <span className="flex items-center gap-1"><CalendarDays className="h-3 w-3" />{formatDate(event.starts_at)}</span>
               <span className="flex items-center gap-1"><Clock className="h-3 w-3" />{formatTime(event.starts_at)}{event.ends_at && ` – ${formatTime(event.ends_at)}`}</span>
               {!isVirtual && event.location && <span className="flex items-center gap-1"><MapPin className="h-3 w-3" />{event.location}</span>}
@@ -272,7 +272,7 @@ export default function EventsPage() {
     <div className="max-w-3xl mx-auto space-y-5">
       <div className="flex items-center justify-between gap-4">
         <div>
-          <div className="inline-flex items-center gap-1.5 bg-[#EEF1FF] border border-[#E4E7F0] px-2.5 py-1 rounded-full text-[10px] font-extrabold text-[#3B52D4] mb-2">
+          <div className="inline-flex items-center gap-1.5 bg-[#EEF1FF] border border-[#E4E7F0] px-2.5 py-1 rounded-full text-xs font-extrabold text-[#3B52D4] mb-2">
             <span className="w-1.5 h-1.5 rounded-full bg-[#3B52D4] animate-pulse" />
             الفعاليات
           </div>
@@ -294,7 +294,7 @@ export default function EventsPage() {
 
         <div className="flex flex-wrap items-center gap-1.5">
           {PERIODS.map((p) => (
-            <button key={p.value} type="button" onClick={() => setPeriod(p.value)} className={["px-3 h-7 rounded-xl text-[11px] font-extrabold border transition-all", period === p.value ? "bg-[#3B52D4] border-[#2E44C8] text-white shadow-sm shadow-[#3B52D4]/20" : "border-slate-200 text-slate-500 hover:border-[#3B52D4]/30 hover:text-[#3B52D4] bg-white"].join(" ")}>
+            <button key={p.value} type="button" onClick={() => setPeriod(p.value)} className={["px-3 h-7 rounded-xl text-xs font-extrabold border transition-all", period === p.value ? "bg-[#3B52D4] border-[#2E44C8] text-white shadow-sm shadow-[#3B52D4]/20" : "border-slate-200 text-slate-500 hover:border-[#3B52D4]/30 hover:text-[#3B52D4] bg-white"].join(" ")}>
               {p.label}
             </button>
           ))}

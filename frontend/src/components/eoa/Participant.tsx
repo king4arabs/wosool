@@ -48,6 +48,7 @@ export function ParticipantWorkspace({
         <h2>{ar ? 'مساحة المشارك' : 'Participant workspace'}</h2>
         <span className="eoa-badge">{statusLabel(p.status, ar)}</span>
       </div>
+      {p.track && <p><strong>{ar ? 'مسارك' : 'Your track'}:</strong> {ar ? p.track.name_ar : p.track.name_en}</p>}
       {error && <Notice error>{error}</Notice>}
       {notice && <Notice>{notice}</Notice>}
       <div className="eoa-two-grid">

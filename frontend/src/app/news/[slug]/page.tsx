@@ -6,14 +6,11 @@ import { useParams } from "next/navigation"
 import { ArrowLeft, ArrowRight, ChevronLeft, ChevronRight, Clock, User, Tag, BookOpen } from "lucide-react"
 import { PublicLayout } from "@/components/layout/PublicLayout"
 import { Button } from "@/components/ui/button"
-import { newsItems as sampleNewsItems } from "@/data/seed"
-import { demoContentEnabled } from "@/lib/demo-content"
 import { fetchJson, mapNewsItem, type ApiNewsItem } from "@/lib/content-api"
 import { getLocalizedNewsContent } from "@/lib/news-content"
 import { useLocale } from "@/lib/locale"
 
 // ── i18n ──────────────────────────────────────────────────────────────────────
-const newsItems = demoContentEnabled ? sampleNewsItems : []
 
 const detailCopy = {
   ar: {
@@ -216,7 +213,7 @@ export default function NewsArticlePage() {
             {/* Back link */}
             <Link
               href="/news"
-              className="inline-flex items-center gap-2 text-[11px] font-bold text-slate-400 hover:text-white transition-colors mb-8 group"
+              className="inline-flex items-center gap-2 text-xs font-bold text-slate-400 hover:text-white transition-colors mb-8 group"
             >
               <BackIcon className="h-3.5 w-3.5 group-hover:-translate-x-0.5 transition-transform" />
               {copy.back}
@@ -225,7 +222,7 @@ export default function NewsArticlePage() {
             {/* Category pill */}
             <div className="mb-5">
               <span
-                className="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[11px] font-extrabold uppercase tracking-widest border"
+                className="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-extrabold uppercase tracking-widest border"
                 style={{ color: style.accent, background: `${style.accent}18`, borderColor: `${style.accent}30` }}
               >
                 <Tag className="h-3 w-3" />
@@ -308,7 +305,7 @@ export default function NewsArticlePage() {
                   {(Array.isArray(articleView.tags) ? articleView.tags : []).map((tag: string) => (
                     <span
                       key={tag}
-                      className="rounded-full px-3 py-1 text-[11px] font-bold border"
+                      className="rounded-full px-3 py-1 text-xs font-bold border"
                       style={{ color: style.text, background: style.bg, borderColor: `${style.accent}25` }}
                     >
                       #{tag}
@@ -323,7 +320,7 @@ export default function NewsArticlePage() {
 
               {/* About the author card */}
               <div className="rounded-2xl border border-slate-100 bg-slate-50 p-5">
-                <p className="text-[10px] font-extrabold uppercase tracking-widest text-slate-400 mb-3">
+                <p className="text-xs font-extrabold uppercase tracking-widest text-slate-400 mb-3">
                   {locale === "ar" ? "الكاتب" : "Author"}
                 </p>
                 <div className="flex items-center gap-3">
@@ -336,7 +333,7 @@ export default function NewsArticlePage() {
                   </div>
                   <div>
                     <p className="text-sm font-bold text-slate-800">{articleView.author}</p>
-                    <p className="text-[11px] font-medium text-slate-400">
+                    <p className="text-xs font-medium text-slate-400">
                       {articleView.authorRole ?? (locale === "ar" ? "فريق التحرير" : "Editorial Team")}
                     </p>
                   </div>
@@ -345,7 +342,7 @@ export default function NewsArticlePage() {
 
               {/* Related articles */}
               <div>
-                <p className="text-[10px] font-extrabold uppercase tracking-widest text-slate-400 mb-4">
+                <p className="text-xs font-extrabold uppercase tracking-widest text-slate-400 mb-4">
                   {copy.more}
                 </p>
                 <div className="space-y-0 divide-y divide-slate-100">
@@ -362,7 +359,7 @@ export default function NewsArticlePage() {
                           style={{ background: getCategoryStyle(item.category).accent }}
                         />
                         <span
-                          className="text-[10px] font-extrabold uppercase tracking-wider"
+                          className="text-xs font-extrabold uppercase tracking-wider"
                           style={{ color: getCategoryStyle(item.category).accent }}
                         >
                           {item.category}
@@ -371,7 +368,7 @@ export default function NewsArticlePage() {
                       <h3 className="text-sm font-bold text-slate-800 group-hover:text-slate-950 leading-snug transition-colors line-clamp-2">
                         {item.title}
                       </h3>
-                      <span className="inline-flex items-center gap-1 mt-2 text-[11px] font-bold text-slate-400 group-hover:text-slate-600 transition-colors">
+                      <span className="inline-flex items-center gap-1 mt-2 text-xs font-bold text-slate-400 group-hover:text-slate-600 transition-colors">
                         {copy.read}
                         <ArrowIcon className="h-3 w-3 group-hover:translate-x-0.5 transition-transform" />
                       </span>

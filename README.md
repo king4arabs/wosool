@@ -6,9 +6,19 @@
 
 **https://wosool.org/EOA — EO Riyadh Accelerator.** The Accelerator has its own discovery, application and participant journey: **Saudi Founders. Global Connections. Extraordinary Growth.** Wosool provides its digital gateway; community membership and Accelerator admission remain separate.
 
-The canonical program journey is **https://wosool.org/EOA**. Discovery, eligibility, accounts, applications, review, participant services and coaching remain under uppercase `/EOA`. The older `/accelerator` pages redirect there. Applications and local acceptance do not guarantee official Accelerator enrollment or EO membership.
+The canonical program journey is **https://wosool.org/EOA**. Discovery, eligibility, accounts, applications, review and coaching remain under uppercase `/EOA`; applicants and participants also have a dedicated `/dashboard/eoa` workspace. Lowercase `/eoa` redirects to `/EOA`. The older `/accelerator` pages redirect there. Applications and local acceptance do not guarantee official Accelerator enrollment or EO membership.
 
 EO Riyadh provides chapter leadership and governance; EO Accelerator provides the program framework; Wosool provides the local digital gateway; operating partners deliver only their approved scope. Program leadership: Mohammed Alsolami, EO Riyadh Membership & Accelerator Chair.
+
+## October 9 reliability and EOA upgrade
+
+- Cairo is the shared Arabic/English typeface, with consistent reading sizes, mobile controls, RTL/LTR alignment and responsive navigation.
+- EOA uses the requested global-founder / US$1 million hero message, official EO Riyadh artwork, right-moving partner logos and a homepage infographic.
+- Applications include a preferred track; leadership confirms an active track at acceptance. Applicants see their decision and track at `/dashboard/eoa` independently of community membership.
+- Existing verified Wosool administrators can manage EOA lead, staff, reviewer and coach roles from **EOA administration → Team access**. Program leads manage bilingual tracks from **Admission tracks**.
+- Public profiles, directories, pagination, program filters, introductions, chat and operational admin screens connect to existing API workflows with visible failure/retry handling.
+
+See [release and verification notes](docs/WOSOOL-RELIABILITY-EOA-2026-10-09.md). Run the new additive migration before `eoa:install` when deploying; there is no automatic production deployment.
 
 ## Architecture
 

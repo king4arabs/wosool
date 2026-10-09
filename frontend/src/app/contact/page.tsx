@@ -280,14 +280,14 @@ export default function ContactPage() {
               <div
                 className="mt-2 p-5 bg-[#F5F7FF] border border-[#E4E7F0] rounded-2xl"
               >
-                <div className="inline-flex items-center gap-1.5 bg-[#EEF1FF] border border-[#E4E7F0] px-2.5 py-1 rounded-full text-[10px] font-extrabold text-[#3B52D4] mb-3">
+                <div className="inline-flex items-center gap-1.5 bg-[#EEF1FF] border border-[#E4E7F0] px-2.5 py-1 rounded-full text-xs font-extrabold text-[#3B52D4] mb-3">
                   جلسة مباشرة
                 </div>
                 <h3 className="text-sm font-black text-slate-900 mb-1.5">طلب جلسة مباشرة</h3>
                 <p className="text-xs text-slate-500 leading-relaxed mb-3">
                   إذا رغبت في تنسيق مكالمة مع فريق وصول، اذكر في رسالتك أنك تطلب جلسة مباشرة.
                 </p>
-                <div className="flex items-center gap-1.5 text-[11px] text-slate-400 font-medium">
+                <div className="flex items-center gap-1.5 text-xs text-slate-400 font-medium">
                   <Clock className="h-3 w-3" />
                   متوسط زمن الرد: يومان إلى ثلاثة أيام عمل
                 </div>
@@ -381,7 +381,7 @@ export default function ContactPage() {
                     <div className="flex items-start justify-between gap-2">
                       <FieldError message={errors.message} />
                       <span
-                        className={`text-[11px] font-medium shrink-0 ${
+                        className={`text-xs font-medium shrink-0 ${
                           formData.message.length > 2800 ? "text-amber-500" : "text-slate-400"
                         }`}
                       >

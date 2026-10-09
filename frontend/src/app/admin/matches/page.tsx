@@ -1,172 +1,74 @@
-import { Card, CardContent, CardHeader } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
+"use client"
+
+import { FormEvent, useCallback, useEffect, useMemo, useState } from "react"
+import Link from "next/link"
+import { api } from "@/lib/api"
+import { useLocale } from "@/lib/locale"
+import { type ApiFounder } from "@/lib/content-api"
 import { Button } from "@/components/ui/button"
-import { Avatar, AvatarFallback } from "@/components/ui/avatar"
-import { founders } from "@/data/seed"
-import { Search, Filter, ArrowRight, CheckCircle, XCircle, Link2, Handshake } from "lucide-react"
+import { Input } from "@/components/ui/input"
+import { Select } from "@/components/ui/select"
+import { Textarea } from "@/components/ui/textarea"
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog"
 
-type MatchStatus = "suggested" | "accepted" | "connected" | "declined"
+type Match = { id: number; founder_a: ApiFounder; founder_b: ApiFounder; status: string; match_reasons: string[]; created_at: string }
+const founderName = (founder: ApiFounder) => founder.name || founder.user?.name || founder.slug
 
-const statusBadge = (status: MatchStatus) => {
-  switch (status) {
-    case "suggested": return <Badge variant="warning">Suggested</Badge>
-    case "accepted": return <Badge variant="success">Accepted</Badge>
-    case "connected": return <Badge variant="gold">Connected</Badge>
-    case "declined": return <Badge variant="destructive">Declined</Badge>
-  }
-}
-
-const matches = [
-  { id: "m1", founder1: founders[0], founder2: founders[1], reason: "Both in healthcare/fintech crossover, complementary needs", score: 92, status: "connected" as MatchStatus, matchedAt: "Mar 15, 2026" },
-  { id: "m2", founder1: founders[2], founder2: founders[5], reason: "SaaS + HRTech synergy, both Riyadh-based", score: 87, status: "accepted" as MatchStatus, matchedAt: "Mar 18, 2026" },
-  { id: "m3", founder1: founders[3], founder2: founders[0], reason: "Logistics meets fintech — supply chain finance opportunity", score: 81, status: "suggested" as MatchStatus, matchedAt: "Mar 20, 2026" },
-  { id: "m4", founder1: founders[4], founder2: founders[2], reason: "FoodTech ops automation, shared distribution challenges", score: 76, status: "suggested" as MatchStatus, matchedAt: "Mar 22, 2026" },
-  { id: "m5", founder1: founders[1], founder2: founders[5], reason: "HealthTech talent pipeline through HRTech platform", score: 84, status: "accepted" as MatchStatus, matchedAt: "Mar 10, 2026" },
-  { id: "m6", founder1: founders[0], founder2: founders[3], reason: "Fintech payments for logistics — potential integration", score: 72, status: "declined" as MatchStatus, matchedAt: "Mar 5, 2026" },
-]
-
-const stats = [
-  { label: "Total Matches", value: matches.length, icon: Link2, color: "text-blue-600" },
-  { label: "Suggested", value: matches.filter(m => m.status === "suggested").length, icon: Handshake, color: "text-amber-600" },
-  { label: "Accepted", value: matches.filter(m => m.status === "accepted").length, icon: CheckCircle, color: "text-emerald-600" },
-  { label: "Connected", value: matches.filter(m => m.status === "connected").length, icon: Link2, color: "text-purple-600" },
-]
-
-function getInitials(name: string) {
-  return name.split(" ").map(n => n[0]).join("").slice(0, 2).toUpperCase()
+function FounderPicker({ label, value, onChange }: { label: string; value: ApiFounder | null; onChange: (value: ApiFounder | null) => void }) {
+  const { locale } = useLocale()
+  const [query, setQuery] = useState("")
+  const [items, setItems] = useState<ApiFounder[]>([])
+  const [error, setError] = useState<string | null>(null)
+  useEffect(() => {
+    const controller = new AbortController()
+    const timer = setTimeout(() => {
+      api.get<{ data: ApiFounder[] }>("/admin/founders", { params: { search: query, status: "active", per_page: 20 }, signal: controller.signal }).then(response => { setItems(response.data); setError(null) }).catch(error => { if (!controller.signal.aborted) setError(error instanceof Error ? error.message : "Unable to load founders") })
+    }, 300)
+    return () => { clearTimeout(timer); controller.abort() }
+  }, [query])
+  const options = value && !items.some(item => item.id === value.id) ? [value, ...items] : items
+  return <fieldset className="space-y-2"><legend className="mb-2 font-semibold">{label}</legend><Input type="search" value={query} onChange={event => setQuery(event.target.value)} aria-label={`${label}: ${locale === "ar" ? "بحث بالاسم" : "Search by name"}`} placeholder={locale === "ar" ? "بحث بالاسم" : "Search by name"} /><Select required value={value?.id ?? ""} aria-label={label} onChange={event => onChange(options.find(item => item.id === Number(event.target.value)) ?? null)}><option value="">{locale === "ar" ? "اختر المؤسس" : "Select founder"}</option>{options.map(item => <option key={item.id} value={item.id}>{founderName(item)}</option>)}</Select>{error && <p role="alert" className="text-sm text-rose-700">{error}</p>}</fieldset>
 }
 
 export default function AdminMatchesPage() {
-  return (
-    <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div>
-          <h2 className="text-2xl font-bold text-gray-900">Matches</h2>
-          <p className="text-gray-500 text-sm mt-1">
-            Manage founder-to-founder match suggestions and connections.
-          </p>
-        </div>
-        <div className="flex gap-2">
-          <Button variant="outline" size="sm">
-            <Filter className="h-4 w-4 mr-2" />
-            Filter
-          </Button>
-          <Button size="sm">
-            + Suggest Match
-          </Button>
-        </div>
-      </div>
-
-      {/* Stats */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        {stats.map(({ label, value, icon: Icon, color }) => (
-          <Card key={label}>
-            <CardContent className="pt-6">
-              <div className="flex items-center justify-between mb-3">
-                <Icon className={`h-5 w-5 ${color}`} aria-hidden="true" />
-              </div>
-              <p className="text-3xl font-bold text-gray-900">{value}</p>
-              <p className="text-sm text-gray-500 mt-1">{label}</p>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
-
-      {/* Search */}
-      <Card>
-        <CardContent className="pt-5">
-          <div className="flex flex-col sm:flex-row gap-4">
-            <div className="flex-1 relative">
-              <Search
-                className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400"
-                aria-hidden="true"
-              />
-              <input
-                type="search"
-                placeholder="Search matches by founder name..."
-                className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-[#C9A84C]"
-                aria-label="Search matches"
-              />
-            </div>
-            <select
-              className="rounded-lg border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#C9A84C]"
-              aria-label="Filter by status"
-            >
-              <option>All Status</option>
-              <option>Suggested</option>
-              <option>Accepted</option>
-              <option>Connected</option>
-              <option>Declined</option>
-            </select>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Match Cards */}
-      <Card>
-        <CardHeader>
-          <div className="flex items-center justify-between">
-            <h3 className="font-semibold text-gray-900">All Matches ({matches.length})</h3>
-            <p className="text-sm text-gray-500">
-              {matches.filter(m => m.status === "suggested").length} pending action
-            </p>
-          </div>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          {matches.map((match) => (
-            <div
-              key={match.id}
-              className="flex flex-col sm:flex-row sm:items-center gap-4 p-4 rounded-xl bg-gray-50 hover:bg-gray-100 transition-colors"
-            >
-              {/* Founder 1 */}
-              <div className="flex items-center gap-3 flex-1 min-w-0">
-                <Avatar className="h-9 w-9 shrink-0">
-                  <AvatarFallback className="text-xs">{getInitials(match.founder1.name)}</AvatarFallback>
-                </Avatar>
-                <div className="min-w-0">
-                  <p className="font-medium text-sm text-gray-900 truncate">{match.founder1.name}</p>
-                  <p className="text-xs text-gray-400 truncate">{match.founder1.companyName} · {match.founder1.sector}</p>
-                </div>
-              </div>
-
-              {/* Arrow */}
-              <div className="hidden sm:flex items-center gap-2 shrink-0">
-                <ArrowRight className="h-4 w-4 text-gray-300" aria-hidden="true" />
-              </div>
-
-              {/* Founder 2 */}
-              <div className="flex items-center gap-3 flex-1 min-w-0">
-                <Avatar className="h-9 w-9 shrink-0">
-                  <AvatarFallback className="text-xs">{getInitials(match.founder2.name)}</AvatarFallback>
-                </Avatar>
-                <div className="min-w-0">
-                  <p className="font-medium text-sm text-gray-900 truncate">{match.founder2.name}</p>
-                  <p className="text-xs text-gray-400 truncate">{match.founder2.companyName} · {match.founder2.sector}</p>
-                </div>
-              </div>
-
-              {/* Details */}
-              <div className="flex items-center gap-3 shrink-0">
-                <div className="text-right hidden md:block">
-                  <p className="text-xs text-gray-500">{match.matchedAt}</p>
-                  <p className="text-xs font-bold text-[#0A1628]">Score: {match.score}</p>
-                </div>
-                {statusBadge(match.status)}
-                {match.status === "suggested" && (
-                  <div className="flex gap-1">
-                    <Button size="sm" variant="ghost" className="h-7 w-7 p-0 text-emerald-600 hover:text-emerald-700" aria-label="Approve match">
-                      <CheckCircle className="h-3.5 w-3.5" />
-                    </Button>
-                    <Button size="sm" variant="ghost" className="h-7 w-7 p-0 text-red-500 hover:text-red-600" aria-label="Decline match">
-                      <XCircle className="h-3.5 w-3.5" />
-                    </Button>
-                  </div>
-                )}
-              </div>
-            </div>
-          ))}
-        </CardContent>
-      </Card>
-    </div>
-  )
+  const { locale } = useLocale()
+  const ar = locale === "ar"
+  const [matches, setMatches] = useState<Match[]>([])
+  const [search, setSearch] = useState("")
+  const [status, setStatus] = useState("")
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+  const [open, setOpen] = useState(false)
+  const [a, setA] = useState<ApiFounder | null>(null)
+  const [b, setB] = useState<ApiFounder | null>(null)
+  const [reason, setReason] = useState("")
+  const [sending, setSending] = useState(false)
+  const [formError, setFormError] = useState<string | null>(null)
+  const labels: Record<string, string> = ar ? { suggested: "مقترح", accepted: "مقبول", connected: "متصل", declined: "مرفوض" } : { suggested: "Suggested", accepted: "Accepted", connected: "Connected", declined: "Declined" }
+  const load = useCallback(async (signal?: AbortSignal) => {
+    setLoading(true); setError(null)
+    try { const response = await api.get<{ data: Match[] }>("/admin/matches", { signal }); if (!signal?.aborted) setMatches(response.data) }
+    catch (error) { if (!signal?.aborted) setError(error instanceof Error ? error.message : "Unable to load matches") }
+    finally { if (!signal?.aborted) setLoading(false) }
+  }, [])
+  useEffect(() => { const controller = new AbortController(); void load(controller.signal); return () => controller.abort() }, [load])
+  const visible = useMemo(() => matches.filter(match => (!status || match.status === status) && [founderName(match.founder_a), founderName(match.founder_b), ...match.match_reasons].join(" ").toLowerCase().includes(search.trim().toLowerCase())), [matches, search, status])
+  async function submit(event: FormEvent) {
+    event.preventDefault()
+    if (!a || !b || sending) return
+    setSending(true); setFormError(null)
+    try { await api.post("/admin/matches", { founder_a_id: a.id, founder_b_id: b.id, reason: reason.trim() }); setOpen(false); setA(null); setB(null); setReason(""); await load() }
+    catch (error) { setFormError(error instanceof Error ? error.message : "Unable to suggest match") }
+    finally { setSending(false) }
+  }
+  return <div className="space-y-6">
+    <header className="flex flex-wrap items-center justify-between gap-4"><div><h1 className="text-2xl font-bold">{ar ? "تعارف المؤسسين" : "Founder matches"}</h1><p className="mt-2 text-slate-600">{ar ? "اقترح علاقات مناسبة وتابع قرارات المؤسسين وطلبات التعارف." : "Suggest useful connections and follow founder responses and introduction requests."}</p></div><Button onClick={() => { setOpen(true); setFormError(null) }}>{ar ? "اقتراح تعارف" : "Suggest match"}</Button></header>
+    <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">{Object.entries(labels).map(([key, label]) => <div key={key} className="rounded-xl border bg-white p-5"><p className="text-3xl font-bold">{loading ? "—" : matches.filter(match => match.status === key).length}</p><p className="mt-2 text-sm text-slate-600">{label}</p></div>)}</div>
+    <div className="flex flex-wrap gap-3"><Input className="min-w-0 flex-1" type="search" value={search} onChange={event => setSearch(event.target.value)} aria-label={ar ? "بحث" : "Search"} placeholder={ar ? "ابحث باسم المؤسس أو سبب الترشيح" : "Search founders or match reasons"} /><Select className="sm:w-52" value={status} onChange={event => setStatus(event.target.value)} aria-label={ar ? "الحالة" : "Status"}><option value="">{ar ? "جميع الحالات" : "All statuses"}</option>{Object.entries(labels).map(([key, label]) => <option key={key} value={key}>{label}</option>)}</Select></div>
+    {loading && <p role="status">{ar ? "جارٍ التحميل…" : "Loading…"}</p>}
+    {error && <div role="alert"><p>{error}</p><Button variant="outline" onClick={() => void load()}>{ar ? "إعادة المحاولة" : "Try again"}</Button></div>}
+    {!loading && !error && <div className="space-y-4">{!visible.length && <p className="rounded-xl border bg-white p-6">{ar ? "لا توجد نتائج مطابقة." : "No matching connections."}</p>}{visible.map(match => <article key={match.id} className="rounded-xl border bg-white p-5"><div className="flex flex-wrap items-center justify-between gap-3"><h2 className="font-bold">{founderName(match.founder_a)} · {founderName(match.founder_b)}</h2><span className="rounded-full bg-slate-100 px-3 py-1 text-sm">{labels[match.status] ?? match.status}</span></div><ul className="mt-3 list-inside list-disc text-sm text-slate-600">{match.match_reasons.map((reason, index) => <li key={index}>{reason}</li>)}</ul><time className="mt-3 block text-xs text-slate-500">{new Date(match.created_at).toLocaleDateString(ar ? "ar-SA" : "en-GB")}</time></article>)}</div>}
+    <Link className="inline-flex min-h-11 items-center font-semibold text-[#3B52D4] underline" href="/admin/intros">{ar ? "إدارة طلبات التعارف" : "Manage introduction requests"}</Link>
+    <Dialog open={open} onOpenChange={value => { if (!sending) setOpen(value) }}><DialogContent><DialogHeader><DialogTitle>{ar ? "اقتراح تعارف" : "Suggest a match"}</DialogTitle><DialogDescription>{ar ? "اختر مؤسسين مختلفين واشرح قيمة التعارف. يختار المؤسسون قبول المقترح أو رفضه." : "Choose two different founders and explain the value of connecting. Founders decide whether to accept or decline."}</DialogDescription></DialogHeader><form onSubmit={submit} className="space-y-4"><FounderPicker label={ar ? "المؤسس الأول" : "First founder"} value={a} onChange={setA} /><FounderPicker label={ar ? "المؤسس الثاني" : "Second founder"} value={b} onChange={setB} /><label className="block font-semibold" htmlFor="match-reason">{ar ? "سبب الترشيح" : "Reason"}</label><Textarea id="match-reason" required minLength={10} maxLength={2000} value={reason} onChange={event => setReason(event.target.value)} />{formError && <p role="alert" className="text-rose-700">{formError}</p>}<Button type="submit" loading={sending} disabled={!a || !b || a.id === b.id || reason.trim().length < 10}>{ar ? "حفظ المقترح" : "Save suggestion"}</Button></form></DialogContent></Dialog>
+  </div>
 }

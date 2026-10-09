@@ -1,5 +1,6 @@
 import { ApiError } from './api'
 
+export type EoaTrack = { id: number; name_ar: string; name_en: string; description_ar?: string | null; description_en?: string | null; is_active?: boolean }
 export type EoaPartner = {
   id: number
   name_en: string
@@ -17,6 +18,7 @@ export type Organization = EoaPartner & {
   logo_source_url?: string
 }
 export type EoaProgram = {
+  tracks: EoaTrack[]
   program_id: number
   data_collection_open: boolean
   privacy_notice_ar: string | null
@@ -45,6 +47,7 @@ export type EoaProgram = {
   participation_terms_ar: string | null
 }
 export type ApplicationFields = {
+  preferred_track_id?: number | string
   founder_name?: string
   phone?: string
   founder_role?: string
@@ -65,6 +68,7 @@ export type ApplicationFields = {
   locale?: string
 }
 export type EoaApplication = {
+  track?: EoaTrack | null
   id: number
   status: string
   version: number
@@ -88,6 +92,7 @@ export type Session = {
   session_type?: string
 }
 export type Participant = {
+  track?: EoaTrack | null
   id: number
   status: string
   onboarding: { completed_at?: string }
@@ -162,6 +167,7 @@ export function eligibility(amount: number, currency: string, owner: boolean) {
 }
 
 const applicationFieldNames: Record<string, [string, string]> = {
+  preferred_track_id: ['المسار المفضل', 'Preferred track'],
   founder_name: ['اسم المؤسس', 'Founder name'],
   phone: ['رقم الهاتف', 'Phone'],
   founder_role: ['دور المؤسس', 'Founder role'],

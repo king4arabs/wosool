@@ -1,5 +1,6 @@
 import { env } from "./env"
 import { currentLocale, sessionFetch } from "./session-request"
+import { readResponse, requestErrorMessage } from "./response"
 
 export class ApiError extends Error {
   constructor(
@@ -39,28 +40,26 @@ async function request<T>(path: string, options: RequestOptions = {}): Promise<T
   const url = buildUrl(path, params)
   const resolvedLocale = currentLocale()
 
-  const headers: HeadersInit = {
-    Accept: "application/json",
-    "X-Locale": resolvedLocale,
-    ...customHeaders,
-  }
+  const headers = new Headers(customHeaders)
+  if (!headers.has("Accept")) headers.set("Accept", "application/json")
+  if (!headers.has("X-Locale")) headers.set("X-Locale", resolvedLocale)
 
-  if (body && !(body instanceof FormData)) {
-    ;(headers as Record<string, string>)["Content-Type"] = "application/json"
+  if (body !== undefined && !(body instanceof FormData)) {
+    headers.set("Content-Type", "application/json")
   }
 
   const response = await sessionFetch(url, {
     credentials: "include",
     ...init,
     headers,
-    body: body instanceof FormData ? body : body ? JSON.stringify(body) : undefined,
+    body: body instanceof FormData ? body : body !== undefined ? JSON.stringify(body) : undefined,
   })
 
   if (!response.ok) {
     const errorData = await response.json().catch(() => null)
     throw new ApiError(
       response.status,
-      errorData?.message || `API error: ${response.status}`,
+      (errorData?.errors ? Object.values(errorData.errors).flat().find(value => typeof value === "string") : null) || (response.status < 500 ? errorData?.message : null) || requestErrorMessage(response.status),
       errorData
     )
   }
@@ -69,7 +68,7 @@ async function request<T>(path: string, options: RequestOptions = {}): Promise<T
     return undefined as T
   }
 
-  return response.json()
+  return readResponse<T>(response)
 }
 
 /** API client for the Wosool backend */

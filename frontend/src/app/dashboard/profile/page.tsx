@@ -112,7 +112,7 @@ function SectionCard({
             <Icon className="h-4 w-4 text-[#3B52D4]" />
           </div>
           <div>
-            <div className="inline-flex items-center gap-1.5 bg-[#EEF1FF] border border-[#E4E7F0] px-2 py-0.5 rounded-full text-[10px] font-extrabold text-[#3B52D4] mb-1">
+            <div className="inline-flex items-center gap-1.5 bg-[#EEF1FF] border border-[#E4E7F0] px-2 py-0.5 rounded-full text-xs font-extrabold text-[#3B52D4] mb-1">
               {badge}
             </div>
             <h3 className="text-sm font-black text-slate-900 leading-none">{title}</h3>
@@ -143,7 +143,7 @@ function Field({
     <div className="space-y-1.5">
       <label className="text-xs font-bold text-slate-600">{label}</label>
       {children}
-      {error && <p className="text-[11px] text-red-500 font-medium">{error}</p>}
+      {error && <p className="text-xs text-red-500 font-medium">{error}</p>}
     </div>
   )
 }
@@ -163,7 +163,7 @@ function Chip({
       : "bg-[#F0FDF4] border-[#BBF7D0] text-emerald-700"
   return (
     <span
-      className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[11px] font-bold ${styles}`}
+      className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-bold ${styles}`}
     >
       {label}
       <button
@@ -347,7 +347,7 @@ export default function ProfilePage() {
 
           <div className="relative px-6 pt-6 pb-5">
             {/* Badge */}
-            <div className="inline-flex items-center gap-1.5 bg-white/70 border border-[#C7D0F8] px-2.5 py-1 rounded-full text-[10px] font-extrabold text-[#3B52D4] mb-4">
+            <div className="inline-flex items-center gap-1.5 bg-white/70 border border-[#C7D0F8] px-2.5 py-1 rounded-full text-xs font-extrabold text-[#3B52D4] mb-4">
               <span className="w-1.5 h-1.5 rounded-full bg-[#3B52D4] animate-pulse" />
               {locale === "ar" ? "معالج الانضمام" : "Onboarding Wizard"}
             </div>
@@ -380,7 +380,7 @@ export default function ProfilePage() {
                     )}
                     <div
                       className={[
-                        "flex items-center gap-2 rounded-xl px-3 py-2 text-[11px] font-extrabold border transition-all",
+                        "flex items-center gap-2 rounded-xl px-3 py-2 text-xs font-extrabold border transition-all",
                         isActive
                           ? "bg-[#3B52D4] border-[#2E44C8] text-white shadow-md shadow-[#3B52D4]/25"
                           : isDone

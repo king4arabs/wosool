@@ -13,6 +13,9 @@ import {
   type Organization,
 } from '@/lib/eoa'
 import { Field, Notice } from './Shared'
+import { RoleManager } from './RoleManager'
+import { TrackManager } from './TrackManager'
+import type { EoaTrack } from '@/lib/eoa'
 
 type Row = Record<string, string | number | boolean | null>
 type Person = { id: number; name: string; email: string; roles: string[] }
@@ -20,6 +23,7 @@ type Enrollment = {
   id: number
   name: string
   status: string
+  track_id: number | null
   cohort_id: number | null
   group_id: number | null
   onboarding: { completed_at?: string } | null
@@ -40,6 +44,7 @@ type Operations = {
   is_open: boolean
   starts_at: string | null
   application_deadline: string | null
+  tracks: EoaTrack[]
   cohorts: Row[]
   sessions: Row[]
   groups: Row[]
@@ -68,7 +73,7 @@ type ReviewRow = {
 }
 type ReviewResponse = {
   data: { data: ReviewRow[]; current_page: number; last_page: number }
-  capabilities: { lead: boolean; staff: boolean }
+  capabilities: { lead: boolean; staff: boolean; manage_roles?: boolean }
 }
 type OperationType =
   | 'cohorts'
@@ -177,6 +182,12 @@ function AdminSession() {
             <div className="eoa-tabs">
               {[
                 ['applications', ar ? 'الطلبات' : 'Applications'],
+                ...(review.capabilities.manage_roles
+                  ? [['accounts', ar ? 'حسابات الفريق' : 'Team access']]
+                  : []),
+                ...(review.capabilities.lead
+                  ? [['tracks', ar ? 'مسارات القبول' : 'Admission tracks']]
+                  : []),
                 ...(ops
                   ? [
                       ['program', ar ? 'التشغيل' : 'Operations'],
@@ -200,6 +211,12 @@ function AdminSession() {
                 </button>
               ))}
             </div>
+            {tab === 'accounts' && review.capabilities.manage_roles && (
+              <RoleManager />
+            )}
+            {tab === 'tracks' && ops && review.capabilities.lead && (
+              <TrackManager tracks={ops.tracks} reload={load} />
+            )}
             {tab === 'applications' && (
               <div className="eoa-admin-grid">
                 <div className="eoa-card">
@@ -255,7 +272,13 @@ function AdminSession() {
                         {Object.entries(selected.fields).map(([key, value]) => (
                           <div key={key}>
                             <dt>{applicationFieldLabel(key, ar)}</dt>
-                            <dd>{applicationFieldValue(value, ar)}</dd>
+                            <dd>
+                              {key === 'preferred_track_id'
+                                ? (ops?.tracks.find(
+                                    (track) => track.id === Number(value),
+                                  )?.[ar ? 'name_ar' : 'name_en'] ?? value)
+                                : applicationFieldValue(value, ar)}
+                            </dd>
                           </div>
                         ))}
                       </dl>
@@ -282,6 +305,9 @@ function AdminSession() {
                               `/eoa/review/${selected.id}`,
                               {
                                 status: f.get('status'),
+                                track_id: f.get('track_id')
+                                  ? Number(f.get('track_id'))
+                                  : null,
                                 version: selected.version,
                                 message: f.get('message'),
                                 internal_note: f.get('internal_note'),
@@ -320,6 +346,35 @@ function AdminSession() {
                             ))}
                           </select>
                         </Field>
+                        {review.capabilities.lead && ops && (
+                          <Field
+                            label={
+                              ar
+                                ? 'مسار القبول (مطلوب عند القبول)'
+                                : 'Admission track (required for acceptance)'
+                            }
+                          >
+                            <select
+                              name="track_id"
+                              defaultValue={
+                                selected.track?.id ??
+                                selected.fields.preferred_track_id ??
+                                ''
+                              }
+                            >
+                              <option value="">
+                                {ar ? 'اختر المسار' : 'Select track'}
+                              </option>
+                              {ops.tracks
+                                .filter((track) => track.is_active)
+                                .map((track) => (
+                                  <option key={track.id} value={track.id}>
+                                    {ar ? track.name_ar : track.name_en}
+                                  </option>
+                                ))}
+                            </select>
+                          </Field>
+                        )}
                         <Field
                           label={ar ? 'رسالة للمؤسس' : 'Message to the founder'}
                         >
@@ -480,6 +535,12 @@ function AdminSession() {
                         ))}
                       </select>
                     </Field>
+                    <p>
+                      {ar ? 'مسار القبول' : 'Admission track'}:{' '}
+                      {ops.tracks.find((track) => track.id === p.track_id)?.[
+                        ar ? 'name_ar' : 'name_en'
+                      ] ?? '—'}
+                    </p>
                     <Field label={ar ? 'حالة الرسوم' : 'Fee status'}>
                       <select
                         name="fee_status"

@@ -1,6 +1,6 @@
 # EO Riyadh Accelerator on Wosool
 
-**Wosool.org remains “Founders to Founders,”** the main founder-community website and membership journey. **Wosool.org/EOA is the digital gateway for EO Riyadh Accelerator**: “Saudi Founders. Global Connections. Extraordinary Growth.” All Accelerator pages, accounts, applications, administration, coaching and recovery pages live under **`/EOA`**, preserving the uppercase path. Lowercase `/eoa/...` redirects to the canonical path. A navigation link connects the two experiences; community membership does not confer Accelerator admission.
+**Wosool.org remains “Founders to Founders,”** the main founder-community website and membership journey. **Wosool.org/EOA is the digital gateway for EO Riyadh Accelerator**: “Saudi Founders. Global Connections. Extraordinary Growth.” Public Accelerator pages, accounts, applications, administration, coaching and recovery pages live under **`/EOA`**, preserving the uppercase path. The dedicated applicant/participant workspace is **`/dashboard/eoa`** and does not require Wosool founder-network membership. Lowercase `/eoa/...` redirects to the canonical path. A navigation link connects the two experiences; community membership does not confer Accelerator admission.
 
 EO Riyadh provides chapter leadership and governance. EO Accelerator provides the applicable program framework. Wosool supports discovery, applications, coordination and participant services. Operating partners deliver only their approved scope. Mohammed Alsolami is identified as EO Riyadh Membership & Accelerator Chair, as supplied by project leadership. Application, local acceptance, official Accelerator enrollment and subsequent EO membership are distinct events.
 
@@ -45,18 +45,9 @@ Review transitions are constrained in `ReviewController`. A rejection cannot be 
 | `eoa_staff` | Program applications, reviewer assignment, operating content, inquiries and reports; no final decisions, financial confirmation or local approvals |
 | `eoa_lead` / existing administrator | Final decisions, program/privacy/fee approvals, partner confirmation, financial and official-enrollment confirmation, plus staff capabilities |
 
-Participant access is derived from `program_participants`, not a self-selectable role. Leadership/staff can also coordinate coaching. Assignments must refer to existing verified accounts with the appropriate role. No privileged account is seeded. An authorized operator can provision the initial lead using Tinker, after checking the exact account and preserving an audit record:
+Participant access is derived from `program_participants`, not a self-selectable role. A verified existing Wosool platform administrator uses **EOA administration → Team access** to search existing accounts and grant/revoke EOA lead, staff, reviewer and coach roles. Changes are audited; the endpoint accepts only these EOA roles and preserves all other account roles. Unverified accounts cannot receive new EOA privileges. EOA leads and staff cannot grant themselves or others privileges through this screen. Role checks run on subsequent API requests, so revocation removes the corresponding access even if reviewer assignments remain.
 
-```php
-$actor = App\Models\User::where('email', 'EXISTING_ADMIN_EMAIL')->firstOrFail();
-abort_unless(App\Services\Eoa\Access::lead($actor), 403);
-$user = App\Models\User::where('email', 'VERIFIED_LEAD_EMAIL')->firstOrFail();
-abort_unless($user->hasVerifiedEmail(), 422);
-$user->assignRole('eoa_lead');
-App\Models\AdminAction::log($actor->id, 'eoa.role_grant', 'user', $user->id, null, null, ['role' => 'eoa_lead']);
-```
-
-Replace placeholders; do not mark an unverified address verified merely to bypass the workflow. Staff/reviewer/coach roles use the same controlled process. Revoke roles with `removeRole`, audit the change, and revoke active sessions when removing access.
+**Admission tracks** are managed by EOA leads and platform administrators. Each has Arabic/English names/descriptions and an availability flag. The installer creates one standard EO Riyadh Accelerator track only if the program has none; it does not overwrite locally configured tracks. Applicants select an active preferred track, and leadership must select an active track belonging to the same program when accepting an application. The accepted track is stored on the application and participant and shown in the Wosool EOA dashboard. Cohorts and accountability groups remain separate operational assignments. Closing a track to new applications preserves existing assignments.
 
 ## Administration and publication
 
@@ -72,7 +63,7 @@ Local settings are draft by default. Administrators must supply approval referen
 
 No launch date, cohort count, sponsor or funding arrangement is inferred. Planning targets are 10–15 qualified participants before launch and at least 25 within two years. Investment discussions remain separate from admission and participation.
 
-The partner strip follows the hero and renders only records with a verified organization, confirmed relationship, approval evidence and an available official logo. It preserves supplied order, artwork and proportions, provides official links and accessible names without visible captions, pauses on focus/hover and respects reduced motion. A hidden strip with no confirmed records is intentional. The public ecosystem directory is separately labeled and is not a partnership claim.
+The partner strip follows the hero, includes the supplied EO Riyadh chapter artwork, and renders additional partner records with a verified organization, confirmed relationship, approval evidence and an available official logo. It preserves supplied order, artwork and proportions, provides official links and accessible names without visible captions, pauses on focus/hover and respects reduced motion. When no additional partnerships are confirmed, only EO Riyadh is shown; no research-directory relationship is inferred. The supplied transparent EO logo is framed to its visible bounds in CSS without modifying its pixels. Movement has an explicit pause control. The public ecosystem directory is separately labeled and is not a partnership claim.
 
 ## Data, privacy and recovery
 
@@ -117,3 +108,5 @@ Run repository `npm run verify` plus the CI dependency audits. Database tests us
 - Visual/browser, production database, mail delivery and disaster-recovery checks in the target environment.
 
 See [EOA-RESEARCH.md](EOA-RESEARCH.md) for the factual corrections, citations and asset inventory.
+
+See [the October 9 reliability and EOA release notes](WOSOOL-RELIABILITY-EOA-2026-10-09.md) for current verification results.

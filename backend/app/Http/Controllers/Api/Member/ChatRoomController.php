@@ -17,6 +17,8 @@ use App\Services\ChatRoomService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\DB;
 
 class ChatRoomController extends Controller
 {
@@ -41,7 +43,7 @@ class ChatRoomController extends Controller
             $query->where('title', 'like', "%{$q}%");
         }
 
-        $rooms = $query->orderByDesc('last_message_at')->orderByDesc('updated_at')->paginate($request->integer('per_page', 20));
+        $rooms = $query->orderByDesc('last_message_at')->orderByDesc('updated_at')->paginate(max(1, min(100, $request->integer('per_page', 20))));
 
         return ChatRoomResource::collection($rooms)->response();
     }
@@ -54,8 +56,8 @@ class ChatRoomController extends Controller
         $messages = ChatMessage::query()
             ->with(['sender:id,name,email', 'reactions'])
             ->where('room_id', $room->id)
-            ->orderBy('created_at')
-            ->paginate($request->integer('per_page', 50));
+            ->orderByDesc('created_at')->orderByDesc('id')
+            ->paginate(max(1, min(100, $request->integer('per_page', 50))));
 
         return response()->json([
             'data' => [
@@ -110,35 +112,46 @@ class ChatRoomController extends Controller
 
     public function sendMessage(Request $request, ChatRoom $room): JsonResponse
     {
-        $this->authorizeParticipant($request->user()->id, $room->id);
+        $participant = $this->authorizeParticipant($request->user()->id, $room->id);
+        abort_unless($participant->status === 'active', 403);
+        abort_if(in_array($room->status, ['closed', 'archived'], true), 409, 'This conversation is closed.');
 
         $data = $request->validate([
-            'message_type' => ['nullable', 'in:text,file,system,ai,event'],
-            'body' => ['nullable', 'string', 'max:12000'],
+            'message_type' => ['nullable', 'in:text'],
+            'body' => ['required', 'string', 'max:12000', 'regex:/\S/u'],
             'metadata' => ['nullable', 'array'],
-            'parent_message_id' => ['nullable', 'integer', 'exists:chat_messages,id'],
+            'parent_message_id' => ['nullable', 'integer', Rule::exists('chat_messages', 'id')->where('room_id', $room->id)],
         ]);
 
-        $message = ChatMessage::create([
-            'room_id' => $room->id,
-            'sender_user_id' => $request->user()->id,
-            'message_type' => $data['message_type'] ?? 'text',
-            'body' => $data['body'] ?? '',
-            'metadata' => $data['metadata'] ?? [],
-            'parent_message_id' => $data['parent_message_id'] ?? null,
-        ]);
+        $message = DB::transaction(function () use ($data, $room, $request) {
+            $message = ChatMessage::create([
+                'room_id' => $room->id,
+                'sender_user_id' => $request->user()->id,
+                'message_type' => $data['message_type'] ?? 'text',
+                'body' => $data['body'] ?? '',
+                'metadata' => $data['metadata'] ?? [],
+                'parent_message_id' => $data['parent_message_id'] ?? null,
+            ]);
 
-        $room->forceFill(['last_message_at' => now()])->save();
+            $room->forceFill(['last_message_at' => now()])->save();
+            AnalyticsEvent::track(
+                eventName: 'chat_message_sent',
+                userId: $request->user()->id,
+                entityType: 'chat_room',
+                entityId: $room->id,
+                properties: ['message_id' => $message->id, 'type' => $message->message_type]
+            );
+            return $message;
+        });
 
-        ChatMessageCreated::dispatch($message->load('sender:id,name,email'));
+        // Delivery is committed before the optional realtime transport. A broker
+        // outage must not report a persisted message as an unsuccessful send.
+        try {
+            ChatMessageCreated::dispatch($message->load('sender:id,name,email'));
+        } catch (\Throwable $error) {
+            report($error);
+        }
 
-        AnalyticsEvent::track(
-            eventName: 'chat_message_sent',
-            userId: $request->user()->id,
-            entityType: 'chat_room',
-            entityId: $room->id,
-            properties: ['message_id' => $message->id, 'type' => $message->message_type]
-        );
 
         return response()->json([
             'message' => 'تم إرسال الرسالة.',
@@ -189,7 +202,7 @@ class ChatRoomController extends Controller
     public function read(Request $request, ChatRoom $room): JsonResponse
     {
         $participant = $this->authorizeParticipant($request->user()->id, $room->id);
-        $data = $request->validate(['last_read_message_id' => ['nullable', 'integer', 'exists:chat_messages,id']]);
+        $data = $request->validate(['last_read_message_id' => ['nullable', 'integer', Rule::exists('chat_messages', 'id')->where('room_id', $room->id)]]);
 
         $lastReadId = $data['last_read_message_id'] ?? ChatMessage::query()->where('room_id', $room->id)->max('id');
 

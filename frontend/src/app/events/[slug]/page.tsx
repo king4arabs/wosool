@@ -308,7 +308,7 @@ export default function EventDetailPage() {
                 checked={formData.allow_ai_networking_suggestions}
                 onChange={(e) => setFormData((prev) => ({ ...prev, allow_ai_networking_suggestions: e.target.checked }))}
               />
-              تفعيل اقتراحات الذكاء الاصطناعي للتشبيك
+              تفعيل اقتراحات التواصل
             </label>
             <div className="flex justify-end gap-2">
               <Button variant="outline" onClick={() => setIsModalOpen(false)}>إلغاء</Button>

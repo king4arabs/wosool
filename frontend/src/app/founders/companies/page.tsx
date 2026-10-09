@@ -1,8 +1,9 @@
 "use client"
 
-import { useEffect, useState } from "react"
 import Link from "next/link"
 import { Briefcase, Search, TrendingUp, Users } from "lucide-react"
+import { usePublicCollection } from "@/lib/use-public-collection"
+import { CollectionStatus } from "@/components/sections/CollectionStatus"
 import { PublicLayout } from "@/components/layout/PublicLayout"
 import { SectionHeader } from "@/components/sections/SectionHeader"
 import { CompanyCard } from "@/components/sections/CompanyCard"
@@ -12,31 +13,17 @@ import {
   companiesPageCopy,
   localizeCompany,
 } from "@/data/localized-seed"
-import { getCollectionItems, type ApiCompany, fetchJson, mapCompany, type WrappedResponse } from "@/lib/content-api"
+import { type ApiCompany, mapCompany } from "@/lib/content-api"
 import { useLocale } from "@/lib/locale"
-import type { Company, PaginatedResponse } from "@/types"
 
 export default function CompaniesPage() {
   const { locale } = useLocale()
   const copy = companiesPageCopy[locale]
-  const [companyItems, setCompanyItems] = useState<Company[]>([])
+  const collection = usePublicCollection<ApiCompany>("/companies")
+  const companyItems = collection.items.map(item => localizeCompany(mapCompany(item), locale))
 
 
-  useEffect(() => {
-    async function loadCompanies() {
-      try {
-        const response = await fetchJson<PaginatedResponse<ApiCompany> | WrappedResponse<ApiCompany[]>>("/api/v1/companies")
-        const items = getCollectionItems(response).map((item) => localizeCompany(mapCompany(item), locale))
-        if (items.length > 0) {
-          setCompanyItems(items)
-        }
-      } catch {
-        // No invented fallback records.
-      }
-    }
 
-    void loadCompanies()
-  }, [locale])
 
   const hiring = companyItems.filter((company) => company.isHiring)
   const fundraising = companyItems.filter((company) => company.isFundraising)
@@ -53,6 +40,7 @@ export default function CompaniesPage() {
           <p className="mx-auto max-w-2xl text-xl text-gray-300">{copy.description}</p>
         </div>
       </section>
+      {collection.error && <CollectionStatus {...collection} hasMore={false} empty={false} />}
 
       <section className="border-b border-gray-100 bg-white px-4 py-12">
         <div className="mx-auto max-w-7xl">
@@ -154,6 +142,7 @@ export default function CompaniesPage() {
           </Button>
         </div>
       </section>
+      {!collection.error && <CollectionStatus {...collection} empty={companyItems.length === 0} />}
     </PublicLayout>
   )
 }

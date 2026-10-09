@@ -1,5 +1,15 @@
 # Changelog
 
+## Wosool reliability and EOA tracks — 2026-10-09
+
+- Standardize Cairo typography, bilingual alignment, mobile navigation, form sizing and loading/error states.
+- Repair public founder/company profiles, paginated listings, directory introductions, program filters, society actions and admin event/program/match workflows.
+- Preserve chat drafts on failure, load newest history first, deduplicate realtime/polled messages, restrict writes and keep successful sends independent of the broadcast broker.
+- Refresh the EOA hero, partner rail and program explanation; add a homepage infographic and `/dashboard/eoa`.
+- Add bilingual admission tracks, applicant preferences, leadership-confirmed track acceptance and audited platform-admin assignment of EOA roles.
+- Add backend regression tests and record local browser/API verification in the October 9 release notes.
+
+
 ## EO Accelerator gateway — 2026-10-08
 
 - Add bilingual discovery, verified applicant accounts, server-saved multi-step applications, review/audit lifecycle, onboarding and cohort resources.

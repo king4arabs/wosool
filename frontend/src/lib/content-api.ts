@@ -1,4 +1,5 @@
 import { sessionFetch } from "./session-request"
+import { readResponse, requestErrorMessage } from "./response"
 import type {
   Company,
   Event,
@@ -308,12 +309,11 @@ export function mapNewsItem(item: ApiNewsItem): NewsItem {
 }
 
 export async function fetchJson<T>(input: string, init?: RequestInit): Promise<T> {
+  const headers = new Headers(init?.headers)
+  if (!headers.has("Accept")) headers.set("Accept", "application/json")
   const response = await sessionFetch(input, {
     ...init,
-    headers: {
-      Accept: "application/json",
-      ...(init?.headers ?? {}),
-    },
+    headers,
     credentials: "include",
     cache: init?.cache ?? "no-store",
   })
@@ -329,11 +329,11 @@ export async function fetchJson<T>(input: string, init?: RequestInit): Promise<T
       : null
 
     throw new Error(
-      firstFieldError || errorPayload?.message || `Request failed: ${response.status}`
+      firstFieldError || (response.status < 500 ? errorPayload?.message : null) || requestErrorMessage(response.status)
     )
   }
 
-  return response.json()
+  return readResponse<T>(response)
 }
 
 export function getCollectionItems<T>(response: PaginatedResponse<T> | WrappedResponse<T[]>): T[] {

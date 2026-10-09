@@ -39,3 +39,35 @@ test("session writes decode the CSRF cookie, preserve headers, and do not leak i
     else Reflect.deleteProperty(globalThis, "document")
   }
 })
+
+test("a stale CSRF cookie is refreshed once and failed writes are not blindly replayed", async () => {
+  const windowDescriptor = Object.getOwnPropertyDescriptor(globalThis, "window")
+  const documentDescriptor = Object.getOwnPropertyDescriptor(globalThis, "document")
+  const originalFetch = globalThis.fetch
+  const documentMock = { cookie: "other=x;XSRF-TOKEN=expired", documentElement: { lang: "ar" } }
+  Object.defineProperty(globalThis, "window", { configurable: true, value: { location: { origin: "https://wosool.org" } } })
+  Object.defineProperty(globalThis, "document", { configurable: true, value: documentMock })
+  let writes = 0
+  let refreshes = 0
+  let status = 419
+  globalThis.fetch = async (input, init) => {
+    if (String(input).endsWith("csrf-cookie")) { refreshes++; documentMock.cookie = "XSRF-TOKEN=fresh"; return new Response(null, { status: 204 }) }
+    writes++
+    const token = new Headers(init?.headers).get("X-XSRF-TOKEN")
+    return new Response("{}", { status: status === 419 && token === "fresh" ? 200 : status })
+  }
+  try {
+    assert.equal((await sessionFetch("/api/v1/member/settings", { method: "PUT", body: "{}" })).status, 200)
+    assert.equal(writes, 2); assert.equal(refreshes, 1)
+    status = 500
+    assert.equal((await sessionFetch("/api/v1/contact", { method: "POST" })).status, 500)
+    assert.equal(writes, 3); assert.equal(refreshes, 1)
+    const controller = new AbortController(); controller.abort()
+    await assert.rejects(sessionFetch("/api/v1/contact", { method: "POST", signal: controller.signal }), { name: "AbortError" })
+    assert.equal(writes, 3)
+  } finally {
+    globalThis.fetch = originalFetch
+    if (windowDescriptor) Object.defineProperty(globalThis, "window", windowDescriptor); else Reflect.deleteProperty(globalThis, "window")
+    if (documentDescriptor) Object.defineProperty(globalThis, "document", documentDescriptor); else Reflect.deleteProperty(globalThis, "document")
+  }
+})

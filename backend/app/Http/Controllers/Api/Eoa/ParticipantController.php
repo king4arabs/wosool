@@ -32,6 +32,7 @@ class ParticipantController extends Controller
             'id' => $participant->id, 'status' => $participant->status, 'onboarding' => $participant->eoa_onboarding ?? [],
             'finance' => array_intersect_key($participant->eoa_finance ?? [], array_flip(['fee_status', 'global_confirmed', 'participant_amount_usd', 'sponsor_amount_usd'])),
             'group' => $active ? $group : null,
+            'track' => $participant->eoa_track_id ? DB::table('eoa_tracks')->where('id', $participant->eoa_track_id)->first(['id', 'name_ar', 'name_en']) : null,
             'sessions' => $active ? $program->sessions()->where($scoped)->where('status', 'scheduled')->orderBy('starts_at')->get(['id', 'title', 'description', 'starts_at', 'duration_minutes', 'location', 'online_link', 'session_type', 'is_required']) : [],
             'registrations' => DB::table('eoa_registrations')->where('user_id', $request->user()->id)->pluck('program_session_id'),
             'resources' => $active ? $program->resources()->where($scoped)->where('is_archived', false)->get(['id', 'title', 'description', 'url', 'category']) : [],

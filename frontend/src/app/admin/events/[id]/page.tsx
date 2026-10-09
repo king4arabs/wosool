@@ -1,6 +1,7 @@
 "use client"
 
-import { useEffect, useMemo, useState } from "react"
+import { useCallback, useEffect, useMemo, useState } from "react"
+import Link from "next/link"
 import { useParams } from "next/navigation"
 import { api } from "@/lib/api"
 import { Button } from "@/components/ui/button"
@@ -19,22 +20,7 @@ type Registration = {
   checkin_status: string
 }
 
-const TABS = [
-  "نظرة عامة",
-  "التسجيلات",
-  "قائمة الانتظار",
-  "الحضور",
-  "الموافقات",
-  "الأجندة",
-  "المتحدثون",
-  "الموارد",
-  "الرسائل",
-  "تسجيل الدخول",
-  "التقييم",
-  "مطابقات الذكاء الاصطناعي",
-  "التحليلات",
-  "الإعدادات",
-] as const
+const TABS = ["التسجيلات", "قائمة الانتظار", "الحضور", "الموافقات"] as const
 
 export default function AdminEventManagePage() {
   const params = useParams<{ id: string }>()
@@ -45,7 +31,7 @@ export default function AdminEventManagePage() {
   const [loading, setLoading] = useState(true)
   const [busyKey, setBusyKey] = useState<string | null>(null)
 
-  async function load(status?: string) {
+  const load = useCallback(async (status?: string) => {
     if (!eventId) return
     setLoading(true)
     try {
@@ -58,7 +44,7 @@ export default function AdminEventManagePage() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [eventId, toast])
 
   useEffect(() => {
     const map: Record<string, string | undefined> = {
@@ -67,7 +53,7 @@ export default function AdminEventManagePage() {
       "الموافقات": "pending_approval",
     }
     void load(map[tab])
-  }, [tab, eventId])
+  }, [tab, load])
 
   const visibleRows = useMemo(() => rows, [rows])
 
@@ -93,7 +79,7 @@ export default function AdminEventManagePage() {
 
   return (
     <div className="space-y-4">
-      <h1 className="text-2xl font-bold">إدارة الفعالية</h1>
+      <h1 className="text-2xl font-bold">إدارة الفعالية</h1><Link href="/admin/events" className="inline-flex min-h-11 items-center text-[#3B52D4] underline">بيانات الفعاليات وإعداداتها</Link>
       <div className="flex flex-wrap gap-2">
         {TABS.map((entry) => (
           <Button key={entry} size="sm" variant={tab === entry ? "default" : "outline"} onClick={() => setTab(entry)}>
@@ -102,25 +88,20 @@ export default function AdminEventManagePage() {
         ))}
       </div>
 
-      {tab !== "التسجيلات" && tab !== "قائمة الانتظار" && tab !== "الحضور" && tab !== "الموافقات" ? (
-        <div className="rounded-xl border border-dashed border-slate-200 p-6 text-sm text-slate-500">
-          قسم {tab} مفعّل ضمن سير العمل وجاهز للاستكمال التدريجي لهذه الفعالية.
-        </div>
-      ) : (
         <div className="overflow-x-auto rounded-xl border border-slate-200">
           <table className="w-full text-sm">
             <thead className="bg-slate-50 text-slate-500">
               <tr>
-                <th className="text-left px-4 py-3">الحاضر</th>
-                <th className="text-left px-4 py-3">الشركة</th>
-                <th className="text-left px-4 py-3">الدور</th>
-                <th className="text-left px-4 py-3">البريد الإلكتروني</th>
-                <th className="text-left px-4 py-3">نوع الحضور</th>
-                <th className="text-left px-4 py-3">الحالة</th>
-                <th className="text-left px-4 py-3">مدى الصلة</th>
-                <th className="text-left px-4 py-3">تاريخ التسجيل</th>
-                <th className="text-left px-4 py-3">حالة الدخول</th>
-                <th className="text-left px-4 py-3">الإجراءات</th>
+                <th className="text-start px-4 py-3">الحاضر</th>
+                <th className="text-start px-4 py-3">الشركة</th>
+                <th className="text-start px-4 py-3">الدور</th>
+                <th className="text-start px-4 py-3">البريد الإلكتروني</th>
+                <th className="text-start px-4 py-3">نوع الحضور</th>
+                <th className="text-start px-4 py-3">الحالة</th>
+                <th className="text-start px-4 py-3">مدى الصلة</th>
+                <th className="text-start px-4 py-3">تاريخ التسجيل</th>
+                <th className="text-start px-4 py-3">حالة الدخول</th>
+                <th className="text-start px-4 py-3">الإجراءات</th>
               </tr>
             </thead>
             <tbody>
@@ -154,7 +135,6 @@ export default function AdminEventManagePage() {
             </tbody>
           </table>
         </div>
-      )}
       <div>
         <a href={`/api/v1/admin/events/${eventId}/registrations/export`} className="text-sm text-blue-600 underline">تصدير CSV</a>
       </div>

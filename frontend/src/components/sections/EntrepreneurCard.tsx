@@ -51,7 +51,7 @@ export function EntrepreneurCard({ entrepreneur, onViewProfile }: EntrepreneurCa
               <Rocket className="h-3 w-3 shrink-0" aria-hidden="true" />
               {entrepreneur.startupName}
             </p>
-            <p className="mt-0.5 flex items-center gap-1 text-[10px] text-slate-400">
+            <p className="mt-0.5 flex items-center gap-1 text-xs text-slate-400">
               <MapPin className="h-2.5 w-2.5 shrink-0" aria-hidden="true" />
               {entrepreneur.city}, {entrepreneur.country}
             </p>
@@ -65,11 +65,11 @@ export function EntrepreneurCard({ entrepreneur, onViewProfile }: EntrepreneurCa
 
         {/* Sector + stage */}
         <div className="flex flex-wrap gap-1.5">
-          <span className="rounded-full border border-[#E4E7F0] bg-[#EEF1FF] px-2.5 py-1 text-[10px] font-bold text-[#3B52D4]">
+          <span className="rounded-full border border-[#E4E7F0] bg-[#EEF1FF] px-2.5 py-1 text-xs font-bold text-[#3B52D4]">
             {entrepreneur.sector}
           </span>
           <span
-            className="rounded-full border px-2.5 py-1 text-[10px] font-bold"
+            className="rounded-full border px-2.5 py-1 text-xs font-bold"
             style={{ background: stagePill.bg, color: stagePill.text, borderColor: stagePill.bg }}
           >
             {entrepreneur.startupStage}
@@ -81,7 +81,7 @@ export function EntrepreneurCard({ entrepreneur, onViewProfile }: EntrepreneurCa
           {entrepreneur.tags.slice(0, 3).map((tag) => (
             <span
               key={tag}
-              className="rounded-md bg-slate-50 px-2 py-0.5 text-[10px] font-medium text-slate-500"
+              className="rounded-md bg-slate-50 px-2 py-0.5 text-xs font-medium text-slate-500"
             >
               #{tag}
             </span>

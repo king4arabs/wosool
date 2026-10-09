@@ -1,6 +1,8 @@
 "use client"
 
-import { useEffect, useMemo, useState } from "react"
+import { useCallback, useEffect, useMemo, useState } from "react"
+import Link from "next/link"
+import { ProgramOperationsPanel } from "@/components/admin/ProgramOperationsPanel"
 import { useParams } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
@@ -10,7 +12,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { api } from "@/lib/api"
 import { useToast } from "@/components/ui/toast"
 
-const TABS = ["نظرة عامة", "الطلبات", "المشاركون", "الدفعات", "الجلسات", "الموجهون", "الموارد", "الرسائل", "الحضور", "التقدم", "التقييم", "توصيات الذكاء", "التحليلات", "الإعدادات"] as const
+const TABS = ["نظرة عامة", "الطلبات", "المشاركون", "الدفعات", "الجلسات", "الحضور", "التقدم"] as const
 
 type ApplicationRow = {
   id: number
@@ -39,7 +41,7 @@ export default function AdminProgramManagePage() {
   const [cohortForm, setCohortForm] = useState({ name: "", code: "", status: "draft", capacity: "", starts_at: "" })
   const [sessionForm, setSessionForm] = useState({ title: "", session_type: "workshop", starts_at: "", duration_minutes: "60", description: "" })
 
-  async function loadApplications() {
+  const loadApplications = useCallback(async () => {
     if (!programId) return
     setLoading(true)
     try {
@@ -50,9 +52,9 @@ export default function AdminProgramManagePage() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [programId, toast])
 
-  async function loadCohorts() {
+  const loadCohorts = useCallback(async () => {
     if (!programId) return
     setLoading(true)
     try {
@@ -63,9 +65,9 @@ export default function AdminProgramManagePage() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [programId, toast])
 
-  async function loadSessions() {
+  const loadSessions = useCallback(async () => {
     if (!programId) return
     setLoading(true)
     try {
@@ -76,13 +78,13 @@ export default function AdminProgramManagePage() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [programId, toast])
 
   useEffect(() => {
     if (tab === "الطلبات") void loadApplications()
     if (tab === "الدفعات") void loadCohorts()
     if (tab === "الجلسات") void loadSessions()
-  }, [tab, programId])
+  }, [tab, loadApplications, loadCohorts, loadSessions])
 
   const actions = useMemo(() => ([
     { key: "accept", label: "قبول" },
@@ -136,7 +138,7 @@ export default function AdminProgramManagePage() {
 
   return (
     <div className="space-y-5">
-      <h1 className="text-2xl font-bold">إدارة البرنامج</h1>
+      <h1 className="text-2xl font-bold">إدارة البرنامج</h1><Link href="/admin/programs" className="inline-flex min-h-11 items-center text-[#3B52D4] underline">بيانات البرامج وإعداداتها</Link>
       <div className="flex flex-wrap gap-2">{TABS.map((t) => <Button key={t} size="sm" variant={tab === t ? "default" : "outline"} onClick={() => setTab(t)}>{t}</Button>)}</div>
 
       {tab === "الطلبات" && (
@@ -183,7 +185,7 @@ export default function AdminProgramManagePage() {
       )}
 
       {!["الطلبات", "الدفعات", "الجلسات"].includes(tab) ? (
-        <Card><CardContent className="p-6 text-sm text-slate-500">قسم {tab} مفعّل في بنية النظام وجاهز للتوسعة التشغيلية.</CardContent></Card>
+        <ProgramOperationsPanel programId={programId} panel={tab} />
       ) : null}
     </div>
   )

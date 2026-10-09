@@ -60,7 +60,7 @@ export function ProgramCard({ program }: ProgramCardProps) {
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 mb-1">
               <span
-                className="inline-flex items-center gap-1.5 text-[10px] font-extrabold uppercase tracking-wider px-2.5 py-0.5 rounded-full"
+                className="inline-flex items-center gap-1.5 text-xs font-extrabold uppercase tracking-wider px-2.5 py-0.5 rounded-full"
                 style={
                   program.isOpen
                     ? { background: "#DCFCE7", color: "#166534" }
@@ -83,7 +83,7 @@ export function ProgramCard({ program }: ProgramCardProps) {
           {program.targetStage.map((stage) => (
             <span
               key={stage}
-              className="text-[10px] font-bold px-2 py-0.5 rounded-full border border-slate-200 text-slate-500 bg-slate-50"
+              className="text-xs font-bold px-2 py-0.5 rounded-full border border-slate-200 text-slate-500 bg-slate-50"
             >
               {stage}
             </span>
@@ -91,7 +91,7 @@ export function ProgramCard({ program }: ProgramCardProps) {
         </div>
 
         {/* Duration */}
-        <div className="flex items-center gap-1.5 text-[11px] text-slate-400 font-medium">
+        <div className="flex items-center gap-1.5 text-xs text-slate-400 font-medium">
           <Clock className="h-3 w-3 shrink-0" />
           <span>{program.duration}</span>
         </div>

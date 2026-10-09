@@ -22,15 +22,15 @@ export function MetricCard({
       <div className="flex items-start justify-between">
         <div>
           <h3 className="text-sm font-bold text-slate-800">{title}</h3>
-          <p className="mt-1 text-[11px] text-slate-500">{description}</p>
+          <p className="mt-1 text-xs text-slate-500">{description}</p>
         </div>
-        <span className={`font-mono text-lg font-bold ${valueClass}`}>{value}%</span>
+        <span className={`font-sans text-lg font-bold ${valueClass}`}>{value}%</span>
       </div>
       <div className="space-y-1">
         <div className="h-1.5 w-full overflow-hidden rounded-full bg-slate-100">
           <div className={`h-1.5 rounded-full transition-all duration-500 ${barClass}`} style={{ width: `${value}%` }} />
         </div>
-        <span className={`text-[10px] font-medium ${trendClass}`}>{trend}</span>
+        <span className={`text-xs font-medium ${trendClass}`}>{trend}</span>
       </div>
     </div>
   )

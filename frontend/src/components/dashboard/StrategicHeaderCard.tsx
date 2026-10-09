@@ -17,7 +17,7 @@ export function StrategicHeaderCard({
       <div>
         <div className="flex items-center gap-2">
           <span className="inline-block w-2 h-2 rounded-full bg-[#3B52D4] animate-pulse" />
-          <span className="text-[10px] font-bold text-[#3B52D4] uppercase tracking-wider">{badge}</span>
+          <span className="text-xs font-bold text-[#3B52D4] uppercase tracking-wider">{badge}</span>
         </div>
         <h1 className="text-xl font-bold tracking-tight text-slate-900 mt-1">{title}</h1>
         <p className="text-xs text-slate-500 mt-0.5">{subtitle}</p>

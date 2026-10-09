@@ -6,7 +6,7 @@ export function publicJourney(pathname: string) {
 
 export function workspacePath(user: { isAdmin?: boolean; is_admin?: boolean; role_token?: string; is_accelerator_applicant?: boolean; roles?: string[] } | null | undefined): string {
   if (user?.isAdmin || user?.is_admin || user?.role_token === 'admin' || user?.roles?.includes('admin')) return '/admin'
-  if (user?.is_accelerator_applicant || user?.roles?.some(role => role.startsWith('eoa_') || role === 'accelerator-reviewer')) return '/EOA/account'
+  if (user?.is_accelerator_applicant || user?.roles?.some(role => role.startsWith('eoa_') || role === 'accelerator-reviewer')) return '/dashboard/eoa'
   return '/dashboard'
 }
 
