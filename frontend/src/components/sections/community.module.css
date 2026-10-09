@@ -1,0 +1,44 @@
+.row { margin-top:24px; }
+.rowControls { display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; color:#64748b; font-size:13px; }
+.controls { display:flex; gap:8px; }
+.controls button,.partnerHead button { display:grid; place-items:center; width:44px; height:44px; border:1px solid #d9dfed; border-radius:50%; background:#fff; color:#273bad; cursor:pointer; }
+.controls button:disabled { opacity:.3; cursor:default; }
+.rail { display:flex; gap:20px; overflow-x:auto; scroll-snap-type:x mandatory; overscroll-behavior-x:contain; padding:4px 4px 20px; scrollbar-width:thin; scrollbar-color:#b8c2e1 transparent; }
+.founderCard { scroll-snap-align:start; flex:0 0 min(360px,86vw); min-width:0; display:flex; flex-direction:column; padding:24px; border:1px solid #e0e5ef; border-radius:20px; background:#fff; box-shadow:0 6px 24px #10204405; }
+.person { display:flex; align-items:center; gap:16px; }
+.person>div { min-width:0; }
+.person h3 { font-size:18px; font-weight:750; overflow-wrap:anywhere; }
+.person p { font-size:12px; color:#64748b; }
+.verified { font-size:11px; color:#3450b1; }
+.brief { display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; font-size:14px; line-height:1.9; color:#526078; margin-block:16px; min-height:3.8em; }
+.company { border-top:1px solid #edf0f5; padding-top:16px; flex:1; }
+.company>p { font-size:13px; color:#64748b; }
+.companyHeading { display:flex; align-items:center; gap:12px; font-weight:700; font-size:14px; }
+.logo { width:140px; height:58px; border-radius:0; background:transparent; flex-shrink:0; }
+.companyHeading .logo { width:48px; height:40px; }
+.tags { display:flex; flex-wrap:wrap; gap:6px; }
+.tags span { font-size:11px; border:1px solid #e1e6f5; border-radius:6px; padding:4px 9px; color:#40548a; background:#f5f7fc; }
+.cardLinks { display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:8px; margin-top:18px; border-top:1px solid #edf0f5; padding-top:12px; font-size:12px; font-weight:700; color:#344bc1; }
+.cardLinks a { display:flex; align-items:center; gap:5px; min-height:44px; overflow-wrap:anywhere; }
+.cardLinks span { overflow-wrap:anywhere; }
+.profileDetails { margin-top:16px; font-size:13px; line-height:1.9; color:#526078; }
+.profileDetails summary { min-height:44px; padding-block:10px; cursor:pointer; color:#344bc1; font-weight:700; }
+.profileDetails p { margin-bottom:12px; white-space:pre-line; overflow-wrap:anywhere; }
+.profileDetails a { display:inline-flex; padding-block:12px; text-decoration:underline; color:#344bc1; }
+.partners { padding:24px max(24px,calc((100vw - 1200px)/2)); background:#fff; border-bottom:1px solid #e6eaf2; }
+.partnerHead { display:flex; flex-wrap:wrap; align-items:center; justify-content:flex-end; gap:20px; }
+.partnerHead h2 { font-size:15px; font-weight:750; margin-inline-end:auto; }
+.partnerHead a { font-size:13px; color:#3b52d4; padding-block:12px; }
+.logoWindow { overflow-x:auto; padding-block:20px; scrollbar-width:thin; direction:ltr; container-type:inline-size; }
+.logoTrack { display:flex; justify-content:flex-end; width:max-content; min-width:100%; }
+.logoGroup { display:flex; align-items:center; justify-content:flex-end; gap:48px; padding-inline:24px; flex-shrink:0; }
+.logoGroup>a,.logoGroup>div { display:flex; align-items:center; justify-content:center; width:150px; min-height:64px; }
+.moving { animation:logosRight 35s linear infinite; }
+.logoWindow:hover .moving,.logoWindow:focus-within .moving,.moving[data-paused=true] { animation-play-state:paused; }
+.partnerEmpty { color:#64748b; font-size:13px; margin-top:16px; }
+.partnerEmpty button { color:#3044b3; padding:12px; text-decoration:underline; }
+/* One copy only: every visible logo remains an authentic, usable link. */
+.logoWindow:focus-within .moving { animation:none; transform:none; }
+@keyframes logosRight { from { transform:translateX(min(0px,calc(100cqw - 100%))); } to { transform:translateX(0); } }
+@media(prefers-reduced-motion:reduce) { .moving { animation:none; transform:none; } }
+@media(max-width:600px) { .founderCard { padding:20px; }.logoGroup { gap:24px; }.logo { width:120px; }.partnerHead {gap:12px;} }
