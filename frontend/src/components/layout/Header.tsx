@@ -8,7 +8,7 @@ import { Globe, Menu, X } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { useAuth } from "@/lib/auth"
-import { workspacePath } from "@/lib/navigation"
+import { publicJourney, workspacePath } from "@/lib/navigation"
 import { localeOptions, type Locale, useLocale } from "@/lib/locale"
 
 const headerCopy = {
@@ -16,7 +16,7 @@ const headerCopy = {
     navLinks: [
       { href: "/", label: "الرئيسية" },
       { href: "/opportunities", label: "فرص ريادة الأعمال" },
-      { href: "/EOA", label: "EO Accelerator" },
+      { href: "/EOA", label: "EO Riyadh Accelerator" },
       { href: "/founders", label: "الأعضاء" },
       { href: "/events", label: "الفعاليات" },
       { href: "/partners", label: "الشركاء" },
@@ -24,7 +24,8 @@ const headerCopy = {
     ],
     tagline: "من مؤسس إلى مؤسس",
     login: "تسجيل الدخول",
-    apply: "تقدم للمسرّعة",
+    apply: "انضم إلى وصول",
+    applyEoa: "تقدم إلى EO Accelerator",
     dashboard: "لوحة التحكم",
     languageLabel: "اللغة",
     navigation: "التنقل الرئيسي",
@@ -35,7 +36,7 @@ const headerCopy = {
     navLinks: [
       { href: "/", label: "Home" },
       { href: "/opportunities", label: "Opportunities" },
-      { href: "/EOA", label: "EO Accelerator" },
+      { href: "/EOA", label: "EO Riyadh Accelerator" },
       { href: "/founders", label: "Members" },
       { href: "/events", label: "Events" },
       { href: "/partners", label: "Partners" },
@@ -43,7 +44,8 @@ const headerCopy = {
     ],
     tagline: "Founders to Founders",
     login: "Login",
-    apply: "Apply to Accelerator",
+    apply: "Join Wosool",
+    applyEoa: "Apply to EO Accelerator",
     dashboard: "Dashboard",
     languageLabel: "Language",
     navigation: "Main navigation",
@@ -110,6 +112,8 @@ export function Header() {
   const [isScrolled, setIsScrolled] = React.useState(false)
   const menuButton = React.useRef<HTMLButtonElement>(null)
   const copy = headerCopy[locale]
+  const journey = publicJourney(pathname)
+  const applyLabel = journey.isEoa ? copy.applyEoa : copy.apply
   const workspace = workspacePath(user)
   const isActive = (href: string) => href === "/" ? pathname === "/" : pathname === href || pathname.startsWith(`${href}/`)
 
@@ -220,7 +224,7 @@ export function Header() {
             ) : (
               <>
                 <Link
-                  href="/login"
+                  href={journey.loginHref}
                   className="text-xs font-bold text-slate-600 transition-colors hover:text-[#3B52D4]"
                 >
                   {copy.login}
@@ -230,7 +234,7 @@ export function Header() {
                   size="sm"
                   className="rounded-xl bg-[#3B52D4] hover:bg-[#2E44C8] text-white text-xs font-bold shadow-md shadow-[#3B52D4]/20"
                 >
-                  <Link href="/EOA/apply">{copy.apply}</Link>
+                  <Link href={journey.applyHref}>{applyLabel}</Link>
                 </Button>
               </>
             )}
@@ -292,7 +296,7 @@ export function Header() {
               ) : (
                 <>
                   <Link
-                    href="/login"
+                    href={journey.loginHref}
                     className="block px-4 py-2 text-sm font-bold text-slate-600 hover:text-[#3B52D4]"
                     onClick={() => setIsMenuOpen(false)}
                   >
@@ -303,8 +307,8 @@ export function Header() {
                     size="sm"
                     className="w-full rounded-xl bg-[#3B52D4] hover:bg-[#2E44C8] text-white font-bold"
                   >
-                    <Link href="/EOA/apply" onClick={() => setIsMenuOpen(false)}>
-                      {copy.apply}
+                    <Link href={journey.applyHref} onClick={() => setIsMenuOpen(false)}>
+                      {applyLabel}
                     </Link>
                   </Button>
                 </>

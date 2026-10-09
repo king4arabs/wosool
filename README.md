@@ -2,9 +2,9 @@
 
 [![CI](https://github.com/king4arabs/wosool/actions/workflows/ci.yml/badge.svg)](https://github.com/king4arabs/wosool/actions/workflows/ci.yml)
 
-Wosool is the digital gateway for Founders to Founders and powered **EO Riyadh Accelerator**, alongside its existing Saudi/GCC founder community.
+**https://wosool.org — Founders to Founders.** Wosool's main website is the Saudi/GCC founder community: connections, companies, events, learning and collaboration, with its own membership application.
 
-**Saudi Founders. Global Connections. Extraordinary Growth.**
+**https://wosool.org/EOA — EO Riyadh Accelerator.** The Accelerator has its own discovery, application and participant journey: **Saudi Founders. Global Connections. Extraordinary Growth.** Wosool provides its digital gateway; community membership and Accelerator admission remain separate.
 
 The canonical program journey is **https://wosool.org/EOA**. Discovery, eligibility, accounts, applications, review, participant services and coaching remain under uppercase `/EOA`. The older `/accelerator` pages redirect there. Applications and local acceptance do not guarantee official Accelerator enrollment or EO membership.
 
