@@ -1,5 +1,6 @@
 import { cookies, headers } from "next/headers"
 import { redirect } from "next/navigation"
+import NextSteps from "@/components/dashboard/NextSteps"
 import IntroRouterLedger from "@/components/dashboard/IntroRouterLedger"
 import ScorecardWidget from "@/components/dashboard/ScorecardWidget"
 import { dashboardDictionary, resolveDashboardLocale } from "@/lib/dashboard-i18n"
@@ -49,7 +50,6 @@ interface MemberDashboardData {
   upcoming_events?: Array<{ id: number; title?: string; starts_at?: string; slug?: string }>
   recommended_programs?: Array<{ id: number; name?: string; slug?: string; category?: string }>
   latest_community_updates?: Array<{ id: number; title?: string; slug?: string; published_at?: string }>
-  ai_assistant_panel?: { title?: string; description?: string; quick_prompts?: string[] }
 }
 
 function timeoutSignal(ms: number): AbortSignal {
@@ -235,7 +235,7 @@ export default async function DashboardPage() {
       {loadWarnings.length > 0 ? (
         <section className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900">
           <p className="font-semibold">{copy.home.loadWarnTitle}</p>
-          <p className="mt-1">{loadWarnings[0]}</p>
+          <p className="mt-1">{localeKey === "ar" ? "تعذر تحديث بعض المعلومات. أعد المحاولة لاستعادة أحدث البيانات." : "Some information could not be refreshed. Try again to load the latest data."}<a href="/dashboard" className="ms-3 inline-flex min-h-11 items-center underline">{localeKey === "ar" ? "إعادة المحاولة" : "Try again"}</a></p>
         </section>
       ) : null}
 
@@ -278,16 +278,18 @@ export default async function DashboardPage() {
         </section>
       ) : null}
 
+      <NextSteps ar={localeKey === "ar"} profileCompletion={dashboardData.profile_completion} companyCompletion={dashboardData.company_completion} pendingIntros={dashboardData.intro_requests?.pending_count} />
+
       {/* Stat cards */}
       <section className="grid grid-cols-1 gap-4 md:grid-cols-3">
         {[
           {
             label: copy.home.vettedStatus,
-            value: founderProfile?.vetted_status ? copy.home.vetted : copy.home.pendingVetting,
+            value: !profileRes?.ok ? "—" : founderProfile?.vetted_status ? copy.home.vetted : copy.home.pendingVetting,
             dot: founderProfile?.vetted_status ? "#22c55e" : "#f59e0b",
           },
-          { label: copy.home.linkedCompanies, value: String(companies.length), dot: "#3B52D4" },
-          { label: copy.home.activeIntros,  value: String(activeIntros),       dot: "#8b5cf6" },
+          { label: copy.home.linkedCompanies, value: companiesRes?.ok ? String(companies.length) : "—", dot: "#3B52D4" },
+          { label: copy.home.activeIntros,  value: introsRes?.ok ? String(activeIntros) : "—",       dot: "#8b5cf6" },
         ].map(({ label, value, dot }) => (
           <div
             key={label}
@@ -311,11 +313,11 @@ export default async function DashboardPage() {
       <section className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
         <article className="rounded-2xl border border-slate-200/80 bg-white p-5">
           <p className="text-xs font-bold uppercase tracking-wider text-slate-500">{copy.home.profileCompletion}</p>
-          <p className="mt-2 text-2xl font-black text-slate-900">{dashboardData.profile_completion ?? 0}%</p>
+          <p className="mt-2 text-2xl font-black text-slate-900">{dashboardData.profile_completion === undefined ? "—" : `${dashboardData.profile_completion}%`}</p>
         </article>
         <article className="rounded-2xl border border-slate-200/80 bg-white p-5">
           <p className="text-xs font-bold uppercase tracking-wider text-slate-500">{copy.home.companyCompletion}</p>
-          <p className="mt-2 text-2xl font-black text-slate-900">{dashboardData.company_completion ?? 0}%</p>
+          <p className="mt-2 text-2xl font-black text-slate-900">{dashboardData.company_completion === undefined ? "—" : `${dashboardData.company_completion}%`}</p>
         </article>
         <article className="rounded-2xl border border-slate-200/80 bg-white p-5">
           <p className="text-xs font-bold uppercase tracking-wider text-slate-500">{copy.home.founderScoreSummary}</p>
@@ -350,7 +352,7 @@ export default async function DashboardPage() {
           <div className="mt-3 space-y-2 text-sm text-slate-700">
             {(dashboardData.upcoming_appointments ?? []).slice(0, 3).map((appointment) => (
               <p key={appointment.id}>
-                {appointment.scheduled_at ? new Date(appointment.scheduled_at).toLocaleString() : "-"} • {appointment.type ?? "-"}
+                {appointment.scheduled_at ? new Date(appointment.scheduled_at).toLocaleString(localeKey === "ar" ? "ar-SA" : "en-GB", { timeZone: "Asia/Riyadh" }) : "-"} • {appointment.type ?? "-"}
               </p>
             ))}
             {(dashboardData.upcoming_appointments ?? []).length === 0 ? <p>{copy.home.noData}</p> : null}
@@ -394,18 +396,6 @@ export default async function DashboardPage() {
         </article>
       </section>
 
-      <section className="rounded-2xl border border-slate-200/80 bg-white p-5">
-        <h2 className="text-base font-bold text-slate-900">{copy.home.aiAssistant}</h2>
-        <p className="mt-2 text-sm text-slate-600">{dashboardData.ai_assistant_panel?.description ?? copy.home.noData}</p>
-        <div className="mt-3">
-          <p className="text-xs font-bold uppercase tracking-wider text-slate-500">{copy.home.quickPrompts}</p>
-          <div className="mt-2 flex flex-wrap gap-2">
-            {(dashboardData.ai_assistant_panel?.quick_prompts ?? []).map((prompt) => (
-              <span key={prompt} className="rounded-full bg-slate-100 px-3 py-1 text-xs text-slate-700">{prompt}</span>
-            ))}
-          </div>
-        </div>
-      </section>
     </div>
   )
 }

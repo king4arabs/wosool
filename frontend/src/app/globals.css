@@ -613,3 +613,16 @@ html[lang="ar"] :is(h1,h2,h3,h4,h5,h6) { letter-spacing:0; line-height:1.5; }
 .eoa-hero .eoa-btn-outline { border-color:#52627e; color:#e9efff; }
 .eoa-hero .eoa-btn-outline:hover { background:#253651; }
 .eoa-overview h2,.eoa-overview h3 { font-weight:700; }
+
+/* Account journeys keep progress readable in both writing directions. */
+.eoa-journey-progress { display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:12px; list-style:none; padding:0; margin:24px 0; }
+.eoa-journey-progress li { border-block-start:3px solid #e2e8f0; padding-block-start:12px; color:#64748b; font-size:14px; }
+.eoa-journey-progress li > span:first-child { display:block; font-weight:800; margin-block-end:6px; }
+.eoa-journey-progress li[aria-current="step"] { border-color:#3b52d4; color:#263ea9; font-weight:800; }
+.eoa-journey-progress li[data-complete="true"] { border-color:#15803d; color:#166534; }
+.eoa-stepper button { display:flex; align-items:center; gap:8px; min-height:44px; text-align:start; cursor:pointer; }
+.eoa-validation-summary { border:1px solid #b91c1c; border-radius:12px; padding:20px; margin-block-end:24px; background:#fff7f7; color:#991b1b; }
+.eoa-validation-summary a { text-decoration:underline; display:inline-block; padding-block:6px; }
+.eoa input[aria-invalid="true"], .eoa select[aria-invalid="true"], .eoa textarea[aria-invalid="true"] { border-color:#b91c1c; }
+#participant-workspace, #application-updates, #verify-email { scroll-margin-top:100px; }
+@media (max-width:600px) { .eoa-journey-progress { grid-template-columns:1fr; gap:8px; } .eoa-journey-progress li { display:flex; align-items:center; gap:12px; border-block-start:0; border-inline-start:3px solid #e2e8f0; padding:8px 12px; } .eoa-journey-progress li > span:first-child { margin:0; } }

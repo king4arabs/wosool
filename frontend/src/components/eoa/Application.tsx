@@ -1,9 +1,10 @@
 'use client'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
 import { useAuth } from '@/lib/auth'
 import { useLocale } from '@/lib/locale'
+import { applicationSteps, validateApplicationStep } from '@/lib/eoa-journey'
 import { api } from '@/lib/api'
 import {
   errorText,
@@ -37,6 +38,11 @@ function ApplicationSession() {
   const [dirty, setDirty] = useState(false)
   const [error, setError] = useState('')
   const [notice, setNotice] = useState('')
+  const [fieldErrors, setFieldErrors] = useState<Partial<Record<keyof ApplicationFields, string>>>({})
+  const errorSummary = useRef<HTMLDivElement>(null)
+  const stepTitle = useRef<HTMLLegendElement>(null)
+  useEffect(() => { if (Object.keys(fieldErrors).length) errorSummary.current?.focus() }, [fieldErrors])
+  useEffect(() => { if (step > 0 && !Object.keys(fieldErrors).length) stepTitle.current?.focus() }, [step, fieldErrors])
   const load = useCallback(async () => {
     if (!user) return
     try {
@@ -44,9 +50,15 @@ function ApplicationSession() {
         '/eoa/application',
       )
       setApplication(r.data)
-      if (r.data) setFields(r.data.fields)
+      if (r.data) {
+        setFields(r.data.fields)
+        const nextStep = applicationSteps.findIndex((_, index) => Object.keys(validateApplicationStep(r.data!.fields, index, false)).length > 0)
+        setStep(nextStep < 0 ? 3 : nextStep)
+      }
+      setFieldErrors({})
       setDirty(false)
       setLoaded(true)
+      setError('')
     } catch (e) {
       setError(errorText(e))
     }
@@ -60,9 +72,20 @@ function ApplicationSession() {
       e.preventDefault()
       e.returnValue = ''
     }
+    const confirmNavigation = (event: MouseEvent) => {
+      const anchor = event.target instanceof Element ? event.target.closest('a[href]') : null
+      if (!(anchor instanceof HTMLAnchorElement) || anchor.target === '_blank' || event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return
+      const target = new URL(anchor.href, window.location.href)
+      if (target.pathname === window.location.pathname && target.search === window.location.search) return
+      if (!window.confirm(ar ? 'لديك تغييرات لم تُحفظ. هل تريد مغادرة الصفحة؟' : 'You have unsaved changes. Leave this page?')) {
+        event.preventDefault()
+        event.stopPropagation()
+      }
+    }
     window.addEventListener('beforeunload', warn)
-    return () => window.removeEventListener('beforeunload', warn)
-  }, [dirty])
+    document.addEventListener('click', confirmNavigation, true)
+    return () => { window.removeEventListener('beforeunload', warn); document.removeEventListener('click', confirmNavigation, true) }
+  }, [dirty, ar])
   const editable =
     !application ||
     ['draft', 'information_requested'].includes(application.status)
@@ -70,6 +93,11 @@ function ApplicationSession() {
     setFields((f) => ({ ...f, [key]: value }))
     setDirty(true)
     setNotice('')
+  }
+  function validate(stepIndex: number) {
+    const errors = validateApplicationStep(fields, stepIndex, ar)
+    setFieldErrors(errors)
+    return Object.keys(errors).length === 0
   }
   async function save() {
     const r = await api.put<{ data: EoaApplication }>('/eoa/application', {
@@ -129,10 +157,12 @@ function ApplicationSession() {
   const input = (key: keyof ApplicationFields, type = 'text') => (
     <Field key={key} label={labels[key] ?? key}>
       <input
+        id={`eoa-${key}`}
+        aria-invalid={Boolean(fieldErrors[key])}
         type={type}
         value={String(fields[key] ?? '')}
         onChange={(e) => change(key, e.target.value)}
-        maxLength={key === 'phone' ? 40 : 255}
+        maxLength={key === 'phone' ? 40 : ['city', 'country', 'sector'].includes(key) ? 120 : 255}
         {...(type === 'number'
           ? {
               min: key === 'revenue_year' ? 2000 : 0,
@@ -189,7 +219,9 @@ function ApplicationSession() {
             <button
               className="eoa-text-link"
               type="button"
-              onClick={() => void load()}
+              onClick={() => {
+                if (!dirty || window.confirm(ar ? 'سيتم استبدال تعديلاتك غير المحفوظة بآخر مسودة. هل تريد المتابعة؟' : 'Replace your unsaved changes with the last saved draft?')) void load()
+              }}
             >
               {ar
                 ? 'إعادة تحميل آخر مسودة محفوظة'
@@ -271,8 +303,7 @@ function ApplicationSession() {
                         key={s}
                         aria-current={step === i ? 'step' : undefined}
                       >
-                        <span>{i + 1}</span>
-                        {s}
+                        <button type="button" disabled={busy} onClick={() => { setFieldErrors({}); setStep(i) }}><span>{i + 1}</span>{s}</button>
                       </li>
                     ))}
                   </ol>
@@ -280,6 +311,10 @@ function ApplicationSession() {
                     className="eoa-card"
                     onSubmit={(e) => {
                       e.preventDefault()
+                      if (step !== 3) return
+                      for (let i = 0; i < applicationSteps.length; i++) {
+                        if (!validate(i)) { setStep(i); return }
+                      }
                       void act(async () => {
                         const saved = await save()
                         const r = await api.post<{ data: EoaApplication }>(
@@ -295,14 +330,18 @@ function ApplicationSession() {
                       })
                     }}
                   >
+                    {Object.keys(fieldErrors).length > 0 && <div ref={errorSummary} tabIndex={-1} role="alert" className="eoa-validation-summary">
+                      <h2>{ar ? 'راجع هذه المعلومات' : 'Check these details'}</h2>
+                      <ul>{Object.entries(fieldErrors).map(([key, message]) => <li key={key}><a href={`#eoa-${key}`}>{key === 'preferred_track_id' ? (ar ? 'المسار المفضل' : 'Preferred track') : labels[key as keyof ApplicationFields] ?? (ar ? 'تأكيد الموافقة' : 'Confirmation')}: {message}</a></li>)}</ul>
+                    </div>}
                     <fieldset disabled={busy}>
-                      <legend className="eoa-form-title">{steps[step]}</legend>
+                      <legend ref={stepTitle} tabIndex={-1} className="eoa-form-title">{steps[step]}</legend>
                       {step === 0 && (
                         <div className="eoa-two-grid">
                           <Field
                             label={ar ? 'المسار المفضل' : 'Preferred track'}
                           >
-                            <select
+                            <select id="eoa-preferred_track_id" aria-invalid={Boolean(fieldErrors.preferred_track_id)}
                               value={fields.preferred_track_id ?? ''}
                               onChange={(e) =>
                                 change('preferred_track_id', e.target.value)
@@ -321,7 +360,7 @@ function ApplicationSession() {
                           {input('founder_name')}
                           {input('phone', 'tel')}
                           <Field label={labels.founder_role!}>
-                            <select
+                            <select id="eoa-founder_role" aria-invalid={Boolean(fieldErrors.founder_role)}
                               value={fields.founder_role ?? ''}
                               onChange={(e) =>
                                 change('founder_role', e.target.value)
@@ -349,7 +388,7 @@ function ApplicationSession() {
                           {input('country')}
                           {input('sector')}
                           <Field label={labels.stage!}>
-                            <select
+                            <select id="eoa-stage" aria-invalid={Boolean(fieldErrors.stage)}
                               value={fields.stage ?? ''}
                               onChange={(e) => change('stage', e.target.value)}
                             >
@@ -367,7 +406,7 @@ function ApplicationSession() {
                           </Field>
                           {input('revenue_amount', 'number')}
                           <Field label={labels.revenue_currency!}>
-                            <select
+                            <select id="eoa-revenue_currency" aria-invalid={Boolean(fieldErrors.revenue_currency)}
                               value={fields.revenue_currency ?? 'USD'}
                               onChange={(e) =>
                                 change('revenue_currency', e.target.value)
@@ -383,7 +422,7 @@ function ApplicationSession() {
                       {step === 2 && (
                         <>
                           <Field label={labels.growth_objectives!}>
-                            <textarea
+                            <textarea id="eoa-growth_objectives" aria-invalid={Boolean(fieldErrors.growth_objectives)}
                               rows={4}
                               maxLength={4000}
                               value={fields.growth_objectives ?? ''}
@@ -393,7 +432,7 @@ function ApplicationSession() {
                             />
                           </Field>
                           <Field label={labels.support_needs!}>
-                            <textarea
+                            <textarea id="eoa-support_needs" aria-invalid={Boolean(fieldErrors.support_needs)}
                               rows={3}
                               maxLength={4000}
                               value={fields.support_needs ?? ''}
@@ -509,6 +548,8 @@ function ApplicationSession() {
                             <label className="eoa-check" key={k}>
                               <input
                                 type="checkbox"
+                                id={`eoa-${k}`}
+                                aria-invalid={Boolean(fieldErrors[k])}
                                 checked={Boolean(fields[k])}
                                 onChange={(e) => change(k, e.target.checked)}
                               />
@@ -557,6 +598,7 @@ function ApplicationSession() {
                           disabled={busy}
                           onClick={() =>
                             void act(async () => {
+                              if (!validate(step)) return
                               await save()
                               setStep((s) => s + 1)
                             })
