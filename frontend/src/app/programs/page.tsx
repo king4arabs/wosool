@@ -5,7 +5,7 @@ import Link from "next/link"
 import { PublicLayout } from "@/components/layout/PublicLayout"
 import { ProgramCard } from "@/components/sections/ProgramCard"
 import { Button } from "@/components/ui/button"
-import { getSeedPrograms, localizeProgram, programsPageCopy } from "@/data/localized-seed"
+import { localizeProgram, programsPageCopy } from "@/data/localized-seed"
 import { getCollectionItems, type ApiProgram, fetchJson, mapProgram, type WrappedResponse } from "@/lib/content-api"
 import { useLocale } from "@/lib/locale"
 import type { PaginatedResponse, Program } from "@/types"
@@ -13,21 +13,18 @@ import type { PaginatedResponse, Program } from "@/types"
 export default function ProgramsPage() {
   const { locale } = useLocale()
   const copy = programsPageCopy[locale]
-  const [programs, setPrograms] = useState<Program[]>(() => getSeedPrograms(locale))
+  const [programs, setPrograms] = useState<Program[]>([])
   const [activeCategory, setActiveCategory] = useState(0)
 
-  useEffect(() => {
-    setPrograms(getSeedPrograms(locale))
-  }, [locale])
 
   useEffect(() => {
     async function fetchPrograms() {
       try {
         const response = await fetchJson<PaginatedResponse<ApiProgram> | WrappedResponse<ApiProgram[]>>("/api/v1/programs")
         const items = getCollectionItems(response).map((item) => localizeProgram(mapProgram(item), locale))
-        if (items.length > 0) setPrograms(items)
+        setPrograms(items)
       } catch {
-        // seeded fallback stays
+        // No invented fallback records.
       }
     }
     void fetchPrograms()
@@ -64,23 +61,7 @@ export default function ProgramsPage() {
             {copy.description}
           </p>
 
-          {/* Stats chips */}
-          <div className="flex flex-wrap items-center justify-center gap-3 mt-8">
-            {[
-              locale === "ar" ? "250+ مؤسس" : "250+ founders",
-              locale === "ar" ? "15+ برنامج" : "15+ programs",
-              locale === "ar" ? "4 مسارات" : "4 tracks",
-            ].map((chip) => (
-              <div
-                key={chip}
-                className="inline-flex items-center gap-1.5 bg-white border border-slate-200/80 px-3 py-1.5 rounded-full text-xs font-bold text-slate-600"
-                style={{ boxShadow: "0 2px 8px -2px rgba(59,82,212,0.06)" }}
-              >
-                <span className="w-1.5 h-1.5 rounded-full bg-[#3B52D4]" />
-                {chip}
-              </div>
-            ))}
-          </div>
+
         </div>
       </section>
 

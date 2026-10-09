@@ -14,15 +14,17 @@ const headerCopy = {
   ar: {
     navLinks: [
       { href: "/", label: "الرئيسية" },
+      { href: "/accelerator", label: "EO Accelerator" },
+      { href: "/opportunities", label: "فرص ريادة الأعمال" },
       { href: "/EOA", label: "EO Accelerator" },
       { href: "/founders", label: "الأعضاء" },
-      { href: "/entrepreneurs", label: "روّاد الأعمال" },
       { href: "/events", label: "الفعاليات" },
       { href: "/partners", label: "الشركاء" },
       { href: "/news", label: "الرؤى" },
     ],
     tagline: "من مؤسس إلى مؤسس",
     login: "تسجيل الدخول",
+    apply: "قدّم للمسرّعة",
     apply: "تقدم للمسرّعة",
     dashboard: "لوحة التحكم",
     languageLabel: "اللغة",
@@ -33,9 +35,10 @@ const headerCopy = {
   en: {
     navLinks: [
       { href: "/", label: "Home" },
+      { href: "/accelerator", label: "EO Accelerator" },
+      { href: "/opportunities", label: "Opportunities" },
       { href: "/EOA", label: "EO Accelerator" },
       { href: "/founders", label: "Members" },
-      { href: "/entrepreneurs", label: "Entrepreneurs" },
       { href: "/events", label: "Events" },
       { href: "/partners", label: "Partners" },
       { href: "/news", label: "Insights" },
@@ -212,6 +215,7 @@ export function Header() {
                   size="sm"
                   className="rounded-xl bg-[#3B52D4] hover:bg-[#2E44C8] text-white text-xs font-bold shadow-md shadow-[#3B52D4]/20"
                 >
+                  <Link href={user?.isAdmin ? "/admin" : user?.roles?.includes("accelerator-reviewer") ? "/review" : user?.is_accelerator_applicant ? "/accelerator/apply" : "/dashboard"}>{copy.dashboard}</Link>
                   <Link href={user?.roles?.some(r => r.startsWith("eoa_")) ? "/EOA/account" : "/dashboard"}>{copy.dashboard}</Link>
                 </Button>
               </>
@@ -228,6 +232,7 @@ export function Header() {
                   size="sm"
                   className="rounded-xl bg-[#3B52D4] hover:bg-[#2E44C8] text-white text-xs font-bold shadow-md shadow-[#3B52D4]/20"
                 >
+                  <Link href="/accelerator/apply">{copy.apply}</Link>
                   <Link href="/EOA/apply">{copy.apply}</Link>
                 </Button>
               </>
@@ -283,6 +288,7 @@ export function Header() {
                   size="sm"
                   className="w-full rounded-xl bg-[#3B52D4] hover:bg-[#2E44C8] text-white font-bold"
                 >
+                  <Link href={user?.isAdmin ? "/admin" : user?.roles?.includes("accelerator-reviewer") ? "/review" : user?.is_accelerator_applicant ? "/accelerator/apply" : "/dashboard"} onClick={() => setIsMenuOpen(false)}>
                   <Link href={user?.roles?.some(r => r.startsWith("eoa_")) ? "/EOA/account" : "/dashboard"} onClick={() => setIsMenuOpen(false)}>
                     {copy.dashboard}
                   </Link>
@@ -301,6 +307,7 @@ export function Header() {
                     size="sm"
                     className="w-full rounded-xl bg-[#3B52D4] hover:bg-[#2E44C8] text-white font-bold"
                   >
+                    <Link href="/accelerator/apply" onClick={() => setIsMenuOpen(false)}>
                     <Link href="/EOA/apply" onClick={() => setIsMenuOpen(false)}>
                       {copy.apply}
                     </Link>

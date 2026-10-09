@@ -5,7 +5,7 @@ import Link from "next/link"
 import { PublicLayout } from "@/components/layout/PublicLayout"
 import { PartnerCard } from "@/components/sections/PartnerCard"
 import { Button } from "@/components/ui/button"
-import { getSeedPartners, localizePartner, partnersPageCopy } from "@/data/localized-seed"
+import { localizePartner, partnersPageCopy } from "@/data/localized-seed"
 import { getCollectionItems, type ApiPartner, fetchJson, mapPartner, type WrappedResponse } from "@/lib/content-api"
 import { useLocale } from "@/lib/locale"
 import type { PaginatedResponse, Partner } from "@/types"
@@ -15,20 +15,17 @@ const topicIcons: Record<number, string> = { 0: "⚖️", 1: "📊", 2: "🚀" }
 export default function PartnersPage() {
   const { locale } = useLocale()
   const copy = partnersPageCopy[locale]
-  const [partnerItems, setPartnerItems] = useState<Partner[]>(() => getSeedPartners(locale))
+  const [partnerItems, setPartnerItems] = useState<Partner[]>([])
 
-  useEffect(() => {
-    setPartnerItems(getSeedPartners(locale))
-  }, [locale])
 
   useEffect(() => {
     async function loadPartners() {
       try {
         const response = await fetchJson<PaginatedResponse<ApiPartner> | WrappedResponse<ApiPartner[]>>("/api/v1/partners")
         const items = getCollectionItems(response).map((item) => localizePartner(mapPartner(item), locale))
-        if (items.length > 0) setPartnerItems(items)
+        setPartnerItems(items)
       } catch {
-        // seeded fallback stays
+        // No invented fallback records.
       }
     }
     void loadPartners()

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Database\Factories\UserFactory;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -13,16 +14,21 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
 
-#[Fillable(['name', 'email', 'password', 'password_hash', 'role_token', 'email_verified_at'])]
+#[Fillable(['name', 'email', 'password', 'password_hash', 'role_token', 'email_verified_at', 'is_accelerator_applicant', 'privacy_accepted_at'])]
 #[Hidden(['password', 'password_hash', 'remember_token'])]
+class User extends Authenticatable implements MustVerifyEmail
 class User extends Authenticatable implements \Illuminate\Contracts\Auth\MustVerifyEmail
 {
     use HasFactory, HasRoles, Notifiable;
+
+    protected $attributes = ['is_accelerator_applicant' => false];
 
     /** @use HasFactory<UserFactory> */
     protected function casts(): array
     {
         return [
+            'is_accelerator_applicant' => 'boolean',
+            'privacy_accepted_at' => 'datetime',
             'password' => 'hashed',
             'password_hash' => 'hashed',
             'email_verified_at' => 'datetime',

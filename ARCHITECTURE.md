@@ -1,5 +1,12 @@
 # Architecture
 
+## EO Accelerator gateway extension (2026-10-08)
+
+The main public journey now routes through `/accelerator` and `/accelerator/apply`, with `/opportunities` for sourced entrepreneurship discovery. `backend/routes/gateway.php` adds verified applicant APIs, assigned-reviewer access, program operations and editorial/privacy workflows while reusing existing user, profile, program, cohort and participant models. `AcceleratorGateway` is the state-transition and eligibility authority. `application_events` records internal/public audit history; `ecosystem_records` and `ecosystem_revisions` separate researched public facts from user-submitted profiles.
+
+See [the current README](README.md), [release assessment](docs/EO_ACCELERATOR_RELEASE_2026-10-08.md) and [gateway operations](docs/ACCELERATOR_OPERATIONS.md) for current readiness, safeguards and remaining host/policy dependencies. The retained community modules described below are a secondary journey; applicant registration does not grant their access.
+
+
 ## System Overview
 
 Wosool is structured as a **monorepo** with a presentation layer in **Next.js** and a service/data layer in **Laravel**. This separation supports fast frontend iteration, structured backend domain modeling, and clean operational boundaries for future scaling.

@@ -16,6 +16,8 @@ class EnsureUserHasMemberAccess
             abort(response()->json(['message' => 'Authentication required.'], 401));
         }
 
+        if ($user->is_accelerator_applicant && ! $user->hasAnyRole(['member', 'admin'])) {
+            abort(403, 'Approved community membership is required.');
         if ($user->hasRole('eoa_applicant') && ! $user->hasAnyRole(['member','admin'])) {
             abort(403, 'Use the EO Accelerator workspace. Wosool membership is separate.');
         }

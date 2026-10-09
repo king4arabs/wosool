@@ -6,11 +6,12 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreProgramApplicationRequest;
 use App\Http\Resources\ProgramResource;
 use App\Models\AnalyticsEvent;
+use App\Models\Program;
+use App\Models\ProgramApplication;
 use App\Models\ProgramParticipant;
 use App\Models\ProgramProgress;
 use App\Models\ProgramSession;
-use App\Models\Program;
-use App\Models\ProgramApplication;
+use App\Services\AcceleratorGateway;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Schema;
@@ -124,6 +125,7 @@ class ProgramApplicationController extends Controller
     public function store(StoreProgramApplicationRequest $request, string $slug): JsonResponse
     {
         $program = Program::where('slug', $slug)->firstOrFail();
+        abort_if($slug === AcceleratorGateway::SLUG, 409, 'Use the verified accelerator application journey.');
         $user = $request->user();
         abort_if($program->slug === \App\Services\Eoa\ProgramService::SLUG, 409, 'Use /EOA/apply for the verified EO Accelerator application.');
 

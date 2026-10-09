@@ -121,6 +121,8 @@ export interface User {
   role?: "member" | "admin" | "moderator"
   roles?: string[]
   roleToken?: "admin" | "founder" | "mentor" | "partner" | "sponsor"
+  is_accelerator_applicant?: boolean
+  email_verified_at?: string
   isAdmin?: boolean
   avatarUrl?: string
   founderId?: string

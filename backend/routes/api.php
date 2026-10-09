@@ -1,22 +1,23 @@
 <?php
-use App\Http\Controllers\Api\Admin\ApplicationController as AdminApplicationController;
+
 use App\Http\Controllers\Api\Admin\AnalyticsController as AdminAnalyticsController;
+use App\Http\Controllers\Api\Admin\ApplicationController as AdminApplicationController;
+use App\Http\Controllers\Api\Admin\ChatModerationController as AdminChatModerationController;
 use App\Http\Controllers\Api\Admin\CompanyController as AdminCompanyController;
 use App\Http\Controllers\Api\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Api\Admin\EventController as AdminEventController;
 use App\Http\Controllers\Api\Admin\EventRegistrationController as AdminEventRegistrationController;
 use App\Http\Controllers\Api\Admin\FounderController as AdminFounderController;
 use App\Http\Controllers\Api\Admin\IntroductionController as AdminIntroductionController;
-use App\Http\Controllers\Api\Admin\ScorecardController as AdminScorecardController;
 use App\Http\Controllers\Api\Admin\MatchController as AdminMatchController;
 use App\Http\Controllers\Api\Admin\NewsController as AdminNewsController;
 use App\Http\Controllers\Api\Admin\PartnerController as AdminPartnerController;
 use App\Http\Controllers\Api\Admin\ProgramController as AdminProgramController;
 use App\Http\Controllers\Api\Admin\ProgramManagementController as AdminProgramManagementController;
+use App\Http\Controllers\Api\Admin\ScorecardController as AdminScorecardController;
 use App\Http\Controllers\Api\Admin\SettingsController as AdminSettingsController;
 use App\Http\Controllers\Api\Admin\SocietyModerationController as AdminSocietyModerationController;
 use App\Http\Controllers\Api\Admin\SponsorController as AdminSponsorController;
-use App\Http\Controllers\Api\Admin\ChatModerationController as AdminChatModerationController;
 use App\Http\Controllers\Api\ApplicationController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CompanyController;
@@ -25,20 +26,20 @@ use App\Http\Controllers\Api\EventController;
 use App\Http\Controllers\Api\FounderController;
 use App\Http\Controllers\Api\HealthController;
 use App\Http\Controllers\Api\IntroductionController;
+use App\Http\Controllers\Api\Member\ChatRoomController as MemberChatRoomController;
 use App\Http\Controllers\Api\Member\CompanyController as MemberCompanyController;
 use App\Http\Controllers\Api\Member\DashboardController as MemberDashboardController;
-use App\Http\Controllers\Api\Member\EventRsvpController;
-use App\Http\Controllers\Api\Member\EventInteractionController;
 use App\Http\Controllers\Api\Member\EventCatalogController;
+use App\Http\Controllers\Api\Member\EventInteractionController;
+use App\Http\Controllers\Api\Member\EventRsvpController;
 use App\Http\Controllers\Api\Member\FounderProfileController as MemberFounderProfileController;
+use App\Http\Controllers\Api\Member\HelpRequestController as MemberHelpRequestController;
 use App\Http\Controllers\Api\Member\MatchController as MemberMatchController;
 use App\Http\Controllers\Api\Member\ProgramApplicationController;
 use App\Http\Controllers\Api\Member\ScorecardController as MemberScorecardController;
-use App\Http\Controllers\Api\Member\SocietyPostController as MemberSocietyPostController;
 use App\Http\Controllers\Api\Member\SettingsController as MemberSettingsController;
+use App\Http\Controllers\Api\Member\SocietyPostController as MemberSocietyPostController;
 use App\Http\Controllers\Api\Member\ThreadController as MemberThreadController;
-use App\Http\Controllers\Api\Member\ChatRoomController as MemberChatRoomController;
-use App\Http\Controllers\Api\Member\HelpRequestController as MemberHelpRequestController;
 use App\Http\Controllers\Api\NewsController;
 use App\Http\Controllers\Api\PartnerController;
 use App\Http\Controllers\Api\PasswordController;
@@ -48,6 +49,7 @@ use Illuminate\Support\Facades\Route;
 
 // Health check (no prefix, no rate limiting)
 Route::get('/health', HealthController::class);
+Route::get('/ready', [HealthController::class, 'ready']);
 
 Route::prefix('v1')->group(function () {
     // ── Authentication ──────────────────────────────────────────────
@@ -286,4 +288,5 @@ Route::prefix('v1')->group(function () {
     });
 });
 
+require __DIR__.'/gateway.php';
 require __DIR__.'/eoa.php';

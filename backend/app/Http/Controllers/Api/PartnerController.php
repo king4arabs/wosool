@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
@@ -13,7 +14,7 @@ class PartnerController extends Controller
 {
     public function index(Request $request): JsonResponse
     {
-        $query = PartnerProfile::where('is_public', true);
+        $query = PartnerProfile::where('is_public', true)->where('status', 'confirmed')->where('identity_status', 'verified')->where('asset_status', 'verified')->where('designation_status', 'approved')->whereNotNull('logo_url');
         if ($request->filled('type')) {
             $query->where('type', $request->type);
         }

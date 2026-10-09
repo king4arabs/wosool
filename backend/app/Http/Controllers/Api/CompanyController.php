@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
@@ -11,7 +12,7 @@ class CompanyController extends Controller
 {
     public function index(Request $request): JsonResponse
     {
-        $query = CompanyProfile::with(['founders.user'])
+        $query = CompanyProfile::with(['founders' => fn ($q) => $q->where('is_public', true)->with('user')])
             ->where('status', 'active')
             ->where('is_public', true);
 
@@ -56,7 +57,7 @@ class CompanyController extends Controller
 
     public function show(string $slug): JsonResponse
     {
-        $company = CompanyProfile::with(['founders.user'])
+        $company = CompanyProfile::with(['founders' => fn ($q) => $q->where('is_public', true)->with('user')])
             ->where('slug', $slug)
             ->where('is_public', true)
             ->firstOrFail();

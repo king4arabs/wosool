@@ -59,7 +59,6 @@ function formatDate(dateStr: string, locale: string) {
 function ArticleCard({
   item,
   index,
-  locale,
   direction,
 }: {
   item: ReturnType<typeof getLocalizedNewsContent>
@@ -159,10 +158,7 @@ export default function NewsPage() {
     [apiItems, locale]
   )
 
-  const sourceItems =
-    normalizedApiItems.length > 0
-      ? normalizedApiItems
-      : newsItems.map((item) => getLocalizedNewsContent(item, locale))
+  const sourceItems = normalizedApiItems
 
   const featured = sourceItems[0]
   const rest = sourceItems.slice(1)
@@ -314,17 +310,6 @@ export default function NewsPage() {
               className="fade-up mt-10 flex flex-wrap gap-3"
               style={{ animationDelay: "180ms" }}
             >
-              {copy.metrics.map((m) => (
-                <div
-                  key={m.label}
-                  className="flex items-center gap-3 rounded-xl bg-white/[0.05] border border-white/[0.08] px-4 py-3 backdrop-blur-sm"
-                >
-                  <span className="text-xl font-black text-[#3B52D4] leading-none">{m.value}</span>
-                  <span className="w-px h-5 bg-white/10" />
-                  <span className="text-xs font-bold text-slate-400">{m.label}</span>
-                </div>
-              ))}
-
               {/* CTA */}
               {featured && (
                 <Link

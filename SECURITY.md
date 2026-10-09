@@ -28,3 +28,9 @@ Do not log application bodies, credentials, or password reset URLs. Configure mo
 Run `npm --prefix frontend audit --omit=dev` and `composer --working-dir=backend audit` for releases. Review development-tool advisories separately, and update dependencies through tested, compatible changes. Never force a framework downgrade merely to obtain a clean audit output.
 
 See [the October review](docs/REVIEW_2026-10-08.md) for the current audit and validation limitations.
+
+## Accelerator gateway
+
+Verified email, owner/reviewer/admin boundaries, strict status transitions, revision checks and internal-note filtering protect application records. New applicant profiles remain private; community membership is a separate grant. Application APIs send private/no-store and noindex headers. Verification links are account-bound, signed and expire after 60 minutes. New application accounts require 12-character mixed-case/numeric passwords.
+
+Production intake defaults closed until the approved privacy notice, controller/contact, retention and processor register are in place. Privacy requests have an administrative review workflow; deletion/export and retention policy decisions are operational obligations, not automatic effects of changing a request status. See [gateway operations](docs/ACCELERATOR_OPERATIONS.md).

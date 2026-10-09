@@ -2,6 +2,8 @@
 
 Wosool has two deployable applications: `frontend/` is a Next.js Node.js server; `backend/` is a Laravel API with a database. Repository CI validates code and does not perform production deployment. Existing host names and process-manager services must be confirmed in the hosting account before a release.
 
+For the EO Accelerator release, follow [gateway operations](docs/ACCELERATOR_OPERATIONS.md) as well: role provisioning, preview-first imports, privacy readiness, supervised verification/status mail, and same-engine staging recovery are required before live intake.
+
 ## Runtime and configuration
 
 | Surface | Runtime / configuration |
@@ -30,6 +32,9 @@ FRONTEND_URL=https://wosool.org
 SANCTUM_STATEFUL_DOMAINS=wosool.org,www.wosool.org
 SESSION_DOMAIN=.wosool.org
 SESSION_SECURE_COOKIE=true
+SESSION_ENCRYPT=true
+GATEWAY_PRIVACY_READY=false
+GATEWAY_EMAIL_UPDATES=false
 ```
 
 Keep the existing `APP_KEY`. Configure database credentials, a real mail transport and sender, and appropriate queue/cache drivers. The default `MAIL_MAILER=log` is local-only and cannot deliver account recovery messages. Public websocket keys may be exposed to the frontend; secrets may not.
@@ -69,6 +74,7 @@ Never run `migrate:fresh`, rotate `APP_KEY`, or seed demonstration accounts duri
 
 ## Verification
 
+- `GET /api/ready` verifies database/schema and prepared gateway; run `php artisan wosool:check-readiness --production` and separately verify mail/worker delivery.
 - `GET /api/health` succeeds on both the API origin and the frontend proxy.
 - Public pages, logo assets, `/robots.txt`, and `/sitemap.xml` respond correctly.
 - Canonical links point to the current page; member/admin/auth responses carry `X-Robots-Tag: noindex, nofollow`.
@@ -79,7 +85,7 @@ Never run `migrate:fresh`, rotate `APP_KEY`, or seed demonstration accounts duri
 
 ## Rollback
 
-Restore the previously recorded frontend and backend release artifacts using the existing host's deployment mechanism. Restart application workers and clear/rebuild Laravel caches as appropriate. Keep the additive company column; its migration intentionally does not drop historical deletion data. Restore database backups only under an explicit incident plan that accounts for writes received after deployment.
+Restore the previously recorded frontend and backend release artifacts using the existing host's deployment mechanism. Restart application workers and clear/rebuild Laravel caches as appropriate. Keep additive gateway schema and the company column; its migration intentionally does not drop historical deletion data. Restore database backups only under an explicit incident plan that accounts for writes received after deployment.
 
 ## Hosting status
 

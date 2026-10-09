@@ -1,0 +1,72 @@
+[
+  {
+    "slug": "eo-riyadh",
+    "name_ar": "EO الرياض",
+    "name_en": "EO Riyadh",
+    "website_url": "https://member.eonetwork.org/riyadh/",
+    "logo_path": "/partners/eo-riyadh.png",
+    "logo_source_url": "https://member.eonetwork.org/member/EOResources/Chapter%20Logos%202024/EO%20Riyadh.zip",
+    "brand_usage_url": "https://brand.eonetwork.org/chapter-resources/",
+    "display_order": 1,
+    "identity_status": "verified",
+    "designation_status": "needs_review",
+    "asset_status": "verified",
+    "notes": "Requested by the owner in the implementation brief. No relationship designation or logo-use approval was found in the existing repository records reviewed on 2026-10-08; keep hidden until an administrator records the approved designation and asset-use basis. Exact, unmodified primary RGB PNG extracted from EO Riyadh/RGB/Primary/PNG/EO_Riyadh_RGB_primary.png in the chapter package linked by EO’s official brand portal. This is the Riyadh chapter mark. Preserve the original transparent clear space. Review https://brand.eonetwork.org/logo/ for external-use requirements."
+  },
+  {
+    "slug": "the-garage",
+    "name_ar": "الكراج",
+    "name_en": "The Garage",
+    "website_url": "https://thegarage.sa/",
+    "logo_path": "/partners/the-garage.png",
+    "logo_source_url": "https://thegarage.sa/assets/images/logo/logo.png",
+    "brand_usage_url": "https://thegarage.sa/terms",
+    "display_order": 2,
+    "identity_status": "verified",
+    "designation_status": "needs_review",
+    "asset_status": "verified",
+    "notes": "Requested by the owner in the implementation brief. No relationship designation or logo-use approval was found in the existing repository records reviewed on 2026-10-08; keep hidden until an administrator records the approved designation and asset-use basis. Exact transparent PNG used by the official website header. It is a black logo on a transparent background and needs a light background for contrast. Articles 6 and 10 of the official terms require authorization for use implying partnership, sponsorship, or accreditation; do not infer that authorization from the download."
+  },
+  {
+    "slug": "rida",
+    "name_ar": "RIDA",
+    "name_en": "RIDA",
+    "website_url": null,
+    "logo_path": null,
+    "logo_source_url": null,
+    "brand_usage_url": null,
+    "display_order": 3,
+    "identity_status": "needs_review",
+    "designation_status": "needs_review",
+    "asset_status": "needs_review",
+    "notes": "The brief supplies only the abbreviation RIDA. The repository contains no matching organization record or source establishing its exact identity. Preserve the requested spelling; do not substitute RDIA, Riyadah, or another similarly named organization. Administrator must record the exact official Arabic/English names, official URL, relationship designation, and approved logo."
+  },
+  {
+    "slug": "misk",
+    "name_ar": "مؤسسة محمد بن سلمان «مسك»",
+    "name_en": "Mohammed Bin Salman Foundation “Misk”",
+    "website_url": "https://misk.org.sa/en/",
+    "logo_path": "/partners/misk.svg",
+    "logo_source_url": "https://brand.misk.org.sa/wp-content/uploads/2025/06/Misk_P_H_RGB.svg",
+    "brand_usage_url": "https://brand.misk.org.sa/misk-logo/",
+    "display_order": 4,
+    "identity_status": "verified",
+    "designation_status": "needs_review",
+    "asset_status": "verified",
+    "notes": "Requested by the owner in the implementation brief. No relationship designation or logo-use approval was found in the existing repository records reviewed on 2026-10-08; keep hidden until an administrator records the approved designation and asset-use basis. Exact primary horizontal RGB SVG provided by Misk’s official visual-identity website. This foundation logo includes the complete Arabic and English wordmark. Preserve colors and proportions; the guide defines clear space using the wordmark’s M and requires a high-contrast background. Do not use the older 2021 website-header artwork in place of this current brand asset."
+  },
+  {
+    "slug": "code",
+    "name_ar": "مركز ريادة الأعمال الرقمية «كود»",
+    "name_en": "Center of Digital Entrepreneurship (CODE)",
+    "website_url": "https://mcit.gov.sa/code",
+    "logo_path": null,
+    "logo_source_url": null,
+    "brand_usage_url": null,
+    "display_order": 5,
+    "identity_status": "verified",
+    "designation_status": "needs_review",
+    "asset_status": "needs_review",
+    "notes": "Requested by the owner in the implementation brief. No relationship designation or logo-use approval was found in the existing repository records reviewed on 2026-10-08; keep hidden until an administrator records the approved designation and asset-use basis. Identity verified on MCIT’s official CODE page: a Ministry of Communications and Information Technology program for digital entrepreneurship. The former https://code.mcit.gov.sa/ redirects to https://mcit.gov.sa/code. Its current standalone CODE logo could not be retrieved from an authoritative asset endpoint; the page’s CODE.png is an event photograph, not a logo, and the old CODE report URL redirects to HTML. Do not substitute the ministry logo, a commercial CODE company mark, a cropped report, or a generated logo. Obtain the approved standalone CODE artwork."
+  }
+]

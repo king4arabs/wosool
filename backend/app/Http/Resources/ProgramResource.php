@@ -15,6 +15,7 @@ class ProgramResource extends JsonResource
             if (! array_key_exists($key, $attributes)) {
                 return $fallback;
             }
+
             return $this->resource->{$key} ?? $fallback;
         };
 
@@ -59,6 +60,9 @@ class ProgramResource extends JsonResource
             'eligibility_criteria' => $get('eligibility_criteria', []),
             'application_process' => $get('application_process', []),
             'faqs' => $get('faqs', []),
+            'targeting_rules' => $this->when($request->is('api/v1/admin/*'), fn () => $get('targeting_rules', [])),
+            'ai_settings' => $this->when($request->is('api/v1/admin/*'), fn () => $get('ai_settings', [])),
+            'settings' => $this->when($request->is('api/v1/admin/*'), fn () => $get('settings', [])),
             'targeting_rules' => $get('targeting_rules', []),
             'ai_settings' => $get('ai_settings', []),
             'settings' => $this->slug === \App\Services\Eoa\ProgramService::SLUG ? [] : $get('settings', []),

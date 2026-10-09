@@ -3,7 +3,6 @@
 namespace Tests\Feature;
 
 use App\Models\Application;
-use App\Models\CompanyProfile;
 use App\Models\User;
 use Database\Seeders\DatabaseSeeder;
 use Database\Seeders\RoleAndPermissionSeeder;
@@ -162,6 +161,9 @@ class AdminEndpointsTest extends TestCase
 
         $this->actingAs($admin)->postJson('/api/v1/admin/partners', [
             'name' => 'New Partner',
+            'identity_status' => 'verified', 'asset_status' => 'verified', 'designation_status' => 'approved',
+            'logo_url' => 'https://partner.example.com/logo.png', 'logo_source_url' => 'https://partner.example.com/brand',
+            'approval_note' => 'Authorized partnership and artwork use verified by the administrator.',
             'description' => 'Strategic advisory support.',
             'website' => 'https://partner.example.com',
             'type' => 'strategic',

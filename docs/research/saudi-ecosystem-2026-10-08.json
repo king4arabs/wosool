@@ -1,0 +1,887 @@
+{
+  "verified_at": "2026-10-08",
+  "eo": {
+    "name": "EO Accelerator",
+    "website_url": "https://eonetwork.org/accelerator/",
+    "application_url": "https://member.eonetwork.org/eo-accelerator/accelerator-application-form",
+    "riyadh_chapter_url": "https://member.eonetwork.org/riyadh/about-our-chapter",
+    "source_urls": [
+      "https://eonetwork.org/accelerator/",
+      "https://eonetwork.org/accelerator/faqs/",
+      "https://member.eonetwork.org/eo-accelerator/accelerator-application-form",
+      "https://member.eonetwork.org/riyadh/about-our-chapter",
+      "https://resources.eonetwork.org/legacy-knowledgebase/eoa-payment-questions-june-2026"
+    ],
+    "verified_facts": {
+      "eligibility": {
+        "owner_or_founder_of_operating_business": true,
+        "annual_gross_revenue_min": 250000,
+        "annual_gross_revenue_max": 999999,
+        "currency": "USD",
+        "venture_backed_alternative_privately_raised_min": 250000,
+        "venture_backed_alternative_privately_raised_max": 999999,
+        "source_url": "https://eonetwork.org/accelerator/faqs/"
+      },
+      "fees": {
+        "global_annual_fee": 1750,
+        "currency": "USD",
+        "local_chapter_fees_additional": true,
+        "fiscal_year_start": "07-01",
+        "fiscal_year_end": "06-30",
+        "mid_year_proration": true,
+        "source_url": "https://eonetwork.org/accelerator/faqs/"
+      },
+      "program": {
+        "described_duration_years": 2,
+        "full_day_learning_events_per_year": 4,
+        "accountability_groups": "monthly",
+        "pillars": [
+          "Cash",
+          "Strategy",
+          "People",
+          "Execution"
+        ],
+        "source_url": "https://eonetwork.org/accelerator/faqs/"
+      },
+      "application": {
+        "sales_verification_required": true,
+        "local_chapter_liaison_meeting_required": true,
+        "source_url": "https://eonetwork.org/accelerator/"
+      },
+      "graduation": {
+        "revenue_milestone": 1000000,
+        "currency": "USD",
+        "eo_membership_automatic": false,
+        "chapter_application_required": true,
+        "source_url": "https://eonetwork.org/accelerator/faqs/"
+      },
+      "scholarships": {
+        "local_scholarships_possible": true,
+        "participant_balance_due_if_partial": true,
+        "global_notification_and_payment_confirmation_required": true,
+        "source_url": "https://resources.eonetwork.org/legacy-knowledgebase/eoa-payment-questions-june-2026"
+      }
+    },
+    "unconfirmed_riyadh_arrangements": [
+      {
+        "item": "Wosool status",
+        "status": "needs_review",
+        "note": "User-directed gateway positioning is recorded; public EO sources reviewed do not establish Wosool as an official EO operator or approve its local admissions workflow."
+      },
+      {
+        "item": "Riyadh launch and calendar",
+        "status": "needs_review",
+        "note": "No current Riyadh EOA cohort start, application deadline, seats or local fee schedule was verified."
+      },
+      {
+        "item": "Three three-month cohorts",
+        "status": "needs_review",
+        "note": "Prior planning detail; do not substitute it for the published EO curriculum."
+      },
+      {
+        "item": "USD 3000 sponsor plus USD 1000 participant",
+        "status": "needs_review",
+        "note": "Prior local funding proposal; requires chapter confirmation, sponsor terms and a clear cost breakdown."
+      },
+      {
+        "item": "SAR 250000–1000000 revenue",
+        "status": "incorrect_against_global_rules",
+        "note": "Prior planning currency conflicts with the official USD range; no Saudi exception was found."
+      },
+      {
+        "item": "Partner claims",
+        "status": "needs_review",
+        "note": "Entity identities can be researched; partnership or sponsorship with Wosool is not established by listing their websites."
+      }
+    ],
+    "application_relationship": "Wosool interest or local pre-screening is separate from official EO submission and chapter approval; do not promise acceptance or full EO membership.",
+    "verified_at": "2026-10-08"
+  },
+  "records": [
+    {
+      "slug": "monshaat",
+      "entity_type": "organization",
+      "name_ar": "الهيئة العامة للمنشآت الصغيرة والمتوسطة — منشآت",
+      "name_en": "Monsha’at — Small and Medium Enterprises General Authority",
+      "category": "government_support",
+      "description_ar": "جهة حكومية تدعم تنمية قطاع المنشآت الصغيرة والمتوسطة في المملكة وتربط رواد الأعمال بالخدمات والبرامج المساندة.",
+      "description_en": "Saudi authority supporting the development of small and medium enterprises and access to business support services.",
+      "website_url": "https://www.monshaat.gov.sa/en/about",
+      "application_url": null,
+      "organization_slug": null,
+      "coverage": "Saudi Arabia",
+      "delivery_format": null,
+      "stages": [],
+      "sectors": [],
+      "support_type": [
+        "business_support",
+        "advisory",
+        "training"
+      ],
+      "funding_terms": null,
+      "eligibility_ar": null,
+      "eligibility_en": null,
+      "application_status": "not_announced",
+      "deadline": null,
+      "starts_at": null,
+      "ends_at": null,
+      "contact_email": null,
+      "verification_status": "verified",
+      "source_urls": [
+        "https://www.monshaat.gov.sa/en/about",
+        "https://www.monshaat.gov.sa/en/ssc"
+      ],
+      "verified_at": "2026-10-08",
+      "notes": "Organization listing; individual services have separate requirements. No cohort opening is implied.",
+      "coverage_ar": "المملكة العربية السعودية",
+      "funding_terms_ar": null
+    },
+    {
+      "slug": "monshaat-support-centers",
+      "entity_type": "program",
+      "name_ar": "مراكز دعم المنشآت — منشآت",
+      "name_en": "Monsha’at SME Support Centers",
+      "category": "mentorship",
+      "description_ar": "مراكز تقدم الاستشارات والإرشاد والتدريب واللقاءات لمساعدة رواد الأعمال والمنشآت على تطوير أعمالهم.",
+      "description_en": "Business advisory, mentoring, training and meetings for entrepreneurs and SMEs.",
+      "website_url": "https://www.monshaat.gov.sa/en/ssc",
+      "application_url": null,
+      "organization_slug": "monshaat",
+      "coverage": "Saudi Arabia; centers in Riyadh, Jeddah, Al Khobar and Madinah, plus virtual activities",
+      "delivery_format": "hybrid",
+      "stages": [],
+      "sectors": [],
+      "support_type": [
+        "advisory",
+        "mentorship",
+        "training",
+        "networking"
+      ],
+      "funding_terms": null,
+      "eligibility_ar": "رواد الأعمال والمنشآت الصغيرة والمتوسطة؛ الحجز والمتطلبات بحسب الخدمة.",
+      "eligibility_en": "Entrepreneurs and SMEs; booking and requirements depend on the service.",
+      "application_status": "not_announced",
+      "deadline": null,
+      "starts_at": null,
+      "ends_at": null,
+      "contact_email": "Info@monshaat.gov.sa",
+      "verification_status": "verified",
+      "source_urls": [
+        "https://www.monshaat.gov.sa/en/ssc",
+        "https://www.monshaat.gov.sa/en/node/442177"
+      ],
+      "verified_at": "2026-10-08",
+      "notes": "Service identity and scope confirmed through official indexed pages; direct service-page retrieval timed out. Dated February 2026 news verifies the named centers and virtual delivery, not a current event opening.",
+      "coverage_ar": "السعودية؛ مراكز في الرياض وجدة والخبر والمدينة المنورة، وأنشطة افتراضية",
+      "funding_terms_ar": null
+    },
+    {
+      "slug": "code",
+      "entity_type": "organization",
+      "name_ar": "مركز ريادة الأعمال الرقمية — كود",
+      "name_en": "Center of Digital Entrepreneurship — CODE",
+      "category": "digital_entrepreneurship",
+      "description_ar": "برنامج تابع لوزارة الاتصالات وتقنية المعلومات يجمع مساحات العمل وخدمات الأعمال والاحتضان والتسريع لدعم الشركات التقنية.",
+      "description_en": "MCIT initiative combining workspace, business services, incubation and acceleration for technology founders.",
+      "website_url": "https://mcit.gov.sa/code",
+      "application_url": null,
+      "organization_slug": null,
+      "coverage": "Saudi Arabia",
+      "delivery_format": null,
+      "stages": [],
+      "sectors": [
+        "technology"
+      ],
+      "support_type": [
+        "workspace",
+        "business_support",
+        "incubation",
+        "acceleration"
+      ],
+      "funding_terms": null,
+      "eligibility_ar": null,
+      "eligibility_en": null,
+      "application_status": "not_announced",
+      "deadline": null,
+      "starts_at": null,
+      "ends_at": null,
+      "contact_email": null,
+      "verification_status": "verified",
+      "source_urls": [
+        "https://mcit.gov.sa/code",
+        "https://code.mcit.gov.sa/sites/default/files/2024-08/CodeReportQ1V22Aug.pdf"
+      ],
+      "verified_at": "2026-10-08",
+      "notes": "Verified as MCIT Center of Digital Entrepreneurship. The former code.mcit.gov.sa/en URL redirects to mcit.gov.sa/code. English identity is supported by CODE’s official report. Program-specific intake dates were not verified.",
+      "coverage_ar": "المملكة العربية السعودية",
+      "funding_terms_ar": null
+    },
+    {
+      "slug": "the-garage",
+      "entity_type": "organization",
+      "name_ar": "الكراج",
+      "name_en": "The Garage",
+      "category": "innovation_hub",
+      "description_ar": "وجهة في الرياض للشركات التقنية السعودية والعالمية تقدم برامج احتضان وتسريع ومساحات عمل واتصالاً بالمستثمرين.",
+      "description_en": "Riyadh hub connecting Saudi and international technology startups with incubation, acceleration, workspace and investors.",
+      "website_url": "https://thegarage.sa/",
+      "application_url": null,
+      "organization_slug": null,
+      "coverage": "Riyadh, Saudi Arabia; Saudi and international startups",
+      "delivery_format": null,
+      "stages": [],
+      "sectors": [
+        "technology",
+        "deep_tech"
+      ],
+      "support_type": [
+        "incubation",
+        "acceleration",
+        "workspace",
+        "investor_access"
+      ],
+      "funding_terms": null,
+      "eligibility_ar": null,
+      "eligibility_en": null,
+      "application_status": "not_announced",
+      "deadline": null,
+      "starts_at": null,
+      "ends_at": null,
+      "contact_email": null,
+      "verification_status": "verified",
+      "source_urls": [
+        "https://thegarage.sa/",
+        "https://thegarage.sa/about"
+      ],
+      "verified_at": "2026-10-08",
+      "notes": "Hub listing only. The homepage says cohort openings are announced separately; its generic join buttons are not evidence of an open cohort.",
+      "coverage_ar": "الرياض، السعودية؛ للشركات السعودية والدولية",
+      "funding_terms_ar": null
+    },
+    {
+      "slug": "the-garage-accelerator",
+      "entity_type": "program",
+      "name_ar": "مسرعة الكراج",
+      "name_en": "The Garage Accelerator",
+      "category": "accelerator",
+      "description_ar": "برنامج لتسريع نمو الشركات التقنية القائمة، يوفر الإرشاد وورش العمل ومساحات العمل والوصول للمستثمرين ومختبرات كاكست.",
+      "description_en": "Growth support for operating technology startups, with mentors, workshops, workspace, investor access and KACST laboratory access.",
+      "website_url": "https://thegarage.sa/programs/accelerator",
+      "application_url": null,
+      "organization_slug": "the-garage",
+      "coverage": "Riyadh, Saudi Arabia; multiple nationalities",
+      "delivery_format": null,
+      "stages": [
+        "revenue",
+        "growth"
+      ],
+      "sectors": [
+        "technology"
+      ],
+      "support_type": [
+        "mentorship",
+        "training",
+        "workspace",
+        "investor_access",
+        "laboratory_access"
+      ],
+      "funding_terms": null,
+      "eligibility_ar": "تصف الصفحة الرئيسية البرنامج بأنه للشركات القائمة التي تحقق مبيعات؛ متطلبات الدفعة يحددها الكراج.",
+      "eligibility_en": "The homepage targets operating companies with sales; cohort-specific requirements are set by The Garage.",
+      "application_status": "not_announced",
+      "deadline": null,
+      "starts_at": null,
+      "ends_at": null,
+      "contact_email": null,
+      "verification_status": "verified",
+      "source_urls": [
+        "https://thegarage.sa/programs/accelerator",
+        "https://thegarage.sa/"
+      ],
+      "verified_at": "2026-10-08",
+      "notes": "The program page has an undated registration CTA. No dated intake window or direct application destination was confirmed, so application_url remains null.",
+      "coverage_ar": "الرياض، السعودية؛ لجنسيات متعددة",
+      "funding_terms_ar": null
+    },
+    {
+      "slug": "the-garage-challenge-2-2026",
+      "entity_type": "opportunity",
+      "name_ar": "تحدي الكراج — النسخة الثانية 2026",
+      "name_en": "The Garage Challenge — Second Edition 2026",
+      "category": "competition",
+      "description_ar": "تحدٍّ أقيم في الرياض لتطوير أفكار تقنية إلى مشاريع أولية، مع إرشاد وتدريب وعروض أمام لجنة تحكيم.",
+      "description_en": "Completed Riyadh challenge where teams developed technology concepts through mentoring, workshops and judged pitches.",
+      "website_url": "https://thegarage.sa/news/bda9a416-b455-4cdc-94d1-db3d9ee55063",
+      "application_url": null,
+      "organization_slug": "the-garage",
+      "coverage": "Riyadh, Saudi Arabia",
+      "delivery_format": "in_person",
+      "stages": [
+        "idea",
+        "prototype"
+      ],
+      "sectors": [
+        "technology"
+      ],
+      "support_type": [
+        "mentorship",
+        "training",
+        "competition"
+      ],
+      "funding_terms": null,
+      "eligibility_ar": null,
+      "eligibility_en": null,
+      "application_status": "closed",
+      "deadline": null,
+      "starts_at": "2026-10-01",
+      "ends_at": "2026-10-03",
+      "contact_email": null,
+      "verification_status": "expired",
+      "source_urls": [
+        "https://thegarage.sa/news/bda9a416-b455-4cdc-94d1-db3d9ee55063"
+      ],
+      "verified_at": "2026-10-08",
+      "notes": "Archive only: the organizer’s 4 October 2026 report confirms completion. No future edition or prize amount is inferred.",
+      "coverage_ar": "الرياض، السعودية",
+      "funding_terms_ar": null
+    },
+    {
+      "slug": "misk-foundation",
+      "entity_type": "organization",
+      "name_ar": "مؤسسة محمد بن سلمان — مسك",
+      "name_en": "Misk Foundation",
+      "category": "entrepreneurship_support",
+      "description_ar": "مؤسسة غير ربحية تمكّن الشباب من خلال برامج التعليم والقيادة وريادة الأعمال وتنمية القدرات.",
+      "description_en": "Nonprofit foundation developing young people’s capabilities through learning, leadership and entrepreneurship programs.",
+      "website_url": "https://misk.org.sa/en/about-misk/",
+      "application_url": null,
+      "organization_slug": null,
+      "coverage": "Saudi Arabia",
+      "delivery_format": null,
+      "stages": [],
+      "sectors": [],
+      "support_type": [
+        "training",
+        "entrepreneurship_support",
+        "networking"
+      ],
+      "funding_terms": null,
+      "eligibility_ar": null,
+      "eligibility_en": null,
+      "application_status": "not_announced",
+      "deadline": null,
+      "starts_at": null,
+      "ends_at": null,
+      "contact_email": null,
+      "verification_status": "verified",
+      "source_urls": [
+        "https://misk.org.sa/en/about-misk/",
+        "https://hub.misk.org.sa/en/misk-entrepreneurship/"
+      ],
+      "verified_at": "2026-10-08",
+      "notes": "Organization identity does not imply that all Misk programs are open or share the same eligibility rules.",
+      "coverage_ar": "المملكة العربية السعودية",
+      "funding_terms_ar": null
+    },
+    {
+      "slug": "misk-launchpad-10",
+      "entity_type": "program",
+      "name_ar": "مسك الانطلاق — الدفعة 10",
+      "name_en": "Misk Launchpad 10.0",
+      "category": "pre_accelerator",
+      "description_ar": "برنامج للمشاريع التقنية المبكرة يساعد المؤسسين على اختبار الفكرة وبناء المنتج الأولي والاستعداد للإطلاق.",
+      "description_en": "Pre-acceleration support for technology founders validating an idea, developing an MVP and preparing to launch.",
+      "website_url": "https://hub.misk.org.sa/en/programs/entrepreneurship/misk-launchpad/",
+      "application_url": null,
+      "organization_slug": "misk-foundation",
+      "coverage": "Saudi Arabia; online delivery with optional Riyadh events",
+      "delivery_format": "hybrid",
+      "stages": [
+        "idea",
+        "prototype",
+        "mvp",
+        "early_launch"
+      ],
+      "sectors": [
+        "technology",
+        "technology_enabled"
+      ],
+      "support_type": [
+        "training",
+        "mentorship",
+        "validation"
+      ],
+      "funding_terms": "Participation is free; no guaranteed cash award is stated here.",
+      "eligibility_ar": "مشروع تقني مبكر والتزام بإطلاقه في السعودية وإتقان الإنجليزية؛ يقبل المؤسسون الأفراد.",
+      "eligibility_en": "Early technology venture, commitment to launch in Saudi Arabia and English proficiency; solo founders may apply.",
+      "application_status": "closed",
+      "deadline": "2026-08-08",
+      "starts_at": "2026-09-06",
+      "ends_at": "2027-01-02",
+      "contact_email": null,
+      "verification_status": "verified",
+      "source_urls": [
+        "https://hub.misk.org.sa/en/programs/entrepreneurship/misk-launchpad/"
+      ],
+      "verified_at": "2026-10-08",
+      "notes": "Uses the explicit cohort header dates. Generic 10-week wording conflicts with the displayed calendar span, so duration is deliberately omitted. Intake is closed; do not reuse a generic Apply label.",
+      "coverage_ar": "السعودية؛ عبر الإنترنت مع فعاليات اختيارية في الرياض",
+      "funding_terms_ar": "المشاركة مجانية؛ لا يرد هنا وعد بمكافأة نقدية مضمونة."
+    },
+    {
+      "slug": "misk-startup-school",
+      "entity_type": "program",
+      "name_ar": "مدرسة مسك لرواد الأعمال — الدورات المتخصصة",
+      "name_en": "Misk Startup School MasterClasses",
+      "category": "training",
+      "description_ar": "دورات إلكترونية ذاتية التعلّم في أساسيات ريادة الأعمال، تشمل نموذج العمل والعملاء والمنتج والتمويل والفريق.",
+      "description_en": "Self-paced online classes covering startup foundations, customers, business models, products, fundraising and teams.",
+      "website_url": "https://hub.misk.org.sa/en/programs/entrepreneurship/misk-startup-schoolmasterclasses/",
+      "application_url": "https://hub.misk.org.sa/en/programs/entrepreneurship/misk-startup-schoolmasterclasses/",
+      "organization_slug": "misk-foundation",
+      "coverage": "Saudi Arabia",
+      "delivery_format": "online_self_paced",
+      "stages": [],
+      "sectors": [],
+      "support_type": [
+        "training"
+      ],
+      "funding_terms": null,
+      "eligibility_ar": "رواد الأعمال الحاليون والطموحون وقادة الأعمال والمهتمون بريادة الأعمال.",
+      "eligibility_en": "Current and aspiring entrepreneurs, business leaders and people interested in entrepreneurship.",
+      "application_status": "open",
+      "deadline": "2026-12-31",
+      "starts_at": null,
+      "ends_at": null,
+      "contact_email": null,
+      "verification_status": "verified",
+      "source_urls": [
+        "https://hub.misk.org.sa/en/programs/entrepreneurship/misk-startup-schoolmasterclasses/"
+      ],
+      "verified_at": "2026-10-08",
+      "notes": "Official page explicitly shows applications open from 1 January 2025 through 31 December 2026. Arabic and English are listed. A misplaced NPO FAQ was excluded; eligibility uses the program’s Target Audience section.",
+      "coverage_ar": "المملكة العربية السعودية",
+      "funding_terms_ar": null
+    },
+    {
+      "slug": "svc",
+      "entity_type": "organization",
+      "name_ar": "الشركة السعودية للاستثمار الجريء",
+      "name_en": "Saudi Venture Capital — SVC",
+      "category": "venture_capital",
+      "description_ar": "شركة استثمار تابعة لبنك المنشآت الصغيرة والمتوسطة تدعم تمويل الشركات الناشئة والمنشآت عبر الصناديق والاستثمار المباشر.",
+      "description_en": "SME Bank subsidiary supporting startup and SME financing through fund investments and direct investments.",
+      "website_url": "https://svc.com.sa/en/about-us/",
+      "application_url": null,
+      "organization_slug": null,
+      "coverage": "Saudi Arabia",
+      "delivery_format": null,
+      "stages": [
+        "pre_seed",
+        "seed",
+        "growth",
+        "pre_ipo"
+      ],
+      "sectors": [],
+      "support_type": [
+        "fund_investment",
+        "direct_investment"
+      ],
+      "funding_terms": null,
+      "eligibility_ar": null,
+      "eligibility_en": null,
+      "application_status": "not_announced",
+      "deadline": null,
+      "starts_at": null,
+      "ends_at": null,
+      "contact_email": null,
+      "verification_status": "verified",
+      "source_urls": [
+        "https://svc.com.sa/en/about-us/"
+      ],
+      "verified_at": "2026-10-08",
+      "notes": "Not a universal grant or guaranteed startup-funding offer. Specific investment routes and terms require separate verification.",
+      "coverage_ar": "المملكة العربية السعودية",
+      "funding_terms_ar": null
+    },
+    {
+      "slug": "kafalah",
+      "entity_type": "organization",
+      "name_ar": "برنامج كفالة لتمويل المنشآت الصغيرة والمتوسطة",
+      "name_en": "Kafalah SME Financing Guarantee Program",
+      "category": "funding_guarantee",
+      "description_ar": "برنامج ضمانات تمويلية يساعد المنشآت الصغيرة والمتوسطة القابلة للاستمرار على الوصول إلى التمويل من الجهات المشاركة.",
+      "description_en": "Financing guarantee program helping viable SMEs access funding through participating finance providers.",
+      "website_url": "https://www.kafalah.gov.sa/en/About/Pages/default.aspx",
+      "application_url": null,
+      "organization_slug": null,
+      "coverage": "Saudi Arabia",
+      "delivery_format": null,
+      "stages": [],
+      "sectors": [],
+      "support_type": [
+        "financing_guarantee"
+      ],
+      "funding_terms": null,
+      "eligibility_ar": null,
+      "eligibility_en": null,
+      "application_status": "not_announced",
+      "deadline": null,
+      "starts_at": null,
+      "ends_at": null,
+      "contact_email": null,
+      "verification_status": "verified",
+      "source_urls": [
+        "https://www.kafalah.gov.sa/en/About/Pages/default.aspx",
+        "https://www.kafalah.gov.sa/en/Help/Pages/HowTo.aspx"
+      ],
+      "verified_at": "2026-10-08",
+      "notes": "Kafalah provides guarantees; it is not presented as a direct cash lender. Financing applications begin with participating financiers.",
+      "coverage_ar": "المملكة العربية السعودية",
+      "funding_terms_ar": null
+    },
+    {
+      "slug": "kafalah-startup-guarantee",
+      "entity_type": "program",
+      "name_ar": "كفالة — منتج المنشآت الناشئة",
+      "name_en": "Kafalah Start-Up Enterprises Product",
+      "category": "funding_guarantee",
+      "description_ar": "ضمان تمويلي للمنشآت في سنواتها التشغيلية الأولى، يُدرس بعد تقديم طلب التمويل إلى جهة تمويل مشاركة.",
+      "description_en": "Guarantee product for young enterprises applying for finance through a participating lender.",
+      "website_url": "https://www.kafalah.gov.sa/en/Products/Pages/Start-Up-Enterprises-Product.aspx",
+      "application_url": "https://www.kafalah.gov.sa/en/Help/Pages/HowTo.aspx",
+      "organization_slug": "kafalah",
+      "coverage": "Saudi Arabia",
+      "delivery_format": null,
+      "stages": [
+        "startup"
+      ],
+      "sectors": [],
+      "support_type": [
+        "financing_guarantee"
+      ],
+      "funding_terms": "Guarantee up to 90% of financing; ceilings: SAR 2.5m micro, SAR 5m small, SAR 15m medium enterprises. Subject to financier and Kafalah approval.",
+      "eligibility_ar": "عمر المنشأة لا يتجاوز ثلاث سنوات وفق تاريخ السجل التجاري، مع استيفاء شروط الجهة الممولة والبرنامج.",
+      "eligibility_en": "Enterprise age no more than three years from commercial registration, subject to lender and program requirements.",
+      "application_status": "not_announced",
+      "deadline": null,
+      "starts_at": null,
+      "ends_at": null,
+      "contact_email": null,
+      "verification_status": "verified",
+      "source_urls": [
+        "https://www.kafalah.gov.sa/en/Products/Pages/Start-Up-Enterprises-Product.aspx",
+        "https://www.kafalah.gov.sa/en/Help/Pages/HowTo.aspx"
+      ],
+      "verified_at": "2026-10-08",
+      "notes": "Evergreen product; no cohort deadline verified. The page’s 17 May 2023 start/end metadata is not an application deadline. application_url provides the official process, not a direct Kafalah loan application.",
+      "coverage_ar": "المملكة العربية السعودية",
+      "funding_terms_ar": "ضمان يصل إلى ٩٠٪ من التمويل؛ الحدود القصوى: ٢٫٥ مليون ريال للمنشآت متناهية الصغر، و٥ ملايين للصغيرة، و١٥ مليونًا للمتوسطة. يخضع لموافقة جهة التمويل وكفالة."
+    },
+    {
+      "slug": "social-development-bank",
+      "entity_type": "organization",
+      "name_ar": "بنك التنمية الاجتماعية",
+      "name_en": "Social Development Bank",
+      "category": "development_finance",
+      "description_ar": "بنك يقدم منتجات تمويل وخدمات تمكين للأفراد ورواد الأعمال والمنشآت في المملكة.",
+      "description_en": "Saudi bank offering financing and development services for individuals, entrepreneurs and enterprises.",
+      "website_url": "https://www.sdb.gov.sa/en/about-us",
+      "application_url": null,
+      "organization_slug": null,
+      "coverage": "Saudi Arabia",
+      "delivery_format": null,
+      "stages": [],
+      "sectors": [],
+      "support_type": [
+        "financing",
+        "business_support"
+      ],
+      "funding_terms": null,
+      "eligibility_ar": null,
+      "eligibility_en": null,
+      "application_status": "not_announced",
+      "deadline": null,
+      "starts_at": null,
+      "ends_at": null,
+      "contact_email": null,
+      "verification_status": "verified",
+      "source_urls": [
+        "https://www.sdb.gov.sa/en/about-us",
+        "https://www.sdb.gov.sa/en/facilities-financing"
+      ],
+      "verified_at": "2026-10-08",
+      "notes": "Products have different applicant, activity and credit requirements; no blanket eligibility or funding entitlement is implied.",
+      "coverage_ar": "المملكة العربية السعودية",
+      "funding_terms_ar": null
+    },
+    {
+      "slug": "sdb-entrepreneurs-financing",
+      "entity_type": "program",
+      "name_ar": "بنك التنمية الاجتماعية — تمويل رواد الأعمال",
+      "name_en": "Social Development Bank — Entrepreneurs Financing",
+      "category": "development_finance",
+      "description_ar": "تمويل لأصول وتكاليف تشغيل المشروعات الجديدة والناشئة، مع تقديم إلكتروني وتقييم من البنك.",
+      "description_en": "Financing for assets and operating costs of new entrepreneurial projects, with online applications and bank review.",
+      "website_url": "https://www.sdb.gov.sa/en/facilities-financing/financing-entrepreneurs/",
+      "application_url": "https://lending.sdb.gov.sa/product-overview/80d2ab51-9106-2f74-41fb-39ffd9b67ddc",
+      "organization_slug": "social-development-bank",
+      "coverage": "Saudi Arabia",
+      "delivery_format": "online_application",
+      "stages": [
+        "idea",
+        "establishment",
+        "startup"
+      ],
+      "sectors": [],
+      "support_type": [
+        "debt_financing"
+      ],
+      "funding_terms": "SAR 50,000–500,000; repayment up to 9 years; grace period up to 12 months; 9% administrative fee and 2% annual service fee.",
+      "eligibility_ar": "منتج للمواطنين ورواد الأعمال في المشروعات الجديدة أو الناشئة؛ تشترط الأسئلة الشائعة ملكية المتقدم الكاملة، وتوجد أنشطة مستثناة.",
+      "eligibility_en": "For citizens with new or startup projects; the FAQ requires full applicant ownership and excludes specified activities.",
+      "application_status": "open",
+      "deadline": null,
+      "starts_at": null,
+      "ends_at": null,
+      "contact_email": null,
+      "verification_status": "verified",
+      "source_urls": [
+        "https://www.sdb.gov.sa/en/facilities-financing/financing-entrepreneurs/",
+        "https://www.sdb.gov.sa/en/facilities-financing/financing-entrepreneurs/%D8%A7%D9%84%D8%A7%D8%B3%D9%8A%D9%84%D8%A9-%D8%A7%D9%84%D8%B4%D8%A7%D9%8A%D8%B9%D8%A9-8d89b11e674593ddb4230dbbadea7e12",
+        "https://lending.sdb.gov.sa/product-overview/80d2ab51-9106-2f74-41fb-39ffd9b67ddc"
+      ],
+      "verified_at": "2026-10-08",
+      "notes": "The product page, modified 16 September 2026, publishes 24/7 service availability and an Apply route. Open refers to the published online service, not approval. Full product conditions remain authoritative.",
+      "coverage_ar": "المملكة العربية السعودية",
+      "funding_terms_ar": "من ٥٠ ألفًا إلى ٥٠٠ ألف ريال؛ سداد حتى ٩ سنوات؛ سماح حتى ١٢ شهرًا؛ رسوم إدارية ٩٪ ورسوم خدمة سنوية ٢٪."
+    },
+    {
+      "slug": "taqadam",
+      "entity_type": "program",
+      "name_ar": "تقدّم — مسرعة الشركات الناشئة",
+      "name_en": "TAQADAM Startup Accelerator",
+      "category": "accelerator",
+      "description_ar": "مسرعة من كاوست والبنك السعودي الأول تقدم الإرشاد والتدريب وشبكة علاقات وتمويلاً للفرق المختارة.",
+      "description_en": "KAUST and Saudi Awwal Bank accelerator offering mentorship, workshops, connections and funding to selected teams.",
+      "website_url": "https://taqadam.kaust.edu.sa/",
+      "application_url": null,
+      "organization_slug": null,
+      "coverage": "Saudi Arabia; international startups with Saudi expansion plans",
+      "delivery_format": "hybrid",
+      "stages": [
+        "early_stage",
+        "growth"
+      ],
+      "sectors": [],
+      "support_type": [
+        "mentorship",
+        "training",
+        "funding",
+        "workspace"
+      ],
+      "funding_terms": "Selected teams receive USD 40,000; ten startups may obtain an additional USD 100,000 at the showcase. Not every applicant receives funding.",
+      "eligibility_ar": "فريق من مؤسسين اثنين على الأقل والتزام بالبرنامج؛ للشركات الدولية خطة للتوسع في السعودية خلال سنة من بدايته.",
+      "eligibility_en": "At least two founders and program commitment; international startups need a Saudi expansion plan within one year of starting.",
+      "application_status": "not_announced",
+      "deadline": null,
+      "starts_at": null,
+      "ends_at": null,
+      "contact_email": "Apply.Taqadam@kaust.edu.sa",
+      "verification_status": "verified",
+      "source_urls": [
+        "https://taqadam.kaust.edu.sa/"
+      ],
+      "verified_at": "2026-10-08",
+      "notes": "Current page offers Register Interest, not a dated open application call. Provider relationship is KAUST with SAB. Conflicting one-versus-two-person attendance wording is excluded from eligibility.",
+      "coverage_ar": "السعودية؛ يشمل شركات دولية تخطط للتوسع في المملكة",
+      "funding_terms_ar": "تحصل الفرق المختارة على ٤٠ ألف دولار؛ وقد تحصل عشر شركات على ١٠٠ ألف دولار إضافية في العرض الختامي. لا يحصل كل متقدم على تمويل."
+    },
+    {
+      "slug": "waed-ventures",
+      "entity_type": "organization",
+      "name_ar": "واعد فنتشرز",
+      "name_en": "Wa’ed Ventures",
+      "category": "venture_capital",
+      "description_ar": "صندوق مدعوم من أرامكو يستثمر في الشركات التقنية من المرحلة البذرية إلى النمو، ويدعم التوسع والتوطين في السعودية.",
+      "description_en": "Aramco-backed investor supporting technology companies from seed to growth and their expansion or localization in Saudi Arabia.",
+      "website_url": "https://www.waed.com/EN/about.php",
+      "application_url": "https://www.waed.com/EN/contact.php",
+      "organization_slug": null,
+      "coverage": "Saudi Arabia and international startups with Saudi localization plans",
+      "delivery_format": null,
+      "stages": [
+        "seed",
+        "series_a",
+        "series_b",
+        "series_c"
+      ],
+      "sectors": [
+        "technology",
+        "deep_tech",
+        "artificial_intelligence",
+        "fintech"
+      ],
+      "support_type": [
+        "equity_investment",
+        "advisory",
+        "market_access"
+      ],
+      "funding_terms": null,
+      "eligibility_ar": "شركات تقنية في المرحلة البذرية أو بعدها ذات صلة استراتيجية بالمملكة؛ الأفكار المجردة لا تستوفي متطلبات الاستثمار المنشورة.",
+      "eligibility_en": "Technology businesses at seed stage or later with strategic relevance to Saudi Arabia; idea-only projects are not eligible.",
+      "application_status": "not_announced",
+      "deadline": null,
+      "starts_at": null,
+      "ends_at": null,
+      "contact_email": null,
+      "verification_status": "verified",
+      "source_urls": [
+        "https://www.waed.com/EN/about.php",
+        "https://www.waed.com/EN/contact.php"
+      ],
+      "verified_at": "2026-10-08",
+      "notes": "Current primary site is waed.com. Its linked funding widget returned 502 during read-only retrieval; use the official contact/application guidance page rather than claiming successful form validation.",
+      "coverage_ar": "السعودية وشركات دولية لديها خطط للتوطين في المملكة",
+      "funding_terms_ar": null
+    },
+    {
+      "slug": "endeavor-saudi-arabia",
+      "entity_type": "organization",
+      "name_ar": "إنديفر السعودية",
+      "name_en": "Endeavor Saudi Arabia",
+      "category": "mentorship",
+      "description_ar": "شبكة تدعم رواد الأعمال ذوي فرص النمو المرتفعة بالإرشاد والعلاقات والمشورة، بعد اجتياز مراحل الاختيار.",
+      "description_en": "Network providing selected high-growth entrepreneurs with mentors, peer connections, advice and investor introductions.",
+      "website_url": "https://saudi.endeavor.org/entrepreneur-experience/",
+      "application_url": "https://saudi.endeavor.org/entrepreneur-experience/",
+      "organization_slug": null,
+      "coverage": "Saudi Arabia",
+      "delivery_format": null,
+      "stages": [
+        "growth",
+        "scaleup"
+      ],
+      "sectors": [],
+      "support_type": [
+        "mentorship",
+        "advisory",
+        "networking",
+        "investor_access"
+      ],
+      "funding_terms": null,
+      "eligibility_ar": "مؤسسون لشركات سريعة النمو وذات إمكانات مرتفعة، بعد التقييم والاختيار المحلي والدولي.",
+      "eligibility_en": "High-potential, fast-growing founders selected through local and international review.",
+      "application_status": "not_announced",
+      "deadline": null,
+      "starts_at": null,
+      "ends_at": null,
+      "contact_email": null,
+      "verification_status": "verified",
+      "source_urls": [
+        "https://saudi.endeavor.org/entrepreneur-experience/",
+        "https://saudi.endeavor.org/about-us/"
+      ],
+      "verified_at": "2026-10-08",
+      "notes": "Official page supports self-nomination and staged selection. No dated application window verified. Selection itself does not imply an investment offer.",
+      "coverage_ar": "المملكة العربية السعودية",
+      "funding_terms_ar": null
+    },
+    {
+      "slug": "flat6labs-riyadh-seed",
+      "entity_type": "program",
+      "name_ar": "فلات 6 لابز — برنامج الرياض للتمويل الأولي",
+      "name_en": "Flat6Labs Riyadh Seed Program",
+      "category": "accelerator",
+      "description_ar": "برنامج تاريخي للشركات المبكرة يجمع التمويل الأولي والإرشاد والتدريب ومساحات العمل والوصول للمستثمرين؛ مدرج حالياً كغير نشط.",
+      "description_en": "Seed program combining funding, mentoring, training, workspace and investor access; currently listed as not active.",
+      "website_url": "https://flat6labs.com/program/riyadh-seed-program-page/",
+      "application_url": null,
+      "organization_slug": null,
+      "coverage": "Saudi Arabia; Riyadh program",
+      "delivery_format": null,
+      "stages": [
+        "seed"
+      ],
+      "sectors": [],
+      "support_type": [
+        "seed_investment",
+        "mentorship",
+        "training",
+        "workspace",
+        "investor_access"
+      ],
+      "funding_terms": null,
+      "eligibility_ar": "تذكر الصفحة الإقامة في السعودية والتفرغ للبرنامج؛ لا توجد دفعة مفتوحة مؤكدة.",
+      "eligibility_en": "The program page specifies Saudi residence and full-time commitment; no open cohort is verified.",
+      "application_status": "closed",
+      "deadline": null,
+      "starts_at": "2025-09-15",
+      "ends_at": "2025-12-15",
+      "contact_email": null,
+      "verification_status": "expired",
+      "source_urls": [
+        "https://flat6labs.com/program/riyadh-seed-program-page/",
+        "https://flat6labs.com/Location/ksa/"
+      ],
+      "verified_at": "2026-10-08",
+      "notes": "Archive of cycle 6 dates shown on the official KSA listing. The Not Active status overrides generic Apply Now navigation. Historic funding amounts are omitted from current offers.",
+      "coverage_ar": "السعودية؛ برنامج الرياض",
+      "funding_terms_ar": null
+    }
+  ],
+  "unresolved": [
+    {
+      "key": "rida_identity",
+      "status": "needs_review",
+      "requested_label": "RIDA",
+      "reason": "The supplied acronym does not uniquely identify the intended Saudi partner. No substitution was made.",
+      "distinct_entities": [
+        {
+          "name": "Research, Development and Innovation Authority — RDIA",
+          "website_url": "https://www.rdia.gov.sa/en/"
+        },
+        {
+          "name": "National Entrepreneurship Institute — Riyadah",
+          "official_reference_url": "https://www.sdb.gov.sa/ar/our-partners/riyadah-center"
+        }
+      ],
+      "required_evidence": "Exact legal/brand name or official website from the requester."
+    },
+    {
+      "key": "wosool_partner_relationships",
+      "status": "needs_review",
+      "reason": "Research verifies organizations, not their contractual partnership with Wosool. Partner display requires the site owner’s relationship record."
+    },
+    {
+      "key": "misk_launchpad_duration",
+      "status": "needs_review",
+      "source_urls": [
+        "https://hub.misk.org.sa/en/programs/entrepreneurship/misk-launchpad/"
+      ],
+      "reason": "Explicit cohort calendar spans 6 September 2026–2 January 2027, while general FAQ says ten weeks. Use displayed dates without an inferred duration."
+    },
+    {
+      "key": "taqadam_attendance",
+      "status": "needs_review",
+      "source_urls": [
+        "https://taqadam.kaust.edu.sa/"
+      ],
+      "reason": "Different FAQ answers specify one versus two members attending required activities. Retained the consistent two-founder requirement and omitted attendance headcount."
+    },
+    {
+      "key": "waed_funding_widget",
+      "status": "needs_review",
+      "source_urls": [
+        "https://www.waed.com/EN/contact.php",
+        "https://edda-dealflow.waed.com/externalapi/submit-widget/embed/FsfsbswfxCkuDWDQC2qy/saudi_aramco"
+      ],
+      "reason": "Official linked application widget returned 502 during retrieval. This is a retrieval limitation, not proof the organization has stopped accepting pitches."
+    },
+    {
+      "key": "unknown_intakes",
+      "status": "needs_review",
+      "reason": "For undated evergreen organization/program pages, not_announced means no current intake verified. It must not be rendered as an assertion that a provider is inactive."
+    }
+  ]
+}

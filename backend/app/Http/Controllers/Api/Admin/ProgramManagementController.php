@@ -11,16 +11,17 @@ use App\Models\ProgramApplication;
 use App\Models\ProgramParticipant;
 use App\Models\ProgramSession;
 use App\Models\ProgramSessionAttendance;
+use App\Services\AcceleratorGateway;
 use App\Services\ChatRoomService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
+use Illuminate\Validation\Rule;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class ProgramManagementController extends Controller
 {
-    public function __construct(private readonly ChatRoomService $rooms)
-    {
-    }
+    public function __construct(private readonly ChatRoomService $rooms) {}
 
     public function dashboard(Program $program): JsonResponse
     {
@@ -63,7 +64,7 @@ class ProgramManagementController extends Controller
                 'company_stage' => $application->company_stage,
                 'sector' => $application->sector,
                 'role' => $application->user?->role_token,
-                'scorecard_fit' => 70,
+                'scorecard_fit' => null,
                 'status' => $application->status,
                 'submitted_at' => $application->created_at?->toIso8601String(),
                 'why_join' => $application->why_join,
@@ -81,11 +82,12 @@ class ProgramManagementController extends Controller
     public function updateApplication(Request $request, Program $program, ProgramApplication $application): JsonResponse
     {
         abort_unless($application->program_id === $program->id, 404);
+        abort_if($program->slug === AcceleratorGateway::SLUG, 409, 'Use the audited accelerator review workspace.');
         abort_if($program->slug === \App\Services\Eoa\ProgramService::SLUG, 409, 'Use the EOA workspace to preserve review and enrollment controls.');
 
         $data = $request->validate([
             'action' => ['required', 'in:accept,reject,waitlist,request_more_info,withdraw,enroll,assign_to_cohort,add_internal_note'],
-            'cohort_id' => ['nullable', 'integer', 'exists:cohorts,id'],
+            'cohort_id' => ['nullable', 'integer', Rule::exists('cohorts', 'id')->where('program_id', $program->id)],
             'note' => ['nullable', 'string', 'max:4000'],
             'decision_reason' => ['nullable', 'string', 'max:4000'],
         ]);
@@ -126,7 +128,7 @@ class ProgramManagementController extends Controller
 
                 $programRoom = $this->rooms->ensureRoom([
                     'type' => 'program_room',
-                    'title' => 'برنامج: ' . ($program->title ?: $program->name),
+                    'title' => 'برنامج: '.($program->title ?: $program->name),
                     'description' => 'غرفة البرنامج للمشاركين.',
                     'created_by_user_id' => $request->user()->id,
                     'owner_user_id' => $request->user()->id,
@@ -142,7 +144,7 @@ class ProgramManagementController extends Controller
                     if ($cohort) {
                         $cohortRoom = $this->rooms->ensureRoom([
                             'type' => 'cohort_room',
-                            'title' => 'دفعة: ' . $cohort->name,
+                            'title' => 'دفعة: '.$cohort->name,
                             'description' => 'غرفة تواصل أعضاء الدفعة.',
                             'created_by_user_id' => $request->user()->id,
                             'owner_user_id' => $request->user()->id,
@@ -232,22 +234,23 @@ class ProgramManagementController extends Controller
     public function createSession(Request $request, Program $program): JsonResponse
     {
         $data = $request->validate([
-            'cohort_id' => ['nullable', 'integer', 'exists:cohorts,id'],
+            'cohort_id' => ['nullable', 'integer', Rule::exists('cohorts', 'id')->where('program_id', $program->id)],
             'title' => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
             'session_type' => ['required', 'in:workshop,office_hour,mentorship,lecture,roundtable,demo,review,check_in'],
             'starts_at' => ['required', 'date'],
             'duration_minutes' => ['nullable', 'integer', 'min:15'],
             'location' => ['nullable', 'string', 'max:255'],
-            'online_link' => ['nullable', 'string', 'max:2048'],
+            'online_link' => ['nullable', 'url:https', 'max:2048'],
             'mentor_user_id' => ['nullable', 'integer', 'exists:users,id'],
             'is_required' => ['nullable', 'boolean'],
             'materials' => ['nullable', 'array'],
-            'recording_link' => ['nullable', 'string', 'max:2048'],
+            'recording_link' => ['nullable', 'url:https', 'max:2048'],
             'attendance_required' => ['nullable', 'boolean'],
             'status' => ['nullable', 'in:scheduled,live,completed,cancelled'],
         ]);
 
+        $data['starts_at'] = Carbon::parse($data['starts_at'])->utc();
         $session = $program->sessions()->create($data);
 
         return response()->json(['message' => 'تم إنشاء الجلسة.', 'data' => $session], 201);
@@ -304,6 +307,9 @@ class ProgramManagementController extends Controller
             'status' => ['required', 'in:not_started,attended,absent,no_show'],
             'note' => ['nullable', 'string', 'max:2000'],
         ]);
+
+        $participant = ProgramParticipant::where('program_id', $program->id)->where('user_id', $data['user_id'])->first();
+        abort_unless($participant && (! $session->cohort_id || $participant->cohort_id === $session->cohort_id), 422, 'The participant is not enrolled in this session cohort.');
 
         ProgramSessionAttendance::updateOrCreate(
             ['program_session_id' => $session->id, 'user_id' => (int) $data['user_id']],

@@ -403,6 +403,24 @@ input, select, textarea {
   }
 }
 
+/* Shared gateway surfaces retain Wosool's blue, navy and local font assets. */
+.gateway-hero { background: radial-gradient(ellipse at 80% 20%, #e6eafa 0%, transparent 48%), #f8f9fc; }
+.gateway-section { padding: 5rem 1.25rem; }
+.gateway-eyebrow { font-size: .75rem; line-height: 1.8; font-weight: 800; letter-spacing: .08em; color: #3B52D4; }
+.gateway-heading { margin-top: 1rem; font-size: clamp(1.75rem, 3.8vw, 2.5rem); font-weight: 750; line-height: 1.5; color: #0f1628; }
+.gateway-lead { margin-top: 1rem; max-width: 48rem; font-size: 1.05rem; line-height: 2; color: #52617b; }
+.gateway-card { border: 1px solid #e1e6f0; border-radius: 1.25rem; background: #fff; padding: 1.75rem; min-width: 0; }
+.gateway-button, .gateway-button-secondary { display: inline-flex; align-items: center; justify-content: center; gap: .6rem; padding: .9rem 1.25rem; min-height: 48px; border-radius: .7rem; font-size: .9rem; font-weight: 700; line-height: 1.7; }
+.gateway-button { background: #3B52D4; color: #fff; border: 1px solid #3B52D4; }
+.gateway-button:hover { background: #2E44C8; }
+.gateway-button-secondary { color: #1c2941; background: white; border: 1px solid #cbd3e3; }
+.gateway-button:disabled, .gateway-button-secondary:disabled { opacity: .6; cursor: wait; }
+.gateway-label { display: block; font-size: .9rem; font-weight: 600; line-height: 1.7; color: #26334b; }
+.gateway-input { display: block; width: 100%; border: 1px solid #b7c2d5; background: #fff; border-radius: .6rem; padding: .7rem .8rem; font-size: 1rem; font-weight: 400; margin-top: .45rem; color: #142139; min-height: 46px; }
+.gateway-input:focus { outline: 2px solid #3B52D4; outline-offset: 2px; }
+.gateway-error { padding: 1rem; border: 1px solid #fecaca; background: #fff1f2; color: #9f1239; border-radius: .7rem; font-size: .9rem; line-height: 1.8; }
+.gateway-badge { display: inline-flex; border-radius: 999px; background: #eef1ff; color: #3044b3; padding: .3rem .75rem; font-size: .8rem; font-weight: 700; }
+@media (max-width: 640px) { .gateway-section { padding: 3rem 1.25rem; } .gateway-card { padding: 1.25rem; } }
 /* EO Accelerator — Wosool's founder-led growth gateway */
 .eoa { --eoa-ink:#101b31; --eoa-blue:#3b52d4; --eoa-border:#dfe5ef; font-family:var(--font-cairo),sans-serif; color:var(--eoa-ink); background:#fafbfd; }
 .eoa-container { width:min(1240px,calc(100% - 64px)); margin-inline:auto; }

@@ -10,7 +10,6 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import {
-  getSeedSponsors,
   localizeSponsor,
   sponsorsPageCopy,
 } from "@/data/localized-seed"
@@ -21,11 +20,8 @@ import type { PaginatedResponse, Sponsor } from "@/types"
 export default function SponsorsPage() {
   const { locale } = useLocale()
   const copy = sponsorsPageCopy[locale]
-  const [sponsorItems, setSponsorItems] = useState<Sponsor[]>(() => getSeedSponsors(locale))
+  const [sponsorItems, setSponsorItems] = useState<Sponsor[]>([])
 
-  useEffect(() => {
-    setSponsorItems(getSeedSponsors(locale))
-  }, [locale])
 
   useEffect(() => {
     async function loadSponsors() {
@@ -36,7 +32,7 @@ export default function SponsorsPage() {
           setSponsorItems(items)
         }
       } catch {
-        // Seeded localized fallback stays in place.
+        // No invented fallback records.
       }
     }
 

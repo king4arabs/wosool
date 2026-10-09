@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button"
 import { newsItems as sampleNewsItems } from "@/data/seed"
 import { demoContentEnabled } from "@/lib/demo-content"
 import { fetchJson, mapNewsItem, type ApiNewsItem } from "@/lib/content-api"
-import { getLocalizedNewsBySlug, getLocalizedNewsContent } from "@/lib/news-content"
+import { getLocalizedNewsContent } from "@/lib/news-content"
 import { useLocale } from "@/lib/locale"
 
 // ── i18n ──────────────────────────────────────────────────────────────────────
@@ -83,8 +83,8 @@ export default function NewsArticlePage() {
   const [isLoading, setIsLoading] = useState(true)
 
   const article = useMemo(
-    () => apiArticle ?? getLocalizedNewsBySlug(newsItems, slug, locale),
-    [apiArticle, slug, locale]
+    () => apiArticle ? getLocalizedNewsContent(apiArticle, locale) : null,
+    [apiArticle, locale]
   )
   const copy = detailCopy[locale]
   const ArrowIcon = direction === "rtl" ? ArrowLeft : ArrowRight
@@ -143,10 +143,7 @@ export default function NewsArticlePage() {
     body?: string[]
   }
 
-  const related = newsItems
-    .filter((item) => item.slug !== article.slug)
-    .slice(0, 3)
-    .map((item) => getLocalizedNewsContent(item, locale))
+  const related: ReturnType<typeof getLocalizedNewsContent>[] = []
 
   const style = getCategoryStyle(articleView.category)
   const publishDate = new Date(articleView.publishedAt).toLocaleDateString(
