@@ -1,190 +1,95 @@
 "use client"
 
-import { useEffect, useMemo, useState } from "react"
-import { MapPin, Building2, TrendingUp, Handshake, CalendarPlus } from "lucide-react"
+import { FormEvent, useEffect, useState } from "react"
+import Link from "next/link"
+import { useSearchParams } from "next/navigation"
 import { api } from "@/lib/api"
-
-interface Scorecard {
-  momentum_score: number
-}
-
-interface Company {
-  company_name: string
-  scorecard: Scorecard
-}
-
-interface Founder {
-  id: number
-  first_name: string
-  last_name: string
-  city: string
-  expertise: string
-  immediate_need: string
-  companies: Company[]
-}
-
-interface PaginatedResponse {
-  data: Founder[]
-  links?: {
-    prev?: string | null
-    next?: string | null
-  }
-  meta?: {
-    current_page?: number
-    last_page?: number
-    per_page?: number
-    total?: number
-  }
-}
-
-function clampMomentum(score: number): number {
-  if (!Number.isFinite(score)) return 0
-  return Math.max(0, Math.min(100, Math.round(score)))
-}
+import { type ApiFounder, mapFounder } from "@/lib/content-api"
+import { useLocale } from "@/lib/locale"
+import { useAuth } from "@/lib/auth"
+import { useToast } from "@/components/ui/toast"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Textarea } from "@/components/ui/textarea"
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog"
+import type { Founder } from "@/types"
 
 export default function FounderDirectoryPage() {
-  const [items, setItems] = useState<Founder[]>([])
+  const { locale } = useLocale()
+  const ar = locale === "ar"
+  const { user } = useAuth()
+  const { toast } = useToast()
+  const searchParams = useSearchParams()
+  const query = searchParams.get("q") ?? ""
+  const [search, setSearch] = useState(query)
+  const [filter, setFilter] = useState(query)
   const [page, setPage] = useState(1)
   const [lastPage, setLastPage] = useState(1)
+  const [items, setItems] = useState<Array<Founder & { userId?: number }>>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [attempt, setAttempt] = useState(0)
+  const [target, setTarget] = useState<Founder | null>(null)
+  const [brief, setBrief] = useState("")
+  const [sending, setSending] = useState(false)
+  const [sendError, setSendError] = useState<string | null>(null)
 
+  useEffect(() => { setSearch(query); setFilter(query); setPage(1) }, [query])
   useEffect(() => {
-    let cancelled = false
+    const controller = new AbortController()
+    setLoading(true); setError(null)
+    api.get<{ data: ApiFounder[]; meta?: { last_page?: number } }>("/founders", {
+      params: { search: filter, page, per_page: 12 }, headers: { "X-Locale": locale }, signal: controller.signal,
+    }).then(response => {
+      setItems(response.data.map(item => ({ ...mapFounder(item), userId: item.user?.id })))
+      setLastPage(response.meta?.last_page ?? 1)
+    }).catch(error => { if (!controller.signal.aborted) setError(error instanceof Error ? error.message : "Unable to load founders") })
+      .finally(() => { if (!controller.signal.aborted) setLoading(false) })
+    return () => controller.abort()
+  }, [filter, page, locale, attempt])
 
-    async function load() {
-      setLoading(true)
-      setError(null)
-      try {
-        const response = await api.get<PaginatedResponse>("/founder-directory", {
-          params: { page, per_page: 12 },
-        })
-        if (cancelled) return
-        setItems(Array.isArray(response.data) ? response.data : [])
-        setLastPage(response.meta?.last_page && response.meta.last_page > 0 ? response.meta.last_page : 1)
-      } catch (err) {
-        if (cancelled) return
-        setError(err instanceof Error ? err.message : "Failed to load founder directory.")
-      } finally {
-        if (!cancelled) setLoading(false)
-      }
-    }
+  async function introduce(event: FormEvent) {
+    event.preventDefault()
+    if (!target || sending) return
+    setSending(true); setSendError(null)
+    try {
+      await api.post("/member/introductions", { target_founder_id: Number(target.id), payload_context_brief: brief.trim() })
+      toast(ar ? "تم إرسال طلب التعارف. تابع حالته في صفحة التعارف." : "Introduction requested. Follow its status in Matches.", "success")
+      setTarget(null); setBrief("")
+    } catch (error) { setSendError(error instanceof Error ? error.message : "Unable to send introduction") }
+    finally { setSending(false) }
+  }
 
-    load()
-    return () => {
-      cancelled = true
-    }
-  }, [page])
-
-  const canPrev = useMemo(() => page > 1, [page])
-  const canNext = useMemo(() => page < lastPage, [lastPage, page])
-
-  return (
-    <div className="space-y-6">
-      <section className="rounded-2xl border border-slate-200 bg-white p-5">
-        <h1 className="text-xl font-black text-slate-900">Founder Directory</h1>
-        <p className="mt-1 text-sm text-slate-600">
-          Curated founders with live venture momentum signals.
-        </p>
-      </section>
-
-      {loading ? <p className="text-sm text-slate-500">Loading founders...</p> : null}
-      {error ? <p className="text-sm text-red-600">{error}</p> : null}
-
-      {!loading && !error ? (
-        <section className="grid grid-cols-1 gap-4 xl:grid-cols-2">
-          {items.map((founder) => {
-            const company = founder.companies?.[0]
-            const momentum = clampMomentum(company?.scorecard?.momentum_score ?? 0)
-            return (
-              <article
-                key={founder.id}
-                className="rounded-2xl border border-slate-200 bg-white p-5"
-                style={{ boxShadow: "0 8px 30px -14px rgba(15,22,40,0.18)" }}
-              >
-                <div className="flex items-start justify-between gap-4">
-                  <div>
-                    <h2 className="text-lg font-black text-slate-900">
-                      {founder.first_name} {founder.last_name}
-                    </h2>
-                    <div className="mt-1 flex items-center gap-2 text-sm text-slate-600">
-                      <Building2 className="h-4 w-4 text-slate-400" />
-                      <span>{company?.company_name || "—"}</span>
-                    </div>
-                    <div className="mt-1 flex items-center gap-2 text-sm text-slate-600">
-                      <MapPin className="h-4 w-4 text-slate-400" />
-                      <span>{founder.city || "—"}</span>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="mt-4 space-y-3">
-                  <div>
-                    <p className="text-[11px] font-bold uppercase tracking-wider text-slate-500">Core Expertise</p>
-                    <p className="mt-1 text-sm font-medium text-slate-800">{founder.expertise || "—"}</p>
-                  </div>
-                  <div>
-                    <p className="text-[11px] font-bold uppercase tracking-wider text-slate-500">Immediate Need</p>
-                    <p className="mt-1 text-sm font-medium text-slate-800">{founder.immediate_need || "—"}</p>
-                  </div>
-                </div>
-
-                <div className="mt-5 rounded-xl border border-slate-200 bg-slate-50 px-3 py-3">
-                  <div className="mb-2 flex items-center justify-between text-xs font-bold text-slate-700">
-                    <span className="inline-flex items-center gap-1.5">
-                      <TrendingUp className="h-3.5 w-3.5 text-[#3B52D4]" />
-                      Venture Momentum Index
-                    </span>
-                    <span>{momentum}%</span>
-                  </div>
-                  <div className="h-2 w-full overflow-hidden rounded-full bg-slate-200">
-                    <div
-                      className="h-full rounded-full bg-gradient-to-r from-[#3B52D4] to-[#5D73F0] transition-all"
-                      style={{ width: `${momentum}%` }}
-                    />
-                  </div>
-                </div>
-
-                <div className="mt-5 grid grid-cols-1 gap-2 sm:grid-cols-2">
-                  <button className="inline-flex items-center justify-center gap-2 rounded-xl border border-[#3B52D4]/35 bg-[#EEF1FF] px-4 py-2.5 text-sm font-bold text-[#3B52D4] hover:bg-[#E3E8FF]">
-                    <Handshake className="h-4 w-4" />
-                    Request Intro
-                  </button>
-                  <button className="inline-flex items-center justify-center gap-2 rounded-xl border border-emerald-300 bg-emerald-50 px-4 py-2.5 text-sm font-bold text-emerald-700 hover:bg-emerald-100">
-                    <CalendarPlus className="h-4 w-4" />
-                    Book Discussion
-                  </button>
-                </div>
-              </article>
-            )
-          })}
-        </section>
-      ) : null}
-
-      {!loading && !error ? (
-        <section className="flex items-center justify-between rounded-2xl border border-slate-200 bg-white p-4">
-          <p className="text-sm font-medium text-slate-600">
-            Page {page} of {lastPage}
-          </p>
-          <div className="flex items-center gap-2">
-            <button
-              disabled={!canPrev}
-              onClick={() => setPage((p) => Math.max(1, p - 1))}
-              className="rounded-lg border border-slate-300 px-3 py-1.5 text-sm font-semibold text-slate-700 disabled:cursor-not-allowed disabled:opacity-40"
-            >
-              Previous
-            </button>
-            <button
-              disabled={!canNext}
-              onClick={() => setPage((p) => p + 1)}
-              className="rounded-lg border border-slate-300 px-3 py-1.5 text-sm font-semibold text-slate-700 disabled:cursor-not-allowed disabled:opacity-40"
-            >
-              Next
-            </button>
-          </div>
-        </section>
-      ) : null}
-    </div>
-  )
+  return <div className="mx-auto max-w-6xl space-y-6">
+    <header><h1 className="text-2xl font-bold">{ar ? "دليل المؤسسين" : "Founder directory"}</h1><p className="mt-2 text-slate-600">{ar ? "اكتشف أعضاء المجتمع واطلب التعارف لمناقشة فرص التعاون." : "Discover community members and request an introduction to discuss collaboration."}</p></header>
+    <form role="search" className="flex flex-wrap gap-3" onSubmit={event => { event.preventDefault(); setPage(1); setFilter(search.trim()) }}>
+      <Input className="min-w-0 flex-1" type="search" value={search} onChange={event => setSearch(event.target.value)} aria-label={ar ? "البحث عن مؤسس" : "Search founders"} placeholder={ar ? "ابحث بالاسم أو الخبرة" : "Search by name or experience"} />
+      <Button type="submit">{ar ? "بحث" : "Search"}</Button>
+    </form>
+    {loading && <p role="status">{ar ? "جارٍ تحميل المؤسسين…" : "Loading founders…"}</p>}
+    {error && <div role="alert" className="rounded-xl border border-rose-200 bg-rose-50 p-4"><p>{error}</p><Button variant="outline" className="mt-3" onClick={() => setAttempt(value => value + 1)}>{ar ? "إعادة المحاولة" : "Try again"}</Button></div>}
+    {!loading && !error && <>
+      {!items.length && <p className="rounded-xl border bg-white p-6">{ar ? "لا توجد نتائج مطابقة." : "No matching founders."}</p>}
+      <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">{items.map(founder => <article key={founder.id} className="flex min-w-0 flex-col rounded-2xl border bg-white p-6">
+        <h2 className="text-xl font-bold">{founder.name}</h2><p className="mt-2 text-slate-600">{founder.companyName}</p>
+        <p className="my-4 text-sm leading-relaxed">{founder.tagline || founder.bio}</p>
+        <p className="mb-5 text-sm text-slate-500">{[founder.location, founder.sector, founder.stage].filter(Boolean).join(" · ")}</p>
+        <div className="mt-auto flex flex-wrap gap-3">
+          {founder.userId !== Number(user?.id) && <Button onClick={() => { setTarget(founder); setBrief(""); setSendError(null) }}>{ar ? "طلب تعارف" : "Request introduction"}</Button>}
+          <Link className="inline-flex min-h-11 items-center text-sm font-semibold text-[#3B52D4]" href="/dashboard/matches">{ar ? "متابعة الطلبات" : "Track requests"}</Link>
+        </div>
+      </article>)}</div>
+      <nav className="flex flex-wrap items-center justify-between gap-3" aria-label={ar ? "صفحات الدليل" : "Directory pages"}>
+        <Button variant="outline" disabled={page <= 1} onClick={() => setPage(value => value - 1)}>{ar ? "السابق" : "Previous"}</Button>
+        <span>{ar ? `صفحة ${page} من ${lastPage}` : `Page ${page} of ${lastPage}`}</span>
+        <Button variant="outline" disabled={page >= lastPage} onClick={() => setPage(value => value + 1)}>{ar ? "التالي" : "Next"}</Button>
+      </nav>
+    </>}
+    <Dialog open={!!target} onOpenChange={open => { if (!open && !sending) setTarget(null) }}><DialogContent>
+      <DialogHeader><DialogTitle>{ar ? `طلب تعارف مع ${target?.name ?? ""}` : `Introduction to ${target?.name ?? ""}`}</DialogTitle><DialogDescription>{ar ? "اشرح هدف التواصل والموضوع الذي تود مناقشته. يصل الطلب للمراجعة قبل بدء التواصل." : "Describe why you would like to connect and what you want to discuss. Requests are reviewed before a connection is made."}</DialogDescription></DialogHeader>
+      <form onSubmit={introduce} className="space-y-4"><label className="block text-sm font-semibold" htmlFor="intro-brief">{ar ? "هدف التعارف" : "Reason for introduction"}</label><Textarea id="intro-brief" required minLength={20} maxLength={4000} value={brief} onChange={event => setBrief(event.target.value)} />
+        {sendError && <p role="alert" className="text-rose-700">{sendError}</p>}<Button type="submit" loading={sending} disabled={brief.trim().length < 20}>{ar ? "إرسال الطلب" : "Send request"}</Button>
+      </form>
+    </DialogContent></Dialog>
+  </div>
 }
-

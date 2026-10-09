@@ -48,7 +48,7 @@ class EoaPlatformTest extends TestCase
 
     private function fields(): array
     {
-        return ['founder_name' => 'Test Founder', 'phone' => '+966500000001', 'founder_role' => 'founder', 'company_name' => 'Test Company', 'country' => 'Saudi Arabia', 'city' => 'Riyadh', 'sector' => 'Technology', 'stage' => 'operating', 'revenue_amount' => 300000, 'revenue_currency' => 'USD', 'revenue_year' => 2025, 'growth_objectives' => 'Build a sustainable company with predictable revenue and leadership.', 'support_needs' => 'Peer learning', 'privacy_consent' => true, 'accuracy_confirmed' => true, 'attendance_commitment' => true];
+        return ['preferred_track_id' => DB::table('eoa_tracks')->value('id'), 'founder_name' => 'Test Founder', 'phone' => '+966500000001', 'founder_role' => 'founder', 'company_name' => 'Test Company', 'country' => 'Saudi Arabia', 'city' => 'Riyadh', 'sector' => 'Technology', 'stage' => 'operating', 'revenue_amount' => 300000, 'revenue_currency' => 'USD', 'revenue_year' => 2025, 'growth_objectives' => 'Build a sustainable company with predictable revenue and leadership.', 'support_needs' => 'Peer learning', 'privacy_consent' => true, 'accuracy_confirmed' => true, 'attendance_commitment' => true];
     }
 
     private function draft(User $u): array
@@ -116,7 +116,7 @@ class EoaPlatformTest extends TestCase
         $this->actingAs($reviewer)->getJson('/api/v1/eoa/review/'.$a['id'])->assertForbidden();
         DB::table('eoa_reviewers')->insert(['application_id' => $a['id'], 'user_id' => $reviewer->id]);
         $this->getJson('/api/v1/eoa/review/'.$a['id'])->assertOk();
-        $this->patchJson('/api/v1/eoa/review/'.$a['id'], ['status' => 'accepted', 'version' => $a['version'], 'message' => 'Approved'])->assertForbidden();
+        $this->patchJson('/api/v1/eoa/review/'.$a['id'], ['status' => 'accepted', 'track_id' => DB::table('eoa_tracks')->value('id'), 'version' => $a['version'], 'message' => 'Approved'])->assertForbidden();
         $this->patchJson('/api/v1/eoa/review/'.$a['id'], ['status' => 'information_requested', 'version' => $a['version'], 'message' => 'Please clarify reporting year.'])->assertOk();
         $this->actingAs($u)->putJson('/api/v1/eoa/application', $this->fields() + ['version' => $a['version'] + 1])->assertOk();
         $this->actingAs($this->lead())->postJson('/api/v1/eoa/review/'.$a['id'].'/assign', ['reviewer_id' => $reviewer->id, 'remove' => true])->assertOk();
@@ -129,7 +129,7 @@ class EoaPlatformTest extends TestCase
         $u = $this->founder();
         $a = $this->submit($u);
         $lead = $this->lead();
-        $this->actingAs($lead)->patchJson('/api/v1/eoa/review/'.$a['id'], ['status' => 'accepted', 'version' => $a['version'], 'message' => 'Local review complete.'])->assertOk();
+        $this->actingAs($lead)->patchJson('/api/v1/eoa/review/'.$a['id'], ['status' => 'accepted', 'track_id' => DB::table('eoa_tracks')->value('id'), 'version' => $a['version'], 'message' => 'Local review complete.'])->assertOk();
         $p = ProgramParticipant::firstOrFail();
         $this->assertSame('onboarding', $p->status);
         $this->actingAs($u)->postJson('/api/v1/eoa/onboarding', ['participation_agreed' => true, 'profile_confirmed' => true])->assertOk();

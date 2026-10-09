@@ -64,7 +64,7 @@ export function EventCard({ event }: EventCardProps) {
             style={{ background: "#EEF1FF", borderColor: "#E4E7F0" }}
             aria-label={d.full}
           >
-            <span className="text-[9px] font-extrabold uppercase tracking-widest text-[#3B52D4]">{d.month}</span>
+            <span className="text-xs font-extrabold uppercase tracking-widest text-[#3B52D4]">{d.month}</span>
             <span className="text-xl font-black text-slate-900 leading-none">{d.day}</span>
           </div>
 
@@ -81,7 +81,7 @@ export function EventCard({ event }: EventCardProps) {
         <div className="flex flex-wrap gap-1.5">
           {isPast && <span className="rounded-full bg-slate-100 px-2.5 py-1 text-xs font-bold text-slate-600">{locale === "ar" ? "فعالية سابقة" : "Past event"}</span>}
           <span
-            className="inline-flex items-center gap-1 text-[10px] font-bold px-2.5 py-1 rounded-full border"
+            className="inline-flex items-center gap-1 text-xs font-bold px-2.5 py-1 rounded-full border"
             style={
               event.isVirtual
                 ? { background: "#EFF6FF", color: "#1d4ed8", borderColor: "#BFDBFE" }
@@ -96,13 +96,13 @@ export function EventCard({ event }: EventCardProps) {
           </span>
 
           {!event.isPublic && (
-            <span className="text-[10px] font-bold px-2.5 py-1 rounded-full bg-[#EEF1FF] text-[#3B52D4] border border-[#E4E7F0]">
+            <span className="text-xs font-bold px-2.5 py-1 rounded-full bg-[#EEF1FF] text-[#3B52D4] border border-[#E4E7F0]">
               {copy.membersOnly}
             </span>
           )}
 
           {event.maxAttendees && (
-            <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2.5 py-1 rounded-full bg-slate-50 text-slate-500 border border-slate-200">
+            <span className="inline-flex items-center gap-1 text-xs font-bold px-2.5 py-1 rounded-full bg-slate-50 text-slate-500 border border-slate-200">
               <Users className="h-2.5 w-2.5" />
               {copy.limited}
             </span>
@@ -110,7 +110,7 @@ export function EventCard({ event }: EventCardProps) {
         </div>
 
         {/* Location */}
-        <div className="flex items-center gap-1.5 text-[11px] text-slate-400 font-medium">
+        <div className="flex items-center gap-1.5 text-xs text-slate-400 font-medium">
           {event.isVirtual
             ? <Video className="h-3 w-3 shrink-0" />
             : <MapPin className="h-3 w-3 shrink-0" />

@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Select } from "@/components/ui/select"
@@ -28,7 +28,7 @@ export default function AdminChatPage() {
   const [rooms, setRooms] = useState<Room[]>([])
   const [helpRequests, setHelpRequests] = useState<HelpRequest[]>([])
 
-  async function load() {
+  const load = useCallback(async () => {
     try {
       const [roomsRes, helpRes] = await Promise.all([
         api.get<{ data: Room[] }>("/admin/chat/rooms"),
@@ -39,12 +39,12 @@ export default function AdminChatPage() {
     } catch (e) {
       toast(e instanceof Error ? e.message : "تعذر تحميل بيانات الإشراف", "error")
     }
-  }
+  }, [toast])
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect -- async data fetch; state updates happen after await
     void load()
-  }, [])
+  }, [load])
 
   async function updateStatus(roomId: number, status: string) {
     try {

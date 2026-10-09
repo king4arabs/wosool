@@ -36,7 +36,7 @@ export function SocietyComposerModal({
         <div className="px-6 py-4 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
           <div>
             <h2 className="text-base font-bold text-slate-900">إضافة منشور تشغيلي جديد</h2>
-            <p className="text-[11px] text-slate-500 mt-0.5">سيقوم الذكاء الاصطناعي بتحليل النص ومطابقتك مع البُناة فوراً.</p>
+            <p className="text-xs text-slate-500 mt-0.5">وضّح طلبك أو خبرتك لتسهيل التواصل مع أعضاء المجتمع.</p>
           </div>
           <button id="closeModalX" onClick={onClose} className="text-slate-400 hover:text-slate-600 p-1 rounded-md hover:bg-slate-100 transition-colors focus:outline-none"><X className="w-4 h-4" /></button>
         </div>

@@ -168,13 +168,13 @@ export function Header() {
             <div className="min-w-0">
               <div className="flex items-center gap-2 text-base font-black tracking-tight text-slate-900">
                 WOSOOL
-                <span className="text-[10px] font-extrabold text-[#3B52D4] bg-[#EEF1FF] px-1.5 py-0.5 rounded border border-[#E4E7F0]">
+                <span className="text-xs font-extrabold text-[#3B52D4] bg-[#EEF1FF] px-1.5 py-0.5 rounded border border-[#E4E7F0]">
                   وصول
                 </span>
               </div>
               <div
                 className={cn(
-                  "hidden text-[10px] font-bold text-slate-500 sm:block",
+                  "hidden text-xs font-bold text-slate-500 sm:block",
                   locale === "ar" ? "tracking-normal" : "uppercase tracking-[0.18em]"
                 )}
               >

@@ -1,6 +1,7 @@
 'use client'
 import { useCallback, useEffect, useState } from 'react'
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 import { useAuth } from '@/lib/auth'
 import { useLocale } from '@/lib/locale'
 import { api } from '@/lib/api'
@@ -24,10 +25,15 @@ export function Account() {
 }
 
 function AccountSession() {
+  const pathname = usePathname()
   const { user, isLoading, login, refresh, logout } = useAuth()
   const { locale } = useLocale()
   const ar = locale === 'ar'
-  const { program } = useEoaProgram()
+  const {
+    program,
+    failed: programFailed,
+    retry: retryProgram,
+  } = useEoaProgram()
   const [mode, setMode] = useState<'login' | 'register'>('register')
   const [error, setError] = useState('')
   const [notice, setNotice] = useState('')
@@ -173,6 +179,20 @@ function AccountSession() {
                   </button>
                 ))}
               </div>
+              {programFailed && mode === 'register' && (
+                <Notice error>
+                  {ar
+                    ? 'تعذر تحميل حالة التسجيل.'
+                    : 'Unable to load registration availability.'}
+                  <button
+                    type="button"
+                    className="eoa-text-link"
+                    onClick={retryProgram}
+                  >
+                    {ar ? 'إعادة المحاولة' : 'Try again'}
+                  </button>
+                </Notice>
+              )}
               <form onSubmit={authenticate}>
                 {mode === 'register' && (
                   <Field label={ar ? 'الاسم الكامل' : 'Full name'}>
@@ -256,9 +276,7 @@ function AccountSession() {
                   className="eoa-btn"
                   disabled={
                     busy ||
-                    (mode === 'register' &&
-                      program !== null &&
-                      !program.data_collection_open)
+                    (mode === 'register' && !program?.data_collection_open)
                   }
                 >
                   {busy
@@ -301,7 +319,22 @@ function AccountSession() {
                   {ar ? 'مساحة المدرب' : 'Coach workspace'}
                 </Link>
               )}
-              <button className="eoa-text-link" onClick={() => void logout()}>
+              {pathname !== '/dashboard/eoa' && (
+                <Link
+                  className="eoa-btn eoa-btn-secondary"
+                  href="/dashboard/eoa"
+                >
+                  {ar
+                    ? 'مسار EOA في لوحة وصول'
+                    : 'EOA in your Wosool dashboard'}
+                </Link>
+              )}
+              <button
+                className="eoa-text-link"
+                onClick={() =>
+                  void logout().catch((e) => setError(errorText(e)))
+                }
+              >
                 {ar ? 'تسجيل الخروج' : 'Sign out'}
               </button>
             </div>
@@ -344,6 +377,12 @@ function AccountSession() {
                       ? 'ابدأ طلبك'
                       : 'Start your application'}
                 </h2>
+                {application?.track && (
+                  <p>
+                    <strong>{ar ? 'مسار القبول' : 'Admission track'}:</strong>{' '}
+                    {ar ? application.track.name_ar : application.track.name_en}
+                  </p>
+                )}
                 {application?.decision_reason && (
                   <p className="eoa-preserve">{application.decision_reason}</p>
                 )}

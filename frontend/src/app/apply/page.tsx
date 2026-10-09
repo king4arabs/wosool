@@ -444,7 +444,7 @@ export default function ApplyPage() {
                       )}
                     </div>
                     <span
-                      className={`text-[10px] font-bold hidden sm:block ${
+                      className={`text-xs font-bold hidden sm:block ${
                         currentStep === id ? "text-[#3B52D4]" : "text-slate-400"
                       }`}
                     >
@@ -643,7 +643,7 @@ export default function ApplyPage() {
                     />
                     <div className="flex justify-between">
                       <FieldError message={errors.motivation} />
-                      <span className="text-[10px] text-slate-400 font-medium ml-auto">
+                      <span className="text-xs text-slate-400 font-medium ml-auto">
                         {formData.motivation.length}/2000
                       </span>
                     </div>

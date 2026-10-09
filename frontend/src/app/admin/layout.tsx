@@ -1,7 +1,7 @@
 "use client"
 
 import Link from "next/link"
-import { usePathname } from "next/navigation"
+import { usePathname, useRouter } from "next/navigation"
 import {
   LayoutDashboard,
   Users,
@@ -106,7 +106,8 @@ export default function AdminLayout({
 }) {
   const pathname = usePathname()
   const { user } = useAuth()
-  const { locale } = useLocale()
+  const { locale, setLocale } = useLocale()
+  const router = useRouter()
   const activeLocale = locale === "en" ? "en" : "ar"
   const copy = adminLabels[activeLocale]
 
@@ -121,7 +122,7 @@ export default function AdminLayout({
     <AdminGuard>
       <div className="flex min-h-screen bg-gray-50" dir={activeLocale === "ar" ? "rtl" : "ltr"}>
         <aside
-          className="hidden lg:flex flex-col w-64 bg-[#1E293B] text-white fixed top-0 right-0 bottom-0 z-50"
+          className="hidden lg:flex flex-col w-64 bg-[#1E293B] text-white fixed top-0 start-0 bottom-0 z-50"
           aria-label="Admin navigation"
         >
           <div className="flex items-center gap-2 px-6 py-5 border-b border-white/10">
@@ -164,8 +165,8 @@ export default function AdminLayout({
           </div>
         </aside>
 
-        <div className="flex-1 lg:mr-64 flex flex-col">
-          <header className="bg-white border-b border-gray-200 sticky top-0 z-40 px-6 py-4 flex items-center justify-between">
+        <div className="min-w-0 flex-1 lg:ms-64 flex flex-col">
+          <header className="bg-white border-b border-gray-200 sticky top-0 z-40 px-4 sm:px-6 py-4 flex flex-wrap gap-3 items-center justify-between">
             <div className="flex items-center gap-3">
               <span className="text-xs bg-red-100 text-red-700 rounded px-2 py-1 font-semibold">
                 {copy.panel}
@@ -174,7 +175,10 @@ export default function AdminLayout({
                 {(copy.nav as Record<string, string>)[pathname] ?? copy.fallback}
               </h1>
             </div>
-            <div className="flex items-center gap-3">
+            <div className="flex flex-wrap items-center gap-3">
+              <select aria-label={locale === "ar" ? "اللغة" : "Language"} value={locale} onChange={event => setLocale(event.target.value as "ar" | "en")} className="min-h-11 rounded-lg border px-2">
+                <option value="ar">العربية</option><option value="en">English</option>
+              </select>
               <Link
                 href="/"
                 className="text-sm text-gray-500 hover:text-gray-700"
@@ -187,7 +191,12 @@ export default function AdminLayout({
             </div>
           </header>
 
-          <main className="flex-1 p-6">{children}</main>
+          <nav className="lg:hidden border-b bg-white p-4" aria-label={locale === "ar" ? "قائمة الإدارة" : "Admin navigation"}>
+            <select className="min-h-12 w-full rounded-xl border px-3" aria-label={locale === "ar" ? "انتقل إلى صفحة" : "Go to page"} value={adminNavItems.find(item => pathname === item.href)?.href ?? adminNavItems.filter(item => pathname.startsWith(`${item.href}/`)).at(-1)?.href ?? "/admin"} onChange={event => router.push(event.target.value)}>
+              {adminNavItems.map(item => <option key={item.href} value={item.href}>{copy.nav[item.href]}</option>)}
+            </select>
+          </nav>
+          <main id="main-content" className="min-w-0 flex-1 p-4 sm:p-6">{children}</main>
         </div>
       </div>
     </AdminGuard>

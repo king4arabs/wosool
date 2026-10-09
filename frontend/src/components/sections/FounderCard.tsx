@@ -69,7 +69,7 @@ export function FounderCard({ founder }: FounderCardProps) {
               <h3 className="text-sm font-black text-slate-900 truncate">{founder.name}</h3>
               {founder.isVerified && (
                 <span
-                  className="inline-flex items-center gap-1 text-[9px] font-extrabold uppercase tracking-wider px-1.5 py-0.5 rounded-full"
+                  className="inline-flex items-center gap-1 text-xs font-extrabold uppercase tracking-wider px-1.5 py-0.5 rounded-full"
                   style={{ background: "#EEF1FF", color: "#3B52D4" }}
                 >
                   <span className="w-1 h-1 rounded-full bg-[#3B52D4]" />
@@ -80,7 +80,7 @@ export function FounderCard({ founder }: FounderCardProps) {
             <p className="text-xs text-slate-500 font-medium truncate">{founder.companyName}</p>
             <div className="flex items-center gap-1 mt-0.5">
               <MapPin className="h-2.5 w-2.5 text-slate-400 shrink-0" />
-              <span className="text-[10px] text-slate-400">{founder.location}</span>
+              <span className="text-xs text-slate-400">{founder.location}</span>
             </div>
           </div>
 
@@ -90,7 +90,7 @@ export function FounderCard({ founder }: FounderCardProps) {
             style={{ background: "#FFF7ED" }}
           >
             <Sparkles className="h-2.5 w-2.5" style={{ color: "#ea580c" }} />
-            <span className="text-[10px] font-black" style={{ color: "#ea580c" }}>{founder.score}</span>
+            <span className="text-xs font-black" style={{ color: "#ea580c" }}>{founder.score}</span>
           </div>
         </div>
 
@@ -99,11 +99,11 @@ export function FounderCard({ founder }: FounderCardProps) {
 
         {/* Sector + Stage */}
         <div className="flex flex-wrap gap-1.5">
-          <span className="text-[10px] font-bold px-2.5 py-1 rounded-full bg-[#EEF1FF] text-[#3B52D4] border border-[#E4E7F0]">
+          <span className="text-xs font-bold px-2.5 py-1 rounded-full bg-[#EEF1FF] text-[#3B52D4] border border-[#E4E7F0]">
             {founder.sector}
           </span>
           <span
-            className="text-[10px] font-bold px-2.5 py-1 rounded-full border"
+            className="text-xs font-bold px-2.5 py-1 rounded-full border"
             style={{
               background: stagePill.bg,
               color: stagePill.text,
@@ -119,20 +119,20 @@ export function FounderCard({ founder }: FounderCardProps) {
           <div className="space-y-1.5 pt-1 border-t border-slate-100">
             {founder.needs.length > 0 && (
               <div className="flex items-start gap-1.5">
-                <span className="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider mt-px shrink-0">
+                <span className="text-xs font-extrabold text-slate-400 uppercase tracking-wider mt-px shrink-0">
                   {copy.needs}
                 </span>
-                <span className="text-[10px] text-slate-600 leading-relaxed">
+                <span className="text-xs text-slate-600 leading-relaxed">
                   {founder.needs.slice(0, 2).join("، ")}
                 </span>
               </div>
             )}
             {founder.offers.length > 0 && (
               <div className="flex items-start gap-1.5">
-                <span className="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider mt-px shrink-0">
+                <span className="text-xs font-extrabold text-slate-400 uppercase tracking-wider mt-px shrink-0">
                   {copy.offers}
                 </span>
-                <span className="text-[10px] text-slate-600 leading-relaxed">
+                <span className="text-xs text-slate-600 leading-relaxed">
                   {founder.offers.slice(0, 2).join("، ")}
                 </span>
               </div>

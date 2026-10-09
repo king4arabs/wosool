@@ -46,7 +46,7 @@ function DetailSection({
 }) {
   return (
     <section className="rounded-xl border border-slate-100 bg-slate-50/60 p-4">
-      <h4 className="mb-1.5 flex items-center gap-1.5 text-[11px] font-extrabold uppercase tracking-wider text-slate-400">
+      <h4 className="mb-1.5 flex items-center gap-1.5 text-xs font-extrabold uppercase tracking-wider text-slate-400">
         <Icon className="h-3.5 w-3.5 text-[#3B52D4]" aria-hidden="true" />
         {title}
       </h4>
@@ -97,13 +97,13 @@ export function EntrepreneurProfileDialog({
                 </div>
               </DialogDescription>
               <div className="mt-3 flex flex-wrap justify-center gap-1.5 sm:justify-start">
-                <span className="rounded-full border border-[#E4E7F0] bg-white px-2.5 py-1 text-[10px] font-bold text-[#3B52D4]">
+                <span className="rounded-full border border-[#E4E7F0] bg-white px-2.5 py-1 text-xs font-bold text-[#3B52D4]">
                   {entrepreneur.sector}
                 </span>
-                <span className="rounded-full border border-[#E4E7F0] bg-white px-2.5 py-1 text-[10px] font-bold text-slate-600">
+                <span className="rounded-full border border-[#E4E7F0] bg-white px-2.5 py-1 text-xs font-bold text-slate-600">
                   {entrepreneur.startupStage}
                 </span>
-                <span className="rounded-full border border-[#E4E7F0] bg-white px-2.5 py-1 text-[10px] font-bold text-slate-600">
+                <span className="rounded-full border border-[#E4E7F0] bg-white px-2.5 py-1 text-xs font-bold text-slate-600">
                   {entrepreneur.region}
                 </span>
               </div>
@@ -115,7 +115,7 @@ export function EntrepreneurProfileDialog({
         <div className="space-y-3 px-8 py-6">
           <DetailSection icon={Briefcase} title={copy.about}>
             <p>{entrepreneur.description}</p>
-            <p className="mt-2 text-[11px] font-bold text-slate-400">
+            <p className="mt-2 text-xs font-bold text-slate-400">
               {copy.model}: <span className="font-medium text-slate-500">{entrepreneur.businessModel}</span>
             </p>
           </DetailSection>
@@ -133,7 +133,7 @@ export function EntrepreneurProfileDialog({
               {entrepreneur.targetCustomers.map((customer) => (
                 <li
                   key={customer}
-                  className="rounded-full bg-white px-2.5 py-1 text-[10px] font-bold text-slate-600 ring-1 ring-slate-200"
+                  className="rounded-full bg-white px-2.5 py-1 text-xs font-bold text-slate-600 ring-1 ring-slate-200"
                 >
                   {customer}
                 </li>
@@ -152,14 +152,14 @@ export function EntrepreneurProfileDialog({
 
           {/* Tags */}
           <div className="border-t border-slate-100 pt-4">
-            <h4 className="mb-2 text-[11px] font-extrabold uppercase tracking-wider text-slate-400">
+            <h4 className="mb-2 text-xs font-extrabold uppercase tracking-wider text-slate-400">
               {copy.tags}
             </h4>
             <div className="flex flex-wrap gap-1.5">
               {entrepreneur.tags.map((tag) => (
                 <span
                   key={tag}
-                  className="rounded-md bg-[#EEF1FF] px-2 py-0.5 text-[10px] font-bold text-[#3B52D4]"
+                  className="rounded-md bg-[#EEF1FF] px-2 py-0.5 text-xs font-bold text-[#3B52D4]"
                 >
                   #{tag}
                 </span>

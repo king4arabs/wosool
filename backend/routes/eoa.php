@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\Eoa\ApplicationController;
+use App\Http\Controllers\Api\Eoa\AccountRoleController;
 use App\Http\Controllers\Api\Eoa\AuthController;
 use App\Http\Controllers\Api\Eoa\OperationsController;
 use App\Http\Controllers\Api\Eoa\ParticipantController;
@@ -34,6 +35,8 @@ Route::prefix('v1/eoa')->group(function () {
             Route::get('/review/{application}', [ReviewController::class, 'show']);
             Route::patch('/review/{application}', [ReviewController::class, 'update']);
             Route::post('/review/{application}/assign', [ReviewController::class, 'assign']);
+            Route::get('/operations/accounts', [AccountRoleController::class, 'index']);
+            Route::patch('/operations/accounts/{account}', [AccountRoleController::class, 'update']);
             Route::get('/operations', [OperationsController::class, 'show']);
             Route::put('/operations/settings', [OperationsController::class, 'settings']);
             Route::patch('/operations/update/{type}/{record}', [OperationsController::class, 'create']);

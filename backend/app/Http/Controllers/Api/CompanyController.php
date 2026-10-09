@@ -49,7 +49,7 @@ class CompanyController extends Controller
             ->withCount('founders')
             ->orderBy('is_featured', 'desc')
             ->orderBy('created_at', 'desc')
-            ->paginate($request->integer('per_page', 12))
+            ->paginate(max(1, min(100, $request->integer('per_page', 12))))
             ->withQueryString();
 
         return CompanyResource::collection($companies)->response();
@@ -59,6 +59,7 @@ class CompanyController extends Controller
     {
         $company = CompanyProfile::with(['founders' => fn ($q) => $q->where('is_public', true)->with('user')])
             ->where('slug', $slug)
+            ->where('status', 'active')
             ->where('is_public', true)
             ->firstOrFail();
 

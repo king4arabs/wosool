@@ -87,12 +87,12 @@ export default function MatchesPage() {
           <div>
             <div className="flex items-center gap-2">
               <span className="inline-block w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-              <span className="text-[10px] font-bold text-emerald-700 uppercase tracking-wider">نظام الربط الخوارزمي المباشر</span>
+              <span className="text-xs font-bold text-emerald-700 uppercase tracking-wider">نظام الربط الخوارزمي المباشر</span>
             </div>
             <h1 className="text-xl font-bold tracking-tight text-slate-900 mt-1">المطابقة الموجهة وتقصي الأقران</h1>
-            <p className="text-xs text-slate-500 mt-0.5">يقوم الـ AI بمسح مستمر لثغرات بطاقة الأداء الخاصة بك ويطابقها مع خبرات المؤسسين المناسبين.</p>
+            <p className="text-xs text-slate-500 mt-0.5">تعرّف على مؤسسين تتكامل خبراتهم مع احتياجاتك، وأرسل طلب التعارف المناسب.</p>
           </div>
-          <div className="bg-slate-950 text-slate-400 font-mono text-[11px] px-3 py-1.5 rounded-lg border border-slate-800 text-center shrink-0">
+          <div className="bg-slate-950 text-slate-400 font-sans text-xs px-3 py-1.5 rounded-lg border border-slate-800 text-center shrink-0">
             الرصيد المتاح: <span className="text-amber-400 font-bold">{creditRemaining} طلبات تقديم/الشهر</span>
           </div>
         </div>
@@ -104,7 +104,7 @@ export default function MatchesPage() {
         <div className="space-y-3">
           <h2 className="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center gap-2">
             <span>مسار الاتصالات النشطة</span>
-            <span className="bg-slate-200 text-slate-700 px-1.5 py-0.2 rounded font-mono text-[10px]">{activeIntroductions.length} معلق</span>
+            <span className="bg-slate-200 text-slate-700 px-1.5 py-0.2 rounded font-sans text-xs">{activeIntroductions.length} معلق</span>
           </h2>
 
           {loading ? (
@@ -117,15 +117,15 @@ export default function MatchesPage() {
               return (
                 <div key={match.id} className="bg-white border border-slate-200 rounded-xl p-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 shadow-sm">
                   <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-full bg-slate-100 border flex items-center justify-center text-[11px] font-bold text-slate-600">
+                    <div className="w-8 h-8 rounded-full bg-slate-100 border flex items-center justify-center text-xs font-bold text-slate-600">
                       {(founder?.name || "م").charAt(0)}
                     </div>
                     <div className="text-xs">
                       <p className="font-bold text-slate-900">طلب تقديم معلق مع: <span className="text-slate-700 font-semibold">{founder?.name || "مؤسس"} ({founder?.companies?.[0]?.name || "شركة ناشئة"})</span></p>
-                      <p className="text-[11px] text-slate-400 mt-0.5">الموضوع: تواصل مباشر بين مؤسسين • الحالة: {match.status}</p>
+                      <p className="text-xs text-slate-400 mt-0.5">الموضوع: تواصل مباشر بين مؤسسين • الحالة: {match.status}</p>
                     </div>
                   </div>
-                  <span className="inline-flex items-center rounded-md bg-amber-50 px-2 py-1 text-[10px] font-bold text-amber-700 border border-amber-200/60 uppercase whitespace-nowrap">
+                  <span className="inline-flex items-center rounded-md bg-amber-50 px-2 py-1 text-xs font-bold text-amber-700 border border-amber-200/60 uppercase whitespace-nowrap">
                     بانتظار موافقة الطرف الآخر
                   </span>
                 </div>
@@ -156,13 +156,13 @@ export default function MatchesPage() {
                         <div>
                           <div className="flex items-center gap-2">
                             <h3 className="text-sm font-bold text-slate-900">{founder?.name || "مؤسس"}</h3>
-                            <span className="bg-slate-100 border border-slate-200 text-slate-500 text-[10px] px-1.5 py-0.2 rounded font-mono">{founder?.companies?.[0]?.name || "شركة ناشئة"}</span>
+                            <span className="bg-slate-100 border border-slate-200 text-slate-500 text-xs px-1.5 py-0.2 rounded font-sans">{founder?.companies?.[0]?.name || "شركة ناشئة"}</span>
                           </div>
-                          <p className="text-[10px] text-slate-400 mt-0.5">{founder?.stage || "مؤسس"} • {founder?.city || "المملكة العربية السعودية"}</p>
+                          <p className="text-xs text-slate-400 mt-0.5">{founder?.stage || "مؤسس"} • {founder?.city || "المملكة العربية السعودية"}</p>
                         </div>
                       </div>
                       <div className="text-left shrink-0">
-                        <span className={`inline-flex items-center rounded-md px-2 py-1 text-xs font-bold border font-mono ${scoreTone(score)}`}>
+                        <span className={`inline-flex items-center rounded-md px-2 py-1 text-xs font-bold border font-sans ${scoreTone(score)}`}>
                           توافق بنسبة {score}%
                         </span>
                       </div>
@@ -172,10 +172,10 @@ export default function MatchesPage() {
 
                     <div className="bg-slate-50 border border-slate-200/80 rounded-xl p-4 text-xs space-y-2.5">
                       <div className="flex items-center gap-2">
-                        <span className="bg-slate-900 text-white font-bold text-[9px] px-1.5 py-0.5 rounded uppercase tracking-wider font-mono">تحليل الـ AI</span>
+                        <span className="bg-slate-900 text-white font-bold text-xs px-1.5 py-0.5 rounded uppercase tracking-wider font-sans">أسباب الترشيح</span>
                         <p className="text-slate-800 font-semibold">لماذا تم اقتراح هذا الاتصال؟</p>
                       </div>
-                      <p className="text-slate-600 leading-relaxed text-[11px]">
+                      <p className="text-slate-600 leading-relaxed text-xs">
                         {(match.match_reasons && match.match_reasons.length > 0)
                           ? match.match_reasons.join("، ")
                           : (founder?.tagline || "تم اقتراح هذا الاتصال بناءً على تقاطع الاحتياج التشغيلي والخبرة ذات الصلة داخل الشبكة.")}
@@ -184,24 +184,24 @@ export default function MatchesPage() {
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs pt-1">
                       <div>
-                        <span className="block text-slate-400 font-bold uppercase text-[10px] tracking-wider mb-0.5">يمكنه مساعدتك في:</span>
+                        <span className="block text-slate-400 font-bold uppercase text-xs tracking-wider mb-0.5">يمكنه مساعدتك في:</span>
                         <p className="text-slate-700 font-medium">{founder?.sector ? `خبرات ضمن قطاع ${founder.sector}` : "إرشاد مؤسس-لمؤسس بحسب مراحل النمو والتشغيل."}</p>
                       </div>
                       <div>
-                        <span className="block text-slate-400 font-bold uppercase text-[10px] tracking-wider mb-0.5">يبحث حالياً عن:</span>
+                        <span className="block text-slate-400 font-bold uppercase text-xs tracking-wider mb-0.5">يبحث حالياً عن:</span>
                         <p className="text-slate-700 font-medium">تعاونات استراتيجية واتصالات ذات قيمة داخل المجتمع.</p>
                       </div>
                     </div>
 
                     <div className="flex justify-between items-center border-t border-slate-100 pt-4 text-xs gap-3">
-                      <div className="text-slate-400 text-[11px] flex items-center gap-1.5">
+                      <div className="text-slate-400 text-xs flex items-center gap-1.5">
                         <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 inline-block" />
                         متاح للاستشارة التشغيلية هذا الأسبوع
                       </div>
                       <div className="flex gap-2">
                         <button
                           type="button"
-                          className="bg-slate-50 hover:bg-slate-100 text-slate-700 font-semibold px-3 py-2 border border-slate-200 rounded-lg text-[11px] transition-colors"
+                          className="bg-slate-50 hover:bg-slate-100 text-slate-700 font-semibold px-3 py-2 border border-slate-200 rounded-lg text-xs transition-colors"
                         >
                           معاينة ملف الربط
                         </button>
@@ -209,7 +209,7 @@ export default function MatchesPage() {
                           type="button"
                           onClick={() => requestIntro(match.id)}
                           disabled={busyId === match.id}
-                          className="bg-slate-900 hover:bg-slate-800 disabled:opacity-60 disabled:cursor-not-allowed text-white font-semibold px-4 py-2 rounded-lg text-[11px] transition-colors shadow-sm"
+                          className="bg-slate-900 hover:bg-slate-800 disabled:opacity-60 disabled:cursor-not-allowed text-white font-semibold px-4 py-2 rounded-lg text-xs transition-colors shadow-sm"
                         >
                           {busyId === match.id ? "جاري الإرسال..." : "طلب تقديم مُنسَّق"}
                         </button>

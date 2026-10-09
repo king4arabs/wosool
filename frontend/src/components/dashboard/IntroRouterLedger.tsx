@@ -60,7 +60,7 @@ export default function IntroRouterLedger({ initialInbound, initialOutbound, loc
     >
       {/* Header */}
       <div>
-        <div className="inline-flex items-center gap-1.5 bg-[#EEF1FF] border border-[#E4E7F0] px-2.5 py-1 rounded-full text-[10px] font-extrabold text-[#3B52D4] mb-2">
+        <div className="inline-flex items-center gap-1.5 bg-[#EEF1FF] border border-[#E4E7F0] px-2.5 py-1 rounded-full text-xs font-extrabold text-[#3B52D4] mb-2">
           {copy.badge}
         </div>
         <h3 className="text-sm font-black text-slate-900">{copy.title}</h3>
@@ -92,12 +92,12 @@ export default function IntroRouterLedger({ initialInbound, initialOutbound, loc
                 <div className="flex items-start justify-between gap-3 mb-2">
                   <div>
                     <p className="text-xs font-black text-slate-900">{name}</p>
-                    <p className="text-[10px] text-slate-400 font-medium mt-0.5">
+                    <p className="text-xs text-slate-400 font-medium mt-0.5">
                       {row.direction === "inbound" ? copy.inboundRoute : copy.outboundRoute}
                     </p>
                   </div>
                   <span
-                    className="shrink-0 rounded-full border px-2.5 py-0.5 text-[10px] font-extrabold"
+                    className="shrink-0 rounded-full border px-2.5 py-0.5 text-xs font-extrabold"
                     style={{ background: s.bg, color: s.text, borderColor: s.border }}
                   >
                     {statusLabel}
@@ -105,7 +105,7 @@ export default function IntroRouterLedger({ initialInbound, initialOutbound, loc
                 </div>
 
                 {row.payload_context_brief && (
-                  <p className="text-[11px] text-slate-500 leading-relaxed mb-3">{row.payload_context_brief}</p>
+                  <p className="text-xs text-slate-500 leading-relaxed mb-3">{row.payload_context_brief}</p>
                 )}
 
                 {row.routing_status === "INTRO_PENDING" && (
@@ -114,7 +114,7 @@ export default function IntroRouterLedger({ initialInbound, initialOutbound, loc
                       type="button"
                       disabled={busyId === row.id}
                       onClick={() => patchStatus(row.id, "approve")}
-                      className="px-3 py-1.5 rounded-lg text-[11px] font-bold bg-[#3B52D4] text-white hover:bg-[#2E44C8] transition-colors disabled:opacity-50"
+                      className="px-3 py-1.5 rounded-lg text-xs font-bold bg-[#3B52D4] text-white hover:bg-[#2E44C8] transition-colors disabled:opacity-50"
                     >
                       {copy.approve}
                     </button>
@@ -122,7 +122,7 @@ export default function IntroRouterLedger({ initialInbound, initialOutbound, loc
                       type="button"
                       disabled={busyId === row.id}
                       onClick={() => patchStatus(row.id, "decline")}
-                      className="px-3 py-1.5 rounded-lg text-[11px] font-bold border border-slate-200 text-slate-600 hover:border-red-200 hover:text-red-600 hover:bg-red-50 transition-colors disabled:opacity-50"
+                      className="px-3 py-1.5 rounded-lg text-xs font-bold border border-slate-200 text-slate-600 hover:border-red-200 hover:text-red-600 hover:bg-red-50 transition-colors disabled:opacity-50"
                     >
                       {copy.decline}
                     </button>

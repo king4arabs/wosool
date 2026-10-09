@@ -37,7 +37,7 @@ class FounderController extends Controller
         $founders = $query
             ->orderBy('is_featured', 'desc')
             ->orderBy('created_at', 'desc')
-            ->paginate($request->integer('per_page', 12))
+            ->paginate(max(1, min(100, $request->integer('per_page', 12))))
             ->withQueryString();
 
         return FounderResource::collection($founders)->response();
@@ -47,6 +47,7 @@ class FounderController extends Controller
     {
         $founder = FounderProfile::with(['user', 'companies' => fn ($q) => $q->where('is_public', true), 'scorecard'])
             ->where('slug', $slug)
+            ->where('status', 'active')
             ->where('is_public', true)
             ->firstOrFail();
 

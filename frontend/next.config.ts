@@ -57,6 +57,7 @@ const nextConfig: NextConfig = {
   async rewrites() {
     const apiUrl = (process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000").replace(/\/+$/, "");
     return [
+      { source: "/broadcasting/auth", destination: `${apiUrl}/broadcasting/auth` },
       {
         source: "/api/:path*",
         destination: `${apiUrl}/api/:path*`,

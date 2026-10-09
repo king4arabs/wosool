@@ -1,9 +1,10 @@
 'use client'
 import Link from 'next/link'
-import Image from 'next/image'
+import { EoaLogo } from './Logo'
 import { ArrowUpRight, ArrowLeft, Check, MoveUpRight } from 'lucide-react'
 import { useLocale } from '@/lib/locale'
 import { Notice, PartnerStrip, useEoaProgram } from './Shared'
+import { EoaJourney } from './Journey'
 
 export function EoaLanding() {
   const { locale } = useLocale()
@@ -19,20 +20,16 @@ export function EoaLanding() {
               <span className="eoa-dot" />
               WOSOOL / EO RIYADH ACCELERATOR
             </div>
+            <EoaLogo className="eoa-hero-logo" inverse priority />
             <h1>
-              {ar
-                  ? 'مؤسسون سعوديون.\nنمو بلا حدود.'
-                  : 'Saudi founders.\nExtraordinary growth.'}
+              EO Riyadh
+              <br />
+              Accelerator
             </h1>
-            <p className="eoa-hero-tag">
+            <p className="eoa-hero-message">
               {ar
-                ? 'مؤسسون سعوديون. علاقات عالمية. نمو استثنائي.'
-                : 'Saudi Founders. Global Connections. Extraordinary Growth.'}
-            </p>
-            <p>
-              {ar
-                ? 'وصول بوابتك الرقمية إلى EO Riyadh Accelerator. تعلم عملي، ومساءلة بنّاءة، وعلاقات مع مؤسسين يساعدونك على تطوير شركتك وقيادتك.'
-                : 'Wosool is your digital gateway to EO Riyadh Accelerator. Turn ambition into a stronger business through practical learning, peer accountability and founder connections.'}
+                ? 'مسرّعة رائدة تمكّن المؤسسين من التواصل مع مؤسسين حول العالم، وتنمية شركاتهم الناشئة لتبلغ إيرادات سنوية لا تقل عن مليون دولار، والاستعداد لعضوية منظمة روّاد الأعمال (EO).'
+                : 'A premier accelerator empowering founders to connect with Founders globally, and to grow their startups to at least $1 million in annual revenue and prepare for membership in the Entrepreneurs’ Organization (EO)'}
             </p>
             <div className="eoa-actions">
               <Link className="eoa-btn" href="/EOA/apply">
@@ -49,20 +46,13 @@ export function EoaLanding() {
                   ? 'باب التقديم المحلي مفتوح.'
                   : 'Local applications are open.'
                 : ar
-                  ? 'مسار الرياض قيد الإعداد. يمكنك إنشاء حساب وتجهيز طلبك.'
-                  : 'The Riyadh program is in preparation. Create your account and prepare your application.'}
+                  ? 'تابع مواعيد التقديم ومسارات البرنامج من حسابك.'
+                  : 'Follow application dates and program tracks from your account.'}
             </p>
           </div>
           <div className="eoa-path-card">
             <div className="eoa-path-head">
-              <Image
-                src="/partners/eo-riyadh-inverse.png"
-                alt="EO Riyadh"
-                width={160}
-                height={64}
-                priority
-                unoptimized
-              />
+              <EoaLogo inverse />
               <span>{ar ? 'مسار المؤسس' : 'THE FOUNDER PATH'}</span>
             </div>
             <div className="eoa-growth-mark" aria-hidden="true">
@@ -237,6 +227,7 @@ export function EoaLanding() {
           </div>
         </div>
       </section>
+      <EoaJourney program={program} />
       <section className="eoa-section">
         <div className="eoa-container eoa-two-grid">
           <div>

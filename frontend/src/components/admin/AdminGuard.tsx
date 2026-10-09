@@ -3,17 +3,21 @@
 import { useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { useAuth } from "@/lib/auth"
+import { useLocale } from "@/lib/locale"
 import { isAdminUser } from "@/lib/admin"
 
 export function AdminGuard({ children }: { children: React.ReactNode }) {
   const router = useRouter()
-  const { user, isLoading } = useAuth()
+  const { user, isLoading, error, refresh } = useAuth()
+  const { locale } = useLocale()
 
   useEffect(() => {
-    if (!isLoading && !isAdminUser(user)) {
+    if (!isLoading && !error && !isAdminUser(user)) {
       router.replace("/dashboard")
     }
-  }, [isLoading, router, user])
+  }, [isLoading, error, router, user])
+
+  if (error) return <div className="p-6" role="alert"><p>{error}</p><button className="mt-4 underline" onClick={() => void refresh()}>{locale === "ar" ? "إعادة المحاولة" : "Try again"}</button></div>
 
   if (isLoading) {
     return (

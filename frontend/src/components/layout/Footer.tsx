@@ -110,7 +110,7 @@ export function Footer() {
               </div>
               <div>
                 <div className="text-xl font-semibold tracking-[-0.03em] text-slate-900">Wosool</div>
-                <div className="text-[10px] text-slate-500">{copy.tagline}</div>
+                <div className="text-xs text-slate-500">{copy.tagline}</div>
               </div>
             </Link>
             <p className="mb-6 max-w-sm text-sm leading-7 text-slate-500">{copy.description}</p>

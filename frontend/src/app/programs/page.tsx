@@ -1,37 +1,30 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import Link from "next/link"
+import { usePublicCollection } from "@/lib/use-public-collection"
+import { CollectionStatus } from "@/components/sections/CollectionStatus"
 import { PublicLayout } from "@/components/layout/PublicLayout"
 import { ProgramCard } from "@/components/sections/ProgramCard"
 import { Button } from "@/components/ui/button"
 import { localizeProgram, programsPageCopy } from "@/data/localized-seed"
-import { getCollectionItems, type ApiProgram, fetchJson, mapProgram, type WrappedResponse } from "@/lib/content-api"
+import { type ApiProgram, mapProgram } from "@/lib/content-api"
 import { useLocale } from "@/lib/locale"
-import type { PaginatedResponse, Program } from "@/types"
 
 export default function ProgramsPage() {
   const { locale } = useLocale()
   const copy = programsPageCopy[locale]
-  const [programs, setPrograms] = useState<Program[]>([])
+  const collection = usePublicCollection<ApiProgram>("/programs")
+  const programs = collection.items.map(item => localizeProgram(mapProgram(item), locale))
   const [activeCategory, setActiveCategory] = useState(0)
 
 
-  useEffect(() => {
-    async function fetchPrograms() {
-      try {
-        const response = await fetchJson<PaginatedResponse<ApiProgram> | WrappedResponse<ApiProgram[]>>("/api/v1/programs")
-        const items = getCollectionItems(response).map((item) => localizeProgram(mapProgram(item), locale))
-        setPrograms(items)
-      } catch {
-        // No invented fallback records.
-      }
-    }
-    void fetchPrograms()
-  }, [locale])
 
-  const openPrograms = programs.filter((p) => p.isOpen)
-  const closedPrograms = programs.filter((p) => !p.isOpen)
+
+  const categories = [copy.categories[0], ...new Set(programs.map(program => program.category).filter(Boolean))]
+  const visiblePrograms = programs.filter(program => activeCategory === 0 || program.category === categories[activeCategory])
+  const openPrograms = visiblePrograms.filter((p) => p.isOpen)
+  const closedPrograms = visiblePrograms.filter((p) => !p.isOpen)
 
   return (
     <PublicLayout>
@@ -64,6 +57,7 @@ export default function ProgramsPage() {
 
         </div>
       </section>
+      {collection.error && <CollectionStatus {...collection} hasMore={false} empty={false} />}
 
       {/* ── Category filter bar ── */}
       <div className="sticky top-16 z-40 bg-white/90 backdrop-blur-md border-b border-slate-200/60 px-4 py-3.5"
@@ -71,7 +65,7 @@ export default function ProgramsPage() {
       >
         <div className="mx-auto max-w-7xl">
           <div className="flex items-center gap-2 overflow-x-auto pb-0.5 scrollbar-none">
-            {copy.categories.map((category, index) => (
+            {categories.map((category, index) => (
               <button
                 key={category}
                 onClick={() => setActiveCategory(index)}
@@ -230,6 +224,7 @@ export default function ProgramsPage() {
           </div>
         </div>
       </section>
+      {!collection.error && <CollectionStatus {...collection} empty={programs.length === 0} />}
     </PublicLayout>
   )
 }

@@ -3,18 +3,20 @@
 import { useEffect, useState } from "react"
 import Link from "next/link"
 import { Search, SlidersHorizontal, ArrowLeft, ArrowRight } from "lucide-react"
+import { usePublicCollection } from "@/lib/use-public-collection"
+import { CollectionStatus } from "@/components/sections/CollectionStatus"
 import { PublicLayout } from "@/components/layout/PublicLayout"
 import { FounderCard } from "@/components/sections/FounderCard"
 import { Button } from "@/components/ui/button"
 import { foundersPageCopy, localizeFounder } from "@/data/localized-seed"
-import { getCollectionItems, type ApiFounder, fetchJson, mapFounder, type WrappedResponse } from "@/lib/content-api"
+import { type ApiFounder, mapFounder } from "@/lib/content-api"
 import { useLocale } from "@/lib/locale"
-import type { Founder, PaginatedResponse } from "@/types"
 
 export default function FoundersPage() {
   const { locale, direction } = useLocale()
   const copy = foundersPageCopy[locale]
-  const [founders, setFounders] = useState<Founder[]>([])
+  const collection = usePublicCollection<ApiFounder>("/founders")
+  const founders = collection.items.map(item => localizeFounder(mapFounder(item), locale))
   const [search, setSearch] = useState("")
   const [sector, setSector] = useState(copy.sectors[0])
   const [stage, setStage] = useState(copy.stages[0])
@@ -23,24 +25,12 @@ export default function FoundersPage() {
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect -- reset directory state when the locale changes
-    setFounders([])
     setSector(copy.sectors[0])
     setStage(copy.stages[0])
     setLocation(copy.locations[0])
-  }, [locale])
+  }, [locale, copy.locations, copy.sectors, copy.stages])
 
-  useEffect(() => {
-    async function fetchFounders() {
-      try {
-        const response = await fetchJson<PaginatedResponse<ApiFounder> | WrappedResponse<ApiFounder[]>>("/api/v1/founders")
-        const items = getCollectionItems(response).map((item) => localizeFounder(mapFounder(item), locale))
-        setFounders(items)
-      } catch {
-        // No invented fallback records.
-      }
-    }
-    void fetchFounders()
-  }, [locale])
+
 
   const featuredFounders = founders.filter((f) => f.isFeatured)
 
@@ -87,6 +77,7 @@ export default function FoundersPage() {
 
         </div>
       </section>
+      {collection.error && <CollectionStatus {...collection} hasMore={false} empty={false} />}
 
       {/* ── Featured Founders ── */}
       <section className="py-16 px-4 bg-white">
@@ -142,25 +133,28 @@ export default function FoundersPage() {
                   <SlidersHorizontal className="h-3 w-3" />
                 </div>
                 <select
+                  aria-label={locale === "ar" ? "القطاع" : "Sector"}
                   value={sector}
                   onChange={(e) => setSector(e.target.value)}
                   className={selectClass}
                 >
-                  {copy.sectors.map((item) => <option key={item}>{item}</option>)}
+                  {[copy.sectors[0], ...new Set(founders.map(founder => founder.sector).filter(Boolean))].map((item) => <option key={item}>{item}</option>)}
                 </select>
                 <select
+                  aria-label={locale === "ar" ? "المرحلة" : "Stage"}
                   value={stage}
                   onChange={(e) => setStage(e.target.value)}
                   className={selectClass}
                 >
-                  {copy.stages.map((item) => <option key={item}>{item}</option>)}
+                  {[copy.stages[0], ...new Set(founders.map(founder => founder.stage).filter(Boolean))].map((item) => <option key={item}>{item}</option>)}
                 </select>
                 <select
+                  aria-label={locale === "ar" ? "الموقع" : "Location"}
                   value={location}
                   onChange={(e) => setLocation(e.target.value)}
                   className={selectClass}
                 >
-                  {copy.locations.map((item) => <option key={item}>{item}</option>)}
+                  {[copy.locations[0], ...new Set(founders.map(founder => founder.location).filter(Boolean))].map((item) => <option key={item}>{item}</option>)}
                 </select>
               </div>
             </div>
@@ -181,7 +175,7 @@ export default function FoundersPage() {
             )}
           </div>
 
-          {filtered.length === 0 ? (
+          {!collection.loading && !collection.error && filtered.length === 0 ? (
             <div className="flex items-center justify-center h-48 rounded-2xl border border-dashed border-slate-200 bg-white">
               <p className="text-sm text-slate-400 font-medium">
                 {locale === "ar" ? "لا توجد نتائج مطابقة" : "No matching founders found"}
@@ -255,6 +249,7 @@ export default function FoundersPage() {
           </div>
         </div>
       </section>
+      {!collection.error && <CollectionStatus {...collection} empty={founders.length === 0} />}
     </PublicLayout>
   )
 }

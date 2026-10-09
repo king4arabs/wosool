@@ -6,6 +6,7 @@ import { ArrowUpRight, Handshake, Lightbulb, Users } from "lucide-react"
 import { PublicLayout } from "@/components/layout/PublicLayout"
 import { UpcomingEvents } from "@/components/sections/UpcomingEvents"
 import { CommunityPartners, FounderShowcase } from "@/components/sections/CommunityShowcase"
+import { EoaOverview } from "@/components/eoa/Overview"
 import { useHomeContent } from "@/lib/use-home-content"
 import { useLocale } from "@/lib/locale"
 import styles from "./home.module.css"
@@ -78,7 +79,7 @@ export default function HomePage() {
     </div></section>
     <section className={`${styles.container} ${styles.section}`} aria-labelledby="how-title"><p className={styles.eyebrow}>{copy.how}</p><h2 id="how-title">{copy.howTitle}</h2><ol className={styles.steps}>{copy.steps.map((step,i) => <li key={step.title}><span>0{i+1}</span><h3>{step.title}</h3><p>{step.text}</p></li>)}</ol><Link href="/apply" className={styles.primary}>{copy.join}<ArrowUpRight size={18} /></Link></section>
     <section className={styles.events} aria-labelledby="events-title"><div className={styles.container}><p className={styles.eyebrow}>{copy.events}</p><h2 id="events-title">{copy.eventsTitle}</h2><p className={styles.lead}>{copy.eventsText}</p><div className="mt-8"><UpcomingEvents /></div></div></section>
-    <section className={`${styles.container} ${styles.section}`} aria-labelledby="growth-title"><div className={styles.program}><div><p className={styles.eyebrow}>{copy.program}</p><h2 id="growth-title">{copy.programTitle}</h2><p>{copy.programText}</p></div><Link href="/EOA" className={styles.secondary}>{copy.programLink}<ArrowUpRight size={18} /></Link></div></section>
+    <div className={`${styles.container} ${styles.section}`}><EoaOverview /></div>
     {newsItems.length > 0 && <section className={`${styles.container} ${styles.news}`} aria-labelledby="news-title"><div className={styles.sectionHead}><div><p className={styles.eyebrow}>{copy.news}</p><h2 id="news-title">{copy.newsTitle}</h2></div><Link className={styles.textLink} href="/news">{copy.allNews}</Link></div><div className={styles.benefits}>{newsItems.slice(0,3).map(item => <article key={item.id}><p className={styles.eyebrow}>{item.category}</p><h3><Link href={`/news/${item.slug}`}>{item.title}</Link></h3><p>{item.excerpt}</p></article>)}</div></section>}
   </div></PublicLayout>
 }

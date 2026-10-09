@@ -14,6 +14,7 @@ import { currentLocale, sessionFetch } from "./session-request"
 interface AuthContextValue {
   user: User | null
   isLoading: boolean
+  error: string | null
   isAuthenticated: boolean
   login: (email: string, password: string) => Promise<void>
   register: (name: string, email: string, password: string, passwordConfirmation: string, inviteToken?: string) => Promise<void>
@@ -36,8 +37,11 @@ function timeoutSignal(ms: number): AbortSignal {
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null)
   const [isLoading, setIsLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
   const fetchUser = useCallback(async () => {
+    setIsLoading(true)
+    setError(null)
     try {
       const res = await sessionFetch("/api/v1/auth/me", {
         credentials: "include",
@@ -47,11 +51,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (res.ok) {
         const data = await res.json()
         setUser(data.user ? { ...data.user, roleToken: data.user.role_token, isAdmin: data.user.is_admin } : null)
-      } else {
+      } else if (res.status === 401) {
         setUser(null)
+      } else {
+        throw new Error("Session unavailable")
       }
     } catch {
-      setUser(null)
+      setError(currentLocale() === "ar" ? "تعذر التحقق من الجلسة. يرجى المحاولة مجددًا." : "Unable to check your session. Please try again.")
     } finally {
       setIsLoading(false)
     }
@@ -86,6 +92,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
 
     const data = await res.json()
+    setError(null)
     setUser(data.user ? { ...data.user, roleToken: data.user.role_token, isAdmin: data.user.is_admin } : null)
   }, [])
 
@@ -126,43 +133,33 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
 
       const data = await res.json()
+      setError(null)
       setUser(data.user ? { ...data.user, roleToken: data.user.role_token, isAdmin: data.user.is_admin } : null)
     },
     []
   )
 
   const logout = useCallback(async () => {
-    try {
-      // Ensure CSRF token is present for state-changing request.
-      await sessionFetch("/api/v1/auth/csrf-cookie", {
-        credentials: "include",
-        headers: { Accept: "application/json", "X-Locale": resolveLocaleHeader() },
-        signal: timeoutSignal(7000),
-      })
-
-      await sessionFetch("/api/v1/auth/logout", {
-        method: "POST",
-        credentials: "include",
-        headers: { Accept: "application/json", "X-Locale": resolveLocaleHeader() },
-        signal: timeoutSignal(7000),
-      })
-    } finally {
-      // Always clear client auth state even if backend session is already invalid.
-      setUser(null)
+    const response = await sessionFetch("/api/v1/auth/logout", { method: "POST" })
+    if (!response.ok && response.status !== 401) {
+      throw new Error(currentLocale() === "ar" ? "تعذر تسجيل الخروج. يرجى المحاولة مجددًا." : "Unable to sign out. Please try again.")
     }
+    setUser(null)
+    setError(null)
   }, [])
 
   const value = useMemo<AuthContextValue>(
     () => ({
       user,
       isLoading,
+      error,
       isAuthenticated: !!user,
       login,
       register,
       logout,
       refresh: fetchUser,
     }),
-    [user, isLoading, login, register, logout, fetchUser]
+    [user, isLoading, error, login, register, logout, fetchUser]
   )
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>

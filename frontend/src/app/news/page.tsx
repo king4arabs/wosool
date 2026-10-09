@@ -1,18 +1,16 @@
 "use client"
 
-import { useEffect, useMemo, useState } from "react"
+import { useMemo } from "react"
 import Link from "next/link"
 import { ArrowLeft, ArrowRight, Clock, User, Sparkles, BookOpen, Zap } from "lucide-react"
 import { PublicLayout } from "@/components/layout/PublicLayout"
-import { newsItems as sampleNewsItems } from "@/data/seed"
-import { demoContentEnabled } from "@/lib/demo-content"
-import { fetchJson, getCollectionItems, mapNewsItem, type ApiNewsItem } from "@/lib/content-api"
+import { usePublicCollection } from "@/lib/use-public-collection"
+import { CollectionStatus } from "@/components/sections/CollectionStatus"
+import { mapNewsItem, type ApiNewsItem } from "@/lib/content-api"
 import { getLocalizedNewsContent } from "@/lib/news-content"
 import { useLocale } from "@/lib/locale"
-import type { NewsItem, PaginatedResponse } from "@/types"
 
 // ── i18n ──────────────────────────────────────────────────────────────────────
-const newsItems = demoContentEnabled ? sampleNewsItems : []
 
 const pageCopy = {
   ar: {
@@ -109,7 +107,7 @@ function ArticleCard({
         </div>
         {/* Category pill */}
         <div className="absolute top-3 flex items-center" style={{ insetInlineStart: "0.75rem" }}>
-          <span className="inline-flex items-center gap-1 rounded-full bg-[#3B52D4]/20 border border-[#3B52D4]/30 px-2.5 py-0.5 text-[10px] font-extrabold tracking-wider text-[#7B8FF8] uppercase">
+          <span className="inline-flex items-center gap-1 rounded-full bg-[#3B52D4]/20 border border-[#3B52D4]/30 px-2.5 py-0.5 text-xs font-extrabold tracking-wider text-[#7B8FF8] uppercase">
             {item.category}
           </span>
         </div>
@@ -126,7 +124,7 @@ function ArticleCard({
 
         {/* Footer */}
         <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between">
-          <div className="flex items-center gap-3 text-[11px] text-slate-400 font-medium">
+          <div className="flex items-center gap-3 text-xs text-slate-400 font-medium">
             <span className="flex items-center gap-1">
               <User className="h-3 w-3" />
               {item.author}
@@ -149,8 +147,9 @@ function ArticleCard({
 export default function NewsPage() {
   const { locale, direction } = useLocale()
   const copy = pageCopy[locale]
-  const [apiItems, setApiItems] = useState<NewsItem[]>([])
-  const [isLoadingApi, setIsLoadingApi] = useState(true)
+  const collection = usePublicCollection<ApiNewsItem>("/news")
+  const apiItems = useMemo(() => collection.items.map(mapNewsItem), [collection.items])
+  const isLoadingApi = collection.loading
   const ArrowIcon = direction === "rtl" ? ArrowLeft : ArrowRight
 
   const normalizedApiItems = useMemo(
@@ -162,29 +161,6 @@ export default function NewsPage() {
 
   const featured = sourceItems[0]
   const rest = sourceItems.slice(1)
-
-  useEffect(() => {
-    let cancelled = false
-    async function load() {
-      setIsLoadingApi(true)
-      try {
-        const res = await fetchJson<PaginatedResponse<ApiNewsItem> | { data: ApiNewsItem[] }>(
-          "/api/v1/news?per_page=12"
-        )
-        if (cancelled) return
-        const items = getCollectionItems<ApiNewsItem>(
-          res as PaginatedResponse<ApiNewsItem> | { data: ApiNewsItem[] }
-        )
-        setApiItems(items.map(mapNewsItem))
-      } catch {
-        if (!cancelled) setApiItems([])
-      } finally {
-        if (!cancelled) setIsLoadingApi(false)
-      }
-    }
-    load()
-    return () => { cancelled = true }
-  }, [])
 
   if (isLoadingApi && sourceItems.length === 0) {
     return (
@@ -205,6 +181,7 @@ export default function NewsPage() {
 
   return (
     <PublicLayout>
+      {collection.error && <CollectionStatus {...collection} hasMore={false} empty={false} />}
       <style>{`
         @keyframes fadeUp {
           from { opacity: 0; transform: translateY(18px); }
@@ -267,7 +244,7 @@ export default function NewsPage() {
               <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#3B52D4]/20 border border-[#3B52D4]/30">
                 <Sparkles className="h-3.5 w-3.5 text-[#7B8FF8]" />
               </div>
-              <span className="text-[11px] font-extrabold uppercase tracking-[0.22em] text-[#7B8FF8]">
+              <span className="text-xs font-extrabold uppercase tracking-[0.22em] text-[#7B8FF8]">
                 {copy.eyebrow}
               </span>
             </div>
@@ -332,7 +309,7 @@ export default function NewsPage() {
               {/* Section label */}
               <div className="flex items-center gap-3 py-8">
                 <div className="h-px flex-1 bg-gradient-to-r from-[#3B52D4]/60 to-transparent" />
-                <span className="flex items-center gap-1.5 text-[10px] font-extrabold uppercase tracking-[0.22em] text-[#3B52D4]">
+                <span className="flex items-center gap-1.5 text-xs font-extrabold uppercase tracking-[0.22em] text-[#3B52D4]">
                   <Zap className="h-3 w-3" />
                   {copy.featured}
                 </span>
@@ -369,7 +346,7 @@ export default function NewsPage() {
                     />
 
                     <div className="relative z-10">
-                      <span className="inline-flex items-center gap-1.5 rounded-full bg-[#3B52D4]/20 border border-[#3B52D4]/30 px-2.5 py-1 text-[10px] font-extrabold uppercase tracking-wider text-[#7B8FF8]">
+                      <span className="inline-flex items-center gap-1.5 rounded-full bg-[#3B52D4]/20 border border-[#3B52D4]/30 px-2.5 py-1 text-xs font-extrabold uppercase tracking-wider text-[#7B8FF8]">
                         {featured.category}
                       </span>
                     </div>
@@ -378,11 +355,11 @@ export default function NewsPage() {
                       <div className="text-[5rem] font-black leading-none text-[#3B52D4] opacity-30 select-none mb-4">
                         01
                       </div>
-                      <div className="flex items-center gap-2 text-[11px] font-bold text-slate-500 mb-1">
+                      <div className="flex items-center gap-2 text-xs font-bold text-slate-500 mb-1">
                         <Clock className="h-3 w-3 text-[#3B52D4]" />
                         {featured.readTime}
                       </div>
-                      <div className="flex items-center gap-2 text-[11px] font-bold text-slate-500">
+                      <div className="flex items-center gap-2 text-xs font-bold text-slate-500">
                         <User className="h-3 w-3 text-[#3B52D4]" />
                         {featured.author}
                       </div>
@@ -408,7 +385,7 @@ export default function NewsPage() {
                     </p>
 
                     <div className="mt-8 flex items-center justify-between">
-                      <span className="text-[11px] font-medium text-slate-600">
+                      <span className="text-xs font-medium text-slate-600">
                         {formatDate(featured.publishedAt, locale)}
                       </span>
                       <span className="inline-flex items-center gap-1.5 text-xs font-bold text-[#3B52D4] group-hover:gap-2.5 transition-all">
@@ -433,7 +410,7 @@ export default function NewsPage() {
                 <BookOpen className="h-4 w-4 text-[#3B52D4]" />
               </div>
               <div>
-                <p className="text-[10px] font-extrabold uppercase tracking-[0.2em] text-[#3B52D4] mb-0.5">
+                <p className="text-xs font-extrabold uppercase tracking-[0.2em] text-[#3B52D4] mb-0.5">
                   {copy.latestLabel}
                 </p>
                 <div className="h-px w-24 bg-gradient-to-r from-[#3B52D4]/60 to-transparent" />
@@ -457,6 +434,7 @@ export default function NewsPage() {
         </section>
 
       </div>
+      {!collection.error && <CollectionStatus {...collection} empty={sourceItems.length === 0} />}
     </PublicLayout>
   )
 }

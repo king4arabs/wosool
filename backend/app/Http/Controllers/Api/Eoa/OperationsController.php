@@ -24,12 +24,13 @@ class OperationsController extends Controller
         return response()->json(['data' => [
             'program_id' => $p->id, 'settings' => ProgramService::settings($p), 'is_open' => $p->is_open,
             'starts_at' => $p->starts_at, 'application_deadline' => $p->application_deadline,
+            'tracks' => DB::table('eoa_tracks')->where('program_id', $p->id)->orderBy('id')->get(),
             'cohorts' => $p->cohorts()->get(), 'sessions' => $p->sessions()->orderBy('starts_at')->get(),
             'groups' => DB::table('eoa_groups')->where('program_id', $p->id)->get(),
             'resources' => $p->resources()->get(), 'announcements' => DB::table('program_messages')->where('program_id', $p->id)->where('scope', 'program')->latest()->limit(50)->get(),
             'participants' => $p->participants()->with('user:id,name,email')->get()->map(fn ($r) => [
                 'id' => $r->id, 'user_id' => $r->user_id, 'name' => $r->user->name, 'status' => $r->status,
-                'cohort_id' => $r->cohort_id, 'group_id' => $r->eoa_group_id, 'onboarding' => $r->eoa_onboarding,
+                'track_id' => $r->eoa_track_id, 'cohort_id' => $r->cohort_id, 'group_id' => $r->eoa_group_id, 'onboarding' => $r->eoa_onboarding,
                 'finance' => $r->eoa_finance,
             ]),
             'people' => User::role(['eoa_coach', 'eoa_reviewer', 'eoa_lead', 'eoa_staff'])->with('roles:id,name')->get(['id', 'name', 'email'])->map(fn ($u) => ['id' => $u->id, 'name' => $u->name, 'email' => $u->email, 'roles' => $u->getRoleNames()]),
@@ -75,7 +76,9 @@ class OperationsController extends Controller
         abort_unless(Access::staff($request->user()), 403);
         $p = ProgramService::program();
         $cohort = ['nullable', 'integer', Rule::exists('cohorts', 'id')->where('program_id', $p->id)];
+        if ($type === 'tracks') abort_unless(Access::lead($request->user()), 403);
         $rules = match ($type) {
+            'tracks' => ['name_ar' => 'required|string|max:255', 'name_en' => ['required', 'string', 'max:255', Rule::unique('eoa_tracks')->where('program_id', $p->id)->ignore($record)], 'description_ar' => 'nullable|string|max:2000', 'description_en' => 'nullable|string|max:2000', 'is_active' => 'required|boolean'],
             'cohorts' => ['name' => 'required|string|max:255', 'starts_at' => 'nullable|date', 'ends_at' => 'nullable|date|after_or_equal:starts_at', 'capacity' => 'required|integer|min:1|max:200', 'status' => 'nullable|in:forming,active,completed,cancelled'],
             'sessions' => ['title' => 'required|string|max:255', 'description' => 'nullable|string|max:2000', 'cohort_id' => $cohort, 'starts_at' => 'required|date', 'duration_minutes' => 'required|integer|min:15|max:600', 'location' => 'nullable|string|max:255', 'online_link' => 'nullable|url:https|max:255', 'session_type' => 'required|in:learning_day,accountability,mentoring', 'status' => 'nullable|in:scheduled,completed,cancelled'],
             'groups' => ['name' => 'required|string|max:255', 'cohort_id' => $cohort, 'coach_id' => 'nullable|integer|exists:users,id', 'meeting_link' => 'nullable|url:https|max:255'],
@@ -95,7 +98,7 @@ class OperationsController extends Controller
 
         return DB::transaction(function () use ($request, $type, $p, $data, $record) {
             if ($record) {
-                $table = ['cohorts' => 'cohorts', 'sessions' => 'program_sessions', 'groups' => 'eoa_groups', 'resources' => 'program_resources', 'announcements' => 'program_messages'][$type];
+                $table = ['tracks' => 'eoa_tracks', 'cohorts' => 'cohorts', 'sessions' => 'program_sessions', 'groups' => 'eoa_groups', 'resources' => 'program_resources', 'announcements' => 'program_messages'][$type];
                 abort_unless(DB::table($table)->where('program_id', $p->id)->where('id', $record)->exists(), 404);
                 DB::table($table)->where('id', $record)->update($data + ['updated_at' => now()]);
                 AdminAction::log($request->user()->id, 'eoa.update_'.$type, $type, $record);
@@ -109,6 +112,9 @@ class OperationsController extends Controller
                 default => null,
             };
             $id = $row?->id;
+            if ($type === 'tracks') {
+                $id = DB::table('eoa_tracks')->insertGetId($data + ['program_id' => $p->id, 'created_at' => now(), 'updated_at' => now()]);
+            }
             if ($type === 'groups') {
                 $id = DB::table('eoa_groups')->insertGetId($data + ['program_id' => $p->id, 'created_at' => now(), 'updated_at' => now()]);
             }

@@ -247,7 +247,7 @@ export default async function DashboardPage() {
         <div className="pointer-events-none absolute top-0 right-0 w-[300px] h-[150px] rounded-full bg-[#3B52D4]/5 blur-[80px]" aria-hidden="true" />
         <div className="relative flex items-start justify-between gap-4">
           <div>
-            <div className="inline-flex items-center gap-2 bg-[#EEF1FF] border border-[#E4E7F0] px-2.5 py-1 rounded-full text-[10px] font-extrabold text-[#3B52D4] mb-3">
+            <div className="inline-flex items-center gap-2 bg-[#EEF1FF] border border-[#E4E7F0] px-2.5 py-1 rounded-full text-xs font-extrabold text-[#3B52D4] mb-3">
               <span className="w-1.5 h-1.5 rounded-full bg-[#3B52D4] animate-pulse" />
               Wosool
             </div>
@@ -296,7 +296,7 @@ export default async function DashboardPage() {
           >
             <span className="w-2.5 h-2.5 rounded-full shrink-0" style={{ background: dot }} />
             <div>
-              <p className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">{label}</p>
+              <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">{label}</p>
               <p className="mt-0.5 text-lg font-black text-slate-900">{value}</p>
             </div>
           </div>

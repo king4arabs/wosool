@@ -23,6 +23,9 @@ import {
 } from "lucide-react"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { cn, getInitials } from "@/lib/utils"
+import { api } from "@/lib/api"
+import { useToast } from "@/components/ui/toast"
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog"
 import { useAuth } from "@/lib/auth"
 import { isAdminUser } from "@/lib/admin"
 import { useLocale, localeOptions, type Locale } from "@/lib/locale"
@@ -52,6 +55,7 @@ interface DashboardGateResponse {
     profile_completion?: number
     company_completion?: number
     profile?: { id?: number } | null
+    intro_requests?: { pending_count?: number }
     companies?: Array<unknown>
   }
 }
@@ -95,11 +99,11 @@ function SidebarContent({
           <div>
             <div className="flex items-center gap-1.5 text-base font-black tracking-tight text-slate-900">
               WOSOOL
-              <span className="text-[9px] font-extrabold text-[#3B52D4] bg-[#EEF1FF] px-1.5 py-0.5 rounded border border-[#E4E7F0]">
+              <span className="text-xs font-extrabold text-[#3B52D4] bg-[#EEF1FF] px-1.5 py-0.5 rounded border border-[#E4E7F0]">
                 وصول
               </span>
             </div>
-            <div className="text-[9px] font-extrabold text-slate-400 uppercase tracking-wider">
+            <div className="text-xs font-extrabold text-slate-400 uppercase tracking-wider">
               {copy.layout.networkAdmin}
             </div>
           </div>
@@ -108,6 +112,7 @@ function SidebarContent({
 
       {/* Nav */}
       <nav className="flex-1 px-3 py-4 overflow-y-auto space-y-0.5">
+        <Link href="/dashboard/eoa" className="flex min-h-11 items-center gap-3 rounded-xl px-4 py-2.5 text-sm font-bold text-[#3B52D4]"><GraduationCap className="h-4 w-4" />EO Riyadh Accelerator</Link>
         {visibleNavItems.map(({ href, icon: Icon, key }) => (
           <Link
             key={href}
@@ -137,9 +142,9 @@ function SidebarContent({
           <div className="min-w-0 flex-1">
             <div className="flex items-center gap-1.5 mb-0.5">
               <span className="w-1.5 h-1.5 rounded-full bg-[#3B52D4] animate-pulse shrink-0" />
-              <p className="text-[11px] font-extrabold text-slate-800 truncate">{displayName}</p>
+              <p className="text-xs font-extrabold text-slate-800 truncate">{displayName}</p>
             </div>
-            <p className="text-[10px] text-slate-400 font-medium truncate">{email}</p>
+            <p className="text-xs text-slate-400 font-medium truncate">{email}</p>
           </div>
         </div>
         <button
@@ -200,12 +205,18 @@ function DashboardFullscreenLoader({
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
+  const isEoaWorkspace = pathname.startsWith("/dashboard/eoa")
   const router = useRouter()
   const searchParams = useSearchParams()
-  const { user, logout, isLoading } = useAuth()
+  const { user, logout, isLoading, error: authError, refresh } = useAuth()
+  const { toast } = useToast()
   const { locale, setLocale } = useLocale()
   const activeLocale = resolveDashboardLocale(locale)
   const copy = dashboardDictionary[activeLocale]
+  const [search, setSearch] = useState("")
+  const [gateError, setGateError] = useState<string | null>(null)
+  const [attempt, setAttempt] = useState(0)
+  const [pendingIntros, setPendingIntros] = useState(0)
   const [mobileOpen, setMobileOpen] = useState(false)
   const [isCheckingOnboarding, setIsCheckingOnboarding] = useState(true)
   const [onboardingRequired, setOnboardingRequired] = useState(true)
@@ -218,44 +229,28 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   }
 
   useEffect(() => {
-    if (!isLoading && !user) {
-      window.location.replace("/login?redirect=/dashboard")
+    if (!isLoading && !authError && !user) {
+      router.replace(`/login?redirect=${encodeURIComponent(pathname)}`)
       return
     }
 
-    if (!isLoading && isAdminUser(user)) {
+    if (!isLoading && isAdminUser(user) && !isEoaWorkspace) {
       window.location.replace('/admin')
     }
-  }, [isLoading, router, user])
+  }, [isLoading, authError, pathname, router, user, isEoaWorkspace])
 
   useEffect(() => {
-    if (isLoading || !user || isAdminUser(user)) return
+    if (isLoading || !user) return
+    if (isEoaWorkspace) { setIsCheckingOnboarding(false); setGateError(null); return }
+    if (isAdminUser(user)) return
 
     let cancelled = false
 
     async function checkOnboarding() {
       setIsCheckingOnboarding(true)
+      setGateError(null)
       try {
-        const response = await fetch("/api/v1/member/dashboard", {
-          method: "GET",
-          credentials: "include",
-          headers: {
-            Accept: "application/json",
-            "X-Locale": locale,
-          },
-        })
-
-        if (!response.ok) {
-          if (!cancelled) {
-            setOnboardingRequired(true)
-            if (pathname !== "/dashboard/profile") {
-              router.replace("/dashboard/profile?onboarding=1")
-            }
-          }
-          return
-        }
-
-        const payload = (await response.json().catch(() => null)) as DashboardGateResponse | null
+        const payload = await api.get<DashboardGateResponse>("/member/dashboard", { headers: { "X-Locale": locale } })
         const accountApproved = Boolean(payload?.data?.account_approved)
         const hasProfile = Boolean(payload?.data?.profile?.id)
         const companiesCount = Array.isArray(payload?.data?.companies) ? payload!.data!.companies!.length : 0
@@ -264,6 +259,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         const needsOnboarding = !accountApproved || !hasProfile || companiesCount === 0
 
           if (!cancelled) {
+            setPendingIntros(payload?.data?.intro_requests?.pending_count ?? 0)
             setOnboardingRequired(needsOnboarding)
             if (needsOnboarding && !onboardingAllowedPaths.has(pathname)) {
               router.replace("/dashboard/profile?onboarding=1")
@@ -273,13 +269,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               router.replace("/dashboard/profile")
             }
           }
-      } catch {
-        if (!cancelled) {
-          setOnboardingRequired(true)
-          if (!onboardingAllowedPaths.has(pathname)) {
-            router.replace("/dashboard/profile?onboarding=1")
-          }
-        }
+      } catch (error) {
+        if (!cancelled) setGateError(error instanceof Error ? error.message : (locale === "ar" ? "تعذر تحميل الحساب." : "Unable to load your account."))
       } finally {
         if (!cancelled) setIsCheckingOnboarding(false)
       }
@@ -289,24 +280,21 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     return () => {
       cancelled = true
     }
-  }, [hasOnboardingQuery, isLoading, locale, pathname, router, user])
-
-  useEffect(() => {
-    if (!onboardingRequired) return
-    if (!onboardingAllowedPaths.has(pathname)) {
-      router.replace("/dashboard/profile?onboarding=1")
-    }
-  }, [onboardingRequired, pathname, router])
+  }, [attempt, hasOnboardingQuery, isLoading, locale, pathname, router, user, isEoaWorkspace])
 
   const displayName = user?.name ?? copy.layout.memberFallback
   const initials = getInitials(displayName)
 
   const handleLogout = async () => {
-    await logout()
-    setMobileOpen(false)
-    router.replace("/login")
-    router.refresh()
+    try {
+      await logout()
+      setMobileOpen(false)
+      router.replace("/login")
+      router.refresh()
+    } catch (error) { toast(error instanceof Error ? error.message : "Unable to sign out", "error") }
   }
+
+  if (authError || gateError) return <div className="mx-auto max-w-xl p-6 pt-20" role="alert"><p>{authError || gateError}</p><button className="mt-4 rounded-xl bg-[#3B52D4] px-5 py-3 text-white" onClick={() => authError ? void refresh() : setAttempt(value => value + 1)}>{locale === "ar" ? "إعادة المحاولة" : "Try again"}</button></div>
 
   if (isLoading || isCheckingOnboarding) {
     return <DashboardFullscreenLoader locale={activeLocale} label={copy.layout.loading} />
@@ -319,6 +307,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       </div>
     )
   }
+
+  if (isEoaWorkspace) return <div className="min-h-screen bg-slate-50" dir={activeLocale === 'ar' ? 'rtl' : 'ltr'}><header className="border-b bg-white"><nav className="mx-auto flex max-w-7xl flex-wrap items-center gap-4 px-5 py-4"><Link className="font-bold text-[#3B52D4]" href="/">WOSOOL / وصول</Link><Link className="min-h-11 flex items-center text-sm" href="/EOA">EO Riyadh Accelerator</Link><Link className="min-h-11 flex items-center text-sm" href="/EOA/apply">{locale === 'ar' ? 'طلب الالتحاق' : 'Application'}</Link><button className="ms-auto min-h-11 rounded-lg border px-4" onClick={cycleLocale}>{locale === 'ar' ? 'English' : 'العربية'}</button></nav></header><main id="main-content" className="eoa">{children}</main></div>
 
   return (
     <div className="min-h-screen bg-slate-50/60" dir={activeLocale === "ar" ? "rtl" : "ltr"}>
@@ -348,42 +338,22 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       </aside>
 
       {/* ── Mobile drawer overlay ── */}
-      {mobileOpen && (
-        <div
-          className="lg:hidden fixed inset-0 z-50 flex"
-          role="dialog"
-          aria-modal="true"
-          aria-label={copy.layout.menuNavigation}
-        >
-          {/* Backdrop */}
-          <div
-            className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm"
-            onClick={() => setMobileOpen(false)}
-          />
-          {/* Drawer — slides from the start (right in RTL) */}
-          <div className="relative me-auto w-72 h-full p-4 animate-slide-in-right">
-            <SidebarContent
-              pathname={pathname}
-              displayName={displayName}
-              email={user?.email}
-              locale={activeLocale}
-              onboardingRequired={onboardingRequired}
-              onLogout={handleLogout}
-              onNavClick={() => setMobileOpen(false)}
-            />
-          </div>
-        </div>
-      )}
+      <Dialog open={mobileOpen} onOpenChange={setMobileOpen}>
+        <DialogContent className="start-0 end-auto top-0 bottom-0 translate-x-0 translate-y-0 h-dvh max-h-dvh w-[min(20rem,calc(100%-2rem))] rounded-none p-3 pt-14">
+          <DialogTitle className="sr-only">{copy.layout.menuNavigation}</DialogTitle>
+          <SidebarContent pathname={pathname} displayName={displayName} email={user?.email} locale={activeLocale} onboardingRequired={onboardingRequired} onLogout={handleLogout} onNavClick={() => setMobileOpen(false)} />
+        </DialogContent>
+      </Dialog>
 
       {/* ── Main area ── */}
       <div className="lg:ms-72 flex flex-col min-h-screen relative z-10">
 
         {/* Top bar */}
         <header
-          className="h-16 flex items-center justify-between px-6 mb-4 glass-panel rounded-2xl shrink-0 bg-white/90 shadow-sm mt-4"
+          className="min-h-16 flex items-center justify-between px-2 sm:px-4 mb-4 glass-panel rounded-2xl shrink-0 bg-white/90 shadow-sm mt-4"
           style={{ boxShadow: "0 2px 8px -2px rgba(59,82,212,0.05)" }}
         >
-          <div className="mx-auto max-w-screen-2xl px-4 sm:px-6 py-3.5 flex items-center gap-3">
+          <div className="mx-auto w-full min-w-0 max-w-screen-2xl px-2 py-3 flex flex-wrap items-center gap-3">
 
             {/* Mobile hamburger — appears on the right in RTL (first DOM = rightmost) */}
             <button
@@ -397,7 +367,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             {/* Actions — right side in RTL */}
             <div className="flex items-center gap-2 shrink-0">
               {/* Live badge */}
-              <div className="hidden md:flex items-center gap-2 bg-slate-100 px-3 py-1.5 rounded-xl border border-slate-200 text-[11px] font-bold text-slate-600">
+              <div className="hidden md:flex items-center gap-2 bg-slate-100 px-3 py-1.5 rounded-xl border border-slate-200 text-xs font-bold text-slate-600">
                 <span className="w-1.5 h-1.5 rounded-full bg-[#3B52D4] animate-pulse" />
                 {copy.layout.secureLive}
               </div>
@@ -410,19 +380,22 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 title={localeOptions.find((o) => o.code === locale)?.nativeLabel}
               >
                 <Globe className="h-4 w-4" />
-                <span className="text-[10px] font-extrabold uppercase hidden sm:inline">
+                <span className="text-xs font-extrabold uppercase hidden sm:inline">
                   {locale}
                 </span>
               </button>
 
-              {/* Notifications */}
-              <button
-                className="relative p-2 rounded-xl text-slate-500 hover:bg-slate-100 transition-colors"
-                aria-label={copy.layout.notifications}
-              >
-                <Bell className="h-5 w-5" />
-                <span className="absolute top-1.5 start-1.5 h-2 w-2 bg-[#3B52D4] rounded-full" />
-              </button>
+              <details className="relative">
+                <summary className="flex min-h-11 min-w-11 list-none items-center justify-center rounded-xl text-slate-500 hover:bg-slate-100" aria-label={copy.layout.notifications}>
+                  <Bell className="h-5 w-5" />
+                  {pendingIntros > 0 && <span className="ms-1 text-xs text-[#3B52D4]">{pendingIntros}</span>}
+                </summary>
+                <div className="absolute start-0 z-40 mt-2 w-56 rounded-xl border bg-white p-3 shadow-lg">
+                  <Link className="block rounded-lg p-2 hover:bg-slate-50" href="/dashboard/matches">{locale === "ar" ? "طلبات التعارف" : "Introductions"} ({pendingIntros})</Link>
+                  <Link className="block rounded-lg p-2 hover:bg-slate-50" href="/dashboard/events">{copy.nav.events}</Link>
+                  <Link className="block rounded-lg p-2 hover:bg-slate-50" href="/dashboard/messages">{copy.nav.messages}</Link>
+                </div>
+              </details>
 
               {/* Avatar */}
               <Avatar className="h-8 w-8 ring-2 ring-[#EEF1FF]">
@@ -436,19 +409,23 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             <div className="flex-1" />
 
             {/* Search — left side in RTL */}
-            <div className="flex items-center gap-2 bg-slate-100/80 border border-slate-200/60 rounded-xl px-3 py-2 w-full max-w-xs">
+            <form role="search" onSubmit={event => { event.preventDefault(); router.push(`/dashboard/directory?q=${encodeURIComponent(search.trim())}`) }} className="flex items-center gap-2 bg-slate-100/80 border border-slate-200/60 rounded-xl px-3 py-2 w-full sm:max-w-xs">
               <Search className="h-3.5 w-3.5 text-slate-400 shrink-0" />
               <input
-                type="text"
+                type="search"
+                value={search}
+                onChange={event => setSearch(event.target.value)}
+                aria-label={copy.layout.searchPlaceholder}
                 placeholder={copy.layout.searchPlaceholder}
                 className="bg-transparent text-xs text-slate-700 w-full focus:outline-none placeholder:text-slate-400 font-medium"
               />
-            </div>
+              <button type="submit" className="min-h-9 shrink-0 px-2 text-sm text-[#3B52D4]">{locale === "ar" ? "بحث" : "Search"}</button>
+            </form>
           </div>
         </header>
 
         {/* Page content */}
-        <main className="flex-1 px-4 sm:px-6 py-6">
+        <main id="main-content" className="min-w-0 flex-1 px-4 sm:px-6 py-6">
           <div className="mx-auto max-w-screen-2xl">
             {children}
           </div>

@@ -2,7 +2,7 @@
 
 ## Automated checks
 
-CI also syntax-checks all PHP application/configuration/migration/route/test files. Integration regressions cover retired gateway writes, canonical `/EOA` account routing, legacy data retention/ownership, isolated reviewer access, generic-admin bypass prevention and private data-rights requests. Browser/deployed-mail acceptance is a separate release requirement, not inferred from the unit suite.
+CI also syntax-checks all PHP application/configuration/migration/route/test files. Integration regressions cover retired gateway writes, canonical `/EOA` discovery and `/dashboard/eoa` account routing, legacy data retention/ownership, isolated reviewer access, generic-admin bypass prevention and private data-rights requests. Browser/deployed-mail acceptance is a separate release requirement, not inferred from the unit suite.
 
 From the repository root after local setup:
 
@@ -54,3 +54,9 @@ Frontend gateway tests validate signed verification path handling. See [the rele
 `backend/tests/Feature/EoaPlatformTest.php` exercises verification/signature expiry, network isolation, private/versioned/encrypted drafts, required evidence and consent, scoped document/reviewer access, decisions and notifications, onboarding and official/fee confirmation, coach/cohort isolation, privacy/publication approvals, operational edits and inquiry handling. `frontend/src/lib/eoa.test.ts` checks USD/SAR eligibility boundaries, including the incorrect SAR250,000 equivalence and the US$1m progression boundary.
 
 See [the EOA verification matrix](docs/EOA.md#release-and-validation) for required browser, real mail, production-engine and deployment checks. API tests use faked notification delivery and SQLite; do not report them as live integration tests.
+
+## October 9 reliability and track checks
+
+`ChatReliabilityTest` covers newest-first pagination, inactive/closed-room writes, empty or privileged message types, cross-room references and broadcast failure after a successful save. `AdminMatchWorkflowTest` covers authorization, distinct active founders, duplicate proposals and audit logging. `EoaTracksAndRolesTest` covers administrator-only role management, verified accounts, role allowlisting/revocation, preserved community roles, active/program-scoped acceptance tracks and lead-only track publication. Complete EOA fixtures include a preferred track.
+
+Frontend regressions cover one-time CSRF renewal, no automatic replay of failed writes and chat message deduplication. For browser acceptance, test `/dashboard/eoa` with an EOA-only account (the community dashboard API must not be required), save a preferred track, accept with a track as leadership, inspect the applicant dashboard, and grant/revoke a reviewer role as a platform administrator. Use fixture data or staging accounts, not production applicants.

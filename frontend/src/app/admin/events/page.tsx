@@ -441,7 +441,7 @@ export default function AdminEventsPage() {
             <Textarea placeholder="وصف الفعالية" value={form.description} onChange={(event) => setForm((current) => ({ ...current, description: event.target.value }))} />
             <Textarea placeholder="وصف تفصيلي" value={form.full_description} onChange={(event) => setForm((current) => ({ ...current, full_description: event.target.value }))} />
             <Textarea placeholder="قواعد الاستهداف (JSON)" value={form.targeting_rules} onChange={(event) => setForm((current) => ({ ...current, targeting_rules: event.target.value }))} />
-            <Textarea placeholder="إعدادات الذكاء الاصطناعي (JSON)" value={form.ai_settings} onChange={(event) => setForm((current) => ({ ...current, ai_settings: event.target.value }))} />
+            <Textarea placeholder="إعدادات اقتراحات التواصل (JSON)" value={form.ai_settings} onChange={(event) => setForm((current) => ({ ...current, ai_settings: event.target.value }))} />
             <Textarea placeholder="إعدادات التسجيل RSVP (JSON)" value={form.rsvp_settings} onChange={(event) => setForm((current) => ({ ...current, rsvp_settings: event.target.value }))} />
             <div className="flex gap-4 text-sm text-gray-700">
               <label className="flex items-center gap-2"><input type="checkbox" checked={form.is_public} onChange={(event) => setForm((current) => ({ ...current, is_public: event.target.checked }))} /> فعالية عامة</label>

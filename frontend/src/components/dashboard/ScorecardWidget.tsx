@@ -68,7 +68,7 @@ export default function ScorecardWidget({ initialScorecard, locale }: ScorecardW
       {/* Header */}
       <div className="flex items-center justify-between gap-3">
         <div>
-          <div className="inline-flex items-center gap-1.5 bg-[#EEF1FF] border border-[#E4E7F0] px-2.5 py-1 rounded-full text-[10px] font-extrabold text-[#3B52D4] mb-2">
+          <div className="inline-flex items-center gap-1.5 bg-[#EEF1FF] border border-[#E4E7F0] px-2.5 py-1 rounded-full text-xs font-extrabold text-[#3B52D4] mb-2">
             {copy.badge}
           </div>
           <h3 className="text-sm font-black text-slate-900">{copy.title}</h3>
@@ -88,7 +88,7 @@ export default function ScorecardWidget({ initialScorecard, locale }: ScorecardW
       <div
         className="rounded-xl bg-[#EEF1FF] border border-[#E4E7F0] px-5 py-4 flex items-center justify-between"
       >
-        <p className="text-[11px] font-extrabold text-[#3B52D4] uppercase tracking-wider">{copy.aggregate}</p>
+        <p className="text-xs font-extrabold text-[#3B52D4] uppercase tracking-wider">{copy.aggregate}</p>
         <p className="text-2xl font-black text-[#3B52D4]">{scorecard.aggregate_score}</p>
       </div>
 
