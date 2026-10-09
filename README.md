@@ -2,179 +2,118 @@
 
 [![CI](https://github.com/king4arabs/wosool/actions/workflows/ci.yml/badge.svg)](https://github.com/king4arabs/wosool/actions/workflows/ci.yml)
 
-**Founders to Founders.** Wosool is the digital gateway for **EO Riyadh Accelerator**, alongside its Saudi/GCC founder network. The Accelerator journey lives at **https://wosool.org/EOA**: discovery, eligibility, verified accounts, private applications, committee review, onboarding and participant development.
+Wosool is the digital gateway for **EO Riyadh Accelerator**, alongside its existing Saudi/GCC founder community.
 
-**Saudi Founders. Global Connections. Extraordinary Growth.** Read the [EOA operating guide](docs/EOA.md) and [verified research register](docs/EOA-RESEARCH.md) before opening an intake.
+**Saudi Founders. Global Connections. Extraordinary Growth.**
 
-Wosool supports local intake and review. It does not replace EO’s global enrolment systems, confer EO membership, or promise admission or funding. The requested partnership designations require documented approval before public display.
+The canonical program journey is **https://wosool.org/EOA**. Discovery, eligibility, accounts, applications, review, participant services and coaching remain under uppercase `/EOA`. The older `/accelerator` pages redirect there. Applications and local acceptance do not guarantee official Accelerator enrollment or EO membership.
 
-[Website](https://wosool.org) · [Release assessment](docs/EO_ACCELERATOR_RELEASE_2026-10-08.md) · [Gateway operations](docs/ACCELERATOR_OPERATIONS.md) · [Deployment](DEPLOYMENT.md) · [Research sources](docs/research/SOURCES-2026-10-08.md)
+EO Riyadh provides chapter leadership and governance; EO Accelerator provides the program framework; Wosool provides the local digital gateway; operating partners deliver only their approved scope. Program leadership: Mohammed Alsolami, EO Riyadh Membership & Accelerator Chair.
 
 ## Architecture
 
 | Component | Implementation |
 | --- | --- |
-| Frontend | Next.js 16.4, React 19, TypeScript, Tailwind 4, App Router |
-| Backend | Laravel 13 / PHP 8.3+, Sanctum cookie sessions, Spatie roles |
-| Database | SQLite in the local environment template and automated tests; retain the deployed engine when releasing |
-| Authentication | Existing community authentication plus verified accelerator applicant accounts; existing password recovery retained |
-| Localization | Arabic/English gateway, shared navigation and new administration; RTL/LTR, locally hosted Cairo and Manrope fonts |
-| Delivery | Separate Node frontend and PHP backend; GitHub Actions CI validates both and does not deploy |
+| Frontend | Next.js 16.4, React 19, TypeScript, Tailwind 4, Cairo, Arabic/English RTL/LTR |
+| Backend | Laravel 13, PHP 8.3+, Sanctum cookie sessions, Spatie roles |
+| Database | SQLite local/tests; preserve and verify the actual production engine |
+| EOA routes | `frontend/src/app/EOA`, `frontend/src/components/eoa`, `backend/routes/eoa.php` |
+| EOA domain | `backend/app/Services/Eoa`, `backend/app/Http/Controllers/Api/Eoa` |
+| Ecosystem directory | `/opportunities`, `ecosystem_records`, source ledger in `docs/research` |
+| Deployment | Separate Node and PHP applications; GitHub CI validates, **does not deploy** |
 
-Browser requests use `/api/v1` on the frontend origin. Next proxies requests to the configured backend origin. Session writes use the XSRF cookie/header; Laravel enforces ownership and permissions. Applicant drafts stay on the server, with optimistic revisions to prevent stale overwrites.
+Browser API requests use the same-origin `/api/v1` proxy. Sessions use CSRF protection. Financial applications are encrypted, versioned server-side drafts; supporting documents are private and authorized on download. Do not expose the backend storage directory or rotate away the encryption key without a recovery plan.
 
-| Path | Purpose |
-| --- | --- |
-| `frontend/src/components/accelerator` | Landing, partner strip, application, directory, reviewer and program operations views |
-| `frontend/src/app/accelerator`, `opportunities`, `review` | Public discovery and protected applicant/reviewer routes |
-| `backend/routes/gateway.php` | Versioned accelerator, research, program operations and privacy APIs |
-| `backend/app/Services/AcceleratorGateway.php` | Eligibility rules, transitions, authorization and private profile creation |
-| `backend/app/Console/Commands` | Preview-first imports, gateway preparation and readiness checks |
-| `docs/research` | Dated primary-source records, asset provenance and local import/recovery report |
-
-Existing community membership, founder/company editing, introductions, events, society, messaging and administrative functionality remain in the repository. New applicant accounts do not receive community membership implicitly. Public directories no longer substitute fictional fixtures when an API is unavailable; the old fictional entrepreneur showcase route redirects to `/opportunities`.
+The October 9 integration repair resolves the conflicting merge of two Accelerator implementations. The older gateway's application/review/operations writes return **410** with the canonical path; its owned, private records remain readable. It cannot grant enrollment or overwrite EOA approvals. Existing legacy records require staff-reviewed transfer; no silent data conversion or deletion occurs. Ecosystem imports, editorial administration and privacy-request operations remain supported. See [integration release notes](docs/EOA-INTEGRATION-2026-10-09.md).
 
 ## Local setup
 
-Use Node **22.12+ on 22.x or 24.x**, PHP **8.3+**, Composer 2 and the extensions required by Composer, including a database driver. Install the committed lockfiles.
+Requirements: Node 22.12+ on 22.x or 24.x, PHP 8.3+, Composer 2, and the extensions required by the committed Composer lockfile.
 
 ```bash
 git clone https://github.com/king4arabs/wosool.git
 cd wosool
-cp backend/.env.example backend/.env
-cp frontend/.env.example frontend/.env.local
 npm run setup
-cd backend
-php artisan db:seed --class=RoleAndPermissionSeeder
-php artisan wosool:prepare-gateway
-php artisan wosool:prepare-gateway --apply
-php artisan wosool:import-ecosystem
-php artisan wosool:import-ecosystem --apply
-cd ..
 npm run dev
 ```
 
-For SQLite, set `DB_DATABASE` to an absolute path if the framework default is unsuitable. For MySQL or PostgreSQL, configure the existing `DB_*` variables, install the matching PDO driver and create an empty local database first. Validate migrations against the actual deployed engine before release. Setup generates a missing local key, preserves existing keys and rejects production. It does not seed users automatically. Run `php artisan queue:work` in a separate backend terminal for verification email. The default `log` mailer is local-only; use a controlled mail sink while testing. Do not send test messages to real applicants.
-Install the closed/draft Accelerator and sourced organizations with `php backend/artisan eoa:install`. For email verification and notifications, run a queue worker from `backend/` with `php artisan queue:work --tries=5`; the default log mailer does not deliver email.
+Setup installs both lockfiles, prepares a missing local environment/key, migrates and runs `eoa:install`. It preserves existing configuration and refuses production setup. It creates no applicant or administrator accounts. For SQLite, configure an absolute `DB_DATABASE` path if needed.
 
-Open [http://localhost:3000](http://localhost:3000). Check the API at [http://localhost:8000/api/health](http://localhost:8000/api/health). `npm run dev` starts both services on a Bash-compatible system; alternatively, use `npm run dev:frontend` and `npm run dev:backend` in separate terminals.
+Run a worker separately:
 
-The full `db:seed` includes fictional demonstration content and accounts and refuses production. Use only `RoleAndPermissionSeeder` and the two explicit import/preparation commands for this gateway.
+```bash
+cd backend
+php artisan queue:work --tries=5 --timeout=60
+```
+
+Local URLs: frontend http://localhost:3000 and API http://localhost:8000/api/health. The default log mailer **does not deliver email**. Use a controlled mail sink for tests, not real applicant addresses.
+
+`eoa:install` inserts missing roles, a closed/draft program and sourced EOA organization records, without replacing existing settings or confirmations. Optional wider ecosystem import:
+
+```bash
+cd backend
+php artisan wosool:import-ecosystem
+php artisan wosool:import-ecosystem --apply
+```
+
+The first command previews the changes. Production imports require verified staging and backups. The compatibility `wosool:prepare-gateway --apply` command now uses the same closed EOA installer and preserves legacy partner records. Never use the full fictional demo seeder in production.
 
 ## Configuration
 
-Never commit secrets, environment files, reset/verification tokens or database backups. Public frontend variables are browser-visible.
-
 | Variable | Purpose |
 | --- | --- |
-| `NEXT_PUBLIC_SITE_URL` | Canonical frontend origin; production `https://wosool.org` |
-| `NEXT_PUBLIC_API_URL` | Backend origin without `/api`; used for the same-origin proxy |
-| `APP_ENV`, `APP_DEBUG`, `APP_KEY` | Production mode, disabled debug, stable protected encryption key |
-| `APP_URL`, `FRONTEND_URL` | HTTPS origins; frontend URL controls reset and verification links |
-| `SANCTUM_STATEFUL_DOMAINS`, `SESSION_DOMAIN` | Hosts and cookie scope matched to the actual deployment |
-| `SESSION_SECURE_COOKIE`, `SESSION_ENCRYPT` | Set both true in production |
-| `DB_*`, `CACHE_STORE`, `QUEUE_CONNECTION` | Durable database, shared cache/locking and supervised queue storage |
-| `MAIL_*` | Verified mail transport/sender; `log` cannot deliver email |
-| `GATEWAY_PRIVACY_READY` | Defaults false; production registration and draft intake are blocked until the privacy notice and operating policy are approved |
-| `GATEWAY_EMAIL_UPDATES` | Defaults false; enables queued application status email once transport/workers are verified |
-| `BROADCAST_CONNECTION`, `REVERB_*` | Optional community realtime services; not required for the application journey |
+| `NEXT_PUBLIC_SITE_URL` | Frontend canonical origin; production https://wosool.org |
+| `NEXT_PUBLIC_API_URL` | Actual backend origin, without `/api`; rebuild frontend after changes |
+| `APP_ENV`, `APP_DEBUG` | Production and false on the live release |
+| `APP_KEY` | Stable protected encryption key; retain with recovery materials |
+| `APP_URL`, `FRONTEND_URL` | Backend/frontend origins, including verification and recovery links |
+| `SANCTUM_STATEFUL_DOMAINS`, `SESSION_DOMAIN` | Correct origins/cookie scope for the deployed topology |
+| `SESSION_SECURE_COOKIE`, `SESSION_ENCRYPT` | True in production |
+| `DB_*`, `CACHE_STORE`, `QUEUE_CONNECTION` | Durable database and supervised queue/shared cache |
+| `MAIL_*` | Real sending transport, verified sender and delivery testing |
+| `NEXT_PUBLIC_ENABLE_DEMO_CONTENT` | Development fixtures only; ignored in production |
+| `REVERB_*` | Optional existing community realtime integration |
 
-Configure source-backed eligibility, intake availability, global fee and confirmed local dates/fees in `/admin/accelerator`. Keep unknown local arrangements empty. Rebuild the frontend after public environment changes. Clear and rebuild Laravel’s configuration cache after backend environment changes.
+Never commit secrets, private documents, tokens or backups. Rebuild Laravel's configuration cache after environment changes. Legacy `GATEWAY_PRIVACY_READY`/`GATEWAY_EMAIL_UPDATES` flags do **not** authorize EOA collection or intake: those approvals belong to the EOA administrative settings.
 
-## Roles and application states
+## Roles and workflows
 
-- Applicants can save their own draft, submit, respond to an information request and acknowledge onboarding after acceptance. Verified email is required for applications.
-- `accelerator-reviewer` sees assigned submitted applications, may start review, request information, shortlist and add internal notes. It cannot accept, waitlist, decline or assign reviewers/cohorts.
-- `admin` manages final decisions, assignments, cohorts, sessions, attendance, participant resources, mentors, milestones, editorial records, partners and privacy requests.
-- `mentor` is an assignment role, not blanket access to applicant data. Administrators manage coaching assignments and materials.
-- Existing `member` access remains separate.
-| Surface | Capabilities |
-| --- | --- |
-| EO Accelerator `/EOA` | Bilingual discovery, USD/SAR self-check, private versioned applications and evidence, assigned review, onboarding, cohorts, learning, goals, coach workspace and audited operations |
-| Public site | Founder and company discovery, programs, events, news, contact and membership applications |
-| Member workspace | Profile and company management, event RSVPs, program applications, introductions, scorecards and community features |
-| Admin | Application review, member and content management, event/program administration and moderation |
-| Platform | Arabic/English interfaces, RTL/LTR support, responsive layouts, SEO metadata and optional realtime messaging |
+- `eoa_applicant`: own verified account, draft, evidence, decisions and notifications.
+- Participants: enrollment-derived access to their own checklist, calendar, registrations, resources, group/coach, goals, attendance, feedback and announcements.
+- `eoa_reviewer`: assigned applications only; no final decisions or financial approvals.
+- `eoa_coach`: assigned participants' development/attendance, not application finances.
+- `eoa_staff`: review coordination and program operations.
+- `eoa_lead`/existing admin: local approvals, final admission decisions, partner confirmations and official/financial enrollment checks.
+- Existing community membership is separate; old reviewer assignments do not grant EOA permissions.
 
-**Readiness:** This is a pre-launch product, not a claim that the live host or every integration is configured. Production seed fallbacks for founder/company/partner/sponsor/program/event/news lists are disabled. The separate entrepreneurs showcase is explicitly fictional; some legacy screens remain Arabic-first. EOA is bilingual, but browser and deployed-email checks are release requirements. Password recovery requires a real mail transport to deliver messages (`MAIL_MAILER=log` does not send email). Check content and translations before public use.
+Provision verified privileged accounts through the audited procedure in [EOA operations](docs/EOA.md). No privileged account is seeded. Applicants may submit data-rights requests in `/EOA/account`; existing administrators handle them in `/admin/privacy-requests`. A request does not automatically erase records or waive retention obligations.
 
-The supported states are Draft, Submitted, Under Review, Information Requested, Shortlisted, Accepted, Waitlisted, Declined and Onboarded. Server-side allowed transitions, revision checks and audit events are defined in `AcceleratorGateway::TRANSITIONS`. New applicant/company profiles are private. Existing user-submitted profiles are not overwritten by research or application snapshots.
+## Verified content and partners
 
-## Research and partners
+[EOA research](docs/EOA-RESEARCH.md) records official revenue of **USD 250,000–999,999**, the two-year program, learning cadence and annual global fee of **USD 1,750**, separately from local costs. SAR conversions state their basis/date. Recruitment numbers are targets, not achieved counts.
 
-The initial snapshot contains **18** organizations, programs and opportunities. It distinguishes provider entities, programs and dated opportunities, and records Arabic/English names, sources, verification date, conditions and unknowns. Expired records remain labelled historical; past deadlines never produce an active application link. See the [source ledger](docs/research/SOURCES-2026-10-08.md).
+Local launch dates, fees, sponsor allocations, attendance terms and versioned bilingual privacy notices remain draft until approved. Do not infer partnerships from available artwork. The requested partner order is EO Riyadh, The Garage, RIDA, Misk, CODE. RIDA-to-RDIA identity mapping and CODE's standalone approved artwork remain unresolved. Unconfirmed organizations stay out of “Proud of Partners.”
 
-Imports default to preview, use stable slugs/hash comparison, flag duplicate identities, and preserve editorial locks. Administrators can review provenance, update descriptions/links/deadlines/statuses and archive records in `/admin/opportunities`. No automatic merge deletes historical relationships. Production apply commands require `--backup-verified --staging-verified`, which attest to work the operator must actually perform.
+The wider directory has 18 sourced entities/programs/opportunities with dated provenance and editorial locks. It is distinct from applicant companies and confirmed partners. Research does not establish private revenue, founder eligibility or an EO relationship.
 
-“Proud of Partners” / “نفخر بشركائنا” is positioned immediately after the homepage hero. Entries are prepared in EO Riyadh, Garage, RIDA, MISK, CODE order. Three authentic assets are committed unchanged. All five remain hidden until designation approval; RIDA identity and CODE artwork need resolution. `/admin/partners` manages order, links, identity/asset/designation approval and visibility. See [asset sources and usage conditions](docs/research/PARTNER-ASSETS.json).
-
-## Development commands
-
-Run from the repository root:
-| Variable | Purpose |
-| --- | --- |
-| `NEXT_PUBLIC_SITE_URL` | Canonical frontend origin; `https://wosool.org` in production |
-| `NEXT_PUBLIC_API_URL` | Backend origin, without `/api` or `/api/v1`; used by the Next.js rewrite and server API client |
-| `APP_ENV`, `APP_DEBUG` | `production` and `false` on the live backend |
-| `APP_KEY` | Laravel encryption key; generate once, retain securely across releases |
-| `APP_URL` | Backend URL |
-| `FRONTEND_URL` | Frontend origin used for password reset and signed EOA verification links |
-| `NEXT_PUBLIC_ENABLE_DEMO_CONTENT` | Opt-in local fictional fallback content; ignored in production builds |
-| `DB_*` | Database connection settings |
-| `SANCTUM_STATEFUL_DOMAINS` | Frontend hosts, including local ports where applicable; no URL scheme |
-| `SESSION_DOMAIN`, `SESSION_SECURE_COOKIE` | Session cookie domain and HTTPS behavior appropriate to the deployment |
-| `MAIL_*` | Mail transport and sender; the default `log` driver does **not** deliver email |
-| `QUEUE_CONNECTION`, `CACHE_STORE` | Queue/cache drivers; both default to database-backed storage |
-| `BROADCAST_CONNECTION`, `REVERB_*` | Optional backend websocket configuration |
-| `NEXT_PUBLIC_REVERB_*` | Public websocket connection details; never the Reverb secret |
-
-Changing `NEXT_PUBLIC_*` settings requires rebuilding the frontend. After backend configuration changes, clear/rebuild Laravel's configuration cache as described in [DEPLOYMENT.md](DEPLOYMENT.md).
-
-## Develop and verify
-
-Run these from the repository root:
-
-| Command | Purpose |
-| --- | --- |
-| `npm run dev:frontend` / `npm run dev:backend` | Start one service; `npm run dev` starts both on Bash |
-| `npm run lint` / `npm run type-check` | Frontend static checks |
-| `npm run test:frontend` / `npm run test:backend` | Targeted application suites |
-| `npm run test` | Both suites |
-| `npm run validate:entrepreneurs` | Retained development fixture validation |
-| `npm run build` | Next.js and backend Vite production builds |
-| `npm run verify` | Lint, types, tests, fixture validation and both builds |
-
-## Verification and deployment
+## Verification and release
 
 ```bash
 npm run verify
 cd backend
 php artisan wosool:check-readiness
-# On the actual configured release, after required approvals:
+# On a configured release after the required approvals:
 php artisan wosool:check-readiness --production
 ```
 
-CI runs frontend lint, types, tests, fixture validation, production dependency audit and build; backend tests, Composer/npm audit and Vite build. `/api/health` checks liveness; `/api/ready` checks database/schema and gateway preparation. Readiness is not proof of mail delivery, supervised workers, browser acceptance or legal compliance.
+CI runs frontend lint/types/tests/data checks/security audit/build, and PHP syntax checks, backend tests, Composer/npm audits and the backend asset build. `/api/health` is liveness; `/api/ready` checks the database, applied migrations and EOA schema/program. Neither proves delivered email, running workers, backups, browser acceptance or legal compliance.
 
-Follow [DEPLOYMENT.md](DEPLOYMENT.md) and [gateway operations](docs/ACCELERATOR_OPERATIONS.md) for backups, restore rehearsal, migration order, monitoring, rollbacks, privacy request handling and post-release checks. No deployment is automatic on GitHub push. The existing host/release mechanism, credentials and production database access must be supplied before hosted staging or production can be verified.
+Follow [DEPLOYMENT.md](DEPLOYMENT.md) and [EOA operations](docs/EOA.md) for deployment, backups, restore rehearsal and rollback. Keep collection/intake closed until approvals and live checks pass. Never claim a release is live based only on a merge.
 
-## Known limits
-The Next.js server and Laravel API deploy separately; repository CI **does not deploy**. Follow [DEPLOYMENT.md](DEPLOYMENT.md) for configuration, release order, verification and rollback. Preserve `APP_KEY`, back up the database, configure real mail delivery and never run the demonstration seeder in production. EOA notification queue workers are required and must be supervised. Reverb remains optional. Keep EOA collection/intake closed until the local data notice, program decisions, roles and sending service are approved/configured.
+Remaining external dependencies: configured hosting/deployment access, production database validation, persistent private storage, real mail and supervised workers, approved local decisions/relationships, browser RTL/LTR/mobile accessibility acceptance, and backup recovery tests. No payment gateway, EO enrollment API or calendar integration is simulated.
 
-The new journey has bilingual content and responsive/keyboard-oriented markup; browser acceptance on mobile/RTL/LTR remains a release check. Some retained community/admin screens are still Arabic-first. Local SQLite tests do not replace migration testing against the deployed database engine. Real mail delivery, authoritative Riyadh dates/fees, chapter designation, approved partner use and the privacy controller/contact/retention/processor register remain external dependencies. No automatic legal-compliance claim is made.
+## Contributing
 
-- [EOA operations](docs/EOA.md) — setup, roles, workflows, approvals, privacy, deployment and release checklist
-- [EOA research](docs/EOA-RESEARCH.md) — official requirements, factual corrections, organization sources and logos
+Use a focused branch from main, preserve unrelated work, add regression coverage, check Arabic/English, and document verification in the PR.
 
-- [API reference](docs/API.md) — routes and authentication
-- [Architecture](ARCHITECTURE.md) — application boundaries
-- [Testing](TESTING.md) — automated and manual checks
-- [Deployment](DEPLOYMENT.md) — production release procedure
-- [Security policy](SECURITY.md) — controls and private vulnerability reporting
-- [Changelog](CHANGELOG.md) and [roadmap](ROADMAP.md) — releases and planned work
-
-[API reference](docs/API.md) · [Architecture](ARCHITECTURE.md) · [Testing](TESTING.md) · [Security](SECURITY.md) · [Changelog](CHANGELOG.md) · [Roadmap](ROADMAP.md)
-
-Use a focused branch from `main`, include regression coverage for behavior changes, check both languages/directions, run relevant checks and document validation in the pull request.
-
-Report ordinary bugs in [GitHub issues](https://github.com/king4arabs/wosool/issues); report security issues privately using [SECURITY.md](SECURITY.md). License: [MIT](LICENSE).
+[API](docs/API.md) · [Architecture](ARCHITECTURE.md) · [Testing](TESTING.md) · [Security](SECURITY.md) · [Changelog](CHANGELOG.md)

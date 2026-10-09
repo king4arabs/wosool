@@ -6,6 +6,8 @@ EO Riyadh provides chapter leadership and governance. EO Accelerator provides th
 
 ## Architecture and setup
 
+The October 9 integration repair makes this the authoritative operating guide. Older gateway writes are retired; legacy applications/events remain preserved and require reviewed transfer if present. See [integration and deployment notes](EOA-INTEGRATION-2026-10-09.md). Applicant data-rights requests are available in `/EOA/account`; existing administrators review them at `/admin/privacy-requests`, with audited status changes.
+
 The existing Next.js 16 / React 19 frontend, Cairo typography, locale provider, Laravel 13 API, Sanctum sessions and Spatie roles are reused. Public components are in `frontend/src/components/eoa`; routes are in `frontend/src/app/EOA`. The API is registered by `backend/routes/eoa.php` at `/api/v1/eoa`. Laravel controllers/services enforce authorization; UI visibility is not a security boundary.
 
 The normal README setup runs the installer. To repeat it or prepare an existing checkout, run from `backend/`:

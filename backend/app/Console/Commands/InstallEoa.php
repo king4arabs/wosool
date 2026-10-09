@@ -16,6 +16,11 @@ class InstallEoa extends Command
 
     public function handle(): int
     {
+        if (Program::onlyTrashed()->where('slug', ProgramService::SLUG)->exists()) {
+            $this->error('A historical EOA program exists. Review and restore it explicitly before installation.');
+
+            return self::FAILURE;
+        }
         DB::transaction(function () {
             foreach (['eoa_applicant', 'eoa_lead', 'eoa_staff', 'eoa_reviewer', 'eoa_coach'] as $role) {
                 Role::findOrCreate($role, 'web');

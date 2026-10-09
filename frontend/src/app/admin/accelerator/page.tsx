@@ -1,4 +1,5 @@
-import { ReviewWorkspace } from "@/components/accelerator/ReviewWorkspace";
-export default function AdminAccelerator() {
-  return <ReviewWorkspace />;
+import { redirect } from 'next/navigation'
+
+export default function Page() {
+  redirect('/EOA/admin')
 }

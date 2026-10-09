@@ -2,6 +2,8 @@
 
 Verified **2026-10-08** against the primary sources below. This register records program facts and public organizations, not private-company eligibility or local approvals.
 
+EO's FAQ was rechecked **2026-10-09**: revenue limits, duration, learning cadence, fees and membership progression remain as recorded below. Integration review found conflicting RIDA identity claims in the merged project records. RDIA itself is verified, but the brief's RIDA-to-RDIA mapping is **not established**; keep the requested RIDA designation pending explicit confirmation. No live data was rewritten to force that mapping.
+
 ## Program facts and resolved conflicts
 
 | Topic | Published fact / implementation | Primary source |
@@ -26,7 +28,7 @@ Governance, chair title and target positioning are supplied by the project owner
 | --- | --- | --- | --- |
 | 1 | EO Riyadh / EO الرياض | [Chapter site](https://eoriyadh.org/), [EO chapter directory](https://eonetwork.org/chapters/riyadh/): local chapter leadership and founder network | Prospective pending approved record |
 | 2 | The Garage / الكراج | [Official site](https://thegarage.sa/): tech startup support, incubation/acceleration and founder ecosystem | Prospective |
-| 3 | **RDIA**, Research, Development and Innovation Authority / هيئة تنمية البحث والتطوير والابتكار | [Official site](https://www.rdia.gov.sa/en/): R&D and innovation enablement. “RIDA” in prior planning is corrected to the official acronym for this entity. | Prospective |
+| 3 (pending identity mapping) | **RDIA**, Research, Development and Innovation Authority / هيئة تنمية البحث والتطوير والابتكار | [Official site](https://www.rdia.gov.sa/en/): verified R&D and innovation entity. Do not substitute it for the requested “RIDA” without project confirmation. The separate RIDA review record remains in the partner registry. | Unconfirmed; mapping requires review |
 | 4 | Mohammed Bin Salman Foundation “Misk” / مؤسسة محمد بن سلمان «مسك» | [Official site](https://misk.org.sa/en/): leadership and entrepreneurship development; program access follows the organization's terms | Prospective |
 | 5 | **CODE**, MCIT's Center of Digital Entrepreneurship / مركز ريادة الأعمال الرقمية | [Official MCIT page](https://mcit.gov.sa/code): digital entrepreneurship, incubation and related support. It is not an unrelated organization named Code. | Prospective |
 | 6 | Monsha’at / منشآت | [SME Support Centers](https://www.monshaat.gov.sa/en/ssc): SME advisory, training and business support | Ecosystem |

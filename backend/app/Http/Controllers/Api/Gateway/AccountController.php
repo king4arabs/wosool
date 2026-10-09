@@ -62,12 +62,18 @@ class AccountController extends Controller
         return response()->json(['message' => 'Email verified. تم تأكيد البريد الإلكتروني.']);
     }
 
+    public function privacyIndex(Request $request)
+    {
+        return response()->json(['data' => DB::table('privacy_requests')->where('user_id', $request->user()->id)
+            ->latest('id')->limit(50)->get(['id', 'type', 'status', 'message', 'resolution', 'created_at', 'resolved_at'])]);
+    }
+
     public function privacy(Request $request)
     {
         $data = $request->validate(['type' => 'required|in:access,correction,deletion,withdraw_consent', 'message' => 'nullable|string|max:2000']);
         $id = DB::transaction(function () use ($request, $data) {
             User::whereKey($request->user()->id)->lockForUpdate()->firstOrFail();
-            $existing = DB::table('privacy_requests')->where('user_id', $request->user()->id)->where('type', $data['type'])->where('status', 'received')->first();
+            $existing = DB::table('privacy_requests')->where('user_id', $request->user()->id)->where('type', $data['type'])->whereIn('status', ['received', 'in_review'])->first();
 
             return $existing?->id ?? DB::table('privacy_requests')->insertGetId($data + ['user_id' => $request->user()->id, 'status' => 'received', 'created_at' => now(), 'updated_at' => now()]);
         });

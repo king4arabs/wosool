@@ -1,5 +1,7 @@
 # EO Accelerator release assessment — 8 October 2026
 
+**Historical assessment.** The canonical `/EOA` integration supersedes this release's application/review paths. See [October 9 integration notes](EOA-INTEGRATION-2026-10-09.md) and [EOA operations](EOA.md) for current workflow, verification and deployment requirements.
+
 ## Evidence and starting point
 
 Inspection base: `0c9ceb0d9a530d72c15e498376e1c574c583b108`; release incorporates the subsequent README-only changes through `b87bb2d`, existing `king4arabs/wosool` repository. The inspected system was a Next.js/Laravel community platform with reusable session authentication, roles, founder/company profiles, programs, cohorts, attendance and resources. Its program application flow did not implement the requested verified-account/autosave/reviewer journey. Public views had fixture fallbacks, fixed founder/program totals and a fictional entrepreneur showcase. The existing public program detail serializer could include non-public resources. Repository CI validated code but did not deploy it.

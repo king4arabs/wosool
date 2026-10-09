@@ -1,10 +1,10 @@
 # Architecture
 
-## EO Accelerator gateway extension (2026-10-08)
+## EO Accelerator canonical integration (2026-10-09)
 
-The main public journey now routes through `/accelerator` and `/accelerator/apply`, with `/opportunities` for sourced entrepreneurship discovery. `backend/routes/gateway.php` adds verified applicant APIs, assigned-reviewer access, program operations and editorial/privacy workflows while reusing existing user, profile, program, cohort and participant models. `AcceleratorGateway` is the state-transition and eligibility authority. `application_events` records internal/public audit history; `ecosystem_records` and `ecosystem_revisions` separate researched public facts from user-submitted profiles.
+The program journey lives under `/EOA`; `backend/routes/eoa.php` and the Eoa services/controllers own verified accounts, encrypted applications, assigned reviews, onboarding and participant operations. The earlier `/accelerator` pages redirect to `/EOA`. Legacy application/review writes in `backend/routes/gateway.php` return 410; their data and owned read access are retained without granting learning access. Existing gateway ecosystem/editorial/privacy services remain supported. `/opportunities`, `ecosystem_records` and `ecosystem_revisions` provide sourced discovery separate from applicant companies and confirmed partnerships.
 
-See [the current README](README.md), [release assessment](docs/EO_ACCELERATOR_RELEASE_2026-10-08.md) and [gateway operations](docs/ACCELERATOR_OPERATIONS.md) for current readiness, safeguards and remaining host/policy dependencies. The retained community modules described below are a secondary journey; applicant registration does not grant their access.
+See [the current README](README.md), [integration notes](docs/EOA-INTEGRATION-2026-10-09.md) and [EOA operations](docs/EOA.md) for readiness, safeguards and remaining dependencies. The retained community modules are a separate journey; applicant registration does not grant community access.
 
 
 ## System Overview

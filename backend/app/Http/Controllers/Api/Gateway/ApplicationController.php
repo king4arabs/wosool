@@ -36,9 +36,10 @@ class ApplicationController extends Controller
     public function show(Request $request)
     {
         $program = Gateway::program();
-        $application = ProgramApplication::where('program_id', $program->id)->where('user_id', $request->user()->id)->first();
+        $application = ProgramApplication::where('program_id', $program->id)->where('user_id', $request->user()->id)
+            ->whereNotNull('gateway_payload')->whereNull('eoa_data')->first();
 
-        return response()->json(['data' => $application ? $this->present($application) : null]);
+        return response()->json(['data' => $application ? $this->present($application) : null, 'read_only' => true, 'canonical_url' => '/EOA/account']);
     }
 
     public function save(GatewayApplicationRequest $request)
@@ -94,16 +95,7 @@ class ApplicationController extends Controller
         $data['resources'] = [];
         $data['milestones'] = [];
         $data['mentors'] = [];
-        if (in_array($application->status, ['accepted', 'onboarded'])) {
-            $scope = fn ($q) => $q->whereNull('cohort_id')->when($application->cohort_id, fn ($q) => $q->orWhere('cohort_id', $application->cohort_id));
-            $data['sessions'] = ProgramSession::where('program_id', $application->program_id)->where($scope)
-                ->whereIn('status', ['scheduled', 'completed'])->orderBy('starts_at')->get(['id', 'title', 'starts_at', 'duration_minutes', 'location', 'online_link']);
-            $data['resources'] = ProgramResource::where('program_id', $application->program_id)->where($scope)->where('is_archived', false)
-                ->whereIn('visibility', ['public', 'enrolled_only'])->get(['id', 'title', 'url', 'description']);
-            $data['milestones'] = ProgramProgress::where('program_id', $application->program_id)->where('user_id', $application->user_id)->value('milestones') ?? [];
-            $data['mentors'] = DB::table('program_mentors')->join('users', 'users.id', '=', 'program_mentors.user_id')
-                ->where('program_id', $application->program_id)->where('participant_user_id', $application->user_id)->get(['users.name']);
-        }
+        // Retained snapshots never grant learning access through the retired enrollment model.
         if ($review) {
             $data['assigned_reviewer_id'] = $application->assigned_reviewer_id;
             $data['user'] = User::findOrFail($application->user_id)->only('id', 'name', 'email');

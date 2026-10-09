@@ -17,7 +17,6 @@ use Spatie\Permission\Traits\HasRoles;
 #[Fillable(['name', 'email', 'password', 'password_hash', 'role_token', 'email_verified_at', 'is_accelerator_applicant', 'privacy_accepted_at'])]
 #[Hidden(['password', 'password_hash', 'remember_token'])]
 class User extends Authenticatable implements MustVerifyEmail
-class User extends Authenticatable implements \Illuminate\Contracts\Auth\MustVerifyEmail
 {
     use HasFactory, HasRoles, Notifiable;
 

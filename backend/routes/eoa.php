@@ -15,6 +15,8 @@ Route::prefix('v1/eoa')->group(function () {
     Route::get('/auth/verify/{id}/{hash}', [AuthController::class, 'verify'])->middleware(['signed:relative', 'throttle:10,1,eoa-docs'])->name('eoa.verify');
     Route::middleware(['auth:sanctum', EoaPrivateHeaders::class])->group(function () {
         Route::post('/auth/resend', [AuthController::class, 'resend'])->middleware('throttle:2,1,eoa-resend');
+        Route::get('/privacy-requests', [\App\Http\Controllers\Api\Gateway\AccountController::class, 'privacyIndex']);
+        Route::post('/privacy-requests', [\App\Http\Controllers\Api\Gateway\AccountController::class, 'privacy'])->middleware('throttle:5,60,eoa-privacy');
         Route::get('/application', [ApplicationController::class, 'show']);
         Route::get('/participant', [ParticipantController::class, 'show']);
         Route::middleware(['verified', 'throttle:60,1,eoa-write'])->group(function () {

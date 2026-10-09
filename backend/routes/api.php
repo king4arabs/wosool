@@ -214,7 +214,7 @@ Route::prefix('v1')->group(function () {
         Route::post('/help-requests/{helpRequest}/resolve', [MemberHelpRequestController::class, 'resolve']);
     });
 
-    Route::middleware(['auth:sanctum', 'admin'])->prefix('admin')->group(function () {
+    Route::middleware(['auth:sanctum', 'admin', \App\Http\Middleware\CanonicalEoaProgram::class])->prefix('admin')->group(function () {
         Route::get('/dashboard', AdminDashboardController::class);
         Route::get('/analytics', AdminAnalyticsController::class);
         Route::get('/founders', [AdminFounderController::class, 'index']);

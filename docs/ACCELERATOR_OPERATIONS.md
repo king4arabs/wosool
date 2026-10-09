@@ -1,5 +1,7 @@
 # Accelerator operations
 
+**Historical gateway guide — superseded for EO program operations on 2026-10-09.** Use [EOA operations](EOA.md) and [integration notes](EOA-INTEGRATION-2026-10-09.md). The old application writes described below are retired. `GATEWAY_PRIVACY_READY` and `GATEWAY_EMAIL_UPDATES` do not open the canonical EOA workflow. Backup, source-import and historical-event guidance is retained for existing data; do not use old review/onboarding instructions for new applications.
+
 ## Deployable scope and host prerequisites
 
 The implementation uses the existing Laravel/Next.js deployment layout. There is no production deploy job or configured hosting integration in this checkout. Obtain the actual host/project identifiers, release process, PHP/Node services, private environment, database engine/version, queue supervisor and mail configuration. Do not create a duplicate site or change DNS to work around missing access.
