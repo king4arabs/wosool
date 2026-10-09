@@ -53,6 +53,6 @@ class CompanyProfile extends Model
 
     public function founders(): BelongsToMany
     {
-        return $this->belongsToMany(FounderProfile::class, 'founder_company_links', 'company_profile_id', 'founder_profile_id');
+        return $this->belongsToMany(FounderProfile::class, 'founder_company_links', 'company_profile_id', 'founder_profile_id')->withPivot(['role', 'is_primary']);
     }
 }

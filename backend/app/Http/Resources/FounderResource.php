@@ -9,10 +9,13 @@ class FounderResource extends JsonResource
 {
     public function toArray(Request $request): array
     {
-        $primaryCompany = $this->whenLoaded('companies', fn () => $this->companies->first());
+        $primaryCompany = $this->relationLoaded('companies')
+            ? ($this->companies->first(fn ($company) => (bool) $company->pivot->is_primary) ?? $this->companies->first())
+            : null;
 
         return [
             'id' => $this->id,
+            'position' => isset($this->pivot) ? $this->pivot->role : null,
             'slug' => $this->slug,
             'tagline' => $this->tagline,
             'bio' => $this->bio,

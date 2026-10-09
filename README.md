@@ -127,3 +127,7 @@ Remaining external dependencies: configured hosting/deployment access, productio
 Use a focused branch from main, preserve unrelated work, add regression coverage, check Arabic/English, and document verification in the PR.
 
 [Community homepage](docs/COMMUNITY-HOMEPAGE.md) · [API](docs/API.md) · [Architecture](ARCHITECTURE.md) · [Testing](TESTING.md) · [Security](SECURITY.md) · [Changelog](CHANGELOG.md)
+
+### Startup and founder directory
+
+See [the directory guide](docs/STARTUP-DIRECTORY.md) for sourced Saudi-first profiles, card browsing, database import and ongoing review. After migrations, run `php artisan directory:import --dry-run` and `php artisan directory:import` from `backend`.

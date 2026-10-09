@@ -1,11 +1,13 @@
 "use client"
 
 import Link from "next/link"
+import { useState } from "react"
 import { Briefcase, Search, TrendingUp, Users } from "lucide-react"
 import { usePublicCollection } from "@/lib/use-public-collection"
 import { CollectionStatus } from "@/components/sections/CollectionStatus"
 import { PublicLayout } from "@/components/layout/PublicLayout"
 import { SectionHeader } from "@/components/sections/SectionHeader"
+import { CardBrowser } from "@/components/sections/CardBrowser"
 import { CompanyCard } from "@/components/sections/CompanyCard"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -20,11 +22,15 @@ export default function CompaniesPage() {
   const { locale } = useLocale()
   const copy = companiesPageCopy[locale]
   const collection = usePublicCollection<ApiCompany>("/companies")
+  const [search, setSearch] = useState("")
+  const [sector, setSector] = useState("")
+  const [stage, setStage] = useState("")
   const companyItems = collection.items.map(item => localizeCompany(mapCompany(item), locale))
 
 
 
 
+  const filtered = companyItems.filter(c => (!search || `${c.name} ${c.description} ${c.location}`.toLowerCase().includes(search.toLowerCase())) && (!sector || c.sector === sector) && (!stage || c.stage === stage))
   const hiring = companyItems.filter((company) => company.isHiring)
   const fundraising = companyItems.filter((company) => company.isFundraising)
   const collaborating = companyItems.filter((company) => company.isCollaborating)
@@ -62,7 +68,7 @@ export default function CompaniesPage() {
 
       <section className="section-cream px-4 py-20">
         <div className="mx-auto max-w-7xl">
-          <SectionHeader eyebrow={copy.directoryEyebrow} heading={copy.directoryTitle} />
+          <SectionHeader eyebrow={copy.directoryEyebrow} heading={copy.directoryTitle} /><Link href="/startups" className="inline-flex min-h-11 items-center text-blue-700 underline">{locale === "ar" ? "استكشف الشركات من السعودية إلى العالم" : "Explore startups from Saudi Arabia to the world"}</Link>
 
           <div className="mb-8 rounded-2xl bg-white p-6 shadow-sm">
             <div className="flex flex-col gap-4 lg:flex-row">
@@ -72,36 +78,28 @@ export default function CompaniesPage() {
                   aria-hidden="true"
                 />
                 <input
-                  type="search"
+                  type="search" value={search} onChange={e=>setSearch(e.target.value)}
                   placeholder={copy.searchPlaceholder}
                   className="w-full rounded-lg border border-gray-200 py-2.5 pl-10 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-[#C9A84C]"
                   aria-label={copy.searchAria}
                 />
               </div>
-              <select
+              <select value={sector} onChange={e=>setSector(e.target.value)}
                 className="rounded-lg border border-gray-200 px-3 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#C9A84C]"
                 aria-label={copy.searchAria}
               >
-                {copy.sectors.map((sector) => (
-                  <option key={sector}>{sector}</option>
-                ))}
+                <option value="">{copy.sectors[0]}</option>{[...new Set(companyItems.map(c=>c.sector).filter(Boolean))].map(value=><option key={value}>{value}</option>)}
               </select>
-              <select
+              <select value={stage} onChange={e=>setStage(e.target.value)}
                 className="rounded-lg border border-gray-200 px-3 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#C9A84C]"
                 aria-label={copy.searchAria}
               >
-                {copy.stages.map((stage) => (
-                  <option key={stage}>{stage}</option>
-                ))}
+                <option value="">{copy.stages[0]}</option>{[...new Set(companyItems.map(c=>c.stage).filter(Boolean))].map(value=><option key={value}>{value}</option>)}
               </select>
             </div>
           </div>
 
-          <div className="mb-12 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {companyItems.map((company) => (
-              <CompanyCard key={company.id} company={company} />
-            ))}
-          </div>
+          <CardBrowser key={`${search}-${sector}-${stage}`} items={filtered.map(company => ({ id: company.id, content: <CompanyCard company={company} /> }))} />
 
           {hiring.length > 0 && (
             <div className="mb-12">
@@ -109,11 +107,7 @@ export default function CompaniesPage() {
                 <Briefcase className="h-5 w-5 text-[#C9A84C]" />
                 {copy.hiringTitle}
               </h2>
-              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                {hiring.map((company) => (
-                  <CompanyCard key={company.id} company={company} />
-                ))}
-              </div>
+              <CardBrowser key={`${search}-${sector}-${stage}`} items={hiring.map(company => ({ id: company.id, content: <CompanyCard company={company} /> }))} />
             </div>
           )}
 
@@ -123,11 +117,7 @@ export default function CompaniesPage() {
                 <TrendingUp className="h-5 w-5 text-[#C9A84C]" />
                 {copy.fundraisingTitle}
               </h2>
-              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                {fundraising.map((company) => (
-                  <CompanyCard key={company.id} company={company} />
-                ))}
-              </div>
+              <CardBrowser key={`${search}-${sector}-${stage}`} items={fundraising.map(company => ({ id: company.id, content: <CompanyCard company={company} /> }))} />
             </div>
           )}
         </div>

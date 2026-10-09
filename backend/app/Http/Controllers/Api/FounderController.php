@@ -12,7 +12,7 @@ class FounderController extends Controller
 {
     public function index(Request $request): JsonResponse
     {
-        $query = FounderProfile::with(['user', 'companies' => fn ($q) => $q->where('is_public', true), 'scorecard'])
+        $query = FounderProfile::with(['user', 'companies' => fn ($q) => $q->where('is_public', true)->where('status', 'active'), 'scorecard'])
             ->where('status', 'active')
             ->where('is_public', true);
 
@@ -35,6 +35,7 @@ class FounderController extends Controller
         }
 
         $founders = $query
+            ->orderByRaw("CASE WHEN country_code = 'SA' THEN 0 WHEN country_code IN ('AE','BH','KW','OM','QA') THEN 1 WHEN country_code IN ('EG','JO','LB','MA','TN','DZ','IQ','PS','LY','SD','YE','SY') THEN 2 ELSE 3 END")
             ->orderBy('is_featured', 'desc')
             ->orderBy('created_at', 'desc')
             ->paginate(max(1, min(100, $request->integer('per_page', 12))))
@@ -45,7 +46,7 @@ class FounderController extends Controller
 
     public function show(string $slug): JsonResponse
     {
-        $founder = FounderProfile::with(['user', 'companies' => fn ($q) => $q->where('is_public', true), 'scorecard'])
+        $founder = FounderProfile::with(['user', 'companies' => fn ($q) => $q->where('is_public', true)->where('status', 'active'), 'scorecard'])
             ->where('slug', $slug)
             ->where('status', 'active')
             ->where('is_public', true)
