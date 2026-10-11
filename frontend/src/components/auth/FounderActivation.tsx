@@ -40,7 +40,7 @@ export function FounderActivation() {
     const fields = new FormData(event.currentTarget)
     setBusy(true); setError(null)
     try {
-      await api.post('/founder-activation/activate', { token, password: fields.get('password'), password_confirmation: fields.get('password_confirmation'), privacy_accepted: fields.get('privacy') === 'on' })
+      await api.post('/founder-activation/activate', { token, code: fields.get('code'), password: fields.get('password'), password_confirmation: fields.get('password_confirmation'), privacy_accepted: fields.get('privacy') === 'on' })
       window.history.replaceState(null, '', window.location.pathname)
       setToken(''); setDone(true)
     } catch (error) { setError(error instanceof Error ? error.message : 'Unable to activate profile.') }
@@ -56,6 +56,8 @@ export function FounderActivation() {
       {done ? <div className="mt-6 space-y-5"><p className="leading-7 text-slate-600">{ar ? 'يمكنك الآن تسجيل الدخول، مراجعة ملفك وشركتك، والتواصل مع المؤسسين.' : 'Sign in to review your profile and company, then start connecting with founders.'}</p><Button asChild><Link href="/login?redirect=/dashboard/profile">{ar ? 'تسجيل الدخول وإكمال الملف' : 'Sign in and complete your profile'}</Link></Button></div>
         : invitation ? <form onSubmit={activate} className="mt-6 space-y-5">
           <div className="rounded-2xl bg-indigo-50 p-5"><h2 className="text-xl font-bold">{invitation.name}</h2><p className="mt-2 break-all text-sm text-slate-600" dir="ltr">{invitation.email_hint}</p><p className="mt-2 text-sm">{ar ? 'صلاحية الدعوة حتى: ' : 'Invitation expires: '}{new Date(invitation.expires_at).toLocaleDateString(ar ? 'ar-SA' : 'en-GB')}</p></div>
+          <p className="text-sm leading-7 text-[var(--text-muted)]">{ar ? 'أدخل رمز التفعيل المكوّن من ٦ أرقام الموجود في رسالة الدعوة.' : 'Enter the 6-digit activation code from your invitation email.'}</p>
+          <label className="block text-sm font-semibold">{ar ? 'رمز التفعيل' : 'Activation code'}<input name="code" type="text" inputMode="numeric" autoComplete="one-time-code" pattern="[0-9]{6}" maxLength={6} required dir="ltr" className={input} /></label>
           <p className="text-sm leading-7 text-slate-600">{invitation.existing_account ? ar ? 'أدخل كلمة المرور الحالية لحساب البريد المدعو لربط الملف بحسابك.' : 'Enter the current password for your invited email account to claim this profile.' : ar ? 'أنشئ كلمة مرور من 12 حرفاً على الأقل، تشمل أحرفاً كبيرة وصغيرة وأرقاماً.' : 'Create a password of at least 12 characters with uppercase and lowercase letters and numbers.'}</p>
           <label className="block text-sm font-semibold">{ar ? 'كلمة المرور' : 'Password'}<input name="password" type="password" required minLength={invitation.existing_account ? 1 : 12} maxLength={128} autoComplete={invitation.existing_account ? 'current-password' : 'new-password'} className={input} /></label>
           {!invitation.existing_account && <label className="block text-sm font-semibold">{ar ? 'تأكيد كلمة المرور' : 'Confirm password'}<input name="password_confirmation" type="password" required minLength={12} maxLength={128} autoComplete="new-password" className={input} /></label>}
