@@ -61,7 +61,7 @@ class FounderInvitationService
         return $invite;
     }
 
-    private function realMailer(string $name, array $seen = []): bool
+    public function realMailer(string $name, array $seen = []): bool
     {
         if (in_array($name, $seen, true)) { return false; }
         $mailer = config('mail.mailers.'.$name, []);

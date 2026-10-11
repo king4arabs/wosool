@@ -239,6 +239,7 @@ Route::prefix('v1')->group(function () {
 
         Route::get('/applications', [AdminApplicationController::class, 'index']);
         Route::patch('/applications/{application}', [AdminApplicationController::class, 'update']);
+        Route::post('/applications/{application}/invite', [AdminApplicationController::class, 'sendInvitation'])->middleware('throttle:10,1');
 
         Route::get('/companies', [AdminCompanyController::class, 'index']);
         Route::post('/companies', [AdminCompanyController::class, 'store']);

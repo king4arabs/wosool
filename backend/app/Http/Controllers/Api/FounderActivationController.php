@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Application;
 use App\Models\FounderProfile;
 use App\Models\User;
 use App\Services\FounderInvitationService;
@@ -69,7 +70,10 @@ class FounderActivationController extends Controller
             Role::findOrCreate('member', 'web');
             $user->assignRole('member');
             $founder->update(['user_id' => $user->id, 'claimed_at' => now()]);
-            $invite->update(['status' => 'accepted', 'accepted_at' => now(), 'otp_hash' => null]);
+            Application::query()->whereRaw('LOWER(email) = ?', [strtolower($user->email)])
+                ->where('status', 'approved')->whereNull('user_id')
+                ->update(['user_id' => $user->id, 'invite_token' => null]);
+            $invite->update(['status' => 'accepted', 'accepted_at' => now()]);
             $founder->invitations()->where('id', '!=', $invite->id)->whereIn('status', ['sent', 'pending'])->update(['status' => 'revoked']);
             return $founder;
         });

@@ -40,7 +40,7 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         $attributes = $this->getAttributes();
 
-        if (array_key_exists('password_hash', $attributes)) {
+        if (! empty($attributes['password_hash'])) {
             return 'password_hash';
         }
 
@@ -51,8 +51,8 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         $attributes = $this->getAttributes();
 
-        if (array_key_exists('password_hash', $attributes)) {
-            return (string) ($attributes['password_hash'] ?? '');
+        if (! empty($attributes['password_hash'])) {
+            return (string) $attributes['password_hash'];
         }
 
         return (string) ($attributes['password'] ?? '');
