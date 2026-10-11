@@ -4,7 +4,7 @@ import { useLocale } from '@/lib/locale'
 import { CohortModel } from './CohortModel'
 import { EoaPrivacy } from './Privacy'
 import { EoaContact } from './Contact'
-import { EoaBoard } from './Board'
+import { EoaLeadership } from './Leadership'
 import { EoaMentors } from './Mentors'
 import { EoaProgramDetails } from './EoaProgramDetails'
 import { Eligibility } from './Eligibility'
@@ -137,36 +137,8 @@ export function EoaContent({ section }: { section: string }) {
             </div>
           </div>
         )}
-        {section === 'leadership' && <EoaBoard members={program?.board_members ?? []} ar={ar} />}
+        {section === 'leadership' && <EoaLeadership program={program} ar={ar} />}
         {section === 'mentors' && <EoaMentors key={ar ? "ar" : "en"} mentors={program?.mentors ?? []} ar={ar} loading={!program && !failed} failed={failed} retry={retry} />}
-        {section === 'leadership' && (
-          <div className="eoa-two-grid">
-            <div className="eoa-card">
-              <span className="eoa-eyebrow">
-                {ar ? 'قيادة البرنامج' : 'PROGRAM LEADERSHIP'}
-              </span>
-              <h2>{ar ? 'محمد السلمي' : 'Mohammed Alsolami'}</h2>
-              <p>
-                {ar
-                  ? 'رئيس العضوية والمسرّعة – EO الرياض'
-                  : 'EO Riyadh Membership & Accelerator Chair'}
-              </p>
-            </div>
-            <div>
-              <h2>
-                {ar
-                  ? 'خبرة المؤسسين في خدمة المؤسسين'
-                  : 'Founder experience, shared with founders'}
-              </h2>
-              <p>
-                {ar
-                  ? 'تواصل مع قيادة البرنامج حول جاهزية شركتك، ومتطلبات المشاركة، وكيفية الإسهام بخبرتك في مجتمع المؤسسين. تابع ملفات المرشدين للتعرف على مجالات الخبرة المتاحة.'
-                  : 'Connect with program leadership about your business readiness, participation requirements or contributing your experience to the founder community. Explore mentor profiles to learn about their areas of expertise.'}
-              </p>
-              <div className="eoa-actions"><Link href="/eoa/contact" className="eoa-btn">{ar ? 'تواصل مع القيادة' : 'Contact the team'}</Link><Link href="/eoa/mentors" className="eoa-text-link">{ar ? 'المرشدون والمستشارون' : 'Mentors & advisors'}</Link></div>
-            </div>
-          </div>
-        )}
         {section === 'faq' && <EoaProgramDetails program={program} section="faq" />}
         {section === 'partners' && <EoaProgramDetails program={program} section="operator" />}
         {section === 'partners' && (

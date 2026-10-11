@@ -25,7 +25,7 @@ function SocialIcon({ kind }: { kind: SocialKind }) {
   </svg>
 }
 
-function BoardCard({ member, ar, index, count }: { member: EoaBoardMember; ar: boolean; index: number; count: number }) {
+function BoardCard({ member, ar, index, count, slide }: { member: EoaBoardMember; ar: boolean; index: number; count: number; slide: boolean }) {
   const name = boardText(ar, member.name_ar, member.name_en)
   const portrait = boardPortraitUrl(member.portrait_path)
   const [failedPortrait, setFailedPortrait] = useState<string | null>(null)
@@ -39,7 +39,7 @@ function BoardCard({ member, ar, index, count }: { member: EoaBoardMember; ar: b
     ['instagram', 'Instagram', member.instagram_url],
   ]
 
-  return <article className={styles.card} dir={ar ? 'rtl' : 'ltr'} aria-roledescription={ar ? 'بطاقة عضو' : 'slide'} aria-label={`${name} · ${index + 1} / ${count}`}>
+  return <article className={styles.card} dir={ar ? 'rtl' : 'ltr'} aria-roledescription={slide ? (ar ? 'بطاقة عضو' : 'slide') : undefined} aria-label={`${name} · ${index + 1} / ${count}`}>
     <div className={styles.portrait}>
       {portrait && failedPortrait !== portrait
         ? <Image src={portrait} alt={boardText(ar, member.portrait_alt_ar, member.portrait_alt_en) || name} width={240} height={240} sizes="144px" unoptimized={!portrait.startsWith('/')} style={{ objectPosition: member.portrait_position || '50% 35%' }} onError={() => setFailedPortrait(portrait)} />
@@ -62,7 +62,7 @@ function BoardCard({ member, ar, index, count }: { member: EoaBoardMember; ar: b
   </article>
 }
 
-export function EoaBoard({ members, ar }: { members: EoaBoardMember[]; ar: boolean }) {
+export function EoaBoard({ members, ar, layout = 'carousel' }: { members: EoaBoardMember[]; ar: boolean; layout?: 'carousel' | 'grid' }) {
   const roster = useMemo(() => publishedBoardMembers(members), [members])
   const viewport = useRef<HTMLDivElement>(null)
   const track = useRef<HTMLDivElement>(null)
@@ -72,7 +72,7 @@ export function EoaBoard({ members, ar }: { members: EoaBoardMember[]; ar: boole
   const [focused, setFocused] = useState(false)
   const [overflow, setOverflow] = useState(false)
   const reducedMotion = useSyncExternalStore(subscribeMotion, reducedMotionSnapshot, () => true)
-  const running = overflow && !paused && !hovered && !focused && !reducedMotion
+  const running = layout === 'carousel' && overflow && !paused && !hovered && !focused && !reducedMotion
 
   useEffect(() => {
     const element = viewport.current
@@ -140,22 +140,22 @@ export function EoaBoard({ members, ar }: { members: EoaBoardMember[]; ar: boole
   }
 
   if (!roster.length) return null
-  return <section className={`eoa-section ${styles.section}`} id="board" aria-labelledby={`${id}-title`} aria-roledescription={ar ? 'عارض أعضاء مجلس الإدارة' : 'carousel'}>
+  return <section className={`eoa-section ${styles.section} ${layout === 'grid' ? styles.gridSection : ''}`} id="board" aria-labelledby={`${id}-title`} aria-roledescription={layout === 'carousel' ? (ar ? 'عارض أعضاء مجلس الإدارة' : 'carousel') : undefined}>
     <div className="eoa-container">
       <div className={styles.heading}>
         <div><span className="eoa-eyebrow">{ar ? 'قيادة المجتمع الريادي' : 'FOUNDERS LEADING FOUNDERS'}</span><h2 id={`${id}-title`}>{ar ? 'مجلس إدارة EO الرياض' : 'EO Riyadh Board'}</h2><p>{ar ? 'تعرّف على رواد الأعمال الذين يقودون مجتمع EO الرياض.' : 'Meet the entrepreneurs leading the EO Riyadh community.'}</p></div>
-        {overflow && <div className={styles.controls} dir="ltr" aria-label={ar ? 'التحكم في عرض أعضاء المجلس' : 'Board carousel controls'}>
+        {layout === 'carousel' && overflow && <div className={styles.controls} dir="ltr" aria-label={ar ? 'التحكم في عرض أعضاء المجلس' : 'Board carousel controls'}>
           <button type="button" aria-controls={`${id}-cards`} onClick={() => move('left')} aria-label={ar ? 'تحريك البطاقات إلى اليسار' : 'Move cards left'}><ArrowLeft size={20} aria-hidden="true" /></button>
           {!reducedMotion && <button type="button" aria-controls={`${id}-cards`} onClick={() => setPaused(value => !value)} aria-label={paused ? ar ? 'تشغيل الحركة التلقائية' : 'Start automatic movement' : ar ? 'إيقاف الحركة التلقائية' : 'Pause automatic movement'}>{paused ? <Play size={17} aria-hidden="true" /> : <Pause size={17} aria-hidden="true" />}</button>}
           <button type="button" aria-controls={`${id}-cards`} onClick={() => move('right')} aria-label={ar ? 'تحريك البطاقات إلى اليمين' : 'Move cards right'}><ArrowRight size={20} aria-hidden="true" /></button>
         </div>}
       </div>
-      <div ref={viewport} id={`${id}-cards`} className={styles.viewport} dir="ltr" tabIndex={overflow ? 0 : undefined} aria-label={ar ? 'أعضاء المجلس. استخدم السهمين للتنقل.' : 'Board members. Use the arrow keys to browse.'} onKeyDown={handleKey} onPointerEnter={event => { if (event.pointerType !== 'touch') setHovered(true) }} onPointerLeave={() => setHovered(false)} onPointerDown={() => setPaused(true)} onWheel={() => setPaused(true)} onFocusCapture={() => { setFocused(true); setPaused(true) }} onBlurCapture={event => { if (!event.currentTarget.contains(event.relatedTarget)) setFocused(false) }}>
-        <div ref={track} className={styles.track} aria-live="off">
-          {roster.map((member, index) => <BoardCard key={member.id} member={member} ar={ar} index={index} count={roster.length} />)}
+      <div ref={viewport} id={`${id}-cards`} className={styles.viewport} dir={layout === 'grid' ? (ar ? 'rtl' : 'ltr') : 'ltr'} tabIndex={layout === 'carousel' && overflow ? 0 : undefined} aria-label={ar ? 'أعضاء مجلس الإدارة' : 'Board members'} onKeyDown={layout === 'carousel' ? handleKey : undefined} onPointerEnter={event => { if (event.pointerType !== 'touch') setHovered(true) }} onPointerLeave={() => setHovered(false)} onPointerDown={() => setPaused(true)} onWheel={() => setPaused(true)} onFocusCapture={() => { setFocused(true); setPaused(true) }} onBlurCapture={event => { if (!event.currentTarget.contains(event.relatedTarget)) setFocused(false) }}>
+        <div ref={track} className={layout === 'grid' ? styles.grid : styles.track} aria-live="off">
+          {roster.map((member, index) => <BoardCard key={member.id} member={member} ar={ar} index={index} count={roster.length} slide={layout === 'carousel'} />)}
         </div>
       </div>
-      <div className={styles.caption}><span>{ar ? `${roster.length} من قادة مجتمع EO الرياض` : `${roster.length} chapter leaders`}</span>{overflow && <span>{ar ? 'اسحب أو استخدم الأسهم لاستكشاف المجلس' : 'Swipe or use the arrows to explore the board'}</span>}</div>
+      <div className={styles.caption}><span>{ar ? `${roster.length} من قادة مجتمع EO الرياض` : `${roster.length} chapter leaders`}</span>{layout === 'carousel' && overflow && <span>{ar ? 'اسحب أو استخدم الأسهم لاستكشاف المجلس' : 'Swipe or use the arrows to explore the board'}</span>}</div>
     </div>
   </section>
 }

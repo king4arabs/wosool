@@ -42,8 +42,8 @@
     "slug": "mohammed-alsolami",
     "name_en": "Mohammed Alsolami",
     "name_ar": "محمد السلمي",
-    "position_en": "Membership",
-    "position_ar": "العضوية",
+    "position_en": "Membership & Accelerator Chair",
+    "position_ar": "رئيس العضوية والمسرّعة",
     "company_name_en": "RABEH",
     "company_name_ar": "رابح",
     "company_role_en": "Founder & CEO",
@@ -81,6 +81,10 @@
       {
         "label": "Arabic display name",
         "note": "User-provided identity in project context. Short display name; legal name is محمد جبرالله السلمي."
+      },
+      {
+        "label": "Program leadership confirmation",
+        "note": "Mohammed Alsolami confirmed his EO Riyadh Membership & Accelerator Chair role and leadership of EOA on 12 October 2026."
       }
     ],
     "verified_at": "2026-10-11"
