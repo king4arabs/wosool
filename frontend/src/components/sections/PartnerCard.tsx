@@ -4,6 +4,7 @@ import type { Partner } from "@/types"
 import { ExternalLink } from "lucide-react"
 import { getPartnerStatusLabel } from "@/data/localized-seed"
 import { useLocale } from "@/lib/locale"
+import { BrandLogo } from "@/components/ui/BrandLogo"
 
 interface PartnerCardProps {
   partner: Partner
@@ -18,7 +19,6 @@ const statusStyle: Record<Partner["status"], { bg: string; text: string; border:
 
 export function PartnerCard({ partner }: PartnerCardProps) {
   const { locale } = useLocale()
-  const initials = partner.name.split(" ").map((n) => n[0]).join("").slice(0, 2).toUpperCase()
   const statusLabel = getPartnerStatusLabel(partner.status, locale)
   const s = statusStyle[partner.status]
   const visitLabel = locale === "ar" ? "زيارة الموقع" : "Visit website"
@@ -39,15 +39,12 @@ export function PartnerCard({ partner }: PartnerCardProps) {
       }}
     >
       {/* Logo + name */}
-      <div className="flex items-start gap-3 mb-4">
-        <div
-          className="h-12 w-12 rounded-xl bg-[#EEF1FF] border border-[#E4E7F0] flex items-center justify-center text-sm font-black text-[#3B52D4] shrink-0"
-          aria-hidden="true"
-        >
-          {initials}
+      <div className="flex flex-col items-start gap-4 mb-4 min-w-0">
+        <div className="h-20 w-full max-w-44 self-center bg-transparent text-slate-900">
+          <BrandLogo src={partner.logoUrl} name={partner.name} />
         </div>
-        <div className="flex-1 min-w-0">
-          <h3 className="text-sm font-black text-slate-900 truncate">{partner.name}</h3>
+        <div className="w-full min-w-0">
+          <h3 className="text-sm font-black text-slate-900 wrap-break-word">{partner.name}</h3>
           <p className="text-xs text-slate-400 font-medium mt-0.5">{partner.sector}</p>
         </div>
       </div>

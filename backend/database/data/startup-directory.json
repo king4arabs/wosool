@@ -19,7 +19,7 @@
     "founder_brief_ar": "شارك في تأسيس فودكس لتطوير تقنيات تدعم تشغيل المطاعم.",
     "website": "https://www.foodics.com/",
     "source_url": "https://www.foodics.com/press/foodics-completes-full-acquisition-of-norma-a-greek-data-intelligence-company-expanding-its-dedicated-ai-division/",
-    "logo_url": "https://logowik.com/content/uploads/images/foodics9346.jpg",
+    "logo_url": "/startup-directory/foodics-logo.svg",
     "portrait_url": null,
     "company_socials": [
       {
@@ -37,7 +37,7 @@
     "review_due_at": "2027-01-07",
     "sources": [
       "https://www.foodics.com/press/foodics-completes-full-acquisition-of-norma-a-greek-data-intelligence-company-expanding-its-dedicated-ai-division/",
-      "https://logowik.com/foodics-logo-vector-svg-pdf-ai-eps-cdr-free-download-14989.html",
+      "https://www.foodics.com/wp-content/uploads/2021/12/foodics-logo.svg",
       "https://www.foodics.com/press/foodics-signs-partnership-with-american-express-saudi-arabia/",
       "https://www.linkedin.com/posts/foodics_the-h1-2025-performance-numbers-are-in-proud-activity-7354120078851747840--28Z"
     ],
@@ -394,7 +394,7 @@
     "founder_brief_ar": "شارك في تأسيس باي موب لتمكين الشركات من الوصول إلى خدمات الدفع الرقمي.",
     "website": "https://www.paymob.com/",
     "source_url": "https://www.paymob.com/en/about-us",
-    "logo_url": "https://egyptinnovate-prod-upload-bucket.obs.af-north-1.myhuaweicloud.com/37927/01KKTFAHN3XAV1PBSE3GSDCVCZ.jpg",
+    "logo_url": "/startup-directory/paymob-logo.svg",
     "portrait_url": null,
     "company_socials": [],
     "founder_socials": [],
@@ -402,6 +402,7 @@
     "review_due_at": "2027-01-07",
     "sources": [
       "https://www.paymob.com/en/about-us",
+      "https://checkout.paymob.sa/_next/static/media/paymobLogo.29ead46c.svg",
       "https://egyptinnovate.com/en/news/paymob-raises-50-million-series-b-funding-round",
       "https://www.mubadala.com/en/news/mubadala-invests-in-the-35-million-pre-series-c-round-in-paymob"
     ],
@@ -448,7 +449,7 @@
     "founder_brief_ar": "شاركت في تأسيس كانفا بهدف إتاحة التصميم للجميع.",
     "website": "https://www.canva.com/",
     "source_url": "https://www.canva.com/newsroom/news/author/melanie-perkins/",
-    "logo_url": "/startup-directory/canva-logo.webp",
+    "logo_url": "/startup-directory/canva-logo.svg",
     "portrait_url": null,
     "company_socials": [],
     "founder_socials": [
@@ -465,7 +466,7 @@
     "review_due_at": "2027-01-07",
     "sources": [
       "https://www.canva.com/newsroom/news/author/melanie-perkins/",
-      "https://wegic.ai/blog/favicon-guide",
+      "https://canvacreative.team/brand-logo",
       "https://www.canva.com/newsroom/news/Why-Canva-challenging-HQ-privilege/",
       "https://www.canva.com/newsroom/news/canva-2025-wrap/"
     ],
@@ -512,7 +513,7 @@
     "founder_brief_ar": "يقود سوارم روبوتكس؛ تعرض مسك قصة تأسيس محمد وعبدالإله بوخمسين.",
     "website": "https://swarmrobotics.io/",
     "source_url": "https://swarmrobotics.io/about",
-    "logo_url": "https://swarmrobotics.io/_app/immutable/assets/swarm-logo.5jvVSQNz.svg",
+    "logo_url": "/startup-directory/swarm-logo.svg",
     "portrait_url": "https://swarmrobotics.io/_app/immutable/assets/ceo-headshot.B4se3ipc.png",
     "company_socials": [
       {
@@ -584,7 +585,8 @@
     "founder_brief_ar": "شارك في تأسيس رسن ويشغل رئاسة مجلس الإدارة وفق صفحة القيادة الحالية.",
     "website": "https://rasan.sa/en",
     "source_url": "https://rasan.sa/en/about",
-    "logo_url": "https://rasan.sa/_assets/imgs/kCL0EjSWHz-112.jpeg",
+    "logo_url": "/startup-directory/rasan-logo.png",
+    "logo_tone": "dark",
     "portrait_url": null,
     "company_socials": [],
     "founder_socials": [],
@@ -592,6 +594,7 @@
     "review_due_at": "2027-01-07",
     "sources": [
       "https://rasan.sa/en/about",
+      "https://careers.rasan.co/",
       "https://rasan.sa/en/investor-relations/investment-case",
       "https://impact46.sa/",
       "https://www.rasanglobal.com/en/ipo/",
@@ -862,7 +865,7 @@
     "founder_brief_ar": "شارك في تأسيس جاهز ويقود المجموعة رئيساً تنفيذياً، بخبرة في تقنية المعلومات والتجارة الإلكترونية والخدمات اللوجستية.",
     "website": "https://jahezgroup.com/",
     "source_url": "https://jahezgroup.com/corporate-governance/",
-    "logo_url": "https://jahezgroup.com/wp-content/uploads/2025/07/Jahez-Logo-Red-EN-768x191.webp",
+    "logo_url": "/startup-directory/jahez-logo.webp",
     "portrait_url": "https://jahezgroup.com/wp-content/uploads/2024/12/Ghassab-Bin-Mandeel-1-1.webp",
     "company_socials": [],
     "founder_socials": [],

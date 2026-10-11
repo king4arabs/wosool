@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import Image from "next/image";
+import { BrandLogo } from "@/components/ui/BrandLogo";
 import { api } from "@/lib/api";
 import { useLocale } from "@/lib/locale";
 import { safeWebUrl } from "@/lib/gateway";
@@ -70,14 +70,7 @@ export function PartnerStrip() {
               aria-label={p.name}
               className="flex h-20 w-36 items-center justify-center rounded-lg p-2 focus-visible:outline-2 focus-visible:outline-[#3B52D4]"
             >
-              <Image
-                src={p.logo_url}
-                alt={p.name}
-                width={160}
-                height={64}
-                unoptimized
-                className="max-h-16 w-auto max-w-full object-contain"
-              />
+              <BrandLogo src={p.logo_url} name={p.name} />
             </a>
           ))}
         </div>

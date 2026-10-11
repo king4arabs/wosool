@@ -40,7 +40,7 @@ The latest product and brand upgrade includes:
 - **Bilingual account journeys:** shared registration/application layouts, working invitation email entry, recoverable validation, draft-storage resilience and direct EOA sign-in destinations.
 - **Reviewed founder introductions:** authenticated members can discover approved founders, state the purpose and intended value of a connection, submit through the established introduction API, and track the request.
 - **Administration command center:** API-backed operational metrics and grouped navigation for community, operations, growth/content, EO Riyadh Accelerator, privacy, and system settings.
-- **EO Riyadh Accelerator:** licensed Riyadh skyline video with a static reduced-motion poster, official EO palette, supplied EO Riyadh logo, nine-stage growth journey, and verified program information.
+- **EO Riyadh Accelerator:** licensed Riyadh skyline video with a static reduced-motion poster, official EO palette, original transparent EO Riyadh logo, nine-stage growth journey, and verified program information.
 - **2026/27 EO Riyadh board:** 11 original poster portraits with researched company/profile links, accessible rightward carousel, and API-backed ordering, terms, publishing and secure portrait management.
 - **Editorial operations:** bilingual operator content and FAQs with draft/published snapshots, stale-save protection, partner details, and audit history.
 - **Reliability guardrails:** no fictional metrics, partners, founders, revenue, or affiliations; private contact and financial records remain protected; official EO and EO Riyadh artwork remains separate from Wosool artwork.
@@ -49,7 +49,7 @@ See [CHANGELOG.md](CHANGELOG.md) for release history and verified implementation
 
 See [the founder, mentor and responsive journey guide](docs/FOUNDERS-MENTORS-2026-10-11.md) for data sources, publication controls and deployment requirements.
 
-Partner strips share responsive transparent logo frames, proportional sizing, keyboard/touch controls and optional motion. See [the transparency audit](docs/PARTNER-ASSETS-2026-10-11.md) for original asset sources and optical sizing notes.
+Partner strips and partner/founder/company cards share transparent logo fitting, authentic colors, proportional sizing and readable image-failure fallbacks. EO, Kitopi and Salla retain clear space while their excess empty canvas is framed; Canva, Foodics, Paymob, Rasan and Jahez use verified transparent originals. Swarm's original logo is also served locally. Partner strips retain keyboard/touch controls and optional motion. See [the transparency audit](docs/PARTNER-ASSETS-2026-10-11.md) for original asset sources and optical sizing notes.
 
 ## EO Riyadh Accelerator preview
 

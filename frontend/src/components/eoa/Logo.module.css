@@ -1,0 +1,4 @@
+.logo { position:relative; display:block; width:180px; max-width:100%; flex-shrink:0; overflow:hidden; background:transparent; }
+.logo .canvas { position:absolute; display:block; height:auto; max-width:none; object-fit:contain; background:transparent; }
+.fallback { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; color:inherit; font-weight:800; }
+.logo[data-inverse=true] .fallback { color:var(--on-dark); }

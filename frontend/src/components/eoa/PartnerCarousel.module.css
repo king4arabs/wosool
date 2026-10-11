@@ -12,14 +12,6 @@
 .track { display:flex; flex-direction:row-reverse; align-items:center; gap:20px; min-width:100%; width:max-content; justify-content:space-around; }
 .logoFrame { display:flex; align-items:center; justify-content:center; width:190px; height:108px; flex:0 0 190px; padding:16px; border:1px solid var(--border-soft); border-radius:12px; background:transparent; }
 .logoFrame:is(a):hover { border-color:var(--brand-blue); }
-.logoFrame[data-tone=mixed-contrast] { background:color-mix(in srgb,var(--brand-navy) 50%,var(--surface)); }
-.artwork { display:block; width:auto; max-width:156px; height:auto; max-height:64px; object-fit:contain; }
-.artwork[data-shape=tall] { max-width:78px; max-height:76px; }
-.artwork[data-shape=square] { max-width:100px; max-height:72px; }
-.eoArtwork { position:relative; display:block; width:156px; aspect-ratio:3214/1039; overflow:hidden; flex-shrink:0; }
-.section .eoArtwork>span { position:absolute; width:207.405%; left:-53.142%; top:-104.043%; max-width:none; }
-.eoArtwork img { display:block; width:100%; max-width:none; max-height:none; height:auto; }
-.logoFallback { max-width:100%; color:var(--text-muted); font-size:14px; font-weight:700; line-height:1.6; text-align:center; overflow-wrap:anywhere; }
 .viewport:focus-visible,.controls button:focus-visible,.logoFrame:focus-visible,.headingActions>a:focus-visible { outline:3px solid var(--brand-blue); outline-offset:2px; }
-@media(max-width:600px) { .container { width:calc(100% - 32px); }.heading { gap:8px 12px; }.section .heading h2 { font-size:14px; }.headingActions { gap:8px 14px; }.track { gap:14px; }.logoFrame { width:160px; flex-basis:160px; height:96px; padding:12px; }.artwork { max-width:134px; max-height:60px; }.artwork[data-shape=tall] { max-width:68px; max-height:68px; }.artwork[data-shape=square] { max-width:88px; max-height:64px; }.eoArtwork { width:134px; } }
+@media(max-width:600px) { .container { width:calc(100% - 32px); }.heading { gap:8px 12px; }.section .heading h2 { font-size:14px; }.headingActions { gap:8px 14px; }.track { gap:14px; }.logoFrame { width:160px; flex-basis:160px; height:96px; padding:12px; } }
 @media(prefers-reduced-motion:reduce) { .viewport { scroll-behavior:auto; } }

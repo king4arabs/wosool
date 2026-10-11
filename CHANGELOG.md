@@ -6,6 +6,12 @@ This project follows **Semantic Versioning** and a Keep a Changelog-inspired for
 
 ---
 
+## Transparent logo fitting — 2026-10-11
+
+- Unified partner strips, partner-directory cards and founder/company scorecards around proportional transparent logo rendering with readable fallbacks.
+- Replaced the opaque EO hero artwork and five company logo references with verified transparent originals; preserved authentic colors and appropriate light/dark contrast. Localized the existing Swarm logo for reliable delivery.
+- Improved EO, Kitopi and Salla visual sizing, removed blend-mode and unnecessary RDIA backing, and corrected Wosool header/footer image dimensions.
+
 ## Single-row founder browsing — 2026-10-11
 
 - Changed founder scorecards on the homepage and directory to one row with rightward movement every three seconds, manual arrows/swipe, pause/resume and reduced-motion support.

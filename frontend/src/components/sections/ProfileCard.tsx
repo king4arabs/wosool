@@ -15,7 +15,8 @@ import {
   ShieldCheck,
   UserRound,
 } from "lucide-react"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { BrandLogo } from "@/components/ui/BrandLogo"
+import { brandLogoNeedsDarkSurface } from "@/lib/brand-logos"
 import { publicWebsite } from "@/lib/community-display"
 import { useLocale } from "@/lib/locale"
 import { getInitials } from "@/lib/utils"
@@ -158,20 +159,10 @@ export function ProfileCard({ data, variant = "company" }: { data: ProfileCardDa
       <header
         className={[
           styles.logoArea,
-          data.logoTone === "dark" ? styles.darkLogo : "",
+          data.logoTone === "dark" || brandLogoNeedsDarkSurface(data.logo) ? styles.darkLogo : "",
         ].join(" ")}
       >
-        <Avatar className={styles.logo}>
-          <AvatarImage
-            src={safeImage(data.logo)}
-            alt={data.company}
-            className="object-contain"
-            loading="lazy"
-          />
-          <AvatarFallback className="rounded-none bg-transparent px-3 text-center text-sm font-extrabold text-[var(--text)]">
-            {data.company}
-          </AvatarFallback>
-        </Avatar>
+        <div className={styles.logo}><BrandLogo src={data.logo} name={data.company} /></div>
 
         <div className={styles.trustSignals}>
           {data.profileVerified && (

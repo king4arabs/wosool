@@ -17,11 +17,9 @@
 .card:hover { transform:translateY(-4px); border-color:color-mix(in srgb,var(--action-bg) 28%,var(--border-soft)); box-shadow:var(--shadow-raised); }
 .cardTopline { height:4px; background:linear-gradient(90deg,var(--brand-blue),var(--brand-pink),var(--brand-orange),var(--brand-yellow),var(--brand-green)); }
 .logoArea { min-height:122px; padding:22px 24px 18px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:14px; border-bottom:1px solid var(--border-soft); background:linear-gradient(180deg,var(--surface) 0%,color-mix(in srgb,var(--surface-soft) 70%,var(--surface)) 100%); }
-.logo { width:190px; max-width:100%; height:58px; border-radius:0; background:transparent; }
-.logo img { mix-blend-mode:multiply; }
+.logo { width:190px; max-width:100%; height:58px; flex-shrink:0; border-radius:0; background:transparent; color:var(--text); }
 .darkLogo { background:var(--brand-navy); }
-.darkLogo img { mix-blend-mode:normal; }
-.darkLogo [data-slot="avatar-fallback"] { color:var(--on-dark); }
+.darkLogo .logo { color:var(--on-dark); }
 .trustSignals { min-height:25px; display:flex; justify-content:center; flex-wrap:wrap; gap:6px; }
 .signal { display:inline-flex; align-items:center; gap:5px; min-height:25px; border:1px solid var(--border-soft); border-radius:var(--radius-pill); background:var(--surface); padding:3px 8px; color:var(--text-muted); font-size:10px; font-weight:800; line-height:1.4; }
 .signal svg { color:var(--brand-green); }
@@ -90,8 +88,7 @@
 .person :is(h3,h4) { color:var(--text-strong); font-size:15px; line-height:1.5; font-weight:800; overflow-wrap:anywhere; }
 .founderCard .cardTopline { height:3px; background:var(--brand-blue); }
 .founderCard .logoArea { min-height:88px; padding:16px 22px; gap:10px; }
-.founderCard .logo { height:44px; max-width:160px; }
-.founderCard .logo img { mix-blend-mode:normal; }
+.founderCard .logo { height:56px; max-width:180px; }
 .founderCard .trustSignals:empty { display:none; }
 .founderCard .body { padding:22px; gap:14px; }
 .founderCard .person { padding:0; border:0; background:none; gap:13px; }

@@ -171,8 +171,8 @@ export function Header() {
             <Image
               src="/wosool-logo-eo.svg"
               alt="Wosool — Founders to Founders"
-              width={820}
-              height={180}
+              width={914}
+              height={205}
               priority
               unoptimized
               className="h-auto w-[198px] object-contain sm:w-[235px] lg:w-[255px] 2xl:w-[280px]"

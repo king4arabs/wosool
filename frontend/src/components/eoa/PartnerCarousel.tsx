@@ -1,10 +1,9 @@
 'use client'
 
-import Image from 'next/image'
 import { ArrowLeft, ArrowRight, Pause, Play } from 'lucide-react'
 import { useEffect, useId, useMemo, useRef, useState, useSyncExternalStore, type KeyboardEvent, type ReactNode } from 'react'
 import { boardExternalUrl, boardPortraitUrl, boardScrollOffset } from '@/lib/eoa-board'
-import { EoaLogo } from './Logo'
+import { BrandLogo } from '@/components/ui/BrandLogo'
 import styles from './PartnerCarousel.module.css'
 
 function subscribeMotion(callback: () => void) {
@@ -15,20 +14,6 @@ function subscribeMotion(callback: () => void) {
 function motionSnapshot() { return window.matchMedia('(prefers-reduced-motion: reduce)').matches }
 
 type PartnerLogo = { id: string | number; name_ar: string; name_en: string; website?: string; logo_path: string }
-
-function PartnerArtwork({ partner, ar }: { partner: PartnerLogo; ar: boolean }) {
-  const [failed, setFailed] = useState<string | null>(null)
-  const [shape, setShape] = useState('wide')
-  const name = (ar ? partner.name_ar : partner.name_en) || partner.name_en || partner.name_ar
-  if (failed === partner.logo_path) return <span className={styles.logoFallback}>{name}</span>
-  // Frame the transparent margins of the supplied EO artwork; preserve every visible pixel.
-  if (partner.logo_path === '/partners/eo-riyadh.png') return <span className={styles.eoArtwork}><EoaLogo /></span>
-  return <Image src={partner.logo_path} alt={name} width={180} height={80} className={styles.artwork} data-shape={shape} unoptimized onError={() => setFailed(partner.logo_path)} onLoad={event => {
-    const image = event.currentTarget
-    const ratio = image.naturalWidth / image.naturalHeight
-    setShape(ratio < .95 ? 'tall' : ratio < 2 ? 'square' : 'wide')
-  }} />
-}
 
 export function PartnerCarousel({ partners, ar, includeEo = true, headingId, action, emptyState }: { partners: PartnerLogo[]; ar: boolean; includeEo?: boolean; headingId?: string; action?: ReactNode; emptyState?: ReactNode }) {
   const items = useMemo(() => [...new Map([
@@ -123,9 +108,9 @@ export function PartnerCarousel({ partners, ar, includeEo = true, headingId, act
         <div className={styles.track} ref={track}>
           {items.map(partner => {
             const url = boardExternalUrl(partner.website)
-            const artwork = <PartnerArtwork partner={partner} ar={ar} />
-            const tone = partner.logo_path === '/partners/rdia.svg' ? 'mixed-contrast' : undefined
-            return url ? <a key={partner.logo_path} className={styles.logoFrame} data-tone={tone} href={url} target="_blank" rel="noopener noreferrer" aria-label={`${ar ? partner.name_ar : partner.name_en}${ar ? ' (نافذة جديدة)' : ' (opens in a new tab)'}`}>{artwork}</a> : <div className={styles.logoFrame} data-tone={tone} key={partner.logo_path}>{artwork}</div>
+            const name = (ar ? partner.name_ar : partner.name_en) || partner.name_en || partner.name_ar
+            const artwork = <BrandLogo src={partner.logo_path} name={name} />
+            return url ? <a key={partner.logo_path} className={styles.logoFrame} href={url} target="_blank" rel="noopener noreferrer" aria-label={`${name}${ar ? ' (نافذة جديدة)' : ' (opens in a new tab)'}`}>{artwork}</a> : <div className={styles.logoFrame} key={partner.logo_path}>{artwork}</div>
           })}
         </div>
       </div> : emptyState}

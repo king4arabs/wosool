@@ -128,8 +128,8 @@ export function Footer() {
               <Image
                 src="/wosool-logo-white.svg"
                 alt="Wosool — Founders to Founders"
-                width={820}
-                height={180}
+                width={914}
+                height={205}
                 unoptimized
                 className="h-auto w-[270px] max-w-full object-contain sm:w-[310px]"
               />

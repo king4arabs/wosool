@@ -33,7 +33,7 @@ Endpoints under `/api/v1/eoa/operations/mentors` support GET/POST, PATCH `/{ment
 
 ## Partner logos
 
-The homepage and EOA use the same native horizontal partner carousel. Each logo appears once, retains its original colors and proportions, and sits within a responsive transparent frame. Wide, square and tall artwork receive different size limits so their apparent weight is balanced. The EO chapter artwork retains clear space; RDIA's mixed white/black artwork receives a contrasting themed background. Failed images fall back to the organization's name.
+The homepage and EOA use the same native horizontal partner carousel. Each logo appears once, retains its original colors and proportions, and sits within a responsive transparent frame. A shared contain renderer also serves partner-directory and founder/company cards. The EO chapter artwork retains clear space and uses the transparent inverse original in the hero. RDIA's white lettering is already inside its black symbol and needs no colored backing. Failed images fall back to the organization's name. The [asset audit](PARTNER-ASSETS-2026-10-11.md) records optical framing and authentic transparent company-logo replacements.
 
 Touch scrolling, arrow buttons, keyboard arrows and Home/End work at mobile and desktop widths. Optional motion moves logos physically rightward in both languages and pauses for hover, focus or interaction. Reduced-motion preferences disable autoplay. The homepage still requires confirmed partner records; visual changes do not publish or approve organizations. [The asset audit](PARTNER-ASSETS-2026-10-11.md) records transparency and official source details, including the corrected KAUST university symbol.
 
