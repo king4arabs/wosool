@@ -7,7 +7,7 @@ import { Field, Notice, useEoaProgram } from './Shared'
 export function Eligibility() {
   const { locale } = useLocale()
   const ar = locale === 'ar'
-  const { program } = useEoaProgram()
+  const { program, failed, retry } = useEoaProgram()
   const [amount, setAmount] = useState('')
   const [currency, setCurrency] = useState('USD')
   const [owner, setOwner] = useState(false)
@@ -37,7 +37,8 @@ export function Eligibility() {
         </p>
         <div className="eoa-card eoa-fee">
           <span>{ar ? 'الرسوم العالمية السنوية' : 'ANNUAL GLOBAL FEE'}</span>
-          <strong>US$1,750</strong>
+          <strong>{program ? `US$${program.facts.annual_global_fee_usd.toLocaleString(ar ? 'ar-SA' : 'en-US')}` : '—'}</strong>
+          {!program && <Notice error={failed}>{failed ? (ar ? 'تعذر تحميل الرسوم المعتمدة.' : 'Published fees could not load.') : (ar ? 'جارٍ تحميل الرسوم…' : 'Loading fees…')}{failed && <button type="button" className="eoa-text-link" onClick={retry}>{ar ? 'إعادة المحاولة' : 'Try again'}</button>}</Notice>}
           <p>
             {ar
               ? 'تضاف رسوم الفرع المحلي. تُحسب الرسوم وفق توقيت الالتحاق والسنة المالية يوليو–يونيو.'
@@ -59,7 +60,7 @@ export function Eligibility() {
               <dd>US${program.local_fees.participant_contribution_usd}</dd>
             </dl>
           ) : (
-            <p className="eoa-muted">
+            program && <p className="eoa-muted">
               {ar
                 ? 'الرسوم المحلية ومساهمات الرعاية والمشارك قيد الاعتماد.'
                 : 'Local fees and sponsor/participant contributions await approval.'}

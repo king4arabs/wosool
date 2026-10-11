@@ -46,6 +46,35 @@ export type EoaProgram = {
   participation_terms_en: string | null
   participation_terms_ar: string | null
 }
+export function programAvailability(program: EoaProgram | null, failed: boolean) {
+  if (failed) return 'unavailable'
+  if (!program) return 'loading'
+  return program.applications_open ? 'open' : 'closed'
+}
+export function formatEoaDate(value: string | null | undefined, ar: boolean) {
+  if (!value) return '—'
+  const date = new Date(value)
+  if (!Number.isFinite(date.getTime())) return '—'
+  return new Intl.DateTimeFormat(ar ? 'ar-SA' : 'en-GB', {
+    calendar: 'gregory',
+    timeZone: 'Asia/Riyadh',
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  }).format(date)
+}
+export function reviewTransitions(status: string, lead: boolean) {
+  const transitions: Record<string, string[]> = {
+    submitted: ['under_review', 'information_requested', 'interview', 'waitlisted', 'rejected', 'accepted'],
+    under_review: ['information_requested', 'interview', 'accepted', 'waitlisted', 'rejected'],
+    information_requested: ['under_review', 'interview', 'rejected'],
+    interview: ['under_review', 'information_requested', 'accepted', 'waitlisted', 'rejected'],
+    waitlisted: ['under_review', 'interview', 'accepted', 'rejected'],
+  }
+  return (transitions[status] ?? []).filter(
+    (next) => lead || !['accepted', 'waitlisted', 'rejected'].includes(next),
+  )
+}
 export type ApplicationFields = {
   preferred_track_id?: number | string
   founder_name?: string

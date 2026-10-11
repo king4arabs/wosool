@@ -19,6 +19,7 @@ export function TrackManager({
   const [notice, setNotice] = useState('')
   async function save(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
+    if (busy) return
     const form = event.currentTarget
     const data = new FormData(form)
     setBusy(true)
@@ -35,10 +36,14 @@ export function TrackManager({
       if (selected)
         await api.patch(`/eoa/operations/update/tracks/${selected.id}`, payload)
       else await api.post('/eoa/operations/create/tracks', payload)
-      await reload()
       setSelected(null)
       form.reset()
       setNotice(ar ? 'تم حفظ المسار.' : 'Track saved.')
+      try {
+        await reload()
+      } catch (e) {
+        setError(`${ar ? 'تم حفظ المسار، لكن تعذر تحديث القائمة. حدّث الصفحة دون تكرار الإنشاء.' : 'Track saved, but the list could not refresh. Reload the page without creating it again.'} ${errorText(e)}`)
+      }
     } catch (e) {
       setError(errorText(e))
     } finally {
