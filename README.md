@@ -34,7 +34,7 @@ The latest product and brand upgrade includes:
 - **Approved Wosool identity:** the connected-node W mark, large horizontal website wordmark, white footer version, and standalone favicon/application icon.
 - **Unified product design system:** semantic tokens, Cairo as the primary Arabic and English typeface, responsive spacing, consistent cards, accessible controls, visible focus states, and reduced-motion behavior.
 - **Trusted founder and venture scorecards:** company logo, founder portrait, role, short company/founder summaries, sector, stage, location, official links, verification, review freshness, source evidence, and opportunity signals where data is available.
-- **World-class directory browsing:** equal-height responsive cards, controlled two-row browsing, pagination, search, RTL/LTR-aware controls, and no forced autoplay.
+- **Founder browsing:** one responsive scorecard row advances physically right every three seconds, with arrows, swipe, pause and reduced-motion support. Expand the grid below for numbered pages, page-size options, search and sector filters in both languages.
 - **Founder spotlight:** eight researched public founder profiles keep the homepage and directory useful during API outages, clearly separated from approved member profiles.
 - **Mentors and advisors:** responsive mentor cards on `/eoa` and `/eoa/mentors`, expertise filters, portrait management, audited draft/publish controls and confirmed public appointments.
 - **Bilingual account journeys:** shared registration/application layouts, working invitation email entry, recoverable validation, draft-storage resilience and direct EOA sign-in destinations.

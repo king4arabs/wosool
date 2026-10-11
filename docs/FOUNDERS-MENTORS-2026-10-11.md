@@ -2,7 +2,9 @@
 
 ## Public discovery
 
-The homepage places founder scorecards directly after the partner strip. Cards show the founder portrait or initials, name, role, short biography, company logo and summary, sector, location and available professional links. The homepage and `/founders` share manual two-row browsing, search, filters, row controls and pagination. Keyboard arrows, Home/End, touch scrolling and reduced-motion preferences are supported.
+The homepage places founder scorecards directly after the partner strip. Cards show the founder portrait or initials, name, role, short biography, company logo and summary, sector, location and available professional links. The homepage and `/founders` now share one horizontal row that advances one card physically right every three seconds in both languages. It loops back instantly at the end and never scrolls the document vertically. Arrows, Home/End, swipe and pause/resume controls remain available. Autoplay pauses during hover, after focus/manual interaction, while the row is out of view, and when the grid is open; reduced-motion preferences disable autoplay.
+
+**View all founders** opens a separate responsive grid below the row, with six profiles per page initially, numbered previous/next navigation, and 6/12/24 profile page sizes. The grid shares the row's search and sector filters. Filter changes reset pagination. Opening or paging the grid moves focus to its heading area; closing it returns focus to the toggle. Card details and company/profile links work in both views.
 
 Approved public `/founders` API records remain the community directory source. When none are available, the page presents a separately labeled **Founder spotlight** containing eight public editorial profiles. These do not create accounts, imply membership or link to nonexistent member pages. The spotlight is available in the initial frontend render even during an API outage. No private contacts, financial metrics or fictional entrepreneur fixtures are included. Homepage API sections update independently.
 
@@ -53,9 +55,13 @@ Use `npm run build` or `npm run build:webpack` for releases. Their prebuild hook
 
 ## Validation
 
-Local validation passed: ESLint, TypeScript, 40 frontend tests, entrepreneur-data validation and the 79-page production webpack build; the Laravel suite passed 135 tests with 897 assertions. Mentor coverage includes authorization, publication/consent, stale versions, restricted portraits, upload-to-publication and private-field exclusion.
+The single-row follow-up passed ESLint, TypeScript, all 44 frontend tests and the 79-page production webpack build. This follow-up changes frontend presentation only; the backend checks below describe the initial feature release.
 
-Browser checks used the built frontend and isolated Laravel database in both Arabic/RTL and English/LTR at 320, 390, 768, 1440 and 1920 pixels, plus 844 × 390 landscape. Founder search, sector filters, rows, directory, API-outage spotlights and approved-member replacement passed. Mentor filtering, locale reset, keyboard controls, biography expansion and touch targets passed. The initial 320px nested-container clipping was corrected and retested on both the dedicated mentor page and landing page. No document overflow or JavaScript page errors remained in those cases.
+Follow-up browser checks passed all 16 homepage/directory combinations across Arabic and English at 320, 390, 768 and 1440 pixels. They covered one-row card fitting, manual and keyboard direction, 44px controls and reduced motion. The grid checks covered open/close focus, six-to-two profile pagination, page-size changes and shared filters. A delayed homepage news response preserved the user's manually chosen carousel position.
+
+Initial feature-release validation passed: ESLint, TypeScript, 40 frontend tests, entrepreneur-data validation and the 79-page production webpack build; the Laravel suite passed 135 tests with 897 assertions. Mentor coverage includes authorization, publication/consent, stale versions, restricted portraits, upload-to-publication and private-field exclusion.
+
+Initial browser checks used the built frontend and isolated Laravel database in both Arabic/RTL and English/LTR at 320, 390, 768, 1440 and 1920 pixels, plus 844 × 390 landscape. Founder search, sector filters, rows, directory, API-outage spotlights and approved-member replacement passed. Mentor filtering, locale reset, keyboard controls, biography expansion and touch targets passed. The initial 320px nested-container clipping was corrected and retested on both the dedicated mentor page and landing page. No document overflow or JavaScript page errors remained in those cases.
 
 The partner matrix passed 20 cases across both sites/languages, including original logo fitting, unique links, failed-image fallback, rightward motion, pause, reduced motion and 44px controls. Account checks covered invite email entry, password visibility, sign-in mode, responsive forms and the short-screen mobile menu. Browser-only mocked application responses verified validation-step recovery and success despite browser-storage cleanup failures. Test mentor/partner records were browser fixtures only, never production records; the actual mentor roster remained empty. No real applications or emails were sent.
 

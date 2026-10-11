@@ -1,73 +1,88 @@
 "use client"
 
-import { useEffect, useId, useMemo, useRef, useState, type KeyboardEvent } from "react"
+import { useCallback, useEffect, useId, useMemo, useRef, useState, useSyncExternalStore, type KeyboardEvent } from "react"
 import Link from "next/link"
-import { ArrowLeft, ArrowRight, Search } from "lucide-react"
+import { ArrowLeft, ArrowRight, ChevronDown, ChevronUp, LayoutGrid, Pause, Play, Search } from "lucide-react"
 import { PartnerCarousel } from "@/components/eoa/PartnerCarousel"
 import { useLocale } from "@/lib/locale"
 import { FounderCard, type FounderCardProfile } from "./FounderCard"
 import type { Partner } from "@/types"
 import styles from "./community.module.css"
 
-function FounderRow({ founders, row }: { founders: FounderCardProfile[]; row: number }) {
+function subscribeMotion(callback: () => void) {
+  const query = window.matchMedia('(prefers-reduced-motion: reduce)')
+  query.addEventListener('change', callback)
+  return () => query.removeEventListener('change', callback)
+}
+function motionSnapshot() { return window.matchMedia('(prefers-reduced-motion: reduce)').matches }
+
+function FounderRow({ founders, suspended }: { founders: FounderCardProfile[]; suspended: boolean }) {
   const { locale, direction } = useLocale()
   const ar = locale === 'ar'
   const id = useId()
-  const rail = useRef<HTMLUListElement>(null)
-  const firstVisible = useRef(0)
-  const [boundaries, setBoundaries] = useState({ start: true, end: true })
+  const rail = useRef<HTMLDivElement>(null)
+  const reducedMotion = useSyncExternalStore(subscribeMotion, motionSnapshot, () => true)
+  const [paused, setPaused] = useState(false)
+  const [hovered, setHovered] = useState(false)
+  const [overflow, setOverflow] = useState(false)
+  const [inView, setInView] = useState(false)
+  const collectionKey = JSON.stringify(founders.map(founder => founder.id))
 
   useEffect(() => {
     const element = rail.current
     if (!element) return
-    const update = () => {
-      const rect = element.getBoundingClientRect()
-      const cards = Array.from(element.children) as HTMLElement[]
-      const first = cards[0]?.getBoundingClientRect()
-      const last = cards.at(-1)?.getBoundingClientRect()
-      if (!first || !last) return
-      const rtl = direction === 'rtl'
-      setBoundaries({ start: rtl ? first.right <= rect.right + 5 : first.left >= rect.left - 5, end: rtl ? last.left >= rect.left - 5 : last.right <= rect.right + 5 })
-      let closest = Infinity
-      cards.forEach((card, index) => {
-        const bounds = card.getBoundingClientRect()
-        const distance = Math.abs(rtl ? bounds.right - rect.right : bounds.left - rect.left)
-        if (distance < closest) { closest = distance; firstVisible.current = index }
-      })
-    }
-    const observer = new ResizeObserver(update)
-    observer.observe(element)
-    element.addEventListener('scroll', update, { passive: true })
-    update()
-    return () => { observer.disconnect(); element.removeEventListener('scroll', update) }
-  }, [direction, founders.length])
+    // Use a positive LTR offset and reversed visual order in both languages.
+    // Reducing this offset moves the visible cards physically to the right.
+    element.scrollLeft = element.scrollWidth - element.clientWidth
+    const measure = () => setOverflow(element.scrollWidth > element.clientWidth + 2)
+    measure()
+    const resize = new ResizeObserver(measure)
+    resize.observe(element)
+    const visibility = new IntersectionObserver(([entry]) => setInView(entry.isIntersecting), { threshold: .1 })
+    visibility.observe(element)
+    return () => { resize.disconnect(); visibility.disconnect() }
+  }, [collectionKey])
 
-  function go(index: number) {
+  const move = useCallback((towards: 'left' | 'right') => {
     const element = rail.current
     if (!element) return
-    const target = Math.min(founders.length - 1, Math.max(0, index))
-    element.children[target]?.scrollIntoView({ behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth', block: 'nearest', inline: 'start' })
-  }
-  function keyboard(event: KeyboardEvent<HTMLUListElement>) {
+    const maximum = Math.max(0, element.scrollWidth - element.clientWidth)
+    const track = element.firstElementChild
+    const gap = track ? Number.parseFloat(getComputedStyle(track).columnGap) || 20 : 20
+    const step = (track?.firstElementChild?.getBoundingClientRect().width || 320) + gap
+    // Snap alignment can settle 3px short of the end because of viewport padding.
+    const wrap = towards === 'right' ? element.scrollLeft <= 4 : element.scrollLeft >= maximum - 4
+    const target = wrap ? towards === 'right' ? maximum : 0 : element.scrollLeft + (towards === 'right' ? -step : step)
+    element.scrollTo({ left: Math.max(0, Math.min(maximum, target)), behavior: reducedMotion || wrap ? 'instant' : 'smooth' })
+  }, [reducedMotion])
+
+  useEffect(() => {
+    if (!overflow || !inView || paused || hovered || suspended || reducedMotion) return
+    const timer = window.setInterval(() => { if (!document.hidden) move('right') }, 3000)
+    return () => window.clearInterval(timer)
+  }, [overflow, inView, paused, hovered, suspended, reducedMotion, move])
+
+  function manualMove(towards: 'left' | 'right') { setPaused(true); move(towards) }
+  function keyboard(event: KeyboardEvent<HTMLDivElement>) {
     if (event.target !== event.currentTarget || !['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) return
     event.preventDefault()
-    if (event.key === 'Home') go(0)
-    else if (event.key === 'End') go(founders.length - 1)
-    else go(firstVisible.current + ((event.key === 'ArrowRight') === (direction === 'ltr') ? 1 : -1))
+    setPaused(true)
+    if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') move(event.key === 'ArrowRight' ? 'right' : 'left')
+    else if (rail.current) rail.current.scrollTo({ left: event.key === 'Home' ? rail.current.scrollWidth : 0, behavior: reducedMotion ? 'instant' : 'smooth' })
   }
-  const Previous = ar ? ArrowRight : ArrowLeft
-  const Next = ar ? ArrowLeft : ArrowRight
+
   return <div className={styles.founderRow}>
     <div className={styles.founderRowHead}>
-      <span>{ar ? `مجموعة المؤسسين ${row}` : `Founder collection ${row}`}<small>{ar ? 'اسحب لاستكشاف الملفات' : 'Swipe to discover'}</small></span>
-      <div className={styles.controls}>
-        <button type="button" aria-controls={id} aria-label={ar ? `المؤسس السابق في الصف ${row}` : `Previous founder in row ${row}`} disabled={boundaries.start} onClick={() => go(firstVisible.current - 1)}><Previous size={19} aria-hidden="true" /></button>
-        <button type="button" aria-controls={id} aria-label={ar ? `المؤسس التالي في الصف ${row}` : `Next founder in row ${row}`} disabled={boundaries.end} onClick={() => go(firstVisible.current + 1)}><Next size={19} aria-hidden="true" /></button>
+      <span>{ar ? 'تعرّف على المؤسسين' : 'Meet the founders'}<small>{ar ? 'اسحب أو استخدم الأسهم للاستكشاف' : 'Swipe or use the arrows to explore'}</small></span>
+      <div className={styles.controls} dir="ltr" aria-label={ar ? 'التحكم ببطاقات المؤسسين' : 'Founder carousel controls'}>
+        <button type="button" aria-controls={id} aria-label={ar ? 'تحريك بطاقات المؤسسين إلى اليسار' : 'Move founder cards left'} disabled={!overflow} onClick={() => manualMove('left')}><ArrowLeft size={19} aria-hidden="true" /></button>
+        {!reducedMotion && <button type="button" aria-controls={id} aria-label={paused ? ar ? 'تشغيل حركة بطاقات المؤسسين' : 'Resume founder movement' : ar ? 'إيقاف حركة بطاقات المؤسسين' : 'Pause founder movement'} disabled={!overflow || suspended} onClick={() => setPaused(value => !value)}>{paused ? <Play size={17} aria-hidden="true" /> : <Pause size={17} aria-hidden="true" />}</button>}
+        <button type="button" aria-controls={id} aria-label={ar ? 'تحريك بطاقات المؤسسين إلى اليمين' : 'Move founder cards right'} disabled={!overflow} onClick={() => manualMove('right')}><ArrowRight size={19} aria-hidden="true" /></button>
       </div>
     </div>
-    <ul id={id} ref={rail} className={styles.founderRail} dir={direction} tabIndex={0} onKeyDown={keyboard} aria-label={ar ? `ملفات المؤسسين، الصف ${row}` : `Founder profiles, row ${row}`}>
-      {founders.map(founder => <li key={founder.id}><FounderCard founder={founder} /></li>)}
-    </ul>
+    <div id={id} ref={rail} className={styles.founderRail} dir="ltr" role="region" aria-roledescription={ar ? 'عارض بطاقات' : 'carousel'} tabIndex={overflow ? 0 : undefined} onKeyDown={keyboard} aria-label={ar ? 'صف بطاقات المؤسسين. استخدم الأسهم للتنقل.' : 'Founder card row. Use arrow keys to browse.'} onPointerEnter={event => { if (event.pointerType !== 'touch') setHovered(true) }} onPointerLeave={() => setHovered(false)} onPointerDown={() => setPaused(true)} onWheel={() => setPaused(true)} onFocusCapture={() => setPaused(true)}>
+      <ul className={styles.founderTrack}>{founders.map(founder => <li key={founder.id} dir={direction}><FounderCard founder={founder} /></li>)}</ul>
+    </div>
   </div>
 }
 
@@ -75,9 +90,13 @@ export function FounderShowcase({ founders, showFilters = true }: { founders: Fo
   const { locale } = useLocale()
   const ar = locale === 'ar'
   const searchId = useId()
+  const gridId = useId()
+  const grid = useRef<HTMLElement>(null)
+  const gridToggle = useRef<HTMLButtonElement>(null)
   const [search, setSearch] = useState('')
   const [sector, setSector] = useState('')
-  const [rows, setRows] = useState(2)
+  const [gridOpen, setGridOpen] = useState(false)
+  const [pageSize, setPageSize] = useState(6)
   const [page, setPage] = useState(1)
   const sectors = [...new Set(founders.map(founder => founder.primaryCompany?.sector || founder.sector).filter(Boolean))].sort((a, b) => a.localeCompare(b, locale))
   const filtered = useMemo(() => founders.filter(founder => {
@@ -86,25 +105,49 @@ export function FounderShowcase({ founders, showFilters = true }: { founders: Fo
     const haystack = [founder.name, founder.companyName, company?.name, founder.position, founder.bio, founder.location, founder.sector, company?.sector].filter(Boolean).join(' ').toLocaleLowerCase(locale)
     return matchesSector && haystack.includes(search.trim().toLocaleLowerCase(locale))
   }), [founders, locale, search, sector])
-  const pageSize = rows * 6
   const pages = Math.max(1, Math.ceil(filtered.length / pageSize))
   const current = Math.min(page, pages)
   const visible = filtered.slice((current - 1) * pageSize, current * pageSize)
-  const actualRows = Math.min(rows, Math.ceil(visible.length / 3))
   const from = filtered.length ? (current - 1) * pageSize + 1 : 0
   const to = Math.min(current * pageSize, filtered.length)
+  const pageNumbers = [...new Set([1, current - 1, current, current + 1, pages])].filter(value => value >= 1 && value <= pages).sort((a, b) => a - b)
+
+  function revealGrid() {
+    requestAnimationFrame(() => {
+      grid.current?.focus({ preventScroll: true })
+      grid.current?.scrollIntoView({ behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth', block: 'start' })
+    })
+  }
+  function toggleGrid() {
+    setGridOpen(value => !value)
+    if (!gridOpen) revealGrid()
+    else gridToggle.current?.focus({ preventScroll: true })
+  }
+  function changePage(value: number) { setPage(value); revealGrid() }
+
   return <div className={styles.showcase}>
     {showFilters && <div className={styles.founderFilters}>
       <label className={styles.search} htmlFor={searchId}><span>{ar ? 'ابحث عن مؤسس أو شركة' : 'Find a founder or company'}</span><div><Search size={18} aria-hidden="true" /><input id={searchId} type="search" value={search} onChange={event => { setSearch(event.target.value); setPage(1) }} placeholder={ar ? 'الاسم، الشركة أو الخبرة' : 'Name, company or expertise'} /></div></label>
       <label className={styles.sectorFilter}><span>{ar ? 'القطاع' : 'Sector'}</span><select value={sector} onChange={event => { setSector(event.target.value); setPage(1) }}><option value="">{ar ? 'جميع القطاعات' : 'All sectors'}</option>{sectors.map(value => <option key={value} value={value}>{value}</option>)}</select></label>
       {(search || sector) && <button type="button" className={styles.clearFilters} onClick={() => { setSearch(''); setSector(''); setPage(1) }}>{ar ? 'مسح البحث' : 'Clear filters'}</button>}
     </div>}
-    <div className={styles.founderResults}><p role="status" aria-live="polite">{filtered.length ? ar ? `عرض ${from}–${to} من ${filtered.length} ملفًا` : `Showing ${from}–${to} of ${filtered.length} profiles` : ar ? 'لا توجد ملفات مطابقة. جرّب اسمًا أو قطاعًا آخر.' : 'No matching profiles. Try another name or sector.'}</p><span>{ar ? 'تصفّح على مهل' : 'Explore at your own pace'}</span></div>
-    {Array.from({ length: actualRows }, (_, index) => <FounderRow key={`${current}-${rows}-${search}-${sector}-${locale}-${index}`} row={index + 1} founders={visible.slice(Math.floor(index * visible.length / actualRows), Math.floor((index + 1) * visible.length / actualRows))} />)}
-    {!!filtered.length && <div className={styles.founderPagination}>
-      <label>{ar ? 'عدد الصفوف' : 'Rows'}<select value={rows} onChange={event => { setRows(Number(event.target.value)); setPage(1) }}>{[2, 4, 6].map(value => <option value={value} key={value}>{value}</option>)}</select></label>
-      {pages > 1 && <nav aria-label={ar ? 'صفحات المؤسسين' : 'Founder pages'}><button type="button" disabled={current === 1} onClick={() => setPage(current - 1)}>{ar ? 'السابق' : 'Previous'}</button><span>{ar ? `الصفحة ${current} من ${pages}` : `Page ${current} of ${pages}`}</span><button type="button" disabled={current === pages} onClick={() => setPage(current + 1)}>{ar ? 'التالي' : 'Next'}</button></nav>}
-    </div>}
+    <div className={styles.founderResults}><p role="status" aria-live="polite">{filtered.length ? ar ? `${filtered.length} ملفات مؤسسين للاستكشاف` : `${filtered.length} founder profiles to explore` : ar ? 'لا توجد ملفات مطابقة. جرّب اسمًا أو قطاعًا آخر.' : 'No matching profiles. Try another name or sector.'}</p></div>
+    {!!filtered.length && <>
+      <FounderRow key={`${locale}-${search}-${sector}`} founders={filtered} suspended={gridOpen} />
+      <div className={styles.gridInvitation}><button ref={gridToggle} type="button" className={styles.gridToggle} aria-expanded={gridOpen} aria-controls={gridId} onClick={toggleGrid}><LayoutGrid size={18} aria-hidden="true" />{gridOpen ? ar ? 'إخفاء شبكة المؤسسين' : 'Hide founder grid' : ar ? 'عرض جميع المؤسسين' : 'View all founders'}{gridOpen ? <ChevronUp size={18} aria-hidden="true" /> : <ChevronDown size={18} aria-hidden="true" />}</button><span>{ar ? 'استكشف الملفات في شبكة مرتّبة مع صفحات' : 'Browse the full collection in a paginated grid'}</span></div>
+    </>}
+    <section ref={grid} id={gridId} className={styles.founderGridSection} hidden={!gridOpen || !filtered.length} tabIndex={-1} aria-labelledby={`${gridId}-title`}>
+      <div className={styles.gridHead}><div><h3 id={`${gridId}-title`}>{ar ? 'جميع ملفات المؤسسين' : 'All founder profiles'}</h3><p role="status" aria-live="polite">{ar ? `عرض ${from}–${to} من ${filtered.length} ملفًا` : `Showing ${from}–${to} of ${filtered.length} profiles`}</p></div><button type="button" className={styles.clearFilters} onClick={toggleGrid}>{ar ? 'إغلاق الشبكة' : 'Close grid'}<ChevronUp size={16} aria-hidden="true" /></button></div>
+      {gridOpen && <ul className={styles.founderGrid}>{visible.map(founder => <li key={founder.id}><FounderCard founder={founder} /></li>)}</ul>}
+      <div className={styles.founderPagination}>
+        <label>{ar ? 'ملفات في الصفحة' : 'Profiles per page'}<select value={pageSize} onChange={event => { setPageSize(Number(event.target.value)); setPage(1); revealGrid() }}>{[6, 12, 24].map(value => <option value={value} key={value}>{value}</option>)}</select></label>
+        <nav aria-label={ar ? 'صفحات شبكة المؤسسين' : 'Founder grid pages'}>
+          <button type="button" disabled={current === 1} onClick={() => changePage(current - 1)}>{ar ? 'السابق' : 'Previous'}</button>
+          {pageNumbers.map((value, index) => <span className={styles.pageNumber} key={value}>{index > 0 && value - pageNumbers[index - 1] > 1 && <span aria-hidden="true">…</span>}<button type="button" aria-label={ar ? `الصفحة ${value}` : `Page ${value}`} aria-current={current === value ? 'page' : undefined} onClick={() => changePage(value)}>{value}</button></span>)}
+          <button type="button" disabled={current === pages} onClick={() => changePage(current + 1)}>{ar ? 'التالي' : 'Next'}</button>
+        </nav>
+      </div>
+    </section>
   </div>
 }
 

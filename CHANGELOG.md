@@ -6,6 +6,12 @@ This project follows **Semantic Versioning** and a Keep a Changelog-inspired for
 
 ---
 
+## Single-row founder browsing — 2026-10-11
+
+- Changed founder scorecards on the homepage and directory to one row with rightward movement every three seconds, manual arrows/swipe, pause/resume and reduced-motion support.
+- Added an expandable grid below the carousel with numbered pages, 6/12/24 profile page sizes and shared search/filter behavior.
+- Pause motion during hover, focus/manual interaction, hidden-page/out-of-view browsing and expanded-grid use; preserve Arabic/English card direction and keyboard access.
+
 ## Founder cards, mentor profiles and responsive account journeys — 2026-10-11
 
 - Moved founder scorecards below the homepage partner strip with portrait-led cards, two manual rows, search, sector filters and responsive pagination.
