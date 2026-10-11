@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 import { EoaContent } from '@/components/eoa/Content'
+
 const sections = [
   'about',
   'program',
@@ -12,6 +13,7 @@ const sections = [
   'leadership',
   'privacy',
 ]
+
 const titles: Record<string, string> = {
   about: 'عن البرنامج | About',
   program: 'هيكل البرنامج | Program',
@@ -23,9 +25,11 @@ const titles: Record<string, string> = {
   leadership: 'قيادة البرنامج | Leadership',
   privacy: 'الخصوصية | Privacy',
 }
+
 export function generateStaticParams() {
   return sections.map((section) => ({ section }))
 }
+
 export async function generateMetadata({
   params,
 }: {
@@ -34,9 +38,10 @@ export async function generateMetadata({
   const { section } = await params
   return {
     title: `EO Riyadh Accelerator — ${titles[section] ?? section}`,
-    alternates: { canonical: `/EOA/${section}` },
+    alternates: { canonical: `/eoa/${section}` },
   }
 }
+
 export default async function Page({
   params,
 }: {

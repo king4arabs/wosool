@@ -3,7 +3,24 @@ import { env } from "@/lib/env"
 
 export default function robots(): MetadataRoute.Robots {
   return {
-    rules: { userAgent: "*", allow: "/", disallow: ["/api/", "/admin", "/dashboard", "/accelerator/apply", "/review", "/verify-email", "/EOA/account", "/EOA/apply", "/EOA/admin", "/EOA/coach", "/EOA/forgot-password", "/EOA/reset-password"] },
+    rules: {
+      userAgent: "*",
+      allow: "/",
+      disallow: [
+        "/api/",
+        "/admin",
+        "/dashboard",
+        "/accelerator/apply",
+        "/review",
+        "/verify-email",
+        "/eoa/account",
+        "/eoa/apply",
+        "/eoa/admin",
+        "/eoa/coach",
+        "/eoa/forgot-password",
+        "/eoa/reset-password",
+      ],
+    },
     sitemap: new URL("/sitemap.xml", env.siteUrl).toString(),
   }
 }

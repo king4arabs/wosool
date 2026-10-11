@@ -3,21 +3,11 @@ import type { NextRequest } from "next/server"
 
 /**
  * Lightweight middleware that redirects unauthenticated visitors away from
- * protected routes. The real auth check happens in the AuthProvider on the
- * client, but this gives an instant redirect for direct URL access without
- * waiting for the SPA to hydrate.
- *
- * We rely on the existence of a session cookie as a fast heuristic —
- * the backend still validates the session on every API call.
+ * protected routes. The backend remains the source of truth and validates
+ * every authenticated request.
  */
 export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl
-
-  if (/^\/eoa(?:\/|$)/.test(pathname)) {
-    const canonical = request.nextUrl.clone();
-    canonical.pathname = pathname.replace(/^\/eoa/, "/EOA");
-    return NextResponse.redirect(canonical, 308);
-  }
 
   // Check for Laravel session cookie (set by Sanctum).
   // Supports default `laravel_session` and custom names like `wosool-session`.
@@ -30,23 +20,28 @@ export function proxy(request: NextRequest) {
     name.endsWith("-session")
   )
 
-  // Protected paths
-  const isProtected =
+  const isEoaProtected = /^\/eoa\/(admin|coach)(?:\/|$)/.test(pathname)
+  const isPlatformProtected =
     pathname.startsWith("/dashboard") || pathname.startsWith("/admin")
 
-  if (isProtected && !hasSession) {
-    const loginUrl = new URL("/login", request.url)
+  if ((isEoaProtected || isPlatformProtected) && !hasSession) {
+    const loginUrl = new URL(isEoaProtected ? "/eoa/account" : "/login", request.url)
     loginUrl.searchParams.set("redirect", `${pathname}${request.nextUrl.search}`)
     return NextResponse.redirect(loginUrl)
   }
 
-  // Do not force-redirect /login or /register based only on cookie presence.
-  // Cookie can exist while backend session is already invalid, which causes
-  // redirect loops (/login -> /dashboard -> /login).
-
+  // Do not force-redirect sign-in pages based only on cookie presence. A cookie
+  // can outlive its backend session and would otherwise create redirect loops.
   return NextResponse.next()
 }
 
 export const config = {
-  matcher: ["/eoa/:path*","/dashboard/:path*", "/admin/:path*", "/login", "/register"],
+  matcher: [
+    "/eoa/admin/:path*",
+    "/eoa/coach/:path*",
+    "/dashboard/:path*",
+    "/admin/:path*",
+    "/login",
+    "/register",
+  ],
 }

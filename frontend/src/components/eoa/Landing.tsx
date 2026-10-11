@@ -1,11 +1,18 @@
 'use client'
+
 import Link from 'next/link'
-import { EoaLogo } from './Logo'
-import { ArrowUpRight, ArrowLeft, Check, MoveUpRight } from 'lucide-react'
+import {
+  ArrowLeft,
+  ArrowUpRight,
+  Check,
+  MoveUpRight,
+} from 'lucide-react'
 import { useLocale } from '@/lib/locale'
-import { Notice, PartnerStrip, useEoaProgram } from './Shared'
-import { EoaJourney } from './Journey'
 import { programAvailability } from '@/lib/eoa'
+import { EoaJourney } from './Journey'
+import { EoaLogo } from './Logo'
+import { EoaHeroMedia } from './HeroMedia'
+import { Notice, PartnerStrip, useEoaProgram } from './Shared'
 
 export function EoaLanding() {
   const { locale } = useLocale()
@@ -13,89 +20,157 @@ export function EoaLanding() {
   const { program, failed, retry } = useEoaProgram()
   const availability = programAvailability(program, failed)
   const Arrow = ar ? ArrowLeft : ArrowUpRight
+
+  const metrics = ar
+    ? [
+        ['$250K–$999K', 'نطاق الإيراد السنوي المستهدف'],
+        ['4', 'ركائز أساسية للنمو'],
+        ['12–24', 'شهراً للرحلة المحلية المقترحة'],
+        ['$1M+', 'طموح النمو السنوي'],
+      ]
+    : [
+        ['$250K–$999K', 'Target annual revenue'],
+        ['4', 'Core growth pillars'],
+        ['12–24 Months', 'Proposed local journey'],
+        ['$1M+', 'Annual growth ambition'],
+      ]
+
   return (
     <div className="eoa">
-      <section className="eoa-hero">
-        <div className="eoa-container eoa-hero-grid">
-          <div>
-            <div className="eoa-eyebrow">
-              <span className="eoa-dot" />
-              WOSOOL / EO RIYADH ACCELERATOR
-            </div>
-            <EoaLogo className="eoa-hero-logo" inverse priority />
-            <h1>
-              EO Riyadh
-              <br />
-              Accelerator
-            </h1>
-            <p className="eoa-hero-message">
-              {ar
-                ? 'برنامج نمو لمؤسسي ومالكي الشركات القائمة في الرياض، يجمع التعلم العملي ومجموعات المساءلة والتواصل مع الأقران لدعم طموح الوصول إلى مليون دولار من الإيراد السنوي. النمو وعضوية منظمة روّاد الأعمال (EO) غير مضمونين.'
-                : 'A growth program for owners and founders of operating businesses in Riyadh, combining practical learning, accountability groups and peer connections to support the ambition of reaching US$1 million in annual revenue. Growth and Entrepreneurs’ Organization (EO) membership are not guaranteed.'}
-            </p>
-            <div className="eoa-actions">
-              <Link className="eoa-btn" href="/EOA/apply">
-                {ar ? 'تقدم إلى EO Accelerator' : 'Apply to EO Accelerator'}
-                <Arrow size={18} />
-              </Link>
-              <Link className="eoa-btn eoa-btn-outline" href="/EOA/eligibility">
-                {ar ? 'تحقق من الأهلية' : 'Check eligibility'}
-              </Link>
-            </div>
-            <p className="eoa-hero-note">
-              {availability === 'loading'
-                ? ar ? 'جارٍ التحقق من حالة التقديم…' : 'Checking application availability…'
-                : availability === 'unavailable'
-                ? ar ? 'تعذر التحقق من حالة التقديم.' : 'Application availability could not be verified.'
-                : availability === 'open'
-                ? ar
-                  ? 'باب التقديم المحلي مفتوح.'
-                  : 'Local applications are open.'
-                : ar
-                  ? 'التقديم مغلق حالياً. تابع الإعلانات المعتمدة أو تواصل مع فريق البرنامج.'
-                  : 'Applications are currently closed. Follow confirmed updates or contact the program team.'}
-            </p>
-            {failed && <button type="button" className="eoa-btn eoa-btn-outline" onClick={retry}>{ar ? 'إعادة المحاولة' : 'Try again'}</button>}
-          </div>
-          <div className="eoa-path-card">
-            <div className="eoa-path-head">
-              <EoaLogo inverse />
-              <span>{ar ? 'مسار المؤسس' : 'THE FOUNDER PATH'}</span>
-            </div>
-            <div className="eoa-growth-mark" aria-hidden="true">
-              <MoveUpRight size={92} strokeWidth={1} />
-            </div>
-            {[
-              [
-                ar ? 'ابنِ الأساس' : 'Build your foundation',
-                ar ? 'النقد • الاستراتيجية' : 'Cash • Strategy',
-              ],
-              [
-                ar ? 'نمِّ قدراتك' : 'Strengthen your leadership',
-                ar ? 'الأفراد • التنفيذ' : 'People • Execution',
-              ],
-              [
-                ar ? 'وسّع آفاقك' : 'Grow your possibilities',
-                ar
-                  ? 'رحلة نحو جاهزية عضوية EO'
-                  : 'A path toward EO membership readiness',
-              ],
-            ].map(([title, body], i) => (
-              <div className="eoa-path-step" key={title}>
-                <span>0{i + 1}</span>
-                <div>
-                  <h3>{title}</h3>
-                  <p>{body}</p>
+      <section className="eoa-hero" aria-labelledby="eoa-hero-title">
+        <EoaHeroMedia ar={ar} />
+        <div className="eoa-container eoa-hero-shell">
+          <div className="eoa-hero-grid">
+            <div className="eoa-hero-copy">
+              <div className="eoa-eyebrow">
+                <span className="eoa-dot" />
+                {ar
+                  ? 'منظمة رواد الأعمال | EO الرياض'
+                  : "ENTREPRENEURS' ORGANIZATION | EO RIYADH"}
+              </div>
+              <EoaLogo className="eoa-hero-logo" inverse priority />
+              <h1 id="eoa-hero-title" className="eoa-hero-title">
+                {ar ? (
+                  <>
+                    <span>روّاد أعمال من الرياض.</span>
+                    <span>علاقات عالمية.</span>
+                    <span>نمو استثنائي.</span>
+                  </>
+                ) : (
+                  <>
+                    <span>Riyadh-based Founders.</span>
+                    <span>Global Connections.</span>
+                    <span>Extraordinary Growth.</span>
+                  </>
+                )}
+              </h1>
+              <p className="eoa-hero-message">
+                {ar
+                  ? 'انضم إلى رحلة يقودها المؤسسون لتعزيز أعمالك، وتنمية قيادتك، والتوسع نحو إيرادات سنوية تتجاوز مليون دولار من خلال التعلم العملي والعلاقات الريادية العالمية.'
+                  : 'Join a founder-led journey to strengthen your business, grow your leadership and scale toward US$1M+ annual revenue through practical learning and global entrepreneurial connections.'}
+              </p>
+              <div className="eoa-hero-join-row">
+                <div className="eoa-actions">
+                  <Link className="eoa-btn" href="/eoa/apply">
+                    {ar
+                      ? 'انضم إلى مسرّعة EO الرياض'
+                      : 'JOIN EO RIYADH ACCELERATOR'}
+                    <Arrow size={18} />
+                  </Link>
+                  <Link className="eoa-btn eoa-btn-outline" href="/eoa/program">
+                    {ar ? 'استكشف البرنامج' : 'Explore the Program'}
+                  </Link>
+                  <a
+                    className="eoa-text-link"
+                    href="https://eonetwork.org/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {ar ? 'اكتشف EO' : 'Discover EO'}
+                    <Arrow size={18} />
+                  </a>
                 </div>
+                <EoaLogo className="eoa-hero-cta-logo" inverse />
+              </div>
+              <p className="eoa-hero-note" role="status">
+                {availability === 'loading'
+                  ? ar
+                    ? 'جارٍ التحقق من حالة التقديم…'
+                    : 'Checking application availability…'
+                  : availability === 'unavailable'
+                    ? ar
+                      ? 'تعذر التحقق من حالة التقديم.'
+                      : 'Application availability could not be verified.'
+                    : availability === 'open'
+                      ? ar
+                        ? 'باب التقديم المحلي مفتوح.'
+                        : 'Local applications are open.'
+                      : ar
+                        ? 'التقديم مغلق حالياً. تابع الإعلانات المعتمدة أو تواصل مع فريق البرنامج.'
+                        : 'Applications are currently closed. Follow confirmed updates or contact the program team.'}
+              </p>
+              {failed && (
+                <button
+                  type="button"
+                  className="eoa-btn eoa-btn-outline eoa-hero-retry"
+                  onClick={retry}
+                >
+                  {ar ? 'إعادة المحاولة' : 'Try again'}
+                </button>
+              )}
+            </div>
+
+            <div className="eoa-path-card">
+              <div className="eoa-path-head">
+                <EoaLogo inverse />
+                <span>{ar ? 'مسار المؤسس' : 'THE FOUNDER PATH'}</span>
+              </div>
+              <div className="eoa-growth-mark" aria-hidden="true">
+                <MoveUpRight size={92} strokeWidth={1} />
+              </div>
+              {[
+                [
+                  ar ? 'ابنِ الأساس' : 'Build your foundation',
+                  ar ? 'النقد • الاستراتيجية' : 'Cash • Strategy',
+                ],
+                [
+                  ar ? 'نمِّ قدراتك' : 'Strengthen your leadership',
+                  ar ? 'الأفراد • التنفيذ' : 'People • Execution',
+                ],
+                [
+                  ar ? 'وسّع آفاقك' : 'Grow your possibilities',
+                  ar
+                    ? 'رحلة نحو جاهزية عضوية EO'
+                    : 'A path toward EO membership readiness',
+                ],
+              ].map(([title, body], index) => (
+                <div className="eoa-path-step" key={title}>
+                  <span>0{index + 1}</span>
+                  <div>
+                    <h3>{title}</h3>
+                    <p>{body}</p>
+                  </div>
+                </div>
+              ))}
+              <div className="eoa-path-foot">
+                {ar ? 'تعلّم. طبّق. تقدّم.' : 'LEARN. APPLY. PROGRESS.'}
+              </div>
+            </div>
+          </div>
+
+          <div className="eoa-hero-metrics" aria-label={ar ? 'مؤشرات البرنامج' : 'Program highlights'}>
+            {metrics.map(([value, label]) => (
+              <div className="eoa-hero-metric" key={label}>
+                <strong dir="ltr">{value}</strong>
+                <span>{label}</span>
               </div>
             ))}
-            <div className="eoa-path-foot">
-              {ar ? 'تعلّم. طبّق. تقدّم.' : 'LEARN. APPLY. PROGRESS.'}
-            </div>
           </div>
         </div>
       </section>
+
       <PartnerStrip partners={program?.partners ?? []} />
+
       {(ar ? program?.public_message_ar : program?.public_message_en) && (
         <div className="eoa-container">
           <Notice>
@@ -103,27 +178,7 @@ export function EoaLanding() {
           </Notice>
         </div>
       )}
-      <section className="eoa-statbar">
-        <div className="eoa-container">
-          {[
-            [
-              '$250k–$999,999',
-              ar ? 'الإيراد السنوي بالدولار' : 'Annual revenue in USD',
-            ],
-            ['04', ar ? 'أيام تعلم سنوياً' : 'Learning days each year'],
-            [
-              ar ? 'شهرياً' : 'Monthly',
-              ar ? 'مجموعات المساءلة' : 'Accountability groups',
-            ],
-            ['02', ar ? 'عامان للبرنامج' : 'Year learning program'],
-          ].map(([n, label]) => (
-            <div key={label}>
-              <strong dir="ltr">{n}</strong>
-              <span>{label}</span>
-            </div>
-          ))}
-        </div>
-      </section>
+
       <section className="eoa-section">
         <div className="eoa-container">
           <div className="eoa-section-head">
@@ -171,9 +226,9 @@ export function EoaLanding() {
                   ? 'حوّل أهدافك إلى التزامات ونتائج قابلة للمتابعة.'
                   : 'Turn goals into commitments you can track.',
               ],
-            ].map(([title, body], i) => (
+            ].map(([title, body], index) => (
               <article className="eoa-pillar" key={title}>
-                <span>0{i + 1}</span>
+                <span>0{index + 1}</span>
                 <h3>{title}</h3>
                 <p>{body}</p>
               </article>
@@ -181,6 +236,7 @@ export function EoaLanding() {
           </div>
         </div>
       </section>
+
       <section className="eoa-section eoa-light">
         <div className="eoa-container eoa-two-grid">
           <div>
@@ -194,10 +250,10 @@ export function EoaLanding() {
             </h2>
             <p>
               {ar
-                ? 'نربط تطوير الشركات وبناء القدرات الوطنية وطموح القطاع الخاص بمستهدفات رؤية السعودية 2030.'
-                : 'Connect company growth, national capabilities and private-sector ambition with Saudi Vision 2030.'}
+                ? 'تجمع الرحلة بين نمو الشركات وبناء القدرات القيادية وعلاقات المؤسسين داخل الرياض وعبر شبكة EO العالمية.'
+                : 'The journey brings together company growth, leadership capability and founder relationships across Riyadh and the global EO network.'}
             </p>
-            <Link className="eoa-text-link" href="/EOA/about">
+            <Link className="eoa-text-link" href="/eoa/about">
               {ar ? 'تعرف على البرنامج' : 'Meet the program'}
               <Arrow size={18} />
             </Link>
@@ -234,7 +290,9 @@ export function EoaLanding() {
           </div>
         </div>
       </section>
+
       <EoaJourney program={program} />
+
       <section className="eoa-section">
         <div className="eoa-container eoa-two-grid">
           <div>
@@ -254,11 +312,11 @@ export function EoaLanding() {
                 : 'Start with an eligibility check, then prepare your application and save your progress. The committee reviews company readiness and your commitment to growth.'}
             </p>
             <div className="eoa-actions">
-              <Link className="eoa-btn" href="/EOA/apply">
+              <Link className="eoa-btn" href="/eoa/apply">
                 {ar ? 'ابدأ رحلتك' : 'Start your journey'}
                 <Arrow size={18} />
               </Link>
-              <Link className="eoa-text-link" href="/EOA/contact">
+              <Link className="eoa-text-link" href="/eoa/contact">
                 {ar ? 'انضم كشريك' : 'Become a partner'}
               </Link>
             </div>

@@ -1,10 +1,13 @@
 'use client'
+
 import Link from 'next/link'
-import { useLocale } from '@/lib/locale'
 import type { EoaProgram } from '@/lib/eoa'
+import { useLocale } from '@/lib/locale'
+
 export function EoaJourney({ program }: { program: EoaProgram | null }) {
   const { locale } = useLocale()
   const ar = locale === 'ar'
+
   const steps = ar
     ? [
         ['إنشاء الحساب', 'سجّل بياناتك ووثّق بريدك الإلكتروني.'],
@@ -36,6 +39,7 @@ export function EoaJourney({ program }: { program: EoaProgram | null }) {
           'Leadership confirms your track, then you complete participation and enrollment requirements.',
         ],
       ]
+
   return (
     <>
       <section className="eoa-section eoa-light" id="application-journey">
@@ -58,24 +62,25 @@ export function EoaJourney({ program }: { program: EoaProgram | null }) {
             </Link>
           </div>
           <ol className="eoa-journey-grid">
-            {steps.map(([title, body], i) => (
+            {steps.map(([title, body], index) => (
               <li className="eoa-pillar" key={title}>
-                <span>0{i + 1}</span>
+                <span>0{index + 1}</span>
                 <h3>{title}</h3>
                 <p>{body}</p>
               </li>
             ))}
           </ol>
           <div className="eoa-actions">
-            <Link className="eoa-btn" href="/EOA/apply">
+            <Link className="eoa-btn" href="/eoa/apply">
               {ar ? 'ابدأ طلب الالتحاق' : 'Start your application'}
             </Link>
-            <Link className="eoa-btn eoa-btn-outline" href="/EOA/account">
+            <Link className="eoa-btn eoa-btn-outline" href="/eoa/account">
               {ar ? 'إنشاء حساب أو الدخول' : 'Create account or sign in'}
             </Link>
           </div>
         </div>
       </section>
+
       <section className="eoa-section" id="admission">
         <div className="eoa-container eoa-two-grid">
           <div>
@@ -94,10 +99,10 @@ export function EoaJourney({ program }: { program: EoaProgram | null }) {
             </p>
             <p>
               {ar
-                ? 'تتضمن الرحلة أربعة أيام تعلم كل عام، ومجموعات مساءلة شهرية، وتطبيق الأدوات في شركتك ضمن برنامج تعلم يمتد عامين.'
-                : 'The two-year learning program combines four learning days annually, monthly accountability groups and practical work on your own company.'}
+                ? 'تُضبط الرحلة المحلية حسب الدفعة، وقد تمتد من 12 إلى 24 شهراً، وتجمع بين أيام التعلّم الدورية ومجموعات المساءلة الشهرية والتطبيق العملي داخل شركتك.'
+                : 'The local journey is configured by cohort and may span 12–24 months, combining periodic learning days, monthly accountability groups and practical work on your own company.'}
             </p>
-            <Link className="eoa-text-link" href="/EOA/eligibility">
+            <Link className="eoa-text-link" href="/eoa/eligibility">
               {ar ? 'تحقق من الأهلية والرسوم' : 'Check eligibility & fees'} ↗
             </Link>
           </div>
@@ -110,7 +115,7 @@ export function EoaJourney({ program }: { program: EoaProgram | null }) {
                   <p>{ar ? track.description_ar : track.description_en}</p>
                   <Link
                     className="eoa-text-link"
-                    href={`/EOA/apply?track=${track.id}`}
+                    href={`/eoa/apply?track=${track.id}`}
                   >
                     {ar ? 'التقديم لهذا المسار' : 'Apply for this track'} ↗
                   </Link>
@@ -134,6 +139,7 @@ export function EoaJourney({ program }: { program: EoaProgram | null }) {
           </div>
         </div>
       </section>
+
       <section className="eoa-section eoa-light">
         <div className="eoa-container eoa-two-grid">
           <div>
@@ -150,7 +156,7 @@ export function EoaJourney({ program }: { program: EoaProgram | null }) {
                 ? 'تعلّم من خبرات المؤسسين، وناقش تحدياتك مع الأقران، واستكشف فرص التواصل والتعلم المحلية والعالمية المتاحة للمشاركين.'
                 : 'Learn from founder experience, work through challenges with peers, and explore the local and global connections and learning opportunities available to participants.'}
             </p>
-            <Link className="eoa-text-link" href="/EOA/leadership">
+            <Link className="eoa-text-link" href="/eoa/leadership">
               {ar
                 ? 'تعرف على القيادة والمدربين'
                 : 'Meet the leadership & coaches'}{' '}
@@ -167,7 +173,7 @@ export function EoaJourney({ program }: { program: EoaProgram | null }) {
                   ],
                   [
                     'ما رسوم المشاركة؟',
-                    'تبلغ رسوم البرنامج العالمية 1,750 دولاراً سنوياً، وتُنشر الرسوم المحلية والرعاية ومساهمة المشارك بعد اعتمادها.',
+                    'تظهر الرسوم المعتمدة ودعم الرعاية ومساهمة المشارك في صفحة الأهلية ونموذج التقديم بعد اعتمادها رسمياً. ولا تُعد تكاليف السفر أو الفعاليات المنفصلة مشمولة تلقائياً.',
                   ],
                   [
                     'هل أصبح عضواً في EO بعد البرنامج؟',
@@ -181,7 +187,7 @@ export function EoaJourney({ program }: { program: EoaProgram | null }) {
                   ],
                   [
                     'What are the participation fees?',
-                    'The annual global program fee is US$1,750. Local fees, sponsorship and participant contributions are published once approved.',
+                    'Approved program fees, sponsorship support and participant contributions appear on the eligibility page and application only after formal confirmation. Travel and separately priced events are not assumed to be included.',
                   ],
                   [
                     'Will I become an EO member?',
@@ -194,7 +200,7 @@ export function EoaJourney({ program }: { program: EoaProgram | null }) {
                 <p>{answer}</p>
               </details>
             ))}
-            <Link className="eoa-text-link" href="/EOA/faq">
+            <Link className="eoa-text-link" href="/eoa/faq">
               {ar ? 'جميع الأسئلة الشائعة' : 'All frequently asked questions'}{' '}
               ↗
             </Link>

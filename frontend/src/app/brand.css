@@ -43,5 +43,5 @@
   --shadow-card: 0 8px 32px rgb(12 12 49 / 6%);
   --shadow-raised: 0 16px 40px rgb(12 12 49 / 12%);
   --section-space: clamp(3rem, 7vw, 6rem);
-  --font-latin: "Roboto", "Segoe UI", sans-serif;
+  --font-latin: "Cairo Variable", "Segoe UI", sans-serif;
 }

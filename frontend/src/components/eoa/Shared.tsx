@@ -1,45 +1,60 @@
 'use client'
+
 import {
-  useEffect,
-  useState,
-  useRef,
-  useId,
   cloneElement,
   isValidElement,
-  type ReactElement,
+  useEffect,
+  useId,
+  useRef,
+  useState,
   type CSSProperties,
+  type ReactElement,
 } from 'react'
 import { Pause, Play } from 'lucide-react'
+import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import Image from 'next/image'
-import { EoaLogo } from './Logo'
 import { api } from '@/lib/api'
-import { useLocale } from '@/lib/locale'
 import type { EoaPartner, EoaProgram } from '@/lib/eoa'
+import { useLocale } from '@/lib/locale'
+import { EoaLogo } from './Logo'
 
 export function useEoaProgram() {
   const [program, setProgram] = useState<EoaProgram | null>(null)
   const [failed, setFailed] = useState(false)
   const [attempt, setAttempt] = useState(0)
+
   useEffect(() => {
     let active = true
     const controller = new AbortController()
+
     api
-      .get<{ data: EoaProgram }>('/eoa/program', { signal: controller.signal })
-      .then((r) => {
-        if (active) setProgram(r.data)
+      .get<{ data: EoaProgram }>('/eoa/program', {
+        signal: controller.signal,
+      })
+      .then((response) => {
+        if (active) setProgram(response.data)
       })
       .catch(() => {
         if (active) setFailed(true)
       })
+
     return () => {
       active = false
       controller.abort()
     }
   }, [attempt])
-  return { program, failed, retry: () => { setFailed(false); setAttempt((value) => value + 1) } }
+
+  return {
+    program,
+    failed,
+    retry: () => {
+      setFailed(false)
+      setAttempt((value) => value + 1)
+    },
+  }
 }
+
 export function Notice({
   children,
   error = false,
@@ -56,6 +71,7 @@ export function Notice({
     </p>
   )
 }
+
 export function Field({
   label,
   children,
@@ -64,6 +80,7 @@ export function Field({
   children: React.ReactNode
 }) {
   const labelId = useId()
+
   return (
     <label className="eoa-field">
       <span id={labelId}>{label}</span>
@@ -76,21 +93,26 @@ export function Field({
     </label>
   )
 }
+
 export function PartnerStrip({ partners }: { partners: EoaPartner[] }) {
   const { locale } = useLocale()
   const ar = locale === 'ar'
   const [paused, setPaused] = useState(false)
   const windowRef = useRef<HTMLDivElement>(null)
   const [width, setWidth] = useState(0)
+
   useEffect(() => {
     const element = windowRef.current
     if (!element) return
+
     const update = () => setWidth(element.clientWidth)
     update()
+
     const observer = new ResizeObserver(update)
     observer.observe(element)
     return () => observer.disconnect()
   }, [])
+
   const uniquePartners = [
     ...new Map(
       [
@@ -109,15 +131,15 @@ export function PartnerStrip({ partners }: { partners: EoaPartner[] }) {
   return (
     <section
       className="eoa-partners"
-      aria-label={ar ? 'نفخر بشركائنا' : 'Proud of Partners'}
+      aria-label={ar ? 'نفخر بمنظومة شركائنا' : 'Proud of our ecosystem'}
     >
       <div className="eoa-container">
         <div className="eoa-partner-head">
           <h2>
             {partners.length
               ? ar
-                ? 'نفخر بشركائنا'
-                : 'Proud of our partners'
+                ? 'نفخر بمنظومة شركائنا'
+                : 'Proud of Our Ecosystem'
               : ar
                 ? 'بقيادة EO الرياض'
                 : 'Led by EO Riyadh'}
@@ -149,21 +171,21 @@ export function PartnerStrip({ partners }: { partners: EoaPartner[] }) {
                 key={copy}
                 aria-hidden={copy === 1}
               >
-                {uniquePartners.map((p) => (
+                {uniquePartners.map((partner) => (
                   <a
-                    key={p.id}
-                    href={p.website}
+                    key={partner.id}
+                    href={partner.website}
                     target="_blank"
                     rel="noopener noreferrer"
                     tabIndex={copy === 1 ? -1 : 0}
-                    aria-label={ar ? p.name_ar : p.name_en}
+                    aria-label={ar ? partner.name_ar : partner.name_en}
                   >
-                    {p.logo_path === '/partners/eo-riyadh.png' ? (
+                    {partner.logo_path === '/partners/eo-riyadh.png' ? (
                       <EoaLogo />
                     ) : (
                       <Image
-                        src={p.logo_path}
-                        alt={ar ? p.name_ar : p.name_en}
+                        src={partner.logo_path}
+                        alt={ar ? partner.name_ar : partner.name_en}
                         width={180}
                         height={64}
                         unoptimized
@@ -179,35 +201,42 @@ export function PartnerStrip({ partners }: { partners: EoaPartner[] }) {
     </section>
   )
 }
+
 export function EoaNav() {
   const pathname = usePathname()
+  const canonicalPathname = pathname.toLowerCase()
   const { locale } = useLocale()
   const ar = locale === 'ar'
+
   return (
     <nav
       className="eoa-subnav"
-      aria-label={ar ? 'EO Accelerator' : 'EO Accelerator'}
+      aria-label={
+        ar
+          ? 'التنقل في مسرّعة منظمة رواد الأعمال بالرياض'
+          : 'EO Riyadh Accelerator navigation'
+      }
     >
       <div className="eoa-container">
         {[
-          ['/EOA', ar ? 'المسرّعة' : 'Accelerator'],
-          ['/EOA/about', ar ? 'عن المسرّعة' : 'About'],
-          ['/EOA/program', ar ? 'البرنامج' : 'Program'],
-          ['/EOA/eligibility', ar ? 'الأهلية والرسوم' : 'Eligibility & fees'],
-          ['/EOA/learning', ar ? 'التعلم' : 'Learning'],
-          ['/EOA/partners', ar ? 'الشركاء' : 'Partners'],
+          ['/eoa', ar ? 'المسرّعة' : 'Accelerator'],
+          ['/eoa/about', ar ? 'عن المسرّعة' : 'About'],
+          ['/eoa/program', ar ? 'البرنامج' : 'Program'],
+          ['/eoa/eligibility', ar ? 'الأهلية والرسوم' : 'Eligibility & fees'],
+          ['/eoa/learning', ar ? 'التعلم' : 'Learning'],
+          ['/eoa/partners', ar ? 'الشركاء' : 'Partners'],
           [
-            '/EOA/leadership',
+            '/eoa/leadership',
             ar ? 'القيادة والمدربون' : 'Leadership & coaches',
           ],
-          ['/EOA/faq', ar ? 'الأسئلة الشائعة' : 'FAQ'],
-          ['/EOA/contact', ar ? 'التواصل' : 'Contact'],
-          ['/EOA/account', ar ? 'حسابي' : 'My account'],
+          ['/eoa/faq', ar ? 'الأسئلة الشائعة' : 'FAQ'],
+          ['/eoa/contact', ar ? 'التواصل' : 'Contact'],
+          ['/eoa/account', ar ? 'حسابي' : 'My account'],
         ].map(([href, text]) => (
           <Link
             key={href}
             href={href}
-            aria-current={pathname === href ? 'page' : undefined}
+            aria-current={canonicalPathname === href ? 'page' : undefined}
           >
             {text}
           </Link>
