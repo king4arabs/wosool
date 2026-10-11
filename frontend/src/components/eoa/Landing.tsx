@@ -5,11 +5,13 @@ import { ArrowUpRight, ArrowLeft, Check, MoveUpRight } from 'lucide-react'
 import { useLocale } from '@/lib/locale'
 import { Notice, PartnerStrip, useEoaProgram } from './Shared'
 import { EoaJourney } from './Journey'
+import { programAvailability } from '@/lib/eoa'
 
 export function EoaLanding() {
   const { locale } = useLocale()
   const ar = locale === 'ar'
-  const { program } = useEoaProgram()
+  const { program, failed, retry } = useEoaProgram()
+  const availability = programAvailability(program, failed)
   const Arrow = ar ? ArrowLeft : ArrowUpRight
   return (
     <div className="eoa">
@@ -28,8 +30,8 @@ export function EoaLanding() {
             </h1>
             <p className="eoa-hero-message">
               {ar
-                ? 'مسرّعة رائدة تمكّن المؤسسين من التواصل مع مؤسسين حول العالم، وتنمية شركاتهم الناشئة لتبلغ إيرادات سنوية لا تقل عن مليون دولار، والاستعداد لعضوية منظمة روّاد الأعمال (EO).'
-                : 'A premier accelerator empowering founders to connect with Founders globally, and to grow their startups to at least $1 million in annual revenue and prepare for membership in the Entrepreneurs’ Organization (EO)'}
+                ? 'برنامج نمو لمؤسسي ومالكي الشركات القائمة في الرياض، يجمع التعلم العملي ومجموعات المساءلة والتواصل مع الأقران لدعم طموح الوصول إلى مليون دولار من الإيراد السنوي. النمو وعضوية منظمة روّاد الأعمال (EO) غير مضمونين.'
+                : 'A growth program for owners and founders of operating businesses in Riyadh, combining practical learning, accountability groups and peer connections to support the ambition of reaching US$1 million in annual revenue. Growth and Entrepreneurs’ Organization (EO) membership are not guaranteed.'}
             </p>
             <div className="eoa-actions">
               <Link className="eoa-btn" href="/EOA/apply">
@@ -41,14 +43,19 @@ export function EoaLanding() {
               </Link>
             </div>
             <p className="eoa-hero-note">
-              {program?.applications_open
+              {availability === 'loading'
+                ? ar ? 'جارٍ التحقق من حالة التقديم…' : 'Checking application availability…'
+                : availability === 'unavailable'
+                ? ar ? 'تعذر التحقق من حالة التقديم.' : 'Application availability could not be verified.'
+                : availability === 'open'
                 ? ar
                   ? 'باب التقديم المحلي مفتوح.'
                   : 'Local applications are open.'
                 : ar
-                  ? 'تابع مواعيد التقديم ومسارات البرنامج من حسابك.'
-                  : 'Follow application dates and program tracks from your account.'}
+                  ? 'التقديم مغلق حالياً. تابع الإعلانات المعتمدة أو تواصل مع فريق البرنامج.'
+                  : 'Applications are currently closed. Follow confirmed updates or contact the program team.'}
             </p>
+            {failed && <button type="button" className="eoa-btn eoa-btn-outline" onClick={retry}>{ar ? 'إعادة المحاولة' : 'Try again'}</button>}
           </div>
           <div className="eoa-path-card">
             <div className="eoa-path-head">

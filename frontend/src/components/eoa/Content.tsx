@@ -5,6 +5,7 @@ import { EoaPrivacy } from './Privacy'
 import { EoaContact } from './Contact'
 import { Eligibility } from './Eligibility'
 import { Notice, PartnerStrip, useEoaProgram } from './Shared'
+import { formatEoaDate } from '@/lib/eoa'
 const titles: Record<string, [string, string]> = {
   privacy: ['الخصوصية والبيانات', 'Privacy & data'],
   about: ['عن المسرّعة', 'About the Accelerator'],
@@ -41,8 +42,8 @@ export function EoaContent({ section }: { section: string }) {
     [
       ar ? 'متى تبدأ دفعة الرياض؟' : 'When does the Riyadh cohort start?',
       ar
-        ? 'يُنشر الموعد بعد الاعتماد. مستهدفات التخطيط المحلي هي 10–15 مشاركاً مؤهلاً قبل الإطلاق و25 مشاركاً على الأقل خلال عامين؛ ليست أعداداً محققة.'
-        : 'Dates will be published after approval. Local planning targets are 10–15 qualified participants before launch and at least 25 within two years; these are targets, not achieved counts.',
+        ? 'تُنشر مواعيد الدفعة بعد اعتمادها من قيادة البرنامج. تواصل مع الفريق لمعرفة آخر المستجدات؛ لا تفترض بدء دفعة بناءً على تقديم الطلب.'
+        : 'Cohort dates are published after approval by program leadership. Contact the team for current updates; submitting an application does not establish a cohort start date.',
     ],
     [
       ar ? 'ما الالتزام الزمني؟' : 'What is the time commitment?',
@@ -244,7 +245,7 @@ export function EoaContent({ section }: { section: string }) {
                     {ar ? 'الموقع الرسمي' : 'Official website'} ↗
                   </a>
                   <p className="eoa-muted">
-                    {ar ? 'تحقق' : 'Verified'}: {o.verified_at}
+                    {ar ? 'تحقق' : 'Verified'}: {formatEoaDate(o.verified_at, ar)}
                   </p>
                 </article>
               ))}
@@ -280,8 +281,9 @@ export function EoaContent({ section }: { section: string }) {
         )}
         <footer className="eoa-source"><Link href="/EOA/privacy">{ar ? 'إشعار الخصوصية' : 'Data notice'}</Link> · 
           {ar
-            ? 'حقائق البرنامج: مصادر EO الرسمية، تحقق 8 أكتوبر 2026.'
-            : 'Program facts: official EO sources, verified 8 October 2026.'}{' '}
+            ? 'مصادر حقائق البرنامج: EO الرسمية.'
+            : 'Program fact sources: official EO publications.'}{' '}
+          {program?.facts.verified_at && <span>{ar ? 'آخر مراجعة مسجلة' : 'Last recorded review'}: {formatEoaDate(program.facts.verified_at, ar)} · </span>}
           <a
             href="https://eonetwork.org/accelerator"
             target="_blank"

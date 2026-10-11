@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import Link from "next/link"
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -22,23 +22,37 @@ const quickActions = [
   { icon: FileText, label: "Review Apps", href: "/admin/members" },
   { icon: CalendarDays, label: "Create Event", href: "/admin/events" },
   { icon: Settings, label: "Settings", href: "/admin/settings" },
+  { icon: Star, label: "EOA Operations", href: "/EOA/admin" },
 ]
 
 export default function AdminPage() {
   const [dashboard, setDashboard] = useState<AdminDashboardResponse | null>(null)
   const [error, setError] = useState<string | null>(null)
+  const [loading, setLoading] = useState(true)
 
-  useEffect(() => {
-    api.get<AdminDashboardResponse>("/admin/dashboard")
-      .then(setDashboard)
-      .catch((err: Error) => setError(err.message))
+  const load = useCallback(async (signal?: AbortSignal) => {
+    setLoading(true)
+    setError(null)
+    try {
+      const response = await api.get<AdminDashboardResponse>("/admin/dashboard", { signal })
+      if (!signal?.aborted) setDashboard(response)
+    } catch (err) {
+      if (!signal?.aborted) setError(err instanceof Error ? err.message : "Unable to load dashboard.")
+    } finally {
+      if (!signal?.aborted) setLoading(false)
+    }
   }, [])
+  useEffect(() => {
+    const controller = new AbortController()
+    void load(controller.signal)
+    return () => controller.abort()
+  }, [load])
 
   const stats = dashboard ? [
     { label: "Total Members", value: dashboard.stats.total_members, change: `${dashboard.stats.pending_applications} pending`, icon: Users, color: "text-blue-600" },
     { label: "Active Founders", value: dashboard.stats.active_founders, change: `${dashboard.stats.open_programs} open programs`, icon: Star, color: "text-amber-600" },
     { label: "Companies", value: dashboard.stats.companies, change: `${dashboard.stats.published_news} published articles`, icon: Building2, color: "text-emerald-600" },
-    { label: "Events This Month", value: dashboard.stats.events_this_month, change: "Live seeded schedule", icon: CalendarDays, color: "text-purple-600" },
+    { label: "Events This Month", value: dashboard.stats.events_this_month, change: "Current calendar month", icon: CalendarDays, color: "text-purple-600" },
   ] : []
 
   return (
@@ -48,9 +62,12 @@ export default function AdminPage() {
         <p className="text-gray-500 text-sm mt-1">Welcome to the Wosool admin panel.</p>
       </div>
 
+      {loading && <p role="status" className="text-sm text-gray-600">Loading dashboard…</p>}
       {error && (
-        <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
-          {error}
+        <div role="alert" className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+          <p>{error}</p>
+          {dashboard && <p>Previously loaded data is shown below and may be out of date.</p>}
+          <Button type="button" variant="outline" className="mt-3" disabled={loading} onClick={() => void load()}>Try again</Button>
         </div>
       )}
 
@@ -82,13 +99,14 @@ export default function AdminPage() {
             </CardHeader>
             <CardContent>
               <div className="space-y-3">
+                {dashboard && !dashboard.recent_applications.length && <p className="text-sm text-gray-500">No recent applications.</p>}
                 {dashboard?.recent_applications.map((application) => (
                   <div
                     key={application.id}
                     className="flex items-center gap-4 p-3 rounded-xl bg-gray-50 hover:bg-gray-100 transition-colors"
                   >
                     <div className="flex-1 min-w-0">
-                      <p className="font-medium text-sm text-gray-900 truncate">{application.full_name}</p>
+                      <Link href="/admin/members" className="font-medium text-sm text-gray-900 truncate underline">{application.full_name}</Link>
                       <p className="text-xs text-gray-500">
                         {application.company_name || "Independent"} · {application.sector || "—"} · {application.stage || "—"}
                       </p>
@@ -133,6 +151,7 @@ export default function AdminPage() {
               <h3 className="font-semibold text-gray-900">Recent Activity</h3>
             </CardHeader>
             <CardContent className="space-y-3">
+              {dashboard && !dashboard.activity.length && <p className="text-sm text-gray-500">No recent administrative activity.</p>}
               {dashboard?.activity.map((item) => (
                 <div key={item.id} className="flex items-start gap-3">
                   <div className="h-2 w-2 rounded-full mt-1.5 shrink-0 bg-amber-400" aria-hidden="true" />

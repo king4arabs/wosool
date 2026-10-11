@@ -9,6 +9,7 @@ import {
   applicationFieldValue,
   errorText,
   statusLabel,
+  reviewTransitions,
   type EoaApplication,
   type Organization,
 } from '@/lib/eoa'
@@ -113,8 +114,11 @@ function AdminSession() {
   const [error, setError] = useState('')
   const [notice, setNotice] = useState('')
   const [busy, setBusy] = useState(false)
+  const [loading, setLoading] = useState(true)
   const load = useCallback(async () => {
     if (!user?.email_verified_at) return
+    setLoading(true)
+    setError('')
     try {
       const r = await api.get<ReviewResponse>('/eoa/review', {
         params: { page },
@@ -123,22 +127,27 @@ function AdminSession() {
       if (r.capabilities.staff) {
         const o = await api.get<{ data: Operations }>('/eoa/operations')
         setOps(o.data)
-      }
-    } catch (e) {
-      setError(errorText(e))
+      } else setOps(null)
+    } finally {
+      setLoading(false)
     }
   }, [user, page])
   useEffect(() => {
-    void load()
+    void load().catch((e) => setError(errorText(e)))
   }, [load])
   async function act(fn: () => Promise<unknown>) {
+    if (busy) return
     setBusy(true)
     setError('')
     setNotice('')
     try {
       await fn()
-      await load()
       setNotice(ar ? 'تم الحفظ.' : 'Saved.')
+      try {
+        await load()
+      } catch (e) {
+        setError(`${ar ? 'تم الحفظ، لكن تعذر تحديث العرض. أعد تحميل البيانات دون تكرار العملية.' : 'Saved, but the view could not refresh. Reload the data without repeating the action.'} ${errorText(e)}`)
+      }
     } catch (e) {
       setError(errorText(e))
     } finally {
@@ -175,7 +184,8 @@ function AdminSession() {
           <span className="eoa-eyebrow">EOA / OPERATIONS</span>
           <h1>{ar ? 'مساحة إدارة البرنامج' : 'Program administration'}</h1>
         </div>
-        {error && <Notice error>{error}</Notice>}
+        {loading && <Notice>{ar ? 'جارٍ تحميل بيانات الإدارة…' : 'Loading administration data…'}</Notice>}
+        {error && <Notice error>{error} <button type="button" className="eoa-text-link" disabled={loading || busy} onClick={() => void load().catch((e) => setError(errorText(e)))}>{ar ? 'تحديث البيانات' : 'Reload data'}</button></Notice>}
         {notice && <Notice>{notice}</Notice>}
         {review && (
           <>
@@ -263,7 +273,7 @@ function AdminSession() {
                 </div>
                 <div>
                   {selected ? (
-                    <div className="eoa-card" key={selected.id}>
+                    <div className="eoa-card" key={`${selected.id}-${selected.version}`}>
                       <h2>{selected.fields.company_name}</h2>
                       <span className="eoa-badge">
                         {statusLabel(selected.status, ar)}
@@ -331,15 +341,9 @@ function AdminSession() {
                               : 'Decision or next step'
                           }
                         >
-                          <select name="status">
-                            {[
-                              'under_review',
-                              'information_requested',
-                              'interview',
-                              ...(review.capabilities.lead
-                                ? ['accepted', 'waitlisted', 'rejected']
-                                : []),
-                            ].map((s) => (
+                          <select name="status" required disabled={busy || !reviewTransitions(selected.status, review.capabilities.lead).length}>
+                            {!reviewTransitions(selected.status, review.capabilities.lead).length && <option value="">{ar ? 'لا توجد خطوات مراجعة متاحة' : 'No review steps available'}</option>}
+                            {reviewTransitions(selected.status, review.capabilities.lead).map((s) => (
                               <option value={s} key={s}>
                                 {statusLabel(s, ar)}
                               </option>
@@ -407,7 +411,7 @@ function AdminSession() {
                             <input name="interview_location" maxLength={255} />
                           </Field>
                         </div>
-                        <button className="eoa-btn" disabled={busy}>
+                        <button className="eoa-btn" disabled={busy || loading || !reviewTransitions(selected.status, review.capabilities.lead).length}>
                           {ar ? 'حفظ وإشعار المؤسس' : 'Save & notify founder'}
                         </button>
                       </form>
