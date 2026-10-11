@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-label="Wosool W">
+  <defs>
+    <linearGradient id="eo-colors" x1="40" y1="0" x2="216" y2="0" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#3D46F2"/>
+      <stop offset="0.24" stop-color="#FF346E"/>
+      <stop offset="0.48" stop-color="#FA653C"/>
+      <stop offset="0.72" stop-color="#EFB82E"/>
+      <stop offset="1" stop-color="#1EA691"/>
+    </linearGradient>
+  </defs>
+  <rect x="8" y="8" width="240" height="240" rx="52" fill="#0C0C31"/>
+  <polyline points="46,52 82,205 128,88 174,205 214,52" fill="none" stroke="url(#eo-colors)" stroke-width="28" stroke-linecap="square" stroke-linejoin="miter"/>
+</svg>
