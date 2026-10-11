@@ -70,6 +70,10 @@ Local production-build screenshots with the seeded Laravel API (not a claim of l
 - **Bilingual experience:** Arabic/English, RTL/LTR, Cairo typography, logical spacing, responsive layouts, and accessible navigation.
 - **Content reliability:** public partner, mentor, founder, revenue, and ecosystem claims require approved records and source evidence.
 
+### Founder directory and activation
+
+Sourced founder and company cards link to public profiles. Imported, unclaimed profiles are not Wosool members; administrators can invite founders only after independently verifying the recipient email and configuring real mail delivery. Activated founders can manage their profiles and use private community conversations. See [founder activation and release notes](docs/FOUNDER-ACTIVATION.md) for import, invitation, and deployment checks.
+
 | Experience | Canonical route | Purpose |
 | --- | --- | --- |
 | Wosool community | `/` | Founder-community discovery and its own membership journey |
@@ -292,6 +296,7 @@ Remaining external dependencies include configured hosting/deployment access, pr
 | [Architecture](ARCHITECTURE.md) | System structure and engineering context |
 | [API reference](docs/API.md) | Backend interfaces |
 | [Community homepage](docs/COMMUNITY-HOMEPAGE.md) | Main Wosool community experience |
+| [Founder activation](docs/FOUNDER-ACTIVATION.md) | Sourced profile import, verified invitations, and release checks |
 | [Founder calendar](docs/FOUNDER-CALENDAR-2026-10-12.md) | Founder learning calendar, Ramadan off days, international holidays and May 2027 milestones |
 | [EOA operations](docs/EOA.md) | Authoritative Accelerator workflows, access, and approvals |
 | [Startup directory](docs/STARTUP-DIRECTORY.md) | Sourcing, imports, review, and publication controls |
@@ -324,7 +329,3 @@ Report vulnerabilities privately through [SECURITY.md](SECURITY.md), not public 
 ## License
 
 The software repository is licensed under the [MIT License](LICENSE). Third-party artwork and trademarks remain subject to their owners' rights and approval requirements; the software license does not grant partnership, endorsement, or trademark rights.
-
-### Founder directory and activation
-
-Sourced founder/company cards now connect to public profiles and an administrator-managed email activation flow. Activated founders can manage their information and use private community conversations. See [founder activation and release notes](docs/FOUNDER-ACTIVATION.md) for import, recipient verification, mail setup and deployment checks.
