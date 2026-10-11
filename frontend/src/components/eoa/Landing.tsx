@@ -115,7 +115,7 @@ export function EoaLanding() {
         </div>
       </section>
 
-      <PartnerStrip partners={program?.partners ?? []} />
+      <PartnerStrip partners={program?.partners} />
 
       {(ar ? program?.public_message_ar : program?.public_message_en) && <div className="eoa-container"><Notice>{ar ? program?.public_message_ar : program?.public_message_en}</Notice></div>}
 

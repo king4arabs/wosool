@@ -5,6 +5,7 @@ import { ExternalLink } from "lucide-react"
 import { getPartnerStatusLabel } from "@/data/localized-seed"
 import { useLocale } from "@/lib/locale"
 import { BrandLogo } from "@/components/ui/BrandLogo"
+import { brandLogoNeedsDarkSurface } from "@/lib/brand-logos"
 
 interface PartnerCardProps {
   partner: Partner
@@ -40,7 +41,7 @@ export function PartnerCard({ partner }: PartnerCardProps) {
     >
       {/* Logo + name */}
       <div className="flex flex-col items-start gap-4 mb-4 min-w-0">
-        <div className="h-20 w-full max-w-44 self-center bg-transparent text-slate-900">
+        <div className={`h-20 w-full max-w-44 self-center ${brandLogoNeedsDarkSurface(partner.logoUrl) ? 'rounded-lg bg-[var(--brand-navy)] p-3 text-white' : 'bg-transparent text-slate-900'}`}>
           <BrandLogo src={partner.logoUrl} name={partner.name} />
         </div>
         <div className="w-full min-w-0">

@@ -68,7 +68,7 @@ const content = {
 export default function HomePage() {
   const { locale } = useLocale()
   const copy = content[locale]
-  const { founders, partners, newsItems, loading, failed, retry } = useHomeContent()
+  const { founders, partners, partnersLoaded, newsItems, loading, failed, retry } = useHomeContent()
   const icons = [Lightbulb, Users, Handshake]
   const isSpotlight = founders.length === 0 && (loading || failed.includes("founders"))
   const displayedFounders = isSpotlight ? getFounderSpotlights(locale) : founders
@@ -77,7 +77,7 @@ export default function HomePage() {
       <div><p className={styles.eyebrow}>{copy.eyebrow}</p><h1 id="home-title">{copy.title}<br /><span>{copy.highlight}</span></h1><p className={styles.intro}>{copy.intro}</p><p className={styles.lead}>{copy.description}</p><div className={styles.actions}><Link className={styles.primary} href="/apply">{copy.join}<ArrowUpRight size={18} /></Link><Link className={styles.secondary} href="#founder-community">{copy.explore}</Link></div><p className={styles.note}>{copy.note}</p></div>
       <aside className={styles.heroPanel}><div className={styles.panelBrand}><Image src="/wosool-network-logo.png" alt="" width={48} height={48} /><span>WOSOOL / وصول</span></div><h2>{copy.panelTitle}</h2><p>{copy.panelText}</p><a className={styles.heroFaces} href="#founder-community" aria-label={copy.explore}>{displayedFounders.slice(0, 4).map(founder => <Avatar key={founder.id} className={styles.heroAvatar}><AvatarImage src={founder.avatarUrl || undefined} alt={founder.name} loading="lazy" /><AvatarFallback className={styles.heroAvatarFallback}>{getInitials(founder.name)}</AvatarFallback></Avatar>)}<span>{copy.explore}<ArrowUpRight size={15} aria-hidden="true" /></span></a><ul>{copy.panelItems.map((item,i) => <li key={item}><span>0{i+1}</span>{item}</li>)}</ul><Link href="/about">{locale === "ar" ? "اكتشف مجتمع وصول" : "Discover the Wosool community"}<ArrowUpRight size={18} /></Link></aside>
     </div></section>
-    <CommunityPartners partners={partners} loading={loading} failed={failed.includes("partners")} retry={retry} />
+    <CommunityPartners partners={partners} loaded={partnersLoaded} loading={loading} failed={failed.includes("partners")} retry={retry} />
     <section id="founder-community" className={styles.founders} aria-labelledby="founders-title"><div className={styles.container}><div className={styles.sectionHead}><div><p className={styles.eyebrow}>{isSpotlight ? copy.spotlightLabel : copy.foundersLabel}</p><h2 id="founders-title">{isSpotlight ? copy.spotlightTitle : copy.foundersTitle}</h2><p className={styles.lead}>{isSpotlight ? copy.spotlightText : copy.foundersText}</p></div><Link className={styles.textLink} href="/founders">{copy.allFounders}<ArrowUpRight size={18} /></Link></div>
       {failed.includes("founders") && <div className={styles.availability} role="status"><span>{copy.error}</span><button type="button" onClick={retry} disabled={loading}>{loading ? copy.loading : copy.retry}</button></div>}
       {displayedFounders.length ? <FounderShowcase key={`${locale}-${isSpotlight ? 'spotlight' : 'members'}`} founders={displayedFounders} /> : <div className={styles.empty} role="status"><p>{loading ? copy.loading : copy.empty}</p><Link className={styles.textLink} href="/apply">{copy.join}</Link></div>}

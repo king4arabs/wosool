@@ -5,9 +5,10 @@ import type { Company, Founder, NewsItem, Partner } from "@/types"
 import { api } from "./api"
 import { mapCompany, mapFounder, mapNewsItem, mapPartner, type ApiCompany, type ApiFounder, type ApiNewsItem, type ApiPartner, type WrappedResponse } from "./content-api"
 import { useLocale } from "./locale"
+import { loadPartnerPages } from "./partner-pages"
 
-interface HomeContent { founders: Founder[]; companies: Company[]; partners: Partner[]; newsItems: NewsItem[]; loading: boolean; failed: string[] }
-const empty: HomeContent = { founders: [], companies: [], partners: [], newsItems: [], loading: true, failed: [] }
+interface HomeContent { founders: Founder[]; companies: Company[]; partners: Partner[]; partnersLoaded: boolean; newsItems: NewsItem[]; loading: boolean; failed: string[] }
+const empty: HomeContent = { founders: [], companies: [], partners: [], partnersLoaded: false, newsItems: [], loading: true, failed: [] }
 
 export function useHomeContent(): HomeContent & { retry: () => void } {
   const { locale } = useLocale()
@@ -34,7 +35,7 @@ export function useHomeContent(): HomeContent & { retry: () => void } {
     }
     void section('founders', api.get<WrappedResponse<ApiFounder[]>>("/founders", options), items => ({ founders: items.map(mapFounder) }))
     void section('companies', api.get<WrappedResponse<ApiCompany[]>>("/companies", options), items => ({ companies: items.map(mapCompany) }))
-    void section('partners', api.get<WrappedResponse<ApiPartner[]>>("/partners", options), items => ({ partners: items.map(mapPartner).filter(partner => partner.status === 'Confirmed') }))
+    void section('partners', loadPartnerPages(page => api.get<{ data: ApiPartner[]; meta?: { last_page?: number } }>("/partners", { ...options, params: { per_page: 100, page } })), items => ({ partners: items.map(mapPartner).filter(partner => partner.status === 'Confirmed'), partnersLoaded: true }))
     void section('news', api.get<WrappedResponse<ApiNewsItem[]>>("/news", options), items => ({ newsItems: items.map(mapNewsItem) }))
     return () => { active = false; controller.abort() }
   }, [locale, attempt])

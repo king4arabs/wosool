@@ -171,7 +171,7 @@ export function EoaContent({ section }: { section: string }) {
         {section === 'partners' && <EoaProgramDetails program={program} section="operator" />}
         {section === 'partners' && (
           <>
-            <PartnerStrip partners={program?.partners ?? []} />
+            <PartnerStrip partners={program?.partners} />
             {!program?.partners.length && (
               <p>
                 {ar

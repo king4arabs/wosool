@@ -10,7 +10,7 @@ import styles from "./footer.module.css"
 
 const footerCopy = {
   ar: {
-    description: "شبكة منتقاة للمؤسسين والمشغلين والمستثمرين والشركاء الذين يبنون شركات جادة في السعودية والخليج.",
+    description: "وصول شبكة من المؤسسين إلى المؤسسين، تربطهم بممكّني منظومة ريادة الأعمال والمستثمرين وشركات رأس المال الجريء. انطلقت بمبادرة من مؤسسين سعوديين خريجي برنامج «Multiverse» التابع لـ CODE بوزارة الاتصالات وتقنية المعلومات، من السعودية إلى العالم.",
     columns: {
       "المنصة": [
         { href: "/founders", label: "شبكة المؤسسين" },
@@ -43,7 +43,7 @@ const footerCopy = {
     contact: "اتصل بنا",
   },
   en: {
-    description: "A curated network for founders, operators, investors and partners building durable companies across Saudi Arabia and the GCC.",
+    description: "Wosool is a founders-to-founders network connecting entrepreneurs with ecosystem enablers, investors and venture capital firms. Founded as an initiative by Saudi founder alumni of Multiverse, a CODE–MCIT program, Wosool connects founders from Saudi Arabia to the world.",
     columns: {
       Platform: [
         { href: "/founders", label: "Founder network" },

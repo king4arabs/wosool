@@ -4,6 +4,7 @@ import { useCallback, useEffect, useId, useMemo, useRef, useState, useSyncExtern
 import Link from "next/link"
 import { ArrowLeft, ArrowRight, ChevronDown, ChevronUp, LayoutGrid, Pause, Play, Search } from "lucide-react"
 import { PartnerCarousel } from "@/components/eoa/PartnerCarousel"
+import { communityPartnerLogos } from "@/lib/partner-logos"
 import { useLocale } from "@/lib/locale"
 import { FounderCard, type FounderCardProfile } from "./FounderCard"
 import type { Partner } from "@/types"
@@ -151,13 +152,13 @@ export function FounderShowcase({ founders, showFilters = true }: { founders: Fo
   </div>
 }
 
-export function CommunityPartners({ partners, loading, failed, retry }: { partners: Partner[]; loading: boolean; failed: boolean; retry: () => void }) {
+export function CommunityPartners({ partners, loaded, loading, failed, retry }: { partners: Partner[]; loaded: boolean; loading: boolean; failed: boolean; retry: () => void }) {
   const { locale } = useLocale()
   const ar = locale === "ar"
   const approved = useMemo(() => partners.filter(partner => partner.status === "Confirmed" && partner.logoUrl).map(partner => ({
     id: partner.id, name_en: partner.name, name_ar: partner.name, website: partner.website, logo_path: partner.logoUrl,
   })), [partners])
-  return <PartnerCarousel partners={approved} ar={ar} includeEo={false} headingId="community-partners-title"
+  return <PartnerCarousel partners={loaded ? approved : communityPartnerLogos} ar={ar} includeEo={false} headingId="community-partners-title"
     action={<Link href="/contact?category=partnerships">{ar ? 'انضم كشريك' : 'Become a partner'}</Link>}
     emptyState={<div className={styles.partnerEmpty} role="status"><p>{loading ? ar ? 'جارٍ تحميل الشركاء…' : 'Loading partners…' : failed ? ar ? 'تعذر تحميل الشركاء الآن.' : 'Partners are temporarily unavailable.' : ar ? 'ساهم في دعم مجتمع المؤسسين. تواصل معنا لاستكشاف فرص الشراكة.' : 'Help support the founder community. Get in touch to explore a partnership.'}</p>{failed && <button type="button" onClick={retry} disabled={loading}>{ar ? 'إعادة المحاولة' : 'Try again'}</button>}</div>}
   />

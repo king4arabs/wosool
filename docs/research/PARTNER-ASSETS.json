@@ -60,13 +60,13 @@
     "name_ar": "مركز ريادة الأعمال الرقمية «كود»",
     "name_en": "Center of Digital Entrepreneurship (CODE)",
     "website_url": "https://mcit.gov.sa/code",
-    "logo_path": null,
-    "logo_source_url": null,
+    "logo_path": "/partners/code.png",
+    "logo_source_url": "https://naua.tech/assets/images/partners/code.png",
     "brand_usage_url": null,
     "display_order": 5,
     "identity_status": "verified",
     "designation_status": "needs_review",
-    "asset_status": "needs_review",
-    "notes": "Requested by the owner in the implementation brief. No relationship designation or logo-use approval was found in the existing repository records reviewed on 2026-10-08; keep hidden until an administrator records the approved designation and asset-use basis. Identity verified on MCIT’s official CODE page: a Ministry of Communications and Information Technology program for digital entrepreneurship. The former https://code.mcit.gov.sa/ redirects to https://mcit.gov.sa/code. Its current standalone CODE logo could not be retrieved from an authoritative asset endpoint; the page’s CODE.png is an event photograph, not a logo, and the old CODE report URL redirects to HTML. Do not substitute the ministry logo, a commercial CODE company mark, a cropped report, or a generated logo. Obtain the approved standalone CODE artwork."
+    "asset_status": "verified",
+    "notes": "Requested by the owner in the implementation brief. Original transparent 450 × 450 CODE artwork retrieved unchanged on 2026-10-11 from NauaTech, where the image is explicitly labeled Center of Digital Entrepreneurship (CODE). Identity is independently verified by MCIT. This is a published third-party partner asset, not a download from the MCIT brand portal. Source and transparent display framing are documented in docs/PARTNER-CAROUSEL-2026-10-11.md. Existing administrative designation and visibility states remain separate from asset availability."
   }
 ]

@@ -9,10 +9,12 @@ export function EoaLogo({
   inverse = false,
   className = '',
   priority = false,
+  loading,
 }: {
   inverse?: boolean
   className?: string
   priority?: boolean
+  loading?: 'eager' | 'lazy'
 }) {
   const src = inverse ? '/partners/eo-riyadh-inverse.png' : '/partners/eo-riyadh.png'
   const [failed, setFailed] = useState<string | null>(null)
@@ -27,6 +29,7 @@ export function EoaLogo({
         height={3201}
         sizes="(max-width: 600px) 320px, 400px"
         priority={priority}
+        loading={loading}
         className={styles.canvas}
         style={{ width: `${canvas.width / canvas.frame * 100}%`, left: `${-canvas.left / canvas.frame * 100}%`, top: `${-921 / 1359 * 100}%` }}
         onError={() => setFailed(src)}
