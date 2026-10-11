@@ -28,10 +28,10 @@ export function useToast() {
 }
 
 const variantStyles: Record<ToastVariant, string> = {
-  success: "bg-green-50 border-green-200 text-green-800",
-  error: "bg-red-50 border-red-200 text-red-800",
-  warning: "bg-amber-50 border-amber-200 text-amber-800",
-  info: "bg-blue-50 border-blue-200 text-blue-800",
+  success: "bg-[var(--success-bg)] border-[var(--success-text)] text-[var(--success-text)]",
+  error: "bg-[var(--error-bg)] border-[var(--error-text)] text-[var(--error-text)]",
+  warning: "bg-[var(--brand-light-yellow)] border-[var(--brand-dark-yellow)] text-[var(--text)]",
+  info: "bg-[var(--surface-soft)] border-[var(--border)] text-[var(--text)]",
 }
 
 const variantIcons: Record<ToastVariant, React.ElementType> = {
@@ -64,10 +64,10 @@ function ToastItem({
       )}
     >
       <Icon className="h-5 w-5 shrink-0 mt-0.5" aria-hidden="true" />
-      <p className="text-sm font-medium flex-1">{t.message}</p>
+      <p className="text-sm font-normal flex-1">{t.message}</p>
       <button
         onClick={() => onDismiss(t.id)}
-        className="shrink-0 p-0.5 rounded hover:bg-black/5 transition-colors"
+        className="flex min-h-11 min-w-11 items-center justify-center shrink-0 rounded-[var(--radius-control)] hover:bg-[var(--surface)]/50 focus-visible:outline-2 focus-visible:outline-[var(--focus-ring)] transition-colors"
         aria-label="Dismiss notification"
       >
         <X className="h-4 w-4" />

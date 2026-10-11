@@ -1,0 +1,47 @@
+/* Official palette. Semantic tokens determine accessible foreground pairings. */
+:root {
+  --brand-navy: #0C0C31;
+  --brand-white: #FFFFFF;
+  --brand-blue: #3D46F2;
+  --brand-pink: #FF346E;
+  --brand-orange: #FA653C;
+  --brand-yellow: #EFB82E;
+  --brand-green: #1EA691;
+  --brand-gray: #5E617D;
+  --brand-light-blue: #A3A7E4;
+  --brand-dark-blue: #1D007F;
+  --brand-light-pink: #FFB0C8;
+  --brand-dark-pink: #A32246;
+  --brand-light-orange: #FFB5A4;
+  --brand-dark-orange: #C94C3F;
+  --brand-light-yellow: #FCDE95;
+  --brand-dark-yellow: #BF8B0A;
+  --brand-light-green: #ACE2D4;
+  --brand-dark-green: #216854;
+  --brand-light-gray: #B7B8C3;
+  --brand-dark-gray: #3C3E50;
+  --page-bg: var(--brand-white);
+  --surface: var(--brand-white);
+  --surface-soft: #F5F5FC;
+  --text: var(--brand-navy);
+  --text-muted: var(--brand-gray);
+  --border: var(--brand-light-gray);
+  --border-soft: #E4E4EF;
+  --action-bg: var(--brand-blue);
+  --action-hover: var(--brand-dark-blue);
+  --action-fg: var(--brand-white);
+  --link: var(--brand-blue);
+  --focus-ring: var(--brand-blue);
+  --on-dark: var(--brand-white);
+  --on-dark-muted: var(--brand-light-gray);
+  --error-bg: var(--brand-light-pink);
+  --error-text: var(--brand-dark-pink);
+  --success-bg: var(--brand-light-green);
+  --success-text: var(--brand-dark-green);
+  --radius-card: 1.5rem;
+  --radius-control: .75rem;
+  --shadow-card: 0 8px 32px rgb(12 12 49 / 6%);
+  --shadow-raised: 0 16px 40px rgb(12 12 49 / 12%);
+  --section-space: clamp(3rem, 7vw, 6rem);
+  --font-latin: "Roboto", "Segoe UI", sans-serif;
+}

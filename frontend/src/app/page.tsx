@@ -67,7 +67,7 @@ export default function HomePage() {
   const copy = content[locale]
   const { founders, partners, newsItems, loading, failed, retry } = useHomeContent()
   const icons = [Lightbulb, Users, Handshake]
-  return <PublicLayout><div className={styles.home}>
+  return <PublicLayout><div className={styles.home} lang={locale} dir={locale === "ar" ? "rtl" : "ltr"}>
     <section className={styles.hero} aria-labelledby="home-title"><div className={`${styles.container} ${styles.heroGrid}`}>
       <div><p className={styles.eyebrow}>{copy.eyebrow}</p><h1 id="home-title">{copy.title}<br /><span>{copy.highlight}</span></h1><p className={styles.intro}>{copy.intro}</p><p className={styles.lead}>{copy.description}</p><div className={styles.actions}><Link className={styles.primary} href="/apply">{copy.join}<ArrowUpRight size={18} /></Link><Link className={styles.secondary} href="#founder-community">{copy.explore}</Link></div><p className={styles.note}>{copy.note}</p></div>
       <aside className={styles.heroPanel}><div className={styles.panelBrand}><Image src="/wosool-network-logo.png" alt="" width={48} height={48} /><span>WOSOOL / وصول</span></div><h2>{copy.panelTitle}</h2><p>{copy.panelText}</p><ul>{copy.panelItems.map((item,i) => <li key={item}><span>0{i+1}</span>{item}</li>)}</ul><Link href="/about">{locale === "ar" ? "اكتشف مجتمع وصول" : "Discover the Wosool community"}<ArrowUpRight size={18} /></Link></aside>

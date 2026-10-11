@@ -9,7 +9,7 @@ export function Card({
   return (
     <div
       className={cn(
-        "overflow-hidden rounded-[1.5rem] border border-[#E6EAF2] bg-white shadow-[0_18px_42px_rgba(11,18,32,0.05)] transition-shadow hover:shadow-[0_24px_54px_rgba(11,18,32,0.08)]",
+        "overflow-hidden rounded-[var(--radius-card)] border border-[var(--border-soft)] bg-[var(--surface)] text-[var(--text)] shadow-[var(--shadow-card)] transition-shadow hover:shadow-[var(--shadow-raised)]",
         className
       )}
       {...props}
@@ -37,7 +37,7 @@ export function CardTitle({
   ...props
 }: React.HTMLAttributes<HTMLHeadingElement>) {
   return (
-    <h3 className={cn("text-lg font-semibold text-[#0A1628]", className)} {...props}>
+    <h3 className={cn("text-lg font-bold text-[var(--text)]", className)} {...props}>
       {children}
     </h3>
   )
@@ -49,7 +49,7 @@ export function CardDescription({
   ...props
 }: React.HTMLAttributes<HTMLParagraphElement>) {
   return (
-    <p className={cn("text-sm text-[#61708B]", className)} {...props}>
+    <p className={cn("text-sm font-normal text-[var(--text-muted)]", className)} {...props}>
       {children}
     </p>
   )
@@ -73,7 +73,7 @@ export function CardFooter({
   ...props
 }: React.HTMLAttributes<HTMLDivElement>) {
   return (
-    <div className={cn("border-t border-[#E6EAF2] bg-[#F7F8FB] px-6 py-4", className)} {...props}>
+    <div className={cn("border-t border-[var(--border-soft)] bg-[var(--surface-soft)] px-6 py-4", className)} {...props}>
       {children}
     </div>
   )

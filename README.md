@@ -12,7 +12,7 @@ EO Riyadh provides chapter leadership and governance; EO Accelerator provides th
 
 ## October 9 reliability and EOA upgrade
 
-- Cairo is the shared Arabic/English typeface, with consistent reading sizes, mobile controls, RTL/LTR alignment and responsive navigation.
+- Roboto Regular/Bold is the English typeface; Cairo is the Arabic companion, with consistent reading sizes, mobile controls and RTL/LTR alignment.
 - EOA uses the requested global-founder / US$1 million hero message, official EO Riyadh artwork, right-moving partner logos and a homepage infographic.
 - Applications include a preferred track; leadership confirms an active track at acceptance. Applicants see their decision and track at `/dashboard/eoa` independently of community membership.
 - Existing verified Wosool administrators can manage EOA lead, staff, reviewer and coach roles from **EOA administration → Team access**. Program leads manage bilingual tracks from **Admission tracks**.
@@ -20,11 +20,55 @@ EO Riyadh provides chapter leadership and governance; EO Accelerator provides th
 
 See [release and verification notes](docs/WOSOOL-RELIABILITY-EOA-2026-10-09.md). Run the new additive migration before `eoa:install` when deploying; there is no automatic production deployment.
 
+## Brand design system
+
+The shared palette lives in `frontend/src/app/brand.css`, consumed by global CSS,
+Tailwind utilities and component styles. Wosool remains independent at `/`;
+the existing EO program, application, learning, events, participant, coach and
+administration workflows remain under `/EOA` and `/dashboard/eoa`. No data,
+admission rules or authorization boundaries change with this visual upgrade.
+
+- Base: navy `#0C0C31`, white `#FFFFFF`, action blue `#3D46F2`.
+- Supporting: pink `#FF346E`, orange `#FA653C`, yellow `#EFB82E`,
+  green `#1EA691`, gray `#5E617D`; all ten light/dark accent shades are
+  available as `--brand-light-*` / `--brand-dark-*` tokens.
+- Use semantic `--page-bg`, `--surface`, `--surface-soft`, `--text`,
+  `--text-muted`, `--border`, `--border-soft`, `--action-*`, `--link`,
+  `--focus-ring`, `--on-dark*`, `--error-*` and `--success-*` rather than
+  introducing another literal palette. Shared radii, shadows and responsive
+  section spacing keep cards, controls and page journeys consistent.
+- Pair white text with blue/navy; pair navy text with bright supporting colors.
+  Bright pink/orange/yellow/green are not white-text body-copy backgrounds.
+  Use dark pink/green feedback text on their corresponding light surfaces.
+  Muted text on navy uses the separate `--on-dark-muted` token.
+- English uses locally bundled Roboto 400/700; Arabic uses locally bundled
+  Cairo. Use sentence-case headings, responsive `clamp()` sizing, logical
+  spacing, normal Arabic letter spacing, visible keyboard focus and controls
+  at least 44px tall. Honor `prefers-reduced-motion`; circular decoration is
+  background artwork, never a replacement logo.
+
+Existing Wosool artwork is retained without recoloring or redrawing. EO artwork
+comes from the official packages recorded in
+[the asset register](docs/research/PARTNER-ASSETS.md). Preserve entire artwork,
+aspect ratios and clear space; an authentic file is not permission to claim a
+partnership. No new logo or photography is fabricated. A replacement Wosool
+logo and new founder photography require owner-approved source assets.
+The live EO brand portal could not be reached from this sandbox, so a fresh
+approval check remains a release prerequisite.
+
+Verification uses the existing lint, type-check, frontend tests, directory
+validation and builds. Review bilingual mobile/desktop layouts, keyboard
+navigation, dark/light contrast, form feedback, empty/error states and real
+authenticated journeys before release. Automated checks alone do not certify
+WCAG 2.2 AA. There is no authorized production deployment workflow in this
+repository; a push does not deploy. Follow [Deployment](DEPLOYMENT.md) through
+the existing hosting account and verify the released SHA before sign-off.
+
 ## Architecture
 
 | Component | Implementation |
 | --- | --- |
-| Frontend | Next.js 16.4, React 19, TypeScript, Tailwind 4, Cairo, Arabic/English RTL/LTR |
+| Frontend | Next.js 16.4, React 19, TypeScript, Tailwind 4, locally served Roboto/Cairo, Arabic/English RTL/LTR |
 | Backend | Laravel 13, PHP 8.3+, Sanctum cookie sessions, Spatie roles |
 | Database | SQLite local/tests; preserve and verify the actual production engine |
 | EOA routes | `frontend/src/app/EOA`, `frontend/src/components/eoa`, `backend/routes/eoa.php` |
