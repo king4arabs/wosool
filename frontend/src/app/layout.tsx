@@ -64,7 +64,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#07111F",
+  themeColor: "#0C0C31",
   width: "device-width",
   initialScale: 1,
   maximumScale: 5,
@@ -81,7 +81,7 @@ export default function RootLayout({
         <Providers>
           <a
             href="#main-content"
-            className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:rounded-full focus:bg-[#4056C7] focus:px-4 focus:py-2 focus:font-medium focus:text-white"
+            className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:rounded-full focus:bg-[var(--action-bg)] focus:px-4 focus:py-2 focus:font-bold focus:text-white"
           >
             الانتقال إلى المحتوى الرئيسي
           </a>

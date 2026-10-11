@@ -71,12 +71,12 @@ function LanguageSelect({
     <div
       className={cn(
         "relative",
-        mobile && "flex items-center gap-3 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3"
+        mobile && "flex items-center gap-3 rounded-[var(--radius-control)] border border-[var(--border-soft)] bg-[var(--surface-soft)] px-4 py-3"
       )}
     >
       <Globe
         className={cn(
-          "text-slate-400",
+          "text-[var(--text-muted)]",
           mobile
             ? "h-4 w-4 shrink-0"
             : `pointer-events-none absolute top-1/2 h-4 w-4 -translate-y-1/2 ${direction === "rtl" ? "right-3" : "left-3"}`
@@ -88,10 +88,10 @@ function LanguageSelect({
         value={locale}
         onChange={(event) => onChange(event.target.value as Locale)}
         className={cn(
-          "appearance-none outline-none",
+          "appearance-none focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--action-bg)]",
           mobile
-            ? "min-w-0 flex-1 bg-transparent text-sm text-slate-700"
-            : `h-9 rounded-full border border-slate-200 bg-white text-sm text-slate-700 transition-colors hover:bg-slate-50 ${direction === "rtl" ? "pr-10 pl-4" : "pl-10 pr-4"}`
+            ? "min-h-11 min-w-0 flex-1 bg-transparent text-sm text-[var(--text)]"
+            : `h-11 rounded-[var(--radius-control)] border border-[var(--border)] bg-[var(--surface)] text-sm text-[var(--text)] transition-colors hover:bg-[var(--surface-soft)] ${direction === "rtl" ? "pr-10 pl-4" : "pl-10 pr-4"}`
         )}
       >
         {localeOptions.map((option) => (
@@ -116,6 +116,10 @@ export function Header() {
   const applyLabel = journey.isEoa ? copy.applyEoa : copy.apply
   const workspace = workspacePath(user)
   const isActive = (href: string) => href === "/" ? pathname === "/" : pathname === href || pathname.startsWith(`${href}/`)
+
+  React.useEffect(() => {
+    setIsMenuOpen(false)
+  }, [pathname])
 
   React.useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 20)
@@ -145,20 +149,20 @@ export function Header() {
   return (
     <header
       className={cn(
-        "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
+        "fixed top-0 left-0 right-0 z-50 bg-[var(--surface)] text-[var(--text)] transition-shadow duration-300 motion-reduce:transition-none [&_a:focus-visible]:outline-2 [&_a:focus-visible]:outline-offset-4 [&_a:focus-visible]:outline-[var(--action-bg)]",
         isScrolled
-          ? "border-b border-slate-200/80 bg-white/90 shadow-sm backdrop-blur-xl"
-          : "bg-white/70 backdrop-blur-md"
+          ? "border-b border-[var(--border-soft)] shadow-[var(--shadow-card)]"
+          : "border-b border-[var(--border-soft)]"
       )}
     >
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-[72px] items-center justify-between">
           {/* Logo */}
           <Link href="/" className="flex shrink-0 items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 bg-white shadow-sm">
+            <div className="flex h-11 w-11 items-center justify-center rounded-[var(--radius-control)] border border-[var(--border-soft)] bg-[var(--surface)]">
               <Image
                 src="/wosool-network-logo.png"
-                alt="Wosool logo"
+                alt=""
                 width={28}
                 height={28}
                 className="h-7 w-7 object-contain"
@@ -166,18 +170,13 @@ export function Header() {
               />
             </div>
             <div className="min-w-0">
-              <div className="flex items-center gap-2 text-base font-black tracking-tight text-slate-900">
-                WOSOOL
-                <span className="text-xs font-extrabold text-[#3B52D4] bg-[#EEF1FF] px-1.5 py-0.5 rounded border border-[#E4E7F0]">
+              <div className="flex items-center gap-2 text-base font-bold text-[var(--text)]">
+                <span lang="en" dir="ltr">WOSOOL</span>
+                <span lang="ar" dir="rtl" className="text-base font-bold text-[var(--text)]">
                   وصول
                 </span>
               </div>
-              <div
-                className={cn(
-                  "hidden text-xs font-bold text-slate-500 sm:block",
-                  locale === "ar" ? "tracking-normal" : "uppercase tracking-[0.18em]"
-                )}
-              >
+              <div className="hidden text-xs font-normal text-[var(--text-muted)] sm:block">
                 {copy.tagline}
               </div>
             </div>
@@ -191,10 +190,10 @@ export function Header() {
                 href={link.href}
                 aria-current={isActive(link.href) ? "page" : undefined}
                 className={cn(
-                  "rounded-full px-3 py-3 text-xs font-bold transition-colors",
+                  "rounded-[var(--radius-control)] px-3 py-3 text-xs font-bold transition-colors",
                   isActive(link.href)
-                    ? "text-[#3B52D4]"
-                    : "text-slate-600 hover:text-[#3B52D4]"
+                    ? "bg-[var(--surface-soft)] text-[var(--action-bg)]"
+                    : "text-[var(--text-muted)] hover:bg-[var(--surface-soft)] hover:text-[var(--action-bg)]"
                 )}
               >
                 {link.label}
@@ -212,11 +211,11 @@ export function Header() {
             />
             {isAuthenticated ? (
               <>
-                <span className="max-w-[140px] truncate text-sm text-slate-500">{user?.name}</span>
+                <span className="max-w-[140px] truncate text-sm text-[var(--text-muted)]">{user?.name}</span>
                 <Button
                   asChild
                   size="sm"
-                  className="rounded-xl bg-[#3B52D4] hover:bg-[#2E44C8] text-white text-xs font-bold shadow-md shadow-[#3B52D4]/20"
+                  className="min-h-11 rounded-[var(--radius-control)] bg-[var(--action-bg)] hover:bg-[var(--action-hover)] text-[var(--on-dark)] text-xs font-bold"
                 >
                   <Link href={workspace}>{copy.dashboard}</Link>
                 </Button>
@@ -225,14 +224,14 @@ export function Header() {
               <>
                 <Link
                   href={journey.loginHref}
-                  className="text-xs font-bold text-slate-600 transition-colors hover:text-[#3B52D4]"
+                  className="inline-flex min-h-11 items-center text-xs font-bold text-[var(--text-muted)] transition-colors hover:text-[var(--action-bg)]"
                 >
                   {copy.login}
                 </Link>
                 <Button
                   asChild
                   size="sm"
-                  className="rounded-xl bg-[#3B52D4] hover:bg-[#2E44C8] text-white text-xs font-bold shadow-md shadow-[#3B52D4]/20"
+                  className="min-h-11 rounded-[var(--radius-control)] bg-[var(--action-bg)] hover:bg-[var(--action-hover)] text-[var(--on-dark)] text-xs font-bold"
                 >
                   <Link href={journey.applyHref}>{applyLabel}</Link>
                 </Button>
@@ -244,7 +243,7 @@ export function Header() {
           <button
             ref={menuButton}
             type="button"
-            className="flex h-11 w-11 items-center justify-center rounded-xl text-slate-600 transition-colors hover:bg-slate-100 hover:text-slate-900 xl:hidden"
+            className="flex h-11 w-11 items-center justify-center rounded-[var(--radius-control)] text-[var(--text)] transition-colors hover:bg-[var(--surface-soft)] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--action-bg)] xl:hidden"
             onClick={() => setIsMenuOpen((open) => !open)}
             aria-label={isMenuOpen ? copy.closeMenu : copy.openMenu}
             aria-expanded={isMenuOpen}
@@ -257,7 +256,7 @@ export function Header() {
 
       {/* Mobile menu */}
       {isMenuOpen && (
-        <div id="mobile-navigation" className="max-h-[calc(100dvh-72px)] overflow-y-auto overscroll-contain border-t border-slate-200 bg-white shadow-lg xl:hidden">
+        <div id="mobile-navigation" className="max-h-[calc(100dvh-72px)] overflow-y-auto overscroll-contain border-t border-[var(--border-soft)] bg-[var(--surface)] shadow-[var(--shadow-card)] xl:hidden">
           <nav className="space-y-1 px-4 py-4" aria-label={copy.navigation}>
             <LanguageSelect
               locale={locale}
@@ -272,22 +271,22 @@ export function Header() {
                 href={link.href}
                 aria-current={isActive(link.href) ? "page" : undefined}
                 className={cn(
-                  "block rounded-xl px-4 py-3 text-sm font-bold transition-colors",
+                  "block rounded-[var(--radius-control)] px-4 py-3 text-sm font-bold transition-colors",
                   isActive(link.href)
-                    ? "bg-[#EEF1FF] text-[#3B52D4]"
-                    : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
+                    ? "bg-[var(--surface-soft)] text-[var(--action-bg)]"
+                    : "text-[var(--text-muted)] hover:bg-[var(--surface-soft)] hover:text-[var(--text)]"
                 )}
                 onClick={() => setIsMenuOpen(false)}
               >
                 {link.label}
               </Link>
             ))}
-            <div className="flex flex-col gap-2 border-t border-slate-200 pt-4">
+            <div className="flex flex-col gap-2 border-t border-[var(--border-soft)] pt-4">
               {isAuthenticated ? (
                 <Button
                   asChild
                   size="sm"
-                  className="w-full rounded-xl bg-[#3B52D4] hover:bg-[#2E44C8] text-white font-bold"
+                  className="min-h-11 w-full rounded-[var(--radius-control)] bg-[var(--action-bg)] hover:bg-[var(--action-hover)] text-[var(--on-dark)] font-bold"
                 >
                   <Link href={workspace} onClick={() => setIsMenuOpen(false)}>
                     {copy.dashboard}
@@ -297,7 +296,7 @@ export function Header() {
                 <>
                   <Link
                     href={journey.loginHref}
-                    className="block px-4 py-2 text-sm font-bold text-slate-600 hover:text-[#3B52D4]"
+                    className="block min-h-11 px-4 py-3 text-sm font-bold text-[var(--text-muted)] hover:text-[var(--action-bg)]"
                     onClick={() => setIsMenuOpen(false)}
                   >
                     {copy.login}
@@ -305,7 +304,7 @@ export function Header() {
                   <Button
                     asChild
                     size="sm"
-                    className="w-full rounded-xl bg-[#3B52D4] hover:bg-[#2E44C8] text-white font-bold"
+                    className="min-h-11 w-full rounded-[var(--radius-control)] bg-[var(--action-bg)] hover:bg-[var(--action-hover)] text-[var(--on-dark)] font-bold"
                   >
                     <Link href={journey.applyHref} onClick={() => setIsMenuOpen(false)}>
                       {applyLabel}

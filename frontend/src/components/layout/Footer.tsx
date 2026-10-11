@@ -90,7 +90,7 @@ export function Footer() {
   >
 
   return (
-    <footer className={styles.footer} aria-label={locale === "ar" ? "تذييل الموقع" : "Site footer"}>
+    <footer className={styles.footer} lang={locale} dir={locale === "ar" ? "rtl" : "ltr"} aria-label={locale === "ar" ? "تذييل الموقع" : "Site footer"}>
       <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
         {!isEoa && <div className={styles.invitation}>
           <div><p>{locale === "ar" ? "من مؤسس إلى مؤسس" : "FOUNDERS TO FOUNDERS"}</p><h2>{locale === "ar" ? "ابنِ علاقات تستحق وقتك." : "Make your next connection count."}</h2><span>{locale === "ar" ? "شارك تجربتك. تعرّف على مجتمعك. وابنِ ما هو قادم." : "Share your experience. Find your community. Build what comes next."}</span></div>
@@ -99,28 +99,28 @@ export function Footer() {
         <div className="grid grid-cols-1 gap-12 md:grid-cols-2 lg:grid-cols-6">
           <div className="lg:col-span-2">
             <Link href="/" className="mb-5 inline-flex items-center gap-3">
-              <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-[#D7DEED] bg-white shadow-[0_8px_24px_rgba(7,17,31,0.08)]">
+              <div className={styles.logoFrame}>
                 <Image
                   src="/wosool-network-logo.png"
-                  alt="Wosool logo"
+                  alt=""
                   width={34}
                   height={34}
                   className="h-8 w-8 object-contain"
                 />
               </div>
               <div>
-                <div className="text-xl font-semibold tracking-[-0.03em] text-slate-900">Wosool</div>
-                <div className="text-xs text-slate-500">{copy.tagline}</div>
+                <div className={styles.wordmark}><span lang="en" dir="ltr">WOSOOL</span><span lang="ar" dir="rtl">وصول</span></div>
+                <div className={styles.tagline}>{copy.tagline}</div>
               </div>
             </Link>
-            <p className="mb-6 max-w-sm text-sm leading-7 text-slate-500">{copy.description}</p>
+            <p className={`mb-6 max-w-sm text-sm leading-7 ${styles.muted}`}>{copy.description}</p>
             <div className="flex items-center gap-3">
               <a
                 href="https://twitter.com/AboutWosool"
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Wosool on Twitter"
-                className="rounded-full p-2 text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-700"
+                className={styles.socialLink}
               >
                 <AtSign className="h-4 w-4" />
               </a>
@@ -129,7 +129,7 @@ export function Footer() {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Wosool on LinkedIn"
-                className="rounded-full p-2 text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-700"
+                className={styles.socialLink}
               >
                 <Globe className="h-4 w-4" />
               </a>
@@ -138,7 +138,7 @@ export function Footer() {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Wosool on Instagram"
-                className="rounded-full p-2 text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-700"
+                className={styles.socialLink}
               >
                 <Camera className="h-4 w-4" />
               </a>
@@ -147,7 +147,7 @@ export function Footer() {
 
           {footerColumns.map(([category, links]) => (
             <div key={category}>
-              <h3 className="mb-4 text-xs font-extrabold uppercase tracking-[0.18em] text-slate-900">
+              <h3 className="mb-4 text-sm font-bold">
                 {category}
               </h3>
               <ul className="space-y-3">
@@ -155,7 +155,7 @@ export function Footer() {
                   <li key={link.href}>
                     <Link
                       href={link.href}
-                      className="text-sm text-slate-500 transition-colors hover:text-[#3B52D4]"
+                      className={`text-sm ${styles.muted}`}
                     >
                       {link.label}
                     </Link>
@@ -166,18 +166,18 @@ export function Footer() {
           ))}
         </div>
 
-        <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-slate-200/60 pt-8 sm:flex-row">
-          <p className="text-sm text-slate-400">
+        <div className={`mt-12 flex flex-col items-center justify-between gap-4 border-t pt-8 sm:flex-row ${styles.bottom}`}>
+          <p className={`text-sm ${styles.muted}`}>
             © {new Date().getFullYear()} Wosool. {copy.copyright}
           </p>
           <div className="flex flex-wrap items-center justify-center gap-6">
-            <Link href="/privacy" className="text-sm text-slate-400 transition-colors hover:text-[#3B52D4]">
+            <Link href="/privacy" className={`text-sm ${styles.muted}`}>
               {copy.privacy}
             </Link>
-            <Link href="/terms" className="text-sm text-slate-400 transition-colors hover:text-[#3B52D4]">
+            <Link href="/terms" className={`text-sm ${styles.muted}`}>
               {copy.terms}
             </Link>
-            <Link href="/contact" className="text-sm text-slate-400 transition-colors hover:text-[#3B52D4]">
+            <Link href="/contact" className={`text-sm ${styles.muted}`}>
               {copy.contact}
             </Link>
             <button type="button" className={styles.backTop} onClick={() => { window.scrollTo({ top: 0, behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth" }); document.getElementById("main-content")?.focus({ preventScroll: true }) }}>

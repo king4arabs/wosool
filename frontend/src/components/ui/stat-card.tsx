@@ -20,26 +20,26 @@ export function StatCard({
   return (
     <div
       className={cn(
-        "rounded-2xl border border-gray-100 bg-white p-6",
+        "rounded-[var(--radius-card)] border border-[var(--border-soft)] bg-[var(--surface)] p-6 shadow-[var(--shadow-card)]",
         className
       )}
     >
       <div className="flex items-center justify-between mb-4">
-        <p className="text-sm font-medium text-gray-500">{label}</p>
+        <p className="text-sm font-normal text-[var(--text-muted)]">{label}</p>
         {icon && (
-          <div className="h-10 w-10 rounded-xl bg-brand-cream flex items-center justify-center">
+          <div className="h-10 w-10 rounded-xl bg-[var(--surface-soft)] flex items-center justify-center">
             {icon}
           </div>
         )}
       </div>
-      <p className="text-3xl font-bold text-brand-navy">{value}</p>
+      <p className="text-[clamp(1.5rem,3vw,1.875rem)] font-bold text-[var(--text)]">{value}</p>
       {change && (
         <p
           className={cn(
-            "text-sm mt-1 font-medium",
-            changeType === "positive" && "text-green-600",
-            changeType === "negative" && "text-red-600",
-            changeType === "neutral" && "text-gray-500"
+            "text-sm mt-1 font-normal",
+            changeType === "positive" && "text-[var(--success-text)]",
+            changeType === "negative" && "text-[var(--error-text)]",
+            changeType === "neutral" && "text-[var(--text-muted)]"
           )}
         >
           {change}
