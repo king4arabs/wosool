@@ -92,26 +92,26 @@ export default function AdminMembersPage() {
       return
     }
 
-    const sendInvitation = async () => {
-      if (!selected) return
-      setSending(true)
-      try {
-        const response = await api.post<{ data: AdminApplication }>(`/admin/applications/${selected.id}/invite`)
-        setSelected(response.data)
-        toast("تم قبول رسالة الدعوة للإرسال", "success")
-        await loadApplications()
-      } catch (err) {
-        toast(err instanceof Error ? err.message : "تعذر إرسال الدعوة", "error")
-      } finally {
-        setSending(false)
-      }
-    }
-
     try {
       await navigator.clipboard.writeText(selected.invite_url)
       toast("تم نسخ رابط الدعوة", "success")
     } catch {
       toast("تعذر نسخ الرابط", "error")
+    }
+  }
+
+  const sendInvitation = async () => {
+    if (!selected) return
+    setSending(true)
+    try {
+      const response = await api.post<{ data: AdminApplication }>(`/admin/applications/${selected.id}/invite`)
+      setSelected(response.data)
+      toast("تم قبول رسالة الدعوة للإرسال", "success")
+      await loadApplications()
+    } catch (err) {
+      toast(err instanceof Error ? err.message : "تعذر إرسال الدعوة", "error")
+    } finally {
+      setSending(false)
     }
   }
 

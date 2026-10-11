@@ -136,6 +136,20 @@ class AdminEndpointsTest extends TestCase
         $this->assertNotNull($application->fresh()->invite_sent_at);
     }
 
+    public function test_failed_delivery_does_not_mark_an_invitation_sent(): void
+    {
+        $this->seed(DatabaseSeeder::class);
+        $admin = User::where('email', 'admin@wosool.org')->firstOrFail();
+        $application = Application::firstOrFail();
+        $application->update(['status' => 'approved']);
+        config(['mail.default' => 'smtp']);
+        \Illuminate\Support\Facades\Mail::shouldReceive('raw')->once()->andThrow(new \RuntimeException('Transport unavailable'));
+
+        $this->actingAs($admin)->postJson("/api/v1/admin/applications/{$application->id}/invite")->assertStatus(503);
+        $this->assertNull($application->fresh()->invite_sent_at);
+        $this->assertNull($application->fresh()->invite_token);
+    }
+
     public function test_admin_can_request_more_information_on_application(): void
     {
         $this->seed(DatabaseSeeder::class);
