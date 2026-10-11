@@ -58,7 +58,7 @@ class CompanyController extends Controller
     public function update(UpdateCompanyProfileRequest $request, CompanyProfile $company): JsonResponse
     {
         $this->ensureOwnership($request, $company);
-        $company->update($request->validated());
+        $company->update(array_merge($request->validated(), ['translations' => null]));
 
         return response()->json([
             'message' => 'Company updated.',
@@ -73,7 +73,8 @@ class CompanyController extends Controller
     {
         $founder = $this->ensureOwnership($request, $company);
         $founder->companies()->detach($company->id);
-        $company->delete();
+        // Other co-founders retain their company and its public record.
+        if (! $company->founders()->exists() && ! $company->directory_key) { $company->delete(); }
 
         return response()->json(['message' => 'Company removed.']);
     }

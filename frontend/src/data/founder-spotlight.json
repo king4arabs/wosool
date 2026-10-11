@@ -21,7 +21,11 @@
     "logo_url": "/startup-directory/unifonic-logo.png",
     "founder_socials": [],
     "source_url": "https://www.unifonic.com/en/about",
-    "reviewed_at": "2026-10-11"
+    "reviewed_at": "2026-10-11",
+    "company_key": "unifonic",
+    "source_urls": [
+      "https://www.unifonic.com/en/about"
+    ]
   },
   {
     "slug": "swarm-robotics",
@@ -45,7 +49,12 @@
     "logo_url": "/startup-directory/swarm-logo.svg",
     "founder_socials": [],
     "source_url": "https://swarmrobotics.io/about",
-    "reviewed_at": "2026-10-11"
+    "reviewed_at": "2026-10-11",
+    "company_key": "swarm-robotics",
+    "source_urls": [
+      "https://swarmrobotics.io/about",
+      "https://hub.misk.org.sa/programs/entrepreneurship/misk-launchpad/"
+    ]
   },
   {
     "slug": "jahez",
@@ -69,7 +78,12 @@
     "logo_url": "/startup-directory/jahez-logo.webp",
     "founder_socials": [],
     "source_url": "https://jahezgroup.com/corporate-governance/",
-    "reviewed_at": "2026-10-11"
+    "reviewed_at": "2026-10-11",
+    "company_key": "jahez",
+    "source_urls": [
+      "https://jahezgroup.com/corporate-governance/",
+      "https://impact46.sa/jahez-successfully-closed-its-series-a-funding-round-led-by-impact46-vc-in-saudi-arabia/"
+    ]
   },
   {
     "slug": "foodics",
@@ -98,7 +112,11 @@
       }
     ],
     "source_url": "https://www.foodics.com/press/foodics-completes-full-acquisition-of-norma-a-greek-data-intelligence-company-expanding-its-dedicated-ai-division/",
-    "reviewed_at": "2026-10-11"
+    "reviewed_at": "2026-10-11",
+    "company_key": "foodics",
+    "source_urls": [
+      "https://www.foodics.com/press/foodics-completes-full-acquisition-of-norma-a-greek-data-intelligence-company-expanding-its-dedicated-ai-division/"
+    ]
   },
   {
     "slug": "salla",
@@ -121,8 +139,13 @@
     "portrait_url": null,
     "logo_url": "/startup-directory/salla-logo.png",
     "founder_socials": [],
-    "source_url": "https://salla.com/en-ae/blog/salla-leap-2026",
-    "reviewed_at": "2026-10-11"
+    "source_url": "https://salla.com/en/tools/ai-info",
+    "reviewed_at": "2026-10-11",
+    "company_key": "salla",
+    "source_urls": [
+      "https://salla.com/en/tools/ai-info",
+      "https://salla.com/en-ae/blog/salla-leap-2026"
+    ]
   },
   {
     "slug": "tamara",
@@ -146,7 +169,11 @@
     "logo_url": "/startup-directory/tamara-logo.svg",
     "founder_socials": [],
     "source_url": "https://tamara.co/en-kw/blog-post/tamara-secures-up-to-2-4-billion-dollar-facility",
-    "reviewed_at": "2026-10-11"
+    "reviewed_at": "2026-10-11",
+    "company_key": "tamara",
+    "source_urls": [
+      "https://tamara.co/en-kw/blog-post/tamara-secures-up-to-2-4-billion-dollar-facility"
+    ]
   },
   {
     "slug": "rasan",
@@ -154,8 +181,8 @@
     "founder_name_ar": "مؤيد الفلاج",
     "role_en": "Co-founder & Chairman",
     "role_ar": "شريك مؤسس ورئيس مجلس الإدارة",
-    "founder_brief_en": "Co-founded Rasan and is listed as chairman on its current leadership page.",
-    "founder_brief_ar": "شارك في تأسيس رسن ويشغل رئاسة مجلس الإدارة وفق صفحة القيادة الحالية.",
+    "founder_brief_en": "Co-founder of Rasan and chairman of its board, with experience in insurance and financial technology.",
+    "founder_brief_ar": "شريك مؤسس في رسن ورئيس مجلس إدارتها، بخبرة في تقنيات التأمين والخدمات المالية.",
     "company_name_en": "Rasan",
     "company_name_ar": "رسن",
     "company_brief_en": "Saudi technology group operating insurance and financial-service platforms including Tameeni and Treza.",
@@ -170,7 +197,12 @@
     "logo_url": "/startup-directory/rasan-logo.png",
     "founder_socials": [],
     "source_url": "https://rasan.sa/en/about",
-    "reviewed_at": "2026-10-11"
+    "reviewed_at": "2026-10-11",
+    "company_key": "rasan",
+    "source_urls": [
+      "https://rasan.sa/en/about",
+      "https://www.rasan.sa/pages/ir/pdf/Rasan-AR-2024-EN.pdf"
+    ]
   },
   {
     "slug": "kitopi",
@@ -194,6 +226,206 @@
     "logo_url": "/startup-directory/kitopi-logo.png",
     "founder_socials": [],
     "source_url": "https://www.kitopi.com/leadership",
-    "reviewed_at": "2026-10-11"
+    "reviewed_at": "2026-10-11",
+    "company_key": "kitopi",
+    "source_urls": [
+      "https://www.kitopi.com/leadership"
+    ]
+  },
+  {
+    "slug": "hassan-hamdan",
+    "founder_name_en": "Hassan Hamdan",
+    "founder_name_ar": "حسن حمدان",
+    "role_en": "Co-founder",
+    "role_ar": "شريك مؤسس",
+    "founder_brief_en": "Co-founded Unifonic, with experience in communications infrastructure, reliability and regulatory compliance.",
+    "founder_brief_ar": "شارك في تأسيس يونيفونيك بخبرة في البنية التحتية للاتصالات وموثوقية الأنظمة والامتثال التنظيمي.",
+    "company_name_en": "Unifonic",
+    "company_name_ar": "يونيفونيك",
+    "company_brief_en": "A customer-experience platform connecting business messaging, automation and engagement channels.",
+    "company_brief_ar": "منصة لتجربة العملاء تربط رسائل الشركات والأتمتة وقنوات التفاعل.",
+    "country_en": "Saudi Arabia",
+    "country_ar": "السعودية",
+    "country_code": "SA",
+    "sector_en": "Customer communications",
+    "sector_ar": "تقنيات التواصل مع العملاء",
+    "website": "https://www.unifonic.com/",
+    "portrait_url": "/startup-directory/hassan-hamdan-portrait.webp",
+    "logo_url": "/startup-directory/unifonic-logo.png",
+    "founder_socials": [],
+    "source_url": "https://www.unifonic.com/en/about",
+    "reviewed_at": "2026-10-11",
+    "company_key": "unifonic",
+    "source_urls": [
+      "https://www.unifonic.com/en/about"
+    ]
+  },
+  {
+    "slug": "salman-butt",
+    "founder_name_en": "Salman Butt",
+    "founder_name_ar": "سلمان بت",
+    "role_en": "Co-founder",
+    "role_ar": "شريك مؤسس",
+    "founder_brief_en": "Co-founded Salla to help merchants build and operate online stores.",
+    "founder_brief_ar": "شارك في تأسيس سلة لتمكين التجار من إنشاء متاجر إلكترونية وإدارتها.",
+    "company_name_en": "Salla",
+    "company_name_ar": "سلة",
+    "company_brief_en": "An e-commerce platform for building stores and managing payments, inventory and shipping integrations.",
+    "company_brief_ar": "منصة لإنشاء المتاجر الإلكترونية وإدارة المدفوعات والمخزون وتكاملات الشحن.",
+    "country_en": "Saudi Arabia",
+    "country_ar": "السعودية",
+    "country_code": "SA",
+    "sector_en": "E-commerce",
+    "sector_ar": "التجارة الإلكترونية",
+    "website": "https://salla.com/",
+    "portrait_url": null,
+    "logo_url": "/startup-directory/salla-logo.png",
+    "founder_socials": [],
+    "source_url": "https://salla.com/en/tools/ai-info",
+    "reviewed_at": "2026-10-11",
+    "company_key": "salla",
+    "source_urls": [
+      "https://salla.com/en/tools/ai-info"
+    ]
+  },
+  {
+    "slug": "mosab-alothmani",
+    "founder_name_en": "Mosab Alothmani",
+    "founder_name_ar": "مصعب العثماني",
+    "role_en": "Co-founder",
+    "role_ar": "شريك مؤسس",
+    "founder_brief_en": "Co-founded Foodics to develop cloud technology for restaurant operations.",
+    "founder_brief_ar": "شارك في تأسيس فودكس لتطوير تقنيات سحابية تدعم عمليات المطاعم.",
+    "company_name_en": "Foodics",
+    "company_name_ar": "فودكس",
+    "company_brief_en": "Cloud software that brings restaurant point of sale, operations and payments together.",
+    "company_brief_ar": "حلول سحابية تجمع نقاط البيع وإدارة عمليات المطاعم والمدفوعات.",
+    "country_en": "Saudi Arabia",
+    "country_ar": "السعودية",
+    "country_code": "SA",
+    "sector_en": "Restaurant technology",
+    "sector_ar": "تقنيات المطاعم",
+    "website": "https://www.foodics.com/",
+    "portrait_url": null,
+    "logo_url": "/startup-directory/foodics-logo.svg",
+    "founder_socials": [],
+    "source_url": "https://raed.vc/portfolio/foodics/",
+    "reviewed_at": "2026-10-11",
+    "company_key": "foodics",
+    "source_urls": [
+      "https://raed.vc/portfolio/foodics/"
+    ]
+  },
+  {
+    "slug": "turki-bin-zarah",
+    "founder_name_en": "Turki Bin Zarah",
+    "founder_name_ar": "تركي بن زرعة",
+    "role_en": "Co-founder",
+    "role_ar": "شريك مؤسس",
+    "founder_brief_en": "One of the three co-founders of Tamara, a Saudi financial technology company providing flexible payment solutions.",
+    "founder_brief_ar": "أحد المؤسسين الثلاثة لتمارا، وهي شركة تقنية مالية سعودية تقدم حلول دفع مرنة.",
+    "company_name_en": "Tamara",
+    "company_name_ar": "تمارا",
+    "company_brief_en": "A financial technology company offering shopping and payment services to consumers and merchants.",
+    "company_brief_ar": "شركة تقنية مالية تقدم خدمات التسوق والدفع للمستهلكين والتجار.",
+    "country_en": "Saudi Arabia",
+    "country_ar": "السعودية",
+    "country_code": "SA",
+    "sector_en": "Financial technology",
+    "sector_ar": "التقنية المالية",
+    "website": "https://tamara.co/en-sa",
+    "portrait_url": null,
+    "logo_url": "/startup-directory/tamara-logo.svg",
+    "founder_socials": [],
+    "source_url": "https://www.tamara.co/en-KW/press-release-1",
+    "reviewed_at": "2026-10-11",
+    "company_key": "tamara",
+    "source_urls": [
+      "https://www.tamara.co/en-KW/press-release-1"
+    ]
+  },
+  {
+    "slug": "abdulmohsen-al-babtain",
+    "founder_name_en": "Abdulmohsen Al Babtain",
+    "founder_name_ar": "عبدالمحسن البابطين",
+    "role_en": "Co-founder",
+    "role_ar": "شريك مؤسس",
+    "founder_brief_en": "Co-founded Tamara alongside Abdulmajeed Alsukhan and Turki Bin Zarah.",
+    "founder_brief_ar": "شارك في تأسيس تمارا مع عبدالمجيد السخّان وتركي بن زرعة.",
+    "company_name_en": "Tamara",
+    "company_name_ar": "تمارا",
+    "company_brief_en": "A financial technology company offering shopping and payment services to consumers and merchants.",
+    "company_brief_ar": "شركة تقنية مالية تقدم خدمات التسوق والدفع للمستهلكين والتجار.",
+    "country_en": "Saudi Arabia",
+    "country_ar": "السعودية",
+    "country_code": "SA",
+    "sector_en": "Financial technology",
+    "sector_ar": "التقنية المالية",
+    "website": "https://tamara.co/en-sa",
+    "portrait_url": null,
+    "logo_url": "/startup-directory/tamara-logo.svg",
+    "founder_socials": [],
+    "source_url": "https://www.tamara.co/en-KW/press-release-1",
+    "reviewed_at": "2026-10-11",
+    "company_key": "tamara",
+    "source_urls": [
+      "https://www.tamara.co/en-KW/press-release-1"
+    ]
+  },
+  {
+    "slug": "sami-bejjani",
+    "founder_name_en": "Sami Bejjani",
+    "founder_name_ar": "سامي بجاني",
+    "role_en": "Co-founder & CFO",
+    "role_ar": "شريك مؤسس ورئيس تنفيذي للشؤون المالية",
+    "founder_brief_en": "Co-founder and chief financial officer of Kitopi.",
+    "founder_brief_ar": "شريك مؤسس في كيتوبي ورئيسها التنفيذي للشؤون المالية.",
+    "company_name_en": "Kitopi",
+    "company_name_ar": "كيتوبي",
+    "company_brief_en": "A hospitality company developing and operating food brands across restaurants and delivery locations.",
+    "company_brief_ar": "شركة ضيافة تطوّر وتشغّل علامات غذائية عبر المطاعم ومواقع تجهيز طلبات التوصيل.",
+    "country_en": "United Arab Emirates",
+    "country_ar": "الإمارات",
+    "country_code": "AE",
+    "sector_en": "Food & hospitality",
+    "sector_ar": "الأغذية والضيافة",
+    "website": "https://www.kitopi.com/",
+    "portrait_url": "/startup-directory/sami-bejjani-portrait.jpg",
+    "logo_url": "/startup-directory/kitopi-logo.png",
+    "founder_socials": [],
+    "source_url": "https://www.kitopi.com/leadership",
+    "reviewed_at": "2026-10-11",
+    "company_key": "kitopi",
+    "source_urls": [
+      "https://www.kitopi.com/leadership"
+    ]
+  },
+  {
+    "slug": "saman-darkan",
+    "founder_name_en": "Saman Darkan",
+    "founder_name_ar": "سامان داركان",
+    "role_en": "Co-founder & CTO",
+    "role_ar": "شريك مؤسس ورئيس تنفيذي للتقنية",
+    "founder_brief_en": "Co-founder and chief technology officer of Kitopi.",
+    "founder_brief_ar": "شريك مؤسس في كيتوبي ورئيسها التنفيذي للتقنية.",
+    "company_name_en": "Kitopi",
+    "company_name_ar": "كيتوبي",
+    "company_brief_en": "A hospitality company developing and operating food brands across restaurants and delivery locations.",
+    "company_brief_ar": "شركة ضيافة تطوّر وتشغّل علامات غذائية عبر المطاعم ومواقع تجهيز طلبات التوصيل.",
+    "country_en": "United Arab Emirates",
+    "country_ar": "الإمارات",
+    "country_code": "AE",
+    "sector_en": "Food & hospitality",
+    "sector_ar": "الأغذية والضيافة",
+    "website": "https://www.kitopi.com/",
+    "portrait_url": "/startup-directory/saman-darkan-portrait.png",
+    "logo_url": "/startup-directory/kitopi-logo.png",
+    "founder_socials": [],
+    "source_url": "https://www.kitopi.com/leadership",
+    "reviewed_at": "2026-10-11",
+    "company_key": "kitopi",
+    "source_urls": [
+      "https://www.kitopi.com/leadership"
+    ]
   }
 ]

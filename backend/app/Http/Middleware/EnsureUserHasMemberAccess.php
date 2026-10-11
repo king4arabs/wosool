@@ -20,6 +20,11 @@ class EnsureUserHasMemberAccess
             abort(403, 'Use the EO Accelerator workspace. Wosool membership is separate.');
         }
 
+        $profile = $user->founderProfile()->first();
+        if ($profile && ($profile->status === 'suspended' || ($profile->directory_key && ! $profile->communityActive())) && ! $user->hasRole('admin')) {
+            abort(403, 'Your founder profile must be active to access the community.');
+        }
+
         $hasMemberRole = method_exists($user, 'hasRole') && ($user->hasRole('member') || $user->hasRole('admin'));
         $hasMemberToken = in_array((string) ($user->role_token ?? ''), ['founder', 'admin'], true);
 

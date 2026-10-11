@@ -70,7 +70,7 @@ export default function HomePage() {
   const copy = content[locale]
   const { founders, partners, newsItems, loading, failed, retry } = useHomeContent()
   const icons = [Lightbulb, Users, Handshake]
-  const isSpotlight = founders.length === 0
+  const isSpotlight = founders.length === 0 && (loading || failed.includes("founders"))
   const displayedFounders = isSpotlight ? getFounderSpotlights(locale) : founders
   return <PublicLayout><div className={styles.home} lang={locale} dir={locale === "ar" ? "rtl" : "ltr"}>
     <section className={styles.hero} aria-labelledby="home-title"><div className={`${styles.container} ${styles.heroGrid}`}>

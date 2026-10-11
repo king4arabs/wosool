@@ -22,7 +22,7 @@ function FounderPicker({ label, value, onChange }: { label: string; value: ApiFo
   useEffect(() => {
     const controller = new AbortController()
     const timer = setTimeout(() => {
-      api.get<{ data: ApiFounder[] }>("/admin/founders", { params: { search: query, status: "active", per_page: 20 }, signal: controller.signal }).then(response => { setItems(response.data); setError(null) }).catch(error => { if (!controller.signal.aborted) setError(error instanceof Error ? error.message : "Unable to load founders") })
+      api.get<{ data: ApiFounder[] }>("/admin/founders", { params: { search: query, status: "active", activation: "active", per_page: 20 }, signal: controller.signal }).then(response => { setItems(response.data); setError(null) }).catch(error => { if (!controller.signal.aborted) setError(error instanceof Error ? error.message : "Unable to load founders") })
     }, 300)
     return () => { clearTimeout(timer); controller.abort() }
   }, [query])

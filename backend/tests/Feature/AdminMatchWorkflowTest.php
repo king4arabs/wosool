@@ -21,6 +21,8 @@ class AdminMatchWorkflowTest extends TestCase
         $data = ['founder_a_id' => $founders[0]->id, 'founder_b_id' => $founders[1]->id, 'reason' => 'Complementary founder experience.'];
         $this->actingAs(User::factory()->create())->postJson('/api/v1/admin/matches', $data)->assertForbidden();
         $this->actingAs($admin)->postJson('/api/v1/admin/matches', array_merge($data, ['founder_b_id' => $founders[0]->id]))->assertUnprocessable();
+        $unclaimed = FounderProfile::create(['slug' => 'unclaimed-founder', 'status' => 'active', 'directory_key' => 'unclaimed-founder']);
+        $this->postJson('/api/v1/admin/matches', array_merge($data, ['founder_b_id' => $unclaimed->id]))->assertUnprocessable();
         $this->postJson('/api/v1/admin/matches', $data)->assertCreated()->assertJsonPath('data.status', 'suggested')->assertJsonPath('data.is_ai_generated', false);
         $this->postJson('/api/v1/admin/matches', ['founder_a_id' => $founders[1]->id, 'founder_b_id' => $founders[0]->id, 'reason' => 'Reverse duplicate proposal.'])->assertStatus(409);
         $this->assertDatabaseCount('matches', 1);

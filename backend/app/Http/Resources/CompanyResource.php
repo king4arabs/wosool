@@ -9,16 +9,19 @@ class CompanyResource extends JsonResource
 {
     public function toArray(Request $request): array
     {
+        $localized = ($this->translations ?? [])[app()->getLocale()] ?? [];
         return [
             'id' => $this->id,
-            'name' => $this->name,
+            'source_urls' => $this->source_urls ?? [],
+            'source_reviewed_at' => $this->source_reviewed_at?->toDateString(),
+            'name' => $localized['name'] ?? $this->name,
             'slug' => $this->slug,
-            'description' => $this->description,
+            'description' => $localized['description'] ?? $this->description,
             'logo_url' => $this->logo_url,
             'website' => $this->website,
-            'sector' => $this->sector,
+            'sector' => $localized['sector'] ?? $this->sector,
             'stage' => $this->stage,
-            'location' => $this->location,
+            'location' => $localized['location'] ?? $this->location,
             'country_code' => $this->country_code,
             'founded_year' => $this->founded_year,
             'team_size' => $this->team_size,

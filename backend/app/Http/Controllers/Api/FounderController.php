@@ -16,6 +16,8 @@ class FounderController extends Controller
             ->where('status', 'active')
             ->where('is_public', true);
 
+        if ($request->boolean('community')) { $query->whereNotNull('user_id')->where(fn ($q) => $q->whereNull('directory_key')->orWhereNotNull('claimed_at')); }
+
         if ($request->has('sector')) {
             $query->where('sector', $request->sector);
         }
@@ -25,7 +27,8 @@ class FounderController extends Controller
         if ($request->has('search')) {
             $search = $request->search;
             $query->where(function ($q) use ($search) {
-                $q->whereHas('user', fn ($u) => $u->where('name', 'like', "%{$search}%"))
+                $q->where('display_name', 'like', "%{$search}%")->orWhereHas('user', fn ($u) => $u->where('name', 'like', "%{$search}%"))
+                    ->orWhere('translations->ar->name', 'like', "%{$search}%")
                     ->orWhere('tagline', 'like', "%{$search}%")
                     ->orWhere('bio', 'like', "%{$search}%");
             });

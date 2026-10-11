@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useCallback } from "react"
+import { useState, useCallback, useEffect } from "react"
 import Link from "next/link"
 import { PublicLayout } from "@/components/layout/PublicLayout"
 import { Button } from "@/components/ui/button"
@@ -76,6 +76,10 @@ export default function ContactPage() {
   const [submitting, setSubmitting] = useState(false)
   const [submitted, setSubmitted] = useState(false)
   const { toast } = useToast()
+  useEffect(() => {
+    const subject = new URLSearchParams(window.location.search).get('subject')?.slice(0, 255)
+    if (subject) setFormData(previous => ({...previous, subject}))
+  }, [])
 
   const updateField = useCallback(
     (field: keyof ContactFormData, value: string) => {

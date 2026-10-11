@@ -126,7 +126,7 @@ export function ProfileCard({ data, variant = "company" }: { data: ProfileCardDa
       <Portrait src={data.portrait} name={data.founder} />
       <div className={styles.personCopy}>
         <p className={styles.kicker}><UserRound size={14} aria-hidden="true" />{ar ? "المؤسس" : "Founder"}</p>
-        <PersonHeading id={founderFirst ? id : undefined}>{data.founder}</PersonHeading>
+        <PersonHeading id={founderFirst ? id : undefined}>{data.founderHref ? <Link href={data.founderHref}>{data.founder}</Link> : data.founder}</PersonHeading>
         {data.role && <p>{data.role}</p>}
       </div>
     </section>

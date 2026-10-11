@@ -23,7 +23,7 @@ function FounderDirectory() {
   const ar = locale === "ar"
   const copy = foundersPageCopy[locale]
   const collection = usePublicCollection<ApiFounder>("/founders")
-  const isSpotlight = collection.items.length === 0
+  const isSpotlight = collection.items.length === 0 && (collection.loading || Boolean(collection.error))
   const founders: FounderCardProfile[] = isSpotlight
     ? getFounderSpotlights(locale)
     : collection.items.map(mapFounder)

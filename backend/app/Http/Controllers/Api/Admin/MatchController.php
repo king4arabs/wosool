@@ -24,7 +24,8 @@ class MatchController extends Controller
         $match = DB::transaction(function () use ($data, $request) {
             $ids = [(int) $data['founder_a_id'], (int) $data['founder_b_id']];
             sort($ids);
-            FounderProfile::whereIn('id', $ids)->orderBy('id')->lockForUpdate()->get();
+            $founders = FounderProfile::whereIn('id', $ids)->orderBy('id')->lockForUpdate()->get();
+            abort_unless($founders->count() === 2 && $founders->every(fn ($founder) => $founder->communityActive()), 422, 'Both founders must activate their community profiles before being matched.');
             abort_if(FounderMatch::whereIn('founder_a_id', $ids)->whereIn('founder_b_id', $ids)
                 ->whereIn('status', ['suggested', 'accepted', 'connected'])->exists(), 409, 'An active match already exists for these founders.');
             $match = FounderMatch::create([

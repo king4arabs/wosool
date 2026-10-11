@@ -323,3 +323,7 @@ Report vulnerabilities privately through [SECURITY.md](SECURITY.md), not public 
 ## License
 
 The software repository is licensed under the [MIT License](LICENSE). Third-party artwork and trademarks remain subject to their owners' rights and approval requirements; the software license does not grant partnership, endorsement, or trademark rights.
+
+### Founder directory and activation
+
+Sourced founder/company cards now connect to public profiles and an administrator-managed email activation flow. Activated founders can manage their information and use private community conversations. See [founder activation and release notes](docs/FOUNDER-ACTIVATION.md) for import, recipient verification, mail setup and deployment checks.

@@ -65,6 +65,9 @@ Route::prefix('v1')->group(function () {
         Route::get('/auth/me', [AuthController::class, 'me']);
     });
 
+    Route::post('/founder-activation/preview', [\App\Http\Controllers\Api\FounderActivationController::class, 'preview'])->middleware('throttle:15,1');
+    Route::post('/founder-activation/activate', [\App\Http\Controllers\Api\FounderActivationController::class, 'activate'])->middleware('throttle:5,1');
+
     // ── Public read endpoints ───────────────────────────────────────
     Route::get('/founders', [FounderController::class, 'index']);
     Route::get('/founders/{slug}', [FounderController::class, 'show']);
@@ -97,6 +100,7 @@ Route::prefix('v1')->group(function () {
     // ── Authenticated member endpoints ──────────────────────────────
     Route::middleware(['auth:sanctum', 'member'])->prefix('member')->group(function () {
         Route::get('/dashboard', MemberDashboardController::class);
+        Route::post('/founders/{founder}/connect', [\App\Http\Controllers\Api\Member\FounderConnectionController::class, 'store'])->middleware('throttle:10,1');
 
         // Legacy member profile read (kept for backward compatibility)
         Route::get('/profile', [FounderController::class, 'myProfile']);
@@ -219,6 +223,10 @@ Route::prefix('v1')->group(function () {
         Route::get('/dashboard', AdminDashboardController::class);
         Route::get('/analytics', AdminAnalyticsController::class);
         Route::get('/founders', [AdminFounderController::class, 'index']);
+        Route::post('/founders/import', [AdminFounderController::class, 'import'])->middleware('throttle:5,1');
+        Route::post('/founders/{founder}/invite', [AdminFounderController::class, 'invite'])->middleware('throttle:10,1');
+        Route::delete('/founders/{founder}/invitation', [AdminFounderController::class, 'revoke']);
+        Route::patch('/founders/{founder}', [AdminFounderController::class, 'update']);
         Route::get('/matches', [AdminMatchController::class, 'index']);
         Route::post('/matches', [AdminMatchController::class, 'store']);
         Route::get('/intros', [AdminIntroductionController::class, 'index']);

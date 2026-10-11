@@ -1,4 +1,10 @@
 export interface Founder {
+  activationStatus?: "active" | "unclaimed" | "suspended"
+  canCommunicate?: boolean
+  sourceUrls?: string[]
+  sourceReviewedAt?: string
+  websiteUrl?: string
+  userId?: number
   id: string
   name: string
   slug: string

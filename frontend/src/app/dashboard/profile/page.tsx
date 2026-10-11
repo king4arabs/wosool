@@ -1,6 +1,7 @@
 "use client"
 
 import { useCallback, useEffect, useState } from "react"
+import Link from "next/link"
 import { useRouter, useSearchParams } from "next/navigation"
 import { Save, MapPin, Link2, User, Briefcase, ArrowLeft, ArrowRight, CheckCircle2, Sparkles, X, Plus } from "lucide-react"
 import { api, ApiError } from "@/lib/api"
@@ -9,6 +10,14 @@ import { useLocale } from "@/lib/locale"
 import { dashboardDictionary } from "@/lib/dashboard-i18n"
 
 interface FounderProfile {
+  slug?: string
+  display_name?: string | null
+  position?: string | null
+  avatar_url?: string | null
+  skills?: string[] | null
+  country_code?: string | null
+  activation_status?: string
+
   id?: number
   tagline?: string | null
   bio?: string | null
@@ -66,6 +75,7 @@ function normalizeProfile(input: FounderProfile): FounderProfile {
     ...input,
     needs: toStringArray(input.needs),
     offers: toStringArray(input.offers),
+    skills: toStringArray(input.skills),
   }
 }
 
@@ -141,8 +151,7 @@ function Field({
 }) {
   return (
     <div className="space-y-1.5">
-      <label className="text-xs font-bold text-slate-600">{label}</label>
-      {children}
+      <label className="block text-xs font-bold text-slate-600">{label}<span className="mt-2 block">{children}</span></label>
       {error && <p className="text-xs text-red-500 font-medium">{error}</p>}
     </div>
   )
@@ -266,6 +275,12 @@ export default function ProfilePage() {
     setErrors({})
     try {
       const payload = {
+        ...(profile.display_name?.trim() ? { display_name: profile.display_name.trim() } : {}),
+        position: profile.position || null,
+        avatar_url: profile.avatar_url || null,
+        country_code: profile.country_code || null,
+        skills: (profile.skills ?? []).map(value => value.trim()).filter(Boolean),
+        is_public: profile.is_public ?? true,
         tagline: profile.tagline || null,
         bio: profile.bio || null,
         location: profile.location || null,
@@ -321,6 +336,17 @@ export default function ProfilePage() {
 
   return (
     <div className="max-w-3xl mx-auto space-y-6">
+      <section className="rounded-2xl border border-indigo-100 bg-indigo-50 p-5 sm:p-7">
+        <div className="flex flex-wrap items-start justify-between gap-4"><div><p className="text-xs font-bold text-indigo-600">{locale === 'ar' ? 'مساحتك في وصول' : 'YOUR WOSOOL PROFILE'}</p><h1 className="mt-2 text-2xl font-bold text-slate-950">{profile.display_name || (locale === 'ar' ? 'ملفي الشخصي' : 'My founder profile')}</h1><p className="mt-2 text-sm leading-7 text-slate-600">{locale === 'ar' ? 'راجع بياناتك، عرّف المجتمع بخبراتك، وحدد ما تبحث عنه وما يمكنك تقديمه.' : 'Review your information, share your expertise, and tell the community what you need and can offer.'}</p></div>{profile.slug && <Link className="inline-flex min-h-11 items-center rounded-xl border border-indigo-200 bg-white px-4 text-sm font-semibold text-indigo-700" href={`/founders/${profile.slug}`}>{locale === 'ar' ? 'عرض الملف العام' : 'View public profile'}</Link>}</div>
+        <div className="mt-5"><div className="flex justify-between text-xs font-semibold text-indigo-900"><span>{locale === 'ar' ? 'اكتمال الملف' : 'Profile completeness'}</span><span>{Math.round([profile.display_name, profile.position, profile.bio, profile.location, profile.sector, profile.avatar_url, (profile.needs?.length ?? 0) > 0, (profile.offers?.length ?? 0) > 0].filter(Boolean).length / 8 * 100)}%</span></div><progress aria-label={locale === 'ar' ? 'اكتمال الملف' : 'Profile completeness'} max={8} value={[profile.display_name, profile.position, profile.bio, profile.location, profile.sector, profile.avatar_url, (profile.needs?.length ?? 0) > 0, (profile.offers?.length ?? 0) > 0].filter(Boolean).length} className="mt-2 h-2 w-full accent-indigo-600" /></div>
+        <div className="mt-4 flex flex-wrap gap-4 text-sm font-semibold text-indigo-700"><Link className="min-h-11 inline-flex items-center underline" href="/dashboard/company">{locale === 'ar' ? 'إدارة الشركة' : 'Manage company'}</Link><Link className="min-h-11 inline-flex items-center underline" href="/dashboard/messages">{locale === 'ar' ? 'محادثاتي' : 'My conversations'}</Link></div>
+      </section>
+      <SectionCard icon={User} badge={locale === 'ar' ? 'الهوية والظهور' : 'Identity & visibility'} title={locale === 'ar' ? 'كيف يراك المجتمع' : 'How the community sees you'}>
+        <FieldGroup><Field label={locale === 'ar' ? 'الاسم المعروض' : 'Display name'} error={errors.display_name}><input maxLength={255} value={profile.display_name ?? ''} onChange={e => updateField('display_name', e.target.value)} className={inputClass} /></Field><Field label={locale === 'ar' ? 'المنصب' : 'Position'} error={errors.position}><input maxLength={255} value={profile.position ?? ''} onChange={e => updateField('position', e.target.value)} className={inputClass} /></Field></FieldGroup>
+        <Field label={locale === 'ar' ? 'رابط صورة الملف' : 'Profile photo URL'} error={errors.avatar_url}><input type="text" inputMode="url" maxLength={500} placeholder="https://" value={profile.avatar_url ?? ''} onChange={e => updateField('avatar_url', e.target.value)} className={inputClass} /></Field>
+        <FieldGroup><Field label={locale === 'ar' ? 'رمز الدولة' : 'Country code'} error={errors.country_code}><input maxLength={2} placeholder="SA" value={profile.country_code ?? ''} onChange={e => updateField('country_code', e.target.value.toUpperCase())} className={inputClass} /></Field><Field label={locale === 'ar' ? 'المهارات — افصل بينها بفاصلة' : 'Skills — separated by commas'} error={errors.skills}><input value={(profile.skills ?? []).join(', ')} onChange={e => updateField('skills', e.target.value.split(/[,،]/).map(x => x.trim()))} className={inputClass} /></Field></FieldGroup>
+        <label className="flex items-start gap-3 text-sm leading-7 text-slate-700"><input type="checkbox" checked={profile.is_public ?? true} onChange={e => updateField('is_public', e.target.checked)} className="mt-1 h-5 w-5 shrink-0" /><span>{locale === 'ar' ? 'إظهار ملفي في الدليل العام. بإلغاء الخيار سيبقى حسابي متاحاً لي وستُخفى صفحة الملف العامة.' : 'Show my profile in the public directory. Turning this off keeps my account available and hides my public profile.'}</span></label>
+      </SectionCard>
 
       {/* ── Onboarding header ── */}
       {isOnboarding && (
@@ -516,6 +542,7 @@ export default function ProfilePage() {
               className={selectClass}
             >
               <option value="">{copy.selectSector}</option>
+              {profile.sector && !SECTORS.includes(profile.sector) && <option value={profile.sector}>{profile.sector}</option>}
               {SECTORS.map((s) => (
                 <option key={s} value={s}>{s}</option>
               ))}
@@ -529,6 +556,7 @@ export default function ProfilePage() {
               className={selectClass}
             >
               <option value="">{copy.selectStage}</option>
+              {profile.stage && !STAGES.includes(profile.stage) && <option value={profile.stage}>{profile.stage}</option>}
               {STAGES.map((s) => (
                 <option key={s} value={s}>{s}</option>
               ))}
@@ -614,7 +642,7 @@ export default function ProfilePage() {
 
       {/* ── Save bar ── */}
       <div
-        className="bg-white/95 backdrop-blur-sm border border-slate-200/80 rounded-2xl px-6 py-4 flex items-center justify-between gap-4"
+        className="bg-white/95 backdrop-blur-sm border border-slate-200/80 rounded-2xl px-4 sm:px-6 py-4 flex flex-wrap items-center justify-between gap-4"
         style={{ boxShadow: "0 4px 24px -4px rgba(59,82,212,0.08)" }}
       >
         {isOnboarding ? (

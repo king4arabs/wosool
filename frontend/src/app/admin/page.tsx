@@ -177,6 +177,9 @@ export default function AdminPage() {
         </div>
       )}
 
+      <Link href="/admin/founders" className="flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-indigo-200 bg-indigo-50 p-5 text-indigo-950">
+        <div><h2 className="font-bold">{locale === 'ar' ? 'تفعيل ملفات المؤسسين' : 'Founder activation'}</h2><p className="mt-1 text-sm">{dashboard?.stats.unclaimed_founders ?? 0} {locale === 'ar' ? 'ملف بانتظار التفعيل' : 'unclaimed profiles'} · {dashboard?.stats.pending_founder_invitations ?? 0} {locale === 'ar' ? 'دعوة سارية' : 'open invitations'}</p></div><span className="text-sm font-semibold underline">{locale === 'ar' ? 'إدارة الملفات والدعوات' : 'Manage profiles and invitations'}</span>
+      </Link>
       <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4" aria-label={ar ? "مؤشرات المنصة" : "Platform metrics"}>
         {stats.map(({ label, value, detail, icon: Icon, accent }) => (
           <article key={label} className="group relative overflow-hidden rounded-[var(--radius-card)] border border-[var(--border-soft)] bg-[var(--surface)] p-5 shadow-[var(--shadow-card)] transition-transform hover:-translate-y-1 motion-reduce:transform-none">

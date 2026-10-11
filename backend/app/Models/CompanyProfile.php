@@ -11,6 +11,7 @@ class CompanyProfile extends Model
     use SoftDeletes;
 
     protected $fillable = [
+        'directory_key', 'logo_url', 'translations', 'source_urls', 'source_reviewed_at',
         'name',
         'description',
         'website',
@@ -39,6 +40,7 @@ class CompanyProfile extends Model
     protected function casts(): array
     {
         return [
+            'translations' => 'array', 'source_urls' => 'array', 'source_reviewed_at' => 'date',
             'tech_stack_tokens' => 'array',
             'metrics_summary' => 'array',
             'is_hiring' => 'boolean',

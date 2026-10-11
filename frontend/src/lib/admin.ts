@@ -4,6 +4,8 @@ import type { User } from "@/types"
 
 export interface AdminStats {
   total_members: number
+  unclaimed_founders?: number
+  pending_founder_invitations?: number
   active_founders: number
   companies: number
   events_this_month: number

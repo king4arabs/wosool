@@ -9,6 +9,7 @@ export type FounderSpotlight = Founder & {
 /** Public editorial profiles, kept separate from approved community membership. */
 export function getFounderSpotlights(locale: 'ar' | 'en'): FounderSpotlight[] {
   return profiles.map(profile => ({
+    activationStatus: 'unclaimed', canCommunicate: false, sourceUrls: profile.source_urls, sourceReviewedAt: profile.reviewed_at,
     id: `spotlight-${profile.slug}`,
     slug: profile.slug,
     name: profile[`founder_name_${locale}`],
@@ -25,7 +26,7 @@ export function getFounderSpotlights(locale: 'ar' | 'en'): FounderSpotlight[] {
     twitterUrl: profile.founder_socials?.find(link => link.label === 'X')?.url,
     primaryCompany: {
       id: `spotlight-company-${profile.slug}`,
-      slug: profile.slug,
+      slug: profile.company_key,
       name: profile[`company_name_${locale}`],
       description: profile[`company_brief_${locale}`],
       logoUrl: profile.logo_url ?? '',
@@ -51,4 +52,25 @@ export function getFounderSpotlights(locale: 'ar' | 'en'): FounderSpotlight[] {
     externalProfileOnly: true,
     sourceUrl: profile.source_url,
   }))
+}
+
+/** Read-only source snapshot for profile pages when the public API is unavailable. */
+export function getSpotlightApiProfile(slug: string, locale: 'ar' | 'en') {
+  const profile = profiles.find(item => item.slug === slug)
+  if (!profile) return null
+  return {
+    id: 0, slug: profile.slug, name: profile[`founder_name_${locale}`], position: profile[`role_${locale}`],
+    tagline: profile[`role_${locale}`], bio: profile[`founder_brief_${locale}`],
+    location: profile[`country_${locale}`], country_code: profile.country_code, sector: profile[`sector_${locale}`],
+    avatar_url: profile.portrait_url, is_verified: false, is_featured: false,
+    activation_status: 'unclaimed' as const, can_communicate: false,
+    source_urls: profile.source_urls, source_reviewed_at: profile.reviewed_at,
+    linkedin_url: profile.founder_socials.find(link => link.label === 'LinkedIn')?.url,
+    twitter_url: profile.founder_socials.find(link => link.label === 'X')?.url,
+    companies: [{ id: 0, slug: profile.company_key, name: profile[`company_name_${locale}`],
+      description: profile[`company_brief_${locale}`], logo_url: profile.logo_url, website: profile.website,
+      sector: profile[`sector_${locale}`], location: profile[`country_${locale}`], country_code: profile.country_code,
+      is_hiring: false, is_fundraising: false, is_collaborating: false,
+      pivot: { role: profile[`role_${locale}`], is_primary: true } }],
+  }
 }

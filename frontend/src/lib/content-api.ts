@@ -65,6 +65,11 @@ export interface ApiCompany {
 }
 
 export interface ApiFounder {
+  activation_status?: "active" | "unclaimed" | "suspended"
+  can_communicate?: boolean
+  source_urls?: string[]
+  source_reviewed_at?: string | null
+  website_url?: string | null
   country_code?: string | null
   position?: string | null
   linkedin_url?: string | null
@@ -182,7 +187,13 @@ export interface WrappedResponse<T> {
 export function mapFounder(founder: ApiFounder): Founder {
   const company = founder.companies?.find(company => company.pivot?.is_primary) ?? founder.companies?.[0]
   return {
-    position: company?.pivot?.role ?? founder.position ?? undefined,
+    activationStatus: founder.activation_status,
+    canCommunicate: founder.can_communicate,
+    sourceUrls: founder.source_urls,
+    sourceReviewedAt: founder.source_reviewed_at ?? undefined,
+    websiteUrl: founder.website_url ?? undefined,
+    userId: founder.user?.id,
+    position: founder.position ?? company?.pivot?.role ?? undefined,
     countryCode: founder.country_code ?? undefined,
     linkedinUrl: founder.linkedin_url ?? undefined,
     twitterUrl: founder.twitter_url ?? undefined,

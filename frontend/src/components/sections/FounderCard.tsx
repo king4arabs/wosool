@@ -36,9 +36,11 @@ export function FounderCard({
         sector: company?.sector || founder.sector,
         stage: company?.stage || founder.stage,
         profileVerified: founder.isVerified,
-        founderHref: external ? undefined : `/founders/${encodeURIComponent(founder.slug)}`,
+        founderHref: `/founders/${encodeURIComponent(founder.slug)}`,
         href: !external && company?.slug ? `/founders/companies/${encodeURIComponent(company.slug)}` : undefined,
-        sources: external && founder.sourceUrl ? [founder.sourceUrl] : undefined,
+        sources: founder.sourceUrls ?? (founder.sourceUrl ? [founder.sourceUrl] : undefined),
+        reviewedAt: founder.sourceReviewedAt,
+        signals: founder.activationStatus ? [{label: founder.activationStatus === 'active' ? (locale === 'ar' ? 'عضو نشط' : 'Active member') : (locale === 'ar' ? 'بانتظار التفعيل' : 'Awaiting activation'), tone: founder.activationStatus === 'active' ? 'success' : 'neutral'}] : undefined,
         founderSocials: [
           { label: "LinkedIn", url: founder.linkedinUrl ?? "" },
           { label: "X", url: founder.twitterUrl ?? "" },

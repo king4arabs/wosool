@@ -52,7 +52,7 @@ export default function FounderDirectoryPage() {
 
     api
       .get<{ data: ApiFounder[]; meta?: { last_page?: number } }>("/founders", {
-        params: { search: filter, page, per_page: 12 },
+        params: { search: filter, page, per_page: 12, community: true },
         headers: { "X-Locale": locale },
         signal: controller.signal,
       })

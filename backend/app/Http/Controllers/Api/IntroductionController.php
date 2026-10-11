@@ -92,6 +92,9 @@ class IntroductionController extends Controller
             ], 404);
         }
 
+        $target = FounderProfile::findOrFail($request->validated('target_founder_id'));
+        abort_unless($target->communityActive(), 409, 'This founder has not activated community communication.');
+
         $activePendingCount = IntroductionLedger::query()
             ->where('source_founder_id', $sourceFounder->id)
             ->where('routing_status', 'INTRO_PENDING')

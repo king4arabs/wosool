@@ -4,7 +4,7 @@ import type { Company } from "@/types"
 import { useLocale } from "@/lib/locale"
 import { ProfileCard } from "./ProfileCard"
 
-export function CompanyCard({ company }: { company: Company }) {
+export function CompanyCard({ company, linkToProfile = true }: { company: Company; linkToProfile?: boolean }) {
   const { locale } = useLocale()
   const ar = locale === "ar"
   const founder = company.founders?.[0]
@@ -40,7 +40,7 @@ export function CompanyCard({ company }: { company: Company }) {
         portrait: founder?.avatarUrl,
         role: founder?.position,
         founderBrief: founder?.bio || founder?.tagline,
-        href: `/founders/companies/${company.slug}`,
+        href: linkToProfile ? `/founders/companies/${company.slug}` : undefined,
         founderHref: founder ? `/founders/${founder.slug}` : undefined,
         founderSocials: founder
           ? [

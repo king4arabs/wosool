@@ -40,7 +40,9 @@ class DashboardController extends Controller
         return response()->json([
             'stats' => [
                 'total_members' => User::role('member')->count(),
-                'active_founders' => FounderProfile::where('status', 'active')->count(),
+                'active_founders' => FounderProfile::where('status', 'active')->whereNotNull('user_id')->count(),
+                'unclaimed_founders' => FounderProfile::whereNull('user_id')->count(),
+                'pending_founder_invitations' => \App\Models\FounderInvitation::where('status', 'sent')->where('expires_at', '>', now())->count(),
                 'companies' => CompanyProfile::where('status', 'active')->count(),
                 'events_this_month' => Event::whereBetween('starts_at', [
                     now()->copy()->startOfMonth(),
