@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
+use Throwable;
 
 class ApplicationController extends Controller
 {
@@ -78,7 +79,7 @@ class ApplicationController extends Controller
 
         $application->save();
 
-        if ($application->status === 'approved' && $application->user && method_exists($application->user, 'assignRole') && ! $application->user->hasRole('member')) {
+        if ($application->status === 'approved' && $application->user?->hasVerifiedEmail() && ! $application->user->hasRole('member')) {
             try {
                 $application->user->assignRole('member');
             } catch (Throwable) {

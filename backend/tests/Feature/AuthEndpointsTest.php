@@ -41,6 +41,7 @@ class AuthEndpointsTest extends TestCase
         $this->assertDatabaseHas('users', ['email' => 'test@example.com']);
         $this->assertSame($response->json('user.id'), $application->fresh()->user_id);
         $this->assertNull($application->fresh()->invite_token);
+        $this->assertNotNull(User::where('email', 'test@example.com')->firstOrFail()->email_verified_at);
     }
 
     public function test_registration_requires_the_invitation_for_the_approved_email(): void
@@ -68,6 +69,20 @@ class AuthEndpointsTest extends TestCase
         $this->postJson('/api/v1/auth/login', ['email' => 'owner@example.com', 'password' => 'Password1'])->assertOk();
         $this->assertSame($user->id, $approved->fresh()->user_id);
         $this->assertNull($pending->fresh()->user_id);
+    }
+
+    public function test_unverified_existing_account_cannot_claim_an_approved_application_by_email(): void
+    {
+        $user = User::factory()->unverified()->create(['email' => 'unverified@example.com']);
+        $application = Application::create(['full_name' => 'Applicant', 'email' => 'unverified@example.com', 'status' => 'approved']);
+        $credentials = ['email' => 'unverified@example.com', 'password' => 'password'];
+
+        $this->postJson('/api/v1/auth/login', $credentials)->assertOk();
+        $this->assertNull($application->fresh()->user_id);
+        $this->assertFalse($user->fresh()->hasRole('member'));
+        $user->markEmailAsVerified();
+        $this->postJson('/api/v1/auth/login', $credentials)->assertOk();
+        $this->assertSame($user->id, $application->fresh()->user_id);
     }
 
     public function test_register_returns_validation_errors_for_invalid_data(): void
