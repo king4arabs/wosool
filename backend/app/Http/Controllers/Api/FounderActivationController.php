@@ -36,6 +36,7 @@ class FounderActivationController extends Controller
     {
         $data = $request->validate([
             'token' => ['required', 'string', 'size:64'], 'password' => ['required', 'string', 'max:128'],
+            'code' => ['required', 'string', 'regex:/^[0-9]{6}$/'],
             'privacy_accepted' => ['accepted'],
         ]);
         $founder = DB::transaction(function () use ($data, $request, $service) {
@@ -43,6 +44,13 @@ class FounderActivationController extends Controller
             $founder = FounderProfile::lockForUpdate()->findOrFail($initial->founder_profile_id);
             $invite = $service->resolve($data['token'], true);
             abort_if($founder->user_id !== null || $founder->status !== 'active', 409, 'This profile is unavailable for activation.');
+            if ($invite->otp_attempts >= 5 || ! $invite->otp_hash ||
+                ! hash_equals($invite->otp_hash, hash_hmac('sha256', $data['code'], config('app.key')))) {
+                if ($invite->otp_attempts < 5) {
+                    $invite->increment('otp_attempts');
+                }
+                return null;
+            }
             $user = User::whereRaw('LOWER(email) = ?', [$invite->email])->lockForUpdate()->first();
             if ($user) {
                 if (! Hash::check($data['password'], $user->getAuthPassword())) {
@@ -69,6 +77,9 @@ class FounderActivationController extends Controller
             $founder->invitations()->where('id', '!=', $invite->id)->whereIn('status', ['sent', 'pending'])->update(['status' => 'revoked']);
             return $founder;
         });
+        if (! $founder) {
+            throw ValidationException::withMessages(['code' => ['Invalid activation code or too many attempts. Ask Wosool for a new invitation if needed.']]);
+        }
         return response()->json(['message' => 'Profile activated. Sign in to manage your profile and connect with the community.', 'data' => ['slug' => $founder->slug]])->header('Cache-Control', 'no-store');
     }
 }

@@ -13,6 +13,7 @@ class FounderActivationTest extends TestCase
 {
     use RefreshDatabase;
     private User $admin;
+    private string $code;
     protected function setUp(): void
     {
         parent::setUp();
@@ -29,14 +30,14 @@ class FounderActivationTest extends TestCase
         $this->actingAs($this->admin)->postJson('/api/v1/admin/founders/'.$profile->id.'/invite', ['email' => $email, 'recipient_evidence' => 'Confirmed directly with the founder.', 'recipient_verified' => true])->assertOk()->assertJsonPath('data.status', 'sent');
         $tokens = [];
         Notification::assertSentOnDemand(FounderActivationInvitation::class, function ($notification) use (&$tokens) {
-            parse_str(parse_url($notification->activationUrl, PHP_URL_FRAGMENT), $parts); $tokens[] = $parts['token']; return true;
+            parse_str(parse_url($notification->activationUrl, PHP_URL_FRAGMENT), $parts); $tokens[] = $parts['token']; $this->code = $notification->code; return true;
         });
         $this->app['auth']->forgetGuards();
         return end($tokens);
     }
     private function activate(string $token, array $data = [])
     {
-        return $this->postJson('/api/v1/founder-activation/activate', array_merge(['token' => $token, 'password' => 'SecureFounder2026', 'password_confirmation' => 'SecureFounder2026', 'privacy_accepted' => true], $data));
+        return $this->postJson('/api/v1/founder-activation/activate', array_merge(['token' => $token, 'code' => $this->code, 'password' => 'SecureFounder2026', 'password_confirmation' => 'SecureFounder2026', 'privacy_accepted' => true], $data));
     }
     public function test_import_is_repeatable_preserves_edits_and_never_creates_accounts_or_sends_mail(): void
     {
@@ -61,6 +62,7 @@ class FounderActivationTest extends TestCase
     {
         $p = $this->profile(); $token = $this->invite($p); $invite = FounderInvitation::first();
         $this->assertSame(hash('sha256', $token), $invite->token_hash); $this->assertNotSame('owner@example.com', $invite->getRawOriginal('email'));
+        $this->assertNotSame($this->code, $invite->otp_hash);
         $this->getJson('/api/v1/founders/'.$p->slug)->assertOk()->assertJsonMissing(['email' => 'owner@example.com'])->assertJsonMissingPath('data.invitation');
         $this->postJson('/api/v1/founder-activation/preview', ['token' => $token])->assertOk()->assertJsonPath('data.existing_account', false);
         $this->activate($token)->assertOk(); $user = User::where('email', 'owner@example.com')->firstOrFail();
@@ -68,6 +70,23 @@ class FounderActivationTest extends TestCase
         $this->activate($token)->assertUnprocessable();
         $this->actingAs($user)->getJson('/api/v1/member/founder-profile')->assertOk()->assertJsonPath('data.slug', $p->slug);
         $this->getJson('/api/v1/member/chat/rooms')->assertOk();
+    }
+    public function test_activation_requires_email_code_and_limits_guesses(): void
+    {
+        $p = $this->profile(); $token = $this->invite($p);
+        $mail = new FounderActivationInvitation('<Founder>', 'https://wosool.org/activate-founder#token='.$token, $this->code);
+        $message = $mail->toMail($this->admin);
+        $html = (string) app(\Illuminate\Mail\Markdown::class)->render($message->markdown, $message->viewData);
+        $this->assertStringContainsString($this->code, $html);
+        $this->assertStringContainsString('&lt;Founder&gt;', $html);
+        $this->activate($token, ['code' => '123'])->assertUnprocessable();
+        $wrong = $this->code === '000000' ? '999999' : '000000';
+        for ($i = 0; $i < 5; $i++) {
+            $this->activate($token, ['code' => $wrong])->assertUnprocessable();
+        }
+        $this->assertSame(5, FounderInvitation::first()->otp_attempts);
+        $this->activate($token)->assertUnprocessable();
+        $this->assertNull($p->fresh()->user_id);
     }
     public function test_invalid_expired_revoked_and_suspended_invitations_fail(): void
     {

@@ -11,7 +11,7 @@ class FounderInvitation extends Model
     use HasUuids;
 
     protected $guarded = ['id'];
-    protected $hidden = ['email', 'token_hash', 'recipient_evidence'];
+    protected $hidden = ['email', 'token_hash', 'otp_hash', 'recipient_evidence'];
     protected function casts(): array
     {
         return ['email' => 'encrypted', 'expires_at' => 'datetime', 'sent_at' => 'datetime', 'accepted_at' => 'datetime'];
