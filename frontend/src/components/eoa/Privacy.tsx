@@ -77,7 +77,7 @@ export function EoaPrivacy() {
           <p className="eoa-preserve">{localNotice}</p>
         </article>
       )}
-      <Link href="/EOA/contact" className="eoa-btn eoa-space">
+      <Link href="/eoa/contact" className="eoa-btn eoa-space">
         {ar ? 'تواصل بشأن بياناتك' : 'Contact us about your data'}
       </Link>
     </div>

@@ -54,7 +54,7 @@ function CoachSession() {
         </p>
         {isLoading && <Notice>{ar ? 'جارٍ التحميل…' : 'Loading…'}</Notice>}
         {(!user || !user.email_verified_at) && (
-          <Link href="/EOA/account" className="eoa-btn">
+          <Link href="/eoa/account" className="eoa-btn">
             {ar ? 'الدخول بحساب موثق' : 'Sign in with a verified account'}
           </Link>
         )}

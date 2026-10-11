@@ -199,14 +199,14 @@ function ApplicationSession() {
                 ? 'أنشئ حساباً ووثّق بريدك قبل تجهيز الطلب.'
                 : 'Create an account and verify your email before preparing an application.'}
             </p>
-            <Link className="eoa-btn" href="/EOA/account">
+            <Link className="eoa-btn" href="/eoa/account">
               {ar ? 'إنشاء حساب أو الدخول' : 'Create account or sign in'}
             </Link>
           </div>
         )}
         {user && !user.email_verified_at && (
           <Notice>
-            <Link href="/EOA/account">
+            <Link href="/eoa/account">
               {ar
                 ? 'يرجى توثيق بريدك من صفحة الحساب.'
                 : 'Verify your email from your account page.'}
@@ -246,7 +246,7 @@ function ApplicationSession() {
               {ar
                 ? 'التقديم غير متاح حالياً. تابع الإعلان عن فتح التسجيل أو تواصل مع فريق البرنامج.'
                 : 'Applications are not available yet. Follow the intake announcement or contact the program team.'}{' '}
-              <Link href="/EOA/contact" className="eoa-text-link">
+              <Link href="/eoa/contact" className="eoa-text-link">
                 {ar ? 'تواصل معنا' : 'Contact us'}
               </Link>
             </Notice>
@@ -291,7 +291,7 @@ function ApplicationSession() {
                       ? 'يمكنك متابعة القرارات وطلبات المعلومات في حسابك.'
                       : 'Follow decisions and information requests in your account.'}
                   </p>
-                  <Link href="/EOA/account" className="eoa-btn">
+                  <Link href="/eoa/account" className="eoa-btn">
                     {ar ? 'العودة إلى حسابي' : 'Back to my account'}
                   </Link>
                 </div>
@@ -556,7 +556,7 @@ function ApplicationSession() {
                               {l}
                             </label>
                           ))}
-                          <Link href="/EOA/privacy" className="eoa-text-link">
+                          <Link href="/eoa/privacy" className="eoa-text-link">
                             {ar ? 'سياسة الخصوصية' : 'Privacy policy'}
                           </Link>
                         </>

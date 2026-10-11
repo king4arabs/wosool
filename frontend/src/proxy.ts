@@ -9,6 +9,15 @@ import type { NextRequest } from "next/server"
 export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl
 
+  // Canonical Accelerator URLs are lowercase. Next.js route matching is
+  // case-insensitive, so legacy uppercase links are normalised here with an
+  // exact, case-sensitive check (a config redirect would loop on /eoa).
+  if (/^\/EOA(?=\/|$)/.test(pathname)) {
+    const url = request.nextUrl.clone()
+    url.pathname = pathname.replace(/^\/EOA/, "/eoa")
+    return NextResponse.redirect(url, 308)
+  }
+
   // Check for Laravel session cookie (set by Sanctum).
   // Supports default `laravel_session` and custom names like `wosool-session`.
   const cookieNames = request.cookies.getAll().map((cookie) => cookie.name)
@@ -37,6 +46,8 @@ export function proxy(request: NextRequest) {
 
 export const config = {
   matcher: [
+    "/EOA",
+    "/EOA/:path*",
     "/eoa/admin/:path*",
     "/eoa/coach/:path*",
     "/dashboard/:path*",

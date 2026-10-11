@@ -1,10 +1,10 @@
 import type { Metadata } from 'next'
-import { Coach } from '@/components/eoa/Coach'
+import { Admin } from '@/components/eoa/Admin'
 export const metadata: Metadata = {
-  title: 'EO Accelerator coach workspace',
+  title: 'EO Accelerator administration',
   robots: { index: false, follow: false },
-  alternates: { canonical: '/EOA/coach' },
+  alternates: { canonical: '/eoa/admin' },
 }
 export default function Page() {
-  return <Coach />
+  return <Admin />
 }

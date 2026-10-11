@@ -396,7 +396,7 @@ export function ParticipantWorkspace({
             ? 'عند وصول الإيراد السنوي إلى مليون دولار، تواصل مع قيادة الفرع لمراجعة متطلبات عضوية EO واستكمال التقديم الرسمي. لا يحدث الانتقال تلقائياً.'
             : 'When annual revenue reaches US$1 million, contact chapter leadership to review EO membership requirements and complete the official application. Graduation is not automatic.'}
         </p>
-        <Link className="eoa-text-link" href="/EOA/contact">
+        <Link className="eoa-text-link" href="/eoa/contact">
           {ar ? 'تواصل مع البرنامج' : 'Contact the program'} ↗
         </Link>
       </section>

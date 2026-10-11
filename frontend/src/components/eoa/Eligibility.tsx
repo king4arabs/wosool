@@ -134,7 +134,7 @@ export function Eligibility() {
           {ar ? 'تحقق من الأهلية' : 'Check eligibility'}
         </button>
         {result && <Notice>{messages[result]}</Notice>}
-        <Link className="eoa-text-link" href="/EOA/apply">
+        <Link className="eoa-text-link" href="/eoa/apply">
           {ar ? 'جهز طلبك' : 'Prepare your application'} ↗
         </Link>
       </form>

@@ -58,11 +58,11 @@ export function EoaOverview() {
         ))}
       </ol>
       <div className="eoa-actions">
-        <Link className="eoa-btn" href="/EOA">
+        <Link className="eoa-btn" href="/eoa">
           {ar ? 'اكتشف المسرّعة' : 'Explore the Accelerator'}
           <ArrowUpRight size={18} />
         </Link>
-        <Link className="eoa-btn eoa-btn-outline" href="/EOA/apply">
+        <Link className="eoa-btn eoa-btn-outline" href="/eoa/apply">
           {ar ? 'قدّم طلبك' : 'Apply now'}
         </Link>
         <Link className="eoa-text-link" href="/dashboard/eoa">

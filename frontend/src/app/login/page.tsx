@@ -122,7 +122,7 @@ export default function LoginPage() {
             </button>
             <Link
               className="gateway-button-secondary w-full"
-              href="/EOA/apply"
+              href="/eoa/apply"
             >
               {t(
                 "إنشاء حساب للتقديم إلى المسرّعة",

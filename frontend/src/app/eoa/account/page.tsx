@@ -1,10 +1,10 @@
 import type { Metadata } from 'next'
-import { Admin } from '@/components/eoa/Admin'
+import { Account } from '@/components/eoa/Account'
 export const metadata: Metadata = {
-  title: 'EO Accelerator administration',
+  title: 'EO Accelerator account',
   robots: { index: false, follow: false },
-  alternates: { canonical: '/EOA/admin' },
+  alternates: { canonical: '/eoa/account' },
 }
 export default function Page() {
-  return <Admin />
+  return <Account />
 }

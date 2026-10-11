@@ -96,7 +96,7 @@ export function EoaContent({ section }: { section: string }) {
                   ? 'تطوير ريادة الأعمال ونمو القطاع الخاص وبناء القدرات الوطنية والعلاقات الدولية، بما ينسجم مع رؤية السعودية 2030. لا يشير ذلك إلى اعتماد أو تأييد حكومي.'
                   : 'Entrepreneurship, private-sector growth, national capabilities and international connections align with Saudi Vision 2030. This does not represent government endorsement.'}
               </p>
-              <Link className="eoa-text-link" href="/EOA/leadership">
+              <Link className="eoa-text-link" href="/eoa/leadership">
                 {ar ? 'قيادة البرنامج' : 'Program leadership'} ↗
               </Link>
             </div>
@@ -161,7 +161,7 @@ export function EoaContent({ section }: { section: string }) {
                   ? 'تُنشر مواعيد الرياض بعد اعتمادها. يتاح تقويم دفعتك داخل حسابك.'
                   : 'Riyadh dates are shared after approval. Your cohort calendar is available in your account.'}
               </p>
-              <Link href="/EOA/account" className="eoa-btn">
+              <Link href="/eoa/account" className="eoa-btn">
                 {ar ? 'افتح حسابك' : 'Open your account'}
               </Link>
             </div>
@@ -279,7 +279,7 @@ export function EoaContent({ section }: { section: string }) {
             </div>
           </div>
         )}
-        <footer className="eoa-source"><Link href="/EOA/privacy">{ar ? 'إشعار الخصوصية' : 'Data notice'}</Link> · 
+        <footer className="eoa-source"><Link href="/eoa/privacy">{ar ? 'إشعار الخصوصية' : 'Data notice'}</Link> · 
           {ar
             ? 'مصادر حقائق البرنامج: EO الرسمية.'
             : 'Program fact sources: official EO publications.'}{' '}
@@ -301,7 +301,7 @@ export function EoaContent({ section }: { section: string }) {
           </a>
           <div className="eoa-actions">
             {Object.entries(titles).map(([slug, title]) => (
-              <Link key={slug} href={`/EOA/${slug}`}>
+              <Link key={slug} href={`/eoa/${slug}`}>
                 {title[ar ? 0 : 1]}
               </Link>
             ))}

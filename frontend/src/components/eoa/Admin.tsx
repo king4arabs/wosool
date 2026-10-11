@@ -172,7 +172,7 @@ function AdminSession() {
   if (!user || !user.email_verified_at)
     return (
       <div className="eoa-container eoa-section">
-        <Link className="eoa-btn" href="/EOA/account">
+        <Link className="eoa-btn" href="/eoa/account">
           {ar ? 'ادخل بحساب موثق' : 'Sign in with a verified account'}
         </Link>
       </div>

@@ -28,20 +28,6 @@ const nextConfig: NextConfig = {
       },
     ],
   },
-  async redirects() {
-    return [
-      {
-        source: "/EOA",
-        destination: "/eoa",
-        permanent: true,
-      },
-      {
-        source: "/EOA/:path*",
-        destination: "/eoa/:path*",
-        permanent: true,
-      },
-    ];
-  },
   async headers() {
     return [
       {
@@ -50,10 +36,6 @@ const nextConfig: NextConfig = {
       },
       {
         source: "/eoa/:path(account|apply|admin|coach|forgot-password|reset-password)",
-        headers: privateHeaders,
-      },
-      {
-        source: "/EOA/:path(account|apply|admin|coach|forgot-password|reset-password)",
         headers: privateHeaders,
       },
       {
@@ -84,13 +66,6 @@ const nextConfig: NextConfig = {
         ],
       },
       {
-        source: "/EOA/reset-password",
-        headers: [
-          { key: "Referrer-Policy", value: "no-referrer" },
-          { key: "Cache-Control", value: "no-store" },
-        ],
-      },
-      {
         source: "/:path(reset-password|verify-email)",
         headers: [
           { key: "Referrer-Policy", value: "no-referrer" },
@@ -102,9 +77,6 @@ const nextConfig: NextConfig = {
   async rewrites() {
     const apiUrl = (process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000").replace(/\/+$/, "");
     return [
-      // Keep the public URL lowercase while preserving the existing physical route tree.
-      { source: "/eoa", destination: "/EOA" },
-      { source: "/eoa/:path*", destination: "/EOA/:path*" },
       { source: "/broadcasting/auth", destination: `${apiUrl}/broadcasting/auth` },
       {
         source: "/api/:path*",

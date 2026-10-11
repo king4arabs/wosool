@@ -36,8 +36,8 @@ test('community and Accelerator navigation retain separate application and accou
     '/eoa/about',
     '/eoa/apply',
     '/eoa/account',
-    '/EOA',
-    '/EOA/about',
+    '/eoa',
+    '/eoa/about',
   ]) {
     assert.deepEqual(publicJourney(path), {
       isEoa: true,

@@ -308,7 +308,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     )
   }
 
-  if (isEoaWorkspace) return <div className="min-h-screen bg-slate-50" dir={activeLocale === 'ar' ? 'rtl' : 'ltr'}><header className="border-b bg-white"><nav className="mx-auto flex max-w-7xl flex-wrap items-center gap-4 px-5 py-4"><Link className="font-bold text-[#3B52D4]" href="/">WOSOOL / وصول</Link><Link className="min-h-11 flex items-center text-sm" href="/EOA">EO Riyadh Accelerator</Link><Link className="min-h-11 flex items-center text-sm" href="/EOA/apply">{locale === 'ar' ? 'طلب الالتحاق' : 'Application'}</Link><button className="ms-auto min-h-11 rounded-lg border px-4" onClick={cycleLocale}>{locale === 'ar' ? 'English' : 'العربية'}</button></nav></header><main id="main-content" className="eoa">{children}</main></div>
+  if (isEoaWorkspace) return <div className="min-h-screen bg-slate-50" dir={activeLocale === 'ar' ? 'rtl' : 'ltr'}><header className="border-b bg-white"><nav className="mx-auto flex max-w-7xl flex-wrap items-center gap-4 px-5 py-4"><Link className="font-bold text-[#3B52D4]" href="/">WOSOOL / وصول</Link><Link className="min-h-11 flex items-center text-sm" href="/eoa">EO Riyadh Accelerator</Link><Link className="min-h-11 flex items-center text-sm" href="/eoa/apply">{locale === 'ar' ? 'طلب الالتحاق' : 'Application'}</Link><button className="ms-auto min-h-11 rounded-lg border px-4" onClick={cycleLocale}>{locale === 'ar' ? 'English' : 'العربية'}</button></nav></header><main id="main-content" className="eoa">{children}</main></div>
 
   return (
     <div className="min-h-screen bg-slate-50/60" dir={activeLocale === "ar" ? "rtl" : "ltr"}>

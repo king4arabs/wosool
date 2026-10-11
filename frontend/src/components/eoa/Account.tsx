@@ -262,7 +262,7 @@ function AccountSession() {
                         {ar
                           ? 'أوافق على معالجة بيانات طلبي وفق'
                           : 'I agree to application data processing under the'}{' '}
-                        <Link href="/EOA/privacy">
+                        <Link href="/eoa/privacy">
                           {ar ? 'سياسة الخصوصية' : 'privacy policy'}
                         </Link>
                         .
@@ -299,7 +299,7 @@ function AccountSession() {
                         : 'Sign in'}
                 </button>
                 {mode === 'login' && (
-                  <Link href="/EOA/forgot-password" className="eoa-text-link">
+                  <Link href="/eoa/forgot-password" className="eoa-text-link">
                     {ar ? 'نسيت كلمة المرور؟' : 'Forgot password?'}
                   </Link>
                 )}
@@ -309,20 +309,20 @@ function AccountSession() {
         ) : (
           <>
             <div className="eoa-actions">
-              <Link className="eoa-btn" href="/EOA/apply">
+              <Link className="eoa-btn" href="/eoa/apply">
                 {ar ? 'طلب الالتحاق' : 'My application'}
               </Link>
               {user.roles?.some((r) =>
                 ['admin', 'eoa_lead', 'eoa_staff', 'eoa_reviewer'].includes(r),
               ) && (
-                <Link className="eoa-btn eoa-btn-secondary" href="/EOA/admin">
+                <Link className="eoa-btn eoa-btn-secondary" href="/eoa/admin">
                   {ar ? 'إدارة البرنامج' : 'Program administration'}
                 </Link>
               )}
               {user.roles?.some((r) =>
                 ['admin', 'eoa_lead', 'eoa_staff', 'eoa_coach'].includes(r),
               ) && (
-                <Link className="eoa-btn eoa-btn-secondary" href="/EOA/coach">
+                <Link className="eoa-btn eoa-btn-secondary" href="/eoa/coach">
                   {ar ? 'مساحة المدرب' : 'Coach workspace'}
                 </Link>
               )}
