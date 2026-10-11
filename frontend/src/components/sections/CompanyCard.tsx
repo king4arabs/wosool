@@ -9,6 +9,23 @@ export function CompanyCard({ company }: { company: Company }) {
   const ar = locale === "ar"
   const founder = company.founders?.[0]
 
+  const signals = [
+    company.isHiring
+      ? { label: ar ? "ØªÙˆØ¸ÙŠÙ Ù†Ø´Ø·" : "Hiring", tone: "success" as const }
+      : null,
+    company.isFundraising
+      ? { label: ar ? "Ø¬Ù…Ø¹ Ø§Ø³ØªØ«Ù…Ø§Ø±" : "Fundraising", tone: "accent" as const }
+      : null,
+    company.isCollaborating
+      ? { label: ar ? "Ù…Ù†ÙØªØ­Ø© Ø¹Ù„Ù‰ Ø§Ù„ØªØ¹Ø§ÙˆÙ†" : "Open to collaboration", tone: "neutral" as const }
+      : null,
+  ].filter(
+    (signal): signal is {
+      label: string
+      tone: "success" | "accent" | "neutral"
+    } => Boolean(signal),
+  )
+
   return (
     <ProfileCard
       data={{
@@ -31,11 +48,8 @@ export function CompanyCard({ company }: { company: Company }) {
               { label: "X", url: founder.twitterUrl ?? "" },
             ].filter((social) => social.url)
           : [],
-        signals: [
-          company.isHiring
-            ? { label: ar ? "ØªÙˆØ¸ÙŠÙ Ù†Ø¶-Èˆˆ’\š[™È‹Û™NˆœÝXØÙ\ÜÈˆ\ÈÛÛœÝBˆˆ[ˆÛÛ\[žKš\Ñ[™˜Z\Ú[™ÂˆÈÈX™[ˆ\ˆÈ¶+6av.H6)ö,ö*¶*öav)ö,Hˆˆ‘[™˜Z\Ú[™È‹Û™Nˆ˜XØÙ[ˆ\ÈÛÛœÝBˆˆ[ˆÛÛ\[žKš\ÐÛÛX›Ü˜][™ÂˆÈÈX™[ˆ\ˆÈ¶ava¶`v*¶+v*H6.va6bH6)öa6*¶.v)öb6aˆˆˆ“Ü[ˆÈÛÛX›Ü˜][Ûˆ‹Û™Nˆ›™]]˜[ˆ\ÈÛÛœÝBˆˆ[ˆK™š[\Šˆ
-ˆÚYÛ˜[ˆ
-NˆÚYÛ˜[\ÈÂˆX™[ˆÝš[™ÂˆÛ™NˆœÝXØÙ\ÜÈˆ˜XØÙ[ˆ›™]]˜[‚ˆHOˆ›ÛÛX[ŠÚYÛ˜[
-Kˆ
-Kˆ_BˆÏ‚ˆ
-BŸB
+        signals,
+      }}
+    />
+  )
+}
