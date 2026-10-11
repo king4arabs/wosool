@@ -233,6 +233,7 @@ Route::prefix('v1')->group(function () {
         Route::patch('/intros/{intro}', [AdminIntroductionController::class, 'update']);
         Route::get('/scorecards', [AdminScorecardController::class, 'index']);
         Route::get('/scorecards/{scorecard}', [AdminScorecardController::class, 'show']);
+        Route::post('/scorecards/{scorecard}/verify-email', [AdminScorecardController::class, 'sendVerification'])->middleware('throttle:10,1');
         Route::patch('/scorecards/{scorecard}/override', [AdminScorecardController::class, 'override']);
         Route::get('/settings', [AdminSettingsController::class, 'show']);
         Route::put('/settings', [AdminSettingsController::class, 'update']);
