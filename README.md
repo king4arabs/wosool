@@ -27,6 +27,16 @@ Wosool also provides the dedicated digital gateway for **EO Riyadh Accelerator**
 
 > **Release boundary:** GitHub CI validates source, security checks, tests, and production builds. A commit, merge, or green workflow does **not** by itself prove that production hosting has deployed the change.
 
+### Start here
+
+| If you want to… | Read |
+| --- | --- |
+| Run the applications locally | [Quick start](#quick-start), then [Development commands](#development-commands) |
+| Understand the services and API | [Architecture](#architecture) and the [API reference](docs/API.md) |
+| Work on the Accelerator | [EOA operations](docs/EOA.md) for workflows, approvals, and release gates |
+| Test or deploy a change | [Testing](TESTING.md) and [Deployment](DEPLOYMENT.md); CI does not deploy |
+| Report a security issue | [Security policy](SECURITY.md) for private reporting |
+
 ## Current platform snapshot — October 11, 2026
 
 The latest product and brand upgrade includes:
@@ -69,6 +79,10 @@ Local production-build screenshots with the seeded Laravel API (not a claim of l
 - **Administration:** scoped roles, application pipelines, founders, companies, scorecards, introductions, events, programs, partners, sponsors, news, analytics, privacy requests, settings, and EOA operations.
 - **Bilingual experience:** Arabic/English, RTL/LTR, Cairo typography, logical spacing, responsive layouts, and accessible navigation.
 - **Content reliability:** public partner, mentor, founder, revenue, and ecosystem claims require approved records and source evidence.
+
+### Founder activation
+
+Sourced founder/company cards connect to public profiles and an administrator-managed email activation flow. Activated founders can manage their information and use private community conversations. See [founder activation and release notes](docs/FOUNDER-ACTIVATION.md) for import, recipient verification, mail setup, and deployment checks.
 
 | Experience | Canonical route | Purpose |
 | --- | --- | --- |
@@ -132,7 +146,9 @@ test -f frontend/.env.local || cp frontend/.env.example frontend/.env.local
 npm run dev
 ```
 
-`npm run setup` installs locked frontend/backend dependencies, prepares a missing backend environment and key, creates the local SQLite file when required, runs migrations, and runs the non-destructive `eoa:install` setup. It preserves existing configuration, refuses production demonstration setup, and does not seed privileged accounts.
+`npm run setup` installs locked frontend/backend dependencies, copies `backend/.env.example` only if `backend/.env` is absent, generates a key only if missing, creates the configured local SQLite file when required, runs migrations, and runs the non-destructive `eoa:install` setup. The default database is file-backed SQLite; existing configuration and keys are preserved. Setup refuses production demonstration setup and does not seed privileged accounts.
+
+To use another database, configure `backend/.env` **before** running `npm run setup`; do not run local setup against a production database. A fresh PostgreSQL schema using the legacy core migration needs the `vector` extension available and permission to create it, or an administrator must provision it first.
 
 | Service | Local address |
 | --- | --- |
@@ -324,7 +340,3 @@ Report vulnerabilities privately through [SECURITY.md](SECURITY.md), not public 
 ## License
 
 The software repository is licensed under the [MIT License](LICENSE). Third-party artwork and trademarks remain subject to their owners' rights and approval requirements; the software license does not grant partnership, endorsement, or trademark rights.
-
-### Founder directory and activation
-
-Sourced founder/company cards now connect to public profiles and an administrator-managed email activation flow. Activated founders can manage their information and use private community conversations. See [founder activation and release notes](docs/FOUNDER-ACTIVATION.md) for import, recipient verification, mail setup and deployment checks.
