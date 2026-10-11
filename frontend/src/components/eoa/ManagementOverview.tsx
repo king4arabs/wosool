@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { statusLabel } from '@/lib/eoa'
 
 export type Management = {
+  alumni?: {total: number; follow_ups_due: number}
   generated_at: string
   pipeline: Record<string, number>
   attention: Record<string, number>
@@ -24,6 +25,7 @@ export function ManagementOverview({data, ar, settings, mail, open, navigate}: {
   ]
   return <div className="eoa-space">
     <div className="eoa-management-hero"><span className="eoa-eyebrow">EO RIYADH ACCELERATOR</span><h2>{ar?'من القبول إلى النمو':'From admission to growth'}</h2><p>{ar?'خطوة واضحة لكل طلب ومشارك وفريق.':'A clear next step for every application, participant and team.'}</p><span>{ar?'آخر تحديث: ':'Updated: '}{new Date(data.generated_at).toLocaleString(ar?'ar-SA-u-ca-gregory':'en-GB',{timeZone:'Asia/Riyadh'})} · {ar?'الرياض':'Riyadh'}</span></div>
+    {data.alumni && <div className="eoa-two-grid"><button type="button" className="eoa-card eoa-priority" onClick={()=>navigate('alumni')}><strong>{data.alumni.total}</strong><span>{ar?'الخريجون':'Alumni'} ↗</span></button><button type="button" className="eoa-card eoa-priority" onClick={()=>navigate('alumni')}><strong>{data.alumni.follow_ups_due}</strong><span>{ar?'متابعات الخريجين المستحقة':'Alumni follow-ups due'} ↗</span></button></div>}
     <section><h2>{ar?'أولويات اليوم':'Needs attention'}</h2><div className="eoa-three-grid">{priorities.map(([key,arabic,english,tab])=><button type="button" key={key} className="eoa-card eoa-priority" onClick={()=>navigate(tab)}><strong>{data.attention[key] ?? 0}</strong><span>{ar?arabic:english} ↗</span></button>)}</div></section>
     <div className="eoa-two-grid"><section className="eoa-card"><h3>{ar?'مسار الطلبات':'Application pipeline'}</h3>{Object.entries(data.pipeline).length ? Object.entries(data.pipeline).map(([status,count])=><div className="eoa-summary-line" key={status}><span>{statusLabel(status,ar)}</span><strong>{count}</strong></div>):<p>{ar?'لا توجد طلبات مرسلة بعد.':'No submitted applications yet.'}</p>}<button type="button" className="eoa-text-link" onClick={()=>navigate('applications')}>{ar?'إدارة المراجعة':'Manage review'} ↗</button></section>
     <section className="eoa-card"><h3>{ar?'جاهزية التشغيل':'Operating readiness'}</h3>{[[ar?'اعتماد البرنامج':'Program approved',settings.approval_status==='approved'],[ar?'اعتماد إشعار البيانات':'Data notice approved',settings.privacy_status==='approved'],[ar?'إعداد البريد':'Mail transport configured',mail],[ar?'مفتاح القبول مفعل':'Intake switch enabled',open]].map(([label,ready])=><div className="eoa-summary-line" key={String(label)}><span>{label}</span><span className="eoa-badge">{ready ? ar?'جاهز':'Ready':ar?'معلق':'Pending'}</span></div>)}<p className="eoa-muted">{ar?'إعداد البريد لا يؤكد تسليم الرسائل. راجع الموعد النهائي والاعتمادات قبل فتح القبول.':'Mail configuration does not confirm delivery. Review the deadline and approvals before opening intake.'}</p><button type="button" className="eoa-text-link" onClick={()=>navigate('settings')}>{ar?'مراجعة الإعدادات':'Review settings'} ↗</button></section></div>

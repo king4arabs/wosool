@@ -4,6 +4,7 @@ import { EoaContent } from '@/components/eoa/Content'
 
 const sections = [
   'about',
+  'alumni',
   'program',
   'eligibility',
   'partners',
@@ -17,6 +18,7 @@ const sections = [
 
 const titles: Record<string, string> = {
   about: 'عن البرنامج | About',
+  alumni: 'الخريجون | Alumni',
   program: 'هيكل البرنامج | Program',
   eligibility: 'الأهلية والرسوم | Eligibility & fees',
   partners: 'الشركاء | Partners',

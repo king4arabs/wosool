@@ -131,6 +131,8 @@ export type Participant = {
   track?: EoaTrack | null
   id: number
   status: string
+  graduated_at?: string | null
+  alumni?: {follow_up_on?: string; support_plan?: string} | null
   onboarding: { completed_at?: string }
   finance: {
     fee_status?: string
@@ -155,6 +157,7 @@ export type Participant = {
   announcements: { id: number; subject: string; body: string }[]
 }
 export const statusNames: Record<string, [string, string]> = {
+  alumni: ['خريج البرنامج', 'Alumni'],
   forming: ['قيد التشكيل', 'Forming'],
   active: ['نشط', 'Active'],
   completed: ['مكتمل', 'Completed'],

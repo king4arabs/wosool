@@ -22,6 +22,7 @@ class ManagementSummary
 
         return [
             'generated_at' => now()->toIso8601String(),
+            'alumni' => ['total' => $participants->where('status', 'alumni')->count(), 'follow_ups_due' => $participants->where('status', 'alumni')->filter(fn ($p) => ! empty($p->eoa_onboarding['alumni']['follow_up_on']) && $p->eoa_onboarding['alumni']['follow_up_on'] <= $today)->count()],
             'pipeline' => (clone $applications)->selectRaw('status, count(*) as total')->groupBy('status')->pluck('total', 'status'),
             'attention' => [
                 'unassigned_reviews' => (clone $applications)->whereIn('status', ['submitted', 'under_review', 'interview'])->whereNotIn('id', DB::table('eoa_reviewers')->whereIn('user_id', User::role('eoa_reviewer')->whereNotNull('email_verified_at')->select('id'))->select('application_id'))->count(),

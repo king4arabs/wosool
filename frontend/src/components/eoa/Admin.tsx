@@ -19,6 +19,7 @@ import { BoardManager } from './BoardManager'
 import { MentorManager } from './MentorManager'
 import { EoaEditorialManager } from './EoaEditorialManager'
 import { ManagementOverview, AccessGuide, type Management } from './ManagementOverview'
+import { AlumniManager } from './AlumniManager'
 import { TrackManager } from './TrackManager'
 import type { EoaTrack } from '@/lib/eoa'
 
@@ -31,7 +32,7 @@ type Enrollment = {
   track_id: number | null
   cohort_id: number | null
   group_id: number | null
-  onboarding: { completed_at?: string } | null
+  onboarding: { completed_at?: string; alumni?: {graduation_reference?: string; follow_up_on?: string; support_plan?: string} } | null
   finance: Record<string, string | number | boolean | null> | null
 }
 type Inquiry = {
@@ -215,6 +216,7 @@ function AdminSession() {
                   ? [
                       ['program', ar ? 'التشغيل' : 'Operations'],
                       ['enrollment', ar ? 'المشاركون' : 'Participants'],
+                      ['alumni', ar ? 'التخرج والخريجون' : 'Graduation & alumni'],
                       ['partners', ar ? 'الشركاء' : 'Partners'],
                       ['board', ar ? 'مجلس الإدارة' : 'Board members'],
                       ['mentors', ar ? 'المرشدون والمستشارون' : 'Mentors & advisors'],
@@ -497,6 +499,7 @@ function AdminSession() {
             {tab === 'program' && ops && (
               <OperationManager ops={ops} act={act} busy={busy} ar={ar} />
             )}
+            {tab === 'alumni' && ops && <AlumniManager participants={ops.participants} ar={ar} lead={review.capabilities.lead} reload={load} />}
             {tab === 'enrollment' && ops && (
               <div className="eoa-two-grid">
                 {!ops.participants.length && (
@@ -506,7 +509,7 @@ function AdminSession() {
                       : 'Locally accepted applicants appear here.'}
                   </p>
                 )}
-                {ops.participants.map((p) => (
+                {ops.participants.filter(p => p.status !== 'alumni').map((p) => (
                   <form
                     className="eoa-card"
                     key={p.id}
@@ -1075,7 +1078,7 @@ function OperationManager({
       </div>
       <div className="eoa-two-grid">
         <div className="eoa-card">
-          <h2>{operationTitles[type][ar ? 0 : 1]}</h2>
+          <h2>{operationTitles[type][ar ? 0 : 1]}</h2>{type === 'cohorts' && <p>{ar?'مدة كل دفعة ستة أشهر، وجولة جديدة كل ستة أشهر. عند إنشاء دفعة بتاريخ بداية دون تاريخ نهاية، تُحسب النهاية بعد ستة أشهر.':'Each cohort lasts six months, with a new round every six months. For a new cohort with a start date and no end date, the end is set six months later.'}</p>}
           {rows.map((r) => (
             <button
               className="eoa-app-row"
@@ -1194,6 +1197,8 @@ function OperationManager({
                   {ar ? 'مساءلة' : 'Accountability'}
                 </option>
                 <option value="mentoring">{ar ? 'إرشاد' : 'Mentoring'}</option>
+                <option value="prestigious_activity">{ar?'نشاط مرموق':'Prestigious activity'}</option>
+                <option value="alumni_follow_up">{ar?'متابعة الخريجين':'Alumni follow-up'}</option>
               </select>
             </Field>
           )}

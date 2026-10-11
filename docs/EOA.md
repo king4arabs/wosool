@@ -139,3 +139,15 @@ Design references checked October 11, 2026:
 This enhancement needs no new migration. Deploy Laravel and Next.js together; live email delivery and production backend health still require host verification.
 
 Protected post-login destinations are loaded with the new session cookie, preventing a prefetched guest redirect from sending a signed-in participant back to login. Local verification covered 50 frontend tests, the existing 39 Accelerator-related backend tests, and 5 additional management/authorization tests. Production backend health remains a separate deployment gate.
+
+## Authoritative local cohort model — October 11, 2026
+
+Per the owner's updated direction, the Riyadh delivery model is **six months of coaching, training and prestigious activities**, with **new cohort rounds every six months**. This supersedes earlier two-year duration and annual learning-day descriptions on Wosool. Exact launch dates and calendars remain admin-managed, not automatically invented. The public API exposes this local model separately from sourced global eligibility/fee facts.
+
+After cohort graduation, founders join the alumni program for continued coaching, activities, follow-ups and support toward **US$1 million in annual revenue**. Participants, founders and alumni may qualify to apply to EO once they satisfy all EO joining requirements and complete EO/chapter admission. Graduation, reaching the revenue target, and EO membership are separate milestones; this application never grants EO membership automatically. Membership reference: https://eonetwork.org/one/join-eo.
+
+The public `/eoa/alumni` page, homepage, program journey and FAQs explain the model in Arabic and English. Core duration/membership FAQ answers take precedence over older copies of those answers in the editorial snapshot. Other custom FAQs are preserved. Annual fee references retain their original period: a six-month cohort does not imply automatic fee proration or a new approved price.
+
+Leadership records graduation under **Graduation & alumni** after a dated cohort has run six calendar months and its recorded end date has passed. A graduation reference, next follow-up date and support plan are required. No participants are automatically graduated or bulk-updated. Status becomes `alumni`; the graduation date is preserved on later follow-ups. Alumni keep their cohort-scoped sessions, resources, goals and assigned coaching. Application status, financial confirmation and account roles are preserved; no EO membership role is granted. The ordinary enrollment editor cannot silently revert a graduate.
+
+New dated cohorts without an end date default to six calendar months using month-end-safe arithmetic. Existing cohort dates are preserved. Operations can schedule `prestigious_activity` and `alumni_follow_up` sessions. Graduation details use the existing onboarding JSON and completion timestamp; no schema migration is required. The participant response exposes the support plan and follow-up date, but not the internal graduation reference or recording actor.

@@ -27,6 +27,7 @@ class PublicController extends Controller
         }
 
         return response()->json(['data' => [
+            'delivery_model' => ProgramService::deliveryModel(),
             'data_collection_open' => ProgramService::collectionReady(),
             'privacy_notice_ar' => $settings['privacy_status'] === 'approved' ? $settings['privacy_notice_ar'] : null,
             'privacy_notice_en' => $settings['privacy_status'] === 'approved' ? $settings['privacy_notice_en'] : null,

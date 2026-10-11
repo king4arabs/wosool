@@ -40,8 +40,8 @@ export function EoaOverview() {
           <h2 id="eoa-overview-title">EO Riyadh Accelerator</h2>
           <p>
             {ar
-              ? 'مسرّعة رائدة تجمع التعلم العملي والمساءلة والعلاقات العالمية لدعم نمو شركتك.'
-              : 'A premier accelerator combining practical learning, accountability and global founder connections.'}
+              ? 'مسرّعة تمتد ستة أشهر تجمع التوجيه والتدريب والأنشطة المرموقة، يليها برنامج مستمر للخريجين. تنطلق دفعة جديدة كل ستة أشهر.'
+              : 'A six-month accelerator combining coaching, training and prestigious activities, followed by an ongoing alumni program. New cohorts begin every six months.'}
           </p>
         </div>
       </div>

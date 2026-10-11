@@ -15,6 +15,7 @@ import {
 import { useLocale } from "@/lib/locale"
 import { programAvailability } from "@/lib/eoa"
 import { EoaHeroMedia } from "./HeroMedia"
+import { CohortModel } from './CohortModel'
 import { EoaJourney } from "./Journey"
 import { EoaLogo } from "./Logo"
 import { EoaBoard } from "./Board"
@@ -34,13 +35,13 @@ export function EoaLanding() {
     ? [
         ["$250K–$999K", "نطاق الإيراد السنوي المستهدف"],
         ["4", "ركائز أساسية للنمو"],
-        ["عامان", "مدة برنامج التعلم"],
+        ["٦ أشهر", "تدريب وتوجيه وأنشطة مرموقة"],
         ["$1M+", "طموح النمو السنوي"],
       ]
     : [
         ["$250K–$999K", "Target annual revenue"],
         ["4", "Core growth pillars"],
-        ["2 Years", "Learning program"],
+        ["6 Months", "Coaching, training & prestigious activities"],
         ["$1M+", "Annual growth ambition"],
       ]
 
@@ -72,8 +73,8 @@ export function EoaLanding() {
               </h1>
               <p className="eoa-hero-message">
                 {ar
-                  ? "انضم إلى رحلة يقودها المؤسسون لتعزيز أعمالك، وتنمية قيادتك، والتوسع نحو إيرادات سنوية تتجاوز مليون دولار من خلال التعلّم العملي والعلاقات الريادية العالمية."
-                  : "Join a founder-led journey to strengthen your business, grow your leadership and scale toward US$1M+ annual revenue through practical learning and global entrepreneurial connections."}
+                  ? "انضم إلى دفعة تمتد ستة أشهر من التدريب والتوجيه والأنشطة المرموقة، يليها دعم للخريجين نحو مليون دولار من الإيراد السنوي. تنطلق دفعة جديدة كل ستة أشهر."
+                  : "Join a six-month cohort of coaching, training and prestigious activities, followed by alumni support toward US$1M in annual revenue. A new cohort begins every six months."}
               </p>
 
               <div className="eoa-hero-join-row">
@@ -167,6 +168,7 @@ export function EoaLanding() {
         </div>
       </section>
 
+      <div className="eoa-container eoa-section"><CohortModel ar={ar} /></div>
       <EoaJourney program={program} />
       <EoaMentors key={ar ? "ar" : "en"} mentors={program?.mentors ?? []} ar={ar} loading={!program && !failed} failed={failed} retry={retry} compact />
       <EoaProgramDetails program={program} />

@@ -25,11 +25,13 @@ class ParticipantController extends Controller
             return response()->json(['data' => null, 'notifications' => $notifications]);
         }
         $scoped = fn ($q) => $q->whereNull('cohort_id')->orWhere('cohort_id', $participant->cohort_id ?? 0);
-        $active = $participant->status === 'enrolled' && ($participant->eoa_finance['global_confirmed'] ?? false);
+        $active = in_array($participant->status, ['enrolled', 'alumni']) && ($participant->eoa_finance['global_confirmed'] ?? false);
         $group = $participant->eoa_group_id ? DB::table('eoa_groups')->leftJoin('users', 'users.id', '=', 'eoa_groups.coach_id')->where('eoa_groups.id', $participant->eoa_group_id)->first(['eoa_groups.name', 'eoa_groups.meeting_link', 'users.name as coach_name']) : null;
 
         return response()->json(['notifications' => $notifications, 'data' => [
-            'id' => $participant->id, 'status' => $participant->status, 'onboarding' => $participant->eoa_onboarding ?? [],
+            'id' => $participant->id, 'status' => $participant->status, 'onboarding' => array_diff_key($participant->eoa_onboarding ?? [], ['alumni' => true]),
+            'graduated_at' => $participant->completed_at,
+            'alumni' => $participant->status === 'alumni' ? array_intersect_key($participant->eoa_onboarding['alumni'] ?? [], array_flip(['follow_up_on', 'support_plan'])) : null,
             'finance' => array_intersect_key($participant->eoa_finance ?? [], array_flip(['fee_status', 'global_confirmed', 'participant_amount_usd', 'sponsor_amount_usd'])),
             'group' => $active ? $group : null,
             'track' => $participant->eoa_track_id ? DB::table('eoa_tracks')->where('id', $participant->eoa_track_id)->first(['id', 'name_ar', 'name_en']) : null,
@@ -55,7 +57,7 @@ class ParticipantController extends Controller
     public function progress(Request $request)
     {
         $participant = $this->participant($request);
-        abort_unless($participant->status === 'enrolled' && ($participant->eoa_finance['global_confirmed'] ?? false), 403);
+        abort_unless(in_array($participant->status, ['enrolled', 'alumni']) && ($participant->eoa_finance['global_confirmed'] ?? false), 403);
         $data = $request->validate([
             'self_assessment' => 'nullable|string|max:4000', 'milestones' => 'required|array|max:20',
             'milestones.*.title' => 'required|string|max:255', 'milestones.*.due_date' => 'nullable|date_format:Y-m-d',
@@ -73,7 +75,7 @@ class ParticipantController extends Controller
     public function register(Request $request, int $session)
     {
         $participant = $this->participant($request);
-        abort_unless($participant->status === 'enrolled' && ($participant->eoa_finance['global_confirmed'] ?? false), 403);
+        abort_unless(in_array($participant->status, ['enrolled', 'alumni']) && ($participant->eoa_finance['global_confirmed'] ?? false), 403);
         $item = ProgramService::program()->sessions()->findOrFail($session);
         abort_unless($item->cohort_id === null || $item->cohort_id === $participant->cohort_id, 403);
         abort_unless($item->status === 'scheduled' && $item->starts_at?->isFuture(), 422, 'Session registration is unavailable.');
@@ -85,7 +87,7 @@ class ParticipantController extends Controller
     public function feedback(Request $request)
     {
         $participant = $this->participant($request);
-        abort_unless($participant->status === 'enrolled', 403);
+        abort_unless(in_array($participant->status, ['enrolled', 'alumni']), 403);
         $data = $request->validate(['satisfaction_score' => 'required|integer|min:1|max:5', 'what_improved' => 'nullable|string|max:2000', 'what_missing' => 'nullable|string|max:2000']);
         DB::table('program_feedback')->insert($data + ['program_id' => $participant->program_id, 'cohort_id' => $participant->cohort_id, 'user_id' => $request->user()->id, 'created_at' => now(), 'updated_at' => now()]);
 

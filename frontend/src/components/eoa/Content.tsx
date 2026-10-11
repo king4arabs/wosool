@@ -1,6 +1,7 @@
 'use client'
 import Link from 'next/link'
 import { useLocale } from '@/lib/locale'
+import { CohortModel } from './CohortModel'
 import { EoaPrivacy } from './Privacy'
 import { EoaContact } from './Contact'
 import { EoaBoard } from './Board'
@@ -10,6 +11,7 @@ import { Eligibility } from './Eligibility'
 import { Notice, PartnerStrip, useEoaProgram } from './Shared'
 import { formatEoaDate } from '@/lib/eoa'
 const titles: Record<string, [string, string]> = {
+  alumni: ['الخريجون ومتابعة النمو', 'Alumni & continued growth'],
   privacy: ['الخصوصية والبيانات', 'Privacy & data'],
   about: ['عن المسرّعة', 'About the Accelerator'],
   program: ['من التعلم إلى نمو الأعمال', 'From learning to business growth'],
@@ -36,6 +38,8 @@ export function EoaContent({ section }: { section: string }) {
           <span className="eoa-eyebrow">EO RIYADH ACCELERATOR</span>
           <h1>{titles[section]?.[ar ? 0 : 1]}</h1>
         </header>
+        {['program', 'alumni'].includes(section) && <CohortModel ar={ar} />}
+        {section === 'alumni' && <div className="eoa-card eoa-space"><h2>{ar?'تستمر الرحلة بعد التخرج':'Your journey continues after graduation'}</h2><p>{ar?'تابع أهداف شركتك وتواصل مع مدربك وراجع الأنشطة ومواعيد المتابعة من حسابك. يسجل فريق البرنامج التخرج وخطة المتابعة، وتُقيّم أهلية EO بصورة مستقلة عند استيفاء شروطها.':'Keep tracking company goals, connect with your coach and review activities and follow-up dates in your account. The program team records graduation and follow-up plans; EO eligibility is assessed separately against its membership requirements.'}</p><Link href="/dashboard/eoa" className="eoa-btn">{ar?'افتح مساحة الخريجين':'Open your alumni workspace'}</Link></div>}
         {section === 'eligibility' && <Eligibility />}
         {section === 'privacy' && <EoaPrivacy />}
         {section === 'about' && (
@@ -70,8 +74,8 @@ export function EoaContent({ section }: { section: string }) {
           <>
             <p className="eoa-lead">
               {ar
-                ? 'برنامج تعلم يمتد عامين. أربعة أيام تعلم كل عام، ومجموعات مساءلة شهرية، وأهداف تُترجم إلى تطبيق في شركتك.'
-                : 'A two-year learning program. Four learning days each year, monthly accountability groups and goals you apply in your business.'}
+                ? 'برنامج يمتد ستة أشهر من التدريب والتوجيه والأنشطة المرموقة. تنطلق دفعة جديدة كل ستة أشهر، ويستمر دعم الخريجين بعد التخرج.'
+                : 'Six months of coaching, training and prestigious activities. A new cohort begins every six months, with continued alumni support after graduation.'}
             </p>
             <div className="eoa-four-grid">
               {(ar
@@ -240,8 +244,8 @@ export function EoaContent({ section }: { section: string }) {
         )}
         <footer className="eoa-source"><Link href="/eoa/privacy">{ar ? 'إشعار الخصوصية' : 'Data notice'}</Link> · 
           {ar
-            ? 'مصادر حقائق البرنامج: EO الرسمية.'
-            : 'Program fact sources: official EO publications.'}{' '}
+            ? 'نموذج الدفعات المحلي: قيادة برنامج الرياض. شروط EO: المصادر الرسمية.'
+            : 'Local cohort model: Riyadh program leadership. EO requirements: official EO publications.'}{' '}
           {program?.facts.verified_at && <span>{ar ? 'آخر مراجعة مسجلة' : 'Last recorded review'}: {formatEoaDate(program.facts.verified_at, ar)} · </span>}
           <a
             href="https://eonetwork.org/accelerator"

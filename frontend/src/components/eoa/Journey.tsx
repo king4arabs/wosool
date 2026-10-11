@@ -16,8 +16,8 @@ export function EoaJourney({ program }: { program: EoaProgram | null }) {
         ['المراجعة', 'تابع طلبات المعلومات والمقابلة وقرار اللجنة من حسابك.'],
         ['القبول', 'تؤكد قيادة البرنامج قرار القبول والمسار المناسب.'],
         ['الانضمام والتسجيل', 'استكمل متطلبات المشاركة وتأكيد الرسوم والتسجيل الرسمي.'],
-        ['التعلم والمساءلة', 'شارك في أربعة أيام تعلم سنوياً واجتماعات الأقران، وطبّق أهدافك.'],
-        ['إكمال البرنامج', 'راجع تقدم شركتك ونتائج التعلم والخطوات التالية مع القيادة.'],
+        ['التعلم والمساءلة', 'شارك في ستة أشهر من التوجيه والتدريب والأنشطة المرموقة، وطبّق أهدافك.'],
+        ['التخرج والخريجون', 'أكمل الدفعة وانضم إلى برنامج الخريجين للمتابعة ودعم النمو نحو مليون دولار.'],
         ['التقديم لعضوية EO', 'عند استيفاء شروط العضوية، قدّم طلباً مستقلاً يراجعه الفرع.'],
       ]
     : [
@@ -27,8 +27,8 @@ export function EoaJourney({ program }: { program: EoaProgram | null }) {
         ['Review', 'Follow information requests, interviews and committee decisions in your account.'],
         ['Acceptance', 'Program leadership confirms your admission decision and track.'],
         ['Onboarding', 'Complete participation requirements, fee confirmation and official enrollment.'],
-        ['Learn & apply', 'Join four learning days each year, meet your accountability group and pursue your goals.'],
-        ['Completion', 'Review your company’s progress, learning outcomes and next steps with leadership.'],
+        ['Learn & apply', 'Join six months of coaching, training and prestigious activities, meet your accountability group and pursue your goals.'],
+        ['Graduation & alumni', 'Complete your cohort and continue with alumni follow-ups and growth support toward US$1 million.'],
         ['EO membership application', 'When eligible, apply separately for membership through the chapter’s review process.'],
       ]
 
@@ -91,8 +91,8 @@ export function EoaJourney({ program }: { program: EoaProgram | null }) {
             </p>
             <p>
               {ar
-                ? 'يمتد برنامج التعلم لعامين، ويشمل أربعة أيام تعلم كاملة كل عام و8–12 لقاء مساءلة، عادة لساعتين إلى أربع ساعات شهرياً، مع التطبيق العملي داخل شركتك.'
-                : 'The two-year learning program includes four full learning days each year and 8–12 accountability meetings, typically two to four hours monthly, alongside practical work in your company.'}
+                ? 'تمتد الدفعة ستة أشهر من التدريب والتوجيه والأنشطة المرموقة. تبدأ دفعة جديدة كل ستة أشهر، وتستمر المتابعة عبر برنامج الخريجين بعد التخرج.'
+                : 'Each cohort runs for six months of coaching, training and prestigious activities. A new cohort begins every six months, with follow-up support through the alumni program after graduation.'}
             </p>
             <Link className="eoa-text-link" href="/eoa/eligibility">
               {ar ? 'تحقق من الأهلية والرسوم' : 'Check eligibility & fees'} ↗

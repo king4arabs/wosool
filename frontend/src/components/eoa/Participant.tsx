@@ -47,10 +47,11 @@ export function ParticipantWorkspace({
   return (
     <div id="participant-workspace" className="eoa-space">
       <div className="eoa-section-head">
-        <h2>{ar ? 'مساحة المشارك' : 'Participant workspace'}</h2>
+        <h2>{p.status === 'alumni' ? (ar?'مساحة الخريجين':'Alumni workspace') : (ar ? 'مساحة المشارك' : 'Participant workspace')}</h2>
         <span className="eoa-badge">{statusLabel(p.status, ar)}</span>
       </div>
-      {p.status === 'enrolled' && <><div className="eoa-three-grid"><div className="eoa-card"><strong>{summary.completed} / {summary.total}</strong><p>{ar?'أهداف مكتملة':'Goals completed'}</p></div><div className="eoa-card"><strong>{p.registrations.filter(id=>p.sessions.some(s=>s.id===id)).length}</strong><p>{ar?'تسجيلات الجلسات المنشورة':'Registrations in published sessions'}</p></div><div className="eoa-card"><strong>{summary.attended} / {summary.recorded}</strong><p>{ar?'حضور من السجلات الموثقة':'Attended out of recorded attendance'}</p></div></div><nav className="eoa-workspace-nav" aria-label={ar?'مساحة المشارك':'Participant workspace'}>{[['calendar',ar?'الجلسات':'Sessions'],['goals',ar?'أهدافي':'My goals'],['materials',ar?'مواد التعلم':'Materials'],['feedback',ar?'الملاحظات':'Feedback']].map(([id,label])=><a key={id} href={`#eoa-${id}`}>{label}</a>)}</nav></>}
+      {['enrolled', 'alumni'].includes(p.status) && <><div className="eoa-three-grid"><div className="eoa-card"><strong>{summary.completed} / {summary.total}</strong><p>{ar?'أهداف مكتملة':'Goals completed'}</p></div><div className="eoa-card"><strong>{p.registrations.filter(id=>p.sessions.some(s=>s.id===id)).length}</strong><p>{ar?'تسجيلات الجلسات المنشورة':'Registrations in published sessions'}</p></div><div className="eoa-card"><strong>{summary.attended} / {summary.recorded}</strong><p>{ar?'حضور من السجلات الموثقة':'Attended out of recorded attendance'}</p></div></div><nav className="eoa-workspace-nav" aria-label={ar?'مساحة المشارك':'Participant workspace'}>{[['calendar',ar?'الجلسات':'Sessions'],['goals',ar?'أهدافي':'My goals'],['materials',ar?'مواد التعلم':'Materials'],['feedback',ar?'الملاحظات':'Feedback']].map(([id,label])=><a key={id} href={`#eoa-${id}`}>{label}</a>)}</nav></>}
+      {p.status === 'alumni' && <section className="eoa-card"><h3>{ar?'خطة المتابعة بعد التخرج':'Your post-graduation follow-up'}</h3><p>{p.alumni?.support_plan}</p><p>{ar?'موعد المتابعة القادم: ':'Next follow-up: '}{p.alumni?.follow_up_on || '—'}</p></section>}
       {p.track && <p><strong>{ar ? 'مسارك' : 'Your track'}:</strong> {ar ? p.track.name_ar : p.track.name_en}</p>}
       {error && <Notice error>{error}</Notice>}
       {notice && <Notice>{notice}</Notice>}
@@ -121,7 +122,7 @@ export function ParticipantWorkspace({
           </p>
         </div>
       </div>
-      {p.status === 'enrolled' && (
+      {['enrolled', 'alumni'].includes(p.status) && (
         <>
           <div className="eoa-two-grid eoa-space">
             <div className="eoa-card">
@@ -397,8 +398,8 @@ export function ParticipantWorkspace({
         <h3>{ar ? 'الجاهزية لعضوية EO' : 'EO membership readiness'}</h3>
         <p>
           {ar
-            ? 'عند وصول الإيراد السنوي إلى مليون دولار، تواصل مع قيادة الفرع لمراجعة متطلبات عضوية EO واستكمال التقديم الرسمي. لا يحدث الانتقال تلقائياً.'
-            : 'When annual revenue reaches US$1 million, contact chapter leadership to review EO membership requirements and complete the official application. Graduation is not automatic.'}
+            ? 'يمكن لمشاركي EOA والمؤسسين والخريجين التقدم إلى EO بعد استيفاء جميع شروط العضوية واجتياز المراجعة والقبول. تدعم متابعة الخريجين النمو نحو مليون دولار من الإيراد السنوي؛ ولا يمنح التخرج من الدفعة عضوية EO تلقائياً.'
+            : 'EOA participants, founders and alumni may apply to EO once they meet all membership requirements and complete chapter review and admission. Alumni follow-ups support growth toward US$1 million in annual revenue; cohort graduation does not itself grant EO membership.'}
         </p>
         <Link className="eoa-text-link" href="/eoa/contact">
           {ar ? 'تواصل مع البرنامج' : 'Contact the program'} ↗

@@ -34,7 +34,7 @@ export function validateApplicationStep(fields: ApplicationFields, step: number,
 
 export function eoaJourneyStage(status: string | undefined, verified: boolean, participantStatus?: string) {
   if (!verified) return 0
-  if (participantStatus === 'enrolled' || status === 'enrolled') return 4
+  if (['enrolled', 'alumni'].includes(participantStatus ?? '') || status === 'enrolled') return 4
   if (participantStatus || ['accepted', 'onboarding'].includes(status ?? '')) return 3
   if (['submitted', 'under_review', 'interview', 'waitlisted', 'rejected'].includes(status ?? '')) return 2
   return 1

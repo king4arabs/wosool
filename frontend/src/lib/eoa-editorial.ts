@@ -57,8 +57,8 @@ export const defaultEoaFaqs: EoaFaq[] = [
   {
     question_en: 'How long is the program and what is the time commitment?',
     question_ar: 'ما مدة البرنامج والالتزام الزمني؟',
-    answer_en: 'The program runs for two years, with four full learning days each year and 8–12 accountability meetings annually, typically lasting 2–4 hours. Participants also apply the learning in their businesses between sessions.',
-    answer_ar: 'يمتد البرنامج عامين، ويشمل أربعة أيام تعلم كاملة كل عام و8–12 لقاء مساءلة سنوياً، يستغرق كل منها عادةً ساعتين إلى أربع ساعات، إضافة إلى تطبيق التعلم في الشركة بين الجلسات.',
+    answer_en: 'The Riyadh cohort runs for six months of coaching, training and prestigious activities. New cohort rounds begin every six months. Graduates continue in the alumni program with follow-ups and startup growth support.',
+    answer_ar: 'تمتد دفعة الرياض ستة أشهر من التوجيه والتدريب والأنشطة المرموقة. تنطلق جولة جديدة كل ستة أشهر، ويواصل الخريجون الاستفادة من المتابعة ودعم نمو الشركات الناشئة.',
     visible: true,
   },
   {
@@ -78,8 +78,8 @@ export const defaultEoaFaqs: EoaFaq[] = [
   {
     question_en: 'Does completing Accelerator give me EO membership?',
     question_ar: 'هل إكمال المسرّعة يمنحني عضوية EO؟',
-    answer_en: 'EO membership has its own eligibility requirements and chapter review. Program leadership can help you explore the next step when your business qualifies.',
-    answer_ar: 'تتطلب عضوية EO استيفاء شروطها ومراجعة الفرع. تساعدك قيادة البرنامج على استكشاف الخطوة التالية عندما تتأهل شركتك.',
+    answer_en: 'EOA participants, founders and alumni can apply to EO once they meet all joining requirements and pass its admission and chapter-review process. Reaching US$1 million is a growth goal; cohort graduation alone does not grant EO membership.',
+    answer_ar: 'يمكن لمشاركي EOA والمؤسسين والخريجين التقدم إلى EO بعد استيفاء جميع شروط الانضمام واجتياز إجراءات القبول ومراجعة الفرع. الوصول إلى مليون دولار هدف للنمو؛ ولا يمنح التخرج وحده عضوية EO.',
     visible: true,
   },
   {
@@ -92,7 +92,9 @@ export const defaultEoaFaqs: EoaFaq[] = [
 ]
 
 export function eoaFaqs(editorial?: EoaEditorial | null) {
-  return editorial ? editorial.faqs.filter((faq) => faq.visible) : defaultEoaFaqs
+  const core = defaultEoaFaqs.filter(faq => ['How long is the program and what is the time commitment?', 'Does completing Accelerator give me EO membership?'].includes(faq.question_en))
+  const others = editorial ? editorial.faqs.filter(faq => faq.visible) : defaultEoaFaqs
+  return [...core, ...others.filter(faq => !core.some(item => item.question_en === faq.question_en || item.question_ar === faq.question_ar))]
 }
 
 export function safeEoaWebsite(value: string | null | undefined) {
