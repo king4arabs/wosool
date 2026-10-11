@@ -23,18 +23,18 @@ Website checks use retrieved official-site content, including indexed first-part
 
 ## Current catalog
 
-13 researched profiles; 10 meet the current publication criteria.
+14 researched profiles; 10 meet the current publication criteria.
 
-| Region | Eligible profiles | Pending revenue evidence |
+| Region | Eligible profiles | Pending evidence |
 | --- | --- | --- |
-| Saudi Arabia | Foodics, Tamara, Swarm Robotics, Rasan | Unifonic, Salla |
-| Other GCC | Huspy, Lisan, Verofax, Thiqa Education | Kitopi |
+| Saudi Arabia | Foodics, Tamara, Swarm Robotics, Rasan, Jahez | Unifonic, Salla |
+| Other GCC | Huspy, Lisan, Verofax | Kitopi; Thiqa (website and revenue cutoff pending) |
 | Other MENA | Paymob | — |
 | Global | Canva | — |
 
-Five newly researched entries come from Misk, Impact46, LEAP and GITEX/Expand North Star. The source registry tracks all ten requested organizations, including unresolved candidates and precise limitations. **Do not claim complete coverage of all ten.** CODE, Monshaat, Multiverse, Falak, Lamarka and The Garage remain in further research.
+Six research entries are linked to Misk, Impact46, LEAP and GITEX/Expand North Star. The source registry tracks all ten requested organizations, including unresolved candidates and precise limitations. **Do not claim complete coverage of all ten.** CODE, Monshaat, Multiverse, Falak, Lamarka and The Garage remain in further research.
 
-Rasan's current official leadership page lists Moayad Alfallaj as chairman; older CEO biographies were not reused as current roles. Rasan's investor page has inconsistent year labels, so no amount is reproduced. Tamara's financial evidence refers specifically to Tamara Finance Company and unaudited interim results. Swarm's Misk testimonial omits the revenue year. Thiqa's exhibitor total is cumulative and self-reported.
+Rasan's current official leadership page lists Moayad Alfallaj as chairman; older CEO biographies were not reused as current roles. Rasan now uses its H1 2026 issuer announcement: SAR 517.5 million revenue, labeled reported because the full financial statement could not be inspected. Tamara's financial evidence refers specifically to Tamara Finance Company and unaudited interim results. Swarm's Misk testimonial omits the revenue year. Thiqa's exhibitor total is cumulative and self-reported; its unspecified cutoff and inaccessible website leave it pending. Jahez uses its FY2024 consolidated statement, with the historical period explicit.
 
 Canonical files:
 - `backend/database/data/startup-directory.json`: reviewed profiles, classifications, revenue evidence and asset provenance.
@@ -64,5 +64,9 @@ A weekly Sunday-morning review targets Misk, CODE by MCIT, Monshaat, Multiverse 
 `directory:review-due` lists records for source review without advancing dates. Only actual review changes `reviewed_at`. Recheck official websites, revenue periods, leadership, logo availability and social ownership; then validate, commit, deploy and re-import. Keep withdrawn profiles unpublished.
 
 ## Verification
+
+The 11 October 2026 review is documented in `docs/research/STARTUP-DIRECTORY-2026-10-11.md`. Source attempts have a separate date/status; failed retrievals do not advance successful verification dates. Partial revenue reviews only advance the nested evidence date, not the whole-profile review date.
+
+Previous release baseline (9 October 2026):
 
 109 Laravel tests and 18 frontend tests passed. Frontend lint, type checks and production build passed. Arabic/English browser checks passed at 390px and 1280px. Laravel coverage includes import idempotency, moderation preservation, publication gates, region ordering, pagination, combined filters, literal search, missing evidence, overdue flags and public active-only relationships. Frontend coverage includes primary-company and social-link mapping. Run backend tests, frontend tests, lint, type checks and production build. Browser QA covers Arabic/English at mobile and desktop widths with sourced fixtures; it does not prove production import or every external provider's availability.

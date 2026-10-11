@@ -489,7 +489,7 @@
       "period": "2025 review",
       "summary_en": "Canva’s own 2025 review reports reaching USD 3.5 billion in revenue. This is a company-reported figure.",
       "summary_ar": "ذكر تقرير كانفا عن عام 2025 وصول الإيرادات إلى 3.5 مليار دولار؛ الرقم معلن من الشركة.",
-      "reviewed_at": "2026-10-09"
+      "reviewed_at": "2026-10-11"
     }
   },
   {
@@ -561,7 +561,7 @@
       "period": "Annual revenue; year not specified by Misk",
       "summary_en": "Misk reports annual revenue above USD 200,000. The testimonial does not specify the reporting year.",
       "summary_ar": "تذكر مسك إيرادات سنوية تتجاوز 200 ألف دولار دون تحديد السنة المالية.",
-      "reviewed_at": "2026-10-09"
+      "reviewed_at": "2026-10-11"
     }
   },
   {
@@ -588,13 +588,14 @@
     "portrait_url": null,
     "company_socials": [],
     "founder_socials": [],
-    "reviewed_at": "2026-10-09",
+    "reviewed_at": "2026-10-11",
     "review_due_at": "2027-01-07",
     "sources": [
       "https://rasan.sa/en/about",
       "https://rasan.sa/en/investor-relations/investment-case",
       "https://impact46.sa/",
-      "https://www.rasanglobal.com/en/ipo/"
+      "https://www.rasanglobal.com/en/ipo/",
+      "https://gamma.euroland.com/tools/PressReleases/GetPressRelease/?ID=8116409&companycode=sa-rasan&lang=en-GB&v=ticker"
     ],
     "asset_sources": [
       {
@@ -607,8 +608,8 @@
     "focus_area_en": "Insurance comparison and financial-service platforms",
     "focus_area_ar": "مقارنة التأمين ومنصات الخدمات المالية",
     "website_status": "active",
-    "website_verified_at": "2026-10-09",
-    "website_verification_method": "official_site_content_review",
+    "website_verified_at": "2026-10-11",
+    "website_verification_method": "retrieved_official_site_content",
     "ecosystem_sources": [
       {
         "key": "impact46",
@@ -620,12 +621,13 @@
     ],
     "revenue_status": "reported",
     "revenue_evidence": {
-      "source_url": "https://rasan.sa/en/investor-relations/investment-case",
-      "period": "Historical investor disclosure: 2020–2023",
-      "summary_en": "Rasan’s investor page documents positive revenue and revenue growth. No amount is reproduced because the page contains inconsistent year labels.",
-      "summary_ar": "توثق صفحة علاقات المستثمرين إيرادات ونمواً في الإيرادات. لم ننقل مبلغاً لوجود اختلاف في تسميات السنوات على الصفحة.",
-      "reviewed_at": "2026-10-09"
-    }
+      "source_url": "https://gamma.euroland.com/tools/PressReleases/GetPressRelease/?ID=8116409&companycode=sa-rasan&lang=en-GB&v=ticker",
+      "period": "Six months ended 30 June 2026",
+      "summary_en": "Rasan’s issuer interim-results announcement reports SAR 517.5 million revenue for the six months ended 30 June 2026. Source: issuer disclosure carried by Euroland; the full financial statement was not inspected in this review. No audit claim is made.",
+      "summary_ar": "يعلن إفصاح رسن عن النتائج الأولية إيرادات قدرها 517.5 مليون ريال للستة أشهر المنتهية في 30 يونيو 2026. المصدر إفصاح الشركة المنشور عبر يورولاند؛ لم تُفحص القوائم المالية الكاملة في هذه المراجعة ولا يُدّعى تدقيق الرقم.",
+      "reviewed_at": "2026-10-11"
+    },
+    "review_note": "Reviewed revenue disclosure, official website and current leadership. Existing asset/social provenance retained; not reverified."
   },
   {
     "slug": "lisan",
@@ -692,7 +694,7 @@
       "period": "18 August 2026 report; ARR",
       "summary_en": "LEAP reports approximately USD 2.6 million in annual recurring revenue (ARR). ARR is an annualized recurring metric, not recognized annual revenue.",
       "summary_ar": "أفادت ليب بإيرادات سنوية متكررة تقارب 2.6 مليون دولار. هذا مقياس سنوي متكرر وليس إيرادات سنوية محققة محاسبياً.",
-      "reviewed_at": "2026-10-09"
+      "reviewed_at": "2026-10-11"
     },
     "logo_tone": "dark"
   },
@@ -760,7 +762,7 @@
       "period": "2022 revenue; interview published 25 July 2023",
       "summary_en": "The founder reported revenue exceeding USD 1 million in 2022. This is historical, self-reported revenue, not a current estimate.",
       "summary_ar": "ذكر المؤسس إيرادات تتجاوز مليون دولار في 2022. هذا تصريح تاريخي من المؤسس وليس تقديراً حالياً.",
-      "reviewed_at": "2026-10-09"
+      "reviewed_at": "2026-10-11"
     },
     "logo_tone": "dark"
   },
@@ -799,7 +801,7 @@
       }
     ],
     "reviewed_at": "2026-10-09",
-    "review_due_at": "2027-01-07",
+    "review_due_at": "2026-10-18",
     "sources": [
       "https://thiqaeducation.com/en/about",
       "https://plus.gitex.com/newfront/exhibitor/thiqa-education",
@@ -817,7 +819,7 @@
     "business_type": "traditional",
     "focus_area_en": "Private tutoring and tutor training; technology-enabled services",
     "focus_area_ar": "الدروس الخصوصية وتدريب المعلمين؛ خدمات مدعومة بالتقنية",
-    "website_status": "active",
+    "website_status": "pending",
     "website_verified_at": "2026-10-09",
     "website_verification_method": "official_site_content_review",
     "ecosystem_sources": [
@@ -829,13 +831,85 @@
         "relationship_ar": "عارض في إكسباند نورث ستار 2025"
       }
     ],
-    "revenue_status": "reported",
+    "revenue_status": "pending",
     "revenue_evidence": {
       "source_url": "https://plus.gitex.com/newfront/exhibitor/thiqa-education",
-      "period": "Cumulative to Expand North Star 2025 listing",
-      "summary_en": "The exhibitor profile reports cumulative revenue above AED 8 million. This is exhibitor-reported and is not an annual or audited figure.",
-      "summary_ar": "يذكر ملف العارض إيرادات تراكمية تتجاوز 8 ملايين درهم. الرقم معلن من العارض وليس سنوياً أو مدققاً.",
+      "period": "Cumulative to exhibitor statement; cutoff date not specified",
+      "summary_en": "An indexed GITEX exhibitor profile states cumulative revenue above AED 8 million. The cutoff date is unspecified and direct retrieval failed on 11 October 2026. Retained as a research lead; not approved for public eligibility.",
+      "summary_ar": "يذكر ملف عارض مفهرس لدى جيتكس إيرادات تراكمية تتجاوز 8 ملايين درهم دون تاريخ نهاية محدد. تعذر جلب الصفحة مباشرة في 11 أكتوبر 2026؛ يُحتفظ به كدليل بحثي غير مؤهل للنشر العام.",
       "reviewed_at": "2026-10-09"
-    }
+    },
+    "review_note": "Website and about page yielded no substantive content; GITEX direct retrieval failed. Indexed AED 8M+ cumulative revenue has no independently confirmed cutoff. Retain historical evidence, but exclude until website and revenue period can be verified.",
+    "last_attempted_at": "2026-10-11"
+  },
+  {
+    "slug": "jahez",
+    "company_name_en": "Jahez",
+    "company_name_ar": "جاهز",
+    "country_en": "Saudi Arabia",
+    "country_ar": "السعودية",
+    "country_code": "SA",
+    "region": "Saudi Arabia",
+    "sector_en": "Delivery platforms",
+    "sector_ar": "منصات التوصيل",
+    "founder_name_en": "Ghassab Bin Mandeel",
+    "founder_name_ar": "غصاب بن منديل",
+    "role_en": "Co-founder, CEO & Board Member",
+    "role_ar": "شريك مؤسس ورئيس تنفيذي وعضو مجلس إدارة",
+    "company_brief_en": "A Saudi listed group operating digital delivery marketplaces and related logistics and merchant services.",
+    "company_brief_ar": "مجموعة سعودية مدرجة تشغّل منصات رقمية للتوصيل وخدمات لوجستية وحلولاً مساندة للتجار.",
+    "founder_brief_en": "Co-founded Jahez and leads the group as CEO. His background spans information technology, e-commerce and logistics.",
+    "founder_brief_ar": "شارك في تأسيس جاهز ويقود المجموعة رئيساً تنفيذياً، بخبرة في تقنية المعلومات والتجارة الإلكترونية والخدمات اللوجستية.",
+    "website": "https://jahezgroup.com/",
+    "source_url": "https://jahezgroup.com/corporate-governance/",
+    "logo_url": "https://jahezgroup.com/wp-content/uploads/2025/07/Jahez-Logo-Red-EN-768x191.webp",
+    "portrait_url": "https://jahezgroup.com/wp-content/uploads/2024/12/Ghassab-Bin-Mandeel-1-1.webp",
+    "company_socials": [],
+    "founder_socials": [],
+    "reviewed_at": "2026-10-11",
+    "review_due_at": "2027-01-09",
+    "sources": [
+      "https://jahezgroup.com/",
+      "https://jahezgroup.com/corporate-governance/",
+      "https://impact46.sa/jahez-successfully-closed-its-series-a-funding-round-led-by-impact46-vc-in-saudi-arabia/",
+      "https://jahezgroup.com/jahez-ar/2024/assets/img/pdfs/financials/Consolidated%20Statement%20of%20Profit%20or%20Loss%20and%20Other%20Comprehensive%20Income.pdf",
+      "https://jahezgroup.com/wp-content/uploads/2025/07/"
+    ],
+    "asset_sources": [
+      {
+        "kind": "logo",
+        "url": "https://jahezgroup.com/wp-content/uploads/2025/07/Jahez-Logo-Red-EN-768x191.webp",
+        "page": "https://jahezgroup.com/wp-content/uploads/2025/07/"
+      },
+      {
+        "kind": "portrait",
+        "url": "https://jahezgroup.com/wp-content/uploads/2024/12/Ghassab-Bin-Mandeel-1-1.webp",
+        "page": "https://jahezgroup.com/corporate-governance/"
+      }
+    ],
+    "business_type": "technology",
+    "focus_area_en": "Digital food delivery marketplaces, merchant tools and logistics coordination",
+    "focus_area_ar": "أسواق رقمية لتوصيل الطعام وأدوات للتجار وتنسيق الخدمات اللوجستية",
+    "website_status": "active",
+    "website_verified_at": "2026-10-11",
+    "website_verification_method": "retrieved_official_site_content",
+    "ecosystem_sources": [
+      {
+        "key": "impact46",
+        "label": "Impact46",
+        "relationship_en": "Impact46 announced leading Jahez’s Series A; investment is not the revenue evidence.",
+        "relationship_ar": "أعلنت إمباكت46 قيادة جولة جاهز الاستثمارية؛ الاستثمار ليس دليل الإيرادات.",
+        "url": "https://impact46.sa/jahez-successfully-closed-its-series-a-funding-round-led-by-impact46-vc-in-saudi-arabia/"
+      }
+    ],
+    "revenue_status": "financial_statement",
+    "revenue_evidence": {
+      "source_url": "https://jahezgroup.com/jahez-ar/2024/assets/img/pdfs/financials/Consolidated%20Statement%20of%20Profit%20or%20Loss%20and%20Other%20Comprehensive%20Income.pdf",
+      "period": "Year ended 31 December 2024",
+      "summary_en": "Jahez’s consolidated statement reports SAR 2,218,662,735 revenue for the year ended 31 December 2024. This is group revenue, not order value or a current run rate. No independent audit verification is claimed.",
+      "summary_ar": "تورد قائمة الدخل الموحدة لجاهز إيرادات قدرها 2,218,662,735 ريال للسنة المنتهية في 31 ديسمبر 2024. الرقم إيرادات المجموعة وليس قيمة الطلبات أو معدل الإيرادات الحالي، ولا يُدّعى التحقق المستقل من التدقيق.",
+      "reviewed_at": "2026-10-11"
+    },
+    "review_note": "Founder identity from Impact46; current CEO/board role and portrait from official governance page. Original official logo retained without alteration. No social accounts added without ownership provenance. Historical revenue period retained; 2025 report landing page contains placeholders."
   }
 ]
