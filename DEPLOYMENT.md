@@ -39,6 +39,10 @@ GATEWAY_EMAIL_UPDATES=false
 
 Keep the existing `APP_KEY`. Configure database credentials, a real mail transport and sender, and appropriate queue/cache drivers. The default `MAIL_MAILER=log` is local-only and cannot deliver account recovery messages. Public websocket keys may be exposed to the frontend; secrets may not.
 
+### Hostinger Web App (wosool.org)
+
+Hostinger's Node.js build sandbox cannot spawn Turbopack's PostCSS worker (build fails on `src/app/globals.css`). The Hostinger Web App therefore uses root directory `frontend`, framework preset Next.js, Node 22.x, build script `build:webpack` (`next build --webpack`) and output directory `.next`, with `NEXT_PUBLIC_SITE_URL`, `NEXT_PUBLIC_API_URL` and `NEXT_PUBLIC_ENABLE_DEMO_CONTENT=false` set as build environment variables.
+
 ## Release sequence
 
 1. Record the currently deployed commit, back up the database, and stage the candidate release. Run CI and `npm run verify` in development/staging.
