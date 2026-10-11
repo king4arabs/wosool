@@ -17,7 +17,7 @@ class VerifyFounderEmail extends Notification
     {
         $path = URL::temporarySignedRoute('gateway.verification', now()->addMinutes(60),
             ['id' => $notifiable->getKey(), 'hash' => sha1($notifiable->getEmailForVerification())], absolute: false);
-        $url = rtrim(config('app.frontend_url'), '/').'/verify-email?'.http_build_query(['path' => $path]);
+        $url = rtrim(config('app.frontend_url'), '/').'/verify-email?'.http_build_query(['path' => $path, 'return_to' => 'dashboard']);
 
         return (new MailMessage)->subject('Wosool | Verify your founder account / تأكيد حساب المؤسس')
             ->line('Confirm your email to verify your Wosool founder account. أكّد بريدك الإلكتروني لتوثيق حساب المؤسس في وصول.')

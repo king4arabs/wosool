@@ -60,8 +60,8 @@ export default function AdminScorecardsPage() {
       setError(null)
     } catch (e) {
       setError(e instanceof Error ? e.message : "Failed to load scorecards")
-    }, [])
-  }
+    }
+  }, [])
 
   const sendEmail = async () => {
     if (!selected || busy) return
