@@ -1,116 +1,167 @@
 "use client"
 
-import Link from "next/link"
-import { usePathname, useRouter } from "next/navigation"
+import type { ReactNode } from "react"
+import type { LucideIcon } from "lucide-react"
 import {
-  LayoutDashboard,
-  Users,
+  BarChart3,
   Building2,
-  Star,
-  Sparkles,
   CalendarDays,
+  ChevronRight,
   GraduationCap,
   Handshake,
-  Newspaper,
-  BarChart3,
-  Settings,
-  Trophy,
+  LayoutDashboard,
   MessageCircle,
+  Newspaper,
+  Settings,
+  ShieldCheck,
+  Sparkles,
+  Star,
+  Trophy,
+  UserRoundCheck,
+  Users,
 } from "lucide-react"
-import { Avatar, AvatarFallback } from "@/components/ui/avatar"
-import { cn } from "@/lib/utils"
-import { useAuth } from "@/lib/auth"
+import Image from "next/image"
+import Link from "next/link"
+import { usePathname, useRouter } from "next/navigation"
 import { AdminGuard } from "@/components/admin/AdminGuard"
+import { Avatar, AvatarFallback } from "@/components/ui/avatar"
+import { useAuth } from "@/lib/auth"
 import { useLocale } from "@/lib/locale"
+import { cn } from "@/lib/utils"
 
-const adminLabels = {
+const labels = {
   ar: {
+    panel: "مركز إدارة وصول",
+    subtitle: "المجتمع · الشركات · المسرّعة",
+    navigation: "قائمة إدارة وصول",
+    visit: "عرض الموقع",
+    language: "اللغة",
+    fallback: "الإدارة",
+    groups: {
+      community: "المجتمع",
+      operations: "العمليات",
+      growth: "النمو والمحتوى",
+      system: "النظام",
+    },
     nav: {
       "/admin": "نظرة عامة",
       "/admin/members": "طلبات العضوية",
       "/admin/founders": "المؤسسون",
       "/admin/companies": "الشركات",
-      "/admin/scorecards": "التقييمات",
-      "/admin/matches": "التوافق",
-      "/admin/intros": "التعريفات",
+      "/admin/scorecards": "بطاقات التقييم",
+      "/admin/matches": "التوافق الذكي",
+      "/admin/intros": "طلبات التعارف",
+      "/admin/chat": "إشراف المحادثات",
       "/admin/events": "الفعاليات",
       "/admin/programs": "البرامج",
-      "/admin/accelerator": "EO Accelerator",
+      "/eoa/admin": "عمليات EOA",
       "/admin/opportunities": "مصادر المنظومة",
-      "/admin/privacy-requests": "طلبات الخصوصية",
       "/admin/partners": "الشركاء",
       "/admin/sponsors": "الرعاة",
-      "/admin/news": "الأخبار",
-      "/admin/chat": "إشراف المحادثات",
+      "/admin/news": "الأخبار والمحتوى",
       "/admin/analytics": "التحليلات",
+      "/admin/privacy-requests": "طلبات الخصوصية",
       "/admin/settings": "الإعدادات",
     },
-    panel: "لوحة الأدمن",
-    management: "الإدارة",
-    site: "عرض الموقع",
-    fallback: "الإدارة",
   },
   en: {
+    panel: "Wosool Command Center",
+    subtitle: "Community · Companies · Accelerator",
+    navigation: "Wosool administration",
+    visit: "View site",
+    language: "Language",
+    fallback: "Administration",
+    groups: {
+      community: "Community",
+      operations: "Operations",
+      growth: "Growth & content",
+      system: "System",
+    },
     nav: {
       "/admin": "Overview",
-      "/admin/members": "Membership Requests",
+      "/admin/members": "Membership requests",
       "/admin/founders": "Founders",
       "/admin/companies": "Companies",
       "/admin/scorecards": "Scorecards",
-      "/admin/matches": "Matches",
+      "/admin/matches": "Smart matching",
       "/admin/intros": "Introductions",
+      "/admin/chat": "Chat moderation",
       "/admin/events": "Events",
       "/admin/programs": "Programs",
-      "/admin/accelerator": "EO Accelerator",
+      "/eoa/admin": "EOA operations",
       "/admin/opportunities": "Ecosystem sources",
-      "/admin/privacy-requests": "Privacy requests",
       "/admin/partners": "Partners",
       "/admin/sponsors": "Sponsors",
-      "/admin/news": "News",
-      "/admin/chat": "Chat Moderation",
+      "/admin/news": "News & content",
       "/admin/analytics": "Analytics",
+      "/admin/privacy-requests": "Privacy requests",
       "/admin/settings": "Settings",
     },
-    panel: "Admin Panel",
-    management: "Management",
-    site: "View Site",
-    fallback: "Admin",
   },
 } as const
 
-const adminNavItems = [
-  { href: "/admin", icon: LayoutDashboard },
-  { href: "/admin/members", icon: Users },
-  { href: "/admin/founders", icon: Trophy },
-  { href: "/admin/companies", icon: Building2 },
-  { href: "/admin/scorecards", icon: Star },
-  { href: "/admin/matches", icon: Sparkles },
-  { href: "/admin/intros", icon: Handshake },
-  { href: "/admin/events", icon: CalendarDays },
-  { href: "/admin/programs", icon: GraduationCap },
-  { href: "/admin/accelerator", icon: GraduationCap },
-  { href: "/admin/opportunities", icon: Newspaper },
-  { href: "/admin/privacy-requests", icon: Users },
-  { href: "/admin/partners", icon: Handshake },
-  { href: "/admin/sponsors", icon: Trophy },
-  { href: "/admin/news", icon: Newspaper },
-  { href: "/admin/chat", icon: MessageCircle },
-  { href: "/admin/analytics", icon: BarChart3 },
-  { href: "/admin/settings", icon: Settings },
-] as const
+type AdminRoute = keyof typeof labels.en.nav
 
-export default function AdminLayout({
-  children,
-}: {
-  children: React.ReactNode
-}) {
+type NavigationGroup = {
+  key: keyof typeof labels.en.groups
+  items: Array<{ href: AdminRoute; icon: LucideIcon }>
+}
+
+const groups: NavigationGroup[] = [
+  {
+    key: "community",
+    items: [
+      { href: "/admin", icon: LayoutDashboard },
+      { href: "/admin/members", icon: UserRoundCheck },
+      { href: "/admin/founders", icon: Users },
+      { href: "/admin/companies", icon: Building2 },
+      { href: "/admin/scorecards", icon: Star },
+      { href: "/admin/matches", icon: Sparkles },
+      { href: "/admin/intros", icon: Handshake },
+      { href: "/admin/chat", icon: MessageCircle },
+    ],
+  },
+  {
+    key: "operations",
+    items: [
+      { href: "/admin/events", icon: CalendarDays },
+      { href: "/admin/programs", icon: GraduationCap },
+      { href: "/eoa/admin", icon: Trophy },
+    ],
+  },
+  {
+    key: "growth",
+    items: [
+      { href: "/admin/opportunities", icon: Newspaper },
+      { href: "/admin/partners", icon: Handshake },
+      { href: "/admin/sponsors", icon: Trophy },
+      { href: "/admin/news", icon: Newspaper },
+      { href: "/admin/analytics", icon: BarChart3 },
+    ],
+  },
+  {
+    key: "system",
+    items: [
+      { href: "/admin/privacy-requests", icon: ShieldCheck },
+      { href: "/admin/settings", icon: Settings },
+    ],
+  },
+]
+
+function routeActive(pathname: string, href: string) {
+  if (href === "/admin") return pathname === href
+  return pathname === href || pathname.startsWith(`${href}/`)
+}
+
+export default function AdminLayout({ children }: { children: ReactNode }) {
   const pathname = usePathname()
+  const router = useRouter()
   const { user } = useAuth()
   const { locale, setLocale } = useLocale()
-  const router = useRouter()
-  const activeLocale = locale === "en" ? "en" : "ar"
-  const copy = adminLabels[activeLocale]
-
+  const activeLocale = locale === "ar" ? "ar" : "en"
+  const t = labels[activeLocale]
+  const flatItems = groups.flatMap((group) => group.items)
+  const current = flatItems.find((item) => routeActive(pathname, item.href))?.href ?? "/admin"
   const initials = user?.name
     ?.split(" ")
     .map((part) => part[0])
@@ -120,83 +171,106 @@ export default function AdminLayout({
 
   return (
     <AdminGuard>
-      <div className="flex min-h-screen bg-gray-50" dir={activeLocale === "ar" ? "rtl" : "ltr"}>
-        <aside
-          className="hidden lg:flex flex-col w-64 bg-[#1E293B] text-white fixed top-0 start-0 bottom-0 z-50"
-          aria-label="Admin navigation"
-        >
-          <div className="flex items-center gap-2 px-6 py-5 border-b border-white/10">
-            <Link href="/admin" className="flex items-center gap-2">
-              <span className="text-lg font-bold text-white">Wosool</span>
-              <span className="text-xs bg-red-500 text-white rounded px-1.5 py-0.5 font-medium">
-                {copy.management}
-              </span>
+      <div className="min-h-screen bg-[var(--page-bg)] text-[var(--text)]" dir={activeLocale === "ar" ? "rtl" : "ltr"} lang={activeLocale}>
+        <aside className="fixed inset-y-0 start-0 z-50 hidden w-[18rem] flex-col overflow-hidden border-e border-white/10 bg-[var(--brand-navy)] text-white lg:flex">
+          <div className="border-b border-white/10 p-5">
+            <Link href="/admin" className="block rounded-[var(--radius-control)] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white">
+              <Image
+                src="/wosool-logo-white.svg"
+                alt="Wosool — Founders to Founders"
+                width={820}
+                height={180}
+                unoptimized
+                className="h-auto w-[205px] max-w-full"
+              />
             </Link>
+            <p className="mt-3 text-[11px] font-semibold text-white/55">{t.subtitle}</p>
           </div>
 
-          <nav className="flex-1 px-3 py-4 overflow-y-auto">
-            {adminNavItems.map(({ href, icon: Icon }) => (
-              <Link
-                key={href}
-                href={href}
-                className={cn(
-                  "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors mb-0.5",
-                  pathname === href
-                    ? "bg-[#C9A84C] text-[#0A1628]"
-                    : "text-gray-300 hover:text-white hover:bg-white/10"
-                )}
-              >
-                <Icon className="h-4 w-4 shrink-0" aria-hidden="true" />
-                {copy.nav[href]}
-              </Link>
+          <nav className="flex-1 overflow-y-auto px-3 py-4" aria-label={t.navigation}>
+            {groups.map((group) => (
+              <section key={group.key} className="mb-5">
+                <h2 className="px-3 pb-2 text-[10px] font-extrabold uppercase tracking-[.16em] text-white/45">
+                  {t.groups[group.key]}
+                </h2>
+                <div className="space-y-1">
+                  {group.items.map(({ href, icon: Icon }) => {
+                    const active = routeActive(pathname, href)
+                    return (
+                      <Link
+                        key={href}
+                        href={href}
+                        aria-current={active ? "page" : undefined}
+                        className={cn(
+                          "group flex min-h-11 items-center gap-3 rounded-xl px-3 text-xs font-bold transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white",
+                          active
+                            ? "bg-white text-[var(--brand-navy)] shadow-sm"
+                            : "text-white/68 hover:bg-white/10 hover:text-white",
+                        )}
+                      >
+                        <Icon className={cn("h-4 w-4 shrink-0", active ? "text-[var(--action-bg)]" : "text-white/45 group-hover:text-white")} aria-hidden="true" />
+                        <span className="min-w-0 flex-1 truncate">{t.nav[href]}</span>
+                        {active && <ChevronRight className="h-3.5 w-3.5 rtl:rotate-180" aria-hidden="true" />}
+                      </Link>
+                    )
+                  })}
+                </div>
+              </section>
             ))}
           </nav>
 
-          <div className="px-3 py-4 border-t border-white/10">
-            <div className="flex items-center gap-3 px-3 py-2">
-              <Avatar className="h-8 w-8">
-                <AvatarFallback className="text-xs bg-red-500 text-white">{initials}</AvatarFallback>
-              </Avatar>
-              <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium text-white truncate">{user?.name ?? "Admin User"}</p>
-                <p className="text-xs text-gray-400">{user?.email ?? "Super Admin"}</p>
-              </div>
+          <div className="border-t border-white/10 p-4">
+            <div className="flex items-center gap-3 rounded-2xl bg-white/[.07] p-3">
+              <Avatar className="h-10 w-10"><AvatarFallback className="bg-[var(--brand-blue)] text-xs font-bold text-white">{initials}</AvatarFallback></Avatar>
+              <div className="min-w-0"><p className="truncate text-xs font-bold text-white">{user?.name ?? t.fallback}</p><p className="mt-1 truncate text-[10px] text-white/50">{user?.email}</p></div>
             </div>
           </div>
         </aside>
 
-        <div className="min-w-0 flex-1 lg:ms-64 flex flex-col">
-          <header className="bg-white border-b border-gray-200 sticky top-0 z-40 px-4 sm:px-6 py-4 flex flex-wrap gap-3 items-center justify-between">
-            <div className="flex items-center gap-3">
-              <span className="text-xs bg-red-100 text-red-700 rounded px-2 py-1 font-semibold">
-                {copy.panel}
-              </span>
-              <h1 className="text-base font-semibold text-gray-700">
-                {(copy.nav as Record<string, string>)[pathname] ?? copy.fallback}
-              </h1>
-            </div>
-            <div className="flex flex-wrap items-center gap-3">
-              <select aria-label={locale === "ar" ? "اللغة" : "Language"} value={locale} onChange={event => setLocale(event.target.value as "ar" | "en")} className="min-h-11 rounded-lg border px-2">
-                <option value="ar">العربية</option><option value="en">English</option>
-              </select>
-              <Link
-                href="/"
-                className="text-sm text-gray-500 hover:text-gray-700"
-              >
-                {copy.site}
-              </Link>
-              <Avatar className="h-8 w-8">
-                <AvatarFallback className="text-xs bg-red-500 text-white">{initials}</AvatarFallback>
-              </Avatar>
+        <div className="min-w-0 lg:ms-[18rem]">
+          <header className="sticky top-0 z-40 border-b border-[var(--border-soft)] bg-[color:var(--surface)]/92 px-4 py-3 shadow-[var(--shadow-xs)] backdrop-blur-xl sm:px-6 lg:px-8">
+            <div className="mx-auto flex max-w-[var(--container-wide)] flex-wrap items-center justify-between gap-3">
+              <div>
+                <p className="text-[10px] font-extrabold uppercase tracking-[.16em] text-[var(--action-bg)]">{t.panel}</p>
+                <h1 className="mt-1 text-lg font-extrabold text-[var(--text-strong)]">{t.nav[current] ?? t.fallback}</h1>
+              </div>
+              <div className="flex items-center gap-2">
+                <label className="sr-only" htmlFor="admin-language">{t.language}</label>
+                <select
+                  id="admin-language"
+                  value={locale}
+                  onChange={(event) => setLocale(event.target.value as "ar" | "en")}
+                  className="min-h-11 rounded-[var(--radius-control)] border border-[var(--border)] bg-[var(--surface)] px-3 text-xs font-bold"
+                >
+                  <option value="ar">العربية</option>
+                  <option value="en">English</option>
+                </select>
+                <Link href="/" className="inline-flex min-h-11 items-center rounded-[var(--radius-control)] border border-[var(--border)] px-3 text-xs font-bold text-[var(--text-muted)] hover:border-[var(--action-bg)] hover:text-[var(--action-bg)]">
+                  {t.visit}
+                </Link>
+                <Avatar className="h-9 w-9"><AvatarFallback className="bg-[var(--action-bg)] text-xs font-bold text-white">{initials}</AvatarFallback></Avatar>
+              </div>
             </div>
           </header>
 
-          <nav className="lg:hidden border-b bg-white p-4" aria-label={locale === "ar" ? "قائمة الإدارة" : "Admin navigation"}>
-            <select className="min-h-12 w-full rounded-xl border px-3" aria-label={locale === "ar" ? "انتقل إلى صفحة" : "Go to page"} value={adminNavItems.find(item => pathname === item.href)?.href ?? adminNavItems.filter(item => pathname.startsWith(`${item.href}/`)).at(-1)?.href ?? "/admin"} onChange={event => router.push(event.target.value)}>
-              {adminNavItems.map(item => <option key={item.href} value={item.href}>{copy.nav[item.href]}</option>)}
+          <nav className="border-b border-[var(--border-soft)] bg-[var(--surface)] p-4 lg:hidden" aria-label={t.navigation}>
+            <select
+              className="min-h-12 w-full rounded-[var(--radius-control)] border border-[var(--border)] bg-[var(--surface)] px-3 font-bold"
+              aria-label={t.navigation}
+              value={current}
+              onChange={(event) => router.push(event.target.value)}
+            >
+              {groups.map((group) => (
+                <optgroup key={group.key} label={t.groups[group.key]}>
+                  {group.items.map((item) => <option key={item.href} value={item.href}>{t.nav[item.href]}</option>)}
+                </optgroup>
+              ))}
             </select>
           </nav>
-          <main id="main-content" className="min-w-0 flex-1 p-4 sm:p-6">{children}</main>
+
+          <main id="main-content" className="mx-auto min-w-0 max-w-[var(--container-wide)] p-4 sm:p-6 lg:p-8">
+            {children}
+          </main>
         </div>
       </div>
     </AdminGuard>

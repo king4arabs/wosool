@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 180" role="img" aria-labelledby="title description">
+  <title id="title">Wosool</title>
+  <desc id="description">Wosool — Founders to Founders, with a multicolor geometric W mark.</desc>
+  <defs>
+    <linearGradient id="eo-colors" x1="12" y1="0" x2="172" y2="0" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#3D46F2"/>
+      <stop offset="0.24" stop-color="#FF346E"/>
+      <stop offset="0.48" stop-color="#FA653C"/>
+      <stop offset="0.72" stop-color="#EFB82E"/>
+      <stop offset="1" stop-color="#1EA691"/>
+    </linearGradient>
+  </defs>
+  <g transform="translate(10 12)">
+    <polyline points="18,16 49,140 86,48 121,140 166,16" fill="none" stroke="url(#eo-colors)" stroke-width="27" stroke-linecap="square" stroke-linejoin="miter"/>
+  </g>
+  <text x="220" y="92" fill="#0C0C31" font-family="Cairo, Arial, sans-serif" font-size="86" font-weight="800" letter-spacing="1">WOSOOL</text>
+  <text x="224" y="137" fill="#5E617D" font-family="Cairo, Arial, sans-serif" font-size="24" font-weight="600" letter-spacing="0.4">Founders to Founders</text>
+</svg>

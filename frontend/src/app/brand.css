@@ -1,47 +1,94 @@
-/* Official palette. Semantic tokens determine accessible foreground pairings. */
+/*
+ * WOSOOL design foundation
+ * One semantic system for the public site, member workspace, admin portal and EOA.
+ * Official artwork keeps its original colors; semantic tokens control UI contrast.
+ */
 :root {
-  --brand-navy: #0C0C31;
-  --brand-white: #FFFFFF;
-  --brand-blue: #3D46F2;
-  --brand-pink: #FF346E;
-  --brand-orange: #FA653C;
-  --brand-yellow: #EFB82E;
-  --brand-green: #1EA691;
-  --brand-gray: #5E617D;
-  --brand-light-blue: #A3A7E4;
-  --brand-dark-blue: #1D007F;
-  --brand-light-pink: #FFB0C8;
-  --brand-dark-pink: #A32246;
-  --brand-light-orange: #FFB5A4;
-  --brand-dark-orange: #C94C3F;
-  --brand-light-yellow: #FCDE95;
-  --brand-dark-yellow: #BF8B0A;
-  --brand-light-green: #ACE2D4;
-  --brand-dark-green: #216854;
-  --brand-light-gray: #B7B8C3;
-  --brand-dark-gray: #3C3E50;
-  --page-bg: var(--brand-white);
-  --surface: var(--brand-white);
-  --surface-soft: #F5F5FC;
-  --text: var(--brand-navy);
-  --text-muted: var(--brand-gray);
-  --border: var(--brand-light-gray);
-  --border-soft: #E4E4EF;
+  color-scheme: light;
+
+  --brand-navy: #0c0c31;
+  --brand-navy-2: #171743;
+  --brand-white: #ffffff;
+  --brand-blue: #3d46f2;
+  --brand-blue-hover: #2832d8;
+  --brand-blue-soft: #eef0ff;
+  --brand-pink: #ff346e;
+  --brand-orange: #fa653c;
+  --brand-yellow: #efb82e;
+  --brand-green: #1ea691;
+  --brand-gray: #5e617d;
+  --brand-light-blue: #a3a7e4;
+  --brand-dark-blue: #1d007f;
+  --brand-light-pink: #ffb0c8;
+  --brand-dark-pink: #8e1d3c;
+  --brand-light-orange: #ffb5a4;
+  --brand-dark-orange: #a63d32;
+  --brand-light-yellow: #fcde95;
+  --brand-dark-yellow: #755400;
+  --brand-light-green: #ace2d4;
+  --brand-dark-green: #155646;
+  --brand-light-gray: #b7b8c3;
+  --brand-dark-gray: #3c3e50;
+
+  --page-bg: #f7f8fc;
+  --surface: #ffffff;
+  --surface-soft: #f2f3fa;
+  --surface-raised: #ffffff;
+  --surface-inverse: var(--brand-navy);
+  --surface-blue: var(--brand-blue-soft);
+  --text: #10112f;
+  --text-strong: var(--brand-navy);
+  --text-muted: #666a80;
+  --text-subtle: #85889b;
+  --border: #c9cad5;
+  --border-soft: #e4e5ee;
+  --border-strong: #aeb0c0;
   --action-bg: var(--brand-blue);
-  --action-hover: var(--brand-dark-blue);
+  --action-hover: var(--brand-blue-hover);
   --action-fg: var(--brand-white);
-  --link: var(--brand-blue);
-  --focus-ring: var(--brand-blue);
+  --link: #303ae5;
+  --link-hover: var(--brand-dark-blue);
+  --focus-ring: #5961ff;
   --on-dark: var(--brand-white);
-  --on-dark-muted: var(--brand-light-gray);
-  --error-bg: var(--brand-light-pink);
-  --error-text: var(--brand-dark-pink);
-  --success-bg: var(--brand-light-green);
+  --on-dark-muted: #c9cbe2;
+
+  --success-bg: #e8f8f3;
   --success-text: var(--brand-dark-green);
-  --radius-card: 1.5rem;
-  --radius-control: .75rem;
-  --shadow-card: 0 8px 32px rgb(12 12 49 / 6%);
-  --shadow-raised: 0 16px 40px rgb(12 12 49 / 12%);
-  --section-space: clamp(3rem, 7vw, 6rem);
-  --font-latin: "Cairo Variable", "Segoe UI", sans-serif;
+  --warning-bg: #fff7df;
+  --warning-text: var(--brand-dark-yellow);
+  --error-bg: #fff0f4;
+  --error-text: var(--brand-dark-pink);
+  --error-border: #efb2c2;
+  --info-bg: var(--brand-blue-soft);
+  --info-text: var(--brand-dark-blue);
+
+  --radius-xs: 0.5rem;
+  --radius-control: 0.8rem;
+  --radius-card: 1.35rem;
+  --radius-panel: 1.75rem;
+  --radius-hero: 2rem;
+  --radius-pill: 999px;
+
+  --shadow-xs: 0 1px 2px rgb(12 12 49 / 5%);
+  --shadow-card: 0 10px 30px rgb(12 12 49 / 7%);
+  --shadow-raised: 0 24px 64px rgb(12 12 49 / 13%);
+  --shadow-focus: 0 0 0 4px rgb(61 70 242 / 16%);
+
+  --container: 78rem;
+  --container-wide: 90rem;
+  --section-space: clamp(3.75rem, 7vw, 7rem);
+  --content-gap: clamp(1rem, 2.4vw, 2rem);
+
+  /* Cairo is the product font in Arabic and English. */
+  --font-latin: "Cairo Variable", "Cairo", "Segoe UI", sans-serif;
+  --font-arabic: "Cairo Variable", "Cairo", "Segoe UI", sans-serif;
+}
+
+@media (prefers-contrast: more) {
+  :root {
+    --text-muted: #414359;
+    --border: #77798d;
+    --border-soft: #b7b8c3;
+    --focus-ring: #1d007f;
+  }
 }

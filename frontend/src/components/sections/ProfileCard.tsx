@@ -1,54 +1,376 @@
-'use client'
-import Link from 'next/link'
-import Image from 'next/image'
-import { useState } from 'react'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { useLocale } from '@/lib/locale'
-import { publicWebsite } from '@/lib/community-display'
-import { getInitials } from '@/lib/utils'
-import styles from './profile-cards.module.css'
+"use client"
+
+import type { ReactNode } from "react"
+import { useState } from "react"
+import Image from "next/image"
+import Link from "next/link"
+import {
+  ArrowUpRight,
+  BadgeCheck,
+  Building2,
+  CalendarClock,
+  ExternalLink,
+  Globe2,
+  MapPin,
+  ShieldCheck,
+  UserRound,
+} from "lucide-react"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { publicWebsite } from "@/lib/community-display"
+import { useLocale } from "@/lib/locale"
+import { getInitials } from "@/lib/utils"
+import styles from "./profile-cards.module.css"
 
 export type ProfileCardData = {
-  company: string; logo?: string; logoTone?: 'dark'; companyBrief?: string; website?: string
-  founder?: string; portrait?: string; role?: string; founderBrief?: string
-  location?: string; sector?: string; href?: string; founderHref?: string
-  founderSocials?: { label: string; url: string }[]; companySocials?: { label: string; url: string }[]
-  businessType?: string; focusArea?: string; websiteVerifiedAt?: string
-  revenue?: { summary: string; period: string; source: string; financialStatement: boolean }
+  company: string
+  logo?: string
+  logoTone?: "dark"
+  companyBrief?: string
+  website?: string
+  founder?: string
+  portrait?: string
+  role?: string
+  founderBrief?: string
+  location?: string
+  sector?: string
+  stage?: string
+  href?: string
+  founderHref?: string
+  founderSocials?: { label: string; url: string }[]
+  companySocials?: { label: string; url: string }[]
+  businessType?: string
+  focusArea?: string
+  websiteVerifiedAt?: string
+  profileVerified?: boolean
+  revenue?: {
+    summary: string
+    period: string
+    source: string
+    financialStatement: boolean
+  }
   ecosystemSources?: { label: string; relationship: string; url: string }[]
-  assetCredit?: string; sources?: string[]; reviewedAt?: string; reviewDue?: boolean
+  assetCredit?: string
+  sources?: string[]
+  reviewedAt?: string
+  reviewDue?: boolean
+  signals?: { label: string; tone?: "neutral" | "accent" | "success" }[]
+  actions?: ReactNode
 }
-function safeImage(src?: string) { return src?.startsWith('/') && !src.startsWith('//') ? src : publicWebsite(src) }
+
+function safeImage(src?: string) {
+  return src?.startsWith("/") && !src.startsWith("//")
+    ? src
+    : publicWebsite(src)
+}
+
+function hostLabel(url?: string) {
+  const safe = publicWebsite(url)
+  if (!safe) return null
+  try {
+    return new URL(safe).hostname.replace(/^www\./, "")
+  } catch {
+    return null
+  }
+}
+
 function Portrait({ src, name }: { src?: string; name: string }) {
   const [failed, setFailed] = useState(false)
   const image = safeImage(src)
-  return <span className="relative flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-full bg-indigo-50 text-indigo-700">{image && !failed ? <Image src={image} alt={name} width={56} height={56} className="h-full w-full object-cover" unoptimized={!image.startsWith('/')} onError={() => setFailed(true)} /> : getInitials(name)}</span>
+
+  return (
+    <span className={styles.portrait}>
+      {image && !failed ? (
+        <Image
+          src={image}
+          alt={name}
+          width={64}
+          height={64}
+          className="h-full w-full object-cover"
+          unoptimized={!image.startsWith("/")}
+          onError={() => setFailed(true)}
+        />
+      ) : (
+        <span aria-hidden="true">{getInitials(name)}</span>
+      )}
+    </span>
+  )
 }
+
+function TrustSignal({ icon, children }: { icon: ReactNode; children: ReactNode }) {
+  return <span className={styles.signal}>{icon}{children}</span>
+}
+
 export function ProfileCard({ data }: { data: ProfileCardData }) {
-  const { locale } = useLocale(); const ar = locale === 'ar'
+  const { locale } = useLocale()
+  const ar = locale === "ar"
   const website = publicWebsite(data.website)
-  const socialLinks = (items: ProfileCardData['founderSocials'], owner: string) => items?.filter(s => publicWebsite(s.url)).map(s => <a key={`${owner}-${s.url}`} href={publicWebsite(s.url)} target="_blank" rel="noopener noreferrer" aria-label={`${owner} — ${s.label}`}>{s.label}<span className="sr-only"> {ar ? '(نافذة جديدة)' : '(new tab)'}</span></a>)
-  return <article className={styles.card}>
-    <div className={[styles.logoArea, data.logoTone === 'dark' ? styles.darkLogo : ''].join(' ')}><Avatar className={styles.logo}><AvatarImage src={safeImage(data.logo)} alt={data.company} className="object-contain" loading="lazy" /><AvatarFallback className="rounded-none bg-transparent font-bold text-slate-700">{data.company}</AvatarFallback></Avatar></div>
-    <div className={styles.body}>
-      <div><h3 className={styles.title}>{data.company}</h3><p className={styles.location}>{data.location}</p></div>
-      <p className={styles.brief}>{data.companyBrief || (ar ? 'لم تُضف نبذة الشركة بعد.' : 'Company introduction not yet provided.')}</p>
-      {data.founder && <><div className={styles.person}><Portrait key={data.portrait ?? data.founder} src={data.portrait} name={data.founder} /><div><h4>{data.founder}</h4>{data.role && <p>{data.role}</p>}</div></div><p className={styles.brief}>{data.founderBrief || (ar ? 'اكتشف المزيد في ملف المؤسس.' : 'Discover more in the founder’s profile.')}</p></>}
-      <div className="flex flex-wrap gap-2">{data.businessType && <p className={styles.sector}>{data.businessType}</p>}{data.sector && <p className={styles.sector}>{data.sector}</p>}</div>
-      {data.focusArea && <p className={styles.brief}><strong>{ar ? 'مجال التركيز: ' : 'Focus: '}</strong>{data.focusArea}</p>}
-      {data.revenue && <p className="text-xs font-semibold text-emerald-800">{ar ? 'يتوفر مصدر للإيرادات' : 'Revenue source available'}</p>}
-      <div className={styles.links}>
-        {website && <a href={website} target="_blank" rel="noopener noreferrer" aria-label={`${data.company} — ${ar ? 'الموقع، نافذة جديدة' : 'website, new tab'}`}><span dir="ltr">{new URL(website).hostname.replace(/^www\./, '')}</span> ↗</a>}
-        {!!data.companySocials?.length && <div><span>{ar ? 'الشركة:' : 'Company:'}</span>{socialLinks(data.companySocials, data.company)}</div>}
-        {!!data.founderSocials?.length && <div><span>{ar ? 'المؤسس:' : 'Founder:'}</span>{socialLinks(data.founderSocials, data.founder ?? '')}</div>}
+  const websiteHost = hostLabel(data.website)
+  const hasDetails = Boolean(
+    data.revenue ||
+      data.ecosystemSources?.length ||
+      data.sources?.length ||
+      data.assetCredit ||
+      data.founderBrief ||
+      data.companyBrief,
+  )
+
+  function socialLinks(
+    items: ProfileCardData["founderSocials"],
+    owner: string,
+  ) {
+    return items
+      ?.filter((item) => publicWebsite(item.url))
+      .map((item) => (
+        <a
+          key={`${owner}-${item.url}`}
+          href={publicWebsite(item.url)}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label={`${owner} — ${item.label} (${ar ? "نافذة جديدة" : "new tab"})`}
+        >
+          {item.label}
+          <ExternalLink size={13} aria-hidden="true" />
+        </a>
+      ))
+  }
+
+  return (
+    <article className={styles.card}>
+      <div className={styles.cardTopline} aria-hidden="true" />
+      <header
+        className={[
+          styles.logoArea,
+          data.logoTone === "dark" ? styles.darkLogo : "",
+        ].join(" ")}
+      >
+        <Avatar className={styles.logo}>
+          <AvatarImage
+            src={safeImage(data.logo)}
+            alt={data.company}
+            className="object-contain"
+            loading="lazy"
+          />
+          <AvatarFallback className="rounded-none bg-transparent px-3 text-center text-sm font-extrabold text-[var(--text)]">
+            {data.company}
+          </AvatarFallback>
+        </Avatar>
+
+        <div className={styles.trustSignals}>
+          {data.profileVerified && (
+            <TrustSignal icon={<BadgeCheck size={14} aria-hidden="true" />}>
+              {ar ? "ملف موثّق" : "Verified profile"}
+            </TrustSignal>
+          )}
+          {data.websiteVerifiedAt && (
+            <TrustSignal icon={<Globe2 size={14} aria-hidden="true" />}>
+              {ar ? "موقع مُراجع" : "Website reviewed"}
+            </TrustSignal>
+          )}
+          {data.reviewedAt && !data.reviewDue && (
+            <TrustSignal icon={<ShieldCheck size={14} aria-hidden="true" />}>
+              {ar ? "ملف مُراجع" : "Profile reviewed"}
+            </TrustSignal>
+          )}
+          {data.reviewDue && (
+            <TrustSignal icon={<CalendarClock size={14} aria-hidden="true" />}>
+              {ar ? "بحاجة إلى مراجعة" : "Review due"}
+            </TrustSignal>
+          )}
+        </div>
+      </header>
+
+      <div className={styles.body}>
+        <div className={styles.companyHeading}>
+          <div>
+            <p className={styles.kicker}>
+              <Building2 size={14} aria-hidden="true" />
+              {ar ? "الشركة" : "Company"}
+            </p>
+            <h3 className={styles.title}>{data.company}</h3>
+          </div>
+          {website && websiteHost && (
+            <a
+              className={styles.websiteButton}
+              href={website}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={`${data.company} — ${ar ? "الموقع الرسمي" : "official website"}`}
+            >
+              <Globe2 size={17} aria-hidden="true" />
+              <span className="sr-only">{websiteHost}</span>
+            </a>
+          )}
+        </div>
+
+        <p className={styles.brief}>
+          {data.companyBrief ||
+            (ar
+              ? "لم تُضف نبذة الشركة بعد."
+              : "Company introduction not yet provided.")}
+        </p>
+
+        <div className={styles.factGrid}>
+          {data.sector && (
+            <div><span>{ar ? "القطاع" : "Sector"}</span><strong>{data.sector}</strong></div>
+          )}
+          {data.stage && (
+            <div><span>{ar ? "المرحلة" : "Stage"}</span><strong>{data.stage}</strong></div>
+          )}
+          {data.location && (
+            <div>
+              <span>{ar ? "الموقع" : "Location"}</span>
+              <strong><MapPin size={13} aria-hidden="true" />{data.location}</strong>
+            </div>
+          )}
+          {data.businessType && (
+            <div><span>{ar ? "نوع النشاط" : "Business type"}</span><strong>{data.businessType}</strong></div>
+          )}
+        </div>
+
+        {!!data.signals?.length && (
+          <div
+            className={styles.signalRow}
+            aria-label={ar ? "إشارات الشركة" : "Company signals"}
+          >
+            {data.signals.map((signal) => (
+              <span
+                key={signal.label}
+                className={`${styles.businessSignal} ${styles[`businessSignal_${signal.tone ?? "neutral"}`]}`}
+              >
+                {signal.label}
+              </span>
+            ))}
+          </div>
+        )}
+
+        {data.founder && (
+          <section className={styles.person} aria-label={ar ? "المؤسس" : "Founder"}>
+            <Portrait src={data.portrait} name={data.founder} />
+            <div className={styles.personCopy}>
+              <p className={styles.kicker}>
+                <UserRound size={14} aria-hidden="true" />
+                {ar ? "المؤسس" : "Founder"}
+              </p>
+              <h4>{data.founder}</h4>
+              {data.role && <p>{data.role}</p>}
+            </div>
+          </section>
+        )}
+
+        {data.focusArea && (
+          <p className={styles.focus}>
+            <span>{ar ? "مجال التركيز" : "Focus"}</span>
+            {data.focusArea}
+          </p>
+        )}
+
+        {(data.companySocials?.length ||
+          data.founderSocials?.length ||
+          websiteHost) && (
+          <div className={styles.links}>
+            {website && websiteHost && (
+              <a href={website} target="_blank" rel="noopener noreferrer">
+                <span dir="ltr">{websiteHost}</span>
+                <ArrowUpRight size={14} aria-hidden="true" />
+              </a>
+            )}
+            {!!data.companySocials?.length && (
+              <div>
+                <span>{ar ? "الشركة" : "Company"}</span>
+                {socialLinks(data.companySocials, data.company)}
+              </div>
+            )}
+            {!!data.founderSocials?.length && (
+              <div>
+                <span>{ar ? "المؤسس" : "Founder"}</span>
+                {socialLinks(data.founderSocials, data.founder ?? "")}
+              </div>
+            )}
+          </div>
+        )}
+
+        {hasDetails && (
+          <details className={styles.details}>
+            <summary>{ar ? "المصادر والتفاصيل" : "Sources & details"}</summary>
+            <div className={styles.detailsBody}>
+              {data.companyBrief && <p>{data.companyBrief}</p>}
+              {data.founderBrief && <p>{data.founderBrief}</p>}
+              {data.revenue && (
+                <div className={styles.evidence}>
+                  <strong>
+                    {ar
+                      ? "دليل الإيرادات المنشور"
+                      : "Published revenue evidence"}
+                  </strong>
+                  <p>{data.revenue.summary}</p>
+                  <p>{ar ? "الفترة: " : "Period: "}{data.revenue.period}</p>
+                  <a
+                    href={publicWebsite(data.revenue.source)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {data.revenue.financialStatement
+                      ? ar ? "القوائم المالية" : "Financial statement"
+                      : ar ? "المصدر المنشور" : "Published source"}
+                    <ExternalLink size={13} aria-hidden="true" />
+                  </a>
+                </div>
+              )}
+              {data.ecosystemSources
+                ?.filter((source) => publicWebsite(source.url))
+                .map((source) => (
+                  <p key={source.url}>
+                    <a
+                      href={publicWebsite(source.url)}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      {source.label}
+                      <ExternalLink size={13} aria-hidden="true" />
+                    </a>
+                    {" — "}{source.relationship}
+                  </p>
+                ))}
+              {data.sources
+                ?.filter((source) => publicWebsite(source))
+                .map((url, index) => (
+                  <a key={url} href={url} target="_blank" rel="noopener noreferrer">
+                    {ar ? "المصدر" : "Source"} {index + 1}
+                    <ExternalLink size={13} aria-hidden="true" />
+                  </a>
+                ))}
+              {data.websiteVerifiedAt && (
+                <p>
+                  {ar ? "مراجعة الموقع: " : "Website reviewed: "}
+                  <time dateTime={data.websiteVerifiedAt}>{data.websiteVerifiedAt}</time>
+                </p>
+              )}
+              {data.reviewedAt && (
+                <p>
+                  {ar ? "آخر مراجعة: " : "Last reviewed: "}
+                  <time dateTime={data.reviewedAt}>{data.reviewedAt}</time>
+                </p>
+              )}
+              {data.assetCredit && <p>{data.assetCredit}</p>}
+            </div>
+          </details>
+        )}
+
+        <div className={styles.actions}>
+          {data.founderHref && (
+            <Link className={styles.primaryAction} href={data.founderHref}>
+              {ar ? "عرض المؤسس" : "View founder"}
+              <ArrowUpRight size={15} aria-hidden="true" />
+            </Link>
+          )}
+          {data.href && (
+            <Link className={styles.secondaryAction} href={data.href}>
+              {ar ? "عرض الشركة" : "View company"}
+            </Link>
+          )}
+          {data.actions}
+        </div>
       </div>
-      <details className={styles.details}><summary>{ar ? 'المزيد والتفاصيل' : 'More details'}</summary><p>{data.companyBrief}</p>
-        {data.revenue && <div><strong>{ar ? 'دليل الإيرادات' : 'Revenue evidence'}</strong><p>{data.revenue.summary}</p><p>{ar ? 'الفترة: ' : 'Period: '}{data.revenue.period}</p><a href={publicWebsite(data.revenue.source)} target="_blank" rel="noopener noreferrer">{data.revenue.financialStatement ? (ar ? 'القوائم المالية' : 'Financial statement') : (ar ? 'المصدر المنشور' : 'Published report')} ↗</a></div>}
-        {data.ecosystemSources?.filter(s=>publicWebsite(s.url)).map(s=><p key={s.url}><a href={publicWebsite(s.url)} target="_blank" rel="noopener noreferrer">{s.label} ↗</a> — {s.relationship}</p>)}
-        {data.websiteVerifiedAt && <p>{ar ? 'مراجعة الموقع: ' : 'Website reviewed: '}<time dateTime={data.websiteVerifiedAt}>{data.websiteVerifiedAt}</time></p>}
-        {data.founderBrief && <p>{data.founderBrief}</p>}{data.sources?.filter(s => publicWebsite(s)).map((url,i) => <a key={url} href={url} target="_blank" rel="noopener noreferrer">{ar ? 'المصدر' : 'Source'} {i+1} ↗</a>)}{data.assetCredit && <p>{data.assetCredit}</p>}{data.reviewedAt && <p>{ar ? 'آخر مراجعة:' : 'Last reviewed:'} <time dateTime={data.reviewedAt}>{data.reviewedAt}</time>{data.reviewDue && (ar ? ' — حان موعد المراجعة' : ' — review due')}</p>}</details>
-      {data.href && <Link className={styles.profileLink} href={data.href}>{ar ? 'ملف الشركة' : 'Company profile'}</Link>}
-      {data.founderHref && <Link className={styles.profileLink} href={data.founderHref}>{ar ? 'ملف المؤسس' : 'Founder profile'}</Link>}
-    </div>
-  </article>
+    </article>
+  )
 }

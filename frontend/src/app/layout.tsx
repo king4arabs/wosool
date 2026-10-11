@@ -1,8 +1,8 @@
-import type { Metadata, Viewport } from "next";
-import { Providers } from "./providers";
-import "./globals.css";
+import type { Metadata, Viewport } from "next"
+import { Providers } from "./providers"
+import "./globals.css"
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://wosool.org";
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://wosool.org"
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -26,24 +26,26 @@ export const metadata: Metadata = {
   authors: [{ name: "Wosool", url: siteUrl }],
   creator: "Wosool",
   publisher: "Wosool",
-  icons: { icon: "/wosool-network-logo.png", apple: "/wosool-network-logo.png" },
+  icons: {
+    icon: [{ url: "/wosool-w-favicon.svg", type: "image/svg+xml" }],
+    shortcut: "/wosool-w-favicon.svg",
+    apple: "/wosool-network-logo.png",
+  },
   openGraph: {
     title: "Wosool — Founders to Founders | وصول — من مؤسس إلى مؤسس",
-    description:
-      "شبكة خاصة للمؤسسين الطموحين الذين يبنون شركات جادة في السعودية والخليج.",
+    description: "شبكة خاصة للمؤسسين الطموحين الذين يبنون شركات جادة في السعودية والخليج.",
     url: "./",
     siteName: "Wosool",
     locale: "ar_SA",
     alternateLocale: ["en_US"],
-    images: [{ url: "/wosool-network-logo.png", alt: "Wosool | وصول" }],
+    images: [{ url: "/wosool-logo-eo.svg", width: 820, height: 180, alt: "Wosool — Founders to Founders" }],
     type: "website",
   },
   twitter: {
-    card: "summary",
-    images: ["/wosool-network-logo.png"],
+    card: "summary_large_image",
+    images: ["/wosool-logo-eo.svg"],
     title: "Wosool — Founders to Founders | وصول — من مؤسس إلى مؤسس",
-    description:
-      "شبكة خاصة للمؤسسين في السعودية والخليج.",
+    description: "شبكة خاصة للمؤسسين في السعودية والخليج.",
     creator: "@AboutWosool",
     site: "@AboutWosool",
   },
@@ -61,27 +63,27 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "./",
   },
-};
+}
 
 export const viewport: Viewport = {
   themeColor: "#0C0C31",
   width: "device-width",
   initialScale: 1,
   maximumScale: 5,
-};
+}
 
 export default function RootLayout({
   children,
 }: Readonly<{
-  children: React.ReactNode;
+  children: React.ReactNode
 }>) {
   return (
-    <html lang="ar" dir="rtl" className="h-full antialiased scroll-smooth">
-      <body className="min-h-full flex flex-col font-sans">
+    <html lang="ar" dir="rtl" className="h-full scroll-smooth antialiased">
+      <body className="flex min-h-full flex-col font-sans">
         <Providers>
           <a
             href="#main-content"
-            className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:rounded-full focus:bg-[var(--action-bg)] focus:px-4 focus:py-2 focus:font-bold focus:text-white"
+            className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-full focus:bg-[var(--action-bg)] focus:px-4 focus:py-2 focus:font-bold focus:text-white"
           >
             الانتقال إلى المحتوى الرئيسي
           </a>
@@ -89,5 +91,5 @@ export default function RootLayout({
         </Providers>
       </body>
     </html>
-  );
+  )
 }

@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 180" role="img" aria-labelledby="title description">
+  <title id="title">Wosool</title>
+  <desc id="description">White Wosool — Founders to Founders logo for dark backgrounds.</desc>
+  <g transform="translate(10 12)">
+    <polyline points="18,16 49,140 86,48 121,140 166,16" fill="none" stroke="#FFFFFF" stroke-width="27" stroke-linecap="square" stroke-linejoin="miter"/>
+  </g>
+  <text x="220" y="92" fill="#FFFFFF" font-family="Cairo, Arial, sans-serif" font-size="86" font-weight="800" letter-spacing="1">WOSOOL</text>
+  <text x="224" y="137" fill="#FFFFFF" fill-opacity="0.72" font-family="Cairo, Arial, sans-serif" font-size="24" font-weight="600" letter-spacing="0.4">Founders to Founders</text>
+</svg>
