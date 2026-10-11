@@ -185,7 +185,10 @@ function AdminSession() {
           <h1>{ar ? 'مساحة إدارة البرنامج' : 'Program administration'}</h1>
         </div>
         {loading && <Notice>{ar ? 'جارٍ تحميل بيانات الإدارة…' : 'Loading administration data…'}</Notice>}
-        {error && <Notice error>{error} <button type="button" className="eoa-text-link" disabled={loading || busy} onClick={() => void load().catch((e) => setError(errorText(e)))}>{ar ? 'تحديث البيانات' : 'Reload data'}</button></Notice>}
+        {error && <Notice error>{error} <button type="button" className="eoa-text-link" disabled={loading || busy} onClick={() => {
+          setSelected(null)
+          void load().catch((e) => setError(errorText(e)))
+        }}>{ar ? 'تحديث البيانات' : 'Reload data'}</button></Notice>}
         {notice && <Notice>{notice}</Notice>}
         {review && (
           <>
