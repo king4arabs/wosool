@@ -23,6 +23,7 @@ class OperationsController extends Controller
         $p = ProgramService::program();
 
         return response()->json(['data' => [
+            'management' => \App\Services\Eoa\ManagementSummary::forProgram($p),
             'program_id' => $p->id, 'settings' => ProgramService::settings($p), 'is_open' => $p->is_open,
             'starts_at' => $p->starts_at, 'application_deadline' => $p->application_deadline,
             'tracks' => DB::table('eoa_tracks')->where('program_id', $p->id)->orderBy('id')->get(),
@@ -32,7 +33,7 @@ class OperationsController extends Controller
             'participants' => $p->participants()->with('user:id,name,email')->get()->map(fn ($r) => [
                 'id' => $r->id, 'user_id' => $r->user_id, 'name' => $r->user->name, 'status' => $r->status,
                 'track_id' => $r->eoa_track_id, 'cohort_id' => $r->cohort_id, 'group_id' => $r->eoa_group_id, 'onboarding' => $r->eoa_onboarding,
-                'finance' => $r->eoa_finance,
+                'finance' => Access::lead($request->user()) ? $r->eoa_finance : null,
             ]),
             'people' => User::role(['eoa_coach', 'eoa_reviewer', 'eoa_lead', 'eoa_staff'])->with('roles:id,name')->get(['id', 'name', 'email'])->map(fn ($u) => ['id' => $u->id, 'name' => $u->name, 'email' => $u->email, 'roles' => $u->getRoleNames()]),
             'organizations' => DB::table('ecosystem_organizations')->orderBy('sort_order')->get(),
@@ -192,6 +193,34 @@ class OperationsController extends Controller
         });
     }
 
+    public function assignment(Request $request, int $participant)
+    {
+        abort_unless(Access::staff($request->user()), 403);
+        $p = ProgramService::program();
+        $data = $request->validate([
+            'cohort_id' => ['present', 'nullable', 'integer', Rule::exists('cohorts', 'id')->where('program_id', $p->id)],
+            'group_id' => ['present', 'nullable', 'integer', Rule::exists('eoa_groups', 'id')->where('program_id', $p->id)],
+            'fee_status' => 'prohibited', 'global_confirmed' => 'prohibited', 'status' => 'prohibited',
+        ]);
+        return DB::transaction(function () use ($request, $p, $participant, $data) {
+            $row = $p->participants()->lockForUpdate()->findOrFail($participant);
+            abort_unless(in_array($row->status, ['onboarding', 'enrolled']), 409);
+            if ($data['cohort_id']) {
+                $cohort = $p->cohorts()->lockForUpdate()->findOrFail($data['cohort_id']);
+                abort_unless(in_array($cohort->status, ['forming', 'active']), 422, 'Choose an active or forming cohort.');
+                abort_if($cohort->capacity && $p->participants()->where('cohort_id', $cohort->id)->where('id', '!=', $row->id)->count() >= $cohort->capacity, 422, 'Cohort is full.');
+            }
+            if ($data['group_id']) {
+                $group = DB::table('eoa_groups')->where('id', $data['group_id'])->lockForUpdate()->first();
+                abort_if($group->cohort_id && (int) $group->cohort_id !== $data['cohort_id'], 422, 'Group must belong to the selected cohort.');
+            }
+            $before = ['cohort_id' => $row->cohort_id, 'group_id' => $row->eoa_group_id];
+            $row->update(['cohort_id' => $data['cohort_id'], 'eoa_group_id' => $data['group_id']]);
+            AdminAction::log($request->user()->id, 'eoa.assignment', 'program_participant', $row->id, null, $before, $data);
+            return response()->json(['message' => 'Participant assignment saved.']);
+        });
+    }
+
     public function participant(Request $request, int $participant)
     {
         abort_unless(Access::staff($request->user()), 403);
@@ -290,7 +319,7 @@ class OperationsController extends Controller
 
         return response()->json(['data' => $rows->map(fn ($r) => ['participant_id' => $r->id, 'user_id' => $r->user_id, 'name' => $r->user->name,
             'cohort_id' => $r->cohort_id, 'progress' => ProgramProgress::where('program_id', $p->id)->where('user_id', $r->user_id)->first(['milestones', 'self_assessment', 'mentor_feedback']),
-        ]), 'sessions' => $p->sessions()->get(['id', 'title', 'cohort_id'])]);
+        ]), 'sessions' => $p->sessions()->where(fn ($q) => $q->whereNull('cohort_id')->orWhereIn('cohort_id', $rows->pluck('cohort_id')->filter()))->whereIn('status', ['scheduled', 'completed'])->where('starts_at', '<=', now())->orderByDesc('starts_at')->get(['id', 'title', 'cohort_id', 'starts_at'])]);
     }
 
     public function coachUpdate(Request $request, int $participant)
@@ -298,10 +327,12 @@ class OperationsController extends Controller
         $p = ProgramService::program();
         $row = $p->participants()->findOrFail($participant);
         abort_unless(Access::staff($request->user()) || ($request->user()->hasRole('eoa_coach') && DB::table('eoa_groups')->where('id', $row->eoa_group_id)->where('coach_id', $request->user()->id)->exists()), 403);
+        abort_unless($row->status === 'enrolled' && ($row->eoa_finance['global_confirmed'] ?? false), 409, 'This participant is not actively enrolled.');
         $data = $request->validate(['mentor_feedback' => 'nullable|string|max:4000', 'session_id' => ['nullable', 'integer', Rule::exists('program_sessions', 'id')->where('program_id', $p->id)], 'attendance' => 'required_with:session_id|in:attended,absent,excused']);
         if (! empty($data['session_id'])) {
             $s = $p->sessions()->findOrFail($data['session_id']);
             abort_unless($s->cohort_id === null || $s->cohort_id === $row->cohort_id, 422);
+            abort_unless(in_array($s->status, ['scheduled', 'completed']), 422, 'Attendance cannot be recorded for a cancelled session.');
             abort_if($s->starts_at?->isFuture(), 422, 'Attendance can be recorded after a session starts.');
         }
         DB::transaction(function () use ($request, $p, $row, $data) {

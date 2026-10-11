@@ -18,6 +18,7 @@ import { RoleManager } from './RoleManager'
 import { BoardManager } from './BoardManager'
 import { MentorManager } from './MentorManager'
 import { EoaEditorialManager } from './EoaEditorialManager'
+import { ManagementOverview, AccessGuide, type Management } from './ManagementOverview'
 import { TrackManager } from './TrackManager'
 import type { EoaTrack } from '@/lib/eoa'
 
@@ -42,6 +43,7 @@ type Inquiry = {
   responded_at: string | null
 }
 type Operations = {
+  management?: Management
   inquiries: Inquiry[]
   program_id: number
   settings: Record<string, string | number | null>
@@ -112,8 +114,11 @@ function AdminSession() {
   const [review, setReview] = useState<ReviewResponse | null>(null)
   const [ops, setOps] = useState<Operations | null>(null)
   const [selected, setSelected] = useState<EoaApplication | null>(null)
-  const [tab, setTab] = useState('applications')
+  const [tab, setTab] = useState('overview')
   const [page, setPage] = useState(1)
+  const [statusFilter, setStatusFilter] = useState('')
+  const [searchInput, setSearchInput] = useState('')
+  const [search, setSearch] = useState('')
   const [error, setError] = useState('')
   const [notice, setNotice] = useState('')
   const [busy, setBusy] = useState(false)
@@ -124,7 +129,7 @@ function AdminSession() {
     setError('')
     try {
       const r = await api.get<ReviewResponse>('/eoa/review', {
-        params: { page },
+        params: { page, status: statusFilter || undefined, search: search || undefined },
       })
       setReview(r)
       if (r.capabilities.staff) {
@@ -134,7 +139,7 @@ function AdminSession() {
     } finally {
       setLoading(false)
     }
-  }, [user, page])
+  }, [user, page, statusFilter, search])
   useEffect(() => {
     void load().catch((e) => setError(errorText(e)))
   }, [load])
@@ -197,7 +202,9 @@ function AdminSession() {
           <>
             <div className="eoa-tabs">
               {[
+                ['overview', ar ? 'نظرة عامة' : 'Overview'],
                 ['applications', ar ? 'الطلبات' : 'Applications'],
+                ['access', ar ? 'دليل الصلاحيات' : 'Access guide'],
                 ...(review.capabilities.manage_roles
                   ? [['accounts', ar ? 'حسابات الفريق' : 'Team access']]
                   : []),
@@ -230,6 +237,8 @@ function AdminSession() {
                 </button>
               ))}
             </div>
+            {tab === 'overview' && (ops ? <ManagementOverview data={ops.management} ar={ar} settings={ops.settings} mail={ops.mail_configured} open={ops.is_open} navigate={(next) => { if (next === 'coaching') window.location.assign('/eoa/coach'); else setTab(next) }} /> : <div className="eoa-card"><h2>{ar ? 'مساحة المراجع' : 'Reviewer workspace'}</h2><p>{ar ? 'راجع الطلبات المسندة إليك واطلب المعلومات المطلوبة قبل رفع التوصية للقيادة.' : 'Review your assigned applications and request the evidence needed for a leadership decision.'}</p><button className="eoa-btn" onClick={() => setTab('applications')}>{ar ? 'عرض الطلبات' : 'View assigned applications'}</button></div>)}
+            {tab === 'access' && <AccessGuide ar={ar} />}
             {tab === 'accounts' && review.capabilities.manage_roles && (
               <RoleManager />
             )}
@@ -243,6 +252,11 @@ function AdminSession() {
               <div className="eoa-admin-grid">
                 <div className="eoa-card">
                   <h2>{ar ? 'طلبات المراجعة' : 'Applications for review'}</h2>
+                  <form className="eoa-admin-filter" onSubmit={e => {e.preventDefault(); setPage(1); setSearch(searchInput.trim()); setSelected(null)}}>
+                    <Field label={ar?'اسم المتقدم أو بريده':'Applicant name or email'}><input type="search" value={searchInput} maxLength={255} onChange={e=>setSearchInput(e.target.value)}/></Field>
+                    <Field label={ar?'حالة الطلب':'Application status'}><select value={statusFilter} onChange={e=>{setStatusFilter(e.target.value);setPage(1);setSelected(null)}}><option value="">{ar?'كل الحالات':'All statuses'}</option>{['submitted','under_review','information_requested','interview','accepted','waitlisted','rejected','enrolled'].map(s=><option key={s} value={s}>{statusLabel(s,ar)}</option>)}</select></Field>
+                    <button className="eoa-btn" disabled={loading}>{ar?'بحث':'Search'}</button>
+                  </form>
                   {!review.data.data.length && (
                     <p>
                       {ar
@@ -500,14 +514,14 @@ function AdminSession() {
                       e.preventDefault()
                       const f = new FormData(e.currentTarget)
                       void act(() =>
-                        api.patch(`/eoa/operations/participants/${p.id}`, {
+                        api.patch(`/eoa/operations/participants/${p.id}${review.capabilities.lead ? '' : '/assignment'}`, {
                           cohort_id: f.get('cohort_id')
                             ? Number(f.get('cohort_id'))
                             : null,
                           group_id: f.get('group_id')
                             ? Number(f.get('group_id'))
                             : null,
-                          fee_status: f.get('fee_status'),
+                          ...(review.capabilities.lead ? {fee_status: f.get('fee_status'),
                           global_confirmed: f.get('global_confirmed') === 'on',
                           official_reference:
                             f.get('official_reference') || null,
@@ -515,7 +529,7 @@ function AdminSession() {
                           participant_amount_usd:
                             f.get('participant_amount_usd') || null,
                           sponsor_amount_usd:
-                            f.get('sponsor_amount_usd') || null,
+                            f.get('sponsor_amount_usd') || null} : {}),
                         }),
                       )
                     }}
@@ -557,7 +571,7 @@ function AdminSession() {
                         ar ? 'name_ar' : 'name_en'
                       ] ?? '—'}
                     </p>
-                    <Field label={ar ? 'حالة الرسوم' : 'Fee status'}>
+                    {review.capabilities.lead && <><Field label={ar ? 'حالة الرسوم' : 'Fee status'}>
                       <select
                         name="fee_status"
                         defaultValue={String(
@@ -613,9 +627,11 @@ function AdminSession() {
                         ? 'أؤكد التسجيل الرسمي لدى EO وفق المرجع أعلاه.'
                         : 'I confirm official EO enrollment against the reference above.'}
                     </label>
-                    {review.capabilities.lead && (
+                    </>}
+                    {!review.capabilities.lead && <p>{ar?'تأكيد الرسوم والتسجيل متاح لقيادة البرنامج.':'Fees and official enrollment are managed by program leadership.'}</p>}
+                    {(
                       <button className="eoa-btn" disabled={busy}>
-                        {ar ? 'حفظ التأكيد' : 'Save confirmation'}
+                        {review.capabilities.lead ? (ar ? 'حفظ التأكيد' : 'Save confirmation') : (ar ? 'حفظ التوزيع' : 'Save assignment')}
                       </button>
                     )}
                   </form>

@@ -5,6 +5,7 @@ import { useAuth } from '@/lib/auth'
 import { useLocale } from '@/lib/locale'
 import { api } from '@/lib/api'
 import { errorText, type Milestone, type Session } from '@/lib/eoa'
+import { learningSummary, pillars } from '@/lib/eoa-management'
 import { Field, Notice } from './Shared'
 type CoachData = {
   data: {
@@ -32,10 +33,12 @@ function CoachSession() {
   const [error, setError] = useState('')
   const [notice, setNotice] = useState('')
   const [busy, setBusy] = useState(false)
+  const [search, setSearch] = useState('')
   const load = useCallback(async () => {
     if (!user?.email_verified_at) return
     try {
       setData(await api.get<CoachData>('/eoa/coach'))
+      setError('')
     } catch (e) {
       setError(errorText(e))
     }
@@ -58,10 +61,11 @@ function CoachSession() {
             {ar ? 'الدخول بحساب موثق' : 'Sign in with a verified account'}
           </Link>
         )}
-        {error && <Notice error>{error}</Notice>}
+        {error && <Notice error>{error} <button type="button" className="eoa-text-link" onClick={()=>void load()}>{ar?'إعادة المحاولة':'Try again'}</button></Notice>}
         {notice && <Notice>{notice}</Notice>}
+        {data && <><div className="eoa-management-hero"><h2>{ar?'التعلم يتحول إلى تقدم':'Turn learning into progress'}</h2><p>{data.data.length} {ar?'مشاركاً في نطاق مسؤوليتك':'participants in your care'}</p><p>{ar?'راجع النتائج والمواعيد، اترك ملاحظات قابلة للتنفيذ، ووثق الحضور بعد الجلسة.':'Review outcomes and target dates, leave actionable feedback, and record attendance after each session.'}</p></div><Field label={ar?'البحث عن مشارك':'Find a participant'}><input type="search" value={search} onChange={e=>setSearch(e.target.value)}/></Field></>}
         <div className="eoa-two-grid">
-          {data?.data.map((p) => (
+          {data?.data.filter(p=>p.name.toLocaleLowerCase().includes(search.toLocaleLowerCase())).map((p) => (
             <form
               className="eoa-card"
               key={p.participant_id}
@@ -89,10 +93,10 @@ function CoachSession() {
                 }
               }}
             >
-              <h2>{p.name}</h2>
+              <h2>{p.name}</h2><p className="eoa-badge">{learningSummary(p.progress?.milestones ?? [], []).completed} / {p.progress?.milestones?.length ?? 0} {ar?'أهداف مكتملة':'goals completed'}</p>
               {p.progress?.milestones?.map((m, i) => (
                 <p key={i}>
-                  {m.completed ? '✓' : '○'} {m.title} {m.due_date}
+                  {m.completed ? '✓' : '○'} {m.title} {m.due_date} {pillars.find(([key])=>key===m.pillar)?.[ar?1:2]}
                 </p>
               ))}
               <p>{p.progress?.self_assessment}</p>

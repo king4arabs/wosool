@@ -54,6 +54,7 @@ Route::prefix('v1/eoa')->group(function () {
             Route::patch('/operations/update/{type}/{record}', [OperationsController::class, 'create']);
             Route::post('/operations/create/{type}', [OperationsController::class, 'create']);
             Route::patch('/operations/participants/{participant}', [OperationsController::class, 'participant']);
+            Route::patch('/operations/participants/{participant}/assignment', [OperationsController::class, 'assignment']);
             Route::patch('/operations/organizations/{organization}', [OperationsController::class, 'organization']);
             Route::patch('/operations/inquiries/{inquiry}', [OperationsController::class, 'inquiry']);
             Route::get('/coach', [OperationsController::class, 'coach']);

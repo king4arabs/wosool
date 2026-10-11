@@ -21,7 +21,10 @@ class ReviewController extends Controller
         if (! Access::staff($request->user())) {
             $query->whereIn('id', DB::table('eoa_reviewers')->where('user_id', $request->user()->id)->select('application_id'));
         }
-        $status = $request->validate(['status' => 'nullable|in:submitted,under_review,information_requested,interview,accepted,waitlisted,rejected,enrolled']);
+        $status = $request->validate(['status' => 'nullable|in:submitted,under_review,information_requested,interview,accepted,waitlisted,rejected,enrolled', 'search' => 'nullable|string|max:255']);
+        if (! empty($status['search'])) {
+            $query->whereHas('user', fn ($q) => $q->where(fn ($q) => $q->where('name', 'like', '%'.$status['search'].'%')->orWhere('email', 'like', '%'.$status['search'].'%')));
+        }
         if (! empty($status['status'])) {
             $query->where('status', $status['status']);
         }

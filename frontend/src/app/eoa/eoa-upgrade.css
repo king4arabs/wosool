@@ -279,3 +279,15 @@
 .eoa-hero-media { z-index: -2; }
 .eoa-hero-scrim { z-index: -1; }
 .eoa-network { background: var(--surface-soft); }
+
+/* Accelerator workspaces */
+.eoa-management-hero{padding:clamp(24px,4vw,48px);border-radius:24px;background:linear-gradient(120deg,#101035,#29216e);color:white;margin-bottom:28px}
+.eoa-management-hero h2,.eoa-management-hero p,.eoa-management-hero .eoa-eyebrow{color:white}
+.eoa-management-hero>span:last-child{font-size:.8rem;opacity:.8}
+.eoa-priority{text-align:start;display:flex;flex-direction:column;gap:12px;cursor:pointer;width:100%;transition:border-color .2s}
+.eoa-priority:hover{border-color:#6366f1}.eoa-priority strong{font-size:2rem;color:#493bd5}.eoa-priority span{font-weight:700}
+.eoa-summary-line{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;padding:14px 0;border-bottom:1px solid #e8e8f2}
+.eoa-capacity{margin:16px 0}.eoa-capacity progress{width:100%;height:8px;accent-color:#5547e8}
+.eoa-role-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:16px}.eoa-role-grid article{background:#f6f5fd;border-radius:16px;padding:18px}.eoa-role-grid h3{font-size:1rem}
+.eoa-workspace-nav{display:flex;flex-wrap:wrap;gap:10px;margin:20px 0}.eoa-workspace-nav a{padding:10px 16px;border:1px solid #dedcec;border-radius:999px;font-size:.85rem;font-weight:700}
+.eoa-sr-target{scroll-margin-top:120px}.eoa-admin-filter{display:flex;flex-wrap:wrap;align-items:end;gap:12px;margin-bottom:20px}.eoa-admin-filter .eoa-field{flex:1;min-width:180px}

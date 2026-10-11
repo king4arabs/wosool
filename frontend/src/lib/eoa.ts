@@ -115,7 +115,7 @@ export type EoaApplication = {
   internal_note?: string
   documents: { id: number; name: string; size: number }[]
 }
-export type Milestone = { title: string; due_date?: string; completed: boolean }
+export type Milestone = { title: string; due_date?: string; completed: boolean; pillar?: string }
 export type Session = {
   id: number
   title: string

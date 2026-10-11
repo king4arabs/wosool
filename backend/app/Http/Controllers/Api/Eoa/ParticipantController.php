@@ -59,9 +59,9 @@ class ParticipantController extends Controller
         $data = $request->validate([
             'self_assessment' => 'nullable|string|max:4000', 'milestones' => 'required|array|max:20',
             'milestones.*.title' => 'required|string|max:255', 'milestones.*.due_date' => 'nullable|date_format:Y-m-d',
-            'milestones.*.completed' => 'required|boolean',
+            'milestones.*.completed' => 'required|boolean', 'milestones.*.pillar' => 'nullable|in:cash,strategy,people,execution',
         ]);
-        $milestones = collect($data['milestones'])->map(fn ($m) => array_intersect_key($m, array_flip(['title', 'due_date', 'completed'])))->all();
+        $milestones = collect($data['milestones'])->map(fn ($m) => array_intersect_key($m, array_flip(['title', 'due_date', 'completed', 'pillar'])))->all();
         ProgramProgress::updateOrCreate(['program_id' => $participant->program_id, 'user_id' => $request->user()->id], [
             'cohort_id' => $participant->cohort_id, 'self_assessment' => $data['self_assessment'] ?? null,
             'milestones' => $milestones, 'tasks_completed' => collect($milestones)->where('completed', true)->count(),

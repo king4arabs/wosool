@@ -120,3 +120,22 @@ The supplied EO logo is used unmodified on dark backgrounds. The included Riyadh
 ## Mentor management and responsive journeys
 
 See [the founder and mentor guide](FOUNDERS-MENTORS-2026-10-11.md). The **Mentors** operations tab manages bilingual profiles separately from private participant/coach assignments. Public cards appear on `/eoa`, `/eoa/mentors` and leadership after confirmed appointments are published. There is no invented initial mentor roster. Public portrait storage is restricted to `/storage/eoa/mentors/*`, with the same secure raster upload limits as board portraits. Deploy the additive mentor migration before using its admin endpoints.
+
+## Management overview and responsibilities — October 11 enhancement
+
+The default `/eoa/admin` overview now shows actual application counts, review ownership, reviews unchanged for 14 days, onboarding, assignment gaps, verified coaching coverage, cohort capacity, upcoming sessions and goal completion. These are operational indicators, not admission decisions or independently verified business performance. Missing summary support is explicitly reported during mixed-version deployments.
+
+Operations staff can assign a participant to a cohort and accountability group through the dedicated assignment endpoint. It validates program boundaries, group/cohort consistency, active cohort status and capacity, preserves financial/enrollment data, and records the change. Only leadership receives participant finance in the operations response and can confirm fees or official enrollment. Application search remains restricted to the reviewer's assigned applications.
+
+The access guide explains applicant, enrollment-derived participant, reviewer, coach, staff, lead and platform administrator access. Team-access edits send the expected role set to detect concurrent changes and collect an audit reason. Existing API callers without the expected role set remain compatible; the new interface always sends it. Revoking access from an unverified account is allowed; granting new access remains blocked. Public board and mentor publication never grants an account role.
+
+Participant goals can be organized under Cash, Strategy, People or Execution, with a measurable outcome and target date. Progress summaries distinguish recorded attendance from session registration. Coaches receive only sessions in their participants' cohorts that have started and are not cancelled; the server also rejects attendance for cancelled sessions or inactive enrollment.
+
+Design references checked October 11, 2026:
+- EO Accelerator FAQ: https://eonetwork.org/accelerator/faqs/ — learning pillars and monthly accountability.
+- EO coach handbook: https://resources.eonetwork.org/legacy-knowledgebase/eo-accelerator-coach-handbook — measurable goals and progress reviews.
+- OWASP authorization guidance: https://cheatsheetseries.owasp.org/cheatsheets/Authorization_Cheat_Sheet.html — server-side checks and restricted access.
+
+This enhancement needs no new migration. Deploy Laravel and Next.js together; live email delivery and production backend health still require host verification.
+
+Protected post-login destinations are loaded with the new session cookie, preventing a prefetched guest redirect from sending a signed-in participant back to login. Local verification covered 50 frontend tests, the existing 39 Accelerator-related backend tests, and 5 additional management/authorization tests. Production backend health remains a separate deployment gate.

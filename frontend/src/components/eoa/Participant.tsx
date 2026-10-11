@@ -9,6 +9,7 @@ import {
   type Milestone,
   type Participant,
 } from '@/lib/eoa'
+import { learningSummary, pillars } from '@/lib/eoa-management'
 import { Field, Notice, useEoaProgram } from './Shared'
 
 export function ParticipantWorkspace({
@@ -21,6 +22,7 @@ export function ParticipantWorkspace({
   const { locale } = useLocale()
   const ar = locale === 'ar'
   const { program } = useEoaProgram()
+  const summary = learningSummary(p.progress?.milestones ?? [], p.attendance)
   const [error, setError] = useState('')
   const [notice, setNotice] = useState('')
   const [busy, setBusy] = useState(false)
@@ -48,6 +50,7 @@ export function ParticipantWorkspace({
         <h2>{ar ? 'مساحة المشارك' : 'Participant workspace'}</h2>
         <span className="eoa-badge">{statusLabel(p.status, ar)}</span>
       </div>
+      {p.status === 'enrolled' && <><div className="eoa-three-grid"><div className="eoa-card"><strong>{summary.completed} / {summary.total}</strong><p>{ar?'أهداف مكتملة':'Goals completed'}</p></div><div className="eoa-card"><strong>{p.registrations.filter(id=>p.sessions.some(s=>s.id===id)).length}</strong><p>{ar?'تسجيلات الجلسات المنشورة':'Registrations in published sessions'}</p></div><div className="eoa-card"><strong>{summary.attended} / {summary.recorded}</strong><p>{ar?'حضور من السجلات الموثقة':'Attended out of recorded attendance'}</p></div></div><nav className="eoa-workspace-nav" aria-label={ar?'مساحة المشارك':'Participant workspace'}>{[['calendar',ar?'الجلسات':'Sessions'],['goals',ar?'أهدافي':'My goals'],['materials',ar?'مواد التعلم':'Materials'],['feedback',ar?'الملاحظات':'Feedback']].map(([id,label])=><a key={id} href={`#eoa-${id}`}>{label}</a>)}</nav></>}
       {p.track && <p><strong>{ar ? 'مسارك' : 'Your track'}:</strong> {ar ? p.track.name_ar : p.track.name_en}</p>}
       {error && <Notice error>{error}</Notice>}
       {notice && <Notice>{notice}</Notice>}
@@ -160,14 +163,14 @@ export function ParticipantWorkspace({
               )}
             </div>
           </div>
-          <section className="eoa-space">
+          <section id="eoa-calendar" className="eoa-space eoa-sr-target">
             <h2>{ar ? 'التقويم والتسجيل' : 'Calendar & registration'}</h2>
             <div className="eoa-three-grid">
               {p.sessions.map((s) => (
                 <article className="eoa-card" key={s.id}>
                   <span className="eoa-eyebrow">
                     {new Date(s.starts_at).toLocaleString(
-                      ar ? 'ar-SA' : 'en-GB',
+                      ar ? 'ar-SA-u-ca-gregory' : 'en-GB',
                       { timeZone: 'Asia/Riyadh' },
                     )}{' '}
                     (Riyadh)
@@ -228,7 +231,7 @@ export function ParticipantWorkspace({
                 )
               }}
             >
-              <h3>{ar ? 'الأهداف ومراحل الإنجاز' : 'Goals & milestones'}</h3>
+              <h3 id="eoa-goals" className="eoa-sr-target">{ar ? 'الأهداف ومراحل الإنجاز' : 'Goals & milestones'}</h3><p>{ar?'حدد نتيجة قابلة للقياس وموعداً، ثم راجعها مع مدربك في لقاء المساءلة.':'Choose a measurable outcome and target date, then review it with your coach at your accountability meeting.'}</p>
               {goals.map((g, i) => (
                 <div className="eoa-goal" key={i}>
                   <Field label={ar ? 'الهدف' : 'Goal'}>
@@ -245,6 +248,7 @@ export function ParticipantWorkspace({
                       }
                     />
                   </Field>
+                  <Field label={ar?'محور النمو':'Growth pillar'}><select value={g.pillar ?? ''} onChange={e=>setGoals(rows=>rows.map((r,n)=>n===i?{...r,pillar:e.target.value || undefined}:r))}><option value="">{ar?'اختر المحور':'Choose a pillar'}</option>{pillars.map(([key,arabic,english])=><option key={key} value={key}>{ar?arabic:english}</option>)}</select></Field>
                   <Field label={ar ? 'الموعد المستهدف' : 'Target date'}>
                     <input
                       type="date"
@@ -309,7 +313,7 @@ export function ParticipantWorkspace({
             </form>
             <div>
               <section className="eoa-card">
-                <h3>{ar ? 'مواد التعلم' : 'Learning materials'}</h3>
+                <h3 id="eoa-materials" className="eoa-sr-target">{ar ? 'مواد التعلم' : 'Learning materials'}</h3>
                 {p.resources.length ? (
                   p.resources.map((r) => (
                     <p key={r.id}>
@@ -363,7 +367,7 @@ export function ParticipantWorkspace({
               )
             }}
           >
-            <h3>
+            <h3 id="eoa-feedback" className="eoa-sr-target">
               {ar
                 ? 'ملاحظاتك تطور البرنامج'
                 : 'Your feedback improves the program'}

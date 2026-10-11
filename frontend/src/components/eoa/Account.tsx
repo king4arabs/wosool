@@ -1,7 +1,7 @@
 'use client'
 import { useCallback, useEffect, useState } from 'react'
 import Link from 'next/link'
-import { usePathname, useRouter } from 'next/navigation'
+import { usePathname } from 'next/navigation'
 import { useAuth } from '@/lib/auth'
 import { useLocale } from '@/lib/locale'
 import { api } from '@/lib/api'
@@ -27,7 +27,6 @@ export function Account({ initialMode = 'register', redirectTo }: { initialMode?
 
 function AccountSession({ initialMode, redirectTo }: { initialMode: 'login' | 'register'; redirectTo?: string }) {
   const pathname = usePathname()
-  const router = useRouter()
   const { user, isLoading, login, refresh, logout } = useAuth()
   const { locale } = useLocale()
   const ar = locale === 'ar'
@@ -74,7 +73,8 @@ function AccountSession({ initialMode, redirectTo }: { initialMode: 'login' | 'r
     try {
       if (mode === 'login') {
         await login(String(f.get('email')), String(f.get('password')))
-        if (redirectTo) router.replace(redirectTo)
+        // Re-enter with the new session cookie; a prefetched protected route may contain a guest redirect.
+        if (redirectTo) window.location.assign(redirectTo)
       } else {
         const r = await api.post<{ email_queued: boolean }>(
           '/eoa/auth/register',

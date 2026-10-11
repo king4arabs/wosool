@@ -10,6 +10,7 @@ import {
 } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import { useAuth } from '@/lib/auth'
 import { api } from '@/lib/api'
 import type { EoaPartner, EoaProgram } from '@/lib/eoa'
 import { useLocale } from '@/lib/locale'
@@ -96,6 +97,10 @@ export function PartnerStrip({ partners }: { partners: EoaPartner[] }) {
 }
 
 export function EoaNav() {
+  const { user } = useAuth()
+  const roles = user?.roles ?? []
+  const admin = user?.roleToken === 'admin' || roles.some(r => ['admin', 'eoa_lead', 'eoa_staff', 'eoa_reviewer'].includes(r))
+  const coach = roles.includes('eoa_coach')
   const pathname = usePathname()
   const canonicalPathname = pathname.toLowerCase()
   const { locale } = useLocale()
@@ -126,6 +131,8 @@ export function EoaNav() {
           ['/eoa/faq', ar ? 'الأسئلة الشائعة' : 'FAQ'],
           ['/eoa/contact', ar ? 'التواصل' : 'Contact'],
           ['/eoa/account', ar ? 'حسابي' : 'My account'],
+          ...(admin ? [['/eoa/admin', ar ? 'إدارة البرنامج' : 'Administration']] : []),
+          ...(coach ? [['/eoa/coach', ar ? 'مساحة المدرب' : 'Coach workspace']] : []),
         ].map(([href, text]) => (
           <Link
             key={href}

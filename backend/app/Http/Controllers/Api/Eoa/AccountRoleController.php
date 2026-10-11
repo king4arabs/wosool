@@ -31,15 +31,24 @@ class AccountRoleController extends Controller
     public function update(Request $request, User $account)
     {
         abort_unless(Access::platformAdmin($request->user()), 403);
-        $data = $request->validate(['roles' => 'present|array|max:4', 'roles.*' => ['required', 'distinct', Rule::in(self::ROLES)]]);
-        abort_if(count($data['roles']) > 0 && ! $account->hasVerifiedEmail(), 422, 'Verify this account email before granting EOA access.');
+        $data = $request->validate(['roles' => 'present|array|max:4', 'roles.*' => ['required', 'distinct', Rule::in(self::ROLES)],
+            'expected_roles' => 'sometimes|array|max:4', 'expected_roles.*' => ['required', 'distinct', Rule::in(self::ROLES)],
+            'reason' => 'nullable|string|max:500']);
         DB::transaction(function () use ($request, $account, $data) {
             $account = User::whereKey($account->id)->lockForUpdate()->firstOrFail();
             $before = $account->getRoleNames()->intersect(self::ROLES)->values()->all();
+            if (array_key_exists('expected_roles', $data)) {
+                $expected = $data['expected_roles'];
+                sort($expected);
+                $current = $before;
+                sort($current);
+                abort_unless($current === $expected, 409, 'Access changed since you opened this account. Search again before saving.');
+            }
+            abort_if(count(array_diff($data['roles'], $before)) > 0 && ! $account->hasVerifiedEmail(), 422, 'Verify this account email before granting EOA access.');
             foreach (array_diff($before, $data['roles']) as $role) $account->removeRole($role);
             foreach (array_diff($data['roles'], $before) as $role) $account->assignRole($role);
             // Non-EOA privileges and community membership are never replaced.
-            AdminAction::log($request->user()->id, 'eoa.roles_updated', 'user', $account->id, null, ['roles' => $before], ['roles' => $data['roles']]);
+            AdminAction::log($request->user()->id, 'eoa.roles_updated', 'user', $account->id, null, ['roles' => $before], ['roles' => $data['roles'], 'reason' => $data['reason'] ?? null]);
         });
         return response()->json(['data' => $this->present($account->fresh())]);
     }

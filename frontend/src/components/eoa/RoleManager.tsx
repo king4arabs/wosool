@@ -3,6 +3,7 @@ import { FormEvent, useCallback, useEffect, useState } from 'react'
 import { api } from '@/lib/api'
 import { errorText } from '@/lib/eoa'
 import { useLocale } from '@/lib/locale'
+import { AccessGuide } from './ManagementOverview'
 import { Field, Notice } from './Shared'
 
 type Account = {
@@ -52,6 +53,7 @@ export function RoleManager() {
   const [lastPage, setLastPage] = useState(1)
   const [selected, setSelected] = useState<Account | null>(null)
   const [chosen, setChosen] = useState<string[]>([])
+  const [reason, setReason] = useState('')
   const [loading, setLoading] = useState(true)
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState('')
@@ -93,10 +95,11 @@ export function RoleManager() {
     try {
       const response = await api.patch<{ data: Account }>(
         `/eoa/operations/accounts/${selected.id}`,
-        { roles: chosen },
+        { roles: chosen, expected_roles: selected.roles, reason },
       )
       setSelected(response.data)
       setChosen(response.data.roles)
+      setReason('')
       await load()
       setNotice(
         ar
@@ -170,6 +173,7 @@ export function RoleManager() {
                 onClick={() => {
                   setSelected(account)
                   setChosen(account.roles)
+                  setReason('')
                   setNotice('')
                 }}
               >
@@ -248,7 +252,9 @@ export function RoleManager() {
                   : 'Email verification is required before granting access.'}
               </Notice>
             )}
-            <button type="submit" className="eoa-btn" disabled={busy}>
+            <Field label={ar ? 'سبب تغيير الصلاحيات' : 'Reason for access change'}><textarea required minLength={5} maxLength={500} value={reason} onChange={e=>setReason(e.target.value)}/></Field>
+            <p>{ar ? 'الأدوار المحددة تمنح صلاحيات مجتمعة. إلغاء جميع الأدوار يسحب وصول الفريق لهذا البرنامج.' : 'Selected roles combine access. Clearing every role revokes team access to this program.'}</p>
+            <button type="submit" className="eoa-btn" disabled={busy || [...chosen].sort().join() === [...selected.roles].sort().join()}>
               {busy
                 ? ar
                   ? 'جارٍ الحفظ…'
@@ -260,6 +266,7 @@ export function RoleManager() {
           </form>
         )}
       </div>
+      <AccessGuide ar={ar} />
     </section>
   )
 }
