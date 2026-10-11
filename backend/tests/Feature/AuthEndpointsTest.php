@@ -13,7 +13,7 @@ class AuthEndpointsTest extends TestCase
 
     public function test_user_can_register_with_valid_data(): void
     {
-        Application::create([
+        $application = Application::create([
             'full_name' => 'Test User',
             'email' => 'test@example.com',
             'phone' => '+966500000000',
@@ -23,6 +23,7 @@ class AuthEndpointsTest extends TestCase
             'location' => 'Riyadh',
             'motivation' => 'Join network',
             'status' => 'approved',
+            'invite_token' => 'test-invitation-token',
         ]);
 
         $response = $this->postJson('/api/v1/auth/register', [
@@ -30,6 +31,7 @@ class AuthEndpointsTest extends TestCase
             'email' => 'test@example.com',
             'password' => 'Password1',
             'password_confirmation' => 'Password1',
+            'invite_token' => 'test-invitation-token',
         ]);
 
         $response
@@ -37,6 +39,35 @@ class AuthEndpointsTest extends TestCase
             ->assertJsonStructure(['message', 'user' => ['id', 'name', 'email']]);
 
         $this->assertDatabaseHas('users', ['email' => 'test@example.com']);
+        $this->assertSame($response->json('user.id'), $application->fresh()->user_id);
+        $this->assertNull($application->fresh()->invite_token);
+    }
+
+    public function test_registration_requires_the_invitation_for_the_approved_email(): void
+    {
+        Application::create([
+            'full_name' => 'Approved User', 'email' => 'approved@example.com',
+            'status' => 'approved', 'invite_token' => 'private-invitation',
+        ]);
+
+        $payload = ['name' => 'Approved User', 'email' => 'approved@example.com',
+            'password' => 'Password1', 'password_confirmation' => 'Password1'];
+        $this->postJson('/api/v1/auth/register', $payload)->assertUnprocessable()->assertJsonValidationErrors('invite_token');
+        $this->postJson('/api/v1/auth/register', $payload + ['invite_token' => 'wrong'])->assertUnprocessable()->assertJsonValidationErrors('invite_token');
+        $this->assertDatabaseMissing('users', ['email' => 'approved@example.com']);
+    }
+
+    public function test_existing_account_links_approved_applications_only_after_sign_in(): void
+    {
+        $user = User::factory()->create(['email' => 'owner@example.com', 'password' => 'Password1']);
+        $approved = Application::create(['full_name' => 'Owner', 'email' => 'OWNER@example.com', 'status' => 'approved']);
+        $pending = Application::create(['full_name' => 'Owner', 'email' => 'owner@example.com', 'status' => 'submitted']);
+
+        $this->postJson('/api/v1/auth/login', ['email' => 'owner@example.com', 'password' => 'wrong'])->assertUnprocessable();
+        $this->assertNull($approved->fresh()->user_id);
+        $this->postJson('/api/v1/auth/login', ['email' => 'owner@example.com', 'password' => 'Password1'])->assertOk();
+        $this->assertSame($user->id, $approved->fresh()->user_id);
+        $this->assertNull($pending->fresh()->user_id);
     }
 
     public function test_register_returns_validation_errors_for_invalid_data(): void

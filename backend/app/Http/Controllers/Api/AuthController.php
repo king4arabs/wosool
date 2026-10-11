@@ -48,6 +48,12 @@ class AuthController extends Controller
         }
 
         $user = Auth::user();
+        Application::query()->whereRaw('LOWER(email) = ?', [strtolower($user->email)])
+            ->where('status', 'approved')->whereNull('user_id')
+            ->update(['user_id' => $user->id, 'invite_token' => null]);
+        if (! $user->hasRole('member') && Application::where('user_id', $user->id)->where('status', 'approved')->exists()) {
+            $user->assignRole('member');
+        }
 
         return response()->json([
             'message' => __('messages.auth.login_success'),
@@ -80,12 +86,10 @@ class AuthController extends Controller
             ]);
         }
 
-        if ($inviteToken !== '') {
-            if (! hash_equals((string) ($application->invite_token ?? ''), $inviteToken)) {
-                throw ValidationException::withMessages([
-                    'invite_token' => [__('messages.auth.invalid_invite_token')],
-                ]);
-            }
+        if (! $application->invite_token || ! hash_equals((string) $application->invite_token, $inviteToken)) {
+            throw ValidationException::withMessages([
+                'invite_token' => [__('messages.auth.invalid_invite_token')],
+            ]);
         }
 
         $passwordHash = Hash::make($request->input('password'));
@@ -117,13 +121,9 @@ class AuthController extends Controller
             }
         }
 
-        if (is_null($application->user_id)) {
-            $application->update(['user_id' => $user->id]);
-        }
-
-        if ($inviteToken !== '' && ! is_null($application->invite_token)) {
-            $application->forceFill(['invite_token' => null])->save();
-        }
+        Application::query()->whereRaw('LOWER(email) = ?', [strtolower($user->email)])
+            ->where('status', 'approved')->whereNull('user_id')
+            ->update(['user_id' => $user->id, 'invite_token' => null]);
 
         Auth::login($user);
         if ($request->hasSession()) {

@@ -43,6 +43,7 @@ export default function AdminMembersPage() {
   const [selected, setSelected] = useState<AdminApplication | null>(null)
   const [form, setForm] = useState<ReviewState>({ status: "submitted", admin_notes: "" })
   const [saving, setSaving] = useState(false)
+  const [sending, setSending] = useState(false)
 
   const loadApplications = useCallback(async () => {
     const response = await api.get<AdminCollectionResponse<AdminApplication>>("/admin/applications", {
@@ -91,6 +92,21 @@ export default function AdminMembersPage() {
       return
     }
 
+    const sendInvitation = async () => {
+      if (!selected) return
+      setSending(true)
+      try {
+        const response = await api.post<{ data: AdminApplication }>(`/admin/applications/${selected.id}/invite`)
+        setSelected(response.data)
+        toast("تم قبول رسالة الدعوة للإرسال", "success")
+        await loadApplications()
+      } catch (err) {
+        toast(err instanceof Error ? err.message : "تعذر إرسال الدعوة", "error")
+      } finally {
+        setSending(false)
+      }
+    }
+
     try {
       await navigator.clipboard.writeText(selected.invite_url)
       toast("تم نسخ رابط الدعوة", "success")
@@ -106,7 +122,7 @@ export default function AdminMembersPage() {
       <div className="flex items-start justify-between gap-3">
         <div>
           <h2 className="text-2xl font-bold text-gray-900">مراجعة طلبات العضوية</h2>
-          <p className="text-sm text-gray-500 mt-1">راجع بيانات المتقدم، حدّث الحالة، ثم شارك رابط الدعوة الخاص به.</p>
+          <p className="text-sm text-gray-500 mt-1">راجع بيانات المتقدم، اعتمد الطلب، ثم أرسل الدعوة إلى بريده الإلكتروني.</p>
         </div>
         <Button variant="outline" size="sm" onClick={() => loadApplications().catch((err: Error) => toast(err.message, "error"))}>
           تحديث
@@ -193,7 +209,7 @@ export default function AdminMembersPage() {
         <DialogContent className="max-w-4xl" dir="rtl">
           <DialogHeader>
             <DialogTitle>مراجعة الطلب: {selected?.full_name}</DialogTitle>
-            <DialogDescription>كل معلومات المتقدم + إدارة حالة الطلب + رابط الدعوة الخاص.</DialogDescription>
+            <DialogDescription>معلومات المتقدم وحالة الطلب وإرسال دعوة التفعيل.</DialogDescription>
           </DialogHeader>
 
           {selected ? (
@@ -229,11 +245,11 @@ export default function AdminMembersPage() {
                 <div>
                   <label className="mb-2 block text-sm font-medium text-gray-700">رابط الدعوة</label>
                   <div className="flex gap-2">
-                    <Input value={selected.invite_url || "سيظهر بعد اعتماد الطلب"} readOnly />
-                    <Button variant="outline" onClick={copyInviteLink}>نسخ</Button>
+                    <Input value={selected.invite_url || "أرسل الدعوة بعد اعتماد الطلب"} readOnly />
+                    <Button variant="outline" onClick={copyInviteLink} disabled={!selected.invite_url}>نسخ</Button>
                   </div>
                   {selected.invite_sent_at ? (
-                    <p className="mt-1 text-xs text-emerald-600">تم تجهيز الإرسال: {formatDate(selected.invite_sent_at)}</p>
+                    <p className="mt-1 text-xs text-emerald-600">تم قبول البريد للإرسال: {formatDate(selected.invite_sent_at)}</p>
                   ) : null}
                 </div>
               </div>
@@ -249,6 +265,7 @@ export default function AdminMembersPage() {
 
               <div className="flex justify-end gap-2">
                 <Button variant="outline" onClick={() => setSelected(null)}>إغلاق</Button>
+                {selected.status === "approved" && <Button variant="outline" onClick={sendInvitation} loading={sending} disabled={saving}>{selected.invite_sent_at ? "إعادة إرسال الدعوة" : "إرسال دعوة التفعيل"}</Button>}
                 <Button onClick={saveReview} loading={saving}>حفظ التحديث</Button>
               </div>
             </div>

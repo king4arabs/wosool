@@ -116,6 +116,26 @@ class AdminEndpointsTest extends TestCase
         ]);
     }
 
+    public function test_admin_can_send_and_resend_approved_account_invitation(): void
+    {
+        $this->seed(DatabaseSeeder::class);
+        \Illuminate\Support\Facades\Mail::fake();
+        config(['mail.default' => 'smtp']);
+        $admin = User::where('email', 'admin@wosool.org')->firstOrFail();
+        $application = Application::firstOrFail();
+        $url = "/api/v1/admin/applications/{$application->id}/invite";
+
+        $this->actingAs($admin)->postJson($url)->assertStatus(409);
+        $this->patchJson("/api/v1/admin/applications/{$application->id}", ['status' => 'approved'])->assertOk();
+        $first = $this->postJson($url)->assertOk()->json('data.invite_token');
+        $this->assertNotEmpty($first);
+        \Illuminate\Support\Facades\Mail::assertSentCount(1);
+        $second = $this->postJson($url)->assertOk()->json('data.invite_token');
+        $this->assertNotSame($first, $second);
+        \Illuminate\Support\Facades\Mail::assertSentCount(2);
+        $this->assertNotNull($application->fresh()->invite_sent_at);
+    }
+
     public function test_admin_can_request_more_information_on_application(): void
     {
         $this->seed(DatabaseSeeder::class);
