@@ -31,6 +31,14 @@ const nextConfig: NextConfig = {
   async headers() {
     return [
       {
+        source: "/eoa/riyadh-hero.webm",
+        headers: [{ key: "Content-Type", value: "video/webm" }],
+      },
+      {
+        source: "/eoa/riyadh-hero.mp4",
+        headers: [{ key: "Content-Type", value: "video/mp4" }],
+      },
+      {
         source: "/accelerator/apply",
         headers: privateHeaders,
       },
@@ -79,6 +87,7 @@ const nextConfig: NextConfig = {
     return [
       { source: "/broadcasting/auth", destination: `${apiUrl}/broadcasting/auth` },
       { source: "/storage/eoa/board/:path*", destination: `${apiUrl}/storage/eoa/board/:path*` },
+      { source: "/storage/eoa/mentors/:path*", destination: `${apiUrl}/storage/eoa/mentors/:path*` },
       {
         source: "/api/:path*",
         destination: `${apiUrl}/api/:path*`,

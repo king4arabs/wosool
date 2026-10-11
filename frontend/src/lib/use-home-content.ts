@@ -9,10 +9,6 @@ import { useLocale } from "./locale"
 interface HomeContent { founders: Founder[]; companies: Company[]; partners: Partner[]; newsItems: NewsItem[]; loading: boolean; failed: string[] }
 const empty: HomeContent = { founders: [], companies: [], partners: [], newsItems: [], loading: true, failed: [] }
 
-function items<T>(result: PromiseSettledResult<WrappedResponse<T[]>>): T[] {
-  return result.status === "fulfilled" && Array.isArray(result.value.data) ? result.value.data : []
-}
-
 export function useHomeContent(): HomeContent & { retry: () => void } {
   const { locale } = useLocale()
   const [content, setContent] = useState<HomeContent>(empty)
@@ -20,25 +16,27 @@ export function useHomeContent(): HomeContent & { retry: () => void } {
 
   useEffect(() => {
     let active = true
-    const options = { params: { per_page: 12 }, headers: { "X-Locale": locale } }
-    // Each section remains independent; never substitute fictional membership data.
-    void Promise.allSettled([
-      api.get<WrappedResponse<ApiFounder[]>>("/founders", options),
-      api.get<WrappedResponse<ApiCompany[]>>("/companies", options),
-      api.get<WrappedResponse<ApiPartner[]>>("/partners", options),
-      api.get<WrappedResponse<ApiNewsItem[]>>("/news", options),
-    ]).then(([founders, companies, partners, news]) => {
-      if (!active) return
-      setContent({
-        loading: false,
-        failed: [founders, companies, partners, news].flatMap((result, index) => result.status === "rejected" ? [ ["founders", "companies", "partners", "news"][index] ] : []),
-        founders: items(founders).map(mapFounder),
-        companies: items(companies).map(mapCompany),
-        partners: items(partners).map(mapPartner).filter((partner) => partner.status === "Confirmed"),
-        newsItems: items(news).map(mapNewsItem),
-      })
-    })
-    return () => { active = false }
+    const controller = new AbortController()
+    const options = { params: { per_page: 12 }, headers: { "X-Locale": locale }, signal: controller.signal }
+    let pending = 4
+    // Publish sections independently, so a slow endpoint cannot hold up the page.
+    // Retain previously loaded public content during a temporary retry failure.
+    async function section<T>(key: string, request: Promise<WrappedResponse<T[]>>, map: (items: T[]) => Partial<HomeContent>) {
+      try {
+        const result = await request
+        if (active) setContent(previous => ({ ...previous, ...map(Array.isArray(result.data) ? result.data : []), failed: previous.failed.filter(value => value !== key) }))
+      } catch {
+        if (active) setContent(previous => ({ ...previous, failed: [...new Set([...previous.failed, key])] }))
+      } finally {
+        pending -= 1
+        if (active && pending === 0) setContent(previous => ({ ...previous, loading: false }))
+      }
+    }
+    void section('founders', api.get<WrappedResponse<ApiFounder[]>>("/founders", options), items => ({ founders: items.map(mapFounder) }))
+    void section('companies', api.get<WrappedResponse<ApiCompany[]>>("/companies", options), items => ({ companies: items.map(mapCompany) }))
+    void section('partners', api.get<WrappedResponse<ApiPartner[]>>("/partners", options), items => ({ partners: items.map(mapPartner).filter(partner => partner.status === 'Confirmed') }))
+    void section('news', api.get<WrappedResponse<ApiNewsItem[]>>("/news", options), items => ({ newsItems: items.map(mapNewsItem) }))
+    return () => { active = false; controller.abort() }
   }, [locale, attempt])
   return { ...content, retry: () => { setContent(previous => ({ ...previous, loading: true })); setAttempt(value => value + 1) } }
 }

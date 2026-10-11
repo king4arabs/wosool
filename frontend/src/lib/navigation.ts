@@ -7,7 +7,7 @@ export function publicJourney(pathname: string) {
   return {
     isEoa,
     applyHref: isEoa ? '/eoa/apply' : '/apply',
-    loginHref: isEoa ? '/eoa/account' : '/login',
+    loginHref: isEoa ? '/eoa/account?mode=login' : '/login',
   }
 }
 

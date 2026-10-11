@@ -1,7 +1,7 @@
 'use client'
 import { useCallback, useEffect, useState } from 'react'
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import { useAuth } from '@/lib/auth'
 import { useLocale } from '@/lib/locale'
 import { api } from '@/lib/api'
@@ -20,13 +20,14 @@ type AccountData = {
   data: Participant | null
   notifications: { id: number; message: string; read_at: string | null }[]
 }
-export function Account() {
+export function Account({ initialMode = 'register', redirectTo }: { initialMode?: 'login' | 'register'; redirectTo?: string }) {
   const { user } = useAuth()
-  return <AccountSession key={user?.id ?? 'guest'} />
+  return <AccountSession key={`${user?.id ?? 'guest'}:${initialMode}`} initialMode={initialMode} redirectTo={redirectTo} />
 }
 
-function AccountSession() {
+function AccountSession({ initialMode, redirectTo }: { initialMode: 'login' | 'register'; redirectTo?: string }) {
   const pathname = usePathname()
+  const router = useRouter()
   const { user, isLoading, login, refresh, logout } = useAuth()
   const { locale } = useLocale()
   const ar = locale === 'ar'
@@ -35,7 +36,7 @@ function AccountSession() {
     failed: programFailed,
     retry: retryProgram,
   } = useEoaProgram()
-  const [mode, setMode] = useState<'login' | 'register'>('register')
+  const [mode, setMode] = useState<'login' | 'register'>(initialMode)
   const [error, setError] = useState('')
   const [notice, setNotice] = useState('')
   const [busy, setBusy] = useState(false)
@@ -65,14 +66,16 @@ function AccountSession() {
   }, [load])
   async function authenticate(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
+    if (busy) return
     setError('')
     setNotice('')
     setBusy(true)
     const f = new FormData(e.currentTarget)
     try {
-      if (mode === 'login')
+      if (mode === 'login') {
         await login(String(f.get('email')), String(f.get('password')))
-      else {
+        if (redirectTo) router.replace(redirectTo)
+      } else {
         const r = await api.post<{ email_queued: boolean }>(
           '/eoa/auth/register',
           {

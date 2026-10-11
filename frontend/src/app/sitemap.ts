@@ -10,6 +10,7 @@ const publicRoutes = [
   "/eoa/eligibility",
   "/eoa/learning",
   "/eoa/leadership",
+  "/eoa/mentors",
   "/eoa/partners",
   "/eoa/faq",
   "/eoa/contact",

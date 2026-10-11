@@ -35,6 +35,7 @@ export function proxy(request: NextRequest) {
 
   if ((isEoaProtected || isPlatformProtected) && !hasSession) {
     const loginUrl = new URL(isEoaProtected ? "/eoa/account" : "/login", request.url)
+    if (isEoaProtected) loginUrl.searchParams.set("mode", "login")
     loginUrl.searchParams.set("redirect", `${pathname}${request.nextUrl.search}`)
     return NextResponse.redirect(loginUrl)
   }

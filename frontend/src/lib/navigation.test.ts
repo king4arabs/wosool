@@ -42,7 +42,7 @@ test('community and Accelerator navigation retain separate application and accou
     assert.deepEqual(publicJourney(path), {
       isEoa: true,
       applyHref: '/eoa/apply',
-      loginHref: '/eoa/account',
+      loginHref: '/eoa/account?mode=login',
     })
   }
 })

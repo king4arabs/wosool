@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Eoa;
 
 use App\Http\Controllers\Controller;
 use App\Models\EoaBoardMember;
+use App\Models\EoaMentorProfile;
 use App\Services\Eoa\ProgramService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
@@ -44,6 +45,12 @@ class PublicController extends Controller
             'board_members' => Schema::hasTable('eoa_board_members') ? EoaBoardMember::where('program_id', $program->id)
                 ->where('publication_status', 'published')->where('is_active', true)
                 ->orderBy('display_order')->orderBy('id')->get(EoaBoardMember::PUBLIC_FIELDS) : [],
+            'mentors' => Schema::hasTable('eoa_mentor_profiles') ? EoaMentorProfile::where('program_id', $program->id)
+                ->where('publication_status', 'published')->where('is_active', true)
+                ->where('appointment_status', 'confirmed')->where('public_consent', true)
+                ->whereNotNull('appointment_reference')->whereRaw("TRIM(appointment_reference) <> ''")
+                ->whereNotNull('consent_reference')->whereRaw("TRIM(consent_reference) <> ''")
+                ->orderBy('display_order')->orderBy('id')->get(EoaMentorProfile::PUBLIC_FIELDS) : [],
             'partners' => $partners,
             'ecosystem' => DB::table('ecosystem_organizations')->where('verification_status', 'verified')->orderBy('sort_order')->get(['id', 'name_en', 'name_ar', 'website', 'type', 'sector', 'location', 'support_en', 'support_ar', 'source_url', 'verified_at', 'relationship_status']),
         ]]);

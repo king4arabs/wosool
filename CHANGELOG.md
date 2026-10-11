@@ -6,6 +6,18 @@ This project follows **Semantic Versioning** and a Keep a Changelog-inspired for
 
 ---
 
+## Founder cards, mentor profiles and responsive account journeys — 2026-10-11
+
+- Moved founder scorecards below the homepage partner strip with portrait-led cards, two manual rows, search, sector filters and responsive pagination.
+- Added eight researched public founder spotlights for initial rendering and API-outage resilience on the homepage and founder directory, without inventing member status.
+- Added bilingual EOA mentor profiles, public cards, expertise filters, secure uploads, leadership publishing, appointment/consent controls, audit records and stale-write protection.
+- Improved EOA program and learning copy, mentor navigation and Arabic/English empty states.
+- Rebuilt community application/registration layouts for both languages, fixed invitation email entry, storage failures, duplicate submission and validation-step navigation.
+- Corrected EOA sign-in mode and return destinations, localized the skip link, and enlarged password and profile touch targets.
+- Added explicit video MIME headers and a restricted public mentor portrait proxy.
+- Unified the homepage and EOA partner strips with transparent original logos, proportional sizing, swipe/keyboard navigation, pause controls and reduced-motion support; corrected the KAUST university artwork.
+- Clear generated Next.js route responses before production builds so in-place updates serve the newly built pages.
+
 ## EO Riyadh board, editorial management and skyline — 2026-10-11
 
 - Added the supplied 2026/27 board: eleven original portrait crops, explicit terms, source-backed professional links and a controlled accessible carousel.

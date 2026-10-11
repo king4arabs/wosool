@@ -2,8 +2,7 @@
 
 import Image from 'next/image'
 import { ArrowLeft, ArrowRight, Pause, Play } from 'lucide-react'
-import { useEffect, useId, useMemo, useRef, useState, useSyncExternalStore, type KeyboardEvent } from 'react'
-import type { EoaPartner } from '@/lib/eoa'
+import { useEffect, useId, useMemo, useRef, useState, useSyncExternalStore, type KeyboardEvent, type ReactNode } from 'react'
 import { boardExternalUrl, boardPortraitUrl, boardScrollOffset } from '@/lib/eoa-board'
 import { EoaLogo } from './Logo'
 import styles from './PartnerCarousel.module.css'
@@ -15,11 +14,27 @@ function subscribeMotion(callback: () => void) {
 }
 function motionSnapshot() { return window.matchMedia('(prefers-reduced-motion: reduce)').matches }
 
-export function PartnerCarousel({ partners, ar }: { partners: EoaPartner[]; ar: boolean }) {
+type PartnerLogo = { id: string | number; name_ar: string; name_en: string; website?: string; logo_path: string }
+
+function PartnerArtwork({ partner, ar }: { partner: PartnerLogo; ar: boolean }) {
+  const [failed, setFailed] = useState<string | null>(null)
+  const [shape, setShape] = useState('wide')
+  const name = (ar ? partner.name_ar : partner.name_en) || partner.name_en || partner.name_ar
+  if (failed === partner.logo_path) return <span className={styles.logoFallback}>{name}</span>
+  // Frame the transparent margins of the supplied EO artwork; preserve every visible pixel.
+  if (partner.logo_path === '/partners/eo-riyadh.png') return <span className={styles.eoArtwork}><EoaLogo /></span>
+  return <Image src={partner.logo_path} alt={name} width={180} height={80} className={styles.artwork} data-shape={shape} unoptimized onError={() => setFailed(partner.logo_path)} onLoad={event => {
+    const image = event.currentTarget
+    const ratio = image.naturalWidth / image.naturalHeight
+    setShape(ratio < .95 ? 'tall' : ratio < 2 ? 'square' : 'wide')
+  }} />
+}
+
+export function PartnerCarousel({ partners, ar, includeEo = true, headingId, action, emptyState }: { partners: PartnerLogo[]; ar: boolean; includeEo?: boolean; headingId?: string; action?: ReactNode; emptyState?: ReactNode }) {
   const items = useMemo(() => [...new Map([
-    { id: 0, name_ar: 'EO الرياض', name_en: 'EO Riyadh', website: 'https://eoriyadh.org/', logo_path: '/partners/eo-riyadh.png' },
+    ...(includeEo ? [{ id: 0, name_ar: 'EO الرياض', name_en: 'EO Riyadh', website: 'https://eoriyadh.org/', logo_path: '/partners/eo-riyadh.png' }] : []),
     ...partners,
-  ].filter(partner => boardExternalUrl(partner.website) && boardPortraitUrl(partner.logo_path)).map(partner => [partner.logo_path, partner])).values()], [partners])
+  ].filter(partner => boardPortraitUrl(partner.logo_path)).map(partner => [partner.logo_path, partner])).values()], [includeEo, partners])
   const viewport = useRef<HTMLDivElement>(null)
   const track = useRef<HTMLDivElement>(null)
   const [paused, setPaused] = useState(false)
@@ -29,6 +44,7 @@ export function PartnerCarousel({ partners, ar }: { partners: EoaPartner[]; ar: 
   const reducedMotion = useSyncExternalStore(subscribeMotion, motionSnapshot, () => true)
   const running = overflow && !paused && !hovered && !focused && !reducedMotion
   const id = useId()
+  const titleId = headingId || `${id}-title`
 
   useEffect(() => {
     const element = viewport.current
@@ -77,7 +93,8 @@ export function PartnerCarousel({ partners, ar }: { partners: EoaPartner[]; ar: 
     if (!element) return
     setPaused(true)
     const maximum = element.scrollWidth - element.clientWidth
-    const step = (track.current?.firstElementChild?.getBoundingClientRect().width || 180) + 28
+    const gap = track.current ? Number.parseFloat(getComputedStyle(track.current).columnGap) || 20 : 20
+    const step = (track.current?.firstElementChild?.getBoundingClientRect().width || 180) + gap
     let target = boardScrollOffset(element.scrollLeft, maximum, direction === 'right' ? step : -step)
     if (direction === 'right' && element.scrollLeft <= 1) target = maximum
     if (direction === 'left' && element.scrollLeft >= maximum - 1) target = 0
@@ -92,23 +109,26 @@ export function PartnerCarousel({ partners, ar }: { partners: EoaPartner[]; ar: 
     else if (viewport.current) viewport.current.scrollTo({ left: event.key === 'Home' ? viewport.current.scrollWidth : 0, behavior: reducedMotion ? 'instant' : 'smooth' })
   }
 
-  return <section className={`eoa-partners ${styles.section}`} aria-labelledby={`${id}-title`}>
-    <div className="eoa-container">
+  return <section className={styles.section} aria-labelledby={titleId}>
+    <div className={styles.container}>
       <div className={styles.heading}>
-        <h2 id={`${id}-title`}>{ar ? 'نفخر بشركائنا' : 'Proud of Partners'}</h2>
-        {overflow && <div className={styles.controls} dir="ltr" aria-label={ar ? 'التحكم بعرض الشركاء' : 'Partner carousel controls'}>
+        <h2 id={titleId}>{ar ? 'نفخر بشركائنا' : 'Proud of Partners'}</h2>
+        <div className={styles.headingActions}>{action}{items.length > 0 && overflow && <div className={styles.controls} dir="ltr" aria-label={ar ? 'التحكم بعرض الشركاء' : 'Partner carousel controls'}>
           <button type="button" aria-controls={`${id}-logos`} onClick={() => move('left')} aria-label={ar ? 'تحريك الشعارات إلى اليسار' : 'Move logos left'}><ArrowLeft size={18} aria-hidden="true" /></button>
           {!reducedMotion && <button type="button" aria-controls={`${id}-logos`} onClick={() => setPaused(value => !value)} aria-label={paused ? ar ? 'تشغيل حركة الشعارات' : 'Start logo movement' : ar ? 'إيقاف حركة الشعارات' : 'Pause logo movement'}>{paused ? <Play size={16} aria-hidden="true" /> : <Pause size={16} aria-hidden="true" />}</button>}
           <button type="button" aria-controls={`${id}-logos`} onClick={() => move('right')} aria-label={ar ? 'تحريك الشعارات إلى اليمين' : 'Move logos right'}><ArrowRight size={18} aria-hidden="true" /></button>
-        </div>}
+        </div>}</div>
       </div>
-      <div ref={viewport} id={`${id}-logos`} className={styles.viewport} dir="ltr" tabIndex={overflow ? 0 : undefined} aria-label={ar ? 'شعارات الشركاء. استخدم السهمين للتنقل.' : 'Partner logos. Use the arrow keys to browse.'} onKeyDown={handleKey} onPointerEnter={event => { if (event.pointerType !== 'touch') setHovered(true) }} onPointerLeave={() => setHovered(false)} onPointerDown={() => setPaused(true)} onWheel={() => setPaused(true)} onFocusCapture={() => { setFocused(true); setPaused(true) }} onBlurCapture={event => { if (!event.currentTarget.contains(event.relatedTarget)) setFocused(false) }}>
+      {items.length > 0 ? <div ref={viewport} id={`${id}-logos`} className={styles.viewport} dir="ltr" tabIndex={overflow ? 0 : undefined} aria-label={ar ? 'شعارات الشركاء. استخدم السهمين للتنقل.' : 'Partner logos. Use the arrow keys to browse.'} onKeyDown={handleKey} onPointerEnter={event => { if (event.pointerType !== 'touch') setHovered(true) }} onPointerLeave={() => setHovered(false)} onPointerDown={() => setPaused(true)} onWheel={() => setPaused(true)} onFocusCapture={() => { setFocused(true); setPaused(true) }} onBlurCapture={event => { if (!event.currentTarget.contains(event.relatedTarget)) setFocused(false) }}>
         <div className={styles.track} ref={track}>
-          {items.map(partner => <a key={partner.logo_path} href={boardExternalUrl(partner.website)!} target="_blank" rel="noopener noreferrer" aria-label={`${ar ? partner.name_ar : partner.name_en}${ar ? ' (نافذة جديدة)' : ' (opens in a new tab)'}`}>
-            {partner.logo_path === '/partners/eo-riyadh.png' ? <EoaLogo /> : <Image src={partner.logo_path} alt={ar ? partner.name_ar : partner.name_en} width={180} height={64} unoptimized />}
-          </a>)}
+          {items.map(partner => {
+            const url = boardExternalUrl(partner.website)
+            const artwork = <PartnerArtwork partner={partner} ar={ar} />
+            const tone = partner.logo_path === '/partners/rdia.svg' ? 'mixed-contrast' : undefined
+            return url ? <a key={partner.logo_path} className={styles.logoFrame} data-tone={tone} href={url} target="_blank" rel="noopener noreferrer" aria-label={`${ar ? partner.name_ar : partner.name_en}${ar ? ' (نافذة جديدة)' : ' (opens in a new tab)'}`}>{artwork}</a> : <div className={styles.logoFrame} data-tone={tone} key={partner.logo_path}>{artwork}</div>
+          })}
         </div>
-      </div>
+      </div> : emptyState}
     </div>
   </section>
 }

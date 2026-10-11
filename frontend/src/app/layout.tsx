@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next"
 import { Providers } from "./providers"
+import { SkipLink } from "@/components/layout/SkipLink"
 import "./globals.css"
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://wosool.org"
@@ -81,12 +82,7 @@ export default function RootLayout({
     <html lang="ar" dir="rtl" className="h-full scroll-smooth antialiased">
       <body className="flex min-h-full flex-col font-sans">
         <Providers>
-          <a
-            href="#main-content"
-            className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-full focus:bg-[var(--action-bg)] focus:px-4 focus:py-2 focus:font-bold focus:text-white"
-          >
-            الانتقال إلى المحتوى الرئيسي
-          </a>
+          <SkipLink />
           {children}
         </Providers>
       </body>

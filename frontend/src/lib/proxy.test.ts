@@ -26,6 +26,7 @@ test('private EOA workspaces use the EOA account journey and preserve destinatio
     const location = new URL(response.headers.get('location')!)
 
     assert.equal(location.pathname, '/eoa/account')
+    assert.equal(location.searchParams.get('mode'), 'login')
     assert.equal(location.searchParams.get('redirect'), path)
   }
 })

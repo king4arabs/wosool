@@ -21,6 +21,7 @@ export default function LoginPage() {
   const [error, setError] = useState("");
   async function submit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    if (busy) return;
     setBusy(true);
     setError("");
     const f = new FormData(e.currentTarget);
@@ -65,7 +66,7 @@ export default function LoginPage() {
               "Sign in to track your application or access your workspace.",
             )}
           </p>
-          <form onSubmit={submit} className="gateway-card space-y-5">
+          <form onSubmit={submit} className="gateway-card space-y-5" aria-busy={busy}>
             <label className="gateway-label">
               {t("البريد الإلكتروني", "Email")}
               <input
@@ -91,7 +92,8 @@ export default function LoginPage() {
                 />
                 <button
                   type="button"
-                  className="absolute inset-y-0 end-3"
+                  className="absolute inset-y-0 end-1 flex min-h-11 min-w-11 items-center justify-center rounded-lg focus-visible:outline-2 focus-visible:outline-[#3B52D4]"
+                  disabled={busy}
                   aria-label={
                     visible
                       ? t("إخفاء كلمة المرور", "Hide password")
@@ -105,7 +107,7 @@ export default function LoginPage() {
               </span>
             </label>
             <Link
-              className="block text-sm text-[#3B52D4] underline"
+              className="inline-flex min-h-11 items-center text-sm text-[#3B52D4] underline"
               href="/forgot-password"
             >
               {t("نسيت كلمة المرور؟", "Forgot password?")}
@@ -130,7 +132,7 @@ export default function LoginPage() {
               )}
             </Link>
             <Link
-              className="block text-center text-sm underline"
+              className="flex min-h-11 items-center justify-center text-center text-sm underline"
               href="/register"
             >
               {t(

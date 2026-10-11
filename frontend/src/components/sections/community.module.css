@@ -25,23 +25,39 @@
 .profileDetails summary { min-height:44px; padding-block:10px; cursor:pointer; color:var(--action-bg); font-weight:700; }
 .profileDetails p { margin-bottom:12px; white-space:pre-line; overflow-wrap:anywhere; }
 .profileDetails a { display:inline-flex; padding-block:12px; text-decoration:underline; color:var(--action-bg); }
-.partners { padding:32px max(24px,calc((100vw - 1200px)/2)); background:var(--surface); color:var(--text); border-bottom:1px solid var(--border-soft); }
-.partnerHead { display:flex; flex-wrap:wrap; align-items:center; justify-content:flex-end; gap:20px; }
-.partnerHead h2 { font-size:15px; font-weight:700; margin-inline-end:auto; }
-.partnerHead a { font-size:13px; color:var(--action-bg); padding-block:12px; }
-.logoWindow { overflow-x:auto; padding-block:20px; scrollbar-width:thin; direction:ltr; container-type:inline-size; }
-.logoTrack { display:flex; justify-content:flex-end; width:max-content; min-width:100%; }
-.logoGroup { display:flex; align-items:center; justify-content:flex-end; gap:48px; padding-inline:24px; flex-shrink:0; }
-.logoGroup>a,.logoGroup>div { display:flex; align-items:center; justify-content:center; width:150px; min-height:64px; }
-.moving { animation:logosRight 35s linear infinite; }
-.logoWindow:hover .moving,.logoWindow:focus-within .moving,.moving[data-paused=true] { animation-play-state:paused; }
 .partnerEmpty { color:var(--text-muted); font-size:13px; margin-top:16px; }
 .partnerEmpty button { color:var(--action-bg); padding:12px; text-decoration:underline; }
 .row :is(a,button,summary):focus-visible,.partners :is(a,button):focus-visible,.rail:focus-visible { outline:3px solid var(--action-bg); outline-offset:3px; }
 .controls button:not(:disabled):hover,.partnerHead button:hover { background:var(--surface-soft); border-color:var(--action-bg); }
 .cardLinks a:hover,.profileDetails a:hover,.partnerHead a:hover { text-decoration:underline; text-underline-offset:4px; }
-/* One copy only: every visible logo remains an authentic, usable link. */
-.logoWindow:focus-within .moving { animation:none; transform:none; }
-@keyframes logosRight { from { transform:translateX(min(0px,calc(100cqw - 100%))); } to { transform:translateX(0); } }
-@media(prefers-reduced-motion:reduce) { .moving { animation:none; transform:none; } }
 @media(max-width:600px) { .founderCard { padding:20px; }.logoGroup { gap:24px; }.logo { width:120px; }.partnerHead {gap:12px;} }
+
+/* Home founder collections: two independent, manually controlled rows. */
+.showcase { min-width:0; margin-top:30px; }
+.founderFilters { display:flex; align-items:flex-end; flex-wrap:wrap; gap:16px; padding:20px; background:var(--surface); border:1px solid var(--border-soft); border-radius:var(--radius-card); }
+.founderFilters label { display:grid; gap:8px; min-width:0; }
+.founderFilters label>span { font-size:12px; font-weight:700; color:var(--text); }
+.search { flex:1 1 300px; }
+.search>div { display:flex; align-items:center; gap:10px; min-height:48px; padding-inline:14px; background:var(--surface-soft); border:1px solid var(--border); border-radius:var(--radius-control); }
+.search svg { color:var(--text-muted); flex-shrink:0; }
+.search input { width:100%; min-width:0; min-height:46px; border:0; outline:none; font:inherit; font-size:14px; background:transparent; color:var(--text); }
+.search>div:focus-within { outline:3px solid var(--focus-ring); outline-offset:2px; }
+.sectorFilter { flex:0 1 250px; }
+.founderFilters select,.founderPagination select { min-height:48px; max-width:100%; min-width:0; padding:10px 14px; border:1px solid var(--border); border-radius:var(--radius-control); background:var(--surface-soft); color:var(--text); font:inherit; font-size:13px; }
+.clearFilters { min-height:48px; padding:10px 12px; color:var(--action-bg); font-size:13px; font-weight:700; text-decoration:underline; text-underline-offset:4px; }
+.founderResults { display:flex; justify-content:space-between; flex-wrap:wrap; gap:8px; color:var(--text-muted); font-size:12px; line-height:1.8; margin:18px 0 24px; }
+.founderRow { margin-top:18px; }
+.founderRowHead { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:12px; }
+.founderRowHead>span { font-size:12px; font-weight:800; color:var(--text); }
+.founderRowHead small { display:block; font-weight:400; font-size:11px; color:var(--text-muted); margin-top:3px; }
+.founderRail { display:flex; align-items:stretch; gap:20px; overflow-x:auto; overflow-y:clip; scroll-snap-type:x mandatory; overscroll-behavior-x:contain; padding:4px 3px 20px; scrollbar-width:thin; scrollbar-color:var(--border) transparent; list-style:none; margin:0; }
+.founderRail>li { flex:0 0 calc((100% - 40px)/3); min-width:0; display:flex; scroll-snap-align:start; }
+.founderPagination { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:14px; border-top:1px solid var(--border-soft); padding-top:20px; margin-top:12px; }
+.founderPagination label,.founderPagination nav { display:flex; align-items:center; flex-wrap:wrap; gap:12px; color:var(--text-muted); font-size:12px; }
+.founderPagination button { min-height:44px; padding:10px 14px; border:1px solid var(--border); border-radius:var(--radius-control); background:var(--surface); color:var(--text); font-size:13px; font-weight:700; }
+.founderPagination button:disabled { opacity:.4; cursor:default; }
+.showcase :is(button,select,a,summary):focus-visible,.founderRail:focus-visible { outline:3px solid var(--focus-ring); outline-offset:3px; }
+@media(max-width:1040px) { .founderRail>li { flex-basis:calc((100% - 20px)/2); } }
+@media(max-width:660px) { .founderFilters { padding:16px; gap:12px; }.search,.sectorFilter { flex:1 1 100%; }.founderRail { gap:14px; }.founderRail>li { flex-basis:calc(100% - 16px); }.founderResults>span { display:none; }.founderPagination { align-items:flex-start; }.founderRowHead small { font-size:10px; } }
+
+.partnerEmpty { display:flex; align-items:center; flex-wrap:wrap; gap:8px 16px; font-size:13px; line-height:1.9; }.partnerEmpty p { margin:0; }.partnerEmpty button { min-width:44px; min-height:44px; padding:10px; }.partnerEmpty button:focus-visible { outline:3px solid var(--focus-ring); outline-offset:2px; }

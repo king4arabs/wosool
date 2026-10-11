@@ -20,8 +20,9 @@ export function EoaLogo({
         alt="EO Riyadh"
         width={inverse ? 375 : 6666}
         height={inverse ? 134 : 3201}
+        sizes={inverse ? '(max-width: 600px) 160px, 200px' : '(max-width: 600px) 140px, 180px'}
         priority={priority}
-        unoptimized
+        unoptimized={inverse}
       />
     </span>
   )

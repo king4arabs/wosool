@@ -18,6 +18,7 @@ import { EoaHeroMedia } from "./HeroMedia"
 import { EoaJourney } from "./Journey"
 import { EoaLogo } from "./Logo"
 import { EoaBoard } from "./Board"
+import { EoaMentors } from "./Mentors"
 import { EoaProgramDetails } from "./EoaProgramDetails"
 import { EoaPillars } from "./Pillars"
 import { Notice, PartnerStrip, useEoaProgram } from "./Shared"
@@ -167,6 +168,7 @@ export function EoaLanding() {
       </section>
 
       <EoaJourney program={program} />
+      <EoaMentors key={ar ? "ar" : "en"} mentors={program?.mentors ?? []} ar={ar} loading={!program && !failed} failed={failed} retry={retry} compact />
       <EoaProgramDetails program={program} />
       <EoaBoard members={program?.board_members ?? []} ar={ar} />
 

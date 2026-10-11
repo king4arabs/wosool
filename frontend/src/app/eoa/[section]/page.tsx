@@ -11,6 +11,7 @@ const sections = [
   'contact',
   'learning',
   'leadership',
+  'mentors',
   'privacy',
 ]
 
@@ -23,6 +24,7 @@ const titles: Record<string, string> = {
   contact: 'تواصل معنا | Contact',
   learning: 'التعلم والفعاليات | Learning & events',
   leadership: 'قيادة البرنامج | Leadership',
+  mentors: 'المرشدون والمدربون | Mentors & coaches',
   privacy: 'الخصوصية | Privacy',
 }
 

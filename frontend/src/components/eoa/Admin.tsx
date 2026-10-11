@@ -16,6 +16,7 @@ import {
 import { Field, Notice } from './Shared'
 import { RoleManager } from './RoleManager'
 import { BoardManager } from './BoardManager'
+import { MentorManager } from './MentorManager'
 import { EoaEditorialManager } from './EoaEditorialManager'
 import { TrackManager } from './TrackManager'
 import type { EoaTrack } from '@/lib/eoa'
@@ -174,7 +175,7 @@ function AdminSession() {
   if (!user || !user.email_verified_at)
     return (
       <div className="eoa-container eoa-section">
-        <Link className="eoa-btn" href="/eoa/account">
+        <Link className="eoa-btn" href="/eoa/account?mode=login&redirect=%2Feoa%2Fadmin">
           {ar ? 'ادخل بحساب موثق' : 'Sign in with a verified account'}
         </Link>
       </div>
@@ -209,6 +210,7 @@ function AdminSession() {
                       ['enrollment', ar ? 'المشاركون' : 'Participants'],
                       ['partners', ar ? 'الشركاء' : 'Partners'],
                       ['board', ar ? 'مجلس الإدارة' : 'Board members'],
+                      ['mentors', ar ? 'المرشدون والمستشارون' : 'Mentors & advisors'],
                       ...(review.capabilities.lead ? [['editorial', ar ? 'محتوى الصفحة' : 'Page content']] : []),
                       ['settings', ar ? 'الإعدادات' : 'Settings'],
                       ['inquiries', ar ? 'الاستفسارات' : 'Inquiries'],
@@ -235,6 +237,7 @@ function AdminSession() {
               <TrackManager tracks={ops.tracks} reload={load} />
             )}
             {tab === 'board' && ops && <BoardManager lead={review.capabilities.lead} />}
+            {tab === 'mentors' && ops && <MentorManager lead={review.capabilities.lead} />}
             {tab === 'editorial' && ops && review.capabilities.lead && <EoaEditorialManager ar={ar} organizations={ops.organizations} onSaved={load} />}
             {tab === 'applications' && (
               <div className="eoa-admin-grid">

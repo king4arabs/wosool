@@ -116,3 +116,7 @@ See [the October 9 reliability and EOA release notes](WOSOOL-RELIABILITY-EOA-202
 See [the board release guide](EOA-BOARD-RELEASE-2026-10-11.md). The board and editorial tabs are in `/eoa/admin`; the public board is also shown on `/eoa/leadership`. Board photos are public assets, separate from private applicant documents. After deploying Laravel, run `php artisan storage:link` for uploaded portraits. Next.js proxies only `/storage/eoa/board/*` to that public backend directory. Never expose the private EOA document store.
 
 The supplied EO logo is used unmodified on dark backgrounds. The included Riyadh WebM/MP4 video is 14 seconds, muted and optimized; a still from the same licensed clip remains visible when reduced motion is enabled or playback fails. Environment variables may override the media. Source and license details are in [the media register](research/EOA-SOURCES-2026-10-11.md).
+
+## Mentor management and responsive journeys
+
+See [the founder and mentor guide](FOUNDERS-MENTORS-2026-10-11.md). The **Mentors** operations tab manages bilingual profiles separately from private participant/coach assignments. Public cards appear on `/eoa`, `/eoa/mentors` and leadership after confirmed appointments are published. There is no invented initial mentor roster. Public portrait storage is restricted to `/storage/eoa/mentors/*`, with the same secure raster upload limits as board portraits. Deploy the additive mentor migration before using its admin endpoints.

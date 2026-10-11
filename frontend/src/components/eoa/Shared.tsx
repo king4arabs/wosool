@@ -120,8 +120,9 @@ export function EoaNav() {
           ['/eoa/partners', ar ? 'الشركاء' : 'Partners'],
           [
             '/eoa/leadership',
-            ar ? 'القيادة والمدربون' : 'Leadership & coaches',
+            ar ? 'قيادة البرنامج' : 'Leadership',
           ],
+          ['/eoa/mentors', ar ? 'المرشدون والمدربون' : 'Mentors & coaches'],
           ['/eoa/faq', ar ? 'الأسئلة الشائعة' : 'FAQ'],
           ['/eoa/contact', ar ? 'التواصل' : 'Contact'],
           ['/eoa/account', ar ? 'حسابي' : 'My account'],

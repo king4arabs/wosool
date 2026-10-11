@@ -1,5 +1,6 @@
 import type { EoaBoardMember } from './eoa-board'
 import type { EoaEditorial } from './eoa-editorial'
+import type { EoaMentor } from './eoa-mentors'
 import { ApiError } from './api'
 
 export type EoaTrack = { id: number; name_ar: string; name_en: string; description_ar?: string | null; description_en?: string | null; is_active?: boolean }
@@ -20,6 +21,7 @@ export type Organization = EoaPartner & {
   logo_source_url?: string
 }
 export type EoaProgram = {
+  mentors?: EoaMentor[]
   board_members?: EoaBoardMember[]
   editorial?: EoaEditorial | null
   partner_roles?: Record<string, 'operator' | 'enabler' | 'supporter'>

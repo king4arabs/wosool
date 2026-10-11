@@ -35,6 +35,9 @@ The latest product and brand upgrade includes:
 - **Unified product design system:** semantic tokens, Cairo as the primary Arabic and English typeface, responsive spacing, consistent cards, accessible controls, visible focus states, and reduced-motion behavior.
 - **Trusted founder and venture scorecards:** company logo, founder portrait, role, short company/founder summaries, sector, stage, location, official links, verification, review freshness, source evidence, and opportunity signals where data is available.
 - **World-class directory browsing:** equal-height responsive cards, controlled two-row browsing, pagination, search, RTL/LTR-aware controls, and no forced autoplay.
+- **Founder spotlight:** eight researched public founder profiles keep the homepage and directory useful during API outages, clearly separated from approved member profiles.
+- **Mentors and advisors:** responsive mentor cards on `/eoa` and `/eoa/mentors`, expertise filters, portrait management, audited draft/publish controls and confirmed public appointments.
+- **Bilingual account journeys:** shared registration/application layouts, working invitation email entry, recoverable validation, draft-storage resilience and direct EOA sign-in destinations.
 - **Reviewed founder introductions:** authenticated members can discover approved founders, state the purpose and intended value of a connection, submit through the established introduction API, and track the request.
 - **Administration command center:** API-backed operational metrics and grouped navigation for community, operations, growth/content, EO Riyadh Accelerator, privacy, and system settings.
 - **EO Riyadh Accelerator:** licensed Riyadh skyline video with a static reduced-motion poster, official EO palette, supplied EO Riyadh logo, nine-stage growth journey, and verified program information.
@@ -43,6 +46,10 @@ The latest product and brand upgrade includes:
 - **Reliability guardrails:** no fictional metrics, partners, founders, revenue, or affiliations; private contact and financial records remain protected; official EO and EO Riyadh artwork remains separate from Wosool artwork.
 
 See [CHANGELOG.md](CHANGELOG.md) for release history and verified implementation details.
+
+See [the founder, mentor and responsive journey guide](docs/FOUNDERS-MENTORS-2026-10-11.md) for data sources, publication controls and deployment requirements.
+
+Partner strips share responsive transparent logo frames, proportional sizing, keyboard/touch controls and optional motion. See [the transparency audit](docs/PARTNER-ASSETS-2026-10-11.md) for original asset sources and optical sizing notes.
 
 ## EO Riyadh Accelerator preview
 
@@ -66,7 +73,8 @@ Local production-build screenshots with the seeded Laravel API (not a claim of l
 | Experience | Canonical route | Purpose |
 | --- | --- | --- |
 | Wosool community | `/` | Founder-community discovery and its own membership journey |
-| Founder directory | `/founders` | Public approved founders and their companies |
+| Founder directory | `/founders` | Approved public founders, with a separately labeled editorial spotlight |
+| Accelerator mentors | `/eoa/mentors` | Published mentor profiles, expertise and professional links |
 | Startup directory | `/startups` | Sourced startup, scaleup, and venture discovery |
 | Member workspace | `/dashboard` | Profiles, companies, community, matches, events, programs, and messages |
 | EO Riyadh Accelerator | `/eoa` | Program discovery, eligibility, accounts, applications, and public content |

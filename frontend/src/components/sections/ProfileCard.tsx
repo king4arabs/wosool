@@ -1,7 +1,7 @@
 "use client"
 
 import type { ReactNode } from "react"
-import { useState } from "react"
+import { useId, useState } from "react"
 import Image from "next/image"
 import Link from "next/link"
 import {
@@ -74,20 +74,21 @@ function hostLabel(url?: string) {
 }
 
 function Portrait({ src, name }: { src?: string; name: string }) {
-  const [failed, setFailed] = useState(false)
+  const [failed, setFailed] = useState<string | null>(null)
   const image = safeImage(src)
 
   return (
     <span className={styles.portrait}>
-      {image && !failed ? (
+      {image && failed !== image ? (
         <Image
           src={image}
           alt={name}
-          width={64}
-          height={64}
+          width={160}
+          height={160}
+          sizes="80px"
           className="h-full w-full object-cover"
           unoptimized={!image.startsWith("/")}
-          onError={() => setFailed(true)}
+          onError={() => setFailed(image)}
         />
       ) : (
         <span aria-hidden="true">{getInitials(name)}</span>
@@ -100,9 +101,13 @@ function TrustSignal({ icon, children }: { icon: ReactNode; children: ReactNode 
   return <span className={styles.signal}>{icon}{children}</span>
 }
 
-export function ProfileCard({ data }: { data: ProfileCardData }) {
+export function ProfileCard({ data, variant = "company" }: { data: ProfileCardData; variant?: "company" | "founder" }) {
   const { locale } = useLocale()
   const ar = locale === "ar"
+  const id = useId()
+  const founderFirst = variant === "founder" && Boolean(data.founder)
+  const CompanyHeading = founderFirst ? 'h4' : 'h3'
+  const PersonHeading = founderFirst ? 'h3' : 'h4'
   const website = publicWebsite(data.website)
   const websiteHost = hostLabel(data.website)
   const hasDetails = Boolean(
@@ -113,6 +118,19 @@ export function ProfileCard({ data }: { data: ProfileCardData }) {
       data.founderBrief ||
       data.companyBrief,
   )
+  const hasEvidence = Boolean(data.revenue || data.ecosystemSources?.length || data.sources?.length || data.assetCredit)
+
+  const person = data.founder && <div className={styles.personBlock}>
+    <section className={styles.person} aria-label={ar ? "المؤسس" : "Founder"}>
+      <Portrait src={data.portrait} name={data.founder} />
+      <div className={styles.personCopy}>
+        <p className={styles.kicker}><UserRound size={14} aria-hidden="true" />{ar ? "المؤسس" : "Founder"}</p>
+        <PersonHeading id={founderFirst ? id : undefined}>{data.founder}</PersonHeading>
+        {data.role && <p>{data.role}</p>}
+      </div>
+    </section>
+    {data.founderBrief && <p className={styles.founderBrief}>{data.founderBrief}</p>}
+  </div>
 
   function socialLinks(
     items: ProfileCardData["founderSocials"],
@@ -135,7 +153,7 @@ export function ProfileCard({ data }: { data: ProfileCardData }) {
   }
 
   return (
-    <article className={styles.card}>
+    <article className={`${styles.card} ${founderFirst ? styles.founderCard : ''}`} aria-labelledby={id}>
       <div className={styles.cardTopline} aria-hidden="true" />
       <header
         className={[
@@ -180,13 +198,14 @@ export function ProfileCard({ data }: { data: ProfileCardData }) {
       </header>
 
       <div className={styles.body}>
-        <div className={styles.companyHeading}>
+        {founderFirst && person}
+        {data.company && <div className={styles.companyHeading}>
           <div>
             <p className={styles.kicker}>
               <Building2 size={14} aria-hidden="true" />
               {ar ? "الشركة" : "Company"}
             </p>
-            <h3 className={styles.title}>{data.company}</h3>
+            <CompanyHeading className={styles.title} id={!founderFirst ? id : undefined}>{data.company}</CompanyHeading>
           </div>
           {website && websiteHost && (
             <a
@@ -200,14 +219,9 @@ export function ProfileCard({ data }: { data: ProfileCardData }) {
               <span className="sr-only">{websiteHost}</span>
             </a>
           )}
-        </div>
+        </div>}
 
-        <p className={styles.brief}>
-          {data.companyBrief ||
-            (ar
-              ? "لم تُضف نبذة الشركة بعد."
-              : "Company introduction not yet provided.")}
-        </p>
+        {data.companyBrief && <p className={styles.brief}>{data.companyBrief}</p>}
 
         <div className={styles.factGrid}>
           {data.sector && (
@@ -243,19 +257,7 @@ export function ProfileCard({ data }: { data: ProfileCardData }) {
           </div>
         )}
 
-        {data.founder && (
-          <section className={styles.person} aria-label={ar ? "المؤسس" : "Founder"}>
-            <Portrait src={data.portrait} name={data.founder} />
-            <div className={styles.personCopy}>
-              <p className={styles.kicker}>
-                <UserRound size={14} aria-hidden="true" />
-                {ar ? "المؤسس" : "Founder"}
-              </p>
-              <h4>{data.founder}</h4>
-              {data.role && <p>{data.role}</p>}
-            </div>
-          </section>
-        )}
+        {!founderFirst && person}
 
         {data.focusArea && (
           <p className={styles.focus}>
@@ -291,7 +293,7 @@ export function ProfileCard({ data }: { data: ProfileCardData }) {
 
         {hasDetails && (
           <details className={styles.details}>
-            <summary>{ar ? "المصادر والتفاصيل" : "Sources & details"}</summary>
+            <summary>{hasEvidence ? ar ? "المصادر والتفاصيل" : "Sources & details" : ar ? "اقرأ المزيد" : "Read more"}</summary>
             <div className={styles.detailsBody}>
               {data.companyBrief && <p>{data.companyBrief}</p>}
               {data.founderBrief && <p>{data.founderBrief}</p>}

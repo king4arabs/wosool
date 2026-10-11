@@ -97,6 +97,7 @@ export function Footer() {
     ]],
     [ar ? "مجتمع الرياض" : "Riyadh community", [
       { href: "/eoa/leadership", label: ar ? "مجلس الإدارة والقيادة" : "Board & leadership" },
+      { href: "/eoa/mentors", label: ar ? "المرشدون والمدربون" : "Mentors & coaches" },
       { href: "/eoa/partners", label: ar ? "الشركاء" : "Partners" },
       { href: "/eoa/contact", label: ar ? "تواصل مع الفريق" : "Contact the team" },
     ]],

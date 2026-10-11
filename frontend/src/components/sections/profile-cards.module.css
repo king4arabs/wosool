@@ -82,3 +82,36 @@
 .businessSignal_neutral { background:var(--surface-soft); color:var(--text-muted); }
 .businessSignal_accent { background:var(--brand-blue-soft); border-color:color-mix(in srgb,var(--brand-blue) 24%,var(--border-soft)); color:var(--brand-dark-blue); }
 .businessSignal_success { background:var(--success-bg); border-color:color-mix(in srgb,var(--success-text) 20%,var(--border-soft)); color:var(--success-text); }
+
+/* Put the person first on founder surfaces while preserving company scorecards. */
+.card :is(a,button,summary):focus-visible { outline:3px solid var(--focus-ring); outline-offset:3px; }
+.card .personBlock { min-width:0; }
+.card .founderBrief { color:var(--text-muted); font-size:13px; line-height:1.8; margin:12px 0 0; display:-webkit-box; -webkit-box-orient:vertical; -webkit-line-clamp:2; overflow:hidden; }
+.person :is(h3,h4) { color:var(--text-strong); font-size:15px; line-height:1.5; font-weight:800; overflow-wrap:anywhere; }
+.founderCard .cardTopline { height:3px; background:var(--brand-blue); }
+.founderCard .logoArea { min-height:88px; padding:16px 22px; gap:10px; }
+.founderCard .logo { height:44px; max-width:160px; }
+.founderCard .logo img { mix-blend-mode:normal; }
+.founderCard .trustSignals:empty { display:none; }
+.founderCard .body { padding:22px; gap:14px; }
+.founderCard .person { padding:0; border:0; background:none; gap:13px; }
+.founderCard .portrait { width:76px; height:76px; flex-basis:76px; border-width:2px; }
+.founderCard .person h3 { font-size:19px; line-height:1.5; }
+.founderCard .personCopy>p:last-child { font-size:12px; line-height:1.6; }
+.founderCard .personCopy .kicker { font-size:10px; }
+.founderCard .companyHeading { border-top:1px solid var(--border-soft); padding-top:16px; align-items:center; gap:10px; }
+.founderCard .companyHeading .kicker { display:none; }
+.founderCard .title { font-size:16px; line-height:1.5; }
+.card .websiteButton { width:44px; height:44px; }
+.founderCard .brief { font-size:13px; line-height:1.8; min-height:3.6em; -webkit-line-clamp:2; }
+.founderCard .factGrid { gap:7px; }
+.founderCard .factGrid>div { padding:8px 10px; }
+.founderCard .links { display:flex; align-items:center; flex-wrap:wrap; gap:4px 12px; padding-top:9px; }
+.founderCard .links>div { gap:8px; }
+.founderCard .links>div>span { display:none; }
+.card .links a,.card .details a { min-height:44px; min-width:44px; }
+.founderCard .links a { font-size:11px; }
+.founderCard .details summary { font-size:12px; }
+.founderCard .actions { gap:8px; }
+@media(max-width:660px) { .founderCard .body { padding:18px; gap:12px; }.founderCard .factGrid { grid-template-columns:repeat(2,minmax(0,1fr)); }.founderCard .portrait { width:66px; height:66px; flex-basis:66px; }.founderCard .person h3 { font-size:17px; }.founderCard .logoArea { padding-inline:18px; } }
+@media(max-width:360px) { .founderCard .body { padding:15px; }.founderCard .portrait { width:58px; height:58px; flex-basis:58px; }.founderCard .person { gap:10px; }.founderCard .person h3 { font-size:16px; }.founderCard .factGrid { gap:5px; }.founderCard .factGrid>div { padding:7px; } }
