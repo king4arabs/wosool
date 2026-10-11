@@ -119,6 +119,8 @@ Browser API requests use the same-origin proxy. Sessions use CSRF protection. Se
 - Required PHP extensions; CI enables `mbstring`, `dom`, `curl`, `pdo_sqlite`, and `sqlite3`.
 - Git and a Bash-compatible shell for the combined development launcher.
 
+Local setup uses SQLite by default. If using PostgreSQL with a database that lacks the slug-based founder and company schema from the 2024 migrations, the legacy core migration requires `pgvector` and permission to create its `vector` extension (or an administrator must create it first).
+
 ### Install and run locally
 
 ```bash
@@ -238,6 +240,10 @@ Provision privileged users through the audited procedure in [EOA operations](doc
 
 [EOA research](docs/EOA-RESEARCH.md) records official program facts separately from proposed Riyadh delivery decisions. Local dates, fees, sponsorship allocations, partner claims, privacy notices, and commercial terms remain draft until formally approved.
 
+### Founder directory and activation
+
+Sourced founder/company cards connect to public profiles and an administrator-managed email activation flow. Activated founders can manage their information and use private community conversations. See [founder activation and release notes](docs/FOUNDER-ACTIVATION.md) for import, recipient verification, mail setup and deployment checks.
+
 ## Brand system
 
 The shared design tokens live in [`frontend/src/app/brand.css`](frontend/src/app/brand.css), consumed by global CSS, Tailwind utilities, public pages, member workspaces, administration, and EOA components.
@@ -324,7 +330,3 @@ Report vulnerabilities privately through [SECURITY.md](SECURITY.md), not public 
 ## License
 
 The software repository is licensed under the [MIT License](LICENSE). Third-party artwork and trademarks remain subject to their owners' rights and approval requirements; the software license does not grant partnership, endorsement, or trademark rights.
-
-### Founder directory and activation
-
-Sourced founder/company cards now connect to public profiles and an administrator-managed email activation flow. Activated founders can manage their information and use private community conversations. See [founder activation and release notes](docs/FOUNDER-ACTIVATION.md) for import, recipient verification, mail setup and deployment checks.
