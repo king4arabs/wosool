@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from "react"
 import Link from "next/link"
 import { useRouter, useSearchParams } from "next/navigation"
 import { Save, MapPin, Link2, User, Briefcase, ArrowLeft, ArrowRight, CheckCircle2, Sparkles, X, Plus } from "lucide-react"
+import { profileCompletion } from "@/lib/profile-completion"
 import { api, ApiError } from "@/lib/api"
 import { useToast } from "@/components/ui/toast"
 import { useLocale } from "@/lib/locale"
@@ -98,12 +99,14 @@ const textareaClass =
   "flex w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-sm text-slate-800 placeholder:text-slate-400 focus:outline-none focus:border-[#3B52D4] focus:ring-1 focus:ring-[#3B52D4] transition-colors resize-none disabled:opacity-50 aria-invalid:border-red-400"
 
 function SectionCard({
+  id,
   icon: Icon,
   badge,
   title,
   subtitle,
   children,
 }: {
+  id?: string
   icon: React.ComponentType<{ className?: string }>
   badge: string
   title: string
@@ -112,7 +115,8 @@ function SectionCard({
 }) {
   return (
     <div
-      className="bg-white/95 backdrop-blur-sm border border-slate-200/80 rounded-2xl overflow-hidden"
+      id={id}
+      className="scroll-mt-24 bg-white/95 backdrop-blur-sm border border-slate-200/80 rounded-2xl overflow-hidden"
       style={{ boxShadow: "0 4px 24px -4px rgba(59,82,212,0.08)" }}
     >
       {/* Section header */}
@@ -211,21 +215,32 @@ export default function ProfilePage() {
   const [offerInput, setOfferInput] = useState("")
   const [isLoading, setIsLoading] = useState(true)
   const [isSaving, setIsSaving] = useState(false)
+  const [dirty, setDirty] = useState(false)
+  const [loadError, setLoadError] = useState(false)
+  const [loadAttempt, setLoadAttempt] = useState(0)
   const [errors, setErrors] = useState<Record<string, string>>({})
+
+  useEffect(() => {
+    if (!dirty) return
+    const preventLoss = (event: BeforeUnloadEvent) => { event.preventDefault(); event.returnValue = '' }
+    window.addEventListener('beforeunload', preventLoss)
+    return () => window.removeEventListener('beforeunload', preventLoss)
+  }, [dirty])
 
   useEffect(() => {
     let cancelled = false
     async function load() {
+      setIsLoading(true); setLoadError(false)
       try {
         const res = await api.get<{ data: FounderProfile }>("/member/founder-profile")
         if (!cancelled && res?.data) {
-          setProfile(normalizeProfile(res.data))
+          setProfile(normalizeProfile(res.data)); setDirty(false)
         }
       } catch (err) {
         if (err instanceof ApiError && err.status === 404) {
           // No profile yet — keep blank form
         } else if (!cancelled) {
-          toast(copy.loadError, "error")
+          setLoadError(true)
         }
       } finally {
         if (!cancelled) setIsLoading(false)
@@ -233,10 +248,11 @@ export default function ProfilePage() {
     }
     load()
     return () => { cancelled = true }
-  }, [copy.loadError, toast])
+  }, [loadAttempt])
 
   const updateField = useCallback(
     <K extends keyof FounderProfile>(field: K, value: FounderProfile[K]) => {
+      setDirty(true)
       setProfile((prev) => ({ ...prev, [field]: value }))
       setErrors((prev) => {
         if (!prev[field as string]) return prev
@@ -251,22 +267,26 @@ export default function ProfilePage() {
   const addNeed = useCallback(() => {
     const v = needInput.trim()
     if (!v) return
+    setDirty(true)
     setProfile((p) => ({ ...p, needs: [...(p.needs ?? []), v] }))
     setNeedInput("")
   }, [needInput])
 
   const removeNeed = useCallback((value: string) => {
+    setDirty(true)
     setProfile((p) => ({ ...p, needs: (p.needs ?? []).filter((n) => n !== value) }))
   }, [])
 
   const addOffer = useCallback(() => {
     const v = offerInput.trim()
     if (!v) return
+    setDirty(true)
     setProfile((p) => ({ ...p, offers: [...(p.offers ?? []), v] }))
     setOfferInput("")
   }, [offerInput])
 
   const removeOffer = useCallback((value: string) => {
+    setDirty(true)
     setProfile((p) => ({ ...p, offers: (p.offers ?? []).filter((o) => o !== value) }))
   }, [])
 
@@ -296,7 +316,7 @@ export default function ProfilePage() {
         "/member/founder-profile",
         payload
       )
-      setProfile(normalizeProfile(res.data))
+      setProfile(normalizeProfile(res.data)); setDirty(false)
       toast(res.message ?? copy.saveSuccess, "success")
       return true
     } catch (err) {
@@ -334,14 +354,17 @@ export default function ProfilePage() {
     )
   }
 
+  if (loadError) return <section role="alert" className="rounded-2xl border border-amber-200 bg-amber-50 p-6"><h1 className="text-xl font-bold">{locale === 'ar' ? 'تعذر تحميل ملفك' : 'Your profile could not be loaded'}</h1><p className="mt-3 text-sm leading-7">{locale === 'ar' ? 'أعد المحاولة لتحميل بياناتك الحالية قبل إجراء أي تعديل.' : 'Try again to load your current information before making changes.'}</p><button onClick={()=>setLoadAttempt(n=>n+1)} className="mt-4 min-h-11 rounded-xl bg-indigo-600 px-5 text-sm font-bold text-white">{locale === 'ar' ? 'إعادة المحاولة' : 'Try again'}</button></section>
+
   return (
     <div className="max-w-3xl mx-auto space-y-6">
       <section className="rounded-2xl border border-indigo-100 bg-indigo-50 p-5 sm:p-7">
         <div className="flex flex-wrap items-start justify-between gap-4"><div><p className="text-xs font-bold text-indigo-600">{locale === 'ar' ? 'مساحتك في وصول' : 'YOUR WOSOOL PROFILE'}</p><h1 className="mt-2 text-2xl font-bold text-slate-950">{profile.display_name || (locale === 'ar' ? 'ملفي الشخصي' : 'My founder profile')}</h1><p className="mt-2 text-sm leading-7 text-slate-600">{locale === 'ar' ? 'راجع بياناتك، عرّف المجتمع بخبراتك، وحدد ما تبحث عنه وما يمكنك تقديمه.' : 'Review your information, share your expertise, and tell the community what you need and can offer.'}</p></div>{profile.slug && <Link className="inline-flex min-h-11 items-center rounded-xl border border-indigo-200 bg-white px-4 text-sm font-semibold text-indigo-700" href={`/founders/${profile.slug}`}>{locale === 'ar' ? 'عرض الملف العام' : 'View public profile'}</Link>}</div>
-        <div className="mt-5"><div className="flex justify-between text-xs font-semibold text-indigo-900"><span>{locale === 'ar' ? 'اكتمال الملف' : 'Profile completeness'}</span><span>{Math.round([profile.display_name, profile.position, profile.bio, profile.location, profile.sector, profile.avatar_url, (profile.needs?.length ?? 0) > 0, (profile.offers?.length ?? 0) > 0].filter(Boolean).length / 8 * 100)}%</span></div><progress aria-label={locale === 'ar' ? 'اكتمال الملف' : 'Profile completeness'} max={8} value={[profile.display_name, profile.position, profile.bio, profile.location, profile.sector, profile.avatar_url, (profile.needs?.length ?? 0) > 0, (profile.offers?.length ?? 0) > 0].filter(Boolean).length} className="mt-2 h-2 w-full accent-indigo-600" /></div>
+        <div className="mt-5"><div className="flex justify-between text-xs font-semibold text-indigo-900"><span>{locale === 'ar' ? 'اكتمال الملف' : 'Profile completeness'}</span><span>{profileCompletion(profile)}%</span></div><progress aria-label={locale === 'ar' ? 'اكتمال الملف' : 'Profile completeness'} max={100} value={profileCompletion(profile)} className="mt-2 h-2 w-full accent-indigo-600" /></div>
         <div className="mt-4 flex flex-wrap gap-4 text-sm font-semibold text-indigo-700"><Link className="min-h-11 inline-flex items-center underline" href="/dashboard/company">{locale === 'ar' ? 'إدارة الشركة' : 'Manage company'}</Link><Link className="min-h-11 inline-flex items-center underline" href="/dashboard/messages">{locale === 'ar' ? 'محادثاتي' : 'My conversations'}</Link></div>
       </section>
-      <SectionCard icon={User} badge={locale === 'ar' ? 'الهوية والظهور' : 'Identity & visibility'} title={locale === 'ar' ? 'كيف يراك المجتمع' : 'How the community sees you'}>
+      <nav aria-label={locale === 'ar' ? 'أقسام تعديل الملف' : 'Profile editing sections'} className="flex flex-wrap gap-2">{[['identity',locale === 'ar' ? 'الهوية والظهور' : 'Identity & visibility'],['personal',locale === 'ar' ? 'المعلومات والروابط' : 'Information & links'],['background',locale === 'ar' ? 'الخبرات' : 'Background'],['matching',locale === 'ar' ? 'التعاون' : 'Collaboration']].map(([id,label])=><a key={id} href={`#edit-${id}`} className="inline-flex min-h-11 items-center rounded-xl border border-slate-200 bg-white px-4 text-xs font-bold text-slate-600 hover:border-indigo-400">{label}</a>)}</nav>
+      <SectionCard id="edit-identity" icon={User} badge={locale === 'ar' ? 'الهوية والظهور' : 'Identity & visibility'} title={locale === 'ar' ? 'كيف يراك المجتمع' : 'How the community sees you'}>
         <FieldGroup><Field label={locale === 'ar' ? 'الاسم المعروض' : 'Display name'} error={errors.display_name}><input maxLength={255} value={profile.display_name ?? ''} onChange={e => updateField('display_name', e.target.value)} className={inputClass} /></Field><Field label={locale === 'ar' ? 'المنصب' : 'Position'} error={errors.position}><input maxLength={255} value={profile.position ?? ''} onChange={e => updateField('position', e.target.value)} className={inputClass} /></Field></FieldGroup>
         <Field label={locale === 'ar' ? 'رابط صورة الملف' : 'Profile photo URL'} error={errors.avatar_url}><input type="text" inputMode="url" maxLength={500} placeholder="https://" value={profile.avatar_url ?? ''} onChange={e => updateField('avatar_url', e.target.value)} className={inputClass} /></Field>
         <FieldGroup><Field label={locale === 'ar' ? 'رمز الدولة' : 'Country code'} error={errors.country_code}><input maxLength={2} placeholder="SA" value={profile.country_code ?? ''} onChange={e => updateField('country_code', e.target.value.toUpperCase())} className={inputClass} /></Field><Field label={locale === 'ar' ? 'المهارات — افصل بينها بفاصلة' : 'Skills — separated by commas'} error={errors.skills}><input value={(profile.skills ?? []).join(', ')} onChange={e => updateField('skills', e.target.value.split(/[,،]/).map(x => x.trim()))} className={inputClass} /></Field></FieldGroup>
@@ -439,6 +462,7 @@ export default function ProfilePage() {
 
       {/* ── Personal info ── */}
       <SectionCard
+        id="edit-personal"
         icon={User}
         badge={locale === "ar" ? "الخطوة 1" : "Step 1"}
         title={copy.personalInfo}
@@ -513,6 +537,7 @@ export default function ProfilePage() {
 
       {/* ── Professional background ── */}
       <SectionCard
+        id="edit-background"
         icon={Briefcase}
         badge={locale === "ar" ? "الخلفية المهنية" : "Background"}
         title={copy.professionalBackground}
@@ -567,6 +592,7 @@ export default function ProfilePage() {
 
       {/* ── Needs & Offers ── */}
       <SectionCard
+        id="edit-matching"
         icon={Sparkles}
         badge={locale === "ar" ? "شبكة التوافق" : "Network Matching"}
         title={copy.needsOffers}
@@ -642,7 +668,7 @@ export default function ProfilePage() {
 
       {/* ── Save bar ── */}
       <div
-        className="bg-white/95 backdrop-blur-sm border border-slate-200/80 rounded-2xl px-4 sm:px-6 py-4 flex flex-wrap items-center justify-between gap-4"
+        className="sticky bottom-3 z-20 bg-white/95 backdrop-blur-sm border border-slate-200/80 rounded-2xl px-4 sm:px-6 py-4 flex flex-wrap items-center justify-between gap-4"
         style={{ boxShadow: "0 4px 24px -4px rgba(59,82,212,0.08)" }}
       >
         {isOnboarding ? (
@@ -653,7 +679,7 @@ export default function ProfilePage() {
           </p>
         ) : (
           <p className="text-xs text-slate-400 font-medium">
-            {locale === "ar" ? "جميع التغييرات تظهر مباشرة في الشبكة" : "Changes are visible across the network"}
+            {dirty ? (locale === "ar" ? "لديك تغييرات غير محفوظة" : "You have unsaved changes") : (locale === "ar" ? "احفظ بعد تعديل بياناتك لتحديث الملف." : "Save after editing to update your profile.")}
           </p>
         )}
 

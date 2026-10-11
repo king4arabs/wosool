@@ -5,6 +5,8 @@ import { RefreshCw } from "lucide-react"
 import type { Scorecard } from "@/types/platform"
 import type { DashboardLocale } from "@/lib/dashboard-i18n"
 import { dashboardDictionary } from "@/lib/dashboard-i18n"
+import { api } from "@/lib/api"
+import { parseScorecard } from "@/types/platform"
 
 interface ScorecardWidgetProps {
   initialScorecard: Scorecard | null
@@ -31,14 +33,8 @@ export default function ScorecardWidget({ initialScorecard, locale }: ScorecardW
     setIsLoading(true)
     setError(null)
     try {
-      const response = await fetch("/api/v1/member/scorecard/recalculate", {
-        method: "POST",
-        credentials: "include",
-        headers: { Accept: "application/json", "X-Locale": locale },
-      })
-      const payload = await response.json().catch(() => null)
-      if (!response.ok) throw new Error(payload?.message || copy.recalculateFailed)
-      const next = payload?.data as Scorecard | undefined
+      const payload = await api.post<{data: unknown}>("/member/scorecard/recalculate", undefined, {headers: {"X-Locale": locale}})
+      const next = parseScorecard(payload.data)
       if (!next) throw new Error(copy.invalidResponse)
       setScorecard(next)
     } catch (err) {

@@ -55,6 +55,7 @@ class DashboardController extends Controller
             'application_pipeline' => [
                 'submitted' => Application::where('status', 'submitted')->count(),
                 'reviewing' => Application::where('status', 'reviewing')->count(),
+                'request_more_info' => Application::where('status', 'request_more_info')->count(),
                 'approved' => Application::where('status', 'approved')->count(),
                 'rejected' => Application::where('status', 'rejected')->count(),
                 'waitlisted' => Application::where('status', 'waitlisted')->count(),

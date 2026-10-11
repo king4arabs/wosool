@@ -17,6 +17,7 @@ import {
   Star,
   Users,
 } from "lucide-react"
+import { summarizeApplicationPipeline } from "@/lib/admin-overview"
 import { api } from "@/lib/api"
 import { type AdminDashboardResponse, formatDate } from "@/lib/admin"
 import { useLocale } from "@/lib/locale"
@@ -118,13 +119,15 @@ export default function AdminPage() {
   const [dashboard, setDashboard] = useState<AdminDashboardResponse | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
+  const [actionSearch, setActionSearch] = useState("")
+  const [updatedAt, setUpdatedAt] = useState<Date | null>(null)
 
   const load = useCallback(async (signal?: AbortSignal) => {
     setLoading(true)
     setError(null)
     try {
       const response = await api.get<AdminDashboardResponse>("/admin/dashboard", { signal })
-      if (!signal?.aborted) setDashboard(response)
+      if (!signal?.aborted) { setDashboard(response); setUpdatedAt(new Date()) }
     } catch (loadError) {
       if (!signal?.aborted) setError(loadError instanceof Error ? loadError.message : "Unable to load dashboard.")
     } finally {
@@ -145,11 +148,10 @@ export default function AdminPage() {
     { label: t.stats.events, value: dashboard.stats.events_this_month, detail: t.stats.month, icon: CalendarDays, accent: "bg-[var(--brand-orange)]" },
   ] : []
 
-  const pipeline = useMemo(
-    () => Object.entries(dashboard?.application_pipeline ?? {}).sort(([, a], [, b]) => b - a),
-    [dashboard?.application_pipeline],
-  )
-  const pipelineTotal = pipeline.reduce((sum, [, value]) => sum + value, 0)
+  const summary = useMemo(() => summarizeApplicationPipeline(dashboard?.application_pipeline), [dashboard?.application_pipeline])
+  const pipeline = summary.entries
+  const pipelineTotal = summary.total
+  const visibleActions = quickActions.filter(action => `${action.ar} ${action.en}`.toLowerCase().includes(actionSearch.trim().toLowerCase()))
 
   return (
     <div className="space-y-7">
@@ -159,7 +161,7 @@ export default function AdminPage() {
           <div className="max-w-3xl">
             <p className="text-xs font-extrabold uppercase tracking-[.18em] text-[var(--brand-light-blue)]">{t.eyebrow}</p>
             <h2 className="mt-3 text-3xl font-extrabold leading-tight sm:text-4xl">{t.title}</h2>
-            <p className="mt-4 text-sm leading-8 text-white/72 sm:text-base">{t.description}</p>
+            <p className="mt-4 text-sm leading-8 text-white/72 sm:text-base">{t.description}</p>{updatedAt && <p className="mt-3 text-xs text-indigo-200">{ar ? "آخر تحديث: " : "Last refreshed: "}{updatedAt.toLocaleTimeString(ar ? "ar-SA" : "en-GB", {hour:"2-digit", minute:"2-digit", timeZone:"Asia/Riyadh"})} · {ar ? "الرياض" : "Riyadh"}</p>}
           </div>
           <Button type="button" variant="outline" className="min-h-12 border-white/25 bg-white/10 font-bold text-white hover:bg-white hover:text-[var(--brand-navy)]" disabled={loading} onClick={() => void load()}>
             {loading ? <Clock3 className="h-4 w-4 animate-spin motion-reduce:animate-none" /> : <CheckCircle2 className="h-4 w-4" />}
@@ -177,9 +179,14 @@ export default function AdminPage() {
         </div>
       )}
 
-      <Link href="/admin/founders" className="flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-indigo-200 bg-indigo-50 p-5 text-indigo-950">
-        <div><h2 className="font-bold">{locale === 'ar' ? 'تفعيل ملفات المؤسسين' : 'Founder activation'}</h2><p className="mt-1 text-sm">{dashboard?.stats.unclaimed_founders ?? 0} {locale === 'ar' ? 'ملف بانتظار التفعيل' : 'unclaimed profiles'} · {dashboard?.stats.pending_founder_invitations ?? 0} {locale === 'ar' ? 'دعوة سارية' : 'open invitations'}</p></div><span className="text-sm font-semibold underline">{locale === 'ar' ? 'إدارة الملفات والدعوات' : 'Manage profiles and invitations'}</span>
-      </Link>
+      <section aria-labelledby="admin-priorities" className="rounded-3xl border border-slate-200 bg-white p-5 sm:p-6">
+        <div className="flex flex-wrap items-center justify-between gap-3"><div><p className="text-xs font-bold tracking-widest text-indigo-600">{ar ? 'الخطوة التالية' : 'NEXT TO ACTION'}</p><h2 id="admin-priorities" className="mt-2 text-xl font-bold text-slate-950">{ar ? 'ما يحتاج انتباهك' : 'Needs your attention'}</h2></div><p className="text-xs leading-6 text-slate-500">{ar ? 'ابدأ بالطلبات الأقدم، ثم تابع تفعيل المؤسسين.' : 'Start with older applications, then follow up on founder activation.'}</p></div>
+        <div className="mt-5 grid gap-3 md:grid-cols-3">{[
+          {href:'/admin/members',count:dashboard ? summary.overdue : '—',title:ar?'طلبات تجاوزت 14 يوماً':'Applications older than 14 days',body:ar?'طلبات جديدة أو قيد المراجعة تحتاج متابعة.':'Submitted or reviewing applications needing follow-up.',tone:'bg-amber-50 text-amber-950 border-amber-100'},
+          {href:'/admin/founders',count:dashboard?.stats.unclaimed_founders ?? '—',title:ar?'ملفات بانتظار التفعيل':'Profiles awaiting activation',body:ar?'تحقق من المستلم وأرسل دعوة شخصية.':'Verify the recipient and send a personal invitation.',tone:'bg-indigo-50 text-indigo-950 border-indigo-100'},
+          {href:'/admin/founders',count:dashboard?.stats.pending_founder_invitations ?? '—',title:ar?'دعوات سارية':'Open founder invitations',body:ar?'راجع الدعوات التي لم تنته صلاحيتها بعد.':'Review invitations that have not yet expired.',tone:'bg-emerald-50 text-emerald-950 border-emerald-100'},
+        ].map(item=><Link key={item.title} href={item.href} className={`rounded-2xl border p-5 transition hover:border-indigo-400 ${item.tone}`}><div className="flex justify-between gap-3"><strong className="text-3xl font-bold">{item.count}</strong><ArrowUpRight size={18}/></div><h3 className="mt-3 text-sm font-bold">{item.title}</h3><p className="mt-2 text-xs leading-6 opacity-75">{item.body}</p></Link>)}</div>
+      </section>
       <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4" aria-label={ar ? "مؤشرات المنصة" : "Platform metrics"}>
         {stats.map(({ label, value, detail, icon: Icon, accent }) => (
           <article key={label} className="group relative overflow-hidden rounded-[var(--radius-card)] border border-[var(--border-soft)] bg-[var(--surface)] p-5 shadow-[var(--shadow-card)] transition-transform hover:-translate-y-1 motion-reduce:transform-none">
@@ -201,22 +208,24 @@ export default function AdminPage() {
             <strong className="rounded-full bg-[var(--surface-blue)] px-4 py-2 text-sm text-[var(--action-bg)]" dir="ltr">{pipelineTotal}</strong>
           </div>
           <div className="mt-7 space-y-4">
-            {pipeline.length ? pipeline.map(([status, value]) => {
-              const percent = pipelineTotal ? Math.max(4, Math.round((value / pipelineTotal) * 100)) : 0
+            {dashboard && pipelineTotal > 0 ? pipeline.map(([status, value]) => {
+              const percent = pipelineTotal ? Math.round((value / pipelineTotal) * 100) : 0
               return (
                 <div key={status}>
                   <div className="mb-2 flex items-center justify-between gap-3 text-xs font-bold"><span>{statusCopy[status]?.[locale] ?? status.replaceAll("_", " ")}</span><span dir="ltr">{value}</span></div>
                   <div className="h-2 overflow-hidden rounded-full bg-[var(--surface-soft)]"><div className="h-full rounded-full bg-[var(--action-bg)]" style={{ width: `${percent}%` }} /></div>
                 </div>
               )
-            }) : <p className="text-sm text-[var(--text-muted)]">{t.noApplications}</p>}
+            }) : <p className="text-sm text-[var(--text-muted)]">{dashboard ? t.noApplications : t.loading}</p>}
           </div>
         </section>
 
         <section className="rounded-[var(--radius-card)] border border-[var(--border-soft)] bg-[var(--surface)] p-5 shadow-[var(--shadow-card)] sm:p-6">
           <h3 className="text-xl font-extrabold text-[var(--text-strong)]">{t.actions}</h3>
+          <label className="mt-4 block text-xs font-semibold text-slate-600">{ar ? "البحث في الإجراءات" : "Find an action"}<input type="search" value={actionSearch} onChange={event=>setActionSearch(event.target.value)} placeholder={ar ? "الطلبات، الشركات، الفعاليات…" : "Applications, companies, events…"} className="mt-2 min-h-11 w-full rounded-xl border border-slate-200 px-3 text-sm"/></label>
+          {!visibleActions.length && <p role="status" className="mt-4 text-sm text-slate-500">{ar ? "لا توجد إجراءات مطابقة." : "No matching actions."}</p>}
           <div className="mt-5 grid grid-cols-2 gap-3">
-            {quickActions.map(({ icon: Icon, ar: arLabel, en, href }) => (
+            {visibleActions.map(({ icon: Icon, ar: arLabel, en, href }) => (
               <Link key={href} href={href} className="group flex min-h-28 flex-col justify-between rounded-2xl border border-[var(--border-soft)] bg-[var(--surface-soft)] p-4 font-bold text-[var(--text)] transition-colors hover:border-[var(--action-bg)] hover:bg-[var(--surface-blue)]">
                 <Icon className="h-5 w-5 text-[var(--action-bg)]" aria-hidden="true" /><span className="flex items-end justify-between gap-2 text-xs leading-5">{ar ? arLabel : en}<ArrowUpRight className="h-3.5 w-3.5 opacity-55 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5 rtl:group-hover:-translate-x-0.5 motion-reduce:transform-none" /></span>
               </Link>
@@ -232,7 +241,7 @@ export default function AdminPage() {
             <Link href="/admin/members" className="inline-flex min-h-11 items-center gap-2 text-sm font-bold text-[var(--action-bg)] hover:underline">{t.viewAll}<ArrowUpRight className="h-4 w-4" /></Link>
           </div>
           <div className="divide-y divide-[var(--border-soft)]">
-            {dashboard && !dashboard.recent_applications.length && <p className="p-6 text-sm text-[var(--text-muted)]">{t.noApplications}</p>}
+            {dashboard && !dashboard.recent_applications.length && <p className="p-6 text-sm text-[var(--text-muted)]">{dashboard ? t.noApplications : t.loading}</p>}
             {dashboard?.recent_applications.map((application) => (
               <article key={application.id} className="grid gap-4 p-5 transition-colors hover:bg-[var(--surface-soft)] sm:grid-cols-[1fr_auto] sm:items-center sm:px-6">
                 <div className="min-w-0"><Link href="/admin/members" className="font-extrabold text-[var(--text-strong)] hover:text-[var(--action-bg)]">{application.full_name}</Link><p className="mt-1 truncate text-xs text-[var(--text-muted)]">{application.company_name || t.independent} · {application.sector || "—"} · {application.stage || "—"}</p></div>

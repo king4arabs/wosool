@@ -65,6 +65,7 @@ export interface ApiCompany {
 }
 
 export interface ApiFounder {
+  skills?: string[] | null
   activation_status?: "active" | "unclaimed" | "suspended"
   can_communicate?: boolean
   source_urls?: string[]
