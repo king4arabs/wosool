@@ -6,6 +6,7 @@ import { EoaPrivacy } from './Privacy'
 import { EoaContact } from './Contact'
 import { EoaLeadership } from './Leadership'
 import { EoaMentors } from './Mentors'
+import { EoGlobalNetwork } from './GlobalNetwork'
 import { EoaProgramDetails } from './EoaProgramDetails'
 import { Eligibility } from './Eligibility'
 import { Notice, PartnerStrip, useEoaProgram } from './Shared'
@@ -138,7 +139,10 @@ export function EoaContent({ section }: { section: string }) {
           </div>
         )}
         {section === 'leadership' && <EoaLeadership program={program} ar={ar} />}
-        {section === 'mentors' && <EoaMentors key={ar ? "ar" : "en"} mentors={program?.mentors ?? []} ar={ar} loading={!program && !failed} failed={failed} retry={retry} />}
+        {section === 'mentors' && <>
+          <EoGlobalNetwork key={ar ? "ar" : "en"} ar={ar} />
+          {!!program?.mentors?.length && <EoaMentors mentors={program.mentors} ar={ar} />}
+        </>}
         {section === 'faq' && <EoaProgramDetails program={program} section="faq" />}
         {section === 'partners' && <EoaProgramDetails program={program} section="operator" />}
         {section === 'partners' && (
