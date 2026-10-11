@@ -15,6 +15,8 @@ import {
 } from '@/lib/eoa'
 import { Field, Notice } from './Shared'
 import { RoleManager } from './RoleManager'
+import { BoardManager } from './BoardManager'
+import { EoaEditorialManager } from './EoaEditorialManager'
 import { TrackManager } from './TrackManager'
 import type { EoaTrack } from '@/lib/eoa'
 
@@ -206,6 +208,8 @@ function AdminSession() {
                       ['program', ar ? 'التشغيل' : 'Operations'],
                       ['enrollment', ar ? 'المشاركون' : 'Participants'],
                       ['partners', ar ? 'الشركاء' : 'Partners'],
+                      ['board', ar ? 'مجلس الإدارة' : 'Board members'],
+                      ...(review.capabilities.lead ? [['editorial', ar ? 'محتوى الصفحة' : 'Page content']] : []),
                       ['settings', ar ? 'الإعدادات' : 'Settings'],
                       ['inquiries', ar ? 'الاستفسارات' : 'Inquiries'],
                       ['report', ar ? 'التقارير والسجل' : 'Reports & audit'],
@@ -230,6 +234,8 @@ function AdminSession() {
             {tab === 'tracks' && ops && review.capabilities.lead && (
               <TrackManager tracks={ops.tracks} reload={load} />
             )}
+            {tab === 'board' && ops && <BoardManager lead={review.capabilities.lead} />}
+            {tab === 'editorial' && ops && review.capabilities.lead && <EoaEditorialManager ar={ar} organizations={ops.organizations} onSaved={load} />}
             {tab === 'applications' && (
               <div className="eoa-admin-grid">
                 <div className="eoa-card">

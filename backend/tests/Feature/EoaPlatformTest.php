@@ -145,8 +145,11 @@ class EoaPlatformTest extends TestCase
     public function test_public_partner_and_program_privacy_and_repeatable_import(): void
     {
         $this->getJson('/api/v1/eoa/program')->assertOk()->assertJsonCount(0, 'data.partners')->assertJsonPath('data.facts.annual_global_fee_usd', 1750);
+        $expectedSlugs = array_column(json_decode(file_get_contents(database_path('data/eoa-organizations.json')), true, 512, JSON_THROW_ON_ERROR), 'slug');
+        $originalOrganizations = DB::table('ecosystem_organizations')->orderBy('slug')->pluck('id', 'slug')->all();
+        $this->assertEqualsCanonicalizing($expectedSlugs, array_keys($originalOrganizations));
         $this->artisan('eoa:install')->assertSuccessful();
-        $this->assertDatabaseCount('ecosystem_organizations', 7);
+        $this->assertSame($originalOrganizations, DB::table('ecosystem_organizations')->orderBy('slug')->pluck('id', 'slug')->all());
         $p = ProgramService::program();
         $p->update(['settings' => ['eoa' => ['approval_reference' => 'PRIVATE APPROVAL']]]);
         $p->resources()->create(['title' => 'Confidential', 'url' => 'https://example.com/private']);

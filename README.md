@@ -37,10 +37,22 @@ The latest product and brand upgrade includes:
 - **World-class directory browsing:** equal-height responsive cards, controlled two-row browsing, pagination, search, RTL/LTR-aware controls, and no forced autoplay.
 - **Reviewed founder introductions:** authenticated members can discover approved founders, state the purpose and intended value of a connection, submit through the established introduction API, and track the request.
 - **Administration command center:** API-backed operational metrics and grouped navigation for community, operations, growth/content, EO Riyadh Accelerator, privacy, and system settings.
-- **Enhanced EO Riyadh Accelerator experience:** stronger founder-led positioning, premium hero presentation, expandable Cash/Strategy/People/Execution pillars, clearer application journey, and canonical lowercase `/eoa` links.
+- **EO Riyadh Accelerator:** licensed Riyadh skyline video with a static reduced-motion poster, official EO palette, supplied EO Riyadh logo, nine-stage growth journey, and verified program information.
+- **2026/27 EO Riyadh board:** 11 original poster portraits with researched company/profile links, accessible rightward carousel, and API-backed ordering, terms, publishing and secure portrait management.
+- **Editorial operations:** bilingual operator content and FAQs with draft/published snapshots, stale-save protection, partner details, and audit history.
 - **Reliability guardrails:** no fictional metrics, partners, founders, revenue, or affiliations; private contact and financial records remain protected; official EO and EO Riyadh artwork remains separate from Wosool artwork.
 
 See [CHANGELOG.md](CHANGELOG.md) for release history and verified implementation details.
+
+## EO Riyadh Accelerator preview
+
+Local production-build screenshots with the seeded Laravel API (not a claim of live deployment):
+
+![EO Riyadh Accelerator desktop](docs/screenshots/eoa-en-desktop.jpg)
+
+![EO Riyadh Board 2026/27](docs/screenshots/eoa-board-desktop.jpg)
+
+[Arabic desktop](docs/screenshots/eoa-ar-desktop.jpg) · [Arabic mobile](docs/screenshots/eoa-ar-mobile.jpg) · [English mobile](docs/screenshots/eoa-en-mobile.jpg)
 
 ## Platform capabilities
 
@@ -63,7 +75,7 @@ See [CHANGELOG.md](CHANGELOG.md) for release history and verified implementation
 | EOA operations | `/eoa/admin` | Scoped Accelerator review and operations |
 | Ecosystem directory | `/opportunities` | Sourced ecosystem entities and opportunities, not implied partnerships |
 
-Legacy `/EOA` and `/accelerator` links are redirected to the canonical lowercase `/eoa` experience. The physical Next.js route tree remains under `frontend/src/app/EOA` for compatibility with the established application structure.
+Legacy `/EOA` and `/accelerator` links are redirected to the canonical lowercase `/eoa` experience. The physical Next.js route tree is `frontend/src/app/eoa`.
 
 ## Architecture
 
@@ -73,7 +85,7 @@ Legacy `/EOA` and `/accelerator` links are redirected to the canonical lowercase
 | Backend | Laravel 13, PHP 8.3+, Sanctum cookie sessions, Spatie roles and permissions |
 | Database | SQLite for local development/tests; verify and preserve the configured production database engine |
 | API | Same-origin browser access through `/api/v1`, server-side authorization, validation, CSRF protection, rate limits, and resources |
-| EOA routes | `frontend/src/app/EOA`, `frontend/src/components/eoa`, `backend/routes/eoa.php` |
+| EOA routes | `frontend/src/app/eoa`, `frontend/src/components/eoa`, `backend/routes/eoa.php` |
 | EOA domain | `backend/app/Services/Eoa`, `backend/app/Http/Controllers/Api/Eoa` |
 | Ecosystem records | `/opportunities`, `ecosystem_records`, and the source ledger under `docs/research` |
 | CI | Frontend lint, types, tests, data validation, dependency audit, build; backend syntax, tests, audits, and build |
@@ -263,7 +275,7 @@ CI currently covers:
 
 Follow [DEPLOYMENT.md](DEPLOYMENT.md) and [EOA operations](docs/EOA.md) for deployment, backups, restore rehearsal, migrations, queues, mail, rollback, and smoke tests. Keep EOA intake closed until approvals and live checks pass.
 
-Remaining external dependencies include configured hosting/deployment access, production database validation, persistent private storage, real email, supervised workers, approved partner/program decisions, licensed or approved Riyadh media, browser RTL/LTR/mobile acceptance, and backup recovery tests. No payment gateway, EO enrollment API, or production deployment is simulated.
+Remaining external dependencies include configured hosting/deployment access, production database validation, persistent private storage, real email, supervised workers, approved partner/program decisions, deployed browser acceptance, and backup recovery tests. No payment gateway, EO enrollment API, or production deployment is simulated.
 
 ## Documentation
 
@@ -278,6 +290,9 @@ Remaining external dependencies include configured hosting/deployment access, pr
 | [Deployment](DEPLOYMENT.md) | Hosting, release, backup, and rollback procedures |
 | [Security policy](SECURITY.md) | Private reporting and operating controls |
 | [EOA research](docs/EOA-RESEARCH.md) | Official program facts and source notes |
+| [EOA board release](docs/EOA-BOARD-RELEASE-2026-10-11.md) | Board management, editorial workflow, local checks and deployment status |
+| [Board research](docs/research/EO-RIYADH-BOARD-2026-27.md) | Portrait mapping, professional sources and unresolved entries |
+| [EOA media and sources](docs/research/EOA-SOURCES-2026-10-11.md) | Skyline license, original logos and current official program facts |
 | [Partner assets](docs/research/PARTNER-ASSETS.md) | Artwork provenance and approval constraints |
 | [Reliability release notes](docs/WOSOOL-RELIABILITY-EOA-2026-10-09.md) | October 9 reliability, tracks, and role changes |
 | [Integration release notes](docs/EOA-INTEGRATION-2026-10-09.md) | Canonical EOA migration and legacy compatibility |

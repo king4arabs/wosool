@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\Eoa;
 use App\Http\Controllers\Controller;
 use App\Models\AdminAction;
 use App\Models\ContactMessage;
+use App\Models\Program;
 use App\Models\ProgramProgress;
 use App\Models\User;
 use App\Services\Eoa\Access;
@@ -62,13 +63,77 @@ class OperationsController extends Controller
         }
         $p = ProgramService::program();
         DB::transaction(function () use ($request, $p, $data) {
+            $p = Program::whereKey($p->id)->lockForUpdate()->firstOrFail();
             $before = ProgramService::settings($p);
             $p->update(['is_open' => $data['is_open'], 'starts_at' => $data['starts_at'] ?? null, 'application_deadline' => $data['application_deadline'] ?? null,
-                'settings' => array_replace($p->settings ?? [], ['eoa' => array_diff_key($data, array_flip(['is_open', 'starts_at', 'application_deadline']))])]);
+                'settings' => array_replace($p->settings ?? [], ['eoa' => array_replace($p->settings['eoa'] ?? [], array_diff_key($data, array_flip(['is_open', 'starts_at', 'application_deadline'])))])]);
             AdminAction::log($request->user()->id, 'eoa.settings', 'program', $p->id, null, $before, ProgramService::settings($p));
         });
 
         return response()->json(['message' => 'Program settings saved.']);
+    }
+
+    public function editorial(Request $request)
+    {
+        abort_unless(Access::lead($request->user()), 403);
+        $settings = ProgramService::settings(ProgramService::program());
+
+        return response()->json([
+            'data' => $settings['editorial'] ?? ['version' => 0, 'status' => 'draft', 'source_reference' => '', 'operator' => ['name_en' => 'LAMARKA', 'name_ar' => 'لاماركا', 'description_en' => '', 'description_ar' => '', 'website' => null, 'visible' => false], 'faqs' => []],
+            'published_at' => $settings['editorial_published']['updated_at'] ?? null,
+            'partner_roles' => (object) ($settings['partner_roles'] ?? []),
+        ]);
+    }
+
+    public function saveEditorial(Request $request)
+    {
+        abort_unless(Access::lead($request->user()), 403);
+        $rules = [
+            'version' => 'required|integer|min:0',
+            'action' => 'required|in:draft,publish,unpublish',
+            'source_reference' => 'required_if:action,publish|nullable|string|max:2000',
+            'operator' => 'required|array:name_en,name_ar,description_en,description_ar,website,visible',
+            'operator.name_en' => 'nullable|string|max:255', 'operator.name_ar' => 'nullable|string|max:255',
+            'operator.description_en' => 'nullable|string|max:3000', 'operator.description_ar' => 'nullable|string|max:3000',
+            'operator.website' => 'nullable|url:https|max:255', 'operator.visible' => 'required|boolean',
+            'faqs' => 'present|array|max:30',
+            'faqs.*' => 'required|array:question_en,question_ar,answer_en,answer_ar,visible',
+            'faqs.*.question_en' => 'required|string|max:300', 'faqs.*.question_ar' => 'required|string|max:300',
+            'faqs.*.answer_en' => 'required|string|max:3000', 'faqs.*.answer_ar' => 'required|string|max:3000',
+            'faqs.*.visible' => 'required|boolean',
+        ];
+        if ($request->input('action') === 'unpublish') {
+            $rules = array_intersect_key($rules, array_flip(['version', 'action']));
+        }
+        $data = $request->validate($rules);
+        if ($data['action'] === 'publish' && $data['operator']['visible']) {
+            $request->validate([
+                'operator.name_en' => 'required|string', 'operator.name_ar' => 'required|string',
+                'operator.description_en' => 'required|string', 'operator.description_ar' => 'required|string',
+                'operator.website' => 'required|url:https',
+            ]);
+        }
+
+        return DB::transaction(function () use ($request, $data) {
+            $program = Program::where('slug', ProgramService::SLUG)->lockForUpdate()->firstOrFail();
+            $settings = $program->settings ?? [];
+            $before = $settings['eoa']['editorial'] ?? null;
+            abort_unless((int) ($before['version'] ?? 0) === $data['version'], 409, 'Content changed since you opened it. Reload before saving.');
+            $editorial = $data['action'] === 'unpublish' ? ($before ?? ['operator' => null, 'faqs' => []]) : array_diff_key($data, ['action' => true]);
+            $editorial['version'] = $data['version'] + 1;
+            $editorial['status'] = $data['action'] === 'publish' ? 'published' : 'draft';
+            $editorial['updated_at'] = now()->toIso8601String();
+            $settings['eoa']['editorial'] = $editorial;
+            if ($data['action'] === 'publish') {
+                $settings['eoa']['editorial_published'] = $editorial;
+            } elseif ($data['action'] === 'unpublish') {
+                unset($settings['eoa']['editorial_published']);
+            }
+            $program->update(['settings' => $settings]);
+            AdminAction::log($request->user()->id, 'eoa.editorial.'.$data['action'], 'program', $program->id, null, $before, $editorial);
+
+            return response()->json(['data' => $editorial, 'published_at' => $settings['eoa']['editorial_published']['updated_at'] ?? null, 'message' => 'Content saved.']);
+        });
     }
 
     public function create(Request $request, string $type, ?int $record = null)
@@ -168,12 +233,33 @@ class OperationsController extends Controller
     public function organization(Request $request, int $organization)
     {
         abort_unless(Access::lead($request->user()), 403);
-        $data = $request->validate(['relationship_status' => 'required|in:ecosystem,prospective,confirmed', 'relationship_evidence' => 'required_if:relationship_status,confirmed|nullable|string|max:2000']);
+        $data = $request->validate([
+            'relationship_status' => 'required|in:ecosystem,prospective,confirmed', 'relationship_evidence' => 'required_if:relationship_status,confirmed|nullable|string|max:2000',
+            'name_en' => 'sometimes|required|string|max:255', 'name_ar' => 'sometimes|required|string|max:255',
+            'support_en' => 'sometimes|required|string|max:3000', 'support_ar' => 'sometimes|required|string|max:3000',
+            'website' => 'sometimes|required|url:https|max:255', 'source_url' => 'sometimes|required|url:https|max:255',
+            'logo_source_url' => 'sometimes|nullable|url:https|max:2048',
+            'logo_path' => ['sometimes', 'nullable', 'string', 'max:255', function ($attribute, $value, $fail) {
+                if (! preg_match('~^/(?:partners|eoa)/[A-Za-z0-9][A-Za-z0-9/_-]*\.(?:png|jpg|jpeg|webp|svg)$~i', $value)) {
+                    $fail('Choose an existing image under /partners/ or /eoa/.');
+                }
+            }],
+            'partner_role' => 'sometimes|nullable|in:operator,enabler,supporter',
+            'sort_order' => 'sometimes|integer|min:0|max:10000',
+        ]);
         abort_unless(DB::table('ecosystem_organizations')->where('id', $organization)->exists(), 404);
         DB::transaction(function () use ($request, $organization, $data) {
-            $before = DB::table('ecosystem_organizations')->where('id', $organization)->first(['relationship_status']);
-            DB::table('ecosystem_organizations')->where('id', $organization)->update($data + ['updated_at' => now()]);
-            AdminAction::log($request->user()->id, 'eoa.partner_status', 'ecosystem_organization', $organization, null, (array) $before, ['relationship_status' => $data['relationship_status']]);
+            $program = Program::where('slug', ProgramService::SLUG)->lockForUpdate()->firstOrFail();
+            $before = DB::table('ecosystem_organizations')->where('id', $organization)->lockForUpdate()->first();
+            $settings = $program->settings ?? [];
+            if (array_key_exists('partner_role', $data)) {
+                if ($data['partner_role']) $settings['eoa']['partner_roles'][(string) $organization] = $data['partner_role'];
+                else unset($settings['eoa']['partner_roles'][(string) $organization]);
+                $program->update(['settings' => $settings]);
+            }
+            $updates = array_diff_key($data, ['partner_role' => true]);
+            DB::table('ecosystem_organizations')->where('id', $organization)->update($updates + ['updated_at' => now()]);
+            AdminAction::log($request->user()->id, 'eoa.partner_status', 'ecosystem_organization', $organization, null, (array) $before, $data);
         });
 
         return response()->json(['message' => 'Relationship status saved.']);

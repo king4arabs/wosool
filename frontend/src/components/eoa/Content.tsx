@@ -3,6 +3,8 @@ import Link from 'next/link'
 import { useLocale } from '@/lib/locale'
 import { EoaPrivacy } from './Privacy'
 import { EoaContact } from './Contact'
+import { EoaBoard } from './Board'
+import { EoaProgramDetails } from './EoaProgramDetails'
 import { Eligibility } from './Eligibility'
 import { Notice, PartnerStrip, useEoaProgram } from './Shared'
 import { formatEoaDate } from '@/lib/eoa'
@@ -24,48 +26,7 @@ export function EoaContent({ section }: { section: string }) {
   const { locale } = useLocale()
   const ar = locale === 'ar'
   const { program, failed } = useEoaProgram()
-  const faqs = [
-    [
-      ar ? 'هل وصول منصة EO العالمية؟' : 'Is Wosool EO’s global platform?',
-      ar
-        ? 'وصول بوابة رقمية محلية للاكتشاف والتقديم والتنسيق. تحتفظ EO بأنظمتها وإجراءات القبول والتسجيل الرسمية.'
-        : 'Wosool is a local digital gateway for discovery, application and coordination. EO retains its official admission and registration systems.',
-    ],
-    [
-      ar
-        ? 'هل القبول يضمن عضوية EO؟'
-        : 'Does acceptance guarantee EO membership?',
-      ar
-        ? 'لا. تتطلب عضوية EO استيفاء المتطلبات والتقديم والمراجعة لدى الفرع. عند بلوغ مليون دولار من الإيراد، ناقش الخطوة التالية مع قيادة الفرع.'
-        : 'No. EO membership has its own requirements and chapter review. At US$1 million in revenue, discuss the next step with chapter leadership.',
-    ],
-    [
-      ar ? 'متى تبدأ دفعة الرياض؟' : 'When does the Riyadh cohort start?',
-      ar
-        ? 'تُنشر مواعيد الدفعة بعد اعتمادها من قيادة البرنامج. تواصل مع الفريق لمعرفة آخر المستجدات؛ لا تفترض بدء دفعة بناءً على تقديم الطلب.'
-        : 'Cohort dates are published after approval by program leadership. Contact the team for current updates; submitting an application does not establish a cohort start date.',
-    ],
-    [
-      ar ? 'ما الالتزام الزمني؟' : 'What is the time commitment?',
-      ar
-        ? 'أربعة أيام تعلم كاملة سنوياً و8–12 لقاء مساءلة، عادة 2–4 ساعات شهرياً، إضافة إلى تطبيق التعلم.'
-        : 'Four full learning days annually and 8–12 accountability meetings, typically 2–4 hours monthly, plus time to apply the learning.',
-    ],
-    [
-      ar ? 'هل يرتبط البرنامج بالاستثمار؟' : 'Is investment part of admission?',
-      ar
-        ? 'لا ترتبط مناقشات الاستثمار بقرارات القبول أو المشاركة، وتُدار باتفاقات مستقلة.'
-        : 'Investment discussions are separate from admission and participation and require independent arrangements.',
-    ],
-    [
-      ar
-        ? 'من يمكنه رؤية معلوماتي المالية؟'
-        : 'Who can see my financial information?',
-      ar
-        ? 'حسابك والقيادة والموظفون المخولون والمراجعون المخصصون لطلبك. لا تُعرض المعلومات المالية للمشاركين أو المدربين.'
-        : 'You, authorized leadership and staff, and reviewers assigned to your application. Financial information is not shared with participants or coaches.',
-    ],
-  ]
+
   return (
     <section className="eoa-section">
       <div className="eoa-container">
@@ -167,6 +128,7 @@ export function EoaContent({ section }: { section: string }) {
             </div>
           </div>
         )}
+        {section === 'leadership' && <EoaBoard members={program?.board_members ?? []} ar={ar} />}
         {section === 'leadership' && (
           <div className="eoa-two-grid">
             <div className="eoa-card">
@@ -194,16 +156,8 @@ export function EoaContent({ section }: { section: string }) {
             </div>
           </div>
         )}
-        {section === 'faq' && (
-          <div className="eoa-faq">
-            {faqs.map(([q, a]) => (
-              <details key={q}>
-                <summary>{q}</summary>
-                <p>{a}</p>
-              </details>
-            ))}
-          </div>
-        )}
+        {section === 'faq' && <EoaProgramDetails program={program} section="faq" />}
+        {section === 'partners' && <EoaProgramDetails program={program} section="operator" />}
         {section === 'partners' && (
           <>
             <PartnerStrip partners={program?.partners ?? []} />

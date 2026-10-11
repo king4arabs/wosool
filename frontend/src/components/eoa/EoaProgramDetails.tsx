@@ -1,0 +1,88 @@
+'use client'
+
+import { ArrowUpRight, Building2, Handshake } from 'lucide-react'
+import { useLocale } from '@/lib/locale'
+import { eoaFaqs, safeEoaWebsite, type EoaEditorialProgram } from '@/lib/eoa-editorial'
+
+export function EoaProgramDetails({
+  program,
+  section = 'all',
+}: {
+  program: EoaEditorialProgram | null
+  section?: 'all' | 'operator' | 'partners' | 'faq'
+}) {
+  const { locale } = useLocale()
+  const ar = locale === 'ar'
+  const operator = program?.editorial?.operator
+  const operatorUrl = safeEoaWebsite(operator?.website)
+  const confirmedIds = new Set(program?.partners.map((partner) => partner.id) ?? [])
+  const partners = (program?.ecosystem ?? []).filter((organization) =>
+    organization.relationship_status === 'confirmed' && confirmedIds.has(organization.id),
+  )
+  const faqs = eoaFaqs(program?.editorial)
+
+  return (
+    <>
+      {(section === 'all' || section === 'operator') && operator?.visible && operatorUrl && (
+        <section className="eoa-section" id="operator" aria-labelledby="eoa-operator-title">
+          <div className="eoa-container eoa-two-grid">
+            <div>
+              <span className="eoa-eyebrow">{ar ? 'الشريك المشغّل' : 'OPERATING PARTNER'}</span>
+              <h2 id="eoa-operator-title">{ar ? operator.name_ar : operator.name_en}</h2>
+              <p className="eoa-lead" style={{ whiteSpace: 'pre-line' }}>
+                {ar ? operator.description_ar : operator.description_en}
+              </p>
+              <a href={operatorUrl} className="eoa-text-link" target="_blank" rel="noopener noreferrer">
+                {ar ? 'زيارة الموقع الرسمي' : 'Visit official website'} <ArrowUpRight size={18} aria-hidden="true" />
+              </a>
+            </div>
+            <div className="eoa-card">
+              <Building2 size={30} aria-hidden="true" />
+              <h3>{ar ? 'من التعلم إلى التطبيق' : 'From learning to action'}</h3>
+              <p>{ar ? 'تجربة مترابطة تجمع اكتشاف البرنامج والتقديم ومتابعة رحلة المشاركة عبر وصول.' : 'A connected experience for discovering the program, applying and following your participant journey through Wosool.'}</p>
+            </div>
+          </div>
+        </section>
+      )}
+      {(section === 'all' || section === 'partners') && partners.length > 0 && (
+        <section className="eoa-section" id="enablers" aria-labelledby="eoa-enablers-title">
+          <div className="eoa-container">
+            <span className="eoa-eyebrow">{ar ? 'شركاء رحلة النمو' : 'PARTNERS IN GROWTH'}</span>
+            <h2 id="eoa-enablers-title">{ar ? 'خبرات تفتح فرصاً جديدة' : 'Expertise that opens possibilities'}</h2>
+            <div className="eoa-two-grid eoa-space">
+              {partners.map((partner) => {
+                const role = program?.partner_roles?.[String(partner.id)]
+                const website = safeEoaWebsite(partner.website)
+                return (
+                  <article key={partner.id} className="eoa-card">
+                    <Handshake size={24} aria-hidden="true" />
+                    {role && <span className="eoa-eyebrow">{role === 'operator' ? (ar ? 'الشريك المشغّل' : 'OPERATING PARTNER') : role === 'enabler' ? (ar ? 'الشريك الممكّن' : 'ENABLING PARTNER') : (ar ? 'الشريك الداعم' : 'SUPPORTING PARTNER')}</span>}
+                    <h3>{ar ? partner.name_ar : partner.name_en}</h3>
+                    <p style={{ whiteSpace: 'pre-line' }}>{ar ? partner.support_ar : partner.support_en}</p>
+                    {website && <a href={website} className="eoa-text-link" target="_blank" rel="noopener noreferrer">{ar ? 'زيارة الموقع الرسمي' : 'Visit official website'} <ArrowUpRight size={16} aria-hidden="true" /></a>}
+                  </article>
+                )
+              })}
+            </div>
+          </div>
+        </section>
+      )}
+      {(section === 'all' || section === 'faq') && faqs.length > 0 && (
+        <section className="eoa-section" id="faq" aria-labelledby="eoa-faq-title">
+          <div className="eoa-container">
+            <span className="eoa-eyebrow">{ar ? 'إجابات تساعدك على البداية' : 'YOUR QUESTIONS, ANSWERED'}</span>
+            <h2 id="eoa-faq-title">{ar ? 'الأسئلة الشائعة' : 'Frequently asked questions'}</h2>
+            <div className="eoa-faq eoa-space">
+              {faqs.map((faq, index) => (
+                <details key={`${index}-${faq.question_en}`}>
+                  <summary>{ar ? faq.question_ar : faq.question_en}</summary>
+                  <p style={{ whiteSpace: 'pre-line' }}>{ar ? faq.answer_ar : faq.answer_en}</p>
+                </details>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+    </>
+  )
+}

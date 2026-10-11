@@ -1,0 +1,15 @@
+.section { padding-block: 26px; }
+.heading { display: flex; justify-content: space-between; align-items: center; gap: 20px; margin-bottom: 16px; }
+.section .heading h2 { color: var(--text-muted); margin: 0; font-size: 15px; letter-spacing: .015em; font-weight: 700; }
+.controls { display: flex; align-items: center; gap: 6px; }
+.controls button { display: inline-flex; justify-content: center; align-items: center; width: 44px; height: 44px; background: var(--surface); border: 1px solid var(--border-soft); border-radius: 50%; color: var(--brand-navy); cursor: pointer; }
+.controls button:hover { border-color: var(--brand-blue); background: var(--surface-soft); }
+.viewport { overflow-x: auto; overflow-y: hidden; direction: ltr; overscroll-behavior-x: contain; padding: 4px 4px 12px; scrollbar-width: thin; scrollbar-color: var(--border-soft) transparent; }
+.track { display: flex; flex-direction: row-reverse; align-items: center; gap: 28px; min-width: 100%; width: max-content; justify-content: space-around; }
+.track a { display: flex; align-items: center; justify-content: center; width: 180px; height: 88px; flex: 0 0 180px; padding: 10px; border-radius: 8px; }
+.track a:hover { background: var(--surface-soft); }
+.track img { display: block; width: auto; max-width: 160px; height: auto; max-height: 64px; object-fit: contain; }
+.track a > span { width: 160px; }
+.viewport:focus-visible, .controls button:focus-visible, .track a:focus-visible { outline: 3px solid var(--brand-blue); outline-offset: 2px; }
+@media (max-width: 600px) { .heading { gap: 10px; } .section .heading h2 { font-size: 14px; } .track { gap: 24px; } .track a { width: 160px; flex-basis: 160px; } .track img { max-width: 140px; } .track a > span { width: 140px; } }
+@media (prefers-reduced-motion: reduce) { .viewport { scroll-behavior: auto; } }

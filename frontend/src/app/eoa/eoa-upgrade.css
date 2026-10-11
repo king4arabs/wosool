@@ -9,6 +9,7 @@
 }
 
 .eoa-hero-fallback,
+.eoa-hero-poster,
 .eoa-hero-media,
 .eoa-hero-scrim {
   position: absolute;
@@ -57,10 +58,19 @@
   object-position: center;
 }
 
+.eoa-hero-poster { z-index: -3; object-fit: cover; }
+.eoa-hero-media { z-index: -2; }
+.eoa-hero-scrim { z-index: -1; }
+.eoa-full-journey { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.eoa-full-journey li { position: relative; }
+.eoa-full-journey li > span { display: inline-flex; align-items: center; justify-content: center; width: 42px; height: 42px; border-radius: 50%; background: var(--brand-blue); color: white; font-weight: 700; }
+@media (max-width: 760px) { .eoa-full-journey { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 480px) { .eoa-full-journey { grid-template-columns: 1fr; } }
+
 .eoa-hero-scrim {
   z-index: -2;
   background:
-    linear-gradient(90deg, rgb(7 7 33 / 93%) 0%, rgb(7 7 33 / 79%) 46%, rgb(7 7 33 / 58%) 100%),
+    linear-gradient(90deg, rgb(7 7 33 / 82%) 0%, rgb(7 7 33 / 63%) 46%, rgb(7 7 33 / 36%) 100%),
     linear-gradient(to top, rgb(7 7 33 / 55%), transparent 44%);
 }
 
@@ -85,12 +95,15 @@
 
 .eoa-hero .eoa-hero-logo {
   margin-bottom: 1.5rem;
+  overflow: hidden;
+  border-radius: 6px;
+  outline: 1px solid rgb(255 255 255 / 12%);
 }
 
 .eoa-hero .eoa-hero-title {
   max-width: 790px;
   margin-bottom: 1.4rem;
-  font-size: clamp(2.75rem, 6.2vw, 5.6rem);
+  font-size: clamp(2.6rem, 4.2vw, 3.8rem);
   line-height: 1.08;
   letter-spacing: -.045em;
   text-wrap: balance;
@@ -260,3 +273,9 @@
     display: none;
   }
 }
+
+/* Preserve poster under the video and keep the readability layer above both. */
+.eoa-hero-poster { z-index: -3; }
+.eoa-hero-media { z-index: -2; }
+.eoa-hero-scrim { z-index: -1; }
+.eoa-network { background: var(--surface-soft); }

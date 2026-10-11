@@ -81,7 +81,31 @@ export function Footer() {
   const { locale } = useLocale()
   const copy = footerCopy[locale]
   const { isEoa } = publicJourney(usePathname())
-  const footerColumns = Object.entries(copy.columns) as Array<[string, Array<{ href: string; label: string }>]>
+  const ar = locale === "ar"
+  const footerColumns: Array<[string, Array<{ href: string; label: string }>]> = isEoa ? [
+    [ar ? "المسرّعة" : "Accelerator", [
+      { href: "/eoa/about", label: ar ? "عن البرنامج" : "About the program" },
+      { href: "/eoa/program", label: ar ? "رحلة التعلم" : "Learning journey" },
+      { href: "/eoa/eligibility", label: ar ? "الأهلية والرسوم" : "Eligibility & fees" },
+      { href: "/eoa/faq", label: ar ? "الأسئلة الشائعة" : "FAQs" },
+    ]],
+    [ar ? "ابدأ رحلتك" : "Your journey", [
+      { href: "/eoa/apply", label: ar ? "قدّم طلبك" : "Apply" },
+      { href: "/eoa/account", label: ar ? "حسابي" : "My account" },
+      { href: "/dashboard/eoa", label: ar ? "لوحة المشارك" : "Participant dashboard" },
+      { href: "/eoa/privacy", label: ar ? "الخصوصية والبيانات" : "Privacy & data" },
+    ]],
+    [ar ? "مجتمع الرياض" : "Riyadh community", [
+      { href: "/eoa/leadership", label: ar ? "مجلس الإدارة والقيادة" : "Board & leadership" },
+      { href: "/eoa/partners", label: ar ? "الشركاء" : "Partners" },
+      { href: "/eoa/contact", label: ar ? "تواصل مع الفريق" : "Contact the team" },
+    ]],
+    [ar ? "اكتشف وصول" : "Explore Wosool", [
+      { href: "/", label: ar ? "من مؤسس إلى مؤسس" : "Founders to Founders" },
+      { href: "/founders", label: ar ? "شبكة المؤسسين" : "Founder network" },
+      { href: "/events", label: ar ? "الفعاليات" : "Events" },
+    ]],
+  ] : Object.entries(copy.columns)
 
   return (
     <footer className={styles.footer} lang={locale} dir={locale === "ar" ? "rtl" : "ltr"} aria-label={locale === "ar" ? "تذييل الموقع" : "Site footer"}>
@@ -109,7 +133,7 @@ export function Footer() {
                 className="h-auto w-[270px] max-w-full object-contain sm:w-[310px]"
               />
             </Link>
-            <p className={`mb-6 max-w-sm text-sm leading-7 ${styles.muted}`}>{copy.description}</p>
+            <p className={`mb-6 max-w-sm text-sm leading-7 ${styles.muted}`}>{isEoa ? (ar ? "بوابتك الرقمية إلى مسرّعة EO الرياض. تعلّم مع المؤسسين، وطبّق ما تتعلمه، وتابع رحلة نمو شركتك." : "Your digital gateway to EO Riyadh Accelerator. Learn alongside founders, put ideas into practice and follow your company’s growth journey.") : copy.description}</p>
             <div className="flex items-center gap-3">
               <a href="https://twitter.com/AboutWosool" target="_blank" rel="noopener noreferrer" aria-label="Wosool on X" className={styles.socialLink}><AtSign className="h-4 w-4" /></a>
               <a href="https://linkedin.com/company/wosool" target="_blank" rel="noopener noreferrer" aria-label="Wosool on LinkedIn" className={styles.socialLink}><Globe className="h-4 w-4" /></a>
@@ -132,9 +156,9 @@ export function Footer() {
         <div className={`mt-12 flex flex-col items-center justify-between gap-4 border-t pt-8 sm:flex-row ${styles.bottom}`}>
           <p className={`text-sm ${styles.muted}`}>© {new Date().getFullYear()} Wosool. {copy.copyright}</p>
           <div className="flex flex-wrap items-center justify-center gap-6">
-            <Link href="/privacy" className={`text-sm ${styles.muted}`}>{copy.privacy}</Link>
+            <Link href={isEoa ? "/eoa/privacy" : "/privacy"} className={`text-sm ${styles.muted}`}>{copy.privacy}</Link>
             <Link href="/terms" className={`text-sm ${styles.muted}`}>{copy.terms}</Link>
-            <Link href="/contact" className={`text-sm ${styles.muted}`}>{copy.contact}</Link>
+            <Link href={isEoa ? "/eoa/contact" : "/contact"} className={`text-sm ${styles.muted}`}>{copy.contact}</Link>
             <button
               type="button"
               className={styles.backTop}

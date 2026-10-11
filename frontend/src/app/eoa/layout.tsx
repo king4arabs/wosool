@@ -19,17 +19,19 @@ export const metadata: Metadata = {
     alternateLocale: ['en_US'],
     images: [
       {
-        url: '/partners/eo-riyadh.png',
-        alt: 'EO Riyadh',
+        url: '/eoa/riyadh-hero.webp',
+        alt: 'Riyadh — EO Riyadh Accelerator',
+        width: 1600,
+        height: 844,
       },
     ],
   },
   twitter: {
-    card: 'summary',
+    card: 'summary_large_image',
     title: 'EO Riyadh Accelerator',
     description:
       'Riyadh-based Founders. Global Connections. Extraordinary Growth.',
-    images: ['/partners/eo-riyadh.png'],
+    images: ['/eoa/riyadh-hero.webp'],
   },
 }
 

@@ -1,30 +1,31 @@
 'use client'
 
 import { Pause, Play } from 'lucide-react'
+import Image from 'next/image'
 import { useEffect, useMemo, useRef, useState } from 'react'
 
 export function EoaHeroMedia({ ar }: { ar: boolean }) {
   const videoRef = useRef<HTMLVideoElement>(null)
   const [failed, setFailed] = useState(false)
   const [paused, setPaused] = useState(false)
-  const [reducedMotion, setReducedMotion] = useState(false)
+  const [reducedMotion, setReducedMotion] = useState(true)
 
   const sources = useMemo(
     () =>
       [
         {
-          src: process.env.NEXT_PUBLIC_EOA_HERO_VIDEO_WEBM,
+          src: process.env.NEXT_PUBLIC_EOA_HERO_VIDEO_WEBM || '/eoa/riyadh-hero.webm',
           type: 'video/webm',
         },
         {
-          src: process.env.NEXT_PUBLIC_EOA_HERO_VIDEO_MP4,
+          src: process.env.NEXT_PUBLIC_EOA_HERO_VIDEO_MP4 || '/eoa/riyadh-hero.mp4',
           type: 'video/mp4',
         },
       ].filter((source): source is { src: string; type: string } => Boolean(source.src)),
     [],
   )
 
-  const poster = process.env.NEXT_PUBLIC_EOA_HERO_POSTER
+  const poster = process.env.NEXT_PUBLIC_EOA_HERO_POSTER || '/eoa/riyadh-hero.webp'
   const hasVideo = sources.length > 0
 
   useEffect(() => {
@@ -73,11 +74,11 @@ export function EoaHeroMedia({ ar }: { ar: boolean }) {
   return (
     <>
       <div className="eoa-hero-fallback" aria-hidden="true" />
-      {hasVideo && !failed && (
+      {poster && <Image className="eoa-hero-poster" src={poster} alt="" fill unoptimized preload sizes="100vw" />}
+      {hasVideo && !failed && !reducedMotion && (
         <video
           ref={videoRef}
           className="eoa-hero-media"
-          autoPlay
           muted
           loop
           playsInline

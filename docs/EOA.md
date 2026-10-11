@@ -1,14 +1,14 @@
 # EO Riyadh Accelerator on Wosool
 
-**Wosool.org remains “Founders to Founders,”** the main founder-community website and membership journey. **Wosool.org/EOA is the digital gateway for EO Riyadh Accelerator**: “Saudi Founders. Global Connections. Extraordinary Growth.” Public Accelerator pages, accounts, applications, administration, coaching and recovery pages live under **`/EOA`**, preserving the uppercase path. The dedicated applicant/participant workspace is **`/dashboard/eoa`** and does not require Wosool founder-network membership. Lowercase `/eoa/...` redirects to the canonical path. A navigation link connects the two experiences; community membership does not confer Accelerator admission.
+**Wosool.org remains “Founders to Founders,”** the main founder-community website and membership journey. **Wosool.org/EOA is the digital gateway for EO Riyadh Accelerator**: “Saudi Founders. Global Connections. Extraordinary Growth.” Public Accelerator pages, accounts, applications, administration, coaching and recovery pages live under **`/eoa`**, using the canonical lowercase path. The dedicated applicant/participant workspace is **`/dashboard/eoa`** and does not require Wosool founder-network membership. Legacy uppercase `/EOA/...` redirects to the canonical lowercase path. A navigation link connects the two experiences; community membership does not confer Accelerator admission.
 
 EO Riyadh provides chapter leadership and governance. EO Accelerator provides the applicable program framework. Wosool supports discovery, applications, coordination and participant services. Operating partners deliver only their approved scope. Mohammed Alsolami is identified as EO Riyadh Membership & Accelerator Chair, as supplied by project leadership. Application, local acceptance, official Accelerator enrollment and subsequent EO membership are distinct events.
 
 ## Architecture and setup
 
-The October 9 integration repair makes this the authoritative operating guide. Older gateway writes are retired; legacy applications/events remain preserved and require reviewed transfer if present. See [integration and deployment notes](EOA-INTEGRATION-2026-10-09.md). Applicant data-rights requests are available in `/EOA/account`; existing administrators review them at `/admin/privacy-requests`, with audited status changes.
+The October 9 integration repair makes this the authoritative operating guide. Older gateway writes are retired; legacy applications/events remain preserved and require reviewed transfer if present. See [integration and deployment notes](EOA-INTEGRATION-2026-10-09.md). Applicant data-rights requests are available in `/eoa/account`; existing administrators review them at `/admin/privacy-requests`, with audited status changes.
 
-The existing Next.js 16 / React 19 frontend, Cairo typography, locale provider, Laravel 13 API, Sanctum sessions and Spatie roles are reused. Public components are in `frontend/src/components/eoa`; routes are in `frontend/src/app/EOA`. The API is registered by `backend/routes/eoa.php` at `/api/v1/eoa`. Laravel controllers/services enforce authorization; UI visibility is not a security boundary.
+The existing Next.js 16 / React 19 frontend, Cairo typography, locale provider, Laravel 13 API, Sanctum sessions and Spatie roles are reused. Public components are in `frontend/src/components/eoa`; routes are in `frontend/src/app/eoa`. The API is registered by `backend/routes/eoa.php` at `/api/v1/eoa`. Laravel controllers/services enforce authorization; UI visibility is not a security boundary.
 
 The normal README setup runs the installer. To repeat it or prepare an existing checkout, run from `backend/`:
 
@@ -18,7 +18,7 @@ php artisan eoa:install
 php artisan queue:work --tries=5 --timeout=60
 ```
 
-`eoa:install` creates five EOA roles, a closed/draft program, and seven sourced ecosystem organizations. It creates no users or confirmed partnerships. Existing program settings and organization slugs are never overwritten. Do not run the demo seeder in production. Mail defaults to `log` locally: it does not send messages.
+`eoa:install` creates five EOA roles, a closed/draft program, and nine sourced ecosystem organizations and eleven poster-sourced board members. It creates no users or confirmed partnerships. The owner-supplied 2026/27 board is published with its explicit term; later admin edits survive repeat installations. Existing program settings and organization slugs are never overwritten. Do not run the demo seeder in production. Mail defaults to `log` locally: it does not send messages.
 
 The frontend uses the existing same-origin `/api` proxy. Configure `NEXT_PUBLIC_API_URL` with the backend origin, `NEXT_PUBLIC_SITE_URL=https://wosool.org`, `FRONTEND_URL=https://wosool.org`, the matching Sanctum/session domains, HTTPS cookies, database, mail transport and queue. Preserve `APP_KEY`: it decrypts financial fields as well as application secrets. See [DEPLOYMENT.md](../DEPLOYMENT.md).
 
@@ -51,7 +51,7 @@ Participant access is derived from `program_participants`, not a self-selectable
 
 ## Administration and publication
 
-`/EOA/admin` supports review, reviewer assignment, interviews, enrollment, cohort/session/group/material/announcement creation and editing, partner relationship confirmation, bilingual local content, inquiries, reporting and the audit trail. The coach workspace is `/EOA/coach`. Contact/partner inquiries use the existing contact table with an EOA subject prefix; marking one handled does not send an email.
+`/eoa/admin` supports review, reviewer assignment, interviews, enrollment, cohort/session/group/material/announcement creation and editing, partner relationship confirmation, bilingual local content, inquiries, reporting and the audit trail. The coach workspace is `/eoa/coach`. Contact/partner inquiries use the existing contact table with an EOA subject prefix; marking one handled does not send an email.
 
 Local settings are draft by default. Administrators must supply approval references rather than simply infer approval from the existence of code:
 
@@ -86,7 +86,7 @@ Back up the database, `storage/app/private/eoa`, and the encryption key securely
 3. Build/deploy Next.js with the correct origins. Run its Node server through the existing process manager. No static export is supported.
 4. Start/supervise a Laravel database queue worker and restart it on every release. Inspect `php artisan queue:failed`; retry only after diagnosing transport/configuration errors. Test a real verification email, password reset and submission notification in staging.
 5. Provision verified leadership access. Approve local program/data/fee terms, confirm only documented partners, and assign reviewers/coaches. Keep intake closed until these checks pass.
-6. Verify `https://wosool.org/EOA`, `/EOA/account`, the same-origin API, both languages and phone layouts. Run the checklist below on the deployed release, record its SHA and results, then open intake.
+6. Verify `https://wosool.org/eoa`, `/eoa/account`, the same-origin API, both languages and phone layouts. Run the checklist below on the deployed release, record its SHA and results, then open intake.
 
 | Critical check | Automated coverage | Required deployed check |
 | --- | --- | --- |
@@ -110,3 +110,9 @@ Run repository `npm run verify` plus the CI dependency audits. Database tests us
 See [EOA-RESEARCH.md](EOA-RESEARCH.md) for the factual corrections, citations and asset inventory.
 
 See [the October 9 reliability and EOA release notes](WOSOOL-RELIABILITY-EOA-2026-10-09.md) for current verification results.
+
+## Board and editorial management — October 11 release
+
+See [the board release guide](EOA-BOARD-RELEASE-2026-10-11.md). The board and editorial tabs are in `/eoa/admin`; the public board is also shown on `/eoa/leadership`. Board photos are public assets, separate from private applicant documents. After deploying Laravel, run `php artisan storage:link` for uploaded portraits. Next.js proxies only `/storage/eoa/board/*` to that public backend directory. Never expose the private EOA document store.
+
+The supplied EO logo is used unmodified on dark backgrounds. The included Riyadh WebM/MP4 video is 14 seconds, muted and optimized; a still from the same licensed clip remains visible when reduced motion is enabled or playback fails. Environment variables may override the media. Source and license details are in [the media register](research/EOA-SOURCES-2026-10-11.md).

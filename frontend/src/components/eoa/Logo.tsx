@@ -14,12 +14,12 @@ export function EoaLogo({
       <Image
         src={
           inverse
-            ? '/partners/eo-riyadh-inverse.png'
+            ? '/partners/eo-riyadh-supplied.png'
             : '/partners/eo-riyadh.png'
         }
         alt="EO Riyadh"
-        width={6666}
-        height={3201}
+        width={inverse ? 375 : 6666}
+        height={inverse ? 134 : 3201}
         priority={priority}
         unoptimized
       />

@@ -3,9 +3,11 @@
 namespace App\Console\Commands;
 
 use App\Models\Program;
+use App\Models\EoaBoardMember;
 use App\Services\Eoa\ProgramService;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 use Spatie\Permission\Models\Role;
 
 class InstallEoa extends Command
@@ -40,6 +42,13 @@ class InstallEoa extends Command
                 // Research imports are repeatable; existing confirmations and editorial changes survive.
                 if (! DB::table('ecosystem_organizations')->where('slug', $row['slug'])->exists()) {
                     DB::table('ecosystem_organizations')->insert($row + ['created_at' => now(), 'updated_at' => now()]);
+                }
+            }
+            $boardFile = database_path('data/eoa-board-2026-27.json');
+            if (Schema::hasTable('eoa_board_members') && is_file($boardFile)) {
+                foreach (json_decode(file_get_contents($boardFile), true, 512, JSON_THROW_ON_ERROR) as $row) {
+                    // Insert only: every local edit, publication decision and later board term survives reinstallation.
+                    EoaBoardMember::firstOrCreate(['program_id' => $program->id, 'slug' => $row['slug']], $row);
                 }
             }
         });

@@ -124,5 +124,41 @@
     "verification_status": "verified",
     "relationship_status": "ecosystem",
     "sort_order": 7
+  },
+  {
+    "slug": "lamarka",
+    "name_en": "LAMARKA",
+    "name_ar": "لاماركا",
+    "type": "Business consulting",
+    "sector": "Business development",
+    "location": "Riyadh",
+    "website": "https://www.lamarka.com/",
+    "support_en": "Business consulting across strategy, innovation, implementation and capability development.",
+    "support_ar": "استشارات أعمال في الاستراتيجية والابتكار والتنفيذ وتطوير القدرات.",
+    "source_url": "https://sa.linkedin.com/company/lamarka-global",
+    "logo_path": null,
+    "logo_source_url": null,
+    "verified_at": "2026-10-11",
+    "verification_status": "verified",
+    "relationship_status": "prospective",
+    "sort_order": 8
+  },
+  {
+    "slug": "humain",
+    "name_en": "HUMAIN",
+    "name_ar": "هيوماين",
+    "type": "AI technology company",
+    "sector": "Artificial intelligence",
+    "location": "Saudi Arabia",
+    "website": "https://www.humain.com/",
+    "support_en": "AI infrastructure, cloud platforms, models and applications.",
+    "support_ar": "بنية تحتية للذكاء الاصطناعي ومنصات سحابية ونماذج وتطبيقات.",
+    "source_url": "https://www.pif.gov.sa/en/our-investments/our-portfolio/humain/",
+    "logo_path": "/partners/humain.svg",
+    "logo_source_url": "https://www.humain.com/content/dam/PIF-Humain/hero-logos/humain-logo.svg",
+    "verified_at": "2026-10-11",
+    "verification_status": "verified",
+    "relationship_status": "prospective",
+    "sort_order": 9
   }
 ]

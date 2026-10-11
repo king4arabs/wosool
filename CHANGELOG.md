@@ -6,6 +6,16 @@ This project follows **Semantic Versioning** and a Keep a Changelog-inspired for
 
 ---
 
+## EO Riyadh board, editorial management and skyline — 2026-10-11
+
+- Added the supplied 2026/27 board: eleven original portrait crops, explicit terms, source-backed professional links and a controlled accessible carousel.
+- Added scoped board CRUD, secure public raster uploads, bilingual fields, display order, publication controls, audit records and an insert-only seed import.
+- Added bilingual editorial drafts, publication snapshots, FAQs, operator content, optimistic conflict detection and partner metadata editing.
+- Added a licensed muted Riyadh skyline video, persistent poster/reduced-motion fallback and the supplied EO Riyadh logo.
+- Extended the journey through completion and separate EO membership review; aligned duration with EO's published two-year program.
+- Added program-focused footer navigation and corrected stale uppercase route documentation.
+- Hosting verification remains separate from source validation; see the dated release guide for actual status.
+
 ## Product system, EOA experience, and approved Wosool identity — 2026-10-11
 
 ### Added

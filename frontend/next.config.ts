@@ -78,6 +78,7 @@ const nextConfig: NextConfig = {
     const apiUrl = (process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000").replace(/\/+$/, "");
     return [
       { source: "/broadcasting/auth", destination: `${apiUrl}/broadcasting/auth` },
+      { source: "/storage/eoa/board/:path*", destination: `${apiUrl}/storage/eoa/board/:path*` },
       {
         source: "/api/:path*",
         destination: `${apiUrl}/api/:path*`,

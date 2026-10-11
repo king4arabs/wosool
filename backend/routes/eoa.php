@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\Eoa\ApplicationController;
 use App\Http\Controllers\Api\Eoa\AccountRoleController;
 use App\Http\Controllers\Api\Eoa\AuthController;
+use App\Http\Controllers\Api\Eoa\BoardMemberController;
 use App\Http\Controllers\Api\Eoa\OperationsController;
 use App\Http\Controllers\Api\Eoa\ParticipantController;
 use App\Http\Controllers\Api\Eoa\PublicController;
@@ -38,6 +39,12 @@ Route::prefix('v1/eoa')->group(function () {
             Route::get('/operations/accounts', [AccountRoleController::class, 'index']);
             Route::patch('/operations/accounts/{account}', [AccountRoleController::class, 'update']);
             Route::get('/operations', [OperationsController::class, 'show']);
+            Route::get('/operations/editorial', [OperationsController::class, 'editorial']);
+            Route::put('/operations/editorial', [OperationsController::class, 'saveEditorial']);
+            Route::get('/operations/board-members', [BoardMemberController::class, 'index']);
+            Route::post('/operations/board-members', [BoardMemberController::class, 'store']);
+            Route::patch('/operations/board-members/{member}', [BoardMemberController::class, 'update'])->whereNumber('member');
+            Route::post('/operations/board-members/{member}/portrait', [BoardMemberController::class, 'portrait'])->whereNumber('member')->middleware('throttle:10,1,eoa-portraits');
             Route::put('/operations/settings', [OperationsController::class, 'settings']);
             Route::patch('/operations/update/{type}/{record}', [OperationsController::class, 'create']);
             Route::post('/operations/create/{type}', [OperationsController::class, 'create']);
