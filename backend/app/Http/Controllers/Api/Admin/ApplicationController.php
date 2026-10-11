@@ -7,6 +7,7 @@ use App\Http\Resources\ApplicationResource;
 use App\Models\AdminAction;
 use App\Models\Application;
 use App\Models\User;
+use App\Services\FounderInvitationService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -101,11 +102,11 @@ class ApplicationController extends Controller
         ]);
     }
 
-    public function sendInvitation(Request $request, Application $application): JsonResponse
+    public function sendInvitation(Request $request, Application $application, FounderInvitationService $invitationService): JsonResponse
     {
         abort_unless($application->status === 'approved', 409, 'Only approved applications can be invited.');
         abort_if($application->user_id !== null, 409, 'This application is already linked to an account.');
-        abort_unless(config('mail.default') !== 'log' && filled(config('mail.from.address')), 503, 'A delivery mailer must be configured.');
+        abort_unless($invitationService->realMailer((string) config('mail.default')) && filled(config('mail.from.address')), 503, 'A delivery mailer must be configured.');
 
         $existingUser = User::whereRaw('LOWER(email) = ?', [strtolower($application->email)])->first();
         $token = $existingUser ? null : Str::random(64);

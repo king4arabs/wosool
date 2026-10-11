@@ -150,6 +150,24 @@ class AdminEndpointsTest extends TestCase
         $this->assertNull($application->fresh()->invite_token);
     }
 
+    public function test_existing_account_receives_sign_in_invitation_without_registration_token(): void
+    {
+        $this->seed(DatabaseSeeder::class);
+        \Illuminate\Support\Facades\Mail::fake();
+        config(['mail.default' => 'smtp']);
+        $admin = User::where('email', 'admin@wosool.org')->firstOrFail();
+        $user = User::factory()->create(['email' => 'existing@example.com']);
+        $application = Application::create(['full_name' => 'Existing Member', 'email' => 'existing@example.com', 'status' => 'approved']);
+
+        $this->actingAs($admin)->postJson("/api/v1/admin/applications/{$application->id}/invite")
+            ->assertOk()->assertJsonPath('data.invite_token', null);
+        \Illuminate\Support\Facades\Mail::assertSentCount(1);
+        $this->assertNull($application->fresh()->user_id);
+        $this->actingAs($user)->postJson('/api/v1/auth/login', ['email' => 'existing@example.com', 'password' => 'password'])
+            ->assertOk();
+        $this->assertSame($user->id, $application->fresh()->user_id);
+    }
+
     public function test_admin_can_request_more_information_on_application(): void
     {
         $this->seed(DatabaseSeeder::class);

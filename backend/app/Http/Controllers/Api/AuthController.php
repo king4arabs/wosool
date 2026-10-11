@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Validation\Rules\Password;
 use Illuminate\Validation\ValidationException;
+use Spatie\Permission\Models\Role;
 use Throwable;
 
 class AuthController extends Controller
@@ -52,7 +53,7 @@ class AuthController extends Controller
             ->where('status', 'approved')->whereNull('user_id')
             ->update(['user_id' => $user->id, 'invite_token' => null]);
         if (! $user->hasRole('member') && Application::where('user_id', $user->id)->where('status', 'approved')->exists()) {
-            $user->assignRole('member');
+            $user->assignRole(Role::findOrCreate('member', 'web'));
         }
 
         return response()->json([
