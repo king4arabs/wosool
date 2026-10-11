@@ -61,7 +61,7 @@ class FounderProfileController extends Controller
         $base = Str::slug($name) ?: 'founder';
         $slug = $base;
         $i = 2;
-        while (FounderProfile::where('slug', $slug)->exists()) {
+        while (FounderProfile::withTrashed()->where('slug', $slug)->exists()) {
             $slug = $base . '-' . $i++;
         }
         return $slug;
