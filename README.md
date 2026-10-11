@@ -1,86 +1,102 @@
-# Wosool | وصول
+<p align="center">
+  <img src="frontend/public/wosool-logo-eo.svg" alt="Wosool — Founders to Founders" width="680" />
+</p>
 
-**Founders to Founders — a Saudi-first community connecting founders across the GCC.**
+<h1 align="center">Wosool | وصول</h1>
 
-[![CI](https://github.com/king4arabs/wosool/actions/workflows/ci.yml/badge.svg)](https://github.com/king4arabs/wosool/actions/workflows/ci.yml)
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Node.js: 22.12+ or 24.x](https://img.shields.io/badge/Node.js-22.12%2B%20or%2024.x-339933?logo=nodedotjs&logoColor=white)](package.json)
-[![PHP: 8.3+](https://img.shields.io/badge/PHP-8.3%2B-777BB4?logo=php&logoColor=white)](backend/composer.json)
+<p align="center"><strong>Founders to Founders — a Saudi-first community connecting founders across the GCC.</strong></p>
 
-[Community website](https://wosool.org) · [EO Riyadh Accelerator](https://wosool.org/EOA) · [Quick start](#quick-start) · [Documentation](#documentation) · [Report a bug](https://github.com/king4arabs/wosool/issues)
+<p align="center">
+  <a href="https://github.com/king4arabs/wosool/actions/workflows/ci.yml"><img src="https://github.com/king4arabs/wosool/actions/workflows/ci.yml/badge.svg" alt="CI status" /></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="MIT License" /></a>
+  <a href="package.json"><img src="https://img.shields.io/badge/Node.js-22.12%2B%20or%2024.x-339933?logo=nodedotjs&logoColor=white" alt="Node.js 22.12+ or 24.x" /></a>
+  <a href="backend/composer.json"><img src="https://img.shields.io/badge/PHP-8.3%2B-777BB4?logo=php&logoColor=white" alt="PHP 8.3+" /></a>
+</p>
 
-Wosool brings founder profiles, companies, events, learning, introductions and collaboration into one Arabic/English platform. This monorepo contains the Next.js frontend, Laravel API and operating documentation.
+<p align="center">
+  <a href="https://wosool.org">Community website</a> ·
+  <a href="https://wosool.org/eoa">EO Riyadh Accelerator</a> ·
+  <a href="#quick-start">Quick start</a> ·
+  <a href="#documentation">Documentation</a> ·
+  <a href="https://github.com/king4arabs/wosool/issues">Report a bug</a>
+</p>
 
-It also provides the digital gateway for **EO Riyadh Accelerator**: *Saudi Founders. Global Connections. Extraordinary Growth.*
+Wosool brings founder profiles, startup and venture discovery, events, learning, reviewed introductions, collaboration, and administration into one Arabic/English platform. This monorepo contains the Next.js frontend, Laravel API, database migrations, tests, operating tools, and production documentation.
 
-> **Two separate journeys:** Wosool community membership does not grant Accelerator admission. Applications, local acceptance, official Accelerator enrollment and EO membership are distinct. Repository CI validates code; a push or merge **does not deploy** the platform.
+Wosool also provides the dedicated digital gateway for **EO Riyadh Accelerator** at **`/eoa`**: **Riyadh-based Founders. Global Connections. Extraordinary Growth.** Wosool community membership, Accelerator admission, official enrollment, graduation, and EO membership remain separate decisions and workflows.
 
-## Contents
+> **Release boundary:** GitHub CI validates source, security checks, tests, and production builds. A commit, merge, or green workflow does **not** by itself prove that production hosting has deployed the change.
 
-- [Platform capabilities](#platform-capabilities)
-- [Architecture](#architecture)
-- [Quick start](#quick-start)
-- [Development commands](#development-commands)
-- [Configuration](#configuration)
-- [Roles and workflows](#roles-and-workflows)
-- [Verified content and partners](#verified-content-and-partners)
-- [Brand design system](#brand-design-system)
-- [Verification and release](#verification-and-release)
-- [Documentation](#documentation)
-- [Contributing](#contributing)
-- [Security](#security)
-- [License](#license)
+## Current platform snapshot — October 11, 2026
+
+The latest product and brand upgrade includes:
+
+- **Approved Wosool identity:** the connected-node W mark, large horizontal website wordmark, white footer version, and standalone favicon/application icon.
+- **Unified product design system:** semantic tokens, Cairo as the primary Arabic and English typeface, responsive spacing, consistent cards, accessible controls, visible focus states, and reduced-motion behavior.
+- **Trusted founder and venture scorecards:** company logo, founder portrait, role, short company/founder summaries, sector, stage, location, official links, verification, review freshness, source evidence, and opportunity signals where data is available.
+- **World-class directory browsing:** equal-height responsive cards, controlled two-row browsing, pagination, search, RTL/LTR-aware controls, and no forced autoplay.
+- **Reviewed founder introductions:** authenticated members can discover approved founders, state the purpose and intended value of a connection, submit through the established introduction API, and track the request.
+- **Administration command center:** API-backed operational metrics and grouped navigation for community, operations, growth/content, EO Riyadh Accelerator, privacy, and system settings.
+- **Enhanced EO Riyadh Accelerator experience:** stronger founder-led positioning, premium hero presentation, expandable Cash/Strategy/People/Execution pillars, clearer application journey, and canonical lowercase `/eoa` links.
+- **Reliability guardrails:** no fictional metrics, partners, founders, revenue, or affiliations; private contact and financial records remain protected; official EO and EO Riyadh artwork remains separate from Wosool artwork.
+
+See [CHANGELOG.md](CHANGELOG.md) for release history and verified implementation details.
 
 ## Platform capabilities
 
-- **Founder community:** profiles, company management, directories, introductions, chat, events, learning and collaboration.
-- **Accelerator applications:** eligibility discovery, verified accounts, private server-saved drafts, supporting documents, review and admission tracks.
-- **Participant services:** onboarding, cohort calendars, resources, accountability groups, coaching, goals, attendance and feedback.
-- **Administration:** scoped reviewer/staff access, audited role management, program operations, privacy requests and publication approvals.
-- **Bilingual experience:** Arabic/English, RTL/LTR layouts, locally bundled Roboto/Cairo and responsive controls.
-- **Sourced directories:** Saudi-first startup/founder profiles and an ecosystem directory with provenance and editorial review.
+- **Founder community:** public and authenticated profiles, company management, directories, reviewed introductions, chat, events, learning, and collaboration.
+- **Startup, scaleup, and venture discovery:** Saudi-first ecosystem records, source provenance, editorial review, business classifications, official links, and scheduled freshness checks.
+- **EO Riyadh Accelerator:** public discovery, eligibility, verified accounts, private server-saved applications, evidence, assigned review, interviews, decisions, onboarding, cohorts, participant services, coaching, and progress.
+- **Administration:** scoped roles, application pipelines, founders, companies, scorecards, introductions, events, programs, partners, sponsors, news, analytics, privacy requests, settings, and EOA operations.
+- **Bilingual experience:** Arabic/English, RTL/LTR, Cairo typography, logical spacing, responsive layouts, and accessible navigation.
+- **Content reliability:** public partner, mentor, founder, revenue, and ecosystem claims require approved records and source evidence.
 
 | Experience | Canonical route | Purpose |
 | --- | --- | --- |
-| Wosool community | `/` | Founder community and its own membership journey |
-| EO Riyadh Accelerator | `/EOA` | Discovery, eligibility, accounts, applications, review and coaching |
-| Accelerator workspace | `/dashboard/eoa` | Applicant decisions/tracks and participant services, independent of community membership |
-| Ecosystem directory | `/opportunities` | Sourced entities and opportunities, not confirmed partnerships |
+| Wosool community | `/` | Founder-community discovery and its own membership journey |
+| Founder directory | `/founders` | Public approved founders and their companies |
+| Startup directory | `/startups` | Sourced startup, scaleup, and venture discovery |
+| Member workspace | `/dashboard` | Profiles, companies, community, matches, events, programs, and messages |
+| EO Riyadh Accelerator | `/eoa` | Program discovery, eligibility, accounts, applications, and public content |
+| Accelerator workspace | `/dashboard/eoa` | Applicant decisions, tracks, and participant services |
+| Administration | `/admin` | Community and platform operations |
+| EOA operations | `/eoa/admin` | Scoped Accelerator review and operations |
+| Ecosystem directory | `/opportunities` | Sourced ecosystem entities and opportunities, not implied partnerships |
 
-Lowercase `/eoa` and older `/accelerator` pages redirect to uppercase `/EOA`. EO Riyadh provides chapter leadership and governance; EO Accelerator provides the program framework; Wosool provides the local digital gateway. Operating partners deliver only their approved scope. Program leadership: Mohammed Alsolami, EO Riyadh Membership & Accelerator Chair.
+Legacy `/EOA` and `/accelerator` links are redirected to the canonical lowercase `/eoa` experience. The physical Next.js route tree remains under `frontend/src/app/EOA` for compatibility with the established application structure.
 
 ## Architecture
 
 | Component | Implementation |
 | --- | --- |
-| Frontend | Next.js 16.4, React 19, TypeScript, Tailwind 4, locally served Roboto/Cairo, Arabic/English RTL/LTR |
-| Backend | Laravel 13, PHP 8.3+, Sanctum cookie sessions, Spatie roles |
-| Database | SQLite local/tests; preserve and verify the actual production engine |
+| Frontend | Next.js 16.4, React 19, strict TypeScript, Tailwind CSS 4, Cairo Variable, Arabic/English RTL/LTR |
+| Backend | Laravel 13, PHP 8.3+, Sanctum cookie sessions, Spatie roles and permissions |
+| Database | SQLite for local development/tests; verify and preserve the configured production database engine |
+| API | Same-origin browser access through `/api/v1`, server-side authorization, validation, CSRF protection, rate limits, and resources |
 | EOA routes | `frontend/src/app/EOA`, `frontend/src/components/eoa`, `backend/routes/eoa.php` |
 | EOA domain | `backend/app/Services/Eoa`, `backend/app/Http/Controllers/Api/Eoa` |
-| Ecosystem directory | `/opportunities`, `ecosystem_records`, source ledger in `docs/research` |
-| Deployment | Separate Node and PHP applications; GitHub CI validates, **does not deploy** |
+| Ecosystem records | `/opportunities`, `ecosystem_records`, and the source ledger under `docs/research` |
+| CI | Frontend lint, types, tests, data validation, dependency audit, build; backend syntax, tests, audits, and build |
+| Deployment | Separate Node and PHP applications; repository CI validates but does not deploy production |
 
-Browser API requests use the same-origin `/api/v1` proxy. Sessions use CSRF protection. Financial applications are encrypted, versioned server-side drafts; supporting documents are private and authorized on download. Do not expose the backend storage directory or rotate away the encryption key without a recovery plan.
+Browser API requests use the same-origin proxy. Sessions use CSRF protection. Sensitive application fields are encrypted and versioned server-side; supporting documents remain private and authorization-controlled. Do not expose backend storage or rotate the application encryption key without a tested recovery plan.
 
 ```text
 .
-├── frontend/       # Next.js app, shared UI, API clients and frontend tests
-├── backend/        # Laravel API, domain services, migrations and backend tests
-├── docs/           # Product guides, API reference, research and release notes
-├── scripts/        # Local setup, development and operational commands
-└── package.json    # Monorepo setup, verification and build entry points
+├── frontend/       # Next.js app, design system, public/member/admin UI, API clients, frontend tests
+├── backend/        # Laravel API, domain services, models, migrations, policies, jobs, backend tests
+├── docs/           # Product, API, EOA, research, operations, and release documentation
+├── scripts/        # Setup, development, validation, import, and operational commands
+└── package.json    # Monorepo setup, verification, and build entry points
 ```
-
-The October 9 integration repair resolves the conflicting merge of two Accelerator implementations. The older gateway's application/review/operations writes return **410** with the canonical path; its owned, private records remain readable. It cannot grant enrollment or overwrite EOA approvals. Existing legacy records require staff-reviewed transfer; no silent data conversion or deletion occurs. Ecosystem imports, editorial administration and privacy-request operations remain supported. See [integration release notes](docs/EOA-INTEGRATION-2026-10-09.md).
 
 ## Quick start
 
 ### Prerequisites
 
 - Node.js **22.12+ on 22.x, or 24.x**, with npm.
-- PHP **8.3+** and Composer **2**, compatible with the committed Composer lockfile.
-- Required PHP extensions; CI explicitly enables `mbstring`, `dom`, `curl`, `pdo_sqlite` and `sqlite3`.
+- PHP **8.3+** and Composer **2**, compatible with the committed lockfile.
+- Required PHP extensions; CI enables `mbstring`, `dom`, `curl`, `pdo_sqlite`, and `sqlite3`.
 - Git and a Bash-compatible shell for the combined development launcher.
 
 ### Install and run locally
@@ -89,14 +105,14 @@ The October 9 integration repair resolves the conflicting merge of two Accelerat
 git clone https://github.com/king4arabs/wosool.git
 cd wosool
 npm run setup
-# Optional: create frontend/.env.local from the documented local defaults.
+
+# Optional: make the documented frontend defaults explicit.
 test -f frontend/.env.local || cp frontend/.env.example frontend/.env.local
+
 npm run dev
 ```
 
-For a fresh checkout, the optional copy makes frontend configuration explicit; **do not overwrite an existing `.env.local`**. Backend configuration is prepared automatically.
-
-`npm run setup` installs locked frontend/backend dependencies, prepares a missing backend environment/key, migrates and runs `eoa:install`. Local preparation preserves existing configuration and refuses production setup. It creates no applicant or administrator accounts. SQLite is the local default; its database file is created if absent. Set an absolute `DB_DATABASE` path if needed.
+`npm run setup` installs locked frontend/backend dependencies, prepares a missing backend environment and key, creates the local SQLite file when required, runs migrations, and runs the non-destructive `eoa:install` setup. It preserves existing configuration, refuses production demonstration setup, and does not seed privileged accounts.
 
 | Service | Local address |
 | --- | --- |
@@ -104,113 +120,128 @@ For a fresh checkout, the optional copy makes frontend configuration explicit; *
 | API liveness | http://localhost:8000/api/health |
 | API readiness | http://localhost:8000/api/ready |
 
-Run a queue worker in a **second terminal** from the repository root:
+Run a queue worker in a second terminal:
 
 ```bash
 php backend/artisan queue:work --tries=5 --timeout=60
 ```
 
-> Local mail uses `MAIL_MAILER=log` and **does not deliver email**. Use a controlled mail sink for verification/recovery tests, not real applicant addresses. EOA collection and intake stay closed until the required administrative approvals are configured.
+> Local mail defaults to `MAIL_MAILER=log` and does not deliver email. Use a controlled mail sink for verification and recovery tests. Keep EOA data collection and intake closed until the required administrative and privacy approvals are configured.
 
 ### Optional data imports
 
-`eoa:install` inserts missing roles, a closed/draft program and sourced EOA organization records, without replacing existing settings or confirmations. Optional wider ecosystem import:
-
 ```bash
+# Preview and apply the wider ecosystem import.
 php backend/artisan wosool:import-ecosystem
 php backend/artisan wosool:import-ecosystem --apply
+
+# Preview and import the sourced startup/founder directory.
+php backend/artisan directory:import --dry-run
+php backend/artisan directory:import
 ```
 
-The first command previews the changes. Production imports require verified staging and backups. The compatibility `wosool:prepare-gateway --apply` command now uses the same closed EOA installer and preserves legacy partner records. Never use the full fictional demo seeder in production.
-
-For startup/founder profiles, follow the [directory guide](docs/STARTUP-DIRECTORY.md). After migrations, preview with `php backend/artisan directory:import --dry-run`, then import with `php backend/artisan directory:import`.
+Production imports require a verified staging run, backups, source review, and publication approval. Never run fictional demonstration seeders in production.
 
 ## Development commands
 
-Run these commands from the repository root after setup:
+Run commands from the repository root after setup:
 
 | Command | Purpose |
 | --- | --- |
 | `npm run dev` | Start frontend and backend together; stop both with Ctrl+C |
-| `npm run dev:frontend` / `npm run dev:backend` | Start either application independently |
+| `npm run dev:frontend` / `npm run dev:backend` | Start one application independently |
 | `npm run lint` | Run frontend ESLint |
 | `npm run type-check` | Check frontend TypeScript |
 | `npm run test` | Run frontend and backend regression suites |
-| `npm run test:frontend` / `npm run test:backend` | Run one application's tests |
-| `npm run validate:entrepreneurs` | Validate the entrepreneur dataset |
+| `npm run test:frontend` / `npm run test:backend` | Run one test suite |
+| `npm run validate:entrepreneurs` | Validate the researched entrepreneur dataset |
 | `npm run build` | Build both applications |
-| `npm run verify` | Run lint, types, tests, dataset validation and both builds |
+| `npm run verify` | Run lint, types, tests, data validation, and both builds |
 | `npm run eoa:install` | Repeat the non-destructive EOA installer |
 
 Reverb is optional and is not started by default. Configure it before using `RUN_REVERB=1 npm run dev`.
 
 <details>
-<summary>Common local setup issues</summary>
+<summary>Common local issues</summary>
 
-- **SQLite file cannot be created:** check `DB_DATABASE` and write permissions on its parent directory.
-- **API requests fail:** ensure the backend is running and `NEXT_PUBLIC_API_URL` is its origin without `/api`; restart the frontend after local environment changes.
+- **SQLite file cannot be created:** verify `DB_DATABASE` and parent-directory permissions.
+- **API requests fail:** ensure the backend is running and `NEXT_PUBLIC_API_URL` points to its origin without `/api`; restart the frontend after environment changes.
 - **Verification or reset email does not arrive:** the default log mailer is not a sending transport; configure a controlled mail sink and run the queue worker.
-- **EOA registration or submission is unavailable:** check the approved privacy notice and intake settings in [EOA operations](docs/EOA.md); do not bypass the gates.
-- **Ports are occupied:** stop the conflicting local processes or run the applications separately with the appropriate port configuration.
+- **EOA registration or submission is unavailable:** check privacy notice, intake, and program settings in [EOA operations](docs/EOA.md); do not bypass the gates.
+- **Ports are occupied:** stop conflicting processes or start frontend/backend independently with appropriate ports.
 
 </details>
 
 ## Configuration
 
-Use [`frontend/.env.example`](frontend/.env.example) and [`backend/.env.example`](backend/.env.example) as references. Frontend overrides belong in `frontend/.env.local`; backend values belong in `backend/.env`. `NEXT_PUBLIC_*` values are public client configuration, **never secrets**.
+Use [`frontend/.env.example`](frontend/.env.example) and [`backend/.env.example`](backend/.env.example) as references. Frontend overrides belong in `frontend/.env.local`; backend values belong in `backend/.env`. `NEXT_PUBLIC_*` values are public browser configuration and must never contain secrets.
 
 | Variable | Purpose |
 | --- | --- |
-| `NEXT_PUBLIC_SITE_URL` | Frontend canonical origin; production https://wosool.org |
-| `NEXT_PUBLIC_API_URL` | Actual backend origin, without `/api`; rebuild frontend after changes |
-| `APP_ENV`, `APP_DEBUG` | Production and false on the live release |
-| `APP_KEY` | Stable protected encryption key; retain with recovery materials |
+| `NEXT_PUBLIC_SITE_URL` | Canonical frontend origin; production `https://wosool.org` |
+| `NEXT_PUBLIC_API_URL` | Actual backend origin without `/api`; rebuild frontend after changes |
+| `NEXT_PUBLIC_EOA_HERO_VIDEO_WEBM` | Optional approved WebM hero footage for `/eoa` |
+| `NEXT_PUBLIC_EOA_HERO_VIDEO_MP4` | Optional approved MP4 hero footage for `/eoa` |
+| `NEXT_PUBLIC_EOA_HERO_POSTER` | Optional approved poster/fallback image for `/eoa` |
+| `APP_ENV`, `APP_DEBUG` | Production environment and `false` debug setting |
+| `APP_KEY` | Stable protected encryption key retained with recovery materials |
 | `APP_URL`, `FRONTEND_URL` | Backend/frontend origins, including verification and recovery links |
-| `SANCTUM_STATEFUL_DOMAINS`, `SESSION_DOMAIN` | Correct origins/cookie scope for the deployed topology |
-| `SESSION_SECURE_COOKIE`, `SESSION_ENCRYPT` | True in production |
-| `DB_*`, `CACHE_STORE`, `QUEUE_CONNECTION` | Durable database and supervised queue/shared cache |
-| `MAIL_*` | Real sending transport, verified sender and delivery testing |
+| `SANCTUM_STATEFUL_DOMAINS`, `SESSION_DOMAIN` | Correct origins and cookie scope for the deployed topology |
+| `SESSION_SECURE_COOKIE`, `SESSION_ENCRYPT` | Must be enabled in production |
+| `DB_*`, `CACHE_STORE`, `QUEUE_CONNECTION` | Durable database, shared cache, and supervised queue configuration |
+| `MAIL_*` | Real delivery transport, verified sender, and delivery testing |
 | `NEXT_PUBLIC_ENABLE_DEMO_CONTENT` | Development fixtures only; ignored in production |
-| `REVERB_*` | Optional existing community realtime integration |
+| `REVERB_*` | Optional realtime community integration |
 
-Never commit secrets, private documents, tokens or backups. Rebuild Laravel's configuration cache after environment changes. Legacy `GATEWAY_PRIVACY_READY`/`GATEWAY_EMAIL_UPDATES` flags do **not** authorize EOA collection or intake: those approvals belong to the EOA administrative settings.
+Never commit secrets, private applicant documents, tokens, or backups. Rebuild Laravel configuration caches after environment changes. Legacy gateway flags do not authorize EOA collection or intake; approvals belong to EOA administrative settings.
 
 ## Roles and workflows
 
-- `eoa_applicant`: own verified account, draft, evidence, decisions and notifications.
-- Participants: enrollment-derived access to their own checklist, calendar, registrations, resources, group/coach, goals, attendance, feedback and announcements.
-- `eoa_reviewer`: assigned applications only; no final decisions or financial approvals.
-- `eoa_coach`: assigned participants' development/attendance, not application finances.
+- `eoa_applicant`: own verified account, draft application, evidence, decisions, and notifications.
+- Participants: enrollment-derived access to their own checklist, calendar, registrations, resources, accountability group/coach, goals, attendance, feedback, and announcements.
+- `eoa_reviewer`: assigned applications only; no final decisions or financial approval.
+- `eoa_coach`: assigned participant development and attendance; no application-finance access.
 - `eoa_staff`: review coordination and program operations.
-- `eoa_lead`/existing admin: local approvals, final admission decisions, partner confirmations and official/financial enrollment checks.
-- Existing community membership is separate; old reviewer assignments do not grant EOA permissions.
+- `eoa_lead` and existing platform administrators: approved local settings, final admission decisions, partner confirmations, and official/financial enrollment checks.
+- Community member roles remain separate from Accelerator admission and EOA permissions.
 
-Provision verified privileged accounts through the audited procedure in [EOA operations](docs/EOA.md). No privileged account is seeded. Applicants may submit data-rights requests in `/EOA/account`; existing administrators handle them in `/admin/privacy-requests`. A request does not automatically erase records or waive retention obligations.
+Provision privileged users through the audited procedure in [EOA operations](docs/EOA.md). No privileged account is seeded. Applicants can submit data-rights requests through their EOA account; authorized administrators manage requests under `/admin/privacy-requests` according to retention and legal requirements.
 
-## Verified content and partners
+## Content, directory, and partnership trust
 
-[EOA research](docs/EOA-RESEARCH.md) records official revenue of **USD 250,000–999,999**, the two-year program, learning cadence and annual global fee of **USD 1,750**, separately from local costs. SAR conversions state their basis/date. Recruitment numbers are targets, not achieved counts.
+- Public records must identify their source, last review date, publication state, and relationship status where applicable.
+- A logo, event listing, research record, or ecosystem mention does not establish a partnership.
+- Founder photos, logos, websites, roles, revenue evidence, and social links must come from approved or publicly verifiable sources.
+- Private founder contact information, application finances, applicant documents, and confidential peer discussions never belong in public responses or frontend bundles.
+- Automated ranking may support discovery; human reviewers retain publication, relationship, and admission decisions.
+- Meeting minimum EOA eligibility does not guarantee admission, program completion does not guarantee growth, and graduation does not grant automatic EO membership.
 
-Local launch dates, fees, sponsor allocations, attendance terms and versioned bilingual privacy notices remain draft until approved. Do not infer partnerships from available artwork. The requested partner order is EO Riyadh, The Garage, RIDA, Misk, CODE. RIDA-to-RDIA identity mapping and CODE's standalone approved artwork remain unresolved. Unconfirmed organizations stay out of “Proud of Partners.”
+[EOA research](docs/EOA-RESEARCH.md) records official program facts separately from proposed Riyadh delivery decisions. Local dates, fees, sponsorship allocations, partner claims, privacy notices, and commercial terms remain draft until formally approved.
 
-The wider directory has 18 sourced entities/programs/opportunities with dated provenance and editorial locks. It is distinct from applicant companies and confirmed partners. Research does not establish private revenue, founder eligibility or an EO relationship.
+## Brand system
 
-## Brand design system
+The shared design tokens live in [`frontend/src/app/brand.css`](frontend/src/app/brand.css), consumed by global CSS, Tailwind utilities, public pages, member workspaces, administration, and EOA components.
 
-The shared palette lives in [`frontend/src/app/brand.css`](frontend/src/app/brand.css), consumed by global CSS, Tailwind utilities and component styles. Visual changes must preserve data, admission rules and authorization boundaries.
+### Wosool identity assets
 
-<details>
-<summary>Design and asset guidelines</summary>
+| Asset | Use |
+| --- | --- |
+| [`frontend/public/wosool-logo-eo.svg`](frontend/public/wosool-logo-eo.svg) | Primary connected-node horizontal website logo |
+| [`frontend/public/wosool-logo-white.svg`](frontend/public/wosool-logo-white.svg) | White footer/dark-background logo |
+| [`frontend/public/wosool-w-favicon.svg`](frontend/public/wosool-w-favicon.svg) | Favicon and compact application icon |
+| [`frontend/public/wosool-network-logo.png`](frontend/public/wosool-network-logo.png) | Legacy raster compatibility and selected touch-image use |
 
-- Base: navy `#0C0C31`, white `#FFFFFF`, action blue `#3D46F2`.
-- Supporting: pink `#FF346E`, orange `#FA653C`, yellow `#EFB82E`, green `#1EA691`, gray `#5E617D`; light/dark accent shades are available as `--brand-light-*` / `--brand-dark-*` tokens.
-- Use semantic `--page-bg`, `--surface`, `--surface-soft`, `--text`, `--text-muted`, `--border`, `--border-soft`, `--action-*`, `--link`, `--focus-ring`, `--on-dark*`, `--error-*` and `--success-*` rather than introducing another literal palette. Shared radii, shadows and responsive section spacing keep journeys consistent.
-- Pair white text with blue/navy and navy text with bright supporting colors. Bright pink/orange/yellow/green are not white-text body-copy backgrounds. Use dark pink/green feedback text on their light surfaces, and `--on-dark-muted` for muted text on navy.
-- English uses locally bundled Roboto 400/700; Arabic uses Cairo. Use sentence-case headings, responsive `clamp()` sizing, logical spacing, normal Arabic letter spacing, visible keyboard focus and controls at least 44px tall. Honor `prefers-reduced-motion`; circular decoration is background artwork, never a replacement logo.
-- Preserve existing Wosool artwork without recoloring or redrawing. EO artwork comes from official packages in [the asset register](docs/research/PARTNER-ASSETS.md): preserve entire artwork, aspect ratios and clear space.
-- Authentic artwork does not establish a partnership. Replacement logos and new founder photography require owner-approved source assets; do not fabricate them. A fresh EO brand approval check remains a release prerequisite.
+The approved Wosool mark follows the connected-node geometry supplied by the project owner and uses the Wosool/EO-inspired palette. It is the Wosool parent-platform identity, not a replacement or recreation of official EO or EO Riyadh logos.
 
-</details>
+### Interface principles
+
+- Base navy `#0C0C31`, white `#FFFFFF`, action blue `#3D46F2`.
+- Supporting pink `#FF346E`, orange `#FA653C`, yellow `#EFB82E`, green `#1EA691`, and gray `#5E617D`.
+- Use semantic tokens instead of new literal palettes.
+- Cairo Variable is the primary product typeface for Arabic and English.
+- Use responsive `clamp()` sizing, logical spacing, normal Arabic letter spacing, visible focus states, and controls at least 44px tall.
+- Honor `prefers-reduced-motion` and never make animation the only way to access content.
+- Preserve official EO/EO Riyadh artwork, aspect ratios, clear space, provenance, and approval rules documented in [the partner asset register](docs/research/PARTNER-ASSETS.md).
 
 ## Verification and release
 
@@ -218,49 +249,54 @@ The shared palette lives in [`frontend/src/app/brand.css`](frontend/src/app/bran
 npm run verify
 cd backend
 php artisan wosool:check-readiness
-# On a configured release after the required approvals:
+
+# Only on a configured release after required approvals:
 php artisan wosool:check-readiness --production
 ```
 
-CI runs frontend lint/types/tests/data checks/security audit/build, and PHP syntax checks, backend tests, Composer/npm audits and the backend asset build. `/api/health` is liveness; `/api/ready` checks the database, applied migrations and EOA schema/program. Neither proves delivered email, running workers, backups, browser acceptance or legal compliance.
+CI currently covers:
 
-Follow [DEPLOYMENT.md](DEPLOYMENT.md) and [EOA operations](docs/EOA.md) for deployment, backups, restore rehearsal and rollback. Keep collection/intake closed until approvals and live checks pass. Never claim a release is live based only on a merge.
+- Frontend dependency installation, ESLint, TypeScript, automated tests, entrepreneur-data validation, production dependency audit, and Next.js production build.
+- Backend Composer installation, application/migration PHP syntax, Composer audit, Laravel tests, Node dependency audit, and backend asset build.
 
-Remaining external dependencies: configured hosting/deployment access, production database validation, persistent private storage, real mail and supervised workers, approved local decisions/relationships, browser RTL/LTR/mobile accessibility acceptance, and backup recovery tests. No payment gateway, EO enrollment API or calendar integration is simulated.
+`/api/health` is liveness. `/api/ready` checks database access, applied migrations, and required EOA schema/program records. Neither endpoint proves delivered email, supervised workers, backups, browser acceptance, privacy compliance, or production deployment.
 
-Automated checks do not certify WCAG 2.2 AA. Review bilingual mobile/desktop layouts, keyboard navigation, reduced motion, dark/light contrast, form feedback, empty/error states and real authenticated journeys before sign-off.
+Follow [DEPLOYMENT.md](DEPLOYMENT.md) and [EOA operations](docs/EOA.md) for deployment, backups, restore rehearsal, migrations, queues, mail, rollback, and smoke tests. Keep EOA intake closed until approvals and live checks pass.
+
+Remaining external dependencies include configured hosting/deployment access, production database validation, persistent private storage, real email, supervised workers, approved partner/program decisions, licensed or approved Riyadh media, browser RTL/LTR/mobile acceptance, and backup recovery tests. No payment gateway, EO enrollment API, or production deployment is simulated.
 
 ## Documentation
 
-| Guide | What you'll find |
+| Guide | Contents |
 | --- | --- |
 | [Architecture](ARCHITECTURE.md) | System structure and engineering context |
 | [API reference](docs/API.md) | Backend interfaces |
-| [Community homepage](docs/COMMUNITY-HOMEPAGE.md) | Main community experience |
-| [EOA operations](docs/EOA.md) | Authoritative Accelerator workflows, access and approvals |
-| [Startup directory](docs/STARTUP-DIRECTORY.md) | Sourcing, imports and ongoing review |
+| [Community homepage](docs/COMMUNITY-HOMEPAGE.md) | Main Wosool community experience |
+| [EOA operations](docs/EOA.md) | Authoritative Accelerator workflows, access, and approvals |
+| [Startup directory](docs/STARTUP-DIRECTORY.md) | Sourcing, imports, review, and publication controls |
 | [Testing](TESTING.md) | Automated coverage and manual acceptance gates |
-| [Deployment](DEPLOYMENT.md) | Hosting, release, backup and rollback procedures |
+| [Deployment](DEPLOYMENT.md) | Hosting, release, backup, and rollback procedures |
 | [Security policy](SECURITY.md) | Private reporting and operating controls |
-| [EOA research](docs/EOA-RESEARCH.md) | Official program facts and sources |
+| [EOA research](docs/EOA-RESEARCH.md) | Official program facts and source notes |
 | [Partner assets](docs/research/PARTNER-ASSETS.md) | Artwork provenance and approval constraints |
-| [Reliability release notes](docs/WOSOOL-RELIABILITY-EOA-2026-10-09.md) | October 9 reliability, track and role changes |
+| [Reliability release notes](docs/WOSOOL-RELIABILITY-EOA-2026-10-09.md) | October 9 reliability, tracks, and role changes |
 | [Integration release notes](docs/EOA-INTEGRATION-2026-10-09.md) | Canonical EOA migration and legacy compatibility |
-| [Changelog](CHANGELOG.md) | Release history |
+| [Changelog](CHANGELOG.md) | Release history and current implementation changes |
 | [Roadmap](ROADMAP.md) | Planned direction |
 
 ## Contributing
 
-1. Open an [issue](https://github.com/king4arabs/wosool/issues) to discuss a bug or significant change. Include reproduction steps, expected/actual behavior and environment details; omit private data.
-2. Create a focused branch from `main` and keep changes scoped. Preserve unrelated work and existing records, authorization boundaries and approval gates.
-3. Add regression coverage for behavior changes, check Arabic/English and RTL/LTR, and update directly affected documentation.
-4. Run `npm run verify` and the dependency audits in [Testing](TESTING.md). Record manual checks and any limitations separately.
-5. Submit a pull request describing the change, linked issue and verification results. Use only approved, sourced brand assets.
+1. Start from the latest `main` and preserve unrelated concurrent work.
+2. Keep changes focused; preserve records, authorization boundaries, approval gates, and bilingual behavior.
+3. Add regression coverage for behavior changes and review Arabic/English, RTL/LTR, mobile, keyboard, reduced-motion, and error states.
+4. Update README, CHANGELOG, configuration examples, and affected guides in the same changeset when architecture, routes, dependencies, security, testing, deployment, or product behavior changes.
+5. Run `npm run verify` and relevant readiness/security checks before requesting merge.
+6. Document manual checks, external dependencies, and limitations; never represent CI as production deployment.
 
 ## Security
 
-Report vulnerabilities privately using [the security policy](SECURITY.md), not public issues. Never commit credentials, tokens, private applicant documents or backups. Keep production debug disabled, protect private storage and preserve the application encryption key with tested recovery materials.
+Report vulnerabilities privately through [SECURITY.md](SECURITY.md), not public issues. Never commit credentials, tokens, private applicant documents, confidential financial records, or backups. Keep production debug disabled, protect private storage, apply least privilege, and retain the application encryption key with tested recovery materials.
 
 ## License
 
-The repository is licensed under the [MIT License](LICENSE). Third-party artwork and trademarks remain subject to their owners' rights and applicable usage approvals; the software license does not grant partnership or brand endorsement.
+The software repository is licensed under the [MIT License](LICENSE). Third-party artwork and trademarks remain subject to their owners' rights and approval requirements; the software license does not grant partnership, endorsement, or trademark rights.

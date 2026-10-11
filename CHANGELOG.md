@@ -1,5 +1,49 @@
 # Changelog
 
+All notable changes to **Wosool** are documented here.
+
+This project follows **Semantic Versioning** and a Keep a Changelog-inspired format. Date-based entries document significant product and operating-system upgrades between numbered application releases.
+
+---
+
+## Product system, EOA experience, and approved Wosool identity — 2026-10-11
+
+### Added
+
+- Added a unified semantic product design system shared across public Wosool pages, member workspaces, administration, and EO Riyadh Accelerator.
+- Added trusted founder, startup, scaleup, and venture scorecards combining company identity, founder story, role, short descriptions, sector, stage, location, official links, verification, review freshness, evidence, and opportunity signals where available.
+- Added equal-height responsive cards, controlled two-row browsing, pagination, search, and RTL/LTR-aware navigation without forced autoplay.
+- Added a structured authenticated founder-introduction workspace using the established reviewed introduction API and request-tracking flow.
+- Added an API-backed administration command center with grouped navigation for community, operations, growth/content, EOA, privacy, and system settings.
+- Added stronger EO Riyadh Accelerator storytelling and expandable Cash, Strategy, People, and Execution learning pillars under the canonical `/eoa` experience.
+- Added the approved Wosool connected-node identity assets:
+  - `frontend/public/wosool-logo-eo.svg` — primary horizontal website logo.
+  - `frontend/public/wosool-logo-white.svg` — white footer/dark-background version.
+  - `frontend/public/wosool-w-favicon.svg` — compact favicon/application icon.
+
+### Changed
+
+- Made Cairo Variable the primary product typeface for Arabic and English and expanded semantic tokens for surfaces, actions, status states, borders, elevation, responsive spacing, focus, and reduced motion.
+- Replaced the earlier geometric ribbon W with the exact connected-node W structure approved from the supplied Wosool reference.
+- Enlarged and integrated the master Wosool wordmark in the website header, applied the white lockup to the footer, and connected the compact mark to metadata/favicon configuration.
+- Normalized shared public navigation and calls to action to the canonical lowercase `/eoa` route while retaining the established physical route tree for compatibility.
+- Reorganized administration around real operational domains and live API data instead of invented dashboard metrics.
+- Updated README guidance for the current product architecture, brand assets, directories, introductions, EOA journey, trust controls, CI boundary, and production dependencies.
+
+### Fixed
+
+- Replaced malformed UTF-8 source introduced during the scorecard/directory upgrade and restored valid bilingual TypeScript/TSX.
+- Corrected active-route handling so lowercase `/eoa` navigation is recognized consistently.
+- Preserved private contact, application, financial, and peer-group information behind established authorization boundaries.
+
+### Validation and release boundary
+
+- Pull request #29 was merged to `main` as `22c7d0cdcd9ce543fd6befe7049b05d66cd0a402` after successful frontend and backend CI.
+- Follow-up approved-brand commits were pushed directly to `main`, ending with `4044e1fa8d2a26a87518fbf0d551452a6961e1ec`.
+- GitHub Actions run #52 passed frontend lint, TypeScript, automated tests, entrepreneur-data validation, production dependency audit, and Next.js build, plus backend syntax, security audit, Laravel tests, dependency audit, and build.
+- No database migration or new mandatory environment variable was introduced by this product/brand upgrade.
+- CI success does not prove that production hosting deployed the commit; live deployment and browser smoke testing remain separate release gates.
+
 ## Wosool reliability and EOA tracks — 2026-10-09
 
 - Standardize Cairo typography, bilingual alignment, mobile navigation, form sizing and loading/error states.
@@ -8,7 +52,6 @@
 - Refresh the EOA hero, partner rail and program explanation; add a homepage infographic and `/dashboard/eoa`.
 - Add bilingual admission tracks, applicant preferences, leadership-confirmed track acceptance and audited platform-admin assignment of EOA roles.
 - Add backend regression tests and record local browser/API verification in the October 9 release notes.
-
 
 ## EO Accelerator gateway — 2026-10-08
 
@@ -20,16 +63,9 @@
 - Add private response headers, readiness checks, privacy request handling and release/recovery documentation.
 - Deployment requires existing host access and the documented staging, email, policy and browser gates.
 
-
-All notable changes to **Wosool** are documented here.
-
-This project follows **Semantic Versioning** and a Keep a Changelog-inspired format.
-
----
-
 ## [Unreleased] — EO Riyadh Accelerator
 
-- Add the Arabic/English `/EOA` gateway, Cairo layouts, official program facts, eligibility self-check and approval-controlled partner logos.
+- Add the Arabic/English canonical `/eoa` gateway, Cairo layouts, official program facts, eligibility self-check and approval-controlled partner logos.
 - Add verified accounts, encrypted versioned applications, private evidence, assigned committee review, interviews, decisions, onboarding, official/financial confirmation and participant services.
 - Add cohort/session/material/group operations, coach coordination, notifications, inquiries, bilingual local terms and audit records with scoped roles.
 - Import seven sourced ecosystem organizations without overwriting local decisions; correct the USD/SAR distinction and RDIA/CODE identities. Keep partnerships and unapproved local decisions in draft.
@@ -87,8 +123,6 @@ This project follows **Semantic Versioning** and a Keep a Changelog-inspired for
 
 ---
 
-
-
 ### Added
 - Laravel Sanctum SPA authentication with stateful session management.
 - AuthController with login, logout, register, and me (current user) endpoints.
@@ -129,9 +163,9 @@ This project follows **Semantic Versioning** and a Keep a Changelog-inspired for
 ### Added
 - Fully functional Apply form with multi-step state management, client-side validation, API submission, loading states, and success confirmation page.
 - Fully functional Contact form with state management, client-side validation, API submission, loading states, and success confirmation.
-- Terms of Service page (/terms) with comprehensive legal content for Saudi Arabia jurisdiction.
-- Privacy Policy page (/privacy) with GDPR-aligned data protection content.
-- Forgot Password page (/forgot-password) with email input, validation, and confirmation flow.
+- Terms of Service page (`/terms`) with comprehensive legal content for Saudi Arabia jurisdiction.
+- Privacy Policy page (`/privacy`) with GDPR-aligned data protection content.
+- Forgot Password page (`/forgot-password`) with email input, validation, and confirmation flow.
 
 ### Changed
 - Apply form now includes phone field, "What do you need" field, and character counter for motivation (matching backend API contract).
@@ -141,9 +175,9 @@ This project follows **Semantic Versioning** and a Keep a Changelog-inspired for
 - Step indicators in Apply form no longer allow arbitrary step jumps — validation must pass before continuing.
 
 ### Fixed
-- Broken link: /terms now resolves to Terms of Service page.
-- Broken link: /privacy now resolves to Privacy Policy page.
-- Broken link: /forgot-password now resolves to password reset flow.
+- Broken link: `/terms` now resolves to Terms of Service page.
+- Broken link: `/privacy` now resolves to Privacy Policy page.
+- Broken link: `/forgot-password` now resolves to password reset flow.
 - Root package.json version synchronized from 0.2.0 to 0.3.1.
 - Apply form fields now aligned with backend StoreApplicationRequest validation rules.
 - Contact form fields now aligned with backend StoreContactRequest validation rules.
@@ -197,13 +231,12 @@ This project follows **Semantic Versioning** and a Keep a Changelog-inspired for
 ### Added
 - Initial monorepo structure with frontend, backend, schema, design system, and demo content.
 
-## 2026-10-09 — Sourced founder and startup cards
+## Sourced founder and startup cards — 2026-10-09
 
 - Unified logo-first cards with portraits, roles, separate briefs and safe social/website links.
 - Two-row manual sliders, selectable rows and page navigation across community and researched directories.
 - Added eight sourced Saudi-first startup/scaleup profiles, an idempotent database import and review dates.
 - Preserved public relationship privacy and removed invented numeric scores from public cards.
-
 - Expanded research to 13 businesses, with 10 eligible for publication; added Misk, Impact46, LEAP and GITEX profiles and a ten-source research queue.
 - Added technology/traditional classification, business focus, server-side search/filtering, website review dates and linked revenue evidence with publication gates.
 - Preserved pending evidence without publishing it; scheduled reviews now cover all requested sources.
