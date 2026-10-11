@@ -6,6 +6,15 @@ This project follows **Semantic Versioning** and a Keep a Changelog-inspired for
 
 ---
 
+## Founder growth calendar — 2026-10-12
+
+- Added a bilingual month calendar and agenda to `/events`, with date selection, topic search, activity filters, mobile layouts and Riyadh timezone handling.
+- Planned 26 distinct Wednesday learning sessions, 26 Saturday visit programs, 26 Sunday EOA peer discussions and 13 alternate-Friday online workshops from 12 October 2026, preserving all topics across the Ramadan pause through 9 May 2027.
+- Added accelerator off days throughout expected Ramadan (8 February–9 March 2027), international holidays/observances, EOA Cohort Demo Day & Investment Opportunity on 15 May 2027 and EO Saudi Summit in Diriyah on 20 May 2027 (details TBA).
+- Marked session time, host, venue/format, joining link and registration TBD; kept proposals separate from published, registerable API events.
+- Added sourced national occasions and tentative 2027 Ramadan/Eid dates, holiday-overlap notices and explicit messaging outside the program window.
+- Preserved upcoming/archive event listings and existing event details. See [calendar operations and verification](docs/FOUNDER-CALENDAR-2026-10-12.md).
+
 ## Transparent logo fitting — 2026-10-11
 
 - Unified partner strips, partner-directory cards and founder/company scorecards around proportional transparent logo rendering with readable fallbacks.

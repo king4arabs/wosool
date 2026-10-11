@@ -1,8 +1,9 @@
 "use client"
 
-import { useState } from "react"
+import { useMemo, useState } from "react"
 import Link from "next/link"
 import { PublicLayout } from "@/components/layout/PublicLayout"
+import { FounderCalendar } from "@/components/events/FounderCalendar"
 import { EventCard } from "@/components/sections/EventCard"
 import { Button } from "@/components/ui/button"
 import { eventsPageCopy } from "@/data/localized-seed"
@@ -16,7 +17,10 @@ export default function EventsPage() {
   const copy = eventsPageCopy[locale]
   const [activeTab, setActiveTab] = useState(0)
   const [period, setPeriod] = useState<"upcoming" | "past">("upcoming")
-  const { events: allEvents, loading, error, retry } = usePublicEvents(period)
+  const upcoming = usePublicEvents("upcoming")
+  const past = usePublicEvents("past")
+  const { events: allEvents, loading, error, retry } = period === "upcoming" ? upcoming : past
+  const calendarEvents = useMemo(() => Array.from(new Map([...upcoming.events, ...past.events].map((event) => [event.id, event])).values()), [upcoming.events, past.events])
   const now = useEventNow()
   const events = eventsForPeriod(allEvents, period, now)
 
@@ -43,26 +47,23 @@ export default function EventsPage() {
         <div className="relative mx-auto max-w-3xl text-center">
           <div className="inline-flex items-center gap-2 bg-[#EEF1FF] border border-[#E4E7F0] px-3 py-1 rounded-full text-xs font-bold text-[#3B52D4] mb-6">
             <span className="w-1.5 h-1.5 rounded-full bg-[#3B52D4] animate-pulse" />
-            {copy.badge}
+            {locale === "ar" ? "تقويم وصول وEO Riyadh Accelerator" : "Wosool & EO Riyadh Accelerator calendar"}
           </div>
 
           <h1 className="text-4xl lg:text-5xl font-black text-slate-900 tracking-tight leading-[1.15] mb-5">
-            {copy.title.split(" ").slice(0, 3).join(" ")}{" "}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#3B52D4] to-indigo-500">
-              {copy.title.split(" ").slice(3).join(" ")}
-            </span>
+            {locale === "ar" ? "كل أسبوع، خطوة نحو النمو" : "A new opportunity to grow. Every week."}
           </h1>
 
           <p className="text-base lg:text-lg text-slate-600 max-w-2xl mx-auto leading-relaxed">
-            {copy.description}
+            {locale === "ar" ? "تعلّم مع المؤسسين، واستكشف الأعمال من الداخل، وشارك الخبرة مع دفعتك. خطّط رحلتك عبر لقاءات وصول وبرامج EOA والإجازات السعودية." : "Learn with founders, explore businesses from the inside, and exchange experience with your cohort. Plan around Wosool events, EOA programs, and Saudi holidays."}
           </p>
 
           {/* Stats chips */}
           <div className="flex flex-wrap items-center justify-center gap-3 mt-8">
             {[
-              { label: locale === "ar" ? `${events.length} فعالية` : `${events.length} events` },
-              { label: locale === "ar" ? `${virtualEvents.length} عن بُعد` : `${virtualEvents.length} virtual` },
-              { label: locale === "ar" ? `${inPersonEvents.length} حضورية` : `${inPersonEvents.length} in-person` },
+              { label: locale === "ar" ? "٤ مسارات للنمو" : "4 growth tracks" },
+              { label: locale === "ar" ? "٢٦ أسبوعًا للتعلّم" : "26 active learning weeks" },
+              { label: locale === "ar" ? "التفاصيل تُعلن لاحقًا" : "Further details TBD" },
             ].map(({ label }) => (
               <div
                 key={label}
@@ -76,6 +77,8 @@ export default function EventsPage() {
           </div>
         </div>
       </section>
+
+      <FounderCalendar events={calendarEvents} now={now} loading={upcoming.loading || past.loading} error={upcoming.error || past.error} retry={() => { upcoming.retry(); past.retry() }} />
 
       {/* ── Tab filter ── */}
       <div
@@ -118,7 +121,7 @@ export default function EventsPage() {
                 <span className="w-1.5 h-1.5 rounded-full bg-[#3B52D4] animate-pulse" />
                 {period === "past" ? (locale === "ar" ? "الأرشيف" : "Archive") : copy.eyebrow}
               </div>
-              <h2 className="text-2xl lg:text-3xl font-black text-slate-900 tracking-tight">{period === "past" ? (locale === "ar" ? "الفعاليات السابقة" : "Past events") : copy.heading}</h2>
+              <h2 className="text-2xl lg:text-3xl font-black text-slate-900 tracking-tight">{period === "past" ? (locale === "ar" ? "الفعاليات السابقة" : "Past events") : (locale === "ar" ? "فعاليات المجتمع القادمة" : "Upcoming community events")}</h2>
             </div>
             <span className="shrink-0 text-xs font-bold text-slate-400 bg-slate-100 px-3 py-1 rounded-full">
               {filtered.length}
