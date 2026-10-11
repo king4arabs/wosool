@@ -4,7 +4,7 @@
 
 <h1 align="center">Wosool | وصول</h1>
 
-<p align="center"><strong>Founders to Founders — a Saudi-first community connecting founders across the GCC.</strong></p>
+<p align="center"><strong>Founders to Founders — a Saudi-first community connecting founders across the WORLD.</strong></p>
 
 <p align="center">
   <a href="https://github.com/king4arabs/wosool/actions/workflows/ci.yml"><img src="https://github.com/king4arabs/wosool/actions/workflows/ci.yml/badge.svg" alt="CI status" /></a>
