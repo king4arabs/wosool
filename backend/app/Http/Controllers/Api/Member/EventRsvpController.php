@@ -152,15 +152,15 @@ class EventRsvpController extends Controller
             ]);
         }
 
-        if ($registrationDeadline && now()->greaterThan($registrationDeadline)) {
+        if ($registrationDeadline && now()->greaterThanOrEqualTo($registrationDeadline)) {
             throw ValidationException::withMessages([
                 'event' => ['Registration deadline has passed for this event.'],
             ]);
         }
 
-        if (now()->greaterThanOrEqualTo($event->ends_at ?? $event->starts_at)) {
+        if (! $event->registrationWindowOpen()) {
             throw ValidationException::withMessages([
-                'event' => ['This event has ended and is no longer accepting RSVPs.'],
+                'event' => ['This event is no longer accepting RSVPs or has an invalid schedule.'],
             ]);
         }
 
@@ -299,16 +299,16 @@ class EventRsvpController extends Controller
 
     private function computeEventRegistrationState(Event $event): string
     {
-        $statusFlow = method_exists($event, 'getAttributes') && array_key_exists('status_flow', $event->getAttributes())
-            ? (string) ($event->status_flow ?? '')
-            : '';
-        $status = $statusFlow !== '' ? $statusFlow : (string) $event->status;
+        if (! $event->registrationWindowOpen()) {
+            return 'registration_closed';
+        }
 
         if ($this->isInviteOnly($event)) {
             return 'invite_only';
         }
-        if (in_array($status, ['registration_closed', 'completed', 'cancelled', 'archived'], true)) {
-            return 'registration_closed';
+        $capacity = $event->capacity_limit ?: $event->max_attendees;
+        if ($capacity && $event->attendees()->wherePivotIn('status', ['confirmed', 'approved', 'checked_in'])->count() >= $capacity) {
+            return $event->waitlist_enabled ? 'full_capacity' : 'registration_closed';
         }
         $requiresApproval = method_exists($event, 'getAttributes') && array_key_exists('requires_approval', $event->getAttributes())
             ? (bool) ($event->requires_approval ?? false)
@@ -332,6 +332,9 @@ class EventRsvpController extends Controller
 
     private function promoteWaitlistedAttendeeIfPossible(Event $event): void
     {
+        if (! $event->registrationWindowOpen()) {
+            return;
+        }
         $capacity = (method_exists($event, 'getAttributes') && array_key_exists('capacity_limit', $event->getAttributes()))
             ? ($event->capacity_limit ?: $event->max_attendees)
             : $event->max_attendees;

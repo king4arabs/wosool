@@ -5,16 +5,18 @@ import { CalendarDays } from "lucide-react"
 import { useLocale } from "@/lib/locale"
 import { usePublicEvents } from "@/lib/use-public-events"
 import { upcomingEvents } from "@/lib/event-time"
+import { useEventNow } from "@/lib/use-event-now"
 import { EventCard } from "./EventCard"
 
 export function UpcomingEvents() {
   const { locale } = useLocale()
   const { events, loading, error, retry } = usePublicEvents()
-  const upcoming = upcomingEvents(events).slice(0, 3)
+  const now = useEventNow()
+  const upcoming = upcomingEvents(events, now).slice(0, 3)
   return (
     <div>
       {loading ? <p role="status" className="py-12 text-center text-slate-600">{locale === "ar" ? "جارٍ تحميل الفعاليات…" : "Loading events…"}</p>
-        : upcoming.length ? <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">{upcoming.map((event) => <EventCard key={event.id} event={event} />)}</div>
+        : upcoming.length ? <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">{upcoming.map((event) => <EventCard key={event.id} event={event} now={now} />)}</div>
         : <div className="rounded-3xl border border-dashed border-slate-300 bg-slate-50 px-6 py-12 text-center">
           <CalendarDays className="mx-auto mb-4 h-8 w-8 text-[#3B52D4]" aria-hidden="true" />
           <p role={error ? "alert" : "status"} className="text-base font-semibold text-slate-800">{error ? (locale === "ar" ? "تعذر تحميل الفعاليات الآن." : "We could not load events right now.") : (locale === "ar" ? "ترقّب اللقاءات القادمة" : "More founder gatherings are on the way")}</p>

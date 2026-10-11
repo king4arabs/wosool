@@ -4,10 +4,11 @@ import Link from "next/link"
 import type { Event } from "@/types"
 import { MapPin, Video, Users, ArrowLeft, ArrowRight } from "lucide-react"
 import { useLocale } from "@/lib/locale"
-import { isPastEvent } from "@/lib/event-time"
+import { canRegisterForEvent, isPastEvent } from "@/lib/event-time"
 
 interface EventCardProps {
   event: Event
+  now: number
 }
 
 function formatEventDate(dateStr: string, intlLocale: string) {
@@ -16,11 +17,12 @@ function formatEventDate(dateStr: string, intlLocale: string) {
     day:   date.toLocaleDateString(intlLocale, { day: "2-digit", timeZone: "Asia/Riyadh", calendar: "gregory" }),
     month: date.toLocaleDateString(intlLocale, { month: "short", timeZone: "Asia/Riyadh", calendar: "gregory" }).toUpperCase(),
     time:  date.toLocaleTimeString(intlLocale, { hour: "2-digit", minute: "2-digit", timeZone: "Asia/Riyadh", timeZoneName: "short" }),
+    year: date.toLocaleDateString(intlLocale, { year: "numeric", timeZone: "Asia/Riyadh", calendar: "gregory" }),
     full:  date.toLocaleDateString(intlLocale, { weekday: "long", year: "numeric", month: "long", day: "numeric", timeZone: "Asia/Riyadh", calendar: "gregory" }),
   }
 }
 
-export function EventCard({ event }: EventCardProps) {
+export function EventCard({ event, now }: EventCardProps) {
   const { locale, direction } = useLocale()
   const intlLocale = locale === "ar" ? "ar-SA" : "en-US"
   const d = formatEventDate(event.date, intlLocale)
@@ -35,8 +37,8 @@ export function EventCard({ event }: EventCardProps) {
           limited: `${event.maxAttendees ?? 0} places`, rsvp: "RSVP", details: "Voir les détails" },
   }[locale]
 
-  const isPast = isPastEvent(event)
-  const isOpen = !isPast && !!event.registrationUrl && /^https?:\/\//.test(event.registrationUrl)
+  const isPast = isPastEvent(event, now)
+  const isOpen = canRegisterForEvent(event, now) && !!event.registrationUrl && /^https?:\/\//.test(event.registrationUrl)
 
   return (
     <div
@@ -70,7 +72,7 @@ export function EventCard({ event }: EventCardProps) {
 
           <div className="flex-1 min-w-0">
             <h3 className="text-sm font-black text-slate-900 line-clamp-2 leading-snug mb-1">{event.title}</h3>
-            <time dateTime={event.date} className="text-xs text-slate-600 font-medium">{d.time}</time>
+            <time dateTime={event.date} className="text-xs text-slate-600 font-medium">{d.year} · {d.time}</time>
           </div>
         </div>
 

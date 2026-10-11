@@ -7,7 +7,8 @@ import { EventCard } from "@/components/sections/EventCard"
 import { Button } from "@/components/ui/button"
 import { eventsPageCopy } from "@/data/localized-seed"
 import { usePublicEvents } from "@/lib/use-public-events"
-import { isPastEvent } from "@/lib/event-time"
+import { eventsForPeriod } from "@/lib/event-time"
+import { useEventNow } from "@/lib/use-event-now"
 import { useLocale } from "@/lib/locale"
 
 export default function EventsPage() {
@@ -16,8 +17,8 @@ export default function EventsPage() {
   const [activeTab, setActiveTab] = useState(0)
   const [period, setPeriod] = useState<"upcoming" | "past">("upcoming")
   const { events: allEvents, loading, error, retry } = usePublicEvents(period)
-  const events = allEvents.filter((event) => isPastEvent(event) === (period === "past"))
-    .sort((a, b) => period === "past" ? Date.parse(b.date) - Date.parse(a.date) : Date.parse(a.date) - Date.parse(b.date))
+  const now = useEventNow()
+  const events = eventsForPeriod(allEvents, period, now)
 
   const virtualEvents   = events.filter((e) =>  e.isVirtual)
   const inPersonEvents  = events.filter((e) => !e.isVirtual)
@@ -115,7 +116,7 @@ export default function EventsPage() {
             <div>
               <div className="inline-flex items-center gap-2 bg-[#EEF1FF] border border-[#E4E7F0] px-3 py-1 rounded-full text-xs font-bold text-[#3B52D4] mb-3">
                 <span className="w-1.5 h-1.5 rounded-full bg-[#3B52D4] animate-pulse" />
-                {copy.eyebrow}
+                {period === "past" ? (locale === "ar" ? "الأرشيف" : "Archive") : copy.eyebrow}
               </div>
               <h2 className="text-2xl lg:text-3xl font-black text-slate-900 tracking-tight">{period === "past" ? (locale === "ar" ? "الفعاليات السابقة" : "Past events") : copy.heading}</h2>
             </div>
@@ -135,7 +136,7 @@ export default function EventsPage() {
           ) : (
             <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
               {filtered.map((event) => (
-                <EventCard key={event.id} event={event} />
+                <EventCard key={event.id} event={event} now={now} />
               ))}
             </div>
           )}

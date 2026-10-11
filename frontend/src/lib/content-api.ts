@@ -90,6 +90,8 @@ export interface ApiFounder {
 }
 
 export interface ApiEvent {
+  status_flow?: string | null
+  registration_deadline?: string | null
   id: number
   title: string
   slug: string
@@ -232,6 +234,9 @@ export function mapCompany(company: ApiCompany): Company {
 
 export function mapEvent(event: ApiEvent): Event {
   return {
+    status: event.status ?? undefined,
+    statusFlow: event.status_flow ?? undefined,
+    registrationDeadline: event.registration_deadline ?? undefined,
     id: String(event.id),
     title: event.title,
     slug: event.slug,

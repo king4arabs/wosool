@@ -2,6 +2,8 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
+use Carbon\CarbonInterface;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -47,6 +49,35 @@ class Event extends Model
         'auto_approve_trusted_members' => 'boolean',
         'registration_deadline' => 'datetime',
     ];
+
+    /** Date boundaries, not the editable legacy status, determine the event period. */
+    public function scopeInPeriod(Builder $query, bool $past, ?CarbonInterface $now = null): Builder
+    {
+        $now ??= now();
+        $operator = $past ? '<=' : '>';
+        return $query->whereNotNull('starts_at')
+            ->where(function (Builder $range) {
+                $range->whereNull('ends_at')->orWhereColumn('ends_at', '>=', 'starts_at');
+            })
+            ->where(function (Builder $period) use ($operator, $now) {
+                $period->where('ends_at', $operator, $now)
+                    ->orWhere(function (Builder $noEnd) use ($operator, $now) {
+                        $noEnd->whereNull('ends_at')->where('starts_at', $operator, $now);
+                    });
+            });
+    }
+
+    public function registrationWindowOpen(?CarbonInterface $now = null): bool
+    {
+        $now ??= now();
+        $status = $this->status_flow ?: $this->status;
+        $start = $this->starts_at;
+        $end = $this->ends_at ?? $start;
+        return in_array($status, ['published', 'live_now', 'upcoming', 'live'], true)
+            && $start && $end && $end->greaterThanOrEqualTo($start) && $end->greaterThan($now)
+            && (! $this->registration_deadline || $this->registration_deadline->greaterThan($now))
+            && ($this->requires_rsvp || $this->rsvp_required);
+    }
 
     public function creator(): BelongsTo
     {

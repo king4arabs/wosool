@@ -15,23 +15,27 @@ class EventCatalogController extends Controller
     public function index(Request $request): JsonResponse
     {
         $user = $request->user();
+        $past = $request->input('period') === 'past';
+        $statuses = $past ? ['published', 'registration_closed', 'live_now', 'completed'] : ['published', 'registration_closed', 'live_now'];
+        $legacyStatuses = $past ? ['upcoming', 'live', 'completed'] : ['upcoming', 'live'];
 
         $query = Event::query()
+            ->inPeriod($past)
             ->withCount('attendees');
 
         $hasVisibility = Schema::hasColumn('events', 'visibility');
         $hasStatusFlow = Schema::hasColumn('events', 'status_flow');
 
         if ($hasVisibility && $hasStatusFlow) {
-            $query->where(function ($builder) {
+            $query->where(function ($builder) use ($statuses, $legacyStatuses) {
                 $builder
-                    ->where(function ($q) {
+                    ->where(function ($q) use ($statuses) {
                         $q->whereIn('visibility', ['public', 'members_only', 'founder_only'])
-                            ->whereIn('status_flow', ['published', 'registration_closed', 'live_now']);
+                            ->whereIn('status_flow', $statuses);
                     })
-                    ->orWhere(function ($q) {
+                    ->orWhere(function ($q) use ($legacyStatuses) {
                         $q->whereNull('status_flow')
-                            ->whereIn('status', ['upcoming', 'live'])
+                            ->whereIn('status', $legacyStatuses)
                             ->where(function ($legacyVisibility) {
                                 $legacyVisibility
                                     ->where('is_public', true)
@@ -42,7 +46,7 @@ class EventCatalogController extends Controller
         } else {
             $query
                 ->where('is_public', true)
-                ->whereIn('status', ['upcoming', 'live']);
+                ->whereIn('status', $legacyStatuses);
         }
 
         if ($request->filled('period')) {
@@ -55,7 +59,7 @@ class EventCatalogController extends Controller
             };
         }
 
-        $events = $query->orderBy('starts_at')->paginate($request->integer('per_page', 20))->withQueryString();
+        $events = $query->orderBy('starts_at', $past ? 'desc' : 'asc')->paginate(max(1, min(100, $request->integer('per_page', 20))))->withQueryString();
         $savedIds = [];
         if (Schema::hasTable('event_bookmarks')) {
             $savedIds = EventBookmark::query()->where('user_id', $user->id)->pluck('event_id')->all();
@@ -68,6 +72,6 @@ class EventCatalogController extends Controller
             return $event;
         });
 
-        return EventResource::collection($events)->response();
+        return EventResource::collection($events)->response()->header('Cache-Control', 'private, no-store');
     }
 }

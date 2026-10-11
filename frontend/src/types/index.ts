@@ -49,6 +49,9 @@ export interface Company {
 }
 
 export interface Event {
+  status?: string
+  statusFlow?: string
+  registrationDeadline?: string
   id: string
   title: string
   slug: string

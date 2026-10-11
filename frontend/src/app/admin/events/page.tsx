@@ -1,5 +1,7 @@
 "use client"
 
+import { eventLocalInput } from "@/lib/event-time"
+
 import { useCallback, useEffect, useState } from "react"
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -146,9 +148,9 @@ function toForm(event?: AdminEvent | null): EventForm {
     description: event.description || "",
     short_description: event.short_description || "",
     full_description: event.full_description || event.description || "",
-    starts_at: event.starts_at.slice(0, 16),
-    ends_at: event.ends_at ? event.ends_at.slice(0, 16) : "",
-    registration_deadline: event.registration_deadline ? event.registration_deadline.slice(0, 16) : "",
+    starts_at: eventLocalInput(event.starts_at, event.timezone || "Asia/Riyadh"),
+    ends_at: eventLocalInput(event.ends_at, event.timezone || "Asia/Riyadh"),
+    registration_deadline: eventLocalInput(event.registration_deadline, event.timezone || "Asia/Riyadh"),
     timezone: event.timezone || "Asia/Riyadh",
     location: event.location,
     venue_name: event.venue_name || "",

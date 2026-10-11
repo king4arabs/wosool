@@ -10,6 +10,8 @@ import { useToast } from "@/components/ui/toast"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Select } from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
+import { canRegisterForEvent } from "@/lib/event-time"
+import { useEventNow } from "@/lib/use-event-now"
 
 type AgendaItem = {
   id: number
@@ -37,6 +39,11 @@ type EventResourceItem = {
 }
 
 type EventDetails = {
+  status?: string | null
+  status_flow?: string | null
+  registration_deadline?: string | null
+  requires_rsvp?: boolean
+  rsvp_required?: boolean
   id: number
   title: string
   slug: string
@@ -62,6 +69,7 @@ type EventDetails = {
 }
 
 export default function EventDetailPage() {
+  const now = useEventNow()
   const { toast } = useToast()
   const params = useParams<{ slug: string }>()
   const slug = params?.slug
@@ -71,6 +79,7 @@ export default function EventDetailPage() {
   const [busyAction, setBusyAction] = useState<"rsvp" | "save" | "share" | null>(null)
   const [isSaved, setIsSaved] = useState(false)
   const [registrationState, setRegistrationState] = useState<string>("open")
+  const [eventState, setEventState] = useState<string | null>(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [formData, setFormData] = useState({
     attendance_type: "in_person",
@@ -82,22 +91,34 @@ export default function EventDetailPage() {
 
   useEffect(() => {
     if (!slug) return
+    let active = true
     setLoading(true)
-    api.get<{ data: EventDetails }>(`/events/${slug}`)
+    setError(null)
+    setRegistrationState("open")
+    setEventState(null)
+    setIsModalOpen(false)
+    api.get<{ data: EventDetails }>(`/events/${slug}`, { cache: "no-store" })
       .then((response) => {
+        if (!active) return
         setEvent(response.data)
         setIsSaved(false)
       })
-      .catch((err: Error) => setError(err.message))
-      .finally(() => setLoading(false))
+      .catch((err: Error) => { if (active) setError(err.message) })
+      .finally(() => { if (active) setLoading(false) })
 
-    api.get<{ data: { registration_state: string } }>(`/member/events/${slug}/registration-status`)
-      .then((res) => setRegistrationState(res.data.registration_state))
+    api.get<{ data: { event_state: string; registration_state: string } }>(`/member/events/${slug}/registration-status`, { cache: "no-store" })
+      .then((res) => { if (active) { setRegistrationState(res.data.registration_state); setEventState(res.data.event_state) } })
       .catch(() => {})
+    return () => { active = false }
   }, [slug])
 
+  const timing = event ? { date: event.starts_at, endDate: event.ends_at ?? undefined, status: event.status ?? undefined, statusFlow: event.status_flow ?? undefined, registrationDeadline: event.registration_deadline ?? undefined } : null
+  const registrationOpen = timing && canRegisterForEvent(timing, now) &&
+    (event?.requires_rsvp || event?.rsvp_required) && !["registration_closed", "invite_only"].includes(eventState || "")
+  const effectiveRegistrationState = registrationOpen ? registrationState : "registration_closed"
+
   async function handleRsvp() {
-    if (!event) return
+    if (!event || !timing || !canRegisterForEvent(timing, Date.now()) || !registrationOpen || !canOpenRsvp(registrationState)) return
     setBusyAction("rsvp")
     try {
       const res = await api.post<{ message?: string; registration_state?: string }>(`/member/events/${event.slug}/rsvp`, formData)
@@ -234,8 +255,8 @@ export default function EventDetailPage() {
             <CardContent className="p-5 space-y-3">
               <h3 className="font-semibold">التسجيل</h3>
               <p className="text-xs text-slate-500">عدد المسجلين: {event.rsvp_count || 0}</p>
-              <Button className="w-full" onClick={() => (canOpenRsvp(registrationState) ? setIsModalOpen(true) : undefined)} disabled={busyAction === "rsvp" || !canOpenRsvp(registrationState)}>
-                {busyAction === "rsvp" ? "جاري التسجيل..." : ctaLabel(registrationState)}
+              <Button className="w-full" onClick={() => (canOpenRsvp(effectiveRegistrationState) ? setIsModalOpen(true) : undefined)} disabled={busyAction === "rsvp" || !canOpenRsvp(effectiveRegistrationState)}>
+                {busyAction === "rsvp" ? "جاري التسجيل..." : ctaLabel(effectiveRegistrationState)}
               </Button>
               {["registered", "approved", "pending_approval", "waitlisted"].includes(registrationState) ? (
                 <Button
@@ -312,7 +333,7 @@ export default function EventDetailPage() {
             </label>
             <div className="flex justify-end gap-2">
               <Button variant="outline" onClick={() => setIsModalOpen(false)}>إلغاء</Button>
-              <Button onClick={handleRsvp} disabled={busyAction === "rsvp"}>{busyAction === "rsvp" ? "جاري الإرسال..." : "تأكيد التسجيل"}</Button>
+              <Button onClick={handleRsvp} disabled={busyAction === "rsvp" || !canOpenRsvp(effectiveRegistrationState)}>{!registrationOpen ? "أُغلق التسجيل" : busyAction === "rsvp" ? "جاري الإرسال..." : "تأكيد التسجيل"}</Button>
             </div>
           </div>
         </DialogContent>

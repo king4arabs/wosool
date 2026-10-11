@@ -14,6 +14,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Validation\Rule;
+use Carbon\CarbonImmutable;
 
 class EventController extends Controller
 {
@@ -134,6 +135,22 @@ class EventController extends Controller
 
     private function validated(Request $request, ?Event $event = null): array
     {
+        // datetime-local inputs are wall-clock times in the selected event timezone.
+        // Explicit offsets are honored; normalize before comparing or persisting dates.
+        $schedule = $request->validate([
+            'starts_at' => ['required', 'date'],
+            'ends_at' => ['nullable', 'date'],
+            'registration_deadline' => ['nullable', 'date'],
+            'timezone' => ['nullable', 'timezone'],
+        ]);
+        $timezone = $schedule['timezone'] ?? $event?->timezone ?? 'Asia/Riyadh';
+        foreach (['starts_at', 'ends_at', 'registration_deadline'] as $field) {
+            if (! empty($schedule[$field])) {
+                $request->merge([$field => CarbonImmutable::parse($schedule[$field], $timezone)->utc()->toIso8601String()]);
+            }
+        }
+        $request->merge(['timezone' => $timezone]);
+
         return $request->validate([
             'title' => ['required', 'string', 'max:255'],
             'slug' => ['nullable', 'string', 'max:255', Rule::unique('events', 'slug')->ignore($event?->id)],
@@ -143,7 +160,7 @@ class EventController extends Controller
             'starts_at' => ['required', 'date'],
             'ends_at' => ['nullable', 'date', 'after_or_equal:starts_at'],
             'registration_deadline' => ['nullable', 'date', 'before_or_equal:starts_at'],
-            'timezone' => ['nullable', 'string', 'max:64'],
+            'timezone' => ['nullable', 'timezone'],
             'location' => ['required', 'string', 'max:255'],
             'venue_name' => ['nullable', 'string', 'max:255'],
             'city' => ['nullable', 'string', 'max:120'],

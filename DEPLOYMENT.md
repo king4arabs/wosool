@@ -78,6 +78,8 @@ Never run `migrate:fresh`, rotate `APP_KEY`, or seed demonstration accounts duri
 
 ## Verification
 
+For the October 11 events incident, see [the investigation and release checks](docs/EVENTS-INVESTIGATION-2026-10-11.md). Record the hosting source SHA alongside the frontend build ID; the public build ID alone does not identify a Git commit. Deploy the events frontend/backend fixes together and verify API JSON before treating an empty event list as valid.
+
 - `GET /api/ready` verifies database/schema and prepared gateway; run `php artisan wosool:check-readiness --production` and separately verify mail/worker delivery.
 - `GET /api/health` succeeds on both the API origin and the frontend proxy.
 - Public pages, logo assets, `/robots.txt`, and `/sitemap.xml` respond correctly.

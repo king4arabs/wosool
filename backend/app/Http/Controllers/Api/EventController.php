@@ -17,17 +17,7 @@ class EventController extends Controller
     public function index(Request $request): JsonResponse
     {
         $past = $request->input('period') === 'past';
-        $query = $this->publicEvents($past)->withCount('attendees');
-
-        if (in_array($request->input('period'), ['upcoming', 'past'], true)) {
-            $operator = $past ? '<=' : '>';
-            $query->where(function ($builder) use ($operator) {
-                $builder->where('ends_at', $operator, now())
-                    ->orWhere(function ($sub) use ($operator) {
-                        $sub->whereNull('ends_at')->where('starts_at', $operator, now());
-                    });
-            });
-        }
+        $query = $this->publicEvents($past)->inPeriod($past)->withCount('attendees');
 
         if ($request->filled('type')) {
             $query->where('type', $request->string('type'));
@@ -93,7 +83,7 @@ class EventController extends Controller
             return $event;
         });
 
-        return EventResource::collection($events)->response();
+        return EventResource::collection($events)->response()->header('Cache-Control', 'private, no-store');
     }
 
     public function show(string $slug): JsonResponse
