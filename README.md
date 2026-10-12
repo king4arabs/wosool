@@ -37,7 +37,7 @@ Wosool also provides the dedicated digital gateway for **EO Riyadh Accelerator**
 | Test or deploy a change | [Testing](TESTING.md) and [Deployment](DEPLOYMENT.md); CI does not deploy |
 | Report a security issue | [Security policy](SECURITY.md) for private reporting |
 
-## Current platform snapshot — October 11, 2026
+## Current platform snapshot — October 12, 2026
 
 The latest product and brand upgrade includes:
 
@@ -54,6 +54,7 @@ The latest product and brand upgrade includes:
 - **2026/27 EO Riyadh board:** 11 original poster portraits with researched company/profile links, accessible rightward carousel, and API-backed ordering, terms, publishing and secure portrait management.
 - **Editorial operations:** bilingual operator content and FAQs with draft/published snapshots, stale-save protection, partner details, and audit history.
 - **Reliability guardrails:** no fictional metrics, partners, founders, revenue, or affiliations; private contact and financial records remain protected; official EO and EO Riyadh artwork remains separate from Wosool artwork.
+- **Transactional email:** verification, founder activation codes and password recovery use a shared bilingual Wosool header and footer; recovery mail states the configured token expiry. The logo image requires a publicly accessible frontend origin, while the text brand remains visible if images are blocked.
 
 See [CHANGELOG.md](CHANGELOG.md) for release history and verified implementation details.
 
@@ -82,7 +83,7 @@ Local production-build screenshots with the seeded Laravel API (not a claim of l
 
 ### Founder activation
 
-Sourced founder/company cards connect to public profiles and an administrator-managed email activation flow. Activated founders can manage their information and use private community conversations. See [founder activation and release notes](docs/FOUNDER-ACTIVATION.md) for import, recipient verification, mail setup, and deployment checks.
+Sourced founder/company cards connect to public profiles and an administrator-managed email activation flow. Activated founders can manage their information, access an initially unscored private scorecard, and use private community conversations. Activation does not certify a growth score. See [founder activation and release notes](docs/FOUNDER-ACTIVATION.md) for import, recipient verification, mail setup, and deployment checks.
 
 | Experience | Canonical route | Purpose |
 | --- | --- | --- |
@@ -165,6 +166,8 @@ php backend/artisan queue:work --tries=5 --timeout=60
 ```
 
 > Local mail defaults to `MAIL_MAILER=log` and does not deliver email. Use a controlled mail sink for verification and recovery tests. Keep EOA data collection and intake closed until the required administrative and privacy approvals are configured.
+
+Transactional messages use the configured `FRONTEND_URL` for links and the Wosool logo. Set it to the public HTTPS website origin before sending production mail; test image loading, both languages, reset/verification links and delivery on real email clients. The founder activation code expires after seven days; verification links expire after 60 minutes and password-reset expiry follows `auth.passwords.users.expire`. Do not send founder invitations without independently confirming the recipient, and do not treat mail-transport acceptance as inbox delivery.
 
 ### Optional data imports
 
@@ -255,10 +258,6 @@ Provision privileged users through the audited procedure in [EOA operations](doc
 - Meeting minimum EOA eligibility does not guarantee admission, program completion does not guarantee growth, and graduation does not grant automatic EO membership.
 
 [EOA research](docs/EOA-RESEARCH.md) records official program facts separately from proposed Riyadh delivery decisions. Local dates, fees, sponsorship allocations, partner claims, privacy notices, and commercial terms remain draft until formally approved.
-
-### Founder directory and activation
-
-Sourced founder/company cards connect to public profiles and an administrator-managed email activation flow. Activated founders can manage their information and use private community conversations. See [founder activation and release notes](docs/FOUNDER-ACTIVATION.md) for import, recipient verification, mail setup and deployment checks.
 
 ## Brand system
 

@@ -28,9 +28,23 @@ class PasswordRecoveryTest extends TestCase
             $this->assertStringStartsWith('https://wosool.org/reset-password?', $url);
             $this->assertStringContainsString('token=', $url);
             $this->assertStringContainsString('email='.urlencode($user->email), $url);
+            $this->assertStringContainsString('Reset your password', $notification->toMail($user)->subject);
+            $this->assertStringContainsString('60 minutes', implode(' ', $notification->toMail($user)->introLines));
             return true;
         });
         $this->assertDatabaseHas('password_reset_tokens', ['email' => $user->email]);
+    }
+
+    public function test_recovery_mail_has_branded_header_and_footer(): void
+    {
+        config(['app.frontend_url' => 'https://wosool.org']);
+
+        $header = view('vendor.mail.html.header', ['url' => 'https://wosool.org'])->render();
+        $footer = view('vendor.mail.html.footer')->render();
+
+        $this->assertStringContainsString('https://wosool.org/wosool-network-logo.png', $header);
+        $this->assertStringContainsString('Wosool | وصول', $header);
+        $this->assertStringContainsString('Founders to Founders', $footer);
     }
 
     public function test_valid_token_updates_password_and_cannot_be_reused(): void

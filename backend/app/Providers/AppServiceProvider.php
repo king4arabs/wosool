@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
@@ -23,12 +24,19 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        ResetPassword::createUrlUsing(fn ($user, string $token) =>
+        $resetUrl = fn ($user, string $token) =>
             rtrim(config('app.frontend_url'), '/').($user->is_accelerator_applicant || $user->hasAnyRole(['eoa_applicant','eoa_lead','eoa_staff','eoa_reviewer','eoa_coach']) ? '/EOA/reset-password?' : '/reset-password?').http_build_query([
                 'token' => $token,
                 'email' => $user->getEmailForPasswordReset(),
-            ])
-        );
+            ]);
+        ResetPassword::createUrlUsing($resetUrl);
+        ResetPassword::toMailUsing(fn ($user, string $token) => (new MailMessage)
+            ->subject('Wosool | Reset your password / إعادة تعيين كلمة المرور')
+            ->greeting('Reset your password | إعادة تعيين كلمة المرور')
+            ->line('We received a request to reset your Wosool password. تلقّينا طلباً لإعادة تعيين كلمة المرور لحسابك في وصول.')
+            ->action('Reset password | إعادة تعيين كلمة المرور', $resetUrl($user, $token))
+            ->line('This link expires in '.config('auth.passwords.users.expire').' minutes. تنتهي صلاحية الرابط خلال '.config('auth.passwords.users.expire').' دقيقة.')
+            ->line('If you did not request this change, you can ignore this email. إذا لم تطلب ذلك، تجاهل هذه الرسالة.'));
 
         // Enforce strict model behavior in non-production environments
         Model::shouldBeStrict(! $this->app->isProduction());
