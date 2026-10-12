@@ -122,6 +122,13 @@ export interface NewsItem {
   content: string
   category: string
   imageUrl?: string
+  imageCredit?: string
+  sourceUrl?: string
+  sourceName?: string
+  companies?: string[]
+  translations?: {
+    ar: { title: string; excerpt: string; body: string[] }
+  }
   publishedAt: string
   author: string
   tags: string[]

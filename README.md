@@ -53,6 +53,7 @@ The latest product and brand upgrade includes:
 - **EO Riyadh Accelerator:** licensed Riyadh skyline video with a static reduced-motion poster, official EO palette, original transparent EO Riyadh logo, nine-stage growth journey, and verified program information.
 - **2026/27 EO Riyadh board:** 11 original poster portraits with researched company/profile links, accessible rightward carousel, and API-backed ordering, terms, publishing and secure portrait management.
 - **Editorial operations:** bilingual operator content and FAQs with draft/published snapshots, stale-save protection, partner details, and audit history.
+- **Startup newsroom:** `/news` provides public photo scorecards, search and category filters, dated independent Arabic/English news briefs, publisher attribution, and links to full source articles. A researched snapshot remains readable when the API is unavailable; company-associated stories also appear on public founder and company profiles. Coverage does not imply Wosool membership or endorsement.
 - **Reliability guardrails:** no fictional metrics, partners, founders, revenue, or affiliations; private contact and financial records remain protected; official EO and EO Riyadh artwork remains separate from Wosool artwork.
 - **Transactional email:** verification, founder activation codes and password recovery use a shared bilingual Wosool header and footer; recovery mail states the configured token expiry. The logo image requires a publicly accessible frontend origin, while the text brand remains visible if images are blocked.
 

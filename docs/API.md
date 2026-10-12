@@ -220,6 +220,14 @@ Public list, detail, and calendar endpoints require public visibility and a publ
 
 ## Response Notes
 
+### Startup news sources
+
+News JSON adds nullable `source_url`, `source_name`, and `image_credit`, plus `companies` (an array of company-name strings, not relationships; defaults to `[]`). Existing editorial records remain unchanged.
+
+Run `cd backend && php artisan news:sync` after migrations to import trusted Wamda and TechCrunch startup/venture RSS feeds. The existing Laravel scheduler runs it daily; production must run `php artisan schedule:run` every minute. Ingestion stores only plain-text feed summaries capped at 320 characters, never full articles or source HTML; `source_url` links to the publisher's full article. Images are intentionally omitted because image licensing/CDN trust is not established. Companies are matched against public directory names in the title/summary.
+
+Source URLs are restricted to HTTPS publisher hosts. Requests disable redirects and bound time, response size, and item count; unsafe XML and future/missing dates are skipped. Repeats deduplicate by source URL without updating editorial changes or restoring deleted items. Feed failures return a nonzero exit code, retain all existing news, and do not stop other feeds. Publisher availability (including the Wamda feed path) must be verified from the deployment network.
+
 Read endpoints return JSON collections or objects. Submission endpoints return confirmation payloads. Auth endpoints return user objects with role information.
 
 ### Health Response
