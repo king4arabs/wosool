@@ -109,7 +109,7 @@ export function PartnerCarousel({ partners, ar, includeEo = true, headingId, act
       const artwork = <BrandLogo src={partner.logo_path} name={name} loading="eager" />
       const dark = brandLogoNeedsDarkSurface(partner.logo_path) || undefined
       return <div role="listitem" className={styles.slot} key={`${partner.id}-${partner.logo_path ?? partner.website}`}>
-        {partner.website ? <a className={styles.logoFrame} data-dark={dark} href={partner.website} target="_blank" rel="noopener noreferrer" tabIndex={copy ? -1 : undefined} aria-label={`${name}${ar ? ' (نافذة جديدة)' : ' (opens in a new tab)'}`} title={name}>{artwork}</a> : <div className={styles.logoFrame} data-dark={dark}>{artwork}</div>}
+        {partner.website ? <a className={styles.logoFrame} data-dark={dark} data-partner={partner.id} href={partner.website} target="_blank" rel="noopener noreferrer" tabIndex={copy ? -1 : undefined} aria-label={`${name}${ar ? ' (نافذة جديدة)' : ' (opens in a new tab)'}`} title={name}>{artwork}</a> : <div className={styles.logoFrame} data-dark={dark} data-partner={partner.id}>{artwork}</div>}
       </div>
     })
   }
