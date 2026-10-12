@@ -342,7 +342,7 @@ class EventRsvpController extends Controller
             return;
         }
 
-        $confirmedCount = $event->attendees()->wherePivotIn('status', ['approved', 'checked_in'])->count();
+        $confirmedCount = $event->attendees()->wherePivotIn('status', ['confirmed', 'approved', 'checked_in'])->count();
         if ($confirmedCount >= $capacity) {
             return;
         }

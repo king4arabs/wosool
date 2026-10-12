@@ -71,6 +71,10 @@ function AccountSession({ initialMode, redirectTo }: { initialMode: 'login' | 'r
     setBusy(true)
     const f = new FormData(e.currentTarget)
     try {
+      if (mode === 'register' && f.get('password') !== f.get('password_confirmation')) {
+        setError(ar ? 'كلمتا المرور غير متطابقتين.' : 'The passwords do not match.')
+        return
+      }
       if (mode === 'login') {
         await login(String(f.get('email')), String(f.get('password')))
         // Re-enter with the new session cookie; a prefetched protected route may contain a guest redirect.
@@ -203,7 +207,7 @@ function AccountSession({ initialMode, redirectTo }: { initialMode: 'login' | 'r
                   </button>
                 </Notice>
               )}
-              <form onSubmit={authenticate}>
+              <form onSubmit={authenticate} aria-busy={busy}>
                 {mode === 'register' && (
                   <Field label={ar ? 'الاسم الكامل' : 'Full name'}>
                     <input

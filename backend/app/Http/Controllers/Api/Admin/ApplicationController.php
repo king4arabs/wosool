@@ -6,12 +6,15 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\ApplicationResource;
 use App\Models\AdminAction;
 use App\Models\Application;
+use App\Models\User;
+use App\Services\FounderInvitationService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
+use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
 use Throwable;
 
 class ApplicationController extends Controller
@@ -69,24 +72,19 @@ class ApplicationController extends Controller
         $application->reviewed_by = $request->user()->id;
         $application->reviewed_at = now();
 
-        if ($application->status === 'approved' && empty($application->invite_token)) {
-            $application->invite_token = Str::random(64);
+        if ($application->status !== 'approved') {
+            $application->invite_token = null;
+            $application->invite_sent_at = null;
         }
 
         $application->save();
 
-        if ($application->status === 'approved' && $application->user && method_exists($application->user, 'assignRole') && ! $application->user->hasRole('member')) {
+        if ($application->status === 'approved' && $application->user?->hasVerifiedEmail() && ! $application->user->hasRole('member')) {
             try {
                 $application->user->assignRole('member');
             } catch (Throwable) {
                 // Role seeding might not be initialized in some environments.
             }
-        }
-
-        if ($application->status === 'approved' && is_null($application->invite_sent_at) && $this->canSendInvitationEmail()) {
-            $inviteUrl = rtrim((string) config('app.frontend_url'), '/') . '/register?email=' . urlencode((string) $application->email) . '&invite=' . urlencode((string) $application->invite_token);
-            $this->sendInviteEmail($application->email, $application->full_name, $inviteUrl);
-            $application->forceFill(['invite_sent_at' => now()])->save();
         }
 
         AdminAction::log(
@@ -105,28 +103,32 @@ class ApplicationController extends Controller
         ]);
     }
 
-    private function canSendInvitationEmail(): bool
+    public function sendInvitation(Request $request, Application $application, FounderInvitationService $invitationService): JsonResponse
     {
-        return filled(config('mail.mailers.smtp.host'))
-            && filled(config('mail.from.address'));
-    }
+        abort_unless($application->status === 'approved', 409, 'Only approved applications can be invited.');
+        abort_if($application->user_id !== null, 409, 'This application is already linked to an account.');
+        abort_unless($invitationService->realMailer((string) config('mail.default')) && filled(config('mail.from.address')), 503, 'A delivery mailer must be configured.');
 
-    private function sendInviteEmail(string $email, string $name, string $inviteUrl): void
-    {
+        $existingUser = User::whereRaw('LOWER(email) = ?', [strtolower($application->email)])->first();
+        $token = $existingUser ? null : Str::random(64);
+        $inviteUrl = $existingUser
+            ? rtrim((string) config('app.frontend_url'), '/') . '/login'
+            : rtrim((string) config('app.frontend_url'), '/') . '/register?email=' . urlencode((string) $application->email) . '&invite=' . urlencode($token);
         try {
             Mail::raw(
-                "Hello {$name},\n\nYour Wosool application has been approved.\nUse this private invitation link to create your account:\n{$inviteUrl}\n\nThis link is unique to your application.",
-                static function ($message) use ($email): void {
-                    $message
-                        ->to($email)
-                        ->subject('Your Wosool invitation link');
+                "Hello {$application->full_name},\n\nYour Wosool application has been approved.\n" . ($existingUser ? "Sign in with your existing account to activate your membership:\n" : "Use this private invitation link to activate your account:\n") . "{$inviteUrl}",
+                static function ($message) use ($application): void {
+                    $message->to($application->email)->subject('Your Wosool account activation');
                 }
             );
-        } catch (Throwable $exception) {
-            Log::warning('Failed to send invitation email.', [
-                'email' => $email,
-                'error' => $exception->getMessage(),
-            ]);
+        } catch (\Throwable $exception) {
+            Log::warning('Failed to send invitation email.', ['application_id' => $application->id, 'error' => $exception->getMessage()]);
+            throw new ServiceUnavailableHttpException(null, 'Could not send the invitation email.');
         }
+
+        $application->forceFill(['invite_token' => $token, 'invite_sent_at' => now()])->save();
+        AdminAction::log($request->user()->id, 'application.invitation_sent', 'application', $application->id);
+
+        return response()->json(['message' => 'Invitation sent.', 'data' => new ApplicationResource($application->load('reviewer:id,name'))]);
     }
 }

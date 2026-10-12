@@ -27,6 +27,16 @@ Wosool also provides the dedicated digital gateway for **EO Riyadh Accelerator**
 
 > **Release boundary:** GitHub CI validates source, security checks, tests, and production builds. A commit, merge, or green workflow does **not** by itself prove that production hosting has deployed the change.
 
+### Start here
+
+| If you want to… | Read |
+| --- | --- |
+| Run the applications locally | [Quick start](#quick-start), then [Development commands](#development-commands) |
+| Understand the services and API | [Architecture](#architecture) and the [API reference](docs/API.md) |
+| Work on the Accelerator | [EOA operations](docs/EOA.md) for workflows, approvals, and release gates |
+| Test or deploy a change | [Testing](TESTING.md) and [Deployment](DEPLOYMENT.md); CI does not deploy |
+| Report a security issue | [Security policy](SECURITY.md) for private reporting |
+
 ## Current platform snapshot — October 11, 2026
 
 The latest product and brand upgrade includes:
@@ -70,9 +80,9 @@ Local production-build screenshots with the seeded Laravel API (not a claim of l
 - **Bilingual experience:** Arabic/English, RTL/LTR, Cairo typography, logical spacing, responsive layouts, and accessible navigation.
 - **Content reliability:** public partner, mentor, founder, revenue, and ecosystem claims require approved records and source evidence.
 
-### Founder directory and activation
+### Founder activation
 
-Sourced founder and company cards link to public profiles. Imported, unclaimed profiles are not Wosool members; administrators can invite founders only after independently verifying the recipient email and configuring real mail delivery. Activated founders can manage their profiles and use private community conversations. See [founder activation and release notes](docs/FOUNDER-ACTIVATION.md) for import, invitation, and deployment checks.
+Sourced founder/company cards connect to public profiles and an administrator-managed email activation flow. Activated founders can manage their information and use private community conversations. See [founder activation and release notes](docs/FOUNDER-ACTIVATION.md) for import, recipient verification, mail setup, and deployment checks.
 
 | Experience | Canonical route | Purpose |
 | --- | --- | --- |
@@ -123,6 +133,8 @@ Browser API requests use the same-origin proxy. Sessions use CSRF protection. Se
 - Required PHP extensions; CI enables `mbstring`, `dom`, `curl`, `pdo_sqlite`, and `sqlite3`.
 - Git and a Bash-compatible shell for the combined development launcher.
 
+Local setup uses SQLite by default. If using PostgreSQL with a database that lacks the slug-based founder and company schema from the 2024 migrations, the legacy core migration requires `pgvector` and permission to create its `vector` extension (or an administrator must create it first).
+
 ### Install and run locally
 
 ```bash
@@ -136,7 +148,9 @@ test -f frontend/.env.local || cp frontend/.env.example frontend/.env.local
 npm run dev
 ```
 
-`npm run setup` installs locked frontend/backend dependencies, prepares a missing backend environment and key, creates the local SQLite file when required, runs migrations, and runs the non-destructive `eoa:install` setup. It preserves existing configuration, refuses production demonstration setup, and does not seed privileged accounts.
+`npm run setup` installs locked frontend/backend dependencies, copies `backend/.env.example` only if `backend/.env` is absent, generates a key only if missing, creates the configured local SQLite file when required, runs migrations, and runs the non-destructive `eoa:install` setup. The default database is file-backed SQLite; existing configuration and keys are preserved. Setup refuses production demonstration setup and does not seed privileged accounts.
+
+To use another database, configure `backend/.env` **before** running `npm run setup`; do not run local setup against a production database. A fresh PostgreSQL schema using the legacy core migration needs the `vector` extension available and permission to create it, or an administrator must provision it first.
 
 | Service | Local address |
 | --- | --- |
@@ -241,6 +255,10 @@ Provision privileged users through the audited procedure in [EOA operations](doc
 - Meeting minimum EOA eligibility does not guarantee admission, program completion does not guarantee growth, and graduation does not grant automatic EO membership.
 
 [EOA research](docs/EOA-RESEARCH.md) records official program facts separately from proposed Riyadh delivery decisions. Local dates, fees, sponsorship allocations, partner claims, privacy notices, and commercial terms remain draft until formally approved.
+
+### Founder directory and activation
+
+Sourced founder/company cards connect to public profiles and an administrator-managed email activation flow. Activated founders can manage their information and use private community conversations. See [founder activation and release notes](docs/FOUNDER-ACTIVATION.md) for import, recipient verification, mail setup and deployment checks.
 
 ## Brand system
 

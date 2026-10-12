@@ -89,6 +89,30 @@ class EventRsvpTest extends TestCase
             ->assertJsonPath('status', 'waitlisted');
     }
 
+    public function test_cancelling_waitlisted_rsvp_does_not_promote_when_confirmed_attendee_fills_capacity(): void
+    {
+        $event = $this->makeEvent(['max_attendees' => 1]);
+        $confirmed = User::factory()->member()->create();
+        $cancelled = User::factory()->member()->create();
+        $waiting = User::factory()->member()->create();
+        $event->attendees()->attach($confirmed->id, ['status' => 'confirmed']);
+
+        $this->actingAs($cancelled)
+            ->postJson("/api/v1/member/events/{$event->slug}/rsvp", ['attendance_type' => 'in_person'])
+            ->assertCreated()->assertJsonPath('status', 'waitlisted');
+        $this->actingAs($waiting)
+            ->postJson("/api/v1/member/events/{$event->slug}/rsvp", ['attendance_type' => 'in_person'])
+            ->assertCreated()->assertJsonPath('status', 'waitlisted');
+
+        $this->actingAs($cancelled)->deleteJson("/api/v1/member/events/{$event->slug}/rsvp")->assertOk();
+
+        $this->assertDatabaseHas('event_rsvps', [
+            'event_id' => $event->id,
+            'user_id' => $waiting->id,
+            'status' => 'waitlisted',
+        ]);
+    }
+
     public function test_cannot_rsvp_to_cancelled_event(): void
     {
         $event = $this->makeEvent(['status' => 'cancelled', 'status_flow' => 'cancelled']);

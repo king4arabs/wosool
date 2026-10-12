@@ -21,6 +21,7 @@ class FounderController extends Controller
             $query->where(function ($builder) use ($search) {
                 $builder
                     ->where('display_name', 'like', "%{$search}%")
+                    ->orWhere('slug', 'like', "%{$search}%")
                     ->orWhere('translations->ar->name', 'like', "%{$search}%")
                     ->orWhere('tagline', 'like', "%{$search}%")
                     ->orWhere('sector', 'like', "%{$search}%")

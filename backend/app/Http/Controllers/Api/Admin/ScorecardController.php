@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\ScorecardResource;
 use App\Models\AdminAction;
 use App\Models\Scorecard;
+use App\Notifications\VerifyFounderEmail;
+use App\Services\FounderInvitationService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -14,7 +16,7 @@ class ScorecardController extends Controller
     public function index(Request $request): JsonResponse
     {
         $scorecards = Scorecard::query()
-            ->with(['founderProfile.user'])
+            ->with(['founderProfile.user', 'founderProfile.latestInvitation'])
             ->latest()
             ->paginate($request->integer('per_page', 20))
             ->withQueryString();
@@ -24,6 +26,12 @@ class ScorecardController extends Controller
                 'id' => $scorecard->id,
                 'founder_profile_id' => $scorecard->founder_profile_id,
                 'founder_name' => $scorecard->founderProfile?->legal_name ?? $scorecard->founderProfile?->user?->name,
+                'founder_slug' => $scorecard->founderProfile?->slug,
+                'founder_status' => $scorecard->founderProfile?->status,
+                'founder_is_public' => (bool) $scorecard->founderProfile?->is_public,
+                'user_email' => $scorecard->founderProfile?->user?->email,
+                'email_verified' => $scorecard->founderProfile?->user?->hasVerifiedEmail() ?? false,
+                'invitation_email' => $scorecard->founderProfile?->latestInvitation?->email,
                 'aggregate_score' => $scorecard->aggregate_score,
                 'momentum' => $scorecard->momentum,
                 'growth' => $scorecard->growth,
@@ -48,6 +56,24 @@ class ScorecardController extends Controller
         return response()->json([
             'data' => new ScorecardResource($scorecard->load('founderProfile.user')),
         ]);
+    }
+
+    public function sendVerification(Request $request, Scorecard $scorecard, FounderInvitationService $invitations): JsonResponse
+    {
+        $user = $scorecard->load('founderProfile.user')->founderProfile?->user;
+        abort_unless($user && $scorecard->founderProfile->status === 'active', 409, 'Only active profiles with an account can receive verification email.');
+        abort_if($user->hasVerifiedEmail(), 409, 'This email is already verified.');
+        abort_unless($invitations->mailerConfigured(), 503, 'Configure a delivering mail transport before sending verification email.');
+
+        try {
+            $user->notify(new VerifyFounderEmail);
+        } catch (\Throwable) {
+            abort(503, 'The verification email could not be sent. Check mail configuration and retry.');
+        }
+
+        AdminAction::log($request->user()->id, 'founder_verification_sent', 'founder_profile', $scorecard->founder_profile_id, 'Accepted by mail transport; inbox delivery is not confirmed.');
+
+        return response()->json(['message' => 'Verification email accepted by the mail transport.']);
     }
 
     public function override(Request $request, Scorecard $scorecard): JsonResponse
