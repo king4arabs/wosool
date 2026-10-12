@@ -10,24 +10,24 @@ export function EoaJourney({ program }: { program: EoaProgram | null }) {
 
   const steps = ar
     ? [
-        ['اكتشف البرنامج', 'تعرّف على التعلم العملي ومجتمع المؤسسين والالتزام بالمشاركة.'],
+        ['اكتشف البرنامج', 'اعرف ما ستدرسه، ومن ستلتقيه، وما يتطلبه الالتزام بالدفعة.'],
         ['تحقق من الأهلية', 'راجع متطلبات المؤسس والشركة والإيراد السنوي والرسوم.'],
         ['قدّم طلبك', 'أنشئ حساباً ووثّق بريدك، ثم أكمل طلبك واحفظ تقدمك.'],
         ['المراجعة', 'تابع طلبات المعلومات والمقابلة وقرار اللجنة من حسابك.'],
         ['القبول', 'تؤكد قيادة البرنامج قرار القبول والمسار المناسب.'],
         ['الانضمام والتسجيل', 'استكمل متطلبات المشاركة وتأكيد الرسوم والتسجيل الرسمي.'],
-        ['التعلم والمساءلة', 'شارك في ستة أشهر من التوجيه والتدريب والأنشطة المرموقة، وطبّق أهدافك.'],
+        ['التعلم والمساءلة', 'احضر ستة أشهر من التدريب والتوجيه وأنشطة الدفعة، وراجع ما طبقته مع مجموعتك.'],
         ['التخرج والخريجون', 'أكمل الدفعة وانضم إلى برنامج الخريجين للمتابعة ودعم النمو نحو مليون دولار.'],
         ['التقديم لعضوية EO', 'عند استيفاء شروط العضوية، قدّم طلباً مستقلاً يراجعه الفرع.'],
       ]
     : [
-        ['Discover', 'Explore practical learning, the founder community and the participation commitment.'],
+        ['Discover', 'See what you’ll study, who you’ll meet and what joining a cohort involves.'],
         ['Check eligibility', 'Review founder, company, annual revenue and fee requirements.'],
         ['Apply', 'Create an account, verify your email, and complete or resume your application.'],
         ['Review', 'Follow information requests, interviews and committee decisions in your account.'],
         ['Acceptance', 'Program leadership confirms your admission decision and track.'],
         ['Onboarding', 'Complete participation requirements, fee confirmation and official enrollment.'],
-        ['Learn & apply', 'Join six months of coaching, training and prestigious activities, meet your accountability group and pursue your goals.'],
+        ['Learn & apply', 'Join six months of coaching, training and cohort activities, and discuss what you’ve tried with your accountability group.'],
         ['Graduation & alumni', 'Complete your cohort and continue with alumni follow-ups and growth support toward US$1 million.'],
         ['EO membership application', 'When eligible, apply separately for membership through the chapter’s review process.'],
       ]
@@ -40,13 +40,13 @@ export function EoaJourney({ program }: { program: EoaProgram | null }) {
             <div>
               <span className="eoa-eyebrow">
                 {ar
-                  ? 'من الاكتشاف إلى آفاق جديدة'
-                  : 'FROM DISCOVERY TO YOUR NEXT CHAPTER'}
+                  ? 'من السؤال الأول إلى قرار القبول'
+                  : 'FROM FIRST QUESTION TO ADMISSION'}
               </span>
               <h2>
                 {ar
-                  ? 'كل خطوة تدفعك للأمام.'
-                  : 'A clear path, at every stage.'}
+                  ? 'ماذا يحدث بعد تقديم الطلب؟'
+                  : 'What happens after you apply?'}
               </h2>
             </div>
             <Link className="eoa-text-link" href="/dashboard/eoa">
@@ -81,8 +81,8 @@ export function EoaJourney({ program }: { program: EoaProgram | null }) {
             </span>
             <h2>
               {ar
-                ? 'لمؤسسي الشركات الطامحين للنمو.'
-                : 'For founders ready to grow.'}
+                ? 'لديك شركة قائمة وتريد العمل على مرحلتها القادمة؟'
+                : 'Running a business and planning its next stage?'}
             </h2>
             <p>
               {ar
@@ -91,8 +91,8 @@ export function EoaJourney({ program }: { program: EoaProgram | null }) {
             </p>
             <p>
               {ar
-                ? 'تمتد الدفعة ستة أشهر من التدريب والتوجيه والأنشطة المرموقة. تبدأ دفعة جديدة كل ستة أشهر، وتستمر المتابعة عبر برنامج الخريجين بعد التخرج.'
-                : 'Each cohort runs for six months of coaching, training and prestigious activities. A new cohort begins every six months, with follow-up support through the alumni program after graduation.'}
+                ? 'تستمر الدفعة ستة أشهر من التدريب والتوجيه وأنشطة الدفعة. تبدأ دفعة جديدة كل ستة أشهر، وتستمر المتابعة عبر برنامج الخريجين بعد التخرج.'
+                : 'Each cohort has six months of coaching, training and cohort activities. A new cohort begins every six months, with follow-up through the alumni program after graduation.'}
             </p>
             <Link className="eoa-text-link" href="/eoa/eligibility">
               {ar ? 'تحقق من الأهلية والرسوم' : 'Check eligibility & fees'} ↗

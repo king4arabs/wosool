@@ -47,8 +47,8 @@ export function EoaPerks() {
 
   return <section aria-labelledby="eoa-perks-title">
     <p className="eoa-lead">{ar
-      ? 'تشمل مزايا المسرّعات عادةً الإرشاد والتعلم من الأقران وخدمات الشركاء. تُعرض العروض الفعلية هنا بعد اعتمادها من فريق البرنامج.'
-      : 'Accelerators commonly offer mentoring, peer learning and partner services. Actual provider offers appear here only after program approval.'}</p>
+      ? 'قد يقدّم شركاء البرنامج عروضاً للمشاركين. لا تظهر تفاصيل أي عرض إلا بعد اعتماد الشريك والعرض من فريق البرنامج، وتأكيد تسجيلك في الدفعة.'
+      : 'Program partners may make offers to participants. Offer details appear only after the team approves the provider and offer, and your enrollment is confirmed.'}</p>
     <h2 id="eoa-perks-title">{ar ? 'عروض الشركاء المعتمدة' : 'Approved partner perks'}</h2>
     {(isLoading || (user && (loadedFor !== user.id || state === 'loading'))) && <Notice>{ar ? 'جارٍ تحميل المزايا…' : 'Loading perks…'}</Notice>}
     {!isLoading && !user && <div className="eoa-card"><p>{ar ? 'سجّل الدخول للاطلاع على المزايا بعد اعتماد مشاركتك.' : 'Sign in to view perks once your participation is approved.'}</p><Link className="eoa-btn" href="/eoa/account?mode=login&redirect=%2Feoa%2Fperks">{ar ? 'تسجيل الدخول أو إنشاء حساب' : 'Sign in or create an account'}</Link></div>}

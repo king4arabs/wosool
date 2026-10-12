@@ -38,8 +38,8 @@ export function EoaProgramDetails({
             </div>
             <div className="eoa-card">
               <Building2 size={30} aria-hidden="true" />
-              <h3>{ar ? 'من التعلم إلى التطبيق' : 'From learning to action'}</h3>
-              <p>{ar ? 'تجربة مترابطة تجمع اكتشاف البرنامج والتقديم ومتابعة رحلة المشاركة عبر وصول.' : 'A connected experience for discovering the program, applying and following your participant journey through Wosool.'}</p>
+              <h3>{ar ? 'طلباتك وجلساتك في مكان واحد' : 'Your application and sessions in one place'}</h3>
+              <p>{ar ? 'استخدم حسابك في وصول لإرسال الطلب، ومتابعة حالته، والاطلاع على جلسات دفعتك بعد التسجيل.' : 'Use your Wosool account to apply, check your application status and see your cohort sessions after enrollment.'}</p>
             </div>
           </div>
         </section>
@@ -47,8 +47,8 @@ export function EoaProgramDetails({
       {(section === 'all' || section === 'partners') && partners.length > 0 && (
         <section className="eoa-section" id="enablers" aria-labelledby="eoa-enablers-title">
           <div className="eoa-container">
-            <span className="eoa-eyebrow">{ar ? 'شركاء رحلة النمو' : 'PARTNERS IN GROWTH'}</span>
-            <h2 id="eoa-enablers-title">{ar ? 'خبرات تفتح فرصاً جديدة' : 'Expertise that opens possibilities'}</h2>
+            <span className="eoa-eyebrow">{ar ? 'الشركاء المعتمدون' : 'CONFIRMED PARTNERS'}</span>
+            <h2 id="eoa-enablers-title">{ar ? 'كيف يساهم الشركاء في البرنامج' : 'How partners support the program'}</h2>
             <div className="eoa-two-grid eoa-space">
               {partners.map((partner) => {
                 const role = program?.partner_roles?.[String(partner.id)]
@@ -70,7 +70,7 @@ export function EoaProgramDetails({
       {(section === 'all' || section === 'faq') && faqs.length > 0 && (
         <section className="eoa-section" id="faq" aria-labelledby="eoa-faq-title">
           <div className="eoa-container">
-            <span className="eoa-eyebrow">{ar ? 'إجابات تساعدك على البداية' : 'YOUR QUESTIONS, ANSWERED'}</span>
+            <span className="eoa-eyebrow">{ar ? 'قبل التقديم' : 'BEFORE YOU APPLY'}</span>
             <h2 id="eoa-faq-title">{ar ? 'الأسئلة الشائعة' : 'Frequently asked questions'}</h2>
             <div className="eoa-faq eoa-space">
               {faqs.map((faq, index) => (

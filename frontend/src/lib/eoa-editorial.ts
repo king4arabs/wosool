@@ -57,8 +57,8 @@ export const defaultEoaFaqs: EoaFaq[] = [
   {
     question_en: 'How long is the program and what is the time commitment?',
     question_ar: 'ما مدة البرنامج والالتزام الزمني؟',
-    answer_en: 'The Riyadh cohort runs for six months of coaching, training and prestigious activities. New cohort rounds begin every six months. Graduates continue in the alumni program with follow-ups and startup growth support.',
-    answer_ar: 'تمتد دفعة الرياض ستة أشهر من التوجيه والتدريب والأنشطة المرموقة. تنطلق جولة جديدة كل ستة أشهر، ويواصل الخريجون الاستفادة من المتابعة ودعم نمو الشركات الناشئة.',
+    answer_en: 'The Riyadh cohort lasts six months, with coaching, training and cohort activities. A new round begins every six months. After graduation, the alumni program offers follow-ups and support as you continue working on your business.',
+    answer_ar: 'تمتد دفعة الرياض ستة أشهر وتشمل التوجيه والتدريب وأنشطة الدفعة. تنطلق جولة جديدة كل ستة أشهر. بعد التخرج، يمكنك متابعة العمل على شركتك من خلال برنامج الخريجين.',
     visible: true,
   },
   {

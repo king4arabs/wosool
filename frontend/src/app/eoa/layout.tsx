@@ -6,7 +6,7 @@ import './eoa-upgrade.css'
 export const metadata: Metadata = {
   title: 'EO Riyadh Accelerator | Global Connections. Extraordinary Growth.',
   description:
-    'Join a founder-led journey in Riyadh to strengthen your business, grow your leadership and scale toward US$1M+ annual revenue through practical learning and global entrepreneurial connections.',
+    'Work on Cash, Strategy, People and Execution with fellow business owners in a six-month EO Riyadh Accelerator cohort. Check eligibility, fees and application steps.',
   alternates: { canonical: '/eoa' },
   openGraph: {
     title: 'EO Riyadh Accelerator',
