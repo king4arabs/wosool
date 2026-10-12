@@ -8,10 +8,10 @@ All carousel images load eagerly so an approaching repeat is ready before it ent
 
 The homepage now requests every public partner page instead of stopping at twelve entries. Publication filters remain unchanged. A successful API response, including an empty list, remains authoritative. Previously fetched partners survive a temporary retry failure.
 
-On October 11, `https://wosool.org/api/v1/partners` returned HTTP 500. During that outage, the frontend displays the owner's explicitly requested, identified organizations using local assets:
+On October 11, `https://wosool.org/api/v1/partners` returned HTTP 500. During that outage, the frontend displays the owner's explicitly requested, identified organizations using the assets described below:
 
-- Wosool: EO Riyadh, The Garage, Misk, CODE.
-- EOA: EO Riyadh, The Garage, Misk, CODE, LAMARKA, HUMAIN.
+- Wosool: EO Riyadh, The Garage, Misk, CODE, Cipher Ventures, RDIA.
+- EOA: EO Riyadh, The Garage, Misk, CODE, LAMARKA, HUMAIN, Cipher Ventures, RDIA.
 
 EOA uses the same release snapshot while its program data is unavailable, and retains the existing EO chapter mark once a successful API response arrives. These display lists record the owner's October 11 instruction; they are not a claim that externally verified partnership agreements were obtained. No production database rows, approval flags, or relationship evidence were changed. Existing administrator publication controls continue to govern successful API responses.
 
