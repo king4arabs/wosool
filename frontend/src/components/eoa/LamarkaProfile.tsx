@@ -39,11 +39,6 @@ export function LamarkaProfile({ ar }: { ar: boolean }) {
         <p>{ar ? 'لاماركا شريك تشغيل مسرّعة EO الرياض. تجمع منصتها بين بناء المشاريع والاستراتيجية والابتكار والوصول إلى رأس المال، مع خبرة في تصميم وتشغيل برامج تدعم المؤسسين والشركات التقنية.' : 'LAMARKA is the operating partner for EO Riyadh Accelerator. Its platform brings together venture building, strategy, innovation and access to capital, backed by experience designing and operating programs for founders and technology companies.'}</p>
         <a href="https://sa.linkedin.com/company/lamarka-global" target="_blank" rel="noopener noreferrer">{ar ? 'تعرّف على LAMARKA' : 'Connect with LAMARKA'} <ArrowUpRight size={18} aria-hidden="true" /></a>
       </div>
-      <div className={styles.engineMap} aria-label={ar ? 'مجالات عمل لاماركا الثلاثة' : 'LAMARKA’s three connected engines'}>
-        <span className={styles.mapLabel}>{ar ? 'منصة واحدة · ثلاثة محركات' : 'ONE PLATFORM · THREE ENGINES'}</span>
-        {engines.map(([title], index) => <div key={title}><span>0{index + 1}</span><strong>{title}</strong></div>)}
-        <p>{ar ? 'ذكاء يتحول إلى مشاريع، ومشاريع تنمو بالعلاقات.' : 'Insight into ventures. Ventures into growth.'}</p>
-      </div>
     </header>
     <dl className={styles.metrics}>
       {(ar ? [['2015', 'بداية دعم الشركات'], ['500+', 'شركة ناشئة دعمتها البرامج'], ['20', 'شركة ناشئة في المحفظة']] : [['2015', 'Supporting startups since'], ['500+', 'Startups supported through programs'], ['20', 'Startups in the portfolio']]).map(([value, label]) => <div key={value}><dt>{label}</dt><dd dir="ltr">{value}</dd></div>)}
