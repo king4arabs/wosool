@@ -17,18 +17,18 @@ const titles: Record<string, [string, string]> = {
   alumni: ['الخريجون ومتابعة النمو', 'Alumni & continued growth'],
   privacy: ['الخصوصية والبيانات', 'Privacy & data'],
   about: ['عن المسرّعة', 'About the Accelerator'],
-  program: ['من التعلم إلى نمو الأعمال', 'From learning to business growth'],
+  program: ['ماذا ستعمل عليه في البرنامج؟', 'What you’ll work on'],
   eligibility: ['الأهلية والرسوم', 'Eligibility & fees'],
   partners: [
-    'شركاء ومنظومة ريادة الأعمال',
-    'Partners & entrepreneurship ecosystem',
+    'الشركاء وجهات الدعم',
+    'Partners & support',
   ],
   faq: ['الأسئلة الشائعة', 'Frequently asked questions'],
-  contact: ['لنبنِ فرص النمو معاً', 'Let’s build opportunities together'],
+  contact: ['تواصل مع فريق البرنامج', 'Talk to the program team'],
   learning: ['التعلم والفعاليات', 'Learning & events'],
   leadership: ['قيادة البرنامج', 'Program leadership'],
   mentors: ['المرشدون والمستشارون', 'Mentors & advisors'],
-  perks: ['مزايا المسرّعة', 'Accelerator perks'],
+  perks: ['عروض الشركاء', 'Partner offers'],
 }
 export function EoaContent({ section }: { section: string }) {
   const { locale } = useLocale()
@@ -52,22 +52,22 @@ export function EoaContent({ section }: { section: string }) {
             <div>
               <p className="eoa-lead">
                 {ar
-                  ? 'منصة نمو بقيادة المؤسسين، للشركات القائمة الطامحة إلى تطوير أعمالها وقيادتها وعلاقاتها.'
-                  : 'A founder-led growth platform for operating businesses ready to strengthen their companies, leadership and connections.'}
+                  ? 'إذا كنت تدير شركة قائمة، فالبرنامج مساحة للعمل على القرارات التي تشغلك الآن.'
+                  : 'If you run a business, this is a place to work on the decisions in front of you.'}
               </p>
               <p>
                 {ar
-                  ? 'تجمع المسرّعة إطار التعلم العالمي من EO وخبرة مجتمع الرياض. تعمل على أولويات شركتك، وتراجع تقدمك مع أقرانك، وتتابع طلبك وجلساتك وموارد التعلم من حسابك في وصول.'
-                  : 'Accelerator combines EO’s global learning framework with the experience of the Riyadh community. Work on your business priorities, review progress with peers, and manage your application, sessions and learning resources through your Wosool account.'}
+                  ? 'تستخدم مسرّعة EO الرياض إطاراً للتعلم في النقد والاستراتيجية والأفراد والتنفيذ. تناقش تحديات شركتك مع مؤسسين آخرين، وتعود إلى فريقك بخطوات تجرّبها. من حسابك في وصول يمكنك متابعة طلبك وجلساتك ومواد التعلم.'
+                  : 'EO Riyadh Accelerator uses four learning areas: Cash, Strategy, People and Execution. You discuss what’s happening in your business with other founders and take ideas back to your team. Your Wosool account keeps your application, sessions and learning materials in one place.'}
               </p>
               <div className="eoa-actions"><Link href="/eoa/eligibility" className="eoa-btn">{ar ? 'تحقق من الأهلية' : 'Check your eligibility'}</Link><Link href="/eoa/program" className="eoa-text-link">{ar ? 'استكشف رحلة التعلم' : 'Explore the learning journey'}</Link></div>
             </div>
             <div className="eoa-card">
-              <h3>{ar ? 'طموح سعودي وآفاق عالمية' : 'Saudi ambition, global perspectives'}</h3>
+              <h3>{ar ? 'من الرياض، مع مؤسسين آخرين' : 'Start with founders in Riyadh'}</h3>
               <p>
                 {ar
-                  ? 'ابنِ شركة أكثر جاهزية للنمو في السوق السعودي، وتعلّم من تجارب مؤسسين داخل المملكة وعبر شبكة EO. اجعل التحديات اليومية نقطة انطلاق لتطوير القيادة وبناء علاقات طويلة الأمد.'
-                  : 'Build a business ready to grow in Saudi Arabia and learn from founder experiences across the Kingdom and the EO network. Turn day-to-day challenges into opportunities to develop your leadership and lasting relationships.'}
+                  ? 'في الدفعة، ستسمع كيف تعامل مؤسسون آخرون مع تحديات تشبه تحدياتك. وقد تتاح فرص للتعلم من تجارب عبر شبكة EO؛ تتحدد المشاركة وفق البرنامج.'
+                  : 'In your cohort, you’ll hear how other founders approached problems like yours. Opportunities to learn from the wider EO network depend on what the program makes available.'}
               </p>
               <Link className="eoa-text-link" href="/eoa/leadership">
                 {ar ? 'قيادة البرنامج' : 'Program leadership'} ↗
@@ -79,8 +79,8 @@ export function EoaContent({ section }: { section: string }) {
           <>
             <p className="eoa-lead">
               {ar
-                ? 'برنامج يمتد ستة أشهر من التدريب والتوجيه والأنشطة المرموقة. تنطلق دفعة جديدة كل ستة أشهر، ويستمر دعم الخريجين بعد التخرج.'
-                : 'Six months of coaching, training and prestigious activities. A new cohort begins every six months, with continued alumni support after graduation.'}
+                ? 'تمتد الدفعة ستة أشهر. ستتعلم مع مؤسسين آخرين، وتراجع معهم ما طبقته في شركتك، وتواصل المتابعة في برنامج الخريجين بعد انتهاء الدفعة. تنطلق دفعة جديدة كل ستة أشهر.'
+                : 'A cohort lasts six months. Learn alongside other founders, check back on what you’ve tried in your business, and continue with alumni follow-ups afterward. A new cohort begins every six months.'}
             </p>
             <div className="eoa-four-grid">
               {(ar
@@ -166,8 +166,8 @@ export function EoaContent({ section }: { section: string }) {
             </h2>
             <p>
               {ar
-                ? 'استكشف جهات تدعم ريادة الأعمال والابتكار وتنمية القدرات، وتعرّف على برامجها وخدماتها عبر مواقعها الرسمية.'
-                : 'Explore organizations supporting entrepreneurship, innovation and capability building. Visit their official websites to discover their programs and services.'}
+                ? 'هذه جهات تعمل مع رواد الأعمال في السعودية. زر مواقعها الرسمية لمعرفة خدماتها؛ إدراجها هنا لا يعني أنها شريكة في المسرّعة.'
+                : 'These organizations work with entrepreneurs in Saudi Arabia. Check their official sites for services; appearing here does not mean they are Accelerator partners.'}
             </p>
             <EoaDirectory ar={ar} />
           </>
@@ -177,13 +177,13 @@ export function EoaContent({ section }: { section: string }) {
             <div>
               <p className="eoa-lead">
                 {ar
-                  ? 'لنتحدث عن خطوتك القادمة.'
-                  : 'Let’s discuss your next step.'}
+                  ? 'لديك سؤال قبل التقديم؟'
+                  : 'Have a question before you apply?'}
               </p>
               <p>
                 {ar
-                  ? 'اسأل عن الأهلية أو التقديم أو رحلة المشاركة. ونرحب أيضاً بمن يرغب في الإسهام بالإرشاد والخبرات ومساحات العمل والرعاية.'
-                  : 'Ask about eligibility, applying or the participant journey. We also welcome conversations about mentoring, expertise, workspace and sponsorship.'}
+                  ? 'اسألنا عن الأهلية أو الرسوم أو خطوات التقديم. وإذا كنت ترغب في تقديم خبرتك أو مساحة عمل أو رعاية للمشاركين، أخبرنا بما يمكنك تقديمه.'
+                  : 'Ask about eligibility, fees or the application steps. If you can offer mentoring, workspace or sponsorship, tell us what you have in mind.'}
               </p>
             </div>
             <div className="eoa-card">
