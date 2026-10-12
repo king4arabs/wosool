@@ -11,6 +11,7 @@ import { UpcomingEvents } from "@/components/sections/UpcomingEvents"
 import { StartupDirectory } from "@/components/sections/StartupDirectory"
 import { CommunityPartners, FounderShowcase } from "@/components/sections/CommunityShowcase"
 import { EoaOverview } from "@/components/eoa/Overview"
+import { WosoolBoard } from "@/components/sections/WosoolBoard"
 import { useHomeContent } from "@/lib/use-home-content"
 import { useLocale } from "@/lib/locale"
 import styles from "./home.module.css"
@@ -89,5 +90,6 @@ export default function HomePage() {
     <div className={`${styles.container} ${styles.section}`}><StartupDirectory compact />
     <EoaOverview /></div>
     {newsItems.length > 0 && <section className={`${styles.container} ${styles.news}`} aria-labelledby="news-title"><div className={styles.sectionHead}><div><p className={styles.eyebrow}>{copy.news}</p><h2 id="news-title">{copy.newsTitle}</h2></div><Link className={styles.textLink} href="/news">{copy.allNews}</Link></div><div className={styles.benefits}>{newsItems.slice(0,3).map(item => <article key={item.id}><p className={styles.eyebrow}>{item.category}</p><h3><Link href={`/news/${item.slug}`}>{item.title}</Link></h3><p>{item.excerpt}</p></article>)}</div></section>}
+    <WosoolBoard />
   </div></PublicLayout>
 }
