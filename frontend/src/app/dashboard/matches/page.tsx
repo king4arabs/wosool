@@ -1,10 +1,17 @@
 "use client"
 
+import Link from "next/link"
 import { useEffect, useMemo, useState } from "react"
 import { api } from "@/lib/api"
+import { useAuth } from "@/lib/auth"
+import { useLocale } from "@/lib/locale"
+import { resolveDashboardLocale } from "@/lib/dashboard-i18n"
+import IntroRouterLedger from "@/components/dashboard/IntroRouterLedger"
 
 type Founder = {
   id: number
+  slug?: string | null
+  user?: { id?: number | null } | null
   name?: string | null
   city?: string | null
   sector?: string | null
@@ -23,7 +30,10 @@ type Match = {
   created_at?: string
 }
 
-function getOtherFounder(match: Match): Founder | undefined {
+/** The counterpart in a match is whichever side is not the signed-in member. */
+function getOtherFounder(match: Match, userId?: number | null): Founder | undefined {
+  if (userId && match.founder_a?.user?.id === userId) return match.founder_b
+  if (userId && match.founder_b?.user?.id === userId) return match.founder_a
   return match.founder_b || match.founder_a
 }
 
@@ -34,6 +44,9 @@ function scoreTone(score: number) {
 }
 
 export default function MatchesPage() {
+  const { user } = useAuth()
+  const { locale } = useLocale()
+  const userId = user?.id ? Number(user.id) : null
   const [matches, setMatches] = useState<Match[]>([])
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
@@ -101,6 +114,8 @@ export default function MatchesPage() {
           <div className="rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">{error}</div>
         ) : null}
 
+        <IntroRouterLedger locale={resolveDashboardLocale(locale)} onChange={load} />
+
         <div className="space-y-3">
           <h2 className="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center gap-2">
             <span>مسار الاتصالات النشطة</span>
@@ -113,7 +128,7 @@ export default function MatchesPage() {
             <div className="bg-white border border-slate-200 rounded-xl p-4 text-xs text-slate-500 shadow-sm">لا توجد طلبات تقديم نشطة حالياً. ابدأ بطلب تقديم مباشر من التوصيات أدناه.</div>
           ) : (
             activeIntroductions.slice(0, 1).map((match) => {
-              const founder = getOtherFounder(match)
+              const founder = getOtherFounder(match, userId)
               return (
                 <div key={match.id} className="bg-white border border-slate-200 rounded-xl p-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 shadow-sm">
                   <div className="flex items-center gap-3">
@@ -144,7 +159,7 @@ export default function MatchesPage() {
           ) : (
             <div className="space-y-4">
               {suggestedMatches.map((match) => {
-                const founder = getOtherFounder(match)
+                const founder = getOtherFounder(match, userId)
                 const score = Math.round(match.match_score || 0)
                 return (
                   <div key={match.id} className="bg-white border border-slate-200 rounded-xl p-5 space-y-4 shadow-sm hover:border-slate-300 transition-all">
@@ -199,12 +214,14 @@ export default function MatchesPage() {
                         متاح للاستشارة التشغيلية هذا الأسبوع
                       </div>
                       <div className="flex gap-2">
-                        <button
-                          type="button"
-                          className="bg-slate-50 hover:bg-slate-100 text-slate-700 font-semibold px-3 py-2 border border-slate-200 rounded-lg text-xs transition-colors"
-                        >
-                          معاينة ملف الربط
-                        </button>
+                        {founder?.slug ? (
+                          <Link
+                            href={`/founders/${founder.slug}`}
+                            className="bg-slate-50 hover:bg-slate-100 text-slate-700 font-semibold px-3 py-2 border border-slate-200 rounded-lg text-xs transition-colors"
+                          >
+                            معاينة ملف الربط
+                          </Link>
+                        ) : null}
                         <button
                           type="button"
                           onClick={() => requestIntro(match.id)}

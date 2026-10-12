@@ -8,6 +8,7 @@ use App\Http\Resources\FounderResource;
 use App\Models\FounderProfile;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class FounderProfileController extends Controller
@@ -67,4 +68,61 @@ class FounderProfileController extends Controller
         return $slug;
     }
 
+
+    /** Public-disk folder for member-uploaded founder portraits. */
+    private const AVATAR_DIRECTORY = 'founders/avatars';
+
+    /**
+     * Upload a portrait for the authenticated member's founder profile.
+     * Replaces (and deletes) any portrait previously uploaded through this endpoint.
+     */
+    public function uploadAvatar(Request $request): JsonResponse
+    {
+        $request->validate([
+            'avatar' => 'required|file|image|mimes:jpg,jpeg,png,webp|mimetypes:image/jpeg,image/png,image/webp|max:2048|dimensions:min_width=160,min_height=160,max_width=6000,max_height=6000',
+        ]);
+
+        $profile = FounderProfile::where('user_id', $request->user()->id)->first();
+        abort_unless($profile, 404, __('messages.founder.profile_not_found'));
+
+        $file = $request->file('avatar');
+        $extension = match ($file->getMimeType()) {
+            'image/jpeg' => 'jpg', 'image/png' => 'png', 'image/webp' => 'webp',
+            default => abort(422, 'Choose a JPEG, PNG or WebP image.'),
+        };
+        $stored = Storage::disk('public')->putFileAs(self::AVATAR_DIRECTORY, $file, Str::uuid().'.'.$extension);
+        abort_unless($stored, 500, 'The photo could not be saved. Please try again.');
+
+        $previous = $this->uploadedAvatarPath($profile->avatar_url);
+        $profile->update(['avatar_url' => '/storage/'.$stored]);
+        if ($previous && $previous !== $stored) {
+            Storage::disk('public')->delete($previous);
+        }
+
+        return response()->json(['data' => new FounderResource($profile->load(['user', 'companies']))]);
+    }
+
+    /** Remove the member's uploaded portrait. */
+    public function deleteAvatar(Request $request): JsonResponse
+    {
+        $profile = FounderProfile::where('user_id', $request->user()->id)->first();
+        abort_unless($profile, 404, __('messages.founder.profile_not_found'));
+
+        if ($path = $this->uploadedAvatarPath($profile->avatar_url)) {
+            Storage::disk('public')->delete($path);
+        }
+        $profile->update(['avatar_url' => null]);
+
+        return response()->json(['data' => new FounderResource($profile->load(['user', 'companies']))]);
+    }
+
+    /** Return the public-disk path when the avatar is one this endpoint stored. */
+    private function uploadedAvatarPath(?string $url): ?string
+    {
+        if ($url && preg_match('~^/storage/('.preg_quote(self::AVATAR_DIRECTORY, '~').'/[a-f0-9-]+\.(?:jpg|png|webp))$~', $url, $m)) {
+            return $m[1];
+        }
+
+        return null;
+    }
 }

@@ -36,7 +36,8 @@ class MemberFounderProfileShowTest extends TestCase
         $response = $this->actingAs($user)->getJson('/api/v1/member/founder-profile');
 
         $response->assertOk();
-        $response->assertJsonPath('data.legal_name', 'Founder tagline');
+        // legal_name is shown as the founder's name, so it falls back to the account name, never the tagline.
+        $response->assertJsonPath('data.legal_name', $user->name);
         $response->assertJsonPath('data.tagline', 'Founder tagline');
     }
 }

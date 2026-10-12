@@ -74,6 +74,8 @@ class FounderActivationTest extends TestCase
     }
     public function test_activation_requires_email_code_and_limits_guesses(): void
     {
+        // Exercise the per-invitation OTP lockout itself; the route-level IP throttle is covered separately.
+        $this->withoutMiddleware(\Illuminate\Routing\Middleware\ThrottleRequests::class);
         $p = $this->profile(); $token = $this->invite($p);
         $mail = new FounderActivationInvitation('<Founder>', 'https://wosool.org/activate-founder#token='.$token, $this->code);
         $message = $mail->toMail($this->admin);

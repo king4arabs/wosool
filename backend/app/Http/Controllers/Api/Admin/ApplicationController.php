@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Api\Admin;
 
+use App\Mail\ApplicationInvitationMail;
+
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ApplicationResource;
 use App\Models\AdminAction;
@@ -115,12 +117,7 @@ class ApplicationController extends Controller
             ? rtrim((string) config('app.frontend_url'), '/') . '/login'
             : rtrim((string) config('app.frontend_url'), '/') . '/register?email=' . urlencode((string) $application->email) . '&invite=' . urlencode($token);
         try {
-            Mail::raw(
-                "Hello {$application->full_name},\n\nYour Wosool application has been approved.\n" . ($existingUser ? "Sign in with your existing account to activate your membership:\n" : "Use this private invitation link to activate your account:\n") . "{$inviteUrl}",
-                static function ($message) use ($application): void {
-                    $message->to($application->email)->subject('Your Wosool account activation');
-                }
-            );
+            Mail::to($application->email)->send(new ApplicationInvitationMail((string) $application->full_name, $inviteUrl, $existingUser !== null));
         } catch (\Throwable $exception) {
             Log::warning('Failed to send invitation email.', ['application_id' => $application->id, 'error' => $exception->getMessage()]);
             throw new ServiceUnavailableHttpException(null, 'Could not send the invitation email.');

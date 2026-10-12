@@ -84,4 +84,20 @@ class User extends Authenticatable implements MustVerifyEmail
             ->withPivot('status')
             ->withTimestamps();
     }
+
+    /**
+     * Legacy deployments carry a `role_token` column; current schemas use Spatie roles only.
+     * Read it without tripping strict-mode missing-attribute exceptions.
+     */
+    public function roleToken(): ?string
+    {
+        $value = $this->getAttributes()['role_token'] ?? null;
+
+        return $value !== null && $value !== '' ? (string) $value : null;
+    }
+
+    public function isPlatformAdmin(): bool
+    {
+        return $this->roleToken() === 'admin' || $this->hasRole('admin');
+    }
 }

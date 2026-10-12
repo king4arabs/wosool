@@ -20,7 +20,7 @@ class FounderResource extends JsonResource
             'position' => $localized['position'] ?? $this->position ?? (isset($this->pivot) ? $this->pivot->role : null),
             'slug' => $this->slug,
             'display_name' => $this->display_name ?? $this->user?->name,
-            'legal_name' => $this->legal_name ?? $this->display_name ?? $this->tagline ?? $this->slug,
+            'legal_name' => $this->legal_name ?? $this->display_name ?? $this->user?->name ?? $this->slug,
             'skills_tags' => $this->skills_tags ?? $this->skills ?? [],
             'skills' => $this->skills ?? [],
             'tagline' => $localized['tagline'] ?? $this->tagline,

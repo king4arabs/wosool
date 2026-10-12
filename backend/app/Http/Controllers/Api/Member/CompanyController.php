@@ -20,7 +20,12 @@ class CompanyController extends Controller
      */
     public function index(Request $request): JsonResponse
     {
-        $founder = $this->founderProfileOrFail($request);
+        $founder = $request->user()->founderProfile()->first();
+
+        // Members who have not created a founder profile yet simply have no companies.
+        if (! $founder) {
+            return response()->json(['data' => []]);
+        }
 
         return response()->json([
             'data' => CompanyResource::collection($founder->companies()->get()),

@@ -6,6 +6,20 @@ This project follows **Semantic Versioning** and a Keep a Changelog-inspired for
 
 ---
 
+## End-to-end member journey repair — 2026-10-12
+
+Verified with a full browser run on a fresh install: apply → admin approval → invitation email → registration → profile and company onboarding → introduction request → recipient acceptance → private conversation.
+
+- **Fresh-install schema:** added `2026_10_12_000001_ensure_introductions_ledger_table`; the legacy core migration skipped on new databases, so introductions, matches and the admin intro console returned 500 errors.
+- **Introductions:** the member ledger is now mounted on *Matches & Introductions* and loads its own data; recipients can accept/decline, requesters can withdraw, accepted routes link to messages. Fixed authorization that required a non-existent `role_token` column, added a duplicate-pending guard, named intro rooms after both founders, and show founder names instead of taglines.
+- **Admin:** added a *Verify founder* control (also vets the founder for introductions); fixed 500s on admin companies and intros.
+- **Member features:** fixed 500s in help requests (helper suggestions, admin checks), chat moderation and registration exports caused by `role_token`; member company and match lists return empty results before a profile exists.
+- **Profile photos:** members can upload, replace and remove a portrait (JPEG/PNG/WebP, ≤2 MB, ≥160 px) at `POST/DELETE /api/v1/member/founder-profile/avatar`; served via `/storage/founders/avatars/*`.
+- **Email:** approval invitations, introduction confirmations and application updates now use branded bilingual mailables; introduction emails go to each founder separately so addresses are not shared. Password-reset mail states the expiry before the button.
+- **Programs and events:** applications are rejected for programs in a closed lifecycle state on both the website and the API; demo seed data publishes its events.
+- **Reliability:** session login uses the `web` guard explicitly; public program pages no longer call member-only endpoints for visitors.
+- **Tests:** 11 new backend tests (introductions, avatars, admin content lifecycles); backend 185 passing, frontend 70 passing.
+
 ## Founder growth calendar — 2026-10-12
 
 - Added a bilingual month calendar and agenda to `/events`, with date selection, topic search, activity filters, mobile layouts and Riyadh timezone handling.

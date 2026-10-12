@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Mail\IntroductionConnectedMail;
+
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreIntroductionRequest;
 use App\Http\Resources\IntroductionResource;
@@ -36,14 +38,14 @@ class IntroductionController extends Controller
         $perPage = min(max($request->integer('per_page', 15), 1), 100);
 
         $outbound = IntroductionLedger::query()
-            ->with(['targetFounder'])
+            ->with(['targetFounder.user:id,name'])
             ->where('source_founder_id', $founder->id)
             ->orderByDesc('created_at')
             ->paginate($perPage, ['*'], 'outbound_page')
             ->withQueryString();
 
         $inbound = IntroductionLedger::query()
-            ->with(['sourceFounder'])
+            ->with(['sourceFounder.user:id,name'])
             ->where('target_founder_id', $founder->id)
             ->orderByDesc('created_at')
             ->paginate($perPage, ['*'], 'inbound_page')
@@ -94,6 +96,15 @@ class IntroductionController extends Controller
 
         $target = FounderProfile::findOrFail($request->validated('target_founder_id'));
         abort_unless($target->communityActive(), 409, 'This founder has not activated community communication.');
+
+        $duplicatePending = IntroductionLedger::query()
+            ->where('routing_status', 'INTRO_PENDING')
+            ->where(function ($query) use ($sourceFounder, $target): void {
+                $query->where(fn ($q) => $q->where('source_founder_id', $sourceFounder->id)->where('target_founder_id', $target->id))
+                    ->orWhere(fn ($q) => $q->where('source_founder_id', $target->id)->where('target_founder_id', $sourceFounder->id));
+            })
+            ->exists();
+        abort_if($duplicatePending, 409, 'An introduction between you and this founder is already pending review.');
 
         $activePendingCount = IntroductionLedger::query()
             ->where('source_founder_id', $sourceFounder->id)
@@ -152,7 +163,7 @@ class IntroductionController extends Controller
             return $introduction;
         });
 
-        $intro->load(['sourceFounder', 'targetFounder']);
+        $intro->load(['sourceFounder.user:id,name', 'targetFounder.user:id,name']);
 
         return response()->json([
             'message' => __('messages.intro.created'),
@@ -280,7 +291,7 @@ class IntroductionController extends Controller
         $chatRooms = app(ChatRoomService::class);
         $introRoom = $chatRooms->ensureRoom([
             'type' => 'intro_room',
-            'title' => 'غرفة ربط مباشر بين المؤسسين',
+            'title' => trim(($sourceFounder->display_name ?? $sourceFounder->user->name).' · '.($targetFounder->display_name ?? $targetFounder->user->name)),
             'description' => 'تم إنشاء هذه الغرفة بعد قبول طلب الربط.',
             'created_by_user_id' => $request->user()?->id,
             'owner_user_id' => $sourceFounder->user_id,
@@ -325,7 +336,7 @@ class IntroductionController extends Controller
             'locale' => $locale,
         ]);
 
-        $intro->load(['sourceFounder', 'targetFounder']);
+        $intro->load(['sourceFounder.user:id,name', 'targetFounder.user:id,name']);
 
         return response()->json([
             'message' => __('messages.intro.approved'),
@@ -381,7 +392,7 @@ class IntroductionController extends Controller
             'target_founder_id' => $intro->target_founder_id,
         ]);
 
-        $intro->load(['sourceFounder', 'targetFounder']);
+        $intro->load(['sourceFounder.user:id,name', 'targetFounder.user:id,name']);
 
         return response()->json([
             'message' => __('messages.intro.declined'),
@@ -407,14 +418,9 @@ class IntroductionController extends Controller
         }
 
         try {
-            Mail::raw(
-                "Wosool Intro: {$sourceName} is now connected with {$targetName}.\n\nYou can continue directly via in-platform messages.",
-                static function ($message) use ($sourceEmail, $targetEmail): void {
-                    $message
-                        ->to([$sourceEmail, $targetEmail])
-                        ->subject('Wosool Intro Connection');
-                }
-            );
+            $url = rtrim((string) config('app.frontend_url'), '/').'/dashboard/messages';
+            Mail::to($sourceEmail)->send(new IntroductionConnectedMail($sourceName, $targetName, $url));
+            Mail::to($targetEmail)->send(new IntroductionConnectedMail($targetName, $sourceName, $url));
         } catch (\Throwable $exception) {
             Log::warning('Failed to send intro email.', [
                 'source_email' => $sourceEmail,

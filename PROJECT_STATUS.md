@@ -1,6 +1,11 @@
 # Project Status
 
-> Last updated: 2026-04-24
+> Last updated: 2026-10-12
+
+## Current snapshot — 2026-10-12
+
+The October release line (package `0.6.0`) runs the full member journey end to end on a fresh install — community application, admin approval and invitation email, registration, profile/company onboarding with photo upload, founder directory, reviewed introductions, private conversations, events, programs, community posts, help requests and settings — plus the EO Riyadh Accelerator at `/eoa` and the admin command center. Validation: backend 185 tests, frontend 70 tests, lint, type-check and production build all pass. See `CHANGELOG.md` (2026-10-12) for the repair details. The sections below are retained as the historical 0.5.0 record.
+
 
 ## Executive Summary
 

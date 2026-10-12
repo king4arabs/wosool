@@ -180,7 +180,7 @@ class ChatRoomController extends Controller
     public function deleteMessage(Request $request, ChatMessage $message): JsonResponse
     {
         $roomId = $message->room_id;
-        $isAdmin = in_array('admin', (array) ($request->user()->roles ?? []), true) || $request->user()->role_token === 'admin';
+        $isAdmin = $request->user()->isPlatformAdmin();
         abort_unless($message->sender_user_id === $request->user()->id || $isAdmin, 403);
         $message->delete();
 

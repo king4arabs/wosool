@@ -18,7 +18,7 @@ class EventRegistrationController extends Controller
     public function index(Request $request, Event $event): JsonResponse
     {
         $status = (string) $request->input('status', '');
-        $query = $event->attendees()->with('founderProfile.companies');
+        $query = $event->attendees()->with(['founderProfile.companies', 'roles']);
 
         if ($status !== '') {
             $query->wherePivot('status', $status);
@@ -34,7 +34,7 @@ class EventRegistrationController extends Controller
                     'name' => $user->name,
                     'email' => $user->email,
                     'company' => $company?->name,
-                    'role' => $user->role_token ?: ($user->roles[0] ?? 'member'),
+                    'role' => $user->roleToken() ?? ($user->getRoleNames()->first() ?? 'member'),
                     'attendance_type' => $this->pivotValue($user, 'attendance_type'),
                     'registration_status' => $user->pivot->status,
                     'relevance_score' => 70,

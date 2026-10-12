@@ -10,6 +10,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Textarea } from "@/components/ui/textarea"
 import { Input } from "@/components/ui/input"
 import { useToast } from "@/components/ui/toast"
+import { useAuth } from "@/lib/auth"
 
 type ProgramDetails = {
   id: number
@@ -24,6 +25,7 @@ type ProgramDetails = {
   cover_image_url?: string | null
   visibility?: string
   status_flow?: string
+  is_open?: boolean
   objective?: string | null
   who_it_is_for?: string | null
   expected_outcomes?: string | null
@@ -108,12 +110,18 @@ export default function ProgramDetailPage() {
     attachment_path: "",
   })
 
+  const { user, isLoading: authLoading } = useAuth()
+  const signedIn = Boolean(user)
+
   useEffect(() => {
-    if (!slug) return
+    if (!slug || authLoading) return
     setLoading(true)
     Promise.all([
       api.get<{ data: ProgramDetails }>(`/programs/${slug}`),
-      api.get<{ data: Array<ProgramApplicationStatus & { program: { slug: string } }> }>("/member/program-applications").catch(() => ({ data: [] })),
+      // Only members have application history; visitors skip the private lookup.
+      signedIn
+        ? api.get<{ data: Array<ProgramApplicationStatus & { program: { slug: string } }> }>("/member/program-applications").catch(() => ({ data: [] }))
+        : Promise.resolve({ data: [] as Array<ProgramApplicationStatus & { program: { slug: string } }> }),
     ])
       .then(([programRes, applicationsRes]) => {
         setProgram(programRes.data)
@@ -122,11 +130,13 @@ export default function ProgramDetailPage() {
       })
       .catch((err: Error) => toast(err.message, "error"))
       .finally(() => setLoading(false))
-  }, [slug, toast])
+  }, [slug, toast, authLoading, signedIn])
 
   const canApply = useMemo(() => {
     if (!program) return false
     if (applicationStatus && !["withdrawn", "rejected"].includes(applicationStatus)) return false
+    // Mirrors the API rule: the program must be open and not in a closed lifecycle state.
+    if (program.is_open === false) return false
     return !["applications_closed", "completed", "cancelled", "archived"].includes(program.status_flow || "")
   }, [program, applicationStatus])
 

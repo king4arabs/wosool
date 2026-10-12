@@ -129,7 +129,8 @@ class ProgramApplicationController extends Controller
         $user = $request->user();
         abort_if($program->slug === \App\Services\Eoa\ProgramService::SLUG, 409, 'Use /EOA/apply for the verified EO Accelerator application.');
 
-        if (! $program->is_open) {
+        $closedFlow = in_array((string) ($program->getAttributes()['status_flow'] ?? ''), ['applications_closed', 'completed', 'cancelled', 'archived'], true);
+        if (! $program->is_open || $closedFlow) {
             throw ValidationException::withMessages([
                 'program' => ['This program is not currently accepting applications.'],
             ]);

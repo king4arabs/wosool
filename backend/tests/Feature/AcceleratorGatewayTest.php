@@ -144,9 +144,10 @@ class AcceleratorGatewayTest extends TestCase
         $u = $this->applicant();
         $a = ProgramApplication::create(['program_id' => Gateway::program()->id, 'user_id' => $u->id, 'status' => 'submitted', 'motivation' => 'Test learning']);
         $e = ApplicationEvent::create(['application_id' => $a->id, 'to_status' => 'submitted', 'is_internal' => false]);
-        Mail::shouldReceive('raw')->once()->andReturnNull();
+        Mail::fake();
         (new SendApplicationUpdate($e->id))->handle();
         (new SendApplicationUpdate($e->id))->handle();
+        Mail::assertSent(\App\Mail\ApplicationUpdateMail::class, 1);
         $this->assertNotNull($e->fresh()->notification_sent_at);
         $internal = ApplicationEvent::create(['application_id' => $a->id, 'to_status' => 'submitted', 'is_internal' => true]);
         (new SendApplicationUpdate($internal->id))->handle();
@@ -163,8 +164,9 @@ class AcceleratorGatewayTest extends TestCase
         $settings['notifications']['program_updates'] = false;
         $user->userSetting()->create($settings);
 
-        Mail::shouldReceive('raw')->never();
+        Mail::fake();
         (new SendApplicationUpdate($event->id))->handle();
+        Mail::assertNothingSent();
 
         $this->assertNull($event->fresh()->notification_sent_at);
     }

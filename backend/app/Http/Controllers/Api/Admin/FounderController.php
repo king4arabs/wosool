@@ -96,7 +96,12 @@ class FounderController extends Controller
         $data = $request->validate([
             'is_public' => ['sometimes', 'boolean'], 'is_featured' => ['sometimes', 'boolean'],
             'status' => ['sometimes', 'in:active,pending,suspended'],
+            'is_verified' => ['sometimes', 'boolean'],
         ]);
+        if (array_key_exists('is_verified', $data)) {
+            // Verification is the admin review that also vets a founder for introductions.
+            $data['vetted_status'] = $data['is_verified'];
+        }
         $before = $founder->only(array_keys($data));
         $founder->update($data);
         \App\Models\AdminAction::log($request->user()->id, 'founder_profile_moderated', 'founder_profile', $founder->id, null, $before, $data);
