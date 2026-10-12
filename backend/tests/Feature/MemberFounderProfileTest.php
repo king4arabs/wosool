@@ -77,6 +77,28 @@ class MemberFounderProfileTest extends TestCase
         ]);
     }
 
+    public function test_soft_deleted_profile_is_hidden_and_its_slug_remains_reserved(): void
+    {
+        $user = User::factory()->member()->create(['name' => 'Layla Test']);
+        $profile = FounderProfile::create([
+            'user_id' => $user->id,
+            'slug' => 'layla-test',
+            'status' => 'active',
+            'is_public' => true,
+        ]);
+
+        $profile->delete();
+
+        $this->assertSoftDeleted('founder_profiles', ['id' => $profile->id]);
+        $this->assertNull(FounderProfile::find($profile->id));
+        $this->getJson('/api/v1/founders/layla-test')->assertNotFound();
+        $this->actingAs($user)->getJson('/api/v1/member/founder-profile')->assertNotFound();
+        $this->putJson('/api/v1/member/founder-profile', ['tagline' => 'New profile'])
+            ->assertCreated()
+            ->assertJsonPath('data.slug', 'layla-test-2');
+        $this->assertSame('layla-test', FounderProfile::withTrashed()->findOrFail($profile->id)->slug);
+    }
+
     public function test_update_validates_url_fields(): void
     {
         $user = User::factory()->member()->create();

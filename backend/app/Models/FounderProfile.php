@@ -7,9 +7,12 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class FounderProfile extends Model
 {
+    use SoftDeletes;
+
     protected $fillable = [
         'directory_key', 'display_name', 'position', 'translations', 'source_urls', 'source_reviewed_at', 'claimed_at',
         'user_id',
