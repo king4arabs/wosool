@@ -17,7 +17,7 @@ This project follows **Semantic Versioning** and a Keep a Changelog-inspired for
 - **More heroes:** About, Founders, Companies and News now use the same `PageHero`.
 - **QA loop:** `npm run qa` (verify + browser crawl) and `npm run qa:crawl` visit every page in Arabic and English, desktop and mobile, as visitor, member and admin, and fail on page errors, API 5xx, horizontal overflow, error boundaries and missing or duplicate `<h1>`. First run: 416 visits, 12 issues (duplicate `<h1>` on 6 admin pages) — fixed, re-run clean.
 - **Deployment:** `DEPLOYMENT.md` lists the post-deploy content imports in order.
-- **Tests:** backend 210 passing (4 new email tests), frontend 81 passing.
+- **Tests:** backend 212 passing (4 new email tests), frontend 81 passing.
 
 ## Sourced newsroom and founder scorecards — 2026-10-12
 
