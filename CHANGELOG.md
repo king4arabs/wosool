@@ -6,6 +6,13 @@ This project follows **Semantic Versioning** and a Keep a Changelog-inspired for
 
 ---
 
+## Questions & answers — 2026-10-13
+
+- **FAQ:** new bilingual `/faq` with 28 answers in 7 topics (membership, account, profile & privacy, introductions & asking for help, events & programs, news & founder profiles, partners & sponsors). Every answer describes current product behaviour and links to the page that does it. Search folds Arabic diacritics and letter variants and works across both languages; topic filters with live counts; shareable deep links (`/faq#reset-password`) with copy-link; expand/collapse all; an empty state that turns the search into a pre-filled contact message; FAQPage structured data. Linked from the footer and sitemap.
+- **Shared FAQ component:** the membership questions on `/apply` and the EO Riyadh Accelerator FAQ (still admin-editable) now use the same accessible accordion, with search on the accelerator list.
+- **Ask the community (fix):** questions shared with the community were only ever visible to the person who asked. Members now get a *Questions from founders* feed (shared and matched questions, urgent first, search and topic filter, no email addresses exposed) and an *I can help* action that joins the question's private conversation with an optional first message and emails the founder who asked. Helper suggestions now rank members whose profiles mention the topic.
+- **Ask the community (UI):** bilingual page in the member menu with *Questions from founders* / *My questions* tabs, a guided ask form (clear visibility choices, urgency, inline validation), readable status labels, change-who-sees-it, mark resolved and reopen.
+- **Tests:** backend 218 passing (6 new), frontend 84 passing (3 new).
 ## Admin language parity and detail-page headings — 2026-10-12
 
 - **Headings:** Event management (`/admin/events/[id]`) and Program management (`/admin/programs/[id]`) still rendered a second `<h1>` under the admin layout's; they now start at `<h2>`. A new frontend test fails if any admin page renders an `<h1>`.

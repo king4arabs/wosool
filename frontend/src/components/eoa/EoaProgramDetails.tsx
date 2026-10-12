@@ -1,6 +1,9 @@
 'use client'
 
+import Link from 'next/link'
 import { ArrowUpRight, Building2, Handshake } from 'lucide-react'
+import { FaqExplorer } from '@/components/sections/FaqExplorer'
+import type { FaqItem } from '@/data/faq'
 import { useLocale } from '@/lib/locale'
 import { eoaFaqs, safeEoaWebsite, type EoaEditorialProgram } from '@/lib/eoa-editorial'
 
@@ -20,6 +23,12 @@ export function EoaProgramDetails({
     organization.relationship_status === 'confirmed' && confirmedIds.has(organization.id),
   )
   const faqs = eoaFaqs(program?.editorial)
+  const faqItems: FaqItem[] = faqs.map((faq, index) => ({
+    id: `eoa-${faq.question_en.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 60) || index}`,
+    category: 'events',
+    q: { ar: faq.question_ar, en: faq.question_en },
+    a: { ar: faq.answer_ar.split(/\n{2,}/), en: faq.answer_en.split(/\n{2,}/) },
+  }))
 
   return (
     <>
@@ -70,15 +79,14 @@ export function EoaProgramDetails({
       {(section === 'all' || section === 'faq') && faqs.length > 0 && (
         <section className="eoa-section" id="faq" aria-labelledby="eoa-faq-title">
           <div className="eoa-container">
-            <span className="eoa-eyebrow">{ar ? 'قبل التقديم' : 'BEFORE YOU APPLY'}</span>
-            <h2 id="eoa-faq-title">{ar ? 'الأسئلة الشائعة' : 'Frequently asked questions'}</h2>
-            <div className="eoa-faq eoa-space">
-              {faqs.map((faq, index) => (
-                <details key={`${index}-${faq.question_en}`}>
-                  <summary>{ar ? faq.question_ar : faq.question_en}</summary>
-                  <p style={{ whiteSpace: 'pre-line' }}>{ar ? faq.answer_ar : faq.answer_en}</p>
-                </details>
-              ))}
+            <span className={section === 'faq' ? 'sr-only' : 'eoa-eyebrow'}>{ar ? 'قبل التقديم' : 'BEFORE YOU APPLY'}</span>
+            <h2 id="eoa-faq-title" className={section === 'faq' ? 'sr-only' : undefined}>{ar ? 'الأسئلة الشائعة' : 'Frequently asked questions'}</h2>
+            <div className="eoa-space max-w-4xl">
+              <FaqExplorer items={faqItems} categories={['events']} searchable={faqItems.length > 5} grouped={false} jsonLd={section === 'faq'} footer={false} placeholder={ar ? 'ابحث: الرسوم، المدة، الأهلية…' : 'Search: fees, duration, eligibility…'} />
+              <p className="mt-6 text-sm text-[var(--text-muted)]">
+                {ar ? 'لديك سؤال آخر؟ ' : 'Have another question? '}
+                <Link href="/eoa/contact" className="font-bold text-[var(--link)] underline">{ar ? 'تواصل مع فريق المسرّعة' : 'Contact the Accelerator team'}</Link>
+              </p>
             </div>
           </div>
         </section>

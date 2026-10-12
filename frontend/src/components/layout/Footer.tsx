@@ -28,6 +28,7 @@ const footerCopy = {
         { href: "/news", label: "الأخبار والرؤى" },
         { href: "/partners", label: "الشركاء" },
         { href: "/sponsors", label: "الرعاة" },
+        { href: "/faq", label: "الأسئلة الشائعة" },
         { href: "/contact", label: "تواصل معنا" },
       ],
       "عن وصول": [
@@ -61,6 +62,7 @@ const footerCopy = {
         { href: "/news", label: "News & insights" },
         { href: "/partners", label: "Partners" },
         { href: "/sponsors", label: "Sponsors" },
+        { href: "/faq", label: "FAQ" },
         { href: "/contact", label: "Contact" },
       ],
       "About Wosool": [

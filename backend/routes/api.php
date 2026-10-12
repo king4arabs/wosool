@@ -170,6 +170,7 @@ Route::prefix('v1')->group(function () {
         Route::post('/help-requests/{helpRequest}/suggest-helpers', [MemberHelpRequestController::class, 'suggestHelpers']);
         Route::post('/help-requests/{helpRequest}/invite-helper', [MemberHelpRequestController::class, 'inviteHelper']);
         Route::post('/help-requests/{helpRequest}/resolve', [MemberHelpRequestController::class, 'resolve']);
+        Route::post('/help-requests/{helpRequest}/offer-help', [MemberHelpRequestController::class, 'offerHelp'])->middleware('throttle:20,1');
 
         // Introductions workflow
         Route::get('/introductions', [IntroductionController::class, 'index']);
