@@ -63,3 +63,10 @@ export function boardScrollOffset(current: number, maximum: number, step: number
 export function boardText(ar: boolean, arabic: string | null, english: string | null): string {
   return (ar ? arabic || english : english || arabic) || ''
 }
+
+export function boardMemberName(ar: boolean, member: EoaBoardMember): string {
+  if (ar && member.slug === 'mohammed-alsolami' && (!member.name_ar?.trim() || member.name_ar === member.name_en)) {
+    return 'محمد السلمي'
+  }
+  return boardText(ar, member.name_ar, member.name_en)
+}
