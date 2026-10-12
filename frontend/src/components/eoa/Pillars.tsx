@@ -10,15 +10,15 @@ const pillars = [
     icon: Banknote,
     en: {
       title: "Cash",
-      summary: "Build financial clarity and fund sustainable growth.",
+      summary: "Know when cash comes in, when it goes out and what growth will cost.",
       topics: ["Cash flow and liquidity", "Profitability and margins", "Forecasting and controls", "Working capital decisions"],
-      outcome: "A stronger financial operating rhythm and clearer growth choices.",
+      outcome: "A clearer picture of your cash needs before the next big decision.",
     },
     ar: {
       title: "النقد",
-      summary: "ابنِ وضوحاً مالياً يمكّن النمو المستدام.",
+      summary: "اعرف متى يدخل النقد ويخرج، وما تكلفة خطوتك التالية.",
       topics: ["التدفقات النقدية والسيولة", "الربحية والهوامش", "التنبؤ والضوابط المالية", "قرارات رأس المال العامل"],
-      outcome: "إيقاع مالي أقوى وقرارات نمو أكثر وضوحاً.",
+      outcome: "صورة أوضح لاحتياجاتك النقدية قبل القرار التالي.",
     },
   },
   {
@@ -26,15 +26,15 @@ const pillars = [
     icon: Compass,
     en: {
       title: "Strategy",
-      summary: "Turn ambition into a focused competitive direction.",
+      summary: "Decide which customers and opportunities deserve your attention.",
       topics: ["Market positioning", "Value proposition", "Competitive advantage", "Growth priorities"],
-      outcome: "A strategy the team can understand, test and execute.",
+      outcome: "A direction your team can explain and put to the test.",
     },
     ar: {
       title: "الاستراتيجية",
-      summary: "حوّل الطموح إلى اتجاه تنافسي واضح ومركّز.",
+      summary: "حدّد العملاء والفرص التي تستحق وقت فريقك.",
       topics: ["التموضع في السوق", "عرض القيمة", "الميزة التنافسية", "أولويات النمو"],
-      outcome: "استراتيجية يفهمها الفريق ويختبرها وينفذها.",
+      outcome: "اتجاه يستطيع فريقك شرحه واختباره في السوق.",
     },
   },
   {
@@ -42,15 +42,15 @@ const pillars = [
     icon: UsersRound,
     en: {
       title: "People",
-      summary: "Build the leadership, culture and team your next stage needs.",
+      summary: "Work out who owns each decision as your team grows.",
       topics: ["Leadership systems", "Hiring and talent", "Culture and accountability", "Organization design"],
-      outcome: "A team structure that can grow without losing clarity or ownership.",
+      outcome: "Clearer roles and fewer decisions left waiting on the founder.",
     },
     ar: {
       title: "الأفراد",
-      summary: "ابنِ القيادة والثقافة والفريق المناسب للمرحلة القادمة.",
+      summary: "اعرف من يتخذ كل قرار مع توسّع فريقك.",
       topics: ["أنظمة القيادة", "التوظيف والمواهب", "الثقافة والمساءلة", "التصميم التنظيمي"],
-      outcome: "هيكل فريق قادر على النمو مع وضوح المسؤولية والملكية.",
+      outcome: "أدوار أوضح وقرارات لا تتوقف كلها عند المؤسس.",
     },
   },
   {
@@ -58,15 +58,15 @@ const pillars = [
     icon: Gauge,
     en: {
       title: "Execution",
-      summary: "Translate strategy into measurable commitments and results.",
+      summary: "Choose what to do this week and how to check the results.",
       topics: ["Operating cadence", "KPIs and priorities", "Decision routines", "Continuous improvement"],
-      outcome: "A disciplined execution system that keeps growth visible and actionable.",
+      outcome: "A regular check on priorities, results and what needs to change.",
     },
     ar: {
       title: "التنفيذ",
-      summary: "حوّل الاستراتيجية إلى التزامات ونتائج قابلة للقياس.",
+      summary: "اختر ما ستنجزه هذا الأسبوع وكيف ستراجع نتائجه.",
       topics: ["إيقاع التشغيل", "المؤشرات والأولويات", "روتين اتخاذ القرار", "التحسين المستمر"],
-      outcome: "نظام تنفيذ منضبط يجعل النمو واضحاً وقابلاً للعمل.",
+      outcome: "مراجعة منتظمة للأولويات والنتائج وما يحتاج إلى تعديل.",
     },
   },
 ] as const
@@ -80,10 +80,10 @@ export function EoaPillars() {
       <div className="eoa-container">
         <div className="eoa-section-head">
           <div>
-            <span className="eoa-eyebrow">{ar ? "من التعلّم إلى التطبيق" : "LEARNING THAT MOVES THE BUSINESS"}</span>
-            <h2 id="eoa-pillars-title">{ar ? "أربع ركائز. شركة أقوى." : "Four pillars. One stronger company."}</h2>
+            <span className="eoa-eyebrow">{ar ? "ما الذي ستناقشه؟" : "WHAT YOU’LL DISCUSS"}</span>
+            <h2 id="eoa-pillars-title">{ar ? "أربع زوايا للنظر في شركتك." : "Four ways to look at your business."}</h2>
           </div>
-          <p>{ar ? "افتح كل ركيزة لاستكشاف الموضوعات والنتيجة العملية المقصودة. تُكيّف التفاصيل حسب الدفعة والميسّرين المعتمدين." : "Open each pillar to explore its themes and intended practical outcome. Delivery is configured for each cohort and its approved facilitators."}</p>
+          <p>{ar ? "افتح كل محور لترى الأسئلة التي ستعمل عليها. يحدد فريق البرنامج تفاصيل الجلسات لكل دفعة مع ميسّريها المعتمدين." : "Open each area to see the questions you’ll work through. The program team sets session details with each cohort’s approved facilitators."}</p>
         </div>
 
         <div className={styles.pillarGrid}>

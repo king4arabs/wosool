@@ -99,8 +99,8 @@ export function EoGlobalNetwork({ ar }: { ar: boolean }) {
     <div className={styles.intro}>
       <div>
         <span className={styles.eyebrow}><Globe2 size={16} aria-hidden="true" />{ar ? 'خبرات تتجاوز الحدود' : 'EXPERIENCE BEYOND BORDERS'}</span>
-        <h2 id="global-network-title">{ar ? 'تعلّم من خبرات شبكة EO العالمية' : 'Founder experience. Global perspective.'}</h2>
-        <p>{ar ? 'استكشف خبرات قادة ومستشارين ومدربين ومتحدثين من مجتمع EO في النمو والقيادة والتمويل وبناء الفرق.' : 'Explore leaders, advisors, coaches and speakers across EO, with experience in growth, leadership, finance and building teams.'}</p>
+        <h2 id="global-network-title">{ar ? 'تعرّف على أصحاب الخبرة في شبكة EO' : 'Meet people across the EO network'}</h2>
+        <p>{ar ? 'تصفح الملفات العامة لقادة ومتحدثين ومدربين من شبكة EO، وابحث حسب الشركة أو الفرع أو مجال الخبرة.' : 'Browse public profiles of EO leaders, speakers and coaches. Search by company, chapter or area of experience.'}</p>
       </div>
       <div className={styles.stats}>
         <div><strong>{eoNetworkProfiles.length}</strong><span>{ar ? 'ملفاً من شبكة EO' : 'EO network profiles'}</span></div>
@@ -116,6 +116,6 @@ export function EoGlobalNetwork({ ar }: { ar: boolean }) {
     </div>
     <div className={styles.results}><span role="status">{profiles.length} {ar ? 'ملفاً' : 'profiles'}</span><button type="button" onClick={() => setGrid(!grid)} aria-pressed={grid}><Users size={16} aria-hidden="true" />{grid ? (ar ? 'عرض متحرك' : 'Carousel view') : (ar ? 'عرض جميع البطاقات' : 'View all cards')}</button></div>
     {profiles.length ? <ProfileCarousel key={`${query}|${group}|${topic}`} profiles={profiles} ar={ar} grid={grid} /> : <div className={styles.empty}><h3>{ar ? 'لا توجد نتائج مطابقة' : 'No matching profiles'}</h3><button type="button" onClick={() => { setQuery(''); setGroup('all'); setTopic('all') }}>{ar ? 'مسح عوامل التصفية' : 'Clear filters'}</button></div>}
-    <div className={styles.contact}><div><strong>{ar ? 'أي خبرة تحتاجها في رحلة نموك؟' : 'What experience would help you grow?'}</strong><p>{ar ? 'تحدث مع فريق المسرّعة حول احتياجاتك الإرشادية وفرص المشاركة.' : 'Talk to the Accelerator team about mentoring needs and opportunities to participate.'}</p></div><Link href="/eoa/contact" className="eoa-btn">{ar ? 'تواصل مع الفريق' : 'Talk to the team'}<ArrowUpRight size={17} aria-hidden="true" /></Link></div>
+    <div className={styles.contact}><div><strong>{ar ? 'تبحث عن مساعدة في قرار محدد؟' : 'Need a sounding board for a decision?'}</strong><p>{ar ? 'أخبر فريق المسرّعة بالموضوع الذي تريد مناقشته؛ سيشرح لك فرص الإرشاد المتاحة.' : 'Tell the Accelerator team what you’re working through. They can explain which mentoring opportunities are available.'}</p></div><Link href="/eoa/contact" className="eoa-btn">{ar ? 'تواصل مع الفريق' : 'Talk to the team'}<ArrowUpRight size={17} aria-hidden="true" /></Link></div>
   </section>
 }

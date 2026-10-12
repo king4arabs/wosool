@@ -34,29 +34,29 @@ export function EoaLanding() {
   const metrics = ar
     ? [
         ["$250K–$999K", "نطاق الإيراد السنوي المستهدف"],
-        ["4", "ركائز أساسية للنمو"],
-        ["٦ أشهر", "تدريب وتوجيه وأنشطة مرموقة"],
-        ["$1M+", "طموح النمو السنوي"],
+        ["4", "محاور للعمل على شركتك"],
+        ["٦ أشهر", "تعلم وتوجيه مع الدفعة"],
+        ["$1M+", "هدف الإيراد السنوي"],
       ]
     : [
         ["$250K–$999K", "Target annual revenue"],
-        ["4", "Core growth pillars"],
-        ["6 Months", "Coaching, training & prestigious activities"],
-        ["$1M+", "Annual growth ambition"],
+        ["4", "Areas to work on"],
+        ["6 months", "Learning and coaching with your cohort"],
+        ["$1M+", "Annual revenue goal"],
       ]
 
   const valueCards: Array<{ icon: LucideIcon; title: string; body: string }> = ar
     ? [
-        { icon: TrendingUp, title: "نمو قابل للقياس", body: "حوّل الطموح إلى أولويات ومؤشرات والتزامات عملية داخل شركتك." },
-        { icon: Network, title: "علاقات بين المؤسسين", body: "ناقش تحديات حقيقية مع أقران يفهمون مسؤولية بناء الشركات." },
-        { icon: Globe2, title: "اتصال عالمي", body: "استكشف فرص التعلّم والعلاقات التي تتيحها منظومة EO للمشاركين المؤهلين." },
-        { icon: ShieldCheck, title: "دعم من أصحاب الخبرة", body: "تعلّم من رواد أعمال ذوي خبرة واستفد من خبراتهم في بناء شركتك." },
+        { icon: TrendingUp, title: "قرارات أوضح لشركتك", body: "حدّد ما تريد تغييره في عملك، وكيف ستعرف إن كنت تتقدم." },
+        { icon: Network, title: "مؤسسون يشاركونك التحديات", body: "تحدّث عن قرارات التوظيف والسيولة والنمو مع من يواجهون مثلها." },
+        { icon: Globe2, title: "تجارب من شبكة EO", body: "تعرّف على خبرات مؤسسين من شبكة EO، وفق فرص المشاركة المتاحة." },
+        { icon: ShieldCheck, title: "خبرة قابلة للتطبيق", body: "استمع إلى تجارب رواد أعمال، ثم اختر ما يناسب شركتك." },
       ]
     : [
-        { icon: TrendingUp, title: "Measurable growth", body: "Turn ambition into priorities, indicators and practical commitments inside your company." },
-        { icon: Network, title: "Founder-to-founder connection", body: "Work through real challenges with peers who understand the responsibility of building companies." },
-        { icon: Globe2, title: "Global connectivity", body: "Explore learning and relationship opportunities available through the EO ecosystem to eligible participants." },
-        { icon: ShieldCheck, title: "Experienced perspectives", body: "Learn with experienced entrepreneurs and bring fresh perspectives to the decisions that shape your business." },
+        { icon: TrendingUp, title: "Clearer business decisions", body: "Name what needs to change in your business and how you’ll know it’s working." },
+        { icon: Network, title: "Founders facing similar decisions", body: "Talk through hiring, cash and growth with people who have been there." },
+        { icon: Globe2, title: "Experience from the EO network", body: "Hear from founders across EO when participation opportunities are available." },
+        { icon: ShieldCheck, title: "Advice you can put to work", body: "Learn from entrepreneurs’ experiences and decide what fits your company." },
       ]
 
   return (
@@ -73,8 +73,8 @@ export function EoaLanding() {
               </h1>
               <p className="eoa-hero-message">
                 {ar
-                  ? "انضم إلى دفعة تمتد ستة أشهر من التدريب والتوجيه والأنشطة المرموقة، يليها دعم للخريجين نحو مليون دولار من الإيراد السنوي. تنطلق دفعة جديدة كل ستة أشهر."
-                  : "Join a six-month cohort of coaching, training and prestigious activities, followed by alumni support toward US$1M in annual revenue. A new cohort begins every six months."}
+                  ? "لديك شركة قائمة وقرارات لا يمكن تأجيلها؟ خصص ستة أشهر للعمل عليها مع مؤسسين آخرين ومدربين، ثم واصل المتابعة ضمن مجتمع الخريجين. تنطلق دفعة جديدة كل ستة أشهر."
+                  : "Running a business means making decisions you can’t put off. Spend six months working through them with fellow founders and coaches, then stay connected through the alumni program. A new cohort begins every six months."}
               </p>
 
               <div className="eoa-hero-join-row">
@@ -106,7 +106,7 @@ export function EoaLanding() {
                 [ar ? "نمِّ قدراتك" : "Strengthen your leadership", ar ? "الأفراد • التنفيذ" : "People • Execution"],
                 [ar ? "وسّع آفاقك" : "Grow your possibilities", ar ? "رحلة نحو جاهزية عضوية EO" : "A path toward EO membership readiness"],
               ].map(([title, body], index) => <div className="eoa-path-step" key={title}><span>0{index + 1}</span><div><h3>{title}</h3><p>{body}</p></div></div>)}
-              <div className="eoa-path-foot">{ar ? "تعلّم. طبّق. تقدّم." : "LEARN. APPLY. PROGRESS."}</div>
+              <div className="eoa-path-foot">{ar ? "من تحديات شركتك، إلى خطوات تجرّبها." : "BRING A CHALLENGE. LEAVE WITH A NEXT STEP."}</div>
             </aside>
           </div>
 
@@ -123,8 +123,8 @@ export function EoaLanding() {
       <section className="eoa-section eoa-light" id="overview" aria-labelledby="eoa-overview-title">
         <div className="eoa-container">
           <div className="eoa-section-head">
-            <div><span className="eoa-eyebrow">{ar ? "من الطموح إلى مستقبل أكبر" : "FROM AMBITION TO A $1M+ FUTURE"}</span><h2 id="eoa-overview-title">{ar ? "مجتمع مؤسسين يفتح آفاق النمو." : "Built around founders. Focused on growth."}</h2></div>
-            <p>{ar ? "رحلة منظمة لأصحاب الشركات القائمة، تجمع التعلّم بين الأقران، والمساءلة، والتطبيق الحقيقي على الشركة." : "A structured journey for owners of operating businesses, combining peer learning, accountability and real application inside the company."}</p>
+            <div><span className="eoa-eyebrow">{ar ? "اعمل على شركتك، لا على أفكار مجردة" : "WORK ON THE BUSINESS YOU RUN"}</span><h2 id="eoa-overview-title">{ar ? "أحضر تحديات شركتك إلى الطاولة." : "Bring your business questions to the table."}</h2></div>
+            <p>{ar ? "كيف تدير السيولة؟ من تحتاج في فريقك؟ وأين تركز وقتك؟ ناقش هذه الأسئلة مع دفعتك، ثم جرّب ما تعلمته في شركتك." : "Cash is tight. The team needs to grow. Where do you focus first? Bring those questions to your cohort, then test what you learn in your business."}</p>
           </div>
           <div className="eoa-four-grid">
             {valueCards.map(({ icon: Icon, title, body }) => <article className="eoa-pillar" key={title}><Icon size={24} aria-hidden="true" /><h3>{title}</h3><p>{body}</p></article>)}
@@ -142,8 +142,8 @@ export function EoaLanding() {
           </div>
           <div className="eoa-card">
             <EoaLogo />
-            <h3 className="eoa-space">{ar ? 'نمو الشركة يبدأ بتطور مؤسسها.' : 'Stronger founders build stronger businesses.'}</h3>
-            <p>{ar ? 'توفر المسرعة إطاراً منظماً للتعلم والمساءلة للمؤسسين الطامحين إلى توسيع شركاتهم والاستعداد لمتطلبات عضوية EO.' : 'Accelerator provides a structured learning and accountability experience for founders working to scale their companies and prepare for EO membership requirements.'}</p>
+            <h3 className="eoa-space">{ar ? 'لا تحتاج إلى اتخاذ كل قرار وحدك.' : 'You don’t have to make every decision alone.'}</h3>
+            <p>{ar ? 'تجمع المسرّعة مؤسسين لتبادل التجارب ومراجعة التقدم في شركاتهم. ولعضوية EO متطلبات وقرار قبول مستقلان.' : 'Accelerator brings founders together to share experience and check progress in their companies. EO membership has its own requirements and admission process.'}</p>
             <a className="eoa-text-link" href="https://eoriyadh.org/" target="_blank" rel="noopener noreferrer">{ar ? 'تعرف على EO الرياض' : 'Meet EO Riyadh'} ↗</a>
           </div>
         </div>
@@ -156,7 +156,7 @@ export function EoaLanding() {
           <div>
             <span className="eoa-eyebrow">{ar ? "بقيادة المؤسسين" : "FOUNDER LED"}</span>
             <h2>{ar ? "محلي في جذوره.\nعالمي في علاقاته." : "Rooted in Riyadh.\nConnected to the world."}</h2>
-            <p>{ar ? "تجمع الرحلة بين نمو الشركات وبناء القدرات القيادية وعلاقات المؤسسين داخل الرياض وعبر شبكة EO العالمية." : "The journey brings together company growth, leadership capability and founder relationships across Riyadh and the global EO network."}</p>
+            <p>{ar ? "يقود EO الرياض البرنامج محلياً، ويقدّم إطار EO للتعلّم نقطة انطلاق للعمل على تحديات الشركة. يدير وصول التقديم ومتابعة المشاركين." : "EO Riyadh leads the local program. EO’s learning framework gives founders a place to start on business challenges; Wosool handles applications and participant follow-up."}</p>
             <Link className="eoa-text-link" href="/eoa/about">{ar ? "تعرف على البرنامج" : "Meet the program"}<Arrow size={18} /></Link>
           </div>
           <div className="eoa-card">
@@ -177,10 +177,10 @@ export function EoaLanding() {
 
       <section className="eoa-section">
         <div className="eoa-container eoa-two-grid">
-          <div><span className="eoa-eyebrow">{ar ? "خطوتك القادمة" : "YOUR NEXT CHAPTER"}</span><h2>{ar ? "طموحك يستحق\nمجتمعاً يدفعه للأمام." : "Your ambition deserves\na community behind it."}</h2></div>
+          <div><span className="eoa-eyebrow">{ar ? "قبل أن تتقدم" : "BEFORE YOU APPLY"}</span><h2>{ar ? "ابدأ بالأهلية.\nثم أخبرنا عن شركتك." : "Check the criteria.\nThen tell us about your business."}</h2></div>
           <div>
             <p>{ar ? "ابدأ بتقييم الأهلية، ثم جهز طلبك واحفظ تقدمك. تراجع اللجنة جاهزية شركتك والتزامك بالنمو." : "Start with an eligibility check, then prepare your application and save your progress. The committee reviews company readiness and your commitment to growth."}</p>
-            <div className="eoa-actions"><Link className="eoa-btn" href="/eoa/apply">{ar ? "ابدأ رحلتك" : "Start your journey"}<Arrow size={18} /></Link><Link className="eoa-text-link" href="/eoa/contact">{ar ? "انضم كشريك" : "Become a partner"}</Link></div>
+            <div className="eoa-actions"><Link className="eoa-btn" href="/eoa/apply">{ar ? "جهّز طلبك" : "Prepare your application"}<Arrow size={18} /></Link><Link className="eoa-text-link" href="/eoa/contact">{ar ? "تحدث مع الفريق" : "Ask the team"}</Link></div>
             <p className="eoa-muted">{ar ? "التقديم لا يضمن القبول أو عضوية EO. تُدار مناقشات الاستثمار بشكل مستقل عن البرنامج." : "Admission and EO membership require separate review. Investment discussions are independent of program participation."}</p>
           </div>
         </div>
