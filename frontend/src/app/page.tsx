@@ -20,7 +20,7 @@ const content = {
   ar: {
     eyebrow: "وصول · مجتمع المؤسسين", title: "من مؤسس", highlight: "إلى مؤسس",
     intro: "بناء الشركات رحلة. لا تقطعها وحدك.",
-    description: "مجتمع يجمع المؤسسين في السعودية والخليج لتبادل الخبرات، وبناء علاقات حقيقية، واكتشاف فرص التعاون. هنا، تبدأ المحادثة بتجربة مشتركة، وتكبر بما يقدّمه كل مؤسس للآخر.",
+    description: "مجتمع يجمع المؤسسين في السعودية والخليج والعالم لتبادل الخبرات، وبناء علاقات حقيقية، واكتشاف فرص التعاون. هنا، تبدأ المحادثة بتجربة مشتركة، وتكبر بما يقدّمه كل مؤسس للآخر.",
     join: "انضم إلى وصول", explore: "تعرّف على المؤسسين", note: "عضوية المجتمع تخضع للمراجعة. برامج النمو لها متطلبات تقديم مستقلة.",
     panelTitle: "أشخاص يفهمون رحلتك.", panelText: "اسأل عن تحدٍّ. شارك درسًا. ابدأ علاقة تستمر.",
     panelItems: ["خبرات من أرض الواقع", "علاقات قبل المعاملات", "تعاون يصنع قيمة للطرفين"],
@@ -44,7 +44,7 @@ const content = {
   en: {
     eyebrow: "WOSOOL · THE FOUNDER COMMUNITY", title: "Founders", highlight: "to Founders",
     intro: "Building a company is a journey. Don’t go it alone.",
-    description: "A community connecting founders across Saudi Arabia and the GCC to exchange experience, build genuine relationships, and discover ways to collaborate. Shared experience starts the conversation. What we give each other takes it further.",
+    description: "A community connecting founders across Saudi Arabia, the GCC, and the world to exchange experience, build genuine relationships, and discover ways to collaborate. Shared experience starts the conversation. What we give each other takes it further.",
     join: "Join Wosool", explore: "Meet the founders", note: "Community membership is reviewed. Growth programs have separate application requirements.",
     panelTitle: "People who get your journey.", panelText: "Bring a challenge. Share a lesson. Build a lasting connection.", panelItems: ["Experience from the field", "Relationships before transactions", "Collaboration that goes both ways"],
     why: "WHAT BRINGS US TOGETHER", whyTitle: "Different companies. Shared challenges.",
