@@ -2,7 +2,7 @@
 
 import Image from 'next/image'
 import Link from 'next/link'
-import { ArrowUpRight, Compass, Handshake, Users } from 'lucide-react'
+import { ArrowUpRight } from 'lucide-react'
 import type { EoaProgram } from '@/lib/eoa'
 import { leadershipBoard } from '@/lib/eoa-leadership'
 import { EoaBoard } from './Board'
@@ -11,16 +11,6 @@ import styles from './Leadership.module.css'
 
 export function EoaLeadership({ program, ar }: { program: EoaProgram | null; ar: boolean }) {
   const board = leadershipBoard(program?.board_members)
-  const roles = ar ? [
-    ['EO الرياض', 'مجلس الإدارة', 'قيادة مجتمع الفرع ودعم المؤسسين وبناء العلاقات.'],
-    ['محمد السلمي', 'قيادة المسرّعة', 'رئيس العضوية والمسرّعة؛ يقود برنامج EOA الرياض ورحلة نمو المشاركين.'],
-    ['LAMARKA', 'الشريك المشغّل', 'خبرة في تصميم وتشغيل برامج ريادة الأعمال وبناء المشاريع.'],
-  ] : [
-    ['EO Riyadh', 'Chapter board', 'Chapter leadership, founder community and meaningful connections.'],
-    ['Mohammed Alsolami', 'Accelerator leadership', 'Membership & Accelerator Chair, leading EOA Riyadh and its participants’ growth journey.'],
-    ['LAMARKA', 'Operating partner', 'Experience designing and operating entrepreneurship programs and building ventures.'],
-  ]
-  const icons = [Users, Compass, Handshake]
   return <div className={styles.page}>
     <nav className={styles.jumpLinks} aria-label={ar ? 'أقسام القيادة' : 'Leadership sections'}>
       <a href="#program-lead">{ar ? 'قائد البرنامج' : 'Program lead'}</a>
@@ -42,12 +32,6 @@ export function EoaLeadership({ program, ar }: { program: EoaProgram | null; ar:
           <a href="https://www.linkedin.com/in/mohammedalsolami" target="_blank" rel="noopener noreferrer">LinkedIn <ArrowUpRight size={18} aria-hidden="true" /></a>
         </div>
       </div>
-    </section>
-    <section className={styles.roles} aria-label={ar ? 'قيادة وتشغيل البرنامج' : 'Program leadership and operations'}>
-      {roles.map(([name, role, detail], index) => {
-        const Icon = icons[index]
-        return <article key={name}><Icon size={26} aria-hidden="true" /><span className={styles.eyebrow}>{role}</span><h3>{name}</h3><p>{detail}</p></article>
-      })}
     </section>
     <EoaBoard members={board} ar={ar} layout="grid" />
     <LamarkaProfile ar={ar} />
