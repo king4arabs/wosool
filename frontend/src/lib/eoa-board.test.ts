@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
-import { boardExternalUrl, boardPortraitUrl, boardScrollOffset, boardText, publishedBoardMembers, type EoaBoardMember } from './eoa-board'
+import { boardExternalUrl, boardMemberName, boardPortraitUrl, boardScrollOffset, boardText, publishedBoardMembers, type EoaBoardMember } from './eoa-board'
 
 test('board links exclude missing, unsafe and credential-bearing addresses', () => {
   for (const url of [null, '', '   ', 'javascript:alert(1)', 'data:text/html,hello', '//example.org', '/profile', 'https://person:password@example.org']) {
@@ -37,4 +37,13 @@ test('board labels use the available language without inventing missing informat
   assert.equal(boardText(true, null, 'Member name'), 'Member name')
   assert.equal(boardText(false, 'اسم العضو', null), 'اسم العضو')
   assert.equal(boardText(false, null, null), '')
+})
+
+test('the chair has an Arabic name on Arabic pages even if live data has only English', () => {
+  const chair = { slug: 'mohammed-alsolami', name_en: 'Mohammed Alsolami', name_ar: null } as EoaBoardMember
+  assert.equal(boardMemberName(true, chair), 'محمد السلمي')
+  assert.equal(boardMemberName(false, chair), 'Mohammed Alsolami')
+  assert.equal(boardMemberName(true, { ...chair, name_ar: 'Mohammed Alsolami' }), 'محمد السلمي')
+  assert.equal(boardMemberName(true, { ...chair, name_ar: 'محمد جبرالله السلمي' }), 'محمد جبرالله السلمي')
+  assert.equal(boardMemberName(true, { ...chair, slug: 'another-member' }), 'Mohammed Alsolami')
 })

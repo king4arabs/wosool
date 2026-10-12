@@ -3,7 +3,7 @@
 import Image from 'next/image'
 import { ArrowLeft, ArrowRight, Globe2, Pause, Play, UserRound } from 'lucide-react'
 import { useEffect, useId, useMemo, useRef, useState, useSyncExternalStore, type KeyboardEvent } from 'react'
-import { boardExternalUrl, boardPortraitUrl, boardScrollOffset, boardText, publishedBoardMembers, type EoaBoardMember } from '@/lib/eoa-board'
+import { boardExternalUrl, boardMemberName, boardPortraitUrl, boardScrollOffset, boardText, publishedBoardMembers, type EoaBoardMember } from '@/lib/eoa-board'
 import styles from './Board.module.css'
 
 function subscribeMotion(callback: () => void) {
@@ -26,7 +26,7 @@ function SocialIcon({ kind }: { kind: SocialKind }) {
 }
 
 function BoardCard({ member, ar, index, count, slide }: { member: EoaBoardMember; ar: boolean; index: number; count: number; slide: boolean }) {
-  const name = boardText(ar, member.name_ar, member.name_en)
+  const name = boardMemberName(ar, member)
   const portrait = boardPortraitUrl(member.portrait_path)
   const [failedPortrait, setFailedPortrait] = useState<string | null>(null)
   const companyUrl = boardExternalUrl(member.company_url)
@@ -42,7 +42,7 @@ function BoardCard({ member, ar, index, count, slide }: { member: EoaBoardMember
   return <article className={styles.card} dir={ar ? 'rtl' : 'ltr'} aria-roledescription={slide ? (ar ? 'بطاقة عضو' : 'slide') : undefined} aria-label={`${name} · ${index + 1} / ${count}`}>
     <div className={styles.portrait}>
       {portrait && failedPortrait !== portrait
-        ? <Image src={portrait} alt={boardText(ar, member.portrait_alt_ar, member.portrait_alt_en) || name} width={240} height={240} sizes="144px" unoptimized={!portrait.startsWith('/')} style={{ objectPosition: member.portrait_position || '50% 35%' }} onError={() => setFailedPortrait(portrait)} />
+        ? <Image src={portrait} alt={ar && member.slug === 'mohammed-alsolami' && (!member.portrait_alt_ar || member.portrait_alt_ar === member.portrait_alt_en) ? name : boardText(ar, member.portrait_alt_ar, member.portrait_alt_en) || name} width={240} height={240} sizes="144px" unoptimized={!portrait.startsWith('/')} style={{ objectPosition: member.portrait_position || '50% 35%' }} onError={() => setFailedPortrait(portrait)} />
         : <span className={styles.portraitFallback} aria-hidden="true"><UserRound size={46} strokeWidth={1.3} /></span>}
     </div>
     {member.board_term && <span className={styles.term} dir="ltr">{member.board_term}</span>}
