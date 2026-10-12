@@ -1,6 +1,7 @@
 'use client'
 import { useState } from 'react'
 import Link from 'next/link'
+import { CircleCheck } from 'lucide-react'
 import { useLocale } from '@/lib/locale'
 import { api } from '@/lib/api'
 import {
@@ -75,10 +76,11 @@ export function ParticipantWorkspace({
               : program?.participation_terms_en}
           </p>
           {p.onboarding.completed_at ? (
-            <p>
+            <p className="flex items-center gap-2">
+              <CircleCheck size={16} className="shrink-0 text-[var(--success-text)]" aria-hidden="true" />
               {ar
-                ? '✓ اكتملت قائمة الانضمام'
-                : '✓ Onboarding checklist completed'}
+                ? 'اكتملت قائمة الانضمام'
+                : 'Onboarding checklist completed'}
             </p>
           ) : (
             <>
@@ -106,11 +108,12 @@ export function ParticipantWorkspace({
             {ar ? 'حالة الرسوم' : 'Fee status'}:{' '}
             {statusLabel(p.finance.fee_status ?? 'pending', ar)}
           </p>
-          <p>
+          <p className="flex items-center gap-2">
+            {p.finance.global_confirmed && <CircleCheck size={16} className="shrink-0 text-[var(--success-text)]" aria-hidden="true" />}
             {p.finance.global_confirmed
               ? ar
-                ? '✓ تم تسجيل التأكيد الرسمي بواسطة الإدارة.'
-                : '✓ Leadership has recorded official enrollment confirmation.'
+                ? 'تم تسجيل التأكيد الرسمي بواسطة الإدارة.'
+                : 'Leadership has recorded official enrollment confirmation.'
               : ar
                 ? 'بانتظار التأكيد الرسمي من الإدارة.'
                 : 'Awaiting official enrollment confirmation from leadership.'}

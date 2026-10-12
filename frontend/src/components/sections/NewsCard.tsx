@@ -4,7 +4,7 @@ import Link from "next/link"
 import type { NewsItem } from "@/types"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { Calendar, User } from "lucide-react"
+import { Calendar, Newspaper, User } from "lucide-react"
 import { useLocale } from "@/lib/locale"
 import { getLocalizedNewsContent } from "@/lib/news-content"
 
@@ -36,12 +36,14 @@ export function NewsCard({ item }: NewsCardProps) {
   const variant = categoryVariant[item.category] ?? "secondary"
 
   return (
-    <Card className="group flex h-full flex-col overflow-hidden border-[#ddd7ca] bg-[linear-gradient(180deg,#fbfaf6_0%,#f3eee5_100%)] shadow-[0_18px_44px_-24px_rgba(18,24,38,0.18)]">
+    <Card className="group flex h-full flex-col overflow-hidden border-[var(--border-soft)] bg-[var(--surface)] shadow-[var(--shadow-card)]">
       <div
-        className="flex h-44 items-center justify-center rounded-t-xl bg-[radial-gradient(circle_at_top_left,rgba(31,138,112,0.16),transparent_36%),linear-gradient(145deg,#0b1420,#162131)]"
+        className="flex h-44 items-center justify-center rounded-t-xl bg-[var(--surface-inverse)]"
         aria-hidden="true"
       >
-        <span className="text-4xl opacity-30">📰</span>
+        <span className="grid h-20 w-20 place-items-center rounded-3xl border border-white/20 bg-white/10 text-[var(--on-dark)]">
+          <Newspaper className="h-10 w-10" strokeWidth={1.5} />
+        </span>
       </div>
 
       <CardContent className="flex-1 pt-5">
@@ -49,13 +51,13 @@ export function NewsCard({ item }: NewsCardProps) {
           <Badge variant={variant}>{localized.category}</Badge>
         </div>
 
-        <h3 className="mb-2 line-clamp-2 font-semibold text-[#121826] transition-colors group-hover:text-[#1f8a70]">
+        <h3 className="mb-2 line-clamp-2 font-semibold text-[var(--text-strong)] transition-colors group-hover:text-[var(--link)]">
           <Link href={`/news/${item.slug}`}>{localized.title}</Link>
         </h3>
 
-        <p className="mb-4 line-clamp-3 text-sm leading-7 text-[#5b6472]">{localized.excerpt}</p>
+        <p className="mb-4 line-clamp-3 text-sm leading-7 text-[var(--text-muted)]">{localized.excerpt}</p>
 
-        <div className="flex items-center gap-4 text-xs text-[#7b8494]">
+        <div className="flex items-center gap-4 text-xs text-[var(--text-muted)]">
           <div className="flex items-center gap-1">
             <Calendar className="h-3 w-3" />
             <span>{formatDate(localized.publishedAt, intlLocale)}</span>

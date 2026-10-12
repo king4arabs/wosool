@@ -4,9 +4,12 @@ import type { ReactNode } from "react"
 import type { LucideIcon } from "lucide-react"
 import {
   BarChart3,
+  BadgeCheck,
   Building2,
   CalendarDays,
   ChevronRight,
+  ClipboardList,
+  Compass,
   GraduationCap,
   Handshake,
   LayoutDashboard,
@@ -15,7 +18,6 @@ import {
   Settings,
   ShieldCheck,
   Sparkles,
-  Star,
   Trophy,
   UserRoundCheck,
   Users,
@@ -115,7 +117,7 @@ const groups: NavigationGroup[] = [
       { href: "/admin/members", icon: UserRoundCheck },
       { href: "/admin/founders", icon: Users },
       { href: "/admin/companies", icon: Building2 },
-      { href: "/admin/scorecards", icon: Star },
+      { href: "/admin/scorecards", icon: ClipboardList },
       { href: "/admin/matches", icon: Sparkles },
       { href: "/admin/intros", icon: Handshake },
       { href: "/admin/chat", icon: MessageCircle },
@@ -132,9 +134,9 @@ const groups: NavigationGroup[] = [
   {
     key: "growth",
     items: [
-      { href: "/admin/opportunities", icon: Newspaper },
+      { href: "/admin/opportunities", icon: Compass },
       { href: "/admin/partners", icon: Handshake },
-      { href: "/admin/sponsors", icon: Trophy },
+      { href: "/admin/sponsors", icon: BadgeCheck },
       { href: "/admin/news", icon: Newspaper },
       { href: "/admin/analytics", icon: BarChart3 },
     ],

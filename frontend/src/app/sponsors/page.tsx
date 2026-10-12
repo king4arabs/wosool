@@ -1,5 +1,6 @@
 "use client"
 
+import { Check } from "lucide-react"
 import { usePublicCollection } from "@/lib/use-public-collection"
 import { CollectionStatus } from "@/components/sections/CollectionStatus"
 import { PublicLayout } from "@/components/layout/PublicLayout"
@@ -84,7 +85,7 @@ export default function SponsorsPage() {
                       key={benefit}
                       className={`flex items-start gap-2 text-sm ${index === 0 ? "text-gray-300" : "text-gray-600"}`}
                     >
-                      <span className="mt-0.5 text-[#4056C7]">✓</span>
+                      <Check className="mt-0.5 h-4 w-4 shrink-0 text-[var(--brand-blue)]" aria-hidden="true" />
                       <span>{benefit}</span>
                     </li>
                   ))}
