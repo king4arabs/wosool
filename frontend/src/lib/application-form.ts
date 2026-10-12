@@ -1,5 +1,4 @@
 export const APPLY_FORM_SESSION_KEY = "wosool_apply_form_v1";
-export const APPLY_FORM_STARTED_AT_KEY = "wosool_apply_started_at";
 
 export const sectors = [
   ["التقنية المالية", "Fintech"], ["التقنية الصحية", "Healthtech"],

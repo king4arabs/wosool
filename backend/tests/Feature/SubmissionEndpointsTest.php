@@ -12,7 +12,6 @@ class SubmissionEndpointsTest extends TestCase
     public function test_application_submission_succeeds_with_valid_payload(): void
     {
         $payload = [
-            'form_started_at' => (int) (microtime(true) * 1000) - 10000,
             'full_name' => 'Alya Al-Harbi',
             'email' => 'alya@example.com',
             'phone' => '+966500000000',
@@ -39,6 +38,42 @@ class SubmissionEndpointsTest extends TestCase
             'email' => 'alya@example.com',
             'company_name' => 'Najm Labs',
         ]);
+    }
+
+    public function test_application_submission_does_not_depend_on_the_applicants_clock(): void
+    {
+        $response = $this->postJson('/api/v1/applications', [
+            'full_name' => 'Alya Al-Harbi',
+            'email' => 'alya@example.com',
+            'phone' => '+966500000000',
+            'company_name' => 'Najm Labs',
+            'sector' => 'Fintech',
+            'stage' => 'Seed',
+            'location' => 'Riyadh',
+            'motivation' => 'I want to help and meet other founders.',
+            'form_started_at' => (int) (microtime(true) * 1000) + 3600000,
+        ]);
+
+        $response->assertCreated();
+        $this->assertDatabaseHas('applications', ['email' => 'alya@example.com']);
+    }
+
+    public function test_application_honeypot_still_rejects_bot_submissions(): void
+    {
+        $response = $this->postJson('/api/v1/applications', [
+            'full_name' => 'Bot',
+            'email' => 'bot@example.com',
+            'phone' => '+966500000000',
+            'company_name' => 'Bot Labs',
+            'sector' => 'Fintech',
+            'stage' => 'Seed',
+            'location' => 'Riyadh',
+            'motivation' => 'I want to meet founders.',
+            'bot_field' => 'filled',
+        ]);
+
+        $response->assertUnprocessable()->assertJsonValidationErrors('bot_field');
+        $this->assertDatabaseMissing('applications', ['email' => 'bot@example.com']);
     }
 
     public function test_application_submission_returns_validation_errors_for_invalid_payload(): void

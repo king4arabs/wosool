@@ -7,7 +7,7 @@ import { PublicLayout } from "@/components/layout/PublicLayout";
 import { api, ApiError } from "@/lib/api";
 import { useLocale } from "@/lib/locale";
 import {
-  APPLY_FORM_SESSION_KEY, APPLY_FORM_STARTED_AT_KEY, firstErrorStep, initialFormData,
+  APPLY_FORM_SESSION_KEY, firstErrorStep, initialFormData,
   restoreDraft, sectors, stages, validateStep, type ApplicationForm, type FormErrors, type FormField,
 } from "@/lib/application-form";
 
@@ -60,20 +60,14 @@ export default function ApplyPage() {
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [draftReady, setDraftReady] = useState(false);
-  const startedAt = useRef(0);
   const inFlight = useRef(false);
   const stepTitle = useRef<HTMLHeadingElement>(null);
   const errorSummary = useRef<HTMLParagraphElement>(null);
   const focusStep = useRef(false);
 
   useEffect(() => {
-    const now = Date.now();
-    startedAt.current = now;
     try {
       setFormData(restoreDraft(sessionStorage.getItem(APPLY_FORM_SESSION_KEY)));
-      const savedStart = Number(sessionStorage.getItem(APPLY_FORM_STARTED_AT_KEY));
-      if (Number.isSafeInteger(savedStart) && savedStart > 0 && savedStart <= now) startedAt.current = savedStart;
-      sessionStorage.setItem(APPLY_FORM_STARTED_AT_KEY, String(startedAt.current));
     } catch { /* Continue with in-memory form data when browser storage is unavailable. */ }
     setDraftReady(true);
   }, []);
@@ -122,12 +116,11 @@ export default function ApplyPage() {
     setSubmitting(true);
     try {
       const payload = Object.fromEntries(Object.entries(formData).map(([key, value]) => [key, key === "bot_field" ? value : value.trim()]));
-      await api.post("/applications", { ...payload, form_started_at: startedAt.current });
+      await api.post("/applications", payload);
       setSubmitted(true);
       // Optional storage cleanup cannot turn an accepted application into an error.
       try {
         sessionStorage.removeItem(APPLY_FORM_SESSION_KEY);
-        sessionStorage.removeItem(APPLY_FORM_STARTED_AT_KEY);
       } catch { /* The server has already accepted the application. */ }
     } catch (err) {
       const mapped: FormErrors = {};

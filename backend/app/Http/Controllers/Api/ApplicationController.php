@@ -12,7 +12,7 @@ class ApplicationController extends Controller
     public function store(StoreApplicationRequest $request): JsonResponse
     {
         $application = Application::create(
-            Arr::except($request->validated(), ['bot_field', 'form_started_at'])
+            Arr::except($request->validated(), ['bot_field'])
         );
 
         return response()->json([
