@@ -1,10 +1,14 @@
+"use client"
+
 import Link from "next/link"
 import { Globe, Heart, Lightbulb, Shield, Users } from "lucide-react"
+import { AboutEnglish } from "./AboutEnglish"
 import { PublicLayout } from "@/components/layout/PublicLayout"
 import { SectionHeader } from "@/components/sections/SectionHeader"
 import { WosoolBoard } from "@/components/sections/WosoolBoard"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
+import { useLocale } from "@/lib/locale"
 
 const principles = [
   {
@@ -35,6 +39,9 @@ const principles = [
 ]
 
 export default function AboutPage() {
+  const { locale } = useLocale()
+  if (locale === "en") return <AboutEnglish />
+
   return (
     <PublicLayout>
       <section className="bg-[#0A1628] px-4 py-24 text-white">
@@ -187,6 +194,11 @@ export default function AboutPage() {
       </section>
 
       <WosoolBoard />
+
+      <section className="bg-[var(--surface)] px-4 py-12 text-center">
+        <h2 className="text-2xl font-bold text-[var(--text-strong)]">تواصل معنا</h2>
+        <a className="mt-3 inline-block text-lg font-semibold text-[var(--link)] underline underline-offset-4" href="mailto:Info@wosool.org" dir="ltr">Info@wosool.org</a>
+      </section>
 
       <section className="bg-[#EEF2FF] px-4 py-20">
         <div className="mx-auto max-w-2xl text-center">
