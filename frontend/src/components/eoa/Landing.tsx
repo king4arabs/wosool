@@ -81,6 +81,7 @@ export function EoaLanding() {
                 <div className="eoa-actions">
                   <Link className="eoa-btn" href="/eoa/apply">{ar ? "انضم إلى مسرّعة EO الرياض" : "Apply to EO Riyadh Accelerator"}<Arrow size={18} /></Link>
                   <Link className="eoa-btn eoa-btn-outline" href="/eoa/program">{ar ? "استكشف البرنامج" : "Explore the Program"}</Link>
+                  <Link className="eoa-text-link" href="/eoa/perks">{ar ? "مزايا المشاركين" : "Participant perks"}</Link>
                   <a className="eoa-text-link" href="https://eonetwork.org/" target="_blank" rel="noopener noreferrer">{ar ? "اكتشف EO" : "Discover EO"}<Arrow size={18} /></a>
                 </div>
               </div>

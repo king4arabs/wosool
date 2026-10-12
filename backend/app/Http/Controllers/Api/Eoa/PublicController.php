@@ -11,6 +11,13 @@ use Illuminate\Support\Facades\Schema;
 
 class PublicController extends Controller
 {
+    public function directory()
+    {
+        return response()->json(['data' => DB::table('ecosystem_organizations')
+            ->where('verification_status', 'verified')->orderBy('sort_order')
+            ->get(['id', 'name_en', 'name_ar', 'website', 'type', 'sector', 'location', 'support_en', 'support_ar', 'source_url', 'verified_at', 'relationship_status'])]);
+    }
+
     public function show()
     {
         $program = ProgramService::program();
@@ -39,9 +46,9 @@ class PublicController extends Controller
             'local_status' => $settings['approval_status'],
             'starts_at' => $settings['approval_status'] === 'approved' ? $program->starts_at?->toIso8601String() : null,
             'local_fees' => $settings['local_fee_status'] === 'approved'
-                && abs((float) $settings['local_fee_usd'] - 2250) < 0.01
-                && abs((float) $settings['sponsor_contribution_usd'] - 2000) < 0.01
-                && abs((float) $settings['participant_contribution_usd'] - 2000) < 0.01
+                && abs((float) $settings['local_fee_usd'] - (ProgramService::ANNUAL_JOURNEY_USD - ProgramService::facts()['annual_global_fee_usd'])) < 0.01
+                && abs((float) $settings['sponsor_contribution_usd'] - ProgramService::SPONSOR_SHARE_USD) < 0.01
+                && abs((float) $settings['participant_contribution_usd'] - ProgramService::SPONSOR_SHARE_USD) < 0.01
                 ? array_intersect_key($settings, array_flip(['local_fee_usd', 'sponsor_contribution_usd', 'participant_contribution_usd'])) : null,
             'contact_email' => $settings['contact_email'], 'public_message_en' => $settings['public_message_en'] ?? null, 'public_message_ar' => $settings['public_message_ar'] ?? null,
             'participation_terms_en' => $settings['approval_status'] === 'approved' ? $settings['participation_terms_en'] : null, 'participation_terms_ar' => $settings['approval_status'] === 'approved' ? $settings['participation_terms_ar'] : null,

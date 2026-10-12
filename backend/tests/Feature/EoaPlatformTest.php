@@ -145,6 +145,7 @@ class EoaPlatformTest extends TestCase
     public function test_public_partner_and_program_privacy_and_repeatable_import(): void
     {
         $this->getJson('/api/v1/eoa/program')->assertOk()->assertJsonCount(0, 'data.partners')->assertJsonPath('data.facts.annual_global_fee_usd', 1750);
+        $this->getJson('/api/v1/eoa/directory')->assertOk()->assertJsonCount(9, 'data');
         $expectedSlugs = array_column(json_decode(file_get_contents(database_path('data/eoa-organizations.json')), true, 512, JSON_THROW_ON_ERROR), 'slug');
         $originalOrganizations = DB::table('ecosystem_organizations')->orderBy('slug')->pluck('id', 'slug')->all();
         $this->assertEqualsCanonicalizing($expectedSlugs, array_keys($originalOrganizations));
@@ -209,12 +210,14 @@ class EoaPlatformTest extends TestCase
         $this->actingAs($this->lead());
         $base = ProgramService::settings(ProgramService::program()) + ['is_open' => false];
         $base['local_fee_status'] = 'approved';
-        $base['local_fee_usd'] = 250;
-        $base['sponsor_contribution_usd'] = 500;
+        $base['local_fee_usd'] = 2250;
+        $base['sponsor_contribution_usd'] = 2000;
         $base['participant_contribution_usd'] = 1400;
         $this->putJson('/api/v1/eoa/operations/settings', $base)->assertUnprocessable();
-        $base['participant_contribution_usd'] = 1500;
+        $base['participant_contribution_usd'] = 2000;
         $this->putJson('/api/v1/eoa/operations/settings', $base)->assertOk();
+        $this->getJson('/api/v1/eoa/program')->assertJsonPath('data.facts.annual_journey_usd', 4000)
+            ->assertJsonPath('data.local_fees.sponsor_contribution_usd', 2000);
         $base['is_open'] = true;
         $base['approval_status'] = 'approved';
         $base['approval_reference'] = 'approved-record';
