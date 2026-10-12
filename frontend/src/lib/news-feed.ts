@@ -13,7 +13,10 @@ export function newsDate(value: string, locale: string) {
 export function mergeNews(items: NewsItem[], snapshot: NewsItem[] = curatedNews) {
   const unique = new Map<string, NewsItem>()
   for (const item of [...snapshot, ...items]) {
-    unique.set(item.sourceUrl || item.slug, item)
+    const key = item.sourceUrl || item.slug
+    // Keep an independent brief's stable route instead of replacing it with an RSS hash.
+    if (item.slug.startsWith("rss-") && unique.has(key)) continue
+    unique.set(key, item)
   }
   return [...unique.values()].sort((a, b) =>
     (Date.parse(b.publishedAt) || 0) - (Date.parse(a.publishedAt) || 0))
@@ -23,9 +26,9 @@ function normalize(value: string) {
   return value.normalize("NFKC").toLocaleLowerCase().replace(/[\s_-]+/g, " ").trim()
 }
 
-export function companyMatches(item: Pick<NewsItem, "companies">, names: string[]) {
+export function companyMatches(item: Partial<Pick<NewsItem, "companies" | "tags">>, names: string[]) {
   const keys = names.filter(Boolean).map(normalize)
-  return (item.companies ?? []).some(company => keys.includes(normalize(company)))
+  return [...(item.companies ?? []), ...(item.tags ?? [])].some(company => keys.includes(normalize(company)))
 }
 
 export function companyAliases(names: string[]) {

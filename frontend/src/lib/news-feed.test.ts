@@ -20,10 +20,17 @@ test("source merge deduplicates, prefers live corrections and sorts by publicati
   assert.deepEqual(mergeNews([correction, older], [snapshot]).map(item => item.title), ["Corrected reporting", "Real reporting"])
 })
 
+test("RSS duplicates preserve the independent brief and its offline-readable route", () => {
+  const snapshot = { ...story, sourceUrl: "https://www.microsoft.com/story" }
+  const rss = { ...snapshot, slug: "rss-generated-hash", content: "", excerpt: "Publisher excerpt" }
+  assert.deepEqual(mergeNews([rss], [snapshot]), [snapshot])
+})
+
 test("profile news uses exact company associations, not incidental mentions", () => {
   assert.equal(companyMatches(story, ["foodics"]), true)
   assert.equal(companyMatches(story, ["Food"]), false)
   assert.equal(companyMatches({ ...story, companies: [] }, ["Real reporting"]), false)
+  assert.equal(companyMatches({ ...story, companies: [], tags: ["Foodics"] }, ["foodics"]), true)
   assert.equal(newsFounders(story)[0]?.slug, "foodics")
   assert.ok(companyAliases(["فودكس", "foodics"]).includes("Foodics"))
 })
