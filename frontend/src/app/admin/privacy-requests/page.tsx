@@ -54,9 +54,9 @@ export default function PrivacyRequests() {
   }
   return (
     <div>
-      <h1 className="gateway-heading">
+      <h2 className="gateway-heading">
         {t("طلبات الخصوصية", "Privacy requests")}
-      </h1>
+      </h2>
       <p className="gateway-lead">
         {t(
           "راجع الطلب وأنجز إجراءه قبل تسجيله كمكتمل. لا يؤدي تغيير الحالة وحده إلى حذف البيانات أو إرسال نسخة منها.",

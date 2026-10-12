@@ -29,7 +29,7 @@ const content = {
       { title: "اعثر على الأشخاص المناسبين", text: "استكشف المؤسسين حسب قطاعاتهم ومراحل شركاتهم، وتعرّف على ما يحتاجونه وما يمكنهم مشاركته." },
       { title: "اعملوا معًا", text: "اكتشف شركات المجتمع واللقاءات والفرص، وابدأ محادثات قد تنتهي بعمل مشترك." },
     ],
-    foundersLabel: "مجتمع وصول", foundersTitle: "المؤسسون وشركاتهم", foundersText: "خبرات المؤسسين وما يبنونه، لتجد من تبدأ معه محادثتك القادمة.", spotlightLabel: "مؤسسون من السعودية والعالم", spotlightTitle: "مؤسسون يديرون شركات قائمة", spotlightText: "ملفات من مصادر منشورة لمؤسسين في السعودية والخليج والعالم، مع أرقام تشغيل وإيرادات موثّقة المصدر.", allFounders: "دليل المؤسسين", allCompanies: "شركات المجتمع",
+    foundersLabel: "مجتمع وصول", foundersTitle: "المؤسسون وشركاتهم", foundersText: "خبرات المؤسسين وما يبنونه، لتجد من تبدأ معه محادثتك القادمة.", spotlightLabel: "مؤسسون من السعودية والعالم", spotlightTitle: "مؤسسون يديرون شركات قائمة", spotlightText: "ملفات من مصادر منشورة لمؤسسين في السعودية والخليج والعالم، مع رابط لكل مصدر.", allFounders: "دليل المؤسسين", allCompanies: "شركات المجتمع",
     loading: "جارٍ تحميل ملفات المؤسسين…", empty: "تظهر ملفات المؤسسين هنا بعد الموافقة على نشرها.", error: "ملفات أعضاء المجتمع غير متاحة مؤقتًا.", retry: "إعادة المحاولة",
     how: "كيف تبدأ؟", howTitle: "كيف تعمل العضوية", steps: [
       { title: "عرّفنا بك", text: "قدّم طلب عضوية يوضح تجربتك وشركتك وما تبحث عنه في المجتمع." },
@@ -51,7 +51,7 @@ const content = {
       { title: "Find your people", text: "Explore founders by sector and company stage. Understand what they need and the experience they can share." },
       { title: "Work together", text: "Find community companies, gatherings and opportunities, and start conversations that can turn into joint work." },
     ],
-    foundersLabel: "THE WOSOOL COMMUNITY", foundersTitle: "Founders and their companies", foundersText: "What founders have done and what they are building, so you can see who to talk to next.", spotlightLabel: "FOUNDERS FROM SAUDI ARABIA AND BEYOND", spotlightTitle: "Founders running real companies", spotlightText: "Profiles built from published sources, covering founders in Saudi Arabia, the Gulf and worldwide, with sourced operating and revenue figures.", allFounders: "Founder directory", allCompanies: "Community companies",
+    foundersLabel: "THE WOSOOL COMMUNITY", foundersTitle: "Founders and their companies", foundersText: "What founders have done and what they are building, so you can see who to talk to next.", spotlightLabel: "FOUNDERS FROM SAUDI ARABIA AND BEYOND", spotlightTitle: "Founders running real companies", spotlightText: "Profiles built from published sources, covering founders in Saudi Arabia, the Gulf and worldwide, with a link to every source.", allFounders: "Founder directory", allCompanies: "Community companies",
     loading: "Loading founder profiles…", empty: "Founder profiles appear here once approved for public sharing.", error: "Community member profiles are temporarily unavailable.", retry: "Try again",
     how: "YOUR NEXT STEP", howTitle: "How membership works", steps: [
       { title: "Introduce yourself", text: "Apply for membership with your experience, company, and what you’re looking for in the community." },

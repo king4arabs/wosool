@@ -79,6 +79,21 @@ Hostinger's Node.js build sandbox cannot spawn Turbopack's PostCSS worker (build
 
 Never run `migrate:fresh`, rotate `APP_KEY`, or seed demonstration accounts during deployment. Provision production roles separately with `php artisan db:seed --class=RoleAndPermissionSeeder --force` only when needed.
 
+## Post-deploy content imports
+
+All imports are idempotent and never overwrite edits made in the admin. Run them after `migrate`:
+
+```bash
+cd backend
+php artisan eoa:install                 # EO Riyadh Accelerator records (intake stays closed)
+php artisan wosool:import-founders      # researched founder scorecards, Saudi first
+php artisan wosool:import-news          # reviewed, sourced news briefs
+php artisan directory:import            # startup directory (pending evidence stays hidden)
+php artisan news:sync                   # verified publisher feed (also scheduled daily)
+```
+
+`wosool:import-ecosystem` (programs and opportunities) is gated: run it without flags to review, then with `--apply --backup-verified --staging-verified` only after the checks in [accelerator operations](docs/ACCELERATOR_OPERATIONS.md).
+
 ## Verification
 
 For the October 11 events incident, see [the investigation and release checks](docs/EVENTS-INVESTIGATION-2026-10-11.md). Record the hosting source SHA alongside the frontend build ID; the public build ID alone does not identify a Git commit. Deploy the events frontend/backend fixes together and verify API JSON before treating an empty event list as valid.

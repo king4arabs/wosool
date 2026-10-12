@@ -80,9 +80,9 @@ export default function AdminPartners() {
   }
   return (
     <div className="mx-auto max-w-6xl">
-      <h1 className="gateway-heading">
+      <h2 className="gateway-heading">
         {t("الشركاء والشعارات", "Partners and logos")}
-      </h1>
+      </h2>
       <p className="gateway-lead">
         {t(
           "اعتمد هوية الجهة، ومصدر الشعار، وصفة الشراكة قبل إظهارها. يُحفظ ترتيب العرض كما تحدده هنا.",

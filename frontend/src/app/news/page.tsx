@@ -2,10 +2,11 @@
 
 import { Suspense, useCallback, useMemo } from "react"
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
-import { Newspaper, Search, ShieldCheck } from "lucide-react"
+import { Search, ShieldCheck } from "lucide-react"
 import { PublicLayout } from "@/components/layout/PublicLayout"
 import { CollectionStatus } from "@/components/sections/CollectionStatus"
 import { NewsCard } from "@/components/sections/NewsCard"
+import { PageHero } from "@/components/sections/PageHero"
 import { usePublicCollection } from "@/lib/use-public-collection"
 import { mapNewsItem, type ApiNewsItem } from "@/lib/content-api"
 import { NEWS_REGIONS, categoryLabel, mergeNews, newsDate, newsRegion, regionLabel, type NewsRegion } from "@/lib/news-feed"
@@ -70,19 +71,19 @@ function NewsroomContent() {
   const chip = (active: boolean) => `inline-flex min-h-11 items-center gap-2 rounded-full border px-4 text-sm font-bold transition-colors ${active ? "border-[var(--action-bg)] bg-[var(--action-bg)] text-[var(--action-fg)]" : "border-[var(--border)] bg-[var(--surface)] text-[var(--text)] hover:border-[var(--action-bg)]"}`
 
   return <div dir={direction} lang={locale} className="min-h-screen bg-[var(--page-bg)]">
-    <header className="bg-[var(--surface-inverse)] px-4 py-12 text-[var(--on-dark)] sm:px-6 sm:py-20">
-      <div className="mx-auto max-w-6xl">
-        <p className="flex items-center gap-2 text-sm font-bold text-[var(--on-dark-muted)]"><Newspaper size={18} />{ar ? "غرفة أخبار وصول" : "THE WOSOOL NEWSROOM"}</p>
-        <h1 className="mt-5 max-w-3xl text-4xl font-extrabold leading-tight sm:text-6xl">{ar ? "أخبار تصنع قرارات أفضل." : "Big moves. Better founder decisions."}</h1>
-        <p className="mt-6 max-w-2xl text-base leading-8 text-[var(--on-dark-muted)]">{ar ? "أخبار الشركات الناشئة ورواد الأعمال — السعودية أولاً ثم الخليج والعالم — بملخصات مستقلة وأبرز الأرقام وروابط مباشرة للمصدر. لا حاجة لتسجيل الدخول." : "Startup and founder news — Saudi first, then the GCC and the world — with independent briefs, key figures and direct links to the original reporting. No sign-in required."}</p>
-        <dl className="mt-8 grid max-w-3xl grid-cols-2 gap-3 sm:grid-cols-3">
-          <div className="rounded-2xl border border-white/15 p-4"><dt className="text-xs text-[var(--on-dark-muted)]">{ar ? "أخبار موثّقة المصدر" : "Sourced stories"}</dt><dd className="mt-1 text-2xl font-extrabold">{items.length}</dd></div>
-          <div className="rounded-2xl border border-white/15 p-4"><dt className="text-xs text-[var(--on-dark-muted)]">{ar ? "من السعودية" : "From Saudi Arabia"}</dt><dd className="mt-1 text-2xl font-extrabold">{regionCounts.saudi ?? 0}</dd></div>
-          <div className="col-span-2 rounded-2xl border border-white/15 p-4 sm:col-span-1"><dt className="text-xs text-[var(--on-dark-muted)]">{ar ? "آخر خبر سعودي" : "Latest Saudi story"}</dt><dd className="mt-1 text-base font-bold">{saudiLatest ? newsDate(saudiLatest.publishedAt, locale) : "—"}</dd></div>
-        </dl>
-        <p className="mt-6 flex items-center gap-2 text-sm text-[var(--on-dark-muted)]"><ShieldCheck size={18} />{ar ? "مصادر مسمّاة · تواريخ نشر حقيقية · ملخصات وليست إعادة نشر" : "Named sources · Real publication dates · Briefs, not republications"}</p>
-      </div>
-    </header>
+    <PageHero
+      tone="dark"
+      eyebrow={ar ? "غرفة أخبار وصول" : "The Wosool newsroom"}
+      title={ar ? "أخبار الشركات الناشئة، السعودية أولاً" : "Startup news, Saudi first"}
+      description={ar ? "ملخصات قصيرة لأخبار التمويل والاستحواذ والتقارير من السعودية والخليج والعالم، مع أبرز الأرقام ورابط المصدر لكل خبر." : "Short briefs on funding, acquisitions and reports from Saudi Arabia, the Gulf and the world, with the key figures and a source link for every story."}
+    >
+      <dl className="grid max-w-3xl grid-cols-2 gap-3 sm:grid-cols-3">
+        <div className="rounded-2xl border border-white/15 p-4"><dt className="text-xs text-[var(--on-dark-muted)]">{ar ? "أخبار موثّقة المصدر" : "Sourced stories"}</dt><dd className="mt-1 text-2xl font-extrabold">{items.length}</dd></div>
+        <div className="rounded-2xl border border-white/15 p-4"><dt className="text-xs text-[var(--on-dark-muted)]">{ar ? "من السعودية" : "From Saudi Arabia"}</dt><dd className="mt-1 text-2xl font-extrabold">{regionCounts.saudi ?? 0}</dd></div>
+        <div className="col-span-2 rounded-2xl border border-white/15 p-4 sm:col-span-1"><dt className="text-xs text-[var(--on-dark-muted)]">{ar ? "آخر خبر سعودي" : "Latest Saudi story"}</dt><dd className="mt-1 text-base font-bold">{saudiLatest ? newsDate(saudiLatest.publishedAt, locale) : "—"}</dd></div>
+      </dl>
+      <p className="mt-6 flex items-center gap-2 text-sm text-[var(--on-dark-muted)]"><ShieldCheck size={18} aria-hidden="true" />{ar ? "مصادر مسمّاة · تواريخ نشر حقيقية · ملخصات وليست إعادة نشر" : "Named sources · Real publication dates · Briefs, not republications"}</p>
+    </PageHero>
 
     <section className="mx-auto max-w-6xl px-4 py-10 sm:px-6" aria-labelledby="stories-title">
       <h2 id="stories-title" className="text-2xl font-bold text-[var(--text-strong)]">{ar ? "اكتشف آخر الأخبار" : "Explore the latest"}</h2>

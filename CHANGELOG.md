@@ -14,7 +14,10 @@ This project follows **Semantic Versioning** and a Keep a Changelog-inspired for
 - **Pages:** the Terms page is now bilingual (English marked as a translation of the Arabic text) with correct right-to-left layout. Removed invented sponsor statistics (250+ founders, SAR 500M+, 85% decision makers) and replaced them with verifiable facts.
 - **Heroes:** one shared, start-aligned `PageHero` (eyebrow, headline, one sentence, at most two actions) for contact, events, programs, partners, sponsors and terms; the home hero drops its duplicate side panel and decorative clutter.
 - **Copy:** rewrote generic, AI-sounding headlines and descriptions in both languages across home, events, programs, partners, founders and sponsors; home news cards show the localized title and topic.
-- **Tests:** backend 210 passing (4 new email tests), frontend 80 passing.
+- **More heroes:** About, Founders, Companies and News now use the same `PageHero`.
+- **QA loop:** `npm run qa` (verify + browser crawl) and `npm run qa:crawl` visit every page in Arabic and English, desktop and mobile, as visitor, member and admin, and fail on page errors, API 5xx, horizontal overflow, error boundaries and missing or duplicate `<h1>`. First run: 416 visits, 12 issues (duplicate `<h1>` on 6 admin pages) — fixed, re-run clean.
+- **Deployment:** `DEPLOYMENT.md` lists the post-deploy content imports in order.
+- **Tests:** backend 210 passing (4 new email tests), frontend 81 passing.
 
 ## Sourced newsroom and founder scorecards — 2026-10-12
 

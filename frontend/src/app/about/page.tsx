@@ -1,12 +1,12 @@
 "use client"
 
 import Link from "next/link"
+import { PageHero } from "@/components/sections/PageHero"
 import { Check, Globe, Heart, Lightbulb, Shield, Users } from "lucide-react"
 import { AboutEnglish } from "./AboutEnglish"
 import { PublicLayout } from "@/components/layout/PublicLayout"
 import { SectionHeader } from "@/components/sections/SectionHeader"
 import { WosoolBoard } from "@/components/sections/WosoolBoard"
-import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { useLocale } from "@/lib/locale"
 
@@ -44,17 +44,7 @@ export default function AboutPage() {
 
   return (
     <PublicLayout>
-      <section className="bg-[#0A1628] px-4 py-24 text-white">
-        <div className="mx-auto max-w-4xl text-center">
-          <Badge variant="gold" className="mb-4 px-4 py-1.5 text-xs tracking-widest">
-            قصتنا
-          </Badge>
-          <h1 className="mb-6 text-5xl font-bold tracking-tight sm:text-6xl">عن وصول</h1>
-          <p className="mx-auto max-w-2xl text-xl leading-relaxed text-gray-300">
-            من لقاء مؤسسين في لندن إلى مجتمع يبني فيه المؤسسون القيمة لبعضهم بعضًا.
-          </p>
-        </div>
-      </section>
+      <PageHero tone="dark" eyebrow="قصتنا" title="عن وصول" description="من لقاء مؤسسين في لندن إلى مجتمع يبني فيه المؤسسون القيمة لبعضهم بعضًا." />
 
       <section className="bg-white px-4 py-24">
         <div className="mx-auto max-w-7xl">
