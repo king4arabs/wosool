@@ -6,6 +6,7 @@ import { useParams } from "next/navigation"
 import { api } from "@/lib/api"
 import { Button } from "@/components/ui/button"
 import { useToast } from "@/components/ui/toast"
+import { useLocale } from "@/lib/locale"
 
 type Registration = {
   user_id: number
@@ -20,13 +21,36 @@ type Registration = {
   checkin_status: string
 }
 
-const TABS = ["التسجيلات", "قائمة الانتظار", "الحضور", "الموافقات"] as const
+const TABS = [
+  { key: "registrations", status: undefined, ar: "التسجيلات", en: "Registrations" },
+  { key: "waitlist", status: "waitlisted", ar: "قائمة الانتظار", en: "Waitlist" },
+  { key: "attendance", status: "approved", ar: "الحضور", en: "Attendance" },
+  { key: "approvals", status: "pending_approval", ar: "الموافقات", en: "Approvals" },
+] as const
+
+type TabKey = (typeof TABS)[number]["key"]
+
+const ACTIONS = [
+  { key: "approve", ar: "قبول", en: "Approve" },
+  { key: "reject", ar: "رفض", en: "Reject" },
+  { key: "waitlist", ar: "انتظار", en: "Waitlist" },
+  { key: "checkin", ar: "تأكيد حضور", en: "Check in" },
+  { key: "no_show", ar: "عدم حضور", en: "No-show" },
+  { key: "cancel", ar: "إلغاء", en: "Cancel" },
+] as const
+
+function statusFor(tab: TabKey) {
+  return TABS.find((entry) => entry.key === tab)?.status
+}
 
 export default function AdminEventManagePage() {
   const params = useParams<{ id: string }>()
   const { toast } = useToast()
+  const { locale } = useLocale()
+  const ar = locale === "ar"
+  const t = useCallback((arabic: string, english: string) => (ar ? arabic : english), [ar])
   const eventId = params?.id
-  const [tab, setTab] = useState<(typeof TABS)[number]>("التسجيلات")
+  const [tab, setTab] = useState<TabKey>("registrations")
   const [rows, setRows] = useState<Registration[]>([])
   const [loading, setLoading] = useState(true)
   const [busyKey, setBusyKey] = useState<string | null>(null)
@@ -40,19 +64,14 @@ export default function AdminEventManagePage() {
       })
       setRows(res.data ?? [])
     } catch (err) {
-      toast(err instanceof Error ? err.message : "تعذر تحميل التسجيلات.", "error")
+      toast(err instanceof Error ? err.message : t("تعذر تحميل التسجيلات.", "Could not load registrations."), "error")
     } finally {
       setLoading(false)
     }
-  }, [eventId, toast])
+  }, [eventId, toast, t])
 
   useEffect(() => {
-    const map: Record<string, string | undefined> = {
-      "قائمة الانتظار": "waitlisted",
-      "الحضور": "approved",
-      "الموافقات": "pending_approval",
-    }
-    void load(map[tab])
+    void load(statusFor(tab))
   }, [tab, load])
 
   const visibleRows = useMemo(() => rows, [rows])
@@ -63,15 +82,10 @@ export default function AdminEventManagePage() {
     setBusyKey(key)
     try {
       await api.patch(`/admin/events/${eventId}/registrations/${userId}`, { action })
-      toast("تم تحديث حالة التسجيل.", "success")
-      const map: Record<string, string | undefined> = {
-        "قائمة الانتظار": "waitlisted",
-        "الحضور": "approved",
-        "الموافقات": "pending_approval",
-      }
-      await load(map[tab])
+      toast(t("تم تحديث حالة التسجيل.", "Registration updated."), "success")
+      await load(statusFor(tab))
     } catch (err) {
-      toast(err instanceof Error ? err.message : "فشل تنفيذ الإجراء.", "error")
+      toast(err instanceof Error ? err.message : t("فشل تنفيذ الإجراء.", "The action failed."), "error")
     } finally {
       setBusyKey(null)
     }
@@ -79,11 +93,12 @@ export default function AdminEventManagePage() {
 
   return (
     <div className="space-y-4">
-      <h1 className="text-2xl font-bold">إدارة الفعالية</h1><Link href="/admin/events" className="inline-flex min-h-11 items-center text-[#3B52D4] underline">بيانات الفعاليات وإعداداتها</Link>
+      <h2 className="text-2xl font-bold">{t("إدارة الفعالية", "Manage event")}</h2>
+      <Link href="/admin/events" className="inline-flex min-h-11 items-center text-[#3B52D4] underline">{t("بيانات الفعاليات وإعداداتها", "Event details and settings")}</Link>
       <div className="flex flex-wrap gap-2">
         {TABS.map((entry) => (
-          <Button key={entry} size="sm" variant={tab === entry ? "default" : "outline"} onClick={() => setTab(entry)}>
-            {entry}
+          <Button key={entry.key} size="sm" variant={tab === entry.key ? "default" : "outline"} aria-pressed={tab === entry.key} onClick={() => setTab(entry.key)}>
+            {ar ? entry.ar : entry.en}
           </Button>
         ))}
       </div>
@@ -92,23 +107,23 @@ export default function AdminEventManagePage() {
           <table className="w-full text-sm">
             <thead className="bg-slate-50 text-slate-500">
               <tr>
-                <th className="text-start px-4 py-3">الحاضر</th>
-                <th className="text-start px-4 py-3">الشركة</th>
-                <th className="text-start px-4 py-3">الدور</th>
-                <th className="text-start px-4 py-3">البريد الإلكتروني</th>
-                <th className="text-start px-4 py-3">نوع الحضور</th>
-                <th className="text-start px-4 py-3">الحالة</th>
-                <th className="text-start px-4 py-3">مدى الصلة</th>
-                <th className="text-start px-4 py-3">تاريخ التسجيل</th>
-                <th className="text-start px-4 py-3">حالة الدخول</th>
-                <th className="text-start px-4 py-3">الإجراءات</th>
+                <th className="text-start px-4 py-3">{t("الحاضر", "Attendee")}</th>
+                <th className="text-start px-4 py-3">{t("الشركة", "Company")}</th>
+                <th className="text-start px-4 py-3">{t("الدور", "Role")}</th>
+                <th className="text-start px-4 py-3">{t("البريد الإلكتروني", "Email")}</th>
+                <th className="text-start px-4 py-3">{t("نوع الحضور", "Attendance")}</th>
+                <th className="text-start px-4 py-3">{t("الحالة", "Status")}</th>
+                <th className="text-start px-4 py-3">{t("مدى الصلة", "Relevance")}</th>
+                <th className="text-start px-4 py-3">{t("تاريخ التسجيل", "Registered")}</th>
+                <th className="text-start px-4 py-3">{t("حالة الدخول", "Check-in")}</th>
+                <th className="text-start px-4 py-3">{t("الإجراءات", "Actions")}</th>
               </tr>
             </thead>
             <tbody>
               {loading ? (
-                <tr><td colSpan={10} className="px-4 py-8 text-center text-slate-500">جارٍ التحميل...</td></tr>
+                <tr><td colSpan={10} className="px-4 py-8 text-center text-slate-500">{t("جارٍ التحميل…", "Loading…")}</td></tr>
               ) : visibleRows.length === 0 ? (
-                <tr><td colSpan={10} className="px-4 py-8 text-center text-slate-500">لا توجد تسجيلات.</td></tr>
+                <tr><td colSpan={10} className="px-4 py-8 text-center text-slate-500">{t("لا توجد تسجيلات.", "No registrations.")}</td></tr>
               ) : visibleRows.map((row) => (
                 <tr key={row.user_id} className="border-t border-slate-100">
                   <td className="px-4 py-3">{row.name}</td>
@@ -118,16 +133,15 @@ export default function AdminEventManagePage() {
                   <td className="px-4 py-3">{row.attendance_type || "—"}</td>
                   <td className="px-4 py-3">{row.registration_status}</td>
                   <td className="px-4 py-3">{row.relevance_score}%</td>
-                  <td className="px-4 py-3">{row.rsvp_date ? new Date(row.rsvp_date).toLocaleString("ar-SA") : "—"}</td>
+                  <td className="px-4 py-3">{row.rsvp_date ? new Date(row.rsvp_date).toLocaleString(ar ? "ar-SA" : "en-GB", { timeZone: "Asia/Riyadh" }) : "—"}</td>
                   <td className="px-4 py-3">{row.checkin_status}</td>
                   <td className="px-4 py-3">
                     <div className="flex flex-wrap gap-1">
-                      <Button size="sm" variant="outline" disabled={busyKey === `${row.user_id}:approve`} onClick={() => act(row.user_id, "approve")}>قبول</Button>
-                      <Button size="sm" variant="outline" disabled={busyKey === `${row.user_id}:reject`} onClick={() => act(row.user_id, "reject")}>رفض</Button>
-                      <Button size="sm" variant="outline" disabled={busyKey === `${row.user_id}:waitlist`} onClick={() => act(row.user_id, "waitlist")}>انتظار</Button>
-                      <Button size="sm" variant="outline" disabled={busyKey === `${row.user_id}:checkin`} onClick={() => act(row.user_id, "checkin")}>تأكيد حضور</Button>
-                      <Button size="sm" variant="outline" disabled={busyKey === `${row.user_id}:no_show`} onClick={() => act(row.user_id, "no_show")}>عدم حضور</Button>
-                      <Button size="sm" variant="outline" disabled={busyKey === `${row.user_id}:cancel`} onClick={() => act(row.user_id, "cancel")}>إلغاء</Button>
+                      {ACTIONS.map((action) => (
+                        <Button key={action.key} size="sm" variant="outline" disabled={busyKey === `${row.user_id}:${action.key}`} onClick={() => act(row.user_id, action.key)}>
+                          {ar ? action.ar : action.en}
+                        </Button>
+                      ))}
                     </div>
                   </td>
                 </tr>
@@ -136,7 +150,7 @@ export default function AdminEventManagePage() {
           </table>
         </div>
       <div>
-        <a href={`/api/v1/admin/events/${eventId}/registrations/export`} className="text-sm text-blue-600 underline">تصدير CSV</a>
+        <a href={`/api/v1/admin/events/${eventId}/registrations/export`} className="text-sm text-blue-600 underline">{t("تصدير CSV", "Export CSV")}</a>
       </div>
     </div>
   )

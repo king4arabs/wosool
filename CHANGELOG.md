@@ -6,6 +6,13 @@ This project follows **Semantic Versioning** and a Keep a Changelog-inspired for
 
 ---
 
+## Admin language parity and detail-page headings — 2026-10-12
+
+- **Headings:** Event management (`/admin/events/[id]`) and Program management (`/admin/programs/[id]`) still rendered a second `<h1>` under the admin layout's; they now start at `<h2>`. A new frontend test fails if any admin page renders an `<h1>`.
+- **Language:** Chat moderation, Event management and Program management were Arabic-only. Tabs, table headers, actions, room/cohort statuses, session types, form fields, empty states and toasts now follow the selected language; the Arabic cohort statuses agree with "دفعة". Unlabelled selects and inputs have accessible names, and registration/session dates display in Riyadh time.
+- **QA crawl:** the default sample routes now include `/admin/events/1` and `/admin/programs/1`, so the admin detail pages are crawled.
+- **Checks:** `npm run verify` green; QA crawl 356 visits, 0 problems (visitor + admin, ar/en); frontend 82 passing, backend 212 passing.
+
 ## Emails, forms, heroes and plain-language copy — 2026-10-12
 
 - **Email:** every transactional email now uses one bilingual layout — Arabic (right-to-left) first, English second — with a branded theme, a single action button, a copy-paste fallback link and a bilingual footer. Converted: password reset, email verification (accelerator, founder, EOA), EOA status notices, founder activation (with code), membership approval, introduction accepted and application update. Removed Laravel's default English-only greeting, sign-off and button note.
