@@ -1,428 +1,163 @@
 "use client"
 
-import { useState, useCallback, useEffect, useRef } from "react"
+import { useCallback, useEffect, useRef, useState, type FormEvent, type ReactNode } from "react"
 import Link from "next/link"
+import { Building, CheckCircle2, Clock, Loader2, Mail, Newspaper, Users, type LucideIcon } from "lucide-react"
 import { PublicLayout } from "@/components/layout/PublicLayout"
-import { Button } from "@/components/ui/button"
-import { useToast } from "@/components/ui/toast"
+import { PageHero } from "@/components/sections/PageHero"
 import { api, ApiError } from "@/lib/api"
 import { gatewayError } from "@/lib/gateway"
-import {
-  Mail,
-  Users,
-  Building,
-  Newspaper,
-  Loader2,
-  PartyPopper,
-  Clock,
-  MessageSquare,
-} from "lucide-react"
+import { useLocale } from "@/lib/locale"
 
-const categories = [
-  { icon: Mail,      label: "استفسار عام",  value: "general",      description: "أسئلة عامة أو طلبات تواصل أولية" },
-  { icon: Users,     label: "شراكات",       value: "partnerships", description: "شراكات تدعم مجتمع وصول أو برامجه" },
-  { icon: Building,  label: "رعاية",        value: "sponsorship",  description: "الرعاية المرتبطة بالمنصة أو الفعاليات" },
-  { icon: Newspaper, label: "إعلام",        value: "media",        description: "استفسارات الصحافة والظهور الإعلامي" },
-  { icon: Users,     label: "دعم المؤسسين", value: "founder-support", description: "أسئلة حول موارد وخدمات المؤسسين" },
-  { icon: Clock,     label: "ساعات الخبرة", value: "office-hours", description: "طلب جلسة مباشرة مع الفريق" },
+type Category = "general" | "partnerships" | "sponsorship" | "media" | "founder-support" | "office-hours"
+
+const categories: { value: Category; icon: LucideIcon; ar: [string, string]; en: [string, string] }[] = [
+  { value: "general", icon: Mail, ar: ["سؤال عام", "عن وصول أو العضوية أو أي شيء آخر"], en: ["General question", "About Wosool, membership or anything else"] },
+  { value: "founder-support", icon: Users, ar: ["دعم المؤسسين", "حسابك أو ملفك أو التعارف"], en: ["Founder support", "Your account, profile or introductions"] },
+  { value: "partnerships", icon: Users, ar: ["شراكة", "برامج أو فعاليات مشتركة"], en: ["Partnership", "Joint programs or events"] },
+  { value: "sponsorship", icon: Building, ar: ["رعاية", "رعاية فعالية أو لقاء مؤسسين"], en: ["Sponsorship", "Sponsor an event or founder gathering"] },
+  { value: "media", icon: Newspaper, ar: ["إعلام", "طلبات الصحافة والمقابلات"], en: ["Media", "Press requests and interviews"] },
+  { value: "office-hours", icon: Clock, ar: ["جلسة مع الفريق", "حجز وقت قصير للنقاش"], en: ["Time with the team", "Book a short call"] },
 ]
 
-interface ContactFormData {
-  name: string
-  email: string
-  category: string
-  subject: string
-  message: string
-  company: string
-}
+type Fields = { name: string; email: string; company: string; category: Category; subject: string; message: string }
+type Errors = Partial<Record<keyof Fields, string>>
+const empty: Fields = { name: "", email: "", company: "", category: "general", subject: "", message: "" }
 
-type ContactErrors = Partial<Record<keyof ContactFormData, string>>
-
-const initialFormData: ContactFormData = {
-  name: "",
-  email: "",
-  category: "general",
-  subject: "",
-  message: "",
-  company: "",
-}
-
-function validateContact(data: ContactFormData): ContactErrors {
-  const errors: ContactErrors = {}
-  if (!data.name.trim())    errors.name    = "يرجى إدخال الاسم."
-  if (!data.email.trim())   errors.email   = "يرجى إدخال البريد الإلكتروني."
-  else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email))
-    errors.email = "يرجى إدخال بريد إلكتروني صحيح."
-  if (!data.category)       errors.category = "يرجى اختيار التصنيف."
-  if (!data.subject.trim()) errors.subject  = "يرجى كتابة عنوان الرسالة."
-  if (!data.message.trim()) errors.message  = "يرجى كتابة الرسالة."
-  if (data.message.length > 3000) errors.message = "يجب ألا تتجاوز الرسالة 3000 حرف."
-  if (data.name.length > 255) errors.name = "يجب ألا يتجاوز الاسم 255 حرفًا."
-  if (data.email.length > 255) errors.email = "يجب ألا يتجاوز البريد الإلكتروني 255 حرفًا."
-  if (data.subject.length > 255) errors.subject = "يجب ألا يتجاوز العنوان 255 حرفًا."
-  if (data.company.length > 255) errors.company = "يجب ألا يتجاوز اسم الشركة 255 حرفًا."
-  return errors
-}
-
-function FieldError({ message }: { message?: string }) {
-  if (!message) return null
-  return (
-    <p className="flex items-center gap-1.5 text-xs text-red-500 font-medium mt-1">
-      <span className="w-1 h-1 rounded-full bg-red-500 shrink-0" />
-      {message}
-    </p>
-  )
-}
-
-const inputClass =
-  "flex h-10 w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-800 placeholder:text-slate-400 focus:outline-none focus:border-[#3B52D4] focus:ring-1 focus:ring-[#3B52D4] transition-colors"
+const input = "min-h-12 w-full rounded-xl border border-[var(--border)] bg-[var(--surface)] px-4 text-sm text-[var(--text)] placeholder:text-[var(--text-subtle)] focus:border-[var(--action-bg)] focus:outline-none focus:ring-2 focus:ring-[var(--focus-ring)] aria-[invalid=true]:border-red-500"
 
 export default function ContactPage() {
-  const [formData, setFormData]   = useState<ContactFormData>(initialFormData)
-  const [errors, setErrors]       = useState<ContactErrors>({})
-  const [submitting, setSubmitting] = useState(false)
-  const [submitted, setSubmitted] = useState(false)
+  const { locale, direction } = useLocale()
+  const ar = locale === "ar"
+  const t = (arText: string, enText: string) => (ar ? arText : enText)
+  const [values, setValues] = useState<Fields>(empty)
+  const [errors, setErrors] = useState<Errors>({})
+  const [formError, setFormError] = useState("")
+  const [busy, setBusy] = useState(false)
+  const [sent, setSent] = useState(false)
   const inFlight = useRef(false)
-  const { toast } = useToast()
+
+  // Links such as /contact?subject=...&category=sponsorship pre-fill the form.
   useEffect(() => {
-    const subject = new URLSearchParams(window.location.search).get('subject')?.slice(0, 255)
-    if (subject) setFormData(previous => ({...previous, subject}))
+    const params = new URLSearchParams(window.location.search)
+    const subject = params.get("subject")?.slice(0, 255)
+    const category = params.get("category") as Category | null
+    setValues(current => ({
+      ...current,
+      ...(subject ? { subject } : {}),
+      ...(category && categories.some(item => item.value === category) ? { category } : {}),
+    }))
   }, [])
 
-  const updateField = useCallback(
-    (field: keyof ContactFormData, value: string) => {
-      setFormData((prev) => ({ ...prev, [field]: value }))
-      setErrors((prev) => {
-        if (!prev[field]) return prev
-        const next = { ...prev }
-        delete next[field]
-        return next
-      })
-    },
-    []
-  )
+  const set = useCallback(<K extends keyof Fields>(key: K, value: Fields[K]) => {
+    setValues(current => ({ ...current, [key]: value }))
+    setErrors(current => ({ ...current, [key]: undefined }))
+    setFormError("")
+  }, [])
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
+  function validate(): Errors {
+    const next: Errors = {}
+    if (!values.name.trim()) next.name = t("اكتب اسمك.", "Enter your name.")
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(values.email.trim())) next.email = t("اكتب بريداً إلكترونياً صحيحاً.", "Enter a valid email address.")
+    if (!values.subject.trim()) next.subject = t("اكتب عنواناً قصيراً للرسالة.", "Add a short subject.")
+    if (!values.message.trim()) next.message = t("اكتب رسالتك.", "Write your message.")
+    if (values.message.length > 3000) next.message = t("الحد الأقصى 3000 حرف.", "Keep it under 3,000 characters.")
+    return next
+  }
+
+  async function submit(event: FormEvent) {
+    event.preventDefault()
     if (inFlight.current) return
-    const validationErrors = validateContact(formData)
-    if (Object.keys(validationErrors).length > 0) {
-      setErrors(validationErrors)
-      toast("يرجى مراجعة الحقول المعلّمة وتصحيحها.", "error")
+    const found = validate()
+    if (Object.keys(found).length) {
+      setErrors(found)
+      document.getElementById(`contact-${Object.keys(found)[0]}`)?.focus()
       return
     }
     inFlight.current = true
-    setSubmitting(true)
+    setBusy(true)
     try {
-      await api.post("/contact", formData)
-      setSubmitted(true)
-      toast("تم إرسال الرسالة بنجاح.", "success")
-    } catch (err) {
-      const serverErrors = err instanceof ApiError && err.data && typeof err.data === "object" && "errors" in err.data
-        ? (err.data as { errors?: unknown }).errors : null
-      if (serverErrors && typeof serverErrors === "object") {
-        const mapped: ContactErrors = {}
-        for (const [key, messages] of Object.entries(serverErrors)) {
-          if (Object.hasOwn(initialFormData, key) && Array.isArray(messages) && typeof messages[0] === "string") mapped[key as keyof ContactFormData] = messages[0]
-        }
+      await api.post("/contact", { ...values, name: values.name.trim(), email: values.email.trim(), subject: values.subject.trim(), message: values.message.trim() })
+      setSent(true)
+    } catch (error) {
+      const server = error instanceof ApiError && error.data && typeof error.data === "object" && "errors" in error.data
+        ? (error.data as { errors?: Record<string, string[]> }).errors : undefined
+      if (server) {
+        const mapped: Errors = {}
+        for (const key of Object.keys(empty) as (keyof Fields)[]) if (server[key]?.[0]) mapped[key] = server[key][0]
         setErrors(mapped)
-        toast("يرجى مراجعة الحقول المعلّمة وتصحيحها.", "error")
+        setFormError(Object.keys(mapped).length ? "" : Object.values(server).flat()[0] ?? "")
       } else {
-        toast(gatewayError(err, true), "error")
+        setFormError(gatewayError(error, ar))
       }
     } finally {
       inFlight.current = false
-      setSubmitting(false)
+      setBusy(false)
     }
   }
 
-  // ── Submitted ────────────────────────────────────────────────────────────────
-  if (submitted) {
-    return (
-      <PublicLayout>
-        <section className="relative min-h-[80vh] bg-slate-50/60 px-4 py-24 flex items-center">
-          <div className="pointer-events-none absolute inset-0" aria-hidden="true">
-            <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[600px] h-[600px] rounded-full bg-[#3B52D4]/5 blur-[140px]" />
-          </div>
-          <div className="relative mx-auto max-w-lg w-full text-center">
-            <div
-              className="bg-white/90 backdrop-blur-sm border border-slate-200/80 rounded-2xl px-8 py-14"
-              style={{ boxShadow: "0 8px 40px -8px rgba(59,82,212,0.1)" }}
-            >
-              <div className="flex justify-center mb-6">
-                <div className="h-20 w-20 rounded-full bg-[#EEF1FF] border border-[#E4E7F0] flex items-center justify-center">
-                  <PartyPopper className="h-9 w-9 text-[#3B52D4]" />
-                </div>
-              </div>
-              <div className="inline-flex items-center gap-2 bg-[#EEF1FF] border border-[#E4E7F0] px-3 py-1 rounded-full text-xs font-bold text-[#3B52D4] mb-4">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#3B52D4]" />
-                تم بنجاح
-              </div>
-              <h1 className="text-3xl font-black text-slate-900 tracking-tight mb-3">تم إرسال الرسالة</h1>
-              <p className="text-base text-slate-600 mb-2 leading-relaxed">
-                شكرًا لتواصلك معنا. وصلتنا رسالتك بنجاح.
-              </p>
-              <p className="text-sm text-slate-500 mb-8 leading-relaxed">
-                سيعود إليك الفريق خلال يومي إلى ثلاثة أيام عمل على{" "}
-                <span className="break-all font-medium text-[#3B52D4]">{formData.email}</span>.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-3 justify-center">
-                <Button
-                  asChild
-                  className="rounded-xl bg-[#3B52D4] hover:bg-[#2E44C8] text-white font-bold shadow-md shadow-[#3B52D4]/20"
-                >
-                  <Link href="/">العودة إلى الرئيسية</Link>
-                </Button>
-                <Button
-                  variant="outline"
-                  className="rounded-xl border-slate-200 text-slate-700 hover:border-[#3B52D4]/40 hover:text-[#3B52D4] font-bold"
-                  onClick={() => { setSubmitted(false); setFormData(initialFormData); setErrors({}) }}
-                >
-                  إرسال رسالة أخرى
-                </Button>
-              </div>
-            </div>
-          </div>
-        </section>
-      </PublicLayout>
-    )
-  }
+  const fieldProps = (key: keyof Fields) => ({
+    id: `contact-${key}`,
+    "aria-invalid": Boolean(errors[key]),
+    "aria-describedby": errors[key] ? `contact-${key}-error` : undefined,
+  })
+  // Plain render helper (not a component) so inputs keep focus while typing.
+  const field = (name: keyof Fields, label: string, children: ReactNode, optional = false) => <div>
+    <label htmlFor={`contact-${name}`} className="mb-2 block text-sm font-semibold text-[var(--text)]">{label}{optional && <span className="ms-1 font-normal text-[var(--text-subtle)]">{t("(اختياري)", "(optional)")}</span>}</label>
+    {children}
+    {errors[name] && <p id={`contact-${name}-error`} className="mt-2 text-sm text-red-700">{errors[name]}</p>}
+  </div>
 
-  // ── Main page ─────────────────────────────────────────────────────────────────
-  return (
-    <PublicLayout>
-      {/* ── Hero ── */}
-      <section className="relative overflow-hidden bg-slate-50/60 px-4 pt-28 pb-16">
-        <div className="pointer-events-none absolute inset-0" aria-hidden="true">
-          <div className="absolute top-0 right-1/4 w-[500px] h-[500px] rounded-full bg-[#3B52D4]/5 blur-[140px]" />
-          <div className="absolute bottom-0 left-1/4 w-[400px] h-[400px] rounded-full bg-indigo-400/4 blur-[140px]" />
-          <div className="absolute inset-0 bg-[radial-gradient(rgba(59,82,212,0.06)_1px,transparent_1px)] bg-[size:28px_28px] [mask-image:radial-gradient(ellipse_80%_80%_at_50%_40%,black_10%,transparent_70%)]" />
+  return <PublicLayout><div dir={direction} lang={locale} className="bg-[var(--page-bg)]">
+    <PageHero
+      eyebrow={t("تواصل معنا", "Contact")}
+      title={t("راسل فريق وصول", "Write to the Wosool team")}
+      description={t("نقرأ كل رسالة ونرد خلال يومين إلى ثلاثة أيام عمل. ستصلك نسخة تأكيد على بريدك.", "We read every message and reply within 2–3 business days. You will get a confirmation copy by email.")}
+    >
+      <p className="flex flex-wrap items-center gap-2 text-sm text-[var(--text-muted)]"><Mail size={16} aria-hidden="true" />{t("أو راسلنا مباشرة على", "Or email us directly at")} <a dir="ltr" href="mailto:info@wosool.org" className="font-semibold text-[var(--link)] underline-offset-4 hover:underline">info@wosool.org</a></p>
+    </PageHero>
+
+    <section className="mx-auto max-w-6xl px-4 py-12 sm:px-6 sm:py-16">
+      {sent ? <div role="status" className="mx-auto max-w-xl rounded-2xl border border-[var(--border-soft)] bg-[var(--surface)] p-8 text-center">
+        <CheckCircle2 size={40} className="mx-auto text-[var(--success-text)]" aria-hidden="true" />
+        <h2 className="mt-4 text-2xl font-bold text-[var(--text-strong)]">{t("وصلتنا رسالتك", "Your message is with us")}</h2>
+        <p className="mt-3 text-sm leading-7 text-[var(--text-muted)]">{t("أرسلنا تأكيداً إلى", "We sent a confirmation to")} <span dir="ltr" className="font-semibold text-[var(--text)]">{values.email}</span>. {t("سنرد خلال يومين إلى ثلاثة أيام عمل.", "We will reply within 2–3 business days.")}</p>
+        <div className="mt-6 flex flex-wrap justify-center gap-3">
+          <Link href="/" className="inline-flex min-h-12 items-center rounded-xl bg-[var(--action-bg)] px-6 font-bold text-[var(--action-fg)]">{t("العودة للرئيسية", "Back to home")}</Link>
+          <button type="button" onClick={() => { setSent(false); setValues(empty) }} className="inline-flex min-h-12 items-center rounded-xl border border-[var(--border)] px-6 font-bold text-[var(--text)]">{t("رسالة أخرى", "Send another")}</button>
         </div>
-
-        <div className="relative mx-auto max-w-3xl text-center">
-          <div className="inline-flex items-center gap-2 bg-[#EEF1FF] border border-[#E4E7F0] px-3 py-1 rounded-full text-xs font-bold text-[#3B52D4] mb-6">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#3B52D4] animate-pulse" />
-            تواصل معنا
+      </div> :
+      <form noValidate onSubmit={submit} aria-busy={busy} className="grid gap-8 lg:grid-cols-[minmax(0,360px)_minmax(0,1fr)]">
+        <fieldset>
+          <legend className="text-base font-bold text-[var(--text-strong)]">{t("عن ماذا تريد أن تكتب؟", "What is this about?")}</legend>
+          <div className="mt-4 grid gap-2">
+            {categories.map(({ value, icon: Icon, ...copy }) => {
+              const [title, hint] = copy[locale === "ar" ? "ar" : "en"]
+              const active = values.category === value
+              return <label key={value} className={`flex min-h-14 cursor-pointer items-start gap-3 rounded-xl border p-4 transition-colors ${active ? "border-[var(--action-bg)] bg-[var(--info-bg)]" : "border-[var(--border-soft)] bg-[var(--surface)] hover:border-[var(--border)]"}`}>
+                <input type="radio" name="category" value={value} checked={active} onChange={() => set("category", value)} className="mt-1 h-4 w-4 shrink-0 accent-[var(--action-bg)]" />
+                <Icon size={18} className="mt-0.5 shrink-0 text-[var(--action-bg)]" aria-hidden="true" />
+                <span><span className="block text-sm font-bold text-[var(--text-strong)]">{title}</span><span className="block text-xs leading-6 text-[var(--text-muted)]">{hint}</span></span>
+              </label>
+            })}
           </div>
-          <h1 className="text-4xl lg:text-5xl font-black text-slate-900 tracking-tight leading-[1.15] mb-5">
-            يسعدنا{" "}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#3B52D4] to-indigo-500">
-              التواصل معك
-            </span>
-          </h1>
-          <p className="text-base lg:text-lg text-slate-600 max-w-xl mx-auto leading-relaxed">
-            سواء كان لديك سؤال، أو فكرة شراكة، أو رغبة في معرفة المزيد عن وصول، فنحن جاهزون للاستماع.
-          </p>
+        </fieldset>
 
-          {/* Info chips */}
-          <div className="flex flex-wrap items-center justify-center gap-3 mt-8">
-            <div
-              className="inline-flex items-center gap-1.5 bg-white border border-slate-200/80 px-3 py-1.5 rounded-full text-xs font-bold text-slate-600"
-              style={{ boxShadow: "0 2px 8px -2px rgba(59,82,212,0.06)" }}
-            >
-              <Clock className="h-3 w-3 text-[#3B52D4]" />
-              الرد خلال ٢–٣ أيام عمل
-            </div>
-            <div
-              className="inline-flex items-center gap-1.5 bg-white border border-slate-200/80 px-3 py-1.5 rounded-full text-xs font-bold text-slate-600"
-              style={{ boxShadow: "0 2px 8px -2px rgba(59,82,212,0.06)" }}
-            >
-              <MessageSquare className="h-3 w-3 text-[#3B52D4]" />
-              <a href="mailto:Info@wosool.org" className="hover:text-[#3B52D4] transition-colors">
-                Info@wosool.org
-              </a>
-            </div>
+        <div className="space-y-5 rounded-2xl border border-[var(--border-soft)] bg-[var(--surface)] p-6 shadow-sm sm:p-8">
+          <div className="grid gap-5 sm:grid-cols-2">
+            {field("name", t("الاسم", "Name"), <input {...fieldProps("name")} className={input} value={values.name} onChange={e => set("name", e.target.value)} maxLength={255} autoComplete="name" />)}
+            {field("email", t("البريد الإلكتروني", "Email"), <input {...fieldProps("email")} type="email" dir="ltr" className={input} placeholder="name@company.com" value={values.email} onChange={e => set("email", e.target.value)} maxLength={255} autoComplete="email" />)}
           </div>
+          {field("company", t("الشركة أو الجهة", "Company or organisation"), <input {...fieldProps("company")} className={input} value={values.company} onChange={e => set("company", e.target.value)} maxLength={255} autoComplete="organization" />, true)}
+          {field("subject", t("العنوان", "Subject"), <input {...fieldProps("subject")} className={input} value={values.subject} onChange={e => set("subject", e.target.value)} maxLength={255} />)}
+          {field("message", t("الرسالة", "Message"), <textarea {...fieldProps("message")} rows={6} className={`${input} py-3`} value={values.message} onChange={e => set("message", e.target.value)} maxLength={3000} />)}
+          <p className="text-xs text-[var(--text-subtle)]">{values.message.length}/3000</p>
+          {formError && <p role="alert" className="rounded-xl bg-red-50 p-3 text-sm text-red-800">{formError}</p>}
+          <button type="submit" disabled={busy} className="inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-xl bg-[var(--action-bg)] px-6 font-bold text-[var(--action-fg)] hover:bg-[var(--action-hover)] disabled:opacity-60 sm:w-auto">
+            {busy && <Loader2 size={18} className="animate-spin" aria-hidden="true" />}{busy ? t("جارٍ الإرسال…", "Sending…") : t("إرسال الرسالة", "Send message")}
+          </button>
         </div>
-      </section>
-
-      {/* ── Form section ── */}
-      <section className="py-16 px-4 bg-white">
-        <div className="mx-auto max-w-5xl">
-          <div className="grid grid-cols-1 lg:grid-cols-5 gap-10 items-start">
-
-            {/* Left: category selector + hint */}
-            <div className="lg:col-span-2 space-y-4">
-              <div className="mb-6">
-                <div className="inline-flex items-center gap-2 bg-[#EEF1FF] border border-[#E4E7F0] px-3 py-1 rounded-full text-xs font-bold text-[#3B52D4] mb-3">
-                  التصنيف
-                </div>
-                <h2 className="text-xl font-black text-slate-900 tracking-tight">ما طبيعة هذا التواصل؟</h2>
-              </div>
-
-              {categories.map(({ icon: Icon, label, value, description }) => {
-                const active = formData.category === value
-                return (
-                  <button
-                    key={value}
-                    type="button"
-                    onClick={() => updateField("category", value)}
-                    aria-pressed={active}
-                    className="w-full flex items-start gap-3 p-4 rounded-2xl border text-start transition-all duration-200"
-                    style={
-                      active
-                        ? {
-                            borderColor: "rgba(59,82,212,0.4)",
-                            background: "#EEF1FF",
-                            boxShadow: "0 4px 16px -4px rgba(59,82,212,0.12)",
-                          }
-                        : {
-                            borderColor: "#E2E8F0",
-                            background: "white",
-                          }
-                    }
-                  >
-                    <div
-                      className="h-9 w-9 rounded-xl flex items-center justify-center shrink-0 transition-all"
-                      style={
-                        active
-                          ? { background: "#3B52D4", color: "white" }
-                          : { background: "#F8FAFC", color: "#94a3b8" }
-                      }
-                    >
-                      <Icon className="h-4 w-4" aria-hidden="true" />
-                    </div>
-                    <div>
-                      <p className={`text-sm font-black mb-0.5 ${active ? "text-[#3B52D4]" : "text-slate-900"}`}>
-                        {label}
-                      </p>
-                      <p className="text-xs text-slate-500 leading-relaxed">{description}</p>
-                    </div>
-                  </button>
-                )
-              })}
-
-              {/* Hint card */}
-              <div
-                className="mt-2 p-5 bg-[#F5F7FF] border border-[#E4E7F0] rounded-2xl"
-              >
-                <div className="inline-flex items-center gap-1.5 bg-[#EEF1FF] border border-[#E4E7F0] px-2.5 py-1 rounded-full text-xs font-extrabold text-[#3B52D4] mb-3">
-                  جلسة مباشرة
-                </div>
-                <h3 className="text-sm font-black text-slate-900 mb-1.5">طلب جلسة مباشرة</h3>
-                <p className="text-xs text-slate-500 leading-relaxed mb-3">
-                  إذا رغبت في تنسيق مكالمة مع فريق وصول، اذكر في رسالتك أنك تطلب جلسة مباشرة.
-                </p>
-                <div className="flex items-center gap-1.5 text-xs text-slate-400 font-medium">
-                  <Clock className="h-3 w-3" />
-                  متوسط زمن الرد: يومان إلى ثلاثة أيام عمل
-                </div>
-              </div>
-            </div>
-
-            {/* Right: Form */}
-            <div className="min-w-0 lg:col-span-3">
-              <div
-                className="bg-white/90 backdrop-blur-sm border border-slate-200/80 rounded-2xl p-7"
-                style={{ boxShadow: "0 4px 24px -4px rgba(59,82,212,0.07)" }}
-              >
-                <form onSubmit={handleSubmit} className="space-y-5" noValidate>
-                  {/* Name */}
-                  <div className="space-y-1.5">
-                    <label htmlFor="name" className="text-xs font-bold text-slate-600">
-                      الاسم الكامل <span className="text-red-400">*</span>
-                    </label>
-                    <input
-                      id="name"
-                      className={inputClass}
-                      placeholder="اكتب اسمك الكامل"
-                      value={formData.name}
-                      onChange={(e) => updateField("name", e.target.value)}
-                      aria-invalid={!!errors.name}
-                    />
-                    <FieldError message={errors.name} />
-                  </div>
-
-                  {/* Email + Company */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div className="space-y-1.5">
-                      <label htmlFor="contact-email" className="text-xs font-bold text-slate-600">
-                        البريد الإلكتروني <span className="text-red-400">*</span>
-                      </label>
-                      <input
-                        id="contact-email"
-                        type="email"
-                        className={inputClass}
-                        placeholder="name@company.com"
-                        value={formData.email}
-                        onChange={(e) => updateField("email", e.target.value)}
-                        aria-invalid={!!errors.email}
-                      />
-                      <FieldError message={errors.email} />
-                    </div>
-                    <div className="space-y-1.5">
-                      <label htmlFor="organisation" className="text-xs font-bold text-slate-600">
-                        الجهة أو الشركة
-                      </label>
-                      <input
-                        id="organisation"
-                        className={inputClass}
-                        placeholder="اسم الشركة أو الجهة"
-                        value={formData.company}
-                        onChange={(e) => updateField("company", e.target.value)}
-                        aria-invalid={!!errors.company}
-                      />
-                      <FieldError message={errors.company} />
-                    </div>
-                  </div>
-
-                  {/* Subject */}
-                  <div className="space-y-1.5">
-                    <label htmlFor="subject" className="text-xs font-bold text-slate-600">
-                      عنوان الرسالة <span className="text-red-400">*</span>
-                    </label>
-                    <input
-                      id="subject"
-                      className={inputClass}
-                      placeholder="عنوان مختصر وواضح"
-                      value={formData.subject}
-                      onChange={(e) => updateField("subject", e.target.value)}
-                      aria-invalid={!!errors.subject}
-                    />
-                    <FieldError message={errors.subject} />
-                  </div>
-
-                  {/* Message */}
-                  <div className="space-y-1.5">
-                    <label htmlFor="contact-message" className="text-xs font-bold text-slate-600">
-                      الرسالة <span className="text-red-400">*</span>
-                    </label>
-                    <textarea
-                      id="contact-message"
-                      rows={5}
-                      className={inputClass + " h-auto resize-none py-3"}
-                      placeholder="اكتب تفاصيل طلبك أو فكرتك أو استفسارك..."
-                      value={formData.message}
-                      onChange={(e) => updateField("message", e.target.value)}
-                      aria-invalid={!!errors.message}
-                    />
-                    <div className="flex items-start justify-between gap-2">
-                      <FieldError message={errors.message} />
-                      <span
-                        className={`text-xs font-medium shrink-0 ${
-                          formData.message.length > 2800 ? "text-amber-500" : "text-slate-400"
-                        }`}
-                      >
-                        {formData.message.length}/3000
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* Submit */}
-                  <button
-                    type="submit"
-                    disabled={submitting}
-                    className="flex items-center justify-center gap-2 w-full h-11 rounded-xl bg-[#3B52D4] hover:bg-[#2E44C8] text-white text-sm font-bold transition-all shadow-md shadow-[#3B52D4]/20 disabled:opacity-60 disabled:cursor-not-allowed"
-                  >
-                    {submitting && <Loader2 className="h-4 w-4 animate-spin" />}
-                    {submitting ? "جارٍ الإرسال..." : "إرسال الرسالة"}
-                  </button>
-                </form>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-    </PublicLayout>
-  )
+      </form>}
+    </section>
+  </div></PublicLayout>
 }

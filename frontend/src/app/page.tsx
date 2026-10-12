@@ -1,10 +1,9 @@
 "use client"
 
-import Image from "next/image"
 import Link from "next/link"
 import { ArrowUpRight, Handshake, Lightbulb, Users } from "lucide-react"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { getInitials } from "@/lib/utils"
+import { getLocalizedNewsContent } from "@/lib/news-content"
+import { categoryLabel } from "@/lib/news-feed"
 import { getFounderSpotlights } from "@/lib/founder-spotlight"
 import { PublicLayout } from "@/components/layout/PublicLayout"
 import { UpcomingEvents } from "@/components/sections/UpcomingEvents"
@@ -19,50 +18,49 @@ import styles from "./home.module.css"
 const content = {
   ar: {
     eyebrow: "وصول · مجتمع المؤسسين", title: "من مؤسس", highlight: "إلى مؤسس",
-    intro: "بناء الشركات رحلة. لا تقطعها وحدك.",
-    description: "مجتمع يجمع المؤسسين في السعودية والخليج والعالم لتبادل الخبرات، وبناء علاقات حقيقية، واكتشاف فرص التعاون. هنا، تبدأ المحادثة بتجربة مشتركة، وتكبر بما يقدّمه كل مؤسس للآخر.",
-    join: "انضم إلى وصول", explore: "تعرّف على المؤسسين", note: "عضوية المجتمع تخضع للمراجعة. برامج النمو لها متطلبات تقديم مستقلة.",
+    intro: "شبكة أعضاء للمؤسسين في السعودية والخليج وخارجها.",
+    description: "اسأل مؤسسين آخرين كيف وظّفوا وسعّروا وجمعوا التمويل وتوسّعوا. كل عضو تمت مراجعة طلبه، والملفات حقيقية، والتعارف يتم بموافقة الطرف الآخر.",
+    join: "قدّم طلب العضوية", explore: "تصفّح المؤسسين", note: "يراجع الفريق طلبات العضوية. لبرامج النمو مثل مسرّعة EO الرياض طلبات مستقلة.",
     panelTitle: "أشخاص يفهمون رحلتك.", panelText: "اسأل عن تحدٍّ. شارك درسًا. ابدأ علاقة تستمر.",
     panelItems: ["خبرات من أرض الواقع", "علاقات قبل المعاملات", "تعاون يصنع قيمة للطرفين"],
-    why: "ما الذي يجمعنا؟", whyTitle: "شركات مختلفة. تحديات مشتركة.",
+    why: "ما الذي يجمعنا؟", whyTitle: "شركات مختلفة. تحديات متشابهة.",
     benefits: [
       { title: "تعلّم من التجربة", text: "تبادل الدروس العملية في بناء الفرق، وفهم العملاء، وتطوير المنتجات مع مؤسسين يعيشون تحديات مشابهة." },
       { title: "اعثر على الأشخاص المناسبين", text: "استكشف المؤسسين حسب قطاعاتهم ومراحل شركاتهم، وتعرّف على ما يحتاجونه وما يمكنهم مشاركته." },
-      { title: "ابنِ شيئًا مع الآخرين", text: "اكتشف شركات المجتمع واللقاءات والفرص، وابدأ محادثات قد تتحول إلى تعاون حقيقي." },
+      { title: "اعملوا معًا", text: "اكتشف شركات المجتمع واللقاءات والفرص، وابدأ محادثات قد تنتهي بعمل مشترك." },
     ],
-    foundersLabel: "مجتمع وصول", foundersTitle: "تعرّف على الأشخاص وراء الشركات.", foundersText: "اكتشف خبرات المؤسسين وشركاتهم، وابحث عن نقطة التقاء تبدأ منها محادثتك القادمة.", spotlightLabel: "مؤسسون تحت الضوء", spotlightTitle: "أشخاص يبنون. وقصص تلهم.", spotlightText: "تعرّف على مؤسسين يبنون شركات في السعودية وخارجها، واستكشف أعمالهم ومجالات خبرتهم.", allFounders: "دليل المؤسسين", allCompanies: "شركات المجتمع",
+    foundersLabel: "مجتمع وصول", foundersTitle: "المؤسسون وشركاتهم", foundersText: "خبرات المؤسسين وما يبنونه، لتجد من تبدأ معه محادثتك القادمة.", spotlightLabel: "مؤسسون من السعودية والعالم", spotlightTitle: "مؤسسون يديرون شركات قائمة", spotlightText: "ملفات من مصادر منشورة لمؤسسين في السعودية والخليج والعالم، مع أرقام تشغيل وإيرادات موثّقة المصدر.", allFounders: "دليل المؤسسين", allCompanies: "شركات المجتمع",
     loading: "جارٍ تحميل ملفات المؤسسين…", empty: "تظهر ملفات المؤسسين هنا بعد الموافقة على نشرها.", error: "ملفات أعضاء المجتمع غير متاحة مؤقتًا.", retry: "إعادة المحاولة",
-    how: "كيف تبدأ؟", howTitle: "علاقتك القادمة تبدأ بخطوة.", steps: [
+    how: "كيف تبدأ؟", howTitle: "كيف تعمل العضوية", steps: [
       { title: "عرّفنا بك", text: "قدّم طلب عضوية يوضح تجربتك وشركتك وما تبحث عنه في المجتمع." },
       { title: "ابنِ حضورك", text: "بعد الموافقة، أكمل ملفك وعرّف الآخرين بخبراتك واحتياجاتك." },
       { title: "شارك وتواصل", text: "تعرّف على المؤسسين، واستكشف اللقاءات، وقدّم قيمة قبل أن تطلبها." },
     ],
-    events: "لقاءات المجتمع", eventsTitle: "من التعارف إلى المحادثات المفيدة.", eventsText: "استكشف اللقاءات القادمة وتفاصيل المشاركة في كل فعالية.",
-    program: "مسار مستقل للنمو", programTitle: "EO Riyadh Accelerator", programText: "اكتشف برنامج النمو ومعايير الأهلية ورحلة التقديم في بوابته المخصصة. عضوية وصول لا تعني القبول في المسرّعة أو عضوية EO.", programLink: "اكتشف المسرّعة",
-    news: "من المجتمع", newsTitle: "أخبار وأفكار تستحق المشاركة.", allNews: "جميع الأخبار",
+    events: "لقاءات المجتمع", eventsTitle: "اللقاءات القادمة", eventsText: "المواعيد والأماكن وطريقة التسجيل لكل لقاء.",
+    program: "مسار مستقل للنمو", programTitle: "EO Riyadh Accelerator", programText: "برنامج النمو ومعايير الأهلية وخطوات التقديم في بوابته المخصصة. عضوية وصول لا تعني القبول في المسرّعة أو عضوية EO.", programLink: "اكتشف المسرّعة",
+    news: "الأخبار", newsTitle: "آخر أخبار الشركات الناشئة", allNews: "جميع الأخبار",
   },
   en: {
     eyebrow: "WOSOOL · THE FOUNDER COMMUNITY", title: "Founders", highlight: "to Founders",
-    intro: "Building a company is a journey. Don’t go it alone.",
-    description: "A community connecting founders across Saudi Arabia, the GCC, and the world to exchange experience, build genuine relationships, and discover ways to collaborate. Shared experience starts the conversation. What we give each other takes it further.",
-    join: "Join Wosool", explore: "Meet the founders", note: "Community membership is reviewed. Growth programs have separate application requirements.",
-    panelTitle: "People who get your journey.", panelText: "Bring a challenge. Share a lesson. Build a lasting connection.", panelItems: ["Experience from the field", "Relationships before transactions", "Collaboration that goes both ways"],
-    why: "WHAT BRINGS US TOGETHER", whyTitle: "Different companies. Shared challenges.",
+    intro: "A members' network for founders in Saudi Arabia, the Gulf and beyond.",
+    description: "Ask other founders how they hired, priced, raised and expanded. Every member is reviewed, profiles are real, and introductions happen only when the other founder agrees.",
+    join: "Apply for membership", explore: "Browse founders", note: "The team reviews membership applications. Growth programs such as EO Riyadh Accelerator have their own application.",
+    why: "WHAT BRINGS US TOGETHER", whyTitle: "Different companies. Similar problems.",
     benefits: [
       { title: "Learn from experience", text: "Exchange practical lessons in building teams, understanding customers, and developing products with founders navigating similar challenges." },
       { title: "Find your people", text: "Explore founders by sector and company stage. Understand what they need and the experience they can share." },
-      { title: "Build something together", text: "Discover community companies, gatherings, and opportunities. Start conversations that could become meaningful collaborations." },
+      { title: "Work together", text: "Find community companies, gatherings and opportunities, and start conversations that can turn into joint work." },
     ],
-    foundersLabel: "THE WOSOOL COMMUNITY", foundersTitle: "Meet the people behind the companies.", foundersText: "Discover founders, their experience and the companies they are building. Find a shared interest to start your next conversation.", spotlightLabel: "FOUNDER SPOTLIGHT", spotlightTitle: "Meet the people building what’s next.", spotlightText: "Meet founders building companies across Saudi Arabia and beyond. Explore their businesses and the experience behind them.", allFounders: "Founder directory", allCompanies: "Community companies",
+    foundersLabel: "THE WOSOOL COMMUNITY", foundersTitle: "Founders and their companies", foundersText: "What founders have done and what they are building, so you can see who to talk to next.", spotlightLabel: "FOUNDERS FROM SAUDI ARABIA AND BEYOND", spotlightTitle: "Founders running real companies", spotlightText: "Profiles built from published sources, covering founders in Saudi Arabia, the Gulf and worldwide, with sourced operating and revenue figures.", allFounders: "Founder directory", allCompanies: "Community companies",
     loading: "Loading founder profiles…", empty: "Founder profiles appear here once approved for public sharing.", error: "Community member profiles are temporarily unavailable.", retry: "Try again",
-    how: "YOUR NEXT STEP", howTitle: "Every connection starts somewhere.", steps: [
+    how: "YOUR NEXT STEP", howTitle: "How membership works", steps: [
       { title: "Introduce yourself", text: "Apply for membership with your experience, company, and what you’re looking for in the community." },
       { title: "Build your presence", text: "Once approved, complete your profile so others can discover your experience and needs." },
       { title: "Take part", text: "Meet founders, explore gatherings, and offer something useful before asking for something back." },
     ],
-    events: "COME TOGETHER", eventsTitle: "Turn introductions into real conversations.", eventsText: "Explore upcoming gatherings and the participation details for each event.",
-    program: "A SEPARATE GROWTH PATHWAY", programTitle: "EO Riyadh Accelerator", programText: "Explore the growth program, eligibility criteria, and application journey in its dedicated gateway. Wosool membership does not imply Accelerator admission or EO membership.", programLink: "Explore the Accelerator",
-    news: "FROM THE COMMUNITY", newsTitle: "Ideas and updates worth sharing.", allNews: "All news",
+    events: "GATHERINGS", eventsTitle: "Upcoming sessions", eventsText: "Dates, venues and how to register for each session.",
+    program: "A SEPARATE GROWTH PATHWAY", programTitle: "EO Riyadh Accelerator", programText: "The growth program, eligibility and application steps are on its own gateway. Wosool membership does not mean Accelerator admission or EO membership.", programLink: "Explore the Accelerator",
+    news: "NEWS", newsTitle: "Latest startup news", allNews: "All news",
   },
 }
 
@@ -76,7 +74,6 @@ export default function HomePage() {
   return <PublicLayout><div className={styles.home} lang={locale} dir={locale === "ar" ? "rtl" : "ltr"}>
     <section className={styles.hero} aria-labelledby="home-title"><div className={`${styles.container} ${styles.heroGrid}`}>
       <div><p className={styles.eyebrow}>{copy.eyebrow}</p><h1 id="home-title">{copy.title}<br /><span>{copy.highlight}</span></h1><p className={styles.intro}>{copy.intro}</p><p className={styles.lead}>{copy.description}</p><div className={styles.actions}><Link className={styles.primary} href="/apply">{copy.join}<ArrowUpRight size={18} /></Link><Link className={styles.secondary} href="#founder-community">{copy.explore}</Link></div><p className={styles.note}>{copy.note}</p></div>
-      <aside className={styles.heroPanel}><div className={styles.panelBrand}><Image src="/wosool-network-logo.png" alt="" width={48} height={48} /><span>WOSOOL / وصول</span></div><h2>{copy.panelTitle}</h2><p>{copy.panelText}</p><a className={styles.heroFaces} href="#founder-community" aria-label={copy.explore}>{displayedFounders.slice(0, 4).map(founder => <Avatar key={founder.id} className={styles.heroAvatar}><AvatarImage src={founder.avatarUrl || undefined} alt={founder.name} loading="lazy" /><AvatarFallback className={styles.heroAvatarFallback}>{getInitials(founder.name)}</AvatarFallback></Avatar>)}<span>{copy.explore}<ArrowUpRight size={15} aria-hidden="true" /></span></a><ul>{copy.panelItems.map((item,i) => <li key={item}><span>0{i+1}</span>{item}</li>)}</ul><Link href="/about">{locale === "ar" ? "اكتشف مجتمع وصول" : "Discover the Wosool community"}<ArrowUpRight size={18} /></Link></aside>
     </div></section>
     <CommunityPartners partners={partners} loaded={partnersLoaded} loading={loading} failed={failed.includes("partners")} retry={retry} />
     <section id="founder-community" className={styles.founders} aria-labelledby="founders-title"><div className={styles.container}><div className={styles.sectionHead}><div><p className={styles.eyebrow}>{isSpotlight ? copy.spotlightLabel : copy.foundersLabel}</p><h2 id="founders-title">{isSpotlight ? copy.spotlightTitle : copy.foundersTitle}</h2><p className={styles.lead}>{isSpotlight ? copy.spotlightText : copy.foundersText}</p></div><Link className={styles.textLink} href="/founders">{copy.allFounders}<ArrowUpRight size={18} /></Link></div>
@@ -89,7 +86,7 @@ export default function HomePage() {
     <section className={styles.events} aria-labelledby="events-title"><div className={styles.container}><p className={styles.eyebrow}>{copy.events}</p><h2 id="events-title">{copy.eventsTitle}</h2><p className={styles.lead}>{copy.eventsText}</p><div className="mt-8"><UpcomingEvents /></div></div></section>
     <div className={`${styles.container} ${styles.section}`}><StartupDirectory compact />
     <EoaOverview /></div>
-    {newsItems.length > 0 && <section className={`${styles.container} ${styles.news}`} aria-labelledby="news-title"><div className={styles.sectionHead}><div><p className={styles.eyebrow}>{copy.news}</p><h2 id="news-title">{copy.newsTitle}</h2></div><Link className={styles.textLink} href="/news">{copy.allNews}</Link></div><div className={styles.benefits}>{newsItems.slice(0,3).map(item => <article key={item.id}><p className={styles.eyebrow}>{item.category}</p><h3><Link href={`/news/${item.slug}`}>{item.title}</Link></h3><p>{item.excerpt}</p></article>)}</div></section>}
+    {newsItems.length > 0 && <section className={`${styles.container} ${styles.news}`} aria-labelledby="news-title"><div className={styles.sectionHead}><div><p className={styles.eyebrow}>{copy.news}</p><h2 id="news-title">{copy.newsTitle}</h2></div><Link className={styles.textLink} href="/news">{copy.allNews}</Link></div><div className={styles.benefits}>{newsItems.slice(0,3).map(item => { const story = getLocalizedNewsContent(item, locale); return <article key={item.id}><p className={styles.eyebrow}>{categoryLabel(item.category, locale)}</p><h3><Link href={`/news/${item.slug}`}>{story.title}</Link></h3><p>{story.excerpt}</p></article> })}</div></section>}
     <WosoolBoard />
   </div></PublicLayout>
 }

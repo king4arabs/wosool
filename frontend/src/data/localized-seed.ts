@@ -423,7 +423,7 @@ export const foundersPageCopy: Record<Locale, {
   ar: {
     badge: "دليل المؤسسين",
     title: "تعرّف على مؤسسي شبكة وصول",
-    description: "مجتمع يضم مؤسسين موثّقين يبنون شركات في السعودية والخليج، مع تنوع واضح في القطاعات والمراحل التشغيلية.",
+    description: "ملفات المؤسسين وشركاتهم في السعودية والخليج، مع القطاع والمرحلة وما يبحث عنه كل مؤسس.",
     featuredEyebrow: "أعضاء مختارون",
     featuredTitle: "مؤسسون تحت الضوء",
     directoryEyebrow: "الدليل",
@@ -443,7 +443,7 @@ export const foundersPageCopy: Record<Locale, {
   en: {
     badge: "Founder Directory",
     title: "Meet the founders in the Wosool network",
-    description: "A curated community of verified founders building across Saudi Arabia and the GCC, with meaningful diversity in sectors and operating stages.",
+    description: "Founders and their companies across Saudi Arabia and the GCC, with each founder's sector, stage and what they are looking for.",
     featuredEyebrow: "Featured Members",
     featuredTitle: "Founders in focus",
     directoryEyebrow: "Directory",
@@ -533,8 +533,8 @@ export const eventsPageCopy: Record<Locale, {
 }> = {
   ar: {
     badge: "روزنامة الفعاليات",
-    title: "التقِ بمؤسسين يشاركونك الجدية نفسها",
-    description: "من اللقاءات الخاصة إلى الجلسات الرقمية المركزة، صُممت فعاليات وصول لتصنع حوارات أعمق وعلاقات أكثر فائدة.",
+    title: "لقاءات المؤسسين",
+    description: "عشاءات صغيرة وجلسات عن بُعد وورش عملية، مع موعد ومكان واضح لكل لقاء.",
     tabs: ["جميع الفعاليات", "عن بُعد", "حضورية", "للأعضاء فقط"],
     eyebrow: "القادم",
     heading: "جميع الفعاليات",
@@ -549,8 +549,8 @@ export const eventsPageCopy: Record<Locale, {
   },
   en: {
     badge: "Events Calendar",
-    title: "Meet founders who share the same level of intent",
-    description: "From private dinners to focused virtual sessions, Wosool events are designed to create deeper conversations and more useful relationships.",
+    title: "Founder gatherings",
+    description: "Small dinners, online sessions and practical workshops, each with a clear date and place.",
     tabs: ["All events", "Virtual", "In person", "Members only"],
     eyebrow: "Upcoming",
     heading: "All events",
@@ -585,8 +585,8 @@ export const programsPageCopy: Record<Locale, {
 }> = {
   ar: {
     badge: "البرامج",
-    title: "دعم منظم لكل مرحلة",
-    description: "من التهيئة الأولى حتى الجاهزية للاستثمار، صُممت برامج وصول لتقدم للمؤسس ما يحتاجه فعلاً في التوقيت المناسب.",
+    title: "برامج للمؤسسين حسب المرحلة",
+    description: "من أول أسبوع في المجتمع حتى الاستعداد لجولة التمويل. لكل برنامج مدة ومتطلبات وموعد تقديم واضح.",
     categories: ["جميع البرامج", "التهيئة", "التعلم النظيري", "النمو", "الاستثمار"],
     openEyebrow: "مفتوح الآن",
     openTitle: "برامج متاحة للتقديم",
@@ -607,8 +607,8 @@ export const programsPageCopy: Record<Locale, {
   },
   en: {
     badge: "Programs",
-    title: "Structured support for every stage",
-    description: "From onboarding to fundraising readiness, Wosool programs are built to give founders what they actually need at the right time.",
+    title: "Programs for founders, by stage",
+    description: "From your first week in the community to getting ready for a funding round. Each program lists its length, requirements and deadline.",
     categories: ["All programs", "Onboarding", "Peer learning", "Growth", "Fundraising"],
     openEyebrow: "Open now",
     openTitle: "Programs accepting applications",
@@ -648,8 +648,8 @@ export const partnersPageCopy: Record<Locale, {
 }> = {
   ar: {
     badge: "الشركاء والداعمون",
-    title: "شركاء يدعمون المؤسسين بعمق",
-    description: "تتعاون وصول مع مؤسسات وجهات رائدة تضيف للمجتمع خبرة عملية ووصولًا نوعيًا ومصداقية طويلة الأمد.",
+    title: "الجهات التي تعمل مع وصول",
+    description: "مستثمرون وجامعات ومسرّعات وجهات خدمية تقدم للمؤسسين خبرة أو تمويلاً أو مساحة للعمل.",
     types: ["شريك منظومة", "شريك معرفي", "شريك مجتمع", "دعم استراتيجي"],
     sectionEyebrow: "شركاؤنا",
     sectionTitle: "الجهات التي تقف خلف قيمة المجتمع",
@@ -665,8 +665,8 @@ export const partnersPageCopy: Record<Locale, {
   },
   en: {
     badge: "Partners & Supporters",
-    title: "Partners that support founders with real depth",
-    description: "Wosool works with institutions and ecosystem players that bring practical expertise, meaningful access, and long-term credibility to the community.",
+    title: "Organisations that work with Wosool",
+    description: "Investors, universities, accelerators and service firms that give founders expertise, funding or space to work.",
     types: ["Ecosystem partner", "Knowledge partner", "Community partner", "Strategic support"],
     sectionEyebrow: "Our partners",
     sectionTitle: "Organizations behind the network's value",
@@ -709,13 +709,13 @@ export const sponsorsPageCopy: Record<Locale, {
 }> = {
   ar: {
     badge: "الرعاية",
-    title: "وصول نوعي إلى مؤسسي الخليج",
-    description: "تمنحك رعاية وصول حضورًا أمام مجتمع منتقى من المؤسسين الجادين، ضمن بيئة عالية الثقة ومرتبطة بقرارات حقيقية.",
+    title: "ادعم لقاءات المؤسسين في الرياض",
+    description: "الرعاة يموّلون عشاءات المؤسسين وجلسات التعلّم وزيارات الشركات، ويلتقون بالمؤسسين وجهاً لوجه بدلاً من إعلان على شاشة.",
     stats: [
-      { value: "250+", label: "مؤسس موثّق" },
-      { value: "500M+ ر.س", label: "إجمالي تمويل جمعه الأعضاء" },
-      { value: "15", label: "سوقًا ودولة ممثلة" },
-      { value: "85%", label: "صنّاع قرار" },
+      { value: "السعودية أولاً", label: "مؤسسون في الرياض والخليج" },
+      { value: "عضوية بمراجعة", label: "يوافق الفريق على كل عضو" },
+      { value: "عربي وإنجليزي", label: "فعاليات ومحتوى باللغتين" },
+      { value: "مسرّعة EO الرياض", label: "بوابة رسمية لدفعة المسرّعة" },
     ],
     currentEyebrow: "الرعاة الحاليون",
     currentTitle: "جهات نفخر بدعمها للمجتمع",
@@ -767,13 +767,13 @@ export const sponsorsPageCopy: Record<Locale, {
   },
   en: {
     badge: "Sponsorship",
-    title: "High-trust access to Gulf founders",
-    description: "Sponsoring Wosool gives your organization meaningful visibility with a curated group of serious founders inside a trusted, decision-relevant environment.",
+    title: "Back founder gatherings in Riyadh",
+    description: "Sponsors fund founder dinners, learning sessions and company visits, and meet the founders in person rather than as a logo on a screen.",
     stats: [
-      { value: "250+", label: "Verified founders" },
-      { value: "SAR 500M+", label: "Capital raised by members" },
-      { value: "15", label: "Markets represented" },
-      { value: "85%", label: "Decision makers" },
+      { value: "Saudi first", label: "Founders in Riyadh and across the GCC" },
+      { value: "Reviewed membership", label: "The team approves every member" },
+      { value: "Arabic & English", label: "Events and content in both languages" },
+      { value: "EO Riyadh Accelerator", label: "Official gateway for the accelerator cohort" },
     ],
     currentEyebrow: "Current sponsors",
     currentTitle: "Organizations we're proud to feature",

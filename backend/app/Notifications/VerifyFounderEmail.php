@@ -19,10 +19,16 @@ class VerifyFounderEmail extends Notification
             ['id' => $notifiable->getKey(), 'hash' => sha1($notifiable->getEmailForVerification())], absolute: false);
         $url = rtrim(config('app.frontend_url'), '/').'/verify-email?'.http_build_query(['path' => $path, 'return_to' => 'dashboard']);
 
-        return (new MailMessage)->subject('Wosool | Verify your founder account / تأكيد حساب المؤسس')
-            ->line('Confirm your email to verify your Wosool founder account. أكّد بريدك الإلكتروني لتوثيق حساب المؤسس في وصول.')
-            ->action('Verify email / تأكيد البريد', $url)
-            ->line('Sign in to the account that received this email before opening the link. سجّل الدخول إلى الحساب صاحب البريد قبل فتح الرابط.')
-            ->line('This link expires in 60 minutes. تنتهي صلاحية الرابط خلال ٦٠ دقيقة.');
+        return \App\Mail\BilingualEmail::message('توثيق حساب المؤسس', 'Verify your founder account', \App\Mail\BilingualEmail::data(
+            ar: ['title' => 'وثّق حساب المؤسس', 'lines' => [
+                'أكّد بريدك الإلكتروني لنضع علامة التوثيق على ملفك في وصول.',
+                'سجّل الدخول بالحساب نفسه الذي وصله هذا البريد قبل فتح الرابط. الرابط صالح لمدة 60 دقيقة.',
+            ]],
+            en: ['title' => 'Verify your founder account', 'lines' => [
+                'Confirm your email so we can mark your Wosool profile as verified.',
+                'Sign in with the account that received this email before opening the link. The link is valid for 60 minutes.',
+            ]],
+            action: \App\Mail\BilingualEmail::action($url, 'توثيق البريد', 'Verify email'),
+        ));
     }
 }

@@ -147,7 +147,7 @@ class AcceleratorGatewayTest extends TestCase
         Mail::fake();
         (new SendApplicationUpdate($e->id))->handle();
         (new SendApplicationUpdate($e->id))->handle();
-        Mail::assertSent(\App\Mail\ApplicationUpdateMail::class, 1);
+        Mail::assertSent(\App\Mail\WosoolMail::class, 1);
         $this->assertNotNull($e->fresh()->notification_sent_at);
         $internal = ApplicationEvent::create(['application_id' => $a->id, 'to_status' => 'submitted', 'is_internal' => true]);
         (new SendApplicationUpdate($internal->id))->handle();

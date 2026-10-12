@@ -1,6 +1,7 @@
 "use client"
 
 import { useMemo, useState } from "react"
+import { PageHero } from "@/components/sections/PageHero"
 import Link from "next/link"
 import { PublicLayout } from "@/components/layout/PublicLayout"
 import { FounderCalendar } from "@/components/events/FounderCalendar"
@@ -36,47 +37,11 @@ export default function EventsPage() {
 
   return (
     <PublicLayout>
-      {/* ── Hero ── */}
-      <section className="relative overflow-hidden bg-slate-50/60 px-4 pt-28 pb-20">
-        <div className="pointer-events-none absolute inset-0" aria-hidden="true">
-          <div className="absolute top-0 right-1/4 w-[500px] h-[500px] rounded-full bg-[#3B52D4]/5 blur-[140px]" />
-          <div className="absolute bottom-0 left-1/4 w-[400px] h-[400px] rounded-full bg-indigo-400/4 blur-[140px]" />
-          <div className="absolute inset-0 bg-[radial-gradient(rgba(59,82,212,0.06)_1px,transparent_1px)] bg-[size:28px_28px] [mask-image:radial-gradient(ellipse_80%_80%_at_50%_40%,black_10%,transparent_70%)]" />
-        </div>
-
-        <div className="relative mx-auto max-w-3xl text-center">
-          <div className="inline-flex items-center gap-2 bg-[#EEF1FF] border border-[#E4E7F0] px-3 py-1 rounded-full text-xs font-bold text-[#3B52D4] mb-6">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#3B52D4] animate-pulse" />
-            {locale === "ar" ? "تقويم وصول وEO Riyadh Accelerator" : "Wosool & EO Riyadh Accelerator calendar"}
-          </div>
-
-          <h1 className="text-4xl lg:text-5xl font-black text-slate-900 tracking-tight leading-[1.15] mb-5">
-            {locale === "ar" ? "كل أسبوع، خطوة نحو النمو" : "A new opportunity to grow. Every week."}
-          </h1>
-
-          <p className="text-base lg:text-lg text-slate-600 max-w-2xl mx-auto leading-relaxed">
-            {locale === "ar" ? "تعلّم مع المؤسسين، واستكشف الأعمال من الداخل، وشارك الخبرة مع دفعتك. خطّط رحلتك عبر لقاءات وصول وبرامج EOA والإجازات السعودية." : "Learn with founders, explore businesses from the inside, and exchange experience with your cohort. Plan around Wosool events, EOA programs, and Saudi holidays."}
-          </p>
-
-          {/* Stats chips */}
-          <div className="flex flex-wrap items-center justify-center gap-3 mt-8">
-            {[
-              { label: locale === "ar" ? "٤ مسارات للنمو" : "4 growth tracks" },
-              { label: locale === "ar" ? "٢٦ أسبوعًا للتعلّم" : "26 active learning weeks" },
-              { label: locale === "ar" ? "التفاصيل تُعلن لاحقًا" : "Further details TBD" },
-            ].map(({ label }) => (
-              <div
-                key={label}
-                className="inline-flex items-center gap-1.5 bg-white border border-slate-200/80 px-3 py-1.5 rounded-full text-xs font-bold text-slate-600"
-                style={{ boxShadow: "0 2px 8px -2px rgba(59,82,212,0.06)" }}
-              >
-                <span className="w-1.5 h-1.5 rounded-full bg-[#3B52D4]" />
-                {label}
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+      <PageHero
+        eyebrow={locale === "ar" ? "تقويم وصول ومسرّعة EO الرياض" : "Wosool and EO Riyadh Accelerator calendar"}
+        title={locale === "ar" ? "لقاءات أسبوعية مع مؤسسين يبنون شركات حقيقية" : "Weekly sessions with founders who are building real companies"}
+        description={locale === "ar" ? "جلسات تعلّم وزيارات للشركات ونقاشات بين الأقران، مرتبة حسب الأسبوع مع مراعاة الإجازات الرسمية في السعودية." : "Learning sessions, company visits and peer discussions, laid out week by week around Saudi public holidays."}
+      />
 
       <FounderCalendar events={calendarEvents} now={now} loading={upcoming.loading || past.loading} error={upcoming.error || past.error} retry={() => { upcoming.retry(); past.retry() }} />
 

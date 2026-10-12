@@ -2,7 +2,7 @@
 
 namespace Tests\Feature;
 
-use App\Mail\IntroductionConnectedMail;
+use App\Mail\WosoolMail;
 use App\Models\ChatRoom;
 use App\Models\FounderProfile;
 use App\Models\IntroductionLedger;
@@ -84,9 +84,9 @@ class IntroductionWorkflowTest extends TestCase
         $this->assertTrue(ChatRoom::where('related_type', 'introduction')->where('related_id', $id)->exists());
 
         // Each side gets a separate email so neither address is exposed to the other.
-        Mail::assertSent(IntroductionConnectedMail::class, 2);
-        Mail::assertSent(IntroductionConnectedMail::class, fn ($mail) => $mail->hasTo($alice->email) && ! $mail->hasTo($bob->email));
-        Mail::assertSent(IntroductionConnectedMail::class, fn ($mail) => $mail->hasTo($bob->email) && ! $mail->hasTo($alice->email));
+        Mail::assertSent(WosoolMail::class, 2);
+        Mail::assertSent(WosoolMail::class, fn ($mail) => $mail->hasTo($alice->email) && ! $mail->hasTo($bob->email));
+        Mail::assertSent(WosoolMail::class, fn ($mail) => $mail->hasTo($bob->email) && ! $mail->hasTo($alice->email));
 
         $this->actingAs($bob)->patchJson("/api/v1/member/introductions/{$id}/approve")->assertUnprocessable();
     }

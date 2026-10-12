@@ -37,7 +37,7 @@ GATEWAY_PRIVACY_READY=false
 GATEWAY_EMAIL_UPDATES=false
 ```
 
-Keep the existing `APP_KEY`. Configure database credentials, a real mail transport and sender, and appropriate queue/cache drivers. The default `MAIL_MAILER=log` is local-only and cannot deliver account recovery messages. Public websocket keys may be exposed to the frontend; secrets may not.
+Keep the existing `APP_KEY`. Set `MAIL_TEAM_ADDRESS` to the inbox that should receive contact, sponsorship and membership-application alerts (defaults to `MAIL_FROM_ADDRESS`). Configure database credentials, a real mail transport and sender, and appropriate queue/cache drivers. The default `MAIL_MAILER=log` is local-only and cannot deliver account recovery messages. Public websocket keys may be exposed to the frontend; secrets may not.
 
 ### Hostinger Web App (wosool.org)
 
