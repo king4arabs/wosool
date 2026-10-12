@@ -37,7 +37,7 @@ export function Eligibility() {
         </p>
         <div className="eoa-card eoa-fee">
           <span>{ar ? 'تكلفة رحلة EOA السنوية' : 'ANNUAL EOA JOURNEY COST'}</span>
-          <strong>US$4,000</strong>
+          <strong>{program ? `US$${program.facts.annual_journey_usd.toLocaleString('en-US')}` : '—'}</strong>
           {!program && <Notice error={failed}>{failed ? (ar ? 'تعذر تحميل الرسوم المعتمدة.' : 'Published fees could not load.') : (ar ? 'جارٍ تحميل الرسوم…' : 'Loading fees…')}{failed && <button type="button" className="eoa-text-link" onClick={retry}>{ar ? 'إعادة المحاولة' : 'Try again'}</button>}</Notice>}
           <p>
             {ar

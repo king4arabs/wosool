@@ -54,6 +54,8 @@ class PerkController extends Controller
             abort_unless(DB::table('ecosystem_organizations')->where('id', $data['organization_id'])
                 ->where('relationship_status', 'confirmed')->where('verification_status', 'verified')
                 ->whereNotNull('relationship_evidence')->whereNotNull('logo_path')->exists(), 422, 'A confirmed organization with an approved logo is required.');
+        } else {
+            $data['approval_reference'] = null;
         }
 
         return DB::transaction(function () use ($request, $program, $perk, $data) {
