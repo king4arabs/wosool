@@ -32,6 +32,11 @@ export default function AdminFoundersPage() {
   const refresh = () => setRevision(n => n + 1)
 
   useEffect(() => {
+    const initialSearch = new URLSearchParams(window.location.search).get('search')
+    if (initialSearch) setSearch(initialSearch)
+  }, [])
+
+  useEffect(() => {
     if (selected) document.getElementById('invitation-title')?.scrollIntoView({ block: 'start', behavior: 'smooth' })
   }, [selected])
 

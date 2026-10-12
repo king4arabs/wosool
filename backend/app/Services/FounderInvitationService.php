@@ -14,10 +14,15 @@ use Illuminate\Validation\ValidationException;
 
 class FounderInvitationService
 {
+    public function mailerConfigured(): bool
+    {
+        return $this->realMailer((string) config('mail.default'));
+    }
+
     public function send(FounderProfile $profile, User $admin, string $email, string $evidence): FounderInvitation
     {
         // A log/array fallback must never be reported to the operator as an invitation sent.
-        abort_unless($this->realMailer((string) config('mail.default')), 503, 'Configure a delivering mail transport before sending invitations.');
+        abort_unless($this->mailerConfigured(), 503, 'Configure a delivering mail transport before sending invitations.');
         $token = Str::random(64);
         $code = (string) random_int(100000, 999999);
         $invitation = DB::transaction(function () use ($profile, $admin, $email, $evidence, $token, $code) {
