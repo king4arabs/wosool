@@ -38,7 +38,11 @@ class PublicController extends Controller
             'applications_open' => ProgramService::collectionReady() && $program->is_open && $settings['approval_status'] === 'approved' && ! $program->application_deadline?->isPast(),
             'local_status' => $settings['approval_status'],
             'starts_at' => $settings['approval_status'] === 'approved' ? $program->starts_at?->toIso8601String() : null,
-            'local_fees' => $settings['local_fee_status'] === 'approved' ? array_intersect_key($settings, array_flip(['local_fee_usd', 'sponsor_contribution_usd', 'participant_contribution_usd'])) : null,
+            'local_fees' => $settings['local_fee_status'] === 'approved'
+                && abs((float) $settings['local_fee_usd'] - 2250) < 0.01
+                && abs((float) $settings['sponsor_contribution_usd'] - 2000) < 0.01
+                && abs((float) $settings['participant_contribution_usd'] - 2000) < 0.01
+                ? array_intersect_key($settings, array_flip(['local_fee_usd', 'sponsor_contribution_usd', 'participant_contribution_usd'])) : null,
             'contact_email' => $settings['contact_email'], 'public_message_en' => $settings['public_message_en'] ?? null, 'public_message_ar' => $settings['public_message_ar'] ?? null,
             'participation_terms_en' => $settings['approval_status'] === 'approved' ? $settings['participation_terms_en'] : null, 'participation_terms_ar' => $settings['approval_status'] === 'approved' ? $settings['participation_terms_ar'] : null,
             'tracks' => DB::table('eoa_tracks')->where('program_id', $program->id)->where('is_active', true)->orderBy('id')->get(['id', 'name_ar', 'name_en', 'description_ar', 'description_en']),

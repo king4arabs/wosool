@@ -61,7 +61,9 @@ class OperationsController extends Controller
         abort_if($data['is_open'] && ($data['approval_status'] !== 'approved' || $data['privacy_status'] !== 'approved' || ! ProgramService::mailConfigured()), 422, 'Opening intake requires program and data-notice approval and a configured email transport.');
         if ($data['local_fee_status'] === 'approved') {
             abort_unless(isset($data['local_fee_usd'],$data['sponsor_contribution_usd'],$data['participant_contribution_usd']), 422, 'Complete all local fee fields.');
-            abort_unless(abs(1750 + (float) $data['local_fee_usd'] - (float) $data['sponsor_contribution_usd'] - (float) $data['participant_contribution_usd']) < 0.01, 422, 'Participant and sponsor contributions must cover global and local fees.');
+            abort_unless(abs((float) $data['local_fee_usd'] - (ProgramService::ANNUAL_JOURNEY_USD - ProgramService::facts()['annual_global_fee_usd'])) < 0.01
+                && abs((float) $data['sponsor_contribution_usd'] - ProgramService::SPONSOR_SHARE_USD) < 0.01
+                && abs((float) $data['participant_contribution_usd'] - ProgramService::SPONSOR_SHARE_USD) < 0.01, 422, 'Approved annual journey must total US$4,000, split equally between participant and confirmed sponsor.');
         }
         $p = ProgramService::program();
         DB::transaction(function () use ($request, $p, $data) {

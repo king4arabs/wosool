@@ -36,13 +36,13 @@ export function Eligibility() {
             : 'For an owner or founder of an operating business with gross annual revenue of US$250,000–999,999.'}
         </p>
         <div className="eoa-card eoa-fee">
-          <span>{ar ? 'الرسوم العالمية السنوية' : 'ANNUAL GLOBAL FEE'}</span>
-          <strong>{program ? `US$${program.facts.annual_global_fee_usd.toLocaleString(ar ? 'ar-SA' : 'en-US')}` : '—'}</strong>
+          <span>{ar ? 'تكلفة رحلة EOA السنوية' : 'ANNUAL EOA JOURNEY COST'}</span>
+          <strong>US$4,000</strong>
           {!program && <Notice error={failed}>{failed ? (ar ? 'تعذر تحميل الرسوم المعتمدة.' : 'Published fees could not load.') : (ar ? 'جارٍ تحميل الرسوم…' : 'Loading fees…')}{failed && <button type="button" className="eoa-text-link" onClick={retry}>{ar ? 'إعادة المحاولة' : 'Try again'}</button>}</Notice>}
           <p>
             {ar
-              ? 'تضاف رسوم الفرع المحلي. تُحسب الرسوم وفق توقيت الالتحاق والسنة المالية يوليو–يونيو.'
-              : 'Local chapter fees are additional. Proration depends on joining date in the July–June financial year.'}
+              ? 'يشمل الإجمالي الرسوم العالمية والرسوم المحلية. من المخطط أن يغطي الرعاة نصف التكلفة (2,000 دولار)، لكن الرعاية والجهات الراعية قيد التحديد والاعتماد؛ لا تُضمن مساهمة المشارك المخفضة حتى تأكيد الرعاية.'
+              : 'The total includes global and local fees. Sponsors are intended to cover half (US$2,000), but sponsorship and sponsors are still to be confirmed; a reduced participant share is not guaranteed until confirmed.'}
           </p>
           {program?.local_fees ? (
             <dl>
@@ -62,8 +62,8 @@ export function Eligibility() {
           ) : (
             program && <p className="eoa-muted">
               {ar
-                ? 'الرسوم المحلية ومساهمات الرعاية والمشارك قيد الاعتماد.'
-                : 'Local fees and sponsor/participant contributions await approval.'}
+                ? 'تفاصيل السداد ومساهمة الراعي قيد الاعتماد. تواصل مع الفريق قبل أي التزام مالي.'
+                : 'Payment details and sponsor contributions await approval. Contact the team before making any financial commitment.'}
             </p>
           )}
         </div>

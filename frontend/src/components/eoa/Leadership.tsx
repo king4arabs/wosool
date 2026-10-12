@@ -36,7 +36,7 @@ export function EoaLeadership({ program, ar }: { program: EoaProgram | null; ar:
         <span className={styles.eyebrow}>{ar ? 'قائد مسرّعة EO الرياض' : 'LEADING EO RIYADH ACCELERATOR'}</span>
         <h2 id="program-lead-title">{ar ? 'محمد السلمي' : 'Mohammed Alsolami'}</h2>
         <p className={styles.chair}>{ar ? 'رئيس العضوية والمسرّعة — EO الرياض' : 'EO Riyadh Membership & Accelerator Chair'}</p>
-        <p>{ar ? 'يقود محمد السلمي مسرّعة EO الرياض، جامعاً خبرة المؤسسين ومجتمع الفرع والشريك المشغّل لدعم نمو الشركات. تمتد رحلة الدفعة ستة أشهر من التوجيه والتدريب والأنشطة، وتتواصل المتابعة من خلال برنامج الخريجين.' : 'Mohammed Alsolami leads EO Riyadh Accelerator, bringing together founder experience, the chapter community and the operating partner to support business growth. Each cohort follows six months of coaching, training and activities, with continued support through the alumni program.'}</p>
+        <p>{ar ? 'يقود محمد السلمي مسرّعة EO الرياض لدعم نمو المؤسسين وشركاتهم.' : 'Mohammed Alsolami leads EO Riyadh Accelerator, supporting founders and their companies as they grow.'}</p>
         <div className={styles.actions}>
           <Link href="/eoa/contact">{ar ? 'تواصل مع فريق البرنامج' : 'Connect with the program team'} <ArrowUpRight size={18} aria-hidden="true" /></Link>
           <a href="https://www.linkedin.com/in/mohammedalsolami" target="_blank" rel="noopener noreferrer">LinkedIn <ArrowUpRight size={18} aria-hidden="true" /></a>

@@ -36,6 +36,8 @@ export type EoaProgram = {
   starts_at: string | null
   facts: {
     annual_global_fee_usd: number
+    annual_journey_usd: number
+    proposed_sponsor_share_usd: number
     revenue_min_usd: number
     revenue_max_usd: number
     verified_at: string
