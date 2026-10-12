@@ -30,7 +30,7 @@ export const metadata: Metadata = {
   icons: {
     icon: [{ url: "/wosool-w-favicon.svg", type: "image/svg+xml" }],
     shortcut: "/wosool-w-favicon.svg",
-    apple: "/wosool-network-logo.png",
+    apple: "/apple-icon.png",
   },
   openGraph: {
     title: "Wosool — Founders to Founders | وصول — من مؤسس إلى مؤسس",
