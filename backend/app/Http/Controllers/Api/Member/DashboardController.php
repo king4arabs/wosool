@@ -118,7 +118,7 @@ class DashboardController extends Controller
 
         // Treat explicit member/admin access as approved, then fall back to applications table.
         $hasMemberRole = method_exists($user, 'hasRole') && ($user->hasRole('member') || $user->hasRole('admin'));
-        $hasMemberToken = in_array((string) ($user->role_token ?? ''), ['founder', 'admin'], true);
+        $hasMemberToken = in_array((string) $user->roleToken(), ['founder', 'admin'], true);
         $hasFounderProfile = $profile !== null;
         $accountApproved = $hasMemberRole || $hasMemberToken || $hasFounderProfile;
 

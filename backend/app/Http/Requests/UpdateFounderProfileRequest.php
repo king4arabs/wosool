@@ -33,7 +33,7 @@ class UpdateFounderProfileRequest extends FormRequest
             'skills.*' => 'string|max:100',
             'is_public' => 'nullable|boolean',
             'avatar_url' => ['nullable', 'string', 'max:500', function ($attribute, $value, $fail) {
-                $local = preg_match('~^/startup-directory/[a-zA-Z0-9_.-]+$~', $value);
+                $local = preg_match('~^/startup-directory/[a-zA-Z0-9_.-]+$~', $value) || preg_match('~^/storage/founders/avatars/[a-f0-9-]+\.(?:jpg|png|webp)$~', $value);
                 $web = filter_var($value, FILTER_VALIDATE_URL) && in_array(parse_url($value, PHP_URL_SCHEME), ['http', 'https'], true);
                 if (! $local && ! $web) { $fail('Use an HTTP(S) image URL or an existing directory portrait.'); }
             }],

@@ -22,7 +22,7 @@ class HelpRequestController extends Controller
     {
         $query = HelpRequest::query()->with(['room.participants.user:id,name,email', 'suggestedHelpers.helper:id,name,email']);
 
-        if ($request->user()->role_token !== 'admin') {
+        if (! $request->user()->isPlatformAdmin()) {
             $query->where('requester_user_id', $request->user()->id);
         }
 
@@ -38,7 +38,7 @@ class HelpRequestController extends Controller
     public function show(Request $request, HelpRequest $helpRequest): JsonResponse
     {
         $isOwner = $helpRequest->requester_user_id === $request->user()->id;
-        $isAdmin = $request->user()->role_token === 'admin';
+        $isAdmin = $request->user()->isPlatformAdmin();
         abort_unless($isOwner || $isAdmin, 403);
 
         return response()->json([
@@ -112,7 +112,7 @@ class HelpRequestController extends Controller
     public function update(Request $request, HelpRequest $helpRequest): JsonResponse
     {
         $isOwner = $helpRequest->requester_user_id === $request->user()->id;
-        $isAdmin = $request->user()->role_token === 'admin';
+        $isAdmin = $request->user()->isPlatformAdmin();
         abort_unless($isOwner || $isAdmin, 403);
 
         $data = $request->validate([
@@ -130,12 +130,13 @@ class HelpRequestController extends Controller
     public function suggestHelpers(Request $request, HelpRequest $helpRequest): JsonResponse
     {
         $isOwner = $helpRequest->requester_user_id === $request->user()->id;
-        $isAdmin = $request->user()->role_token === 'admin';
+        $isAdmin = $request->user()->isPlatformAdmin();
         abort_unless($isOwner || $isAdmin, 403);
 
         $helpers = User::query()
             ->where('id', '<>', $helpRequest->requester_user_id)
-            ->whereIn('role_token', ['founder', 'mentor', 'admin'])
+            ->whereHas('roles', fn ($roles) => $roles->whereIn('name', ['member', 'admin']))
+            ->whereNotNull('email_verified_at')
             ->limit(5)
             ->get();
 
@@ -159,7 +160,7 @@ class HelpRequestController extends Controller
     public function inviteHelper(Request $request, HelpRequest $helpRequest): JsonResponse
     {
         $isOwner = $helpRequest->requester_user_id === $request->user()->id;
-        $isAdmin = $request->user()->role_token === 'admin';
+        $isAdmin = $request->user()->isPlatformAdmin();
         abort_unless($isOwner || $isAdmin, 403);
 
         $data = $request->validate(['helper_user_id' => ['required', 'integer', 'exists:users,id']]);
@@ -181,7 +182,7 @@ class HelpRequestController extends Controller
     public function resolve(Request $request, HelpRequest $helpRequest): JsonResponse
     {
         $isOwner = $helpRequest->requester_user_id === $request->user()->id;
-        $isAdmin = $request->user()->role_token === 'admin';
+        $isAdmin = $request->user()->isPlatformAdmin();
         abort_unless($isOwner || $isAdmin, 403);
 
         $helpRequest->update(['status' => 'resolved']);

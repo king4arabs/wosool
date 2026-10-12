@@ -48,7 +48,7 @@ class ProgramManagementController extends Controller
 
     public function applications(Request $request, Program $program): JsonResponse
     {
-        $query = $program->applications()->with(['user:id,name,email', 'cohort:id,name'])->latest();
+        $query = $program->applications()->with(['user:id,name,email', 'user.roles', 'cohort:id,name'])->latest();
 
         if ($status = $request->input('status')) {
             $query->where('status', (string) $status);
@@ -63,7 +63,7 @@ class ProgramManagementController extends Controller
                 'email' => $application->user?->email,
                 'company_stage' => $application->company_stage,
                 'sector' => $application->sector,
-                'role' => $application->user?->role_token,
+                'role' => $application->user?->roleToken() ?? $application->user?->getRoleNames()->first(),
                 'scorecard_fit' => null,
                 'status' => $application->status,
                 'submitted_at' => $application->created_at?->toIso8601String(),

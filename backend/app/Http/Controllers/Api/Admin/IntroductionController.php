@@ -14,7 +14,7 @@ class IntroductionController extends Controller
     public function index(Request $request): JsonResponse
     {
         $query = IntroductionLedger::query()
-            ->with(['sourceFounder', 'targetFounder']);
+            ->with(['sourceFounder.user:id,name', 'targetFounder.user:id,name']);
 
         if ($request->filled('status')) {
             $query->where('routing_status', $request->string('status')->toString());

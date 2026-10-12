@@ -64,6 +64,8 @@ The Wosool API is exposed through the Laravel backend and organized around **pub
 | GET | `/api/v1/member/profile` | Current user's founder profile (legacy alias) |
 | GET | `/api/v1/member/founder-profile` | Show authenticated user's founder profile |
 | PUT | `/api/v1/member/founder-profile` | Create or update authenticated user's founder profile |
+| POST | `/api/v1/member/founder-profile/avatar` | Upload or replace the profile photo (`avatar`: JPEG/PNG/WebP, ≤2 MB, ≥160×160) |
+| DELETE | `/api/v1/member/founder-profile/avatar` | Remove the uploaded profile photo |
 | GET | `/api/v1/member/companies` | List companies linked to the authenticated user's founder profile |
 | POST | `/api/v1/member/companies` | Create a company and link it to the founder profile |
 | PUT | `/api/v1/member/companies/{company}` | Update a company owned by the founder profile |
@@ -73,6 +75,10 @@ The Wosool API is exposed through the Laravel backend and organized around **pub
 | DELETE | `/api/v1/member/events/{slug}/rsvp` | Cancel an event RSVP |
 | GET | `/api/v1/member/program-applications` | List the authenticated user's program applications |
 | POST | `/api/v1/member/programs/{slug}/apply` | Apply to an open program |
+| GET | `/api/v1/member/introductions` | Inbound and outbound introduction requests with monthly credit usage |
+| POST | `/api/v1/member/introductions` | Request an introduction (`target_founder_id`, `payload_context_brief` ≥20 chars; max 3 pending, no duplicate pending pair) |
+| PATCH | `/api/v1/member/introductions/{intro}/approve` | Target founder accepts; opens a private conversation and emails both sides separately |
+| PATCH | `/api/v1/member/introductions/{intro}/decline` | Target declines or requester withdraws a pending request |
 
 ---
 

@@ -34,8 +34,8 @@ class AppServiceProvider extends ServiceProvider
             ->subject('Wosool | Reset your password / إعادة تعيين كلمة المرور')
             ->greeting('Reset your password | إعادة تعيين كلمة المرور')
             ->line('We received a request to reset your Wosool password. تلقّينا طلباً لإعادة تعيين كلمة المرور لحسابك في وصول.')
-            ->action('Reset password | إعادة تعيين كلمة المرور', $resetUrl($user, $token))
             ->line('This link expires in '.config('auth.passwords.users.expire').' minutes. تنتهي صلاحية الرابط خلال '.config('auth.passwords.users.expire').' دقيقة.')
+            ->action('Reset password | إعادة تعيين كلمة المرور', $resetUrl($user, $token))
             ->line('If you did not request this change, you can ignore this email. إذا لم تطلب ذلك، تجاهل هذه الرسالة.'));
 
         // Enforce strict model behavior in non-production environments

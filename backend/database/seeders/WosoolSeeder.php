@@ -183,7 +183,7 @@ class WosoolSeeder extends Seeder
         foreach ($eventsData as $eventData) {
             Event::firstOrCreate(
                 ['slug' => $eventData['slug']],
-                array_merge($eventData, ['is_public' => true, 'requires_rsvp' => true, 'status' => 'upcoming', 'created_by' => $admin->id])
+                array_merge($eventData, ['is_public' => true, 'requires_rsvp' => true, 'status' => 'upcoming', 'status_flow' => 'published', 'created_by' => $admin->id])
             );
         }
 
@@ -197,6 +197,7 @@ class WosoolSeeder extends Seeder
         foreach ($programsData as $programData) {
             $deadline = $programData['application_deadline'] ?? null;
             unset($programData['application_deadline']);
+            $programData['status_flow'] = ($programData['is_open'] ?? false) ? 'applications_open' : 'published';
             $program = Program::firstOrCreate(['slug' => $programData['slug']], $programData);
             if ($deadline) {
                 $program->update(['application_deadline' => $deadline]);

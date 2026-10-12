@@ -21,7 +21,10 @@ class MatchController extends Controller
 
     public function index(Request $request): JsonResponse
     {
-        $profile = FounderProfile::where('user_id', $request->user()->id)->firstOrFail();
+        $profile = FounderProfile::where('user_id', $request->user()->id)->first();
+        if (! $profile) {
+            return response()->json(['data' => [], 'meta' => ['profile_required' => true, 'credits' => ['monthly_limit' => self::MONTHLY_INTRO_CREDIT_LIMIT, 'used' => 0, 'remaining' => self::MONTHLY_INTRO_CREDIT_LIMIT]]]);
+        }
 
         $matches = FounderMatch::query()
             ->with(['founderA.user', 'founderA.companies', 'founderB.user', 'founderB.companies'])

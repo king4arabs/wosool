@@ -18,7 +18,7 @@ class CompanyController extends Controller
     public function index(Request $request): JsonResponse
     {
         $query = CompanyProfile::query()
-            ->with(['founders.user:id,name'])
+            ->with(['founders.user:id,name,email'])
             ->withCount('founders');
 
         if ($search = trim((string) $request->input('search'))) {

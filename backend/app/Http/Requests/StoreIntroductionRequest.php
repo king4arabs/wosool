@@ -17,14 +17,16 @@ class StoreIntroductionRequest extends FormRequest
             return false;
         }
 
-        if ($user->role_token !== 'founder') {
+        // Approved community members (or admins) with an active founder profile may request
+        // introductions; each request is still reviewed by the target founder before connecting.
+        if (! $user->hasAnyRole(['member', 'admin']) && ! in_array($user->roleToken(), ['founder', 'admin'], true)) {
             return false;
         }
 
         $founderProfile = $user->founderProfile;
 
         return $founderProfile instanceof FounderProfile
-            && $founderProfile->vetted_status === true;
+            && ($founderProfile->communityActive() || $founderProfile->vetted_status === true);
     }
 
     public function rules(): array
@@ -68,7 +70,7 @@ class StoreIntroductionRequest extends FormRequest
             'message' => 'You are not authorized to create introduction routes.',
             'errors' => [
                 'authorization' => [
-                    'Only vetted founders can create introduction routes.',
+                    'Only approved members with an active founder profile can request introductions.',
                 ],
             ],
         ], 403));

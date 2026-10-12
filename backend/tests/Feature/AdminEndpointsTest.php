@@ -143,7 +143,7 @@ class AdminEndpointsTest extends TestCase
         $application = Application::firstOrFail();
         $application->update(['status' => 'approved']);
         config(['mail.default' => 'smtp']);
-        \Illuminate\Support\Facades\Mail::shouldReceive('raw')->once()->andThrow(new \RuntimeException('Transport unavailable'));
+        \Illuminate\Support\Facades\Mail::shouldReceive('to')->once()->andThrow(new \RuntimeException('Transport unavailable'));
 
         $this->actingAs($admin)->postJson("/api/v1/admin/applications/{$application->id}/invite")->assertStatus(503);
         $this->assertNull($application->fresh()->invite_sent_at);
@@ -163,7 +163,7 @@ class AdminEndpointsTest extends TestCase
             ->assertOk()->assertJsonPath('data.invite_token', null);
         \Illuminate\Support\Facades\Mail::assertSentCount(1);
         $this->assertNull($application->fresh()->user_id);
-        $this->actingAs($user)->postJson('/api/v1/auth/login', ['email' => 'existing@example.com', 'password' => 'password'])
+        $this->postJson('/api/v1/auth/login', ['email' => 'existing@example.com', 'password' => 'password'])
             ->assertOk();
         $this->assertSame($user->id, $application->fresh()->user_id);
     }

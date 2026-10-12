@@ -52,12 +52,15 @@ Hostinger's Node.js build sandbox cannot spawn Turbopack's PostCSS worker (build
    cd backend
    composer install --no-dev --prefer-dist --no-interaction --optimize-autoloader
    php artisan migrate --force
+   php artisan storage:link   # once per server; serves board, mentor and member portraits
    php artisan optimize:clear
    php artisan config:cache
    php artisan route:cache
    php artisan view:cache
    php artisan queue:restart
    ```
+
+   The `2026_10_12_000001` migration creates `introductions_ledger` when it is missing (fresh installs previously skipped it, which broke introductions, matches and the admin intro console); it is a no-op on databases that already have the table.
 
    The `2026_10_08_000001` migration adds `deleted_at` only when missing from an existing company table. Fresh installations already have it. For Laravel's optional welcome-page assets, run `npm ci && npm run build` in `backend/` during the build stage. Do not install development npm dependencies inside a running release.
 

@@ -38,7 +38,7 @@ class AuthController extends Controller
             'password' => 'required|string',
         ]);
 
-        if (! Auth::attempt($request->only('email', 'password'), $request->boolean('remember'))) {
+        if (! Auth::guard('web')->attempt($request->only('email', 'password'), $request->boolean('remember'))) {
             throw ValidationException::withMessages([
                 'email' => [__('messages.auth.invalid_credentials')],
             ]);
@@ -48,7 +48,7 @@ class AuthController extends Controller
             $request->session()->regenerate();
         }
 
-        $user = Auth::user();
+        $user = Auth::guard('web')->user();
         if ($user->hasVerifiedEmail()) {
             Application::query()->whereRaw('LOWER(email) = ?', [strtolower($user->email)])
                 ->where('status', 'approved')->whereNull('user_id')

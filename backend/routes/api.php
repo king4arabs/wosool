@@ -108,6 +108,8 @@ Route::prefix('v1')->group(function () {
         // Founder profile (member)
         Route::get('/founder-profile', [MemberFounderProfileController::class, 'show']);
         Route::put('/founder-profile', [MemberFounderProfileController::class, 'update']);
+        Route::post('/founder-profile/avatar', [MemberFounderProfileController::class, 'uploadAvatar'])->middleware('throttle:10,1');
+        Route::delete('/founder-profile/avatar', [MemberFounderProfileController::class, 'deleteAvatar']);
 
         // Companies (member)
         Route::get('/companies', [MemberCompanyController::class, 'index']);
