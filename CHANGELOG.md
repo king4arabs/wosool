@@ -12,7 +12,7 @@ This project follows **Semantic Versioning** and a Keep a Changelog-inspired for
 - **Shared FAQ component:** the membership questions on `/apply` and the EO Riyadh Accelerator FAQ (still admin-editable) now use the same accessible accordion, with search on the accelerator list.
 - **Ask the community (fix):** questions shared with the community were only ever visible to the person who asked. Members now get a *Questions from founders* feed (shared and matched questions, urgent first, search and topic filter, no email addresses exposed) and an *I can help* action that joins the question's private conversation with an optional first message and emails the founder who asked. Helper suggestions now rank members whose profiles mention the topic.
 - **Ask the community (UI):** bilingual page in the member menu with *Questions from founders* / *My questions* tabs, a guided ask form (clear visibility choices, urgency, inline validation), readable status labels, change-who-sees-it, mark resolved and reopen.
-- **Tests:** backend 219 passing (7 new), frontend 84 passing (3 new). Long question lists page with “Show more”.
+- **Tests:** backend 219 passing (7 new), frontend 85 passing (3 new). Long question lists page with “Show more”.
 
 ## Admin language parity and detail-page headings — 2026-10-12
 
