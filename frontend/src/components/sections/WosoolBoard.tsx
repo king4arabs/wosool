@@ -6,7 +6,7 @@ import styles from "./wosool-board.module.css"
 
 const members = [
   { name: "Thamer Aldhafiri", nameAr: "ثامر الظفيري", company: "Cipher", description: "Cipher Company for Cybersecurity", website: "https://cipher.com.sa", linkedIn: "https://www.linkedin.com/in/thameraldhafiri", photo: null },
-  { name: "Mohammed Alsolami", nameAr: "محمد السلمي", company: "RABEH", description: "Rabeh FinTech", website: null, linkedIn: null, photo: "/eoa/board/mohammed-alsolami-96.webp" },
+  { name: "Mohammed Alsolami", nameAr: "محمد السلمي", company: "RABEH", description: "Rabeh FinTech", website: "https://rabeh.sa", linkedIn: null, photo: "/eoa/board/mohammed-alsolami-96.webp" },
   { name: "Anas Alsahali", nameAr: "أنس السهلي", company: "SEQUENCIVE", description: "SEQUENCIVE", website: "https://sequencive.com", linkedIn: null, photo: null },
   { name: "Faisal Almukles", nameAr: "فيصل المخلص", company: "Torood", description: "Torod Logistics", website: "https://torod.co", linkedIn: null, photo: null },
   { name: "Rayan Alzamil", nameAr: "ريان الزامل", company: "Salesfine", description: "SalesFine FinTech", website: "https://salesfine.co", linkedIn: null, photo: null },
