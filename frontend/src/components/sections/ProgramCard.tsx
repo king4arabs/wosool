@@ -2,14 +2,14 @@
 
 import Link from "next/link"
 import type { Program } from "@/types"
-import { Clock, CheckCircle2, ArrowLeft, ArrowRight, Rocket, Handshake, TrendingUp, Lightbulb, ListChecks } from "lucide-react"
+import { Clock, CheckCircle2, ArrowLeft, ArrowRight, Rocket, Handshake, TrendingUp, HandCoins, ListChecks } from "lucide-react"
 import { useLocale } from "@/lib/locale"
 
 const categoryMap = {
   Onboarding:     { icon: Rocket, color: "var(--brand-blue)", bg: "var(--surface-blue)" },
   "Peer Learning":{ icon: Handshake, color: "var(--brand-dark-green)", bg: "var(--success-bg)" },
   Growth:         { icon: TrendingUp, color: "var(--brand-dark-orange)", bg: "var(--brand-light-orange)" },
-  Fundraising:    { icon: Lightbulb, color: "var(--brand-dark-pink)", bg: "var(--error-bg)" },
+  Fundraising:    { icon: HandCoins, color: "var(--brand-dark-pink)", bg: "var(--error-bg)" },
 }
 
 interface ProgramCardProps {
