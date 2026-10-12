@@ -133,6 +133,8 @@ Browser API requests use the same-origin proxy. Sessions use CSRF protection. Se
 - Required PHP extensions; CI enables `mbstring`, `dom`, `curl`, `pdo_sqlite`, and `sqlite3`.
 - Git and a Bash-compatible shell for the combined development launcher.
 
+Local setup uses SQLite by default. If using PostgreSQL with a database that lacks the slug-based founder and company schema from the 2024 migrations, the legacy core migration requires `pgvector` and permission to create its `vector` extension (or an administrator must create it first).
+
 ### Install and run locally
 
 ```bash
@@ -253,6 +255,10 @@ Provision privileged users through the audited procedure in [EOA operations](doc
 - Meeting minimum EOA eligibility does not guarantee admission, program completion does not guarantee growth, and graduation does not grant automatic EO membership.
 
 [EOA research](docs/EOA-RESEARCH.md) records official program facts separately from proposed Riyadh delivery decisions. Local dates, fees, sponsorship allocations, partner claims, privacy notices, and commercial terms remain draft until formally approved.
+
+### Founder directory and activation
+
+Sourced founder/company cards connect to public profiles and an administrator-managed email activation flow. Activated founders can manage their information and use private community conversations. See [founder activation and release notes](docs/FOUNDER-ACTIVATION.md) for import, recipient verification, mail setup and deployment checks.
 
 ## Brand system
 
