@@ -55,6 +55,8 @@ export type ProfileCardData = {
   reviewedAt?: string
   reviewDue?: boolean
   signals?: { label: string; tone?: "neutral" | "accent" | "success" }[]
+  foundedYear?: number
+  traction?: { text: string; sourceUrl?: string }
   actions?: ReactNode
 }
 
@@ -230,7 +232,23 @@ export function ProfileCard({ data, variant = "company" }: { data: ProfileCardDa
           {data.businessType && (
             <div><span>{ar ? "نوع النشاط" : "Business type"}</span><strong>{data.businessType}</strong></div>
           )}
+          {!!data.foundedYear && (
+            <div><span>{ar ? "سنة التأسيس" : "Founded"}</span><strong>{data.foundedYear}</strong></div>
+          )}
         </div>
+
+        {data.traction && (
+          <div className={styles.traction}>
+            <span>{ar ? "مؤشرات التشغيل والإيرادات" : "Operations & traction"}</span>
+            <p>{data.traction.text}</p>
+            {publicWebsite(data.traction.sourceUrl) && (
+              <a href={publicWebsite(data.traction.sourceUrl)} target="_blank" rel="noopener noreferrer">
+                {ar ? "المصدر" : "Source"}: <span dir="ltr">{hostLabel(data.traction.sourceUrl)}</span>
+                <ArrowUpRight size={13} aria-hidden="true" />
+              </a>
+            )}
+          </div>
+        )}
 
         {!!data.signals?.length && (
           <div

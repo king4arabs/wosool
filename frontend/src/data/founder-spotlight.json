@@ -25,7 +25,12 @@
     "company_key": "unifonic",
     "source_urls": [
       "https://www.unifonic.com/en/about"
-    ]
+    ],
+    "region": "saudi",
+    "founded_year": null,
+    "traction_en": null,
+    "traction_ar": null,
+    "traction_source_url": null
   },
   {
     "slug": "swarm-robotics",
@@ -54,7 +59,12 @@
     "source_urls": [
       "https://swarmrobotics.io/about",
       "https://hub.misk.org.sa/programs/entrepreneurship/misk-launchpad/"
-    ]
+    ],
+    "region": "saudi",
+    "founded_year": null,
+    "traction_en": null,
+    "traction_ar": null,
+    "traction_source_url": null
   },
   {
     "slug": "jahez",
@@ -83,7 +93,12 @@
     "source_urls": [
       "https://jahezgroup.com/corporate-governance/",
       "https://impact46.sa/jahez-successfully-closed-its-series-a-funding-round-led-by-impact46-vc-in-saudi-arabia/"
-    ]
+    ],
+    "region": "saudi",
+    "founded_year": null,
+    "traction_en": null,
+    "traction_ar": null,
+    "traction_source_url": null
   },
   {
     "slug": "foodics",
@@ -116,7 +131,12 @@
     "company_key": "foodics",
     "source_urls": [
       "https://www.foodics.com/press/foodics-completes-full-acquisition-of-norma-a-greek-data-intelligence-company-expanding-its-dedicated-ai-division/"
-    ]
+    ],
+    "region": "saudi",
+    "founded_year": null,
+    "traction_en": null,
+    "traction_ar": null,
+    "traction_source_url": null
   },
   {
     "slug": "salla",
@@ -145,7 +165,12 @@
     "source_urls": [
       "https://salla.com/en/tools/ai-info",
       "https://salla.com/en-ae/blog/salla-leap-2026"
-    ]
+    ],
+    "region": "saudi",
+    "founded_year": null,
+    "traction_en": null,
+    "traction_ar": null,
+    "traction_source_url": null
   },
   {
     "slug": "tamara",
@@ -173,7 +198,12 @@
     "company_key": "tamara",
     "source_urls": [
       "https://tamara.co/en-kw/blog-post/tamara-secures-up-to-2-4-billion-dollar-facility"
-    ]
+    ],
+    "region": "saudi",
+    "founded_year": null,
+    "traction_en": null,
+    "traction_ar": null,
+    "traction_source_url": null
   },
   {
     "slug": "rasan",
@@ -197,40 +227,18 @@
     "logo_url": "/startup-directory/rasan-logo.png",
     "founder_socials": [],
     "source_url": "https://rasan.sa/en/about",
-    "reviewed_at": "2026-10-11",
+    "reviewed_at": "2026-10-12",
     "company_key": "rasan",
     "source_urls": [
       "https://rasan.sa/en/about",
-      "https://www.rasan.sa/pages/ir/pdf/Rasan-AR-2024-EN.pdf"
-    ]
-  },
-  {
-    "slug": "kitopi",
-    "founder_name_en": "Mohamad Ballout",
-    "founder_name_ar": "محمد بلّوط",
-    "role_en": "Co-founder & CEO",
-    "role_ar": "شريك مؤسس ورئيس تنفيذي",
-    "founder_brief_en": "Co-founded the Dubai-born company, combining food operations and technology.",
-    "founder_brief_ar": "شارك في تأسيس الشركة التي انطلقت من دبي وجمعت تشغيل الأعمال الغذائية والتقنية.",
-    "company_name_en": "Kitopi",
-    "company_name_ar": "كيتوبي",
-    "company_brief_en": "A hospitality company developing and operating food brands across restaurants and delivery locations.",
-    "company_brief_ar": "شركة ضيافة تطوّر وتشغّل علامات غذائية عبر المطاعم ومواقع تجهيز طلبات التوصيل.",
-    "country_en": "United Arab Emirates",
-    "country_ar": "الإمارات",
-    "country_code": "AE",
-    "sector_en": "Food & hospitality",
-    "sector_ar": "الأغذية والضيافة",
-    "website": "https://www.kitopi.com/",
-    "portrait_url": "/startup-directory/kitopi-portrait.jpg",
-    "logo_url": "/startup-directory/kitopi-logo.png",
-    "founder_socials": [],
-    "source_url": "https://www.kitopi.com/leadership",
-    "reviewed_at": "2026-10-11",
-    "company_key": "kitopi",
-    "source_urls": [
-      "https://www.kitopi.com/leadership"
-    ]
+      "https://www.rasan.sa/pages/ir/pdf/Rasan-AR-2024-EN.pdf",
+      "https://www.menabytes.com/rasan-files-ipo/"
+    ],
+    "region": "saudi",
+    "founded_year": 2016,
+    "traction_en": "2023 revenue SAR 256M (+58%) and net profit SAR 46M; 7.5M+ customers served (IPO prospectus, 2024).",
+    "traction_ar": "إيرادات 2023 بلغت 256 مليون ريال (+58%) وصافي ربح 46 مليون ريال؛ خدمت أكثر من 7.5 مليون عميل (نشرة الاكتتاب، 2024).",
+    "traction_source_url": "https://www.menabytes.com/rasan-files-ipo/"
   },
   {
     "slug": "hassan-hamdan",
@@ -258,7 +266,12 @@
     "company_key": "unifonic",
     "source_urls": [
       "https://www.unifonic.com/en/about"
-    ]
+    ],
+    "region": "saudi",
+    "founded_year": null,
+    "traction_en": null,
+    "traction_ar": null,
+    "traction_source_url": null
   },
   {
     "slug": "salman-butt",
@@ -286,7 +299,12 @@
     "company_key": "salla",
     "source_urls": [
       "https://salla.com/en/tools/ai-info"
-    ]
+    ],
+    "region": "saudi",
+    "founded_year": null,
+    "traction_en": null,
+    "traction_ar": null,
+    "traction_source_url": null
   },
   {
     "slug": "mosab-alothmani",
@@ -314,7 +332,12 @@
     "company_key": "foodics",
     "source_urls": [
       "https://raed.vc/portfolio/foodics/"
-    ]
+    ],
+    "region": "saudi",
+    "founded_year": null,
+    "traction_en": null,
+    "traction_ar": null,
+    "traction_source_url": null
   },
   {
     "slug": "turki-bin-zarah",
@@ -342,7 +365,12 @@
     "company_key": "tamara",
     "source_urls": [
       "https://www.tamara.co/en-KW/press-release-1"
-    ]
+    ],
+    "region": "saudi",
+    "founded_year": null,
+    "traction_en": null,
+    "traction_ar": null,
+    "traction_source_url": null
   },
   {
     "slug": "abdulmohsen-al-babtain",
@@ -370,7 +398,343 @@
     "company_key": "tamara",
     "source_urls": [
       "https://www.tamara.co/en-KW/press-release-1"
-    ]
+    ],
+    "region": "saudi",
+    "founded_year": null,
+    "traction_en": null,
+    "traction_ar": null,
+    "traction_source_url": null
+  },
+  {
+    "slug": "hosam-arab",
+    "founder_name_en": "Hosam Arab",
+    "founder_name_ar": "حسام عرب",
+    "role_en": "Co-founder & CEO",
+    "role_ar": "شريك مؤسس ورئيس تنفيذي",
+    "founder_brief_en": "Co-founded Tabby in 2019 and leads its growth from Riyadh into a regulated financial-services platform.",
+    "founder_brief_ar": "شارك في تأسيس تابي عام 2019 ويقود نموها من الرياض نحو منصة خدمات مالية مرخّصة.",
+    "company_name_en": "Tabby",
+    "company_name_ar": "تابي",
+    "company_brief_en": "Shariah-compliant buy-now-pay-later and consumer finance app used by shoppers and merchants across the Gulf.",
+    "company_brief_ar": "تطبيق للدفع الآجل والتمويل الاستهلاكي المتوافق مع الشريعة يخدم المتسوقين والتجار في الخليج.",
+    "country_en": "Saudi Arabia",
+    "country_ar": "السعودية",
+    "country_code": "SA",
+    "sector_en": "Fintech",
+    "sector_ar": "التقنية المالية",
+    "website": "https://tabby.ai/",
+    "portrait_url": null,
+    "logo_url": null,
+    "founder_socials": [],
+    "source_url": "https://www.fintechfutures.com/venture-capital-funding/tabby-raises-233m-at-6-5bn-valuation",
+    "reviewed_at": "2026-10-12",
+    "company_key": "tabby",
+    "source_urls": [
+      "https://www.fintechfutures.com/venture-capital-funding/tabby-raises-233m-at-6-5bn-valuation"
+    ],
+    "region": "saudi",
+    "founded_year": 2019,
+    "traction_en": "25M+ users, 65,000 brands and $18B+ processed annually; valued at $6.5B (Sep 2026).",
+    "traction_ar": "أكثر من 25 مليون مستخدم و65 ألف علامة تجارية وأكثر من 18 مليار دولار سنوياً؛ بتقييم 6.5 مليار دولار (سبتمبر 2026).",
+    "traction_source_url": "https://www.fintechfutures.com/venture-capital-funding/tabby-raises-233m-at-6-5bn-valuation"
+  },
+  {
+    "slug": "ahmed-alenazi",
+    "founder_name_en": "Ahmed Alenazi",
+    "founder_name_ar": "أحمد العنزي",
+    "role_en": "Founder",
+    "role_ar": "المؤسس",
+    "founder_brief_en": "Former STC Pay CEO for three years who founded Barq to build a Saudi payments and wallet platform.",
+    "founder_brief_ar": "رئيس تنفيذي سابق لـ STC Pay لثلاث سنوات، أسّس برق لبناء منصة سعودية للمدفوعات والمحافظ الرقمية.",
+    "company_name_en": "Barq",
+    "company_name_ar": "برق",
+    "company_brief_en": "Digital wallet and payments app offering accounts, cards, payments and international transfers.",
+    "company_brief_ar": "تطبيق محفظة ومدفوعات رقمية يقدم الحسابات والبطاقات والمدفوعات والتحويلات الدولية.",
+    "country_en": "Saudi Arabia",
+    "country_ar": "السعودية",
+    "country_code": "SA",
+    "sector_en": "Fintech",
+    "sector_ar": "التقنية المالية",
+    "website": "https://barq.com/",
+    "portrait_url": null,
+    "logo_url": null,
+    "founder_socials": [],
+    "source_url": "https://www.fintechfutures.com/venture-capital-funding/barq-saudi-arabia-329.5m-series-a-unicorn-valuation",
+    "reviewed_at": "2026-10-12",
+    "company_key": "barq",
+    "source_urls": [
+      "https://www.fintechfutures.com/venture-capital-funding/barq-saudi-arabia-329.5m-series-a-unicorn-valuation"
+    ],
+    "region": "saudi",
+    "founded_year": null,
+    "traction_en": "15M+ users and SAR 440B+ processed since launch; $1.85B valuation after a $329.5M Series A (Sep 2026).",
+    "traction_ar": "أكثر من 15 مليون مستخدم وأكثر من 440 مليار ريال معالجة منذ الإطلاق؛ تقييم 1.85 مليار دولار بعد جولة A بقيمة 329.5 مليون دولار (سبتمبر 2026).",
+    "traction_source_url": "https://www.fintechfutures.com/venture-capital-funding/barq-saudi-arabia-329.5m-series-a-unicorn-valuation"
+  },
+  {
+    "slug": "osama-alraee",
+    "founder_name_en": "Osama AlRaee",
+    "founder_name_ar": "أسامة الراعي",
+    "role_en": "Co-founder & CEO",
+    "role_ar": "شريك مؤسس ورئيس تنفيذي",
+    "founder_brief_en": "Co-founded Lendo in 2019 with Mohammed Jawabri to connect Saudi SMEs with working-capital investors.",
+    "founder_brief_ar": "شارك مع محمد جوابري في تأسيس ليندو عام 2019 لربط المنشآت الصغيرة والمتوسطة السعودية بمستثمري رأس المال العامل.",
+    "company_name_en": "Lendo",
+    "company_name_ar": "ليندو",
+    "company_brief_en": "SAMA-supervised, Shariah-compliant debt-crowdfunding marketplace financing SME working capital.",
+    "company_brief_ar": "منصة تمويل جماعي بالدين متوافقة مع الشريعة تحت إشراف ساما لتمويل رأس المال العامل للمنشآت.",
+    "country_en": "Saudi Arabia",
+    "country_ar": "السعودية",
+    "country_code": "SA",
+    "sector_en": "Fintech · SME lending",
+    "sector_ar": "التقنية المالية · تمويل المنشآت",
+    "website": "https://lendo.sa/",
+    "portrait_url": null,
+    "logo_url": null,
+    "founder_socials": [],
+    "source_url": "https://www.wamda.com/2026/09/lendo-quantic-launch-200-million-sme-financing-programme-saudi-arabia",
+    "reviewed_at": "2026-10-12",
+    "company_key": "lendo",
+    "source_urls": [
+      "https://www.wamda.com/2026/09/lendo-quantic-launch-200-million-sme-financing-programme-saudi-arabia"
+    ],
+    "region": "saudi",
+    "founded_year": 2019,
+    "traction_en": "Secured up to SAR 750M ($200M) from Quantic for SME working-capital financing (Sep 2026).",
+    "traction_ar": "حصلت على ما يصل إلى 750 مليون ريال (200 مليون دولار) من كوانتيك لتمويل رأس المال العامل للمنشآت (سبتمبر 2026).",
+    "traction_source_url": "https://www.wamda.com/2026/09/lendo-quantic-launch-200-million-sme-financing-programme-saudi-arabia"
+  },
+  {
+    "slug": "ibrahim-balilah",
+    "founder_name_en": "Ibrahim Balilah",
+    "founder_name_ar": "إبراهيم بليلة",
+    "role_en": "Co-founder & CEO",
+    "role_ar": "شريك مؤسس ورئيس تنفيذي",
+    "founder_brief_en": "Co-founded Rize in 2021 with Mohammed Alfraihi to make annual rent payable monthly through Ejar.",
+    "founder_brief_ar": "شارك مع محمد الفريحي في تأسيس رايز عام 2021 لتحويل الإيجار السنوي إلى دفعات شهرية عبر منصة إيجار.",
+    "company_name_en": "Rize",
+    "company_name_ar": "رايز",
+    "company_brief_en": "REGA-licensed rental platform: tenants pay monthly while landlords receive the annual rent upfront.",
+    "company_brief_ar": "منصة إيجار مرخّصة من الهيئة العامة للعقار: المستأجر يدفع شهرياً والمالك يستلم الإيجار السنوي مقدماً.",
+    "country_en": "Saudi Arabia",
+    "country_ar": "السعودية",
+    "country_code": "SA",
+    "sector_en": "Proptech",
+    "sector_ar": "التقنية العقارية",
+    "website": "https://rize.sa/",
+    "portrait_url": null,
+    "logo_url": null,
+    "founder_socials": [],
+    "source_url": "https://www.wamda.com/ar/2026/09/saudi-proptech-rize-secures-50-million-facility-jadwa-investment",
+    "reviewed_at": "2026-10-12",
+    "company_key": "rize",
+    "source_urls": [
+      "https://www.wamda.com/ar/2026/09/saudi-proptech-rize-secures-50-million-facility-jadwa-investment"
+    ],
+    "region": "saudi",
+    "founded_year": 2021,
+    "traction_en": "200,000+ tenants, 3,000+ landlords and 1,200 verified brokers; $50M Jadwa Murabaha facility (Sep 2026).",
+    "traction_ar": "أكثر من 200 ألف مستأجر و3 آلاف مالك و1,200 وسيط موثّق؛ تسهيل مرابحة بقيمة 50 مليون دولار من جدوى (سبتمبر 2026).",
+    "traction_source_url": "https://www.wamda.com/ar/2026/09/saudi-proptech-rize-secures-50-million-facility-jadwa-investment"
+  },
+  {
+    "slug": "hisham-al-falih",
+    "founder_name_en": "Hisham Al-Falih",
+    "founder_name_ar": "هشام الفالح",
+    "role_en": "Co-founder & CEO",
+    "role_ar": "شريك مؤسس ورئيس تنفيذي",
+    "founder_brief_en": "Co-founded Lean Technologies in 2019 with Ashu Gupta and Aditya Sarkar to build regional open-banking infrastructure.",
+    "founder_brief_ar": "شارك مع أشو غوبتا وأديتيا ساركار في تأسيس لين تكنولوجيز عام 2019 لبناء بنية المصرفية المفتوحة في المنطقة.",
+    "company_name_en": "Lean Technologies",
+    "company_name_ar": "لين تكنولوجيز",
+    "company_brief_en": "Open-banking APIs for account data and payments, used by lenders, BNPL providers and fintechs.",
+    "company_brief_ar": "واجهات برمجية للمصرفية المفتوحة لبيانات الحسابات والمدفوعات يستخدمها المقرضون ومزودو الدفع الآجل والشركات المالية.",
+    "country_en": "Saudi Arabia",
+    "country_ar": "السعودية",
+    "country_code": "SA",
+    "sector_en": "Fintech · Open banking",
+    "sector_ar": "التقنية المالية · المصرفية المفتوحة",
+    "website": "https://www.leantech.me/",
+    "portrait_url": null,
+    "logo_url": null,
+    "founder_socials": [],
+    "source_url": "https://www.wamda.com/2026/03/saudi-arabia-issues-open-banking-license-lean-technologies",
+    "reviewed_at": "2026-10-12",
+    "company_key": "lean-technologies",
+    "source_urls": [
+      "https://www.wamda.com/2026/03/saudi-arabia-issues-open-banking-license-lean-technologies"
+    ],
+    "region": "saudi",
+    "founded_year": 2019,
+    "traction_en": "First SAMA-licensed open-banking provider (Mar 2026); 1M+ bank accounts connected and 1B+ transactions analysed.",
+    "traction_ar": "أول مزود مصرفية مفتوحة مرخّص من ساما (مارس 2026)؛ ربط أكثر من مليون حساب بنكي وتحليل أكثر من مليار معاملة.",
+    "traction_source_url": "https://www.wamda.com/2026/03/saudi-arabia-issues-open-banking-license-lean-technologies"
+  },
+  {
+    "slug": "abdullah-asiri",
+    "founder_name_en": "Abdullah Asiri",
+    "founder_name_ar": "عبدالله عسيري",
+    "role_en": "Founder & CEO",
+    "role_ar": "المؤسس والرئيس التنفيذي",
+    "founder_brief_en": "Founded Lucidya in 2016 to build Arabic-first AI for customer experience.",
+    "founder_brief_ar": "أسّس لوسيديا عام 2016 لبناء ذكاء اصطناعي عربي أولاً لتجربة العملاء.",
+    "company_name_en": "Lucidya",
+    "company_name_ar": "لوسيديا",
+    "company_brief_en": "Arabic-first AI platform for customer-experience analytics, automation and AI agents.",
+    "company_brief_ar": "منصة ذكاء اصطناعي عربية أولاً لتحليلات تجربة العملاء والأتمتة والوكلاء الأذكياء.",
+    "country_en": "Saudi Arabia",
+    "country_ar": "السعودية",
+    "country_code": "SA",
+    "sector_en": "AI · Customer experience",
+    "sector_ar": "الذكاء الاصطناعي · تجربة العملاء",
+    "website": "https://lucidya.com/",
+    "portrait_url": null,
+    "logo_url": null,
+    "founder_socials": [],
+    "source_url": "https://www.wamda.com/en/2025/07/lucidya-secures-30-million-series-b-setting-mena-ai-funding-record",
+    "reviewed_at": "2026-10-12",
+    "company_key": "lucidya",
+    "source_urls": [
+      "https://www.wamda.com/en/2025/07/lucidya-secures-30-million-series-b-setting-mena-ai-funding-record"
+    ],
+    "region": "saudi",
+    "founded_year": 2016,
+    "traction_en": "Operates in 11 MENA countries; clients serve 75M+ customers; $30M Series B led by Impact46 (Jul 2025).",
+    "traction_ar": "تعمل في 11 دولة بالمنطقة؛ يخدم عملاؤها أكثر من 75 مليون عميل؛ جولة B بقيمة 30 مليون دولار بقيادة إمباكت46 (يوليو 2025).",
+    "traction_source_url": "https://www.wamda.com/en/2025/07/lucidya-secures-30-million-series-b-setting-mena-ai-funding-record"
+  },
+  {
+    "slug": "mohammed-alhussein",
+    "founder_name_en": "Dr. Mohammed Alhussein",
+    "founder_name_ar": "د. محمد الحسين",
+    "role_en": "Founder & CEO",
+    "role_ar": "المؤسس والرئيس التنفيذي",
+    "founder_brief_en": "Founded Mozn to build enterprise AI products in Saudi Arabia, including financial-crime prevention.",
+    "founder_brief_ar": "أسّس مزن لبناء منتجات ذكاء اصطناعي للمؤسسات في السعودية، منها منع الجرائم المالية.",
+    "company_name_en": "Mozn",
+    "company_name_ar": "مزن",
+    "company_brief_en": "Enterprise AI company behind FOCAL for financial-crime prevention and OSOS for generative AI.",
+    "company_brief_ar": "شركة ذكاء اصطناعي للمؤسسات تطور منصة فوكال لمكافحة الجرائم المالية ومنصة أسس للذكاء التوليدي.",
+    "country_en": "Saudi Arabia",
+    "country_ar": "السعودية",
+    "country_code": "SA",
+    "sector_en": "AI · Regtech",
+    "sector_ar": "الذكاء الاصطناعي · التقنية التنظيمية",
+    "website": "https://mozn.sa/",
+    "portrait_url": null,
+    "logo_url": null,
+    "founder_socials": [],
+    "source_url": "https://www.zawya.com/en/business/banking-and-insurance/saudi-alrajhi-bank-partners-with-mozn-to-harness-ai-in-the-fight-against-fraud-ccwph0qp",
+    "reviewed_at": "2026-10-12",
+    "company_key": "mozn",
+    "source_urls": [
+      "https://www.zawya.com/en/business/banking-and-insurance/saudi-alrajhi-bank-partners-with-mozn-to-harness-ai-in-the-fight-against-fraud-ccwph0qp"
+    ],
+    "region": "saudi",
+    "founded_year": null,
+    "traction_en": "FOCAL deployed by AlRajhi Bank for fraud prevention.",
+    "traction_ar": "يعتمد مصرف الراجحي منصة فوكال لمكافحة الاحتيال.",
+    "traction_source_url": "https://www.zawya.com/en/business/banking-and-insurance/saudi-alrajhi-bank-partners-with-mozn-to-harness-ai-in-the-fight-against-fraud-ccwph0qp"
+  },
+  {
+    "slug": "ibrahim-al-jassim",
+    "founder_name_en": "Ibrahim Al-Jassim",
+    "founder_name_ar": "إبراهيم الجاسم",
+    "role_en": "Founder",
+    "role_ar": "المؤسس",
+    "founder_brief_en": "Serial founder who started HungerStation before launching Ninja in 2022.",
+    "founder_brief_ar": "رائد أعمال متسلسل أسّس هنقرستيشن قبل إطلاق نينجا عام 2022.",
+    "company_name_en": "Ninja",
+    "company_name_ar": "نينجا",
+    "company_brief_en": "Quick-commerce delivery of groceries, fresh food and household goods from its own dark stores.",
+    "company_brief_ar": "توصيل سريع للبقالة والأطعمة الطازجة والمستلزمات المنزلية من متاجرها المظلمة الخاصة.",
+    "country_en": "Saudi Arabia",
+    "country_ar": "السعودية",
+    "country_code": "SA",
+    "sector_en": "Quick commerce",
+    "sector_ar": "التجارة السريعة",
+    "website": "https://ananinja.com/",
+    "portrait_url": null,
+    "logo_url": null,
+    "founder_socials": [],
+    "source_url": "https://arabfounders.net/en/ninja-startup-story-ibrahim-al-jassim/",
+    "reviewed_at": "2026-10-12",
+    "company_key": "ninja",
+    "source_urls": [
+      "https://arabfounders.net/en/ninja-startup-story-ibrahim-al-jassim/"
+    ],
+    "region": "saudi",
+    "founded_year": 2022,
+    "traction_en": "100+ dark stores in 28+ cities across 4 GCC countries; ~$1.5B valuation after a ~$250M round (2025).",
+    "traction_ar": "أكثر من 100 متجر مظلم في أكثر من 28 مدينة بأربع دول خليجية؛ تقييم يقارب 1.5 مليار دولار بعد جولة نحو 250 مليون دولار (2025).",
+    "traction_source_url": "https://arabfounders.net/en/ninja-startup-story-ibrahim-al-jassim/"
+  },
+  {
+    "slug": "abdulaziz-al-loughani",
+    "founder_name_en": "Abdulaziz Al Loughani",
+    "founder_name_ar": "عبدالعزيز اللوغاني",
+    "role_en": "Co-founder & CEO",
+    "role_ar": "شريك مؤسس ورئيس تنفيذي",
+    "founder_brief_en": "Kuwaiti entrepreneur who co-founded Floward in 2017 and later moved its headquarters to Riyadh.",
+    "founder_brief_ar": "رائد أعمال كويتي شارك في تأسيس فلاورد عام 2017 ثم نقل مقرها الرئيسي إلى الرياض.",
+    "company_name_en": "Floward",
+    "company_name_ar": "فلاورد",
+    "company_brief_en": "Online flowers-and-gifts platform with its own fulfilment across the GCC, wider region and the UK.",
+    "company_brief_ar": "منصة إلكترونية للورود والهدايا بعمليات تجهيز خاصة في الخليج والمنطقة والمملكة المتحدة.",
+    "country_en": "Saudi Arabia",
+    "country_ar": "السعودية",
+    "country_code": "SA",
+    "sector_en": "E-commerce · Gifting",
+    "sector_ar": "التجارة الإلكترونية · الهدايا",
+    "website": "https://floward.com/",
+    "portrait_url": null,
+    "logo_url": null,
+    "founder_socials": [],
+    "source_url": "https://en.wikipedia.org/wiki/Floward",
+    "reviewed_at": "2026-10-12",
+    "company_key": "floward",
+    "source_urls": [
+      "https://en.wikipedia.org/wiki/Floward",
+      "https://www.forbesmiddleeast.com/lists/top-kuwaiti-entrepreneurs-2023/abdulaziz-b-al-loughani/"
+    ],
+    "region": "saudi",
+    "founded_year": 2017,
+    "traction_en": "Operates in 9 countries and about 40 cities; raised over $190M from investors including STV and Impact46.",
+    "traction_ar": "تعمل في 9 دول ونحو 40 مدينة؛ جمعت أكثر من 190 مليون دولار من مستثمرين بينهم STV وإمباكت46.",
+    "traction_source_url": "https://en.wikipedia.org/wiki/Floward"
+  },
+  {
+    "slug": "kitopi",
+    "founder_name_en": "Mohamad Ballout",
+    "founder_name_ar": "محمد بلّوط",
+    "role_en": "Co-founder & CEO",
+    "role_ar": "شريك مؤسس ورئيس تنفيذي",
+    "founder_brief_en": "Co-founded the Dubai-born company, combining food operations and technology.",
+    "founder_brief_ar": "شارك في تأسيس الشركة التي انطلقت من دبي وجمعت تشغيل الأعمال الغذائية والتقنية.",
+    "company_name_en": "Kitopi",
+    "company_name_ar": "كيتوبي",
+    "company_brief_en": "A hospitality company developing and operating food brands across restaurants and delivery locations.",
+    "company_brief_ar": "شركة ضيافة تطوّر وتشغّل علامات غذائية عبر المطاعم ومواقع تجهيز طلبات التوصيل.",
+    "country_en": "United Arab Emirates",
+    "country_ar": "الإمارات",
+    "country_code": "AE",
+    "sector_en": "Food & hospitality",
+    "sector_ar": "الأغذية والضيافة",
+    "website": "https://www.kitopi.com/",
+    "portrait_url": "/startup-directory/kitopi-portrait.jpg",
+    "logo_url": "/startup-directory/kitopi-logo.png",
+    "founder_socials": [],
+    "source_url": "https://www.kitopi.com/leadership",
+    "reviewed_at": "2026-10-11",
+    "company_key": "kitopi",
+    "source_urls": [
+      "https://www.kitopi.com/leadership"
+    ],
+    "region": "gcc",
+    "founded_year": null,
+    "traction_en": null,
+    "traction_ar": null,
+    "traction_source_url": null
   },
   {
     "slug": "sami-bejjani",
@@ -398,7 +762,12 @@
     "company_key": "kitopi",
     "source_urls": [
       "https://www.kitopi.com/leadership"
-    ]
+    ],
+    "region": "gcc",
+    "founded_year": null,
+    "traction_en": null,
+    "traction_ar": null,
+    "traction_source_url": null
   },
   {
     "slug": "saman-darkan",
@@ -426,6 +795,178 @@
     "company_key": "kitopi",
     "source_urls": [
       "https://www.kitopi.com/leadership"
-    ]
+    ],
+    "region": "gcc",
+    "founded_year": null,
+    "traction_en": null,
+    "traction_ar": null,
+    "traction_source_url": null
+  },
+  {
+    "slug": "mudassir-sheikha",
+    "founder_name_en": "Mudassir Sheikha",
+    "founder_name_ar": "مدثر شيخة",
+    "role_en": "Co-founder & CEO",
+    "role_ar": "شريك مؤسس ورئيس تنفيذي",
+    "founder_brief_en": "Co-founded Careem in Dubai in 2012 with Magnus Olsson; leads the Careem Everything App.",
+    "founder_brief_ar": "شارك مع ماغنوس أولسون في تأسيس كريم في دبي عام 2012، ويقود تطبيق كريم الشامل.",
+    "company_name_en": "Careem",
+    "company_name_ar": "كريم",
+    "company_brief_en": "Super app for rides, food, groceries, payments and services across the Middle East and beyond.",
+    "company_brief_ar": "تطبيق شامل للتنقل والطعام والبقالة والمدفوعات والخدمات في الشرق الأوسط وخارجه.",
+    "country_en": "United Arab Emirates",
+    "country_ar": "الإمارات",
+    "country_code": "AE",
+    "sector_en": "Mobility · Super app",
+    "sector_ar": "التنقل · التطبيقات الشاملة",
+    "website": "https://www.careem.com/",
+    "portrait_url": null,
+    "logo_url": null,
+    "founder_socials": [],
+    "source_url": "https://en.wikipedia.org/wiki/Careem",
+    "reviewed_at": "2026-10-12",
+    "company_key": "careem",
+    "source_urls": [
+      "https://en.wikipedia.org/wiki/Careem",
+      "https://www.entrepreneur.com/en-ae/leadership/fueling-up-careem-says-its-entrepreneurial-journey-is-back/455594"
+    ],
+    "region": "gcc",
+    "founded_year": 2012,
+    "traction_en": "Acquired by Uber for $3.1B (2020); e& holds a majority of the Super App; 70+ cities in 10 countries.",
+    "traction_ar": "استحوذت عليها أوبر بـ 3.1 مليار دولار (2020)؛ وتملك إي آند الحصة الأكبر في التطبيق الشامل؛ أكثر من 70 مدينة في 10 دول.",
+    "traction_source_url": "https://en.wikipedia.org/wiki/Careem"
+  },
+  {
+    "slug": "islam-shawky",
+    "founder_name_en": "Islam Shawky",
+    "founder_name_ar": "إسلام شوقي",
+    "role_en": "Co-founder & CEO",
+    "role_ar": "شريك مؤسس ورئيس تنفيذي",
+    "founder_brief_en": "Co-founded Paymob in 2015 with Alain El Hajj and Mostafa Menessy; now expanding across the GCC.",
+    "founder_brief_ar": "شارك مع آلان الحاج ومصطفى منيسي في تأسيس باي موب عام 2015، ويتوسع حالياً في الخليج.",
+    "company_name_en": "Paymob",
+    "company_name_ar": "باي موب",
+    "company_brief_en": "Payments platform giving merchants 60+ payment methods in Egypt, the UAE, Saudi Arabia and Oman.",
+    "company_brief_ar": "منصة مدفوعات توفر للتجار أكثر من 60 وسيلة دفع في مصر والإمارات والسعودية وعُمان.",
+    "country_en": "Egypt",
+    "country_ar": "مصر",
+    "country_code": "EG",
+    "sector_en": "Fintech · Payments",
+    "sector_ar": "التقنية المالية · المدفوعات",
+    "website": "https://paymob.com/",
+    "portrait_url": null,
+    "logo_url": null,
+    "founder_socials": [],
+    "source_url": "https://www.wamda.com/2026/09/paymob-raises-35-million-pre-series-c-led-mubadala-ebrd",
+    "reviewed_at": "2026-10-12",
+    "company_key": "paymob",
+    "source_urls": [
+      "https://www.wamda.com/2026/09/paymob-raises-35-million-pre-series-c-led-mubadala-ebrd"
+    ],
+    "region": "mena",
+    "founded_year": 2015,
+    "traction_en": "390,000+ merchants; revenue up 3x in 18 months with GCC revenue up 7x, now about half of total (Sep 2026).",
+    "traction_ar": "أكثر من 390 ألف تاجر؛ نمت الإيرادات 3 أضعاف خلال 18 شهراً ونمت إيرادات الخليج 7 أضعاف لتشكل نحو نصف الإجمالي (سبتمبر 2026).",
+    "traction_source_url": "https://www.wamda.com/2026/09/paymob-raises-35-million-pre-series-c-led-mubadala-ebrd"
+  },
+  {
+    "slug": "patrick-collison",
+    "founder_name_en": "Patrick Collison",
+    "founder_name_ar": "باتريك كوليسون",
+    "role_en": "Co-founder & CEO",
+    "role_ar": "شريك مؤسس ورئيس تنفيذي",
+    "founder_brief_en": "Irish entrepreneur who co-founded Stripe with his brother John to build the internet's payments infrastructure.",
+    "founder_brief_ar": "رائد أعمال إيرلندي شارك مع شقيقه جون في تأسيس سترايب لبناء البنية التحتية للمدفوعات عبر الإنترنت.",
+    "company_name_en": "Stripe",
+    "company_name_ar": "سترايب",
+    "company_brief_en": "Financial infrastructure for online payments, billing, treasury and revenue operations.",
+    "company_brief_ar": "بنية تحتية مالية للمدفوعات الإلكترونية والفوترة والخزينة وعمليات الإيرادات.",
+    "country_en": "United States",
+    "country_ar": "الولايات المتحدة",
+    "country_code": "US",
+    "sector_en": "Fintech · Payments",
+    "sector_ar": "التقنية المالية · المدفوعات",
+    "website": "https://stripe.com/",
+    "portrait_url": null,
+    "logo_url": null,
+    "founder_socials": [],
+    "source_url": "https://stripe.com/newsroom/news/stripe-2025-update",
+    "reviewed_at": "2026-10-12",
+    "company_key": "stripe",
+    "source_urls": [
+      "https://stripe.com/newsroom/news/stripe-2025-update"
+    ],
+    "region": "global",
+    "founded_year": 2010,
+    "traction_en": "$1.9 trillion total payment volume in 2025, up 34%; tender offer at a $159B valuation (Feb 2026).",
+    "traction_ar": "1.9 تريليون دولار إجمالي المدفوعات في 2025 بنمو 34%؛ عرض شراء أسهم بتقييم 159 مليار دولار (فبراير 2026).",
+    "traction_source_url": "https://stripe.com/newsroom/news/stripe-2025-update"
+  },
+  {
+    "slug": "melanie-perkins",
+    "founder_name_en": "Melanie Perkins",
+    "founder_name_ar": "ميلاني بيركنز",
+    "role_en": "Co-founder & CEO",
+    "role_ar": "شريكة مؤسسة ورئيسة تنفيذية",
+    "founder_brief_en": "Co-founded Canva in Perth in 2013 with Cliff Obrecht and Cameron Adams to make design accessible to everyone.",
+    "founder_brief_ar": "شاركت مع كليف أوبريخت وكاميرون آدامز في تأسيس كانفا في بيرث عام 2013 لجعل التصميم متاحاً للجميع.",
+    "company_name_en": "Canva",
+    "company_name_ar": "كانفا",
+    "company_brief_en": "Online visual-communication and design platform for individuals, teams and enterprises.",
+    "company_brief_ar": "منصة إلكترونية للتصميم والتواصل البصري للأفراد والفرق والمؤسسات.",
+    "country_en": "Australia",
+    "country_ar": "أستراليا",
+    "country_code": "AU",
+    "sector_en": "Design software",
+    "sector_ar": "برمجيات التصميم",
+    "website": "https://www.canva.com/",
+    "portrait_url": null,
+    "logo_url": null,
+    "founder_socials": [],
+    "source_url": "https://en.wikipedia.org/wiki/Canva",
+    "reviewed_at": "2026-10-12",
+    "company_key": "canva",
+    "source_urls": [
+      "https://en.wikipedia.org/wiki/Canva",
+      "https://techcrunch.com/2026/02/18/canva-gets-to-4b-in-revenue-as-llm-referral-traffic-rises/"
+    ],
+    "region": "global",
+    "founded_year": 2013,
+    "traction_en": "US$4B annual recurring revenue and 265M+ monthly active users at the end of 2025.",
+    "traction_ar": "إيرادات سنوية متكررة 4 مليارات دولار وأكثر من 265 مليون مستخدم نشط شهرياً بنهاية 2025.",
+    "traction_source_url": "https://techcrunch.com/2026/02/18/canva-gets-to-4b-in-revenue-as-llm-referral-traffic-rises/"
+  },
+  {
+    "slug": "david-velez",
+    "founder_name_en": "David Vélez",
+    "founder_name_ar": "ديفيد فيليز",
+    "role_en": "Founder & CEO",
+    "role_ar": "المؤسس والرئيس التنفيذي",
+    "founder_brief_en": "Colombian entrepreneur who founded Nubank in Brazil and leads it as global chief executive.",
+    "founder_brief_ar": "رائد أعمال كولومبي أسّس نوبنك في البرازيل ويقودها رئيساً تنفيذياً عالمياً.",
+    "company_name_en": "Nubank (Nu Holdings)",
+    "company_name_ar": "نوبنك (نو هولدينغز)",
+    "company_brief_en": "Digital bank offering cards, accounts, credit and investments in Brazil, Mexico and Colombia.",
+    "company_brief_ar": "بنك رقمي يقدم البطاقات والحسابات والائتمان والاستثمار في البرازيل والمكسيك وكولومبيا.",
+    "country_en": "Brazil",
+    "country_ar": "البرازيل",
+    "country_code": "BR",
+    "sector_en": "Fintech · Digital banking",
+    "sector_ar": "التقنية المالية · المصرفية الرقمية",
+    "website": "https://nubank.com.br/",
+    "portrait_url": null,
+    "logo_url": null,
+    "founder_socials": [],
+    "source_url": "https://international.nubank.com.br/company/nu-holdings-ltd-reports-second-quarter-2026-financial-results/",
+    "reviewed_at": "2026-10-12",
+    "company_key": "nubank",
+    "source_urls": [
+      "https://international.nubank.com.br/company/nu-holdings-ltd-reports-second-quarter-2026-financial-results/"
+    ],
+    "region": "global",
+    "founded_year": 2013,
+    "traction_en": "~139M customers; Q2 2026 revenue ~$5.9B (+39%) and net income ~$1.1B (+49%).",
+    "traction_ar": "نحو 139 مليون عميل؛ إيرادات الربع الثاني 2026 نحو 5.9 مليار دولار (+39%) وصافي ربح نحو 1.1 مليار دولار (+49%).",
+    "traction_source_url": "https://international.nubank.com.br/company/nu-holdings-ltd-reports-second-quarter-2026-financial-results/"
   }
 ]

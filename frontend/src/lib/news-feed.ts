@@ -51,3 +51,42 @@ export function safeNewsUrl(value?: string) {
     return url.protocol === "https:" && !url.username && !url.password ? url.href : undefined
   } catch { return undefined }
 }
+
+export const NEWS_REGIONS = ["saudi", "gcc", "mena", "global"] as const
+export type NewsRegion = (typeof NEWS_REGIONS)[number]
+
+const regionLabels: Record<NewsRegion, { ar: string; en: string }> = {
+  saudi: { ar: "السعودية", en: "Saudi Arabia" },
+  gcc: { ar: "الخليج", en: "GCC" },
+  mena: { ar: "الشرق الأوسط وشمال أفريقيا", en: "MENA" },
+  global: { ar: "عالمي", en: "Global" },
+}
+
+const categoryLabels: Record<string, { ar: string; en: string }> = {
+  funding: { ar: "تمويل", en: "Funding" },
+  ecosystem: { ar: "المنظومة والتقارير", en: "Ecosystem & reports" },
+  "m&a": { ar: "استحواذات", en: "M&A" },
+  product: { ar: "منتجات", en: "Product" },
+  regulation: { ar: "تنظيمات", en: "Regulation" },
+}
+
+export function newsRegion(item: Pick<NewsItem, "region">): NewsRegion {
+  return (NEWS_REGIONS as readonly string[]).includes(item.region ?? "") ? item.region as NewsRegion : "global"
+}
+
+export function regionLabel(region: NewsRegion, locale: string) {
+  return regionLabels[region][locale === "ar" ? "ar" : "en"]
+}
+
+export function categoryLabel(category: string, locale: string) {
+  const label = categoryLabels[category.toLocaleLowerCase()]
+  return label ? label[locale === "ar" ? "ar" : "en"] : category
+}
+
+/** Stories about the same company first, then the same region, newest first. */
+export function relatedNews(item: NewsItem, items: NewsItem[], limit = 3) {
+  const others = items.filter(other => other.slug !== item.slug)
+  const sameCompany = others.filter(other => companyMatches(other, item.companies ?? []))
+  const sameRegion = others.filter(other => !sameCompany.includes(other) && newsRegion(other) === newsRegion(item))
+  return [...sameCompany, ...sameRegion].slice(0, limit)
+}

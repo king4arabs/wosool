@@ -25,6 +25,12 @@ type NewsForm = {
   published_at: string
   is_featured: boolean
   is_public: boolean
+  source_url: string
+  source_name: string
+  image_credit: string
+  companies: string
+  region: "" | NonNullable<AdminNewsItem["region"]>
+  key_facts: string
 }
 
 const emptyForm: NewsForm = {
@@ -39,6 +45,12 @@ const emptyForm: NewsForm = {
   published_at: "",
   is_featured: false,
   is_public: true,
+  source_url: "",
+  source_name: "",
+  image_credit: "",
+  companies: "",
+  region: "",
+  key_facts: "",
 }
 
 function toForm(article?: AdminNewsItem | null): NewsForm {
@@ -55,6 +67,12 @@ function toForm(article?: AdminNewsItem | null): NewsForm {
     published_at: article.published_at ? article.published_at.slice(0, 16) : "",
     is_featured: article.is_featured,
     is_public: article.is_public,
+    source_url: article.source_url || "",
+    source_name: article.source_name || "",
+    image_credit: article.image_credit || "",
+    companies: toCsvLines(article.companies),
+    region: article.region || "",
+    key_facts: (article.key_facts ?? []).join("\n"),
   }
 }
 
@@ -92,6 +110,12 @@ export default function AdminNewsPage() {
       ...form,
       image_url: form.image_url || null,
       tags: fromCsvLines(form.tags),
+      companies: fromCsvLines(form.companies),
+      key_facts: form.key_facts.split("\n").map((line) => line.trim()).filter(Boolean),
+      region: form.region || null,
+      source_url: form.source_url || null,
+      source_name: form.source_name || null,
+      image_credit: form.image_credit || null,
       published_at: form.published_at || null,
     }
 
@@ -237,6 +261,20 @@ export default function AdminNewsPage() {
               </Select>
               <Input type="datetime-local" value={form.published_at} onChange={(event) => setForm((current) => ({ ...current, published_at: event.target.value }))} />
             </div>
+            <div className="grid gap-3 sm:grid-cols-2">
+              <Input type="url" placeholder="Source URL (https://…)" value={form.source_url} onChange={(event) => setForm((current) => ({ ...current, source_url: event.target.value }))} />
+              <Input placeholder="Source name (e.g. Wamda)" value={form.source_name} onChange={(event) => setForm((current) => ({ ...current, source_name: event.target.value }))} />
+              <Input placeholder="Image credit" value={form.image_credit} onChange={(event) => setForm((current) => ({ ...current, image_credit: event.target.value }))} />
+              <Select aria-label="Region" value={form.region} onChange={(event) => setForm((current) => ({ ...current, region: event.target.value as NewsForm["region"] }))}>
+                <option value="">Region — not set</option>
+                <option value="saudi">Saudi Arabia</option>
+                <option value="gcc">GCC</option>
+                <option value="mena">MENA</option>
+                <option value="global">Global</option>
+              </Select>
+            </div>
+            <Input placeholder="Companies in the story (comma separated)" value={form.companies} onChange={(event) => setForm((current) => ({ ...current, companies: event.target.value }))} />
+            <Textarea placeholder="Key facts — one per line (shown as “At a glance”)" value={form.key_facts} onChange={(event) => setForm((current) => ({ ...current, key_facts: event.target.value }))} />
             <Input placeholder="Tags (comma separated)" value={form.tags} onChange={(event) => setForm((current) => ({ ...current, tags: event.target.value }))} />
             <Textarea placeholder="Excerpt" value={form.excerpt} onChange={(event) => setForm((current) => ({ ...current, excerpt: event.target.value }))} />
             <Textarea placeholder="Content" value={form.content} onChange={(event) => setForm((current) => ({ ...current, content: event.target.value }))} />

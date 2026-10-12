@@ -35,7 +35,8 @@ export function getFounderSpotlights(locale: 'ar' | 'en'): FounderSpotlight[] {
       sector: profile[`sector_${locale}`],
       countryCode: profile.country_code,
       stage: '',
-      foundedYear: 0,
+      foundedYear: profile.founded_year ?? 0,
+      traction: profile[`traction_${locale}`] ? { text: profile[`traction_${locale}`] as string, sourceUrl: profile.traction_source_url ?? undefined } : undefined,
       teamSize: '',
       isHiring: false,
       isFundraising: false,
@@ -70,6 +71,8 @@ export function getSpotlightApiProfile(slug: string, locale: 'ar' | 'en') {
     companies: [{ id: 0, slug: profile.company_key, name: profile[`company_name_${locale}`],
       description: profile[`company_brief_${locale}`], logo_url: profile.logo_url, website: profile.website,
       sector: profile[`sector_${locale}`], location: profile[`country_${locale}`], country_code: profile.country_code,
+      founded_year: profile.founded_year ?? null,
+      traction: profile[`traction_${locale}`] ? { text: profile[`traction_${locale}`] as string, source_url: profile.traction_source_url } : null,
       is_hiring: false, is_fundraising: false, is_collaborating: false,
       pivot: { role: profile[`role_${locale}`], is_primary: true } }],
   }

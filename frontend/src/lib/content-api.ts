@@ -54,6 +54,7 @@ export interface ApiCompany {
   stage?: string | null
   location?: string | null
   founded_year?: number | null
+  traction?: { text: string; source_url?: string | null; reviewed_at?: string | null } | null
   team_size?: number | null
   is_hiring: boolean
   is_fundraising: boolean
@@ -180,6 +181,9 @@ export interface ApiNewsItem {
   source_url?: string | null
   source_name?: string | null
   companies?: string[] | null
+  region?: string | null
+  key_facts?: string[] | null
+  translations?: { ar?: { title?: string; excerpt?: string; body?: string[]; keyFacts?: string[] } } | null
   author_name?: string | null
   tags?: string[] | null
   published_at?: string | null
@@ -237,6 +241,7 @@ export function mapCompany(company: ApiCompany): Company {
     stage: company.stage ?? "",
     location: company.location ?? "",
     foundedYear: company.founded_year ?? 0,
+    traction: company.traction?.text ? { text: company.traction.text, sourceUrl: company.traction.source_url ?? undefined } : undefined,
     teamSize: company.team_size ? String(company.team_size) : "—",
     website: company.website ?? undefined,
     isHiring: company.is_hiring,
@@ -341,6 +346,11 @@ export function mapNewsItem(item: ApiNewsItem): NewsItem {
     sourceUrl: item.source_url ?? undefined,
     sourceName: item.source_name ?? undefined,
     companies: item.companies ?? [],
+    region: item.region ?? undefined,
+    keyFacts: item.key_facts?.length ? item.key_facts : undefined,
+    translations: item.translations?.ar?.title && item.translations.ar.excerpt && item.translations.ar.body?.length
+      ? { ar: { title: item.translations.ar.title, excerpt: item.translations.ar.excerpt, body: item.translations.ar.body, keyFacts: item.translations.ar.keyFacts } }
+      : undefined,
     publishedAt: item.published_at ?? "",
     author: item.author_name ?? "Wosool Team",
     tags: item.tags ?? [],

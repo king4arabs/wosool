@@ -186,6 +186,12 @@ export interface AdminNewsItem {
   tags?: string[] | null
   published_at?: string | null
   created_at?: string
+  source_url?: string | null
+  source_name?: string | null
+  image_credit?: string | null
+  companies?: string[] | null
+  region?: "saudi" | "gcc" | "mena" | "global" | null
+  key_facts?: string[] | null
 }
 
 export interface AdminCollectionResponse<T> {

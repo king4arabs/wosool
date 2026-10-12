@@ -38,6 +38,10 @@ class NewsController extends Controller
             });
         }
 
+        if ($request->filled('region')) {
+            $request->validate(['region' => ['in:saudi,gcc,mena,global']]);
+            $query->where('region', $request->input('region'));
+        }
         if ($request->filled('category')) {
             $query->where('category', $request->category);
         }
@@ -49,7 +53,8 @@ class NewsController extends Controller
             $query->where(function ($builder) use ($search) {
                 $builder
                     ->where('title', 'like', "%{$search}%")
-                    ->orWhere('excerpt', 'like', "%{$search}%");
+                    ->orWhere('excerpt', 'like', "%{$search}%")
+                    ->orWhere('source_name', 'like', "%{$search}%");
             });
         }
 

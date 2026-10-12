@@ -50,6 +50,8 @@ export interface Company {
   isFundraising: boolean
   isCollaborating: boolean
   founderIds: string[]
+  /** Sourced operating/revenue signal from the reviewed directory. */
+  traction?: { text: string; sourceUrl?: string }
   createdAt?: string
   updatedAt?: string
 }
@@ -126,8 +128,12 @@ export interface NewsItem {
   sourceUrl?: string
   sourceName?: string
   companies?: string[]
+  /** Market the story is about: saudi | gcc | mena | global. */
+  region?: string
+  /** Short, numeric takeaways shown as "At a glance". */
+  keyFacts?: string[]
   translations?: {
-    ar: { title: string; excerpt: string; body: string[] }
+    ar: { title: string; excerpt: string; body: string[]; keyFacts?: string[] }
   }
   publishedAt: string
   author: string

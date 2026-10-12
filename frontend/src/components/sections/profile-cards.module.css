@@ -112,3 +112,9 @@
 .founderCard .actions { gap:8px; }
 @media(max-width:660px) { .founderCard .body { padding:18px; gap:12px; }.founderCard .factGrid { grid-template-columns:repeat(2,minmax(0,1fr)); }.founderCard .portrait { width:66px; height:66px; flex-basis:66px; }.founderCard .person h3 { font-size:17px; }.founderCard .logoArea { padding-inline:18px; } }
 @media(max-width:360px) { .founderCard .body { padding:15px; }.founderCard .portrait { width:58px; height:58px; flex-basis:58px; }.founderCard .person { gap:10px; }.founderCard .person h3 { font-size:16px; }.founderCard .factGrid { gap:5px; }.founderCard .factGrid>div { padding:7px; } }
+
+/* Sourced operating/revenue signal: visible on the card face, always with its source. */
+.traction { border:1px solid color-mix(in srgb,var(--success-text) 22%,var(--border-soft)); border-radius:var(--radius-control); background:var(--success-bg); padding:10px 12px; }
+.traction>span { display:block; color:var(--success-text); font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:.02em; }
+.traction p { margin-top:4px; color:var(--text); font-size:12px; line-height:1.7; font-weight:700; overflow-wrap:anywhere; }
+.traction a { margin-top:4px; min-height:30px; display:inline-flex; align-items:center; gap:4px; color:var(--action-bg); font-size:11px; font-weight:800; }
