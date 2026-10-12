@@ -176,6 +176,10 @@ export interface ApiNewsItem {
   content?: string | null
   category: string
   image_url?: string | null
+  image_credit?: string | null
+  source_url?: string | null
+  source_name?: string | null
+  companies?: string[] | null
   author_name?: string | null
   tags?: string[] | null
   published_at?: string | null
@@ -333,7 +337,11 @@ export function mapNewsItem(item: ApiNewsItem): NewsItem {
     content: item.content ?? "",
     category: item.category,
     imageUrl: item.image_url ?? undefined,
-    publishedAt: item.published_at ?? new Date().toISOString(),
+    imageCredit: item.image_credit ?? undefined,
+    sourceUrl: item.source_url ?? undefined,
+    sourceName: item.source_name ?? undefined,
+    companies: item.companies ?? [],
+    publishedAt: item.published_at ?? "",
     author: item.author_name ?? "Wosool Team",
     tags: item.tags ?? [],
   }

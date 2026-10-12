@@ -1,0 +1,522 @@
+[
+  {
+    "id": "sourced-ai-startup-moats-2026",
+    "slug": "ai-startup-moats-2026",
+    "title": "Microsoft outlines where AI startups can build lasting advantages",
+    "excerpt": "A new founder briefing argues that customer workflows, proprietary learning and distribution matter more than easily replicated AI features.",
+    "content": "Microsoft for Startups published an October briefing on how AI companies can defend their businesses as models and coding tools become more accessible. It distinguishes the speed that helps founders enter a market from the advantages that can keep competitors from catching up.\n\nThe article identifies ownership of customer workflows, proprietary learning and trusted distribution as sources of durability. It presents these as lessons for founders rather than announcing an investment or a new funding round.",
+    "category": "Ecosystem",
+    "imageUrl": "https://www.microsoft.com/en-us/startups/blog/wp-content/uploads/2026/10/Slide10.jpg",
+    "imageCredit": "Microsoft for Startups",
+    "sourceUrl": "https://www.microsoft.com/en-us/startups/blog/building-a-moat-in-the-ai-age-patterns-from-top-startups-in-the-microsoft-for-startups-program/",
+    "sourceName": "Microsoft for Startups",
+    "companies": ["Microsoft"],
+    "publishedAt": "2026-10-08T16:00:00Z",
+    "author": "Wosool news desk",
+    "tags": ["AI", "founder strategy", "enterprise"],
+    "translations": {
+      "ar": {
+        "title": "مايكروسوفت تستعرض مصادر الميزة المستدامة للشركات الناشئة في الذكاء الاصطناعي",
+        "excerpt": "قراءة جديدة للمؤسسين تركز على سير عمل العملاء والتعلم الخاص وقنوات الوصول إلى السوق بدلاً من الميزات سهلة التقليد.",
+        "body": [
+          "نشرت مايكروسوفت للشركات الناشئة في أكتوبر قراءة حول حماية الميزة التنافسية مع اتساع الوصول إلى النماذج وأدوات البرمجة. وتفرق القراءة بين السرعة التي تساعد المؤسس على دخول السوق والعوامل التي تمنع المنافسين من اللحاق به.",
+          "تحدد المقالة الاندماج في سير عمل العملاء والتعلم الخاص وقنوات التوزيع الموثوقة بوصفها مصادر للاستدامة. وهي تقدم دروساً للمؤسسين، ولا تعلن استثماراً أو جولة تمويل جديدة."
+        ]
+      }
+    }
+  },
+  {
+    "id": "sourced-wazari-ezra-agent-memory",
+    "slug": "wazari-ezra-agent-memory",
+    "title": "Wazari.ai makes its Azure agent's memory inspectable through GitHub",
+    "excerpt": "The startup describes how Ezra stores knowledge in a reviewable repository and checks whether reported changes actually happened.",
+    "content": "Wazari.ai has described the architecture behind Ezra, its Azure expert agent built on the m8t platform. The agent runs on Microsoft Foundry, while a GitHub repository stores its persona, memories, skills and reference material so people can inspect and reverse changes.\n\nThe company also uses review gates for proposed skills and records the premises behind conclusions. Its account highlights why an agent's claim that it saved information should be checked against an independent record rather than accepted as proof.",
+    "category": "Product",
+    "imageUrl": "https://www.microsoft.com/en-us/startups/blog/wp-content/uploads/2026/09/wazariai-banner.jpg",
+    "imageCredit": "Microsoft for Startups",
+    "sourceUrl": "https://www.microsoft.com/en-us/startups/blog/how-wazari-ai-built-an-azure-agent-with-github-and-microsofts-ai-stack/",
+    "sourceName": "Microsoft for Startups",
+    "companies": ["Wazari.ai", "GitHub", "Microsoft"],
+    "publishedAt": "2026-09-30T20:00:00Z",
+    "author": "Wosool news desk",
+    "tags": ["AI agents", "GitHub", "Azure"],
+    "translations": {
+      "ar": {
+        "title": "Wazari.ai تجعل ذاكرة وكيلها Ezra قابلة للمراجعة عبر GitHub",
+        "excerpt": "تشرح الشركة كيف تحفظ معرفة الوكيل في مستودع يمكن فحصه وكيف تتحقق من تنفيذ التغييرات التي يعلن عنها.",
+        "body": [
+          "استعرضت Wazari.ai بنية Ezra، وكيلها المتخصص في Azure والمبني على منصة m8t. يعمل الوكيل على Microsoft Foundry، بينما يحفظ مستودع GitHub شخصيته وذكرياته ومهاراته ومراجعه بما يسمح للأشخاص بفحص التغييرات والتراجع عنها.",
+          "تستخدم الشركة أيضاً بوابات مراجعة للمهارات المقترحة وتسجل الافتراضات التي تستند إليها الاستنتاجات. وتوضح تجربتها أهمية التحقق من ادعاء الوكيل بأنه حفظ معلومات عبر سجل مستقل، بدلاً من اعتبار الادعاء دليلاً على التنفيذ."
+        ]
+      }
+    }
+  },
+  {
+    "id": "sourced-datox-regulatory-reporting-agent",
+    "slug": "datox-regulatory-reporting-agent",
+    "title": "Datox details AI agents designed for regulatory reporting workflows",
+    "excerpt": "The financial software company describes an agent that uses reporting context while keeping review and approval with users.",
+    "content": "Datox has shared how it designed an AI agent for financial services teams preparing regulatory reports. Its platform covers data intake, enrichment, transformation, validation and review, with the agent working alongside the existing application rather than replacing the reporting process.\n\nThe company says the agent uses the current report context and approved application capabilities while leaving judgment and approval with the user. The architecture discussion emphasizes reviewable evidence, access controls and monitoring in workflows where accuracy has regulatory consequences.",
+    "category": "Product",
+    "imageUrl": "https://www.microsoft.com/en-us/startups/blog/wp-content/uploads/2026/09/datox-banner-new.jpg",
+    "imageCredit": "Microsoft for Startups",
+    "sourceUrl": "https://www.microsoft.com/en-us/startups/blog/build-ai-agents-for-real-enterprise-workflows-6-lessons-from-datox/",
+    "sourceName": "Microsoft for Startups",
+    "companies": ["Datox", "Microsoft"],
+    "publishedAt": "2026-09-17T17:00:00Z",
+    "author": "Wosool news desk",
+    "tags": ["regtech", "AI agents", "financial services"],
+    "translations": {
+      "ar": {
+        "title": "Datox تستعرض تصميم وكيل ذكاء اصطناعي لإعداد التقارير التنظيمية",
+        "excerpt": "تشرح الشركة وكيلاً يستخدم سياق التقرير مع إبقاء المراجعة والموافقة بيد المستخدم.",
+        "body": [
+          "عرضت Datox كيفية تصميم وكيل ذكاء اصطناعي لفرق الخدمات المالية التي تعد التقارير التنظيمية. وتغطي منصتها استلام البيانات وإثراءها وتحويلها والتحقق منها ومراجعتها، فيما يعمل الوكيل إلى جانب التطبيق القائم بدلاً من استبدال عملية إعداد التقرير.",
+          "تقول الشركة إن الوكيل يستخدم سياق التقرير الحالي والقدرات المعتمدة للتطبيق، مع إبقاء الحكم والموافقة بيد المستخدم. ويركز العرض على الأدلة القابلة للمراجعة وضوابط الوصول والمراقبة في أعمال قد تترتب على دقتها تبعات تنظيمية."
+        ]
+      }
+    }
+  },
+  {
+    "id": "sourced-welcount-financial-access-ai",
+    "slug": "welcount-financial-access-ai",
+    "title": "Welcount uses AI to simplify financial access for newcomers in Europe",
+    "excerpt": "The fintech describes how Azure-based onboarding and identity checks address barriers faced by people arriving in a new country.",
+    "content": "Welcount is using Azure and AI to help newcomers in Europe access financial services without an established local financial history. Founder and CEO Rooh Savar developed the business around difficulties he experienced after arriving in France as a refugee.\n\nThe platform serves groups including international professionals, students, researchers, migrants and refugees. According to Microsoft's company profile, Welcount applies AI to identity verification, compliance workflows and customer support while building a secure and scalable onboarding experience.",
+    "category": "Product",
+    "imageUrl": "https://www.microsoft.com/en-us/startups/blog/wp-content/uploads/2026/09/Welcount-Blog.jpg",
+    "imageCredit": "Microsoft for Startups",
+    "sourceUrl": "https://www.microsoft.com/en-us/startups/blog/building-fintech-for-greater-financial-success-how-welcount-uses-ai-to-serve-more-customers/",
+    "sourceName": "Microsoft for Startups",
+    "companies": ["Welcount", "Microsoft"],
+    "publishedAt": "2026-09-09T14:30:00Z",
+    "author": "Wosool news desk",
+    "tags": ["fintech", "financial inclusion", "Europe"],
+    "translations": {
+      "ar": {
+        "title": "Welcount توظف الذكاء الاصطناعي لتسهيل الخدمات المالية للقادمين إلى أوروبا",
+        "excerpt": "تشرح الشركة دور التسجيل والتحقق من الهوية على Azure في معالجة العقبات أمام القادمين إلى بلد جديد.",
+        "body": [
+          "تستخدم Welcount منصة Azure والذكاء الاصطناعي لمساعدة القادمين إلى أوروبا على الوصول إلى الخدمات المالية دون سجل مالي محلي سابق. وقد بنى المؤسس والرئيس التنفيذي روه سافار الشركة حول صعوبات واجهها بعد وصوله إلى فرنسا بصفة لاجئ.",
+          "تخدم المنصة فئات تشمل المهنيين الدوليين والطلاب والباحثين والمهاجرين واللاجئين. ووفقاً لملف الشركة المنشور لدى مايكروسوفت، تستخدم Welcount الذكاء الاصطناعي في التحقق من الهوية والامتثال ودعم العملاء، مع تطوير تجربة تسجيل آمنة وقابلة للتوسع."
+        ]
+      }
+    }
+  },
+  {
+    "id": "sourced-pons-legal-ai-architecture",
+    "slug": "pons-legal-ai-architecture",
+    "title": "PONS separates legal knowledge from private client data in its AI platform",
+    "excerpt": "The legal technology startup explains how its Azure architecture supports research, drafting and contract review.",
+    "content": "PONS has outlined the design of its legal AI platform for law firms, in-house legal teams and other regulated organizations. Running on Azure, the software supports legal research, drafting, contract review, due diligence and matter management.\n\nIts architecture separates a pipeline for public legislation and case law from the engine working with customer matters and files. The company describes managed infrastructure and security controls as central design choices, rather than treating legal AI as a model simply connected to documents.",
+    "category": "Product",
+    "imageUrl": "https://www.microsoft.com/en-us/startups/blog/wp-content/uploads/2026/08/pons-banner.jpg",
+    "imageCredit": "Microsoft for Startups",
+    "sourceUrl": "https://www.microsoft.com/en-us/startups/blog/three-architecture-decisions-behind-ponss-legal-ai-platform-on-microsoft-azure/",
+    "sourceName": "Microsoft for Startups",
+    "companies": ["PONS", "Microsoft"],
+    "publishedAt": "2026-08-27T15:00:00Z",
+    "author": "Wosool news desk",
+    "tags": ["legaltech", "AI", "data security"],
+    "translations": {
+      "ar": {
+        "title": "PONS تفصل المعرفة القانونية عن بيانات العملاء الخاصة في منصتها الذكية",
+        "excerpt": "تشرح الشركة كيف تدعم بنيتها على Azure البحث والصياغة ومراجعة العقود.",
+        "body": [
+          "استعرضت PONS تصميم منصتها للذكاء الاصطناعي القانوني الموجهة لمكاتب المحاماة والفرق القانونية الداخلية والمؤسسات الخاضعة للتنظيم. وتعمل المنصة على Azure وتدعم البحث القانوني والصياغة ومراجعة العقود والفحص النافي للجهالة وإدارة الملفات.",
+          "تفصل البنية بين مسار معالجة التشريعات والأحكام المنشورة والمحرك الذي يتعامل مع ملفات العملاء. وتصف الشركة البنية التحتية المدارة وضوابط الأمان بأنها قرارات أساسية في التصميم، بدلاً من اختزال الذكاء الاصطناعي القانوني في نموذج متصل بالمستندات."
+        ]
+      }
+    }
+  },
+  {
+    "id": "sourced-maven-agi-customer-resolution",
+    "slug": "maven-agi-customer-resolution",
+    "title": "Maven AGI builds customer service agents that act across enterprise systems",
+    "excerpt": "The startup's Azure-based platform targets end-to-end issue resolution across chat, voice, email and SMS.",
+    "content": "Maven AGI is developing AI agents intended to resolve customer requests across the systems enterprises already operate. A Microsoft profile describes a platform spanning chat, voice, email and SMS, with a focus on completing work rather than only answering questions or redirecting tickets.\n\nThe company was founded in 2023 by Jonathan Corbin, Sami Shalabi and Eugene Mann. Its approach connects customer support with the wider customer journey, using instructions and system actions suited to the request instead of treating every interaction as a conversation alone.",
+    "category": "Product",
+    "imageUrl": "https://www.microsoft.com/en-us/startups/blog/wp-content/uploads/2026/08/Maven-AGI-Jonathan-Corbin.jpg",
+    "imageCredit": "Microsoft for Startups",
+    "sourceUrl": "https://www.microsoft.com/en-us/startups/blog/resolution-not-deflection-how-maven-uses-ai-agents-to-transform-the-enterprise-customer-journey/",
+    "sourceName": "Microsoft for Startups",
+    "companies": ["Maven AGI", "Microsoft"],
+    "publishedAt": "2026-08-19T14:45:00Z",
+    "author": "Wosool news desk",
+    "tags": ["customer service", "AI agents", "enterprise software"],
+    "translations": {
+      "ar": {
+        "title": "Maven AGI تطور وكلاء لخدمة العملاء ينفذون الإجراءات عبر أنظمة المؤسسات",
+        "excerpt": "تستهدف المنصة المبنية على Azure حل الطلبات بالكامل عبر المحادثة والصوت والبريد والرسائل النصية.",
+        "body": [
+          "تطور Maven AGI وكلاء ذكاء اصطناعي لحل طلبات العملاء عبر الأنظمة التي تستخدمها المؤسسات بالفعل. ويصف ملف منشور لدى مايكروسوفت منصة تغطي المحادثة والصوت والبريد الإلكتروني والرسائل النصية، مع التركيز على إنجاز العمل بدلاً من الاكتفاء بالإجابات أو تحويل التذاكر.",
+          "تأسست الشركة في عام 2023 على يد جوناثان كوربين وسامي شلبي ويوجين مان. ويربط نهجها خدمة العملاء بمراحل أوسع من رحلة العميل، باستخدام تعليمات وإجراءات داخل الأنظمة تناسب الطلب بدلاً من التعامل مع كل تفاعل بوصفه محادثة فقط."
+        ]
+      }
+    }
+  },
+  {
+    "id": "sourced-fireworks-foundry-blueprint",
+    "slug": "fireworks-foundry-blueprint",
+    "title": "Microsoft publishes a startup deployment blueprint for Fireworks AI",
+    "excerpt": "New implementation guidance shows how small teams can run open-model inference through Microsoft Foundry on Azure.",
+    "content": "Microsoft has published an implementation blueprint for startups deploying Fireworks AI models through Microsoft Foundry. The August article says Fireworks inference is generally available on Foundry, letting teams use open models without building a separate inference infrastructure.\n\nThe proposed path starts with a model endpoint, API Management and measurements of latency, usage and cost. Teams can later add caching, workload-specific tuning and multiple model variants, with deployment, governance and billing kept within their Azure environment.",
+    "category": "Product",
+    "imageUrl": "https://www.microsoft.com/en-us/startups/blog/wp-content/uploads/2026/08/fireworks-ai-social.jpg",
+    "imageCredit": "Microsoft for Startups",
+    "sourceUrl": "https://www.microsoft.com/en-us/startups/blog/how-to-deploy-fireworks-ai-on-microsoft-foundry-a-startup-architecture-blueprint/",
+    "sourceName": "Microsoft for Startups",
+    "companies": ["Fireworks AI", "Microsoft"],
+    "publishedAt": "2026-08-04T20:00:00Z",
+    "author": "Wosool news desk",
+    "tags": ["open models", "AI infrastructure", "Azure"],
+    "translations": {
+      "ar": {
+        "title": "مايكروسوفت تنشر مخططاً للشركات الناشئة لنشر نماذج Fireworks AI",
+        "excerpt": "إرشادات تنفيذ جديدة توضح تشغيل النماذج المفتوحة عبر Microsoft Foundry على Azure.",
+        "body": [
+          "نشرت مايكروسوفت مخطط تنفيذ للشركات الناشئة التي تنشر نماذج Fireworks AI عبر Microsoft Foundry. وتوضح مقالة أغسطس أن خدمة الاستدلال من Fireworks متاحة عموماً على Foundry، بما يتيح استخدام النماذج المفتوحة دون بناء بنية مستقلة للاستدلال.",
+          "يبدأ المسار المقترح بنقطة اتصال للنموذج وإدارة واجهات البرمجة وقياس زمن الاستجابة والاستخدام والتكلفة. ويمكن للفرق لاحقاً إضافة التخزين المؤقت والضبط بحسب أعباء العمل واختبار نسخ متعددة من النماذج، مع إبقاء النشر والحوكمة والفوترة داخل بيئة Azure."
+        ]
+      }
+    }
+  },
+  {
+    "id": "sourced-zeroerror-enterprise-data-quality",
+    "slug": "zeroerror-enterprise-data-quality",
+    "title": "ZeroError highlights data quality as a bottleneck for enterprise AI",
+    "excerpt": "Founder Maria J. Marti describes how small inaccuracies can travel through data pipelines and undermine AI results.",
+    "content": "ZeroError founder and CEO Maria J. Marti co-authored a Microsoft article on the data-quality problems behind disappointing enterprise AI results. The company describes how apparently minor inaccuracies can pass through pipelines, reports and applications before reaching a model.\n\nThe discussion argues that organizations need to establish whether the information driving automated decisions is trustworthy, not simply collect more of it. It frames data quality as a product and customer-trust challenge for founders taking AI systems into complex business workflows.",
+    "category": "Product",
+    "imageUrl": "https://www.microsoft.com/en-us/startups/blog/wp-content/uploads/2026/07/Zero-Error-A.jpg",
+    "imageCredit": "Microsoft for Startups",
+    "sourceUrl": "https://www.microsoft.com/en-us/startups/blog/from-ai-promise-to-enterprise-ready-growth-why-data-quality-matters/",
+    "sourceName": "Microsoft for Startups",
+    "companies": ["ZeroError", "Microsoft"],
+    "publishedAt": "2026-07-15T15:00:00Z",
+    "author": "Wosool news desk",
+    "tags": ["data quality", "enterprise AI", "founders"],
+    "translations": {
+      "ar": {
+        "title": "ZeroError تسلط الضوء على جودة البيانات بوصفها عائقاً أمام الذكاء الاصطناعي المؤسسي",
+        "excerpt": "تشرح المؤسسة ماريا جيه مارتي كيف تنتقل الأخطاء الصغيرة عبر مسارات البيانات وتؤثر في نتائج النماذج.",
+        "body": [
+          "شاركت ماريا جيه مارتي، مؤسسة ZeroError ورئيستها التنفيذية، في كتابة مقالة لدى مايكروسوفت عن مشكلات جودة البيانات وراء نتائج الذكاء الاصطناعي المؤسسي المخيبة للتوقعات. وتصف الشركة انتقال أخطاء تبدو محدودة عبر مسارات البيانات والتقارير والتطبيقات قبل وصولها إلى النموذج.",
+          "تؤكد القراءة ضرورة التحقق من موثوقية المعلومات التي تدعم القرارات الآلية، لا الاكتفاء بجمع المزيد منها. وتقدم جودة البيانات بوصفها تحدياً للمنتج وثقة العملاء لدى المؤسسين الذين ينقلون أنظمة الذكاء الاصطناعي إلى أعمال مؤسسية معقدة."
+        ]
+      }
+    }
+  },
+  {
+    "id": "sourced-microsoft-e7-agent-governance",
+    "slug": "microsoft-e7-agent-governance",
+    "title": "Microsoft explains what enterprise agent governance means for startups",
+    "excerpt": "Its Microsoft 365 E7 briefing focuses on identity, access, auditability and lifecycle controls for AI agents.",
+    "content": "Microsoft for Startups has published a briefing on Microsoft 365 E7 and the requirements facing companies that build enterprise AI agents. It describes a shift from isolated experiments toward agents managed within an organization's existing identity, security and compliance environment.\n\nThe article identifies authentication, least-privilege access, traceable actions, policy enforcement and lifecycle management as key dimensions. For founders, the message is that a capable demo is not equivalent to software an enterprise can approve and operate at scale.",
+    "category": "Ecosystem",
+    "imageUrl": "https://www.microsoft.com/en-us/startups/blog/wp-content/uploads/2026/06/E7-Blog.jpg",
+    "imageCredit": "Microsoft for Startups",
+    "sourceUrl": "https://www.microsoft.com/en-us/startups/blog/what-microsoft-365-e7-means-for-startups-building-enterprise-ai-agents/",
+    "sourceName": "Microsoft for Startups",
+    "companies": ["Microsoft"],
+    "publishedAt": "2026-06-25T15:00:00Z",
+    "author": "Wosool news desk",
+    "tags": ["AI governance", "enterprise", "Microsoft 365"],
+    "translations": {
+      "ar": {
+        "title": "مايكروسوفت تشرح متطلبات حوكمة وكلاء الذكاء الاصطناعي للشركات الناشئة",
+        "excerpt": "تركز قراءة Microsoft 365 E7 على الهوية والوصول والتدقيق وإدارة دورة حياة الوكلاء.",
+        "body": [
+          "نشرت مايكروسوفت للشركات الناشئة قراءة عن Microsoft 365 E7 والمتطلبات التي تواجه مطوري وكلاء الذكاء الاصطناعي للمؤسسات. وتصف انتقالاً من التجارب المنفصلة إلى وكلاء تدار ضمن بيئة الهوية والأمان والامتثال القائمة في المؤسسة.",
+          "تحدد المقالة المصادقة والحد الأدنى من الصلاحيات وتتبع الإجراءات وإنفاذ السياسات وإدارة دورة الحياة بوصفها أبعاداً أساسية. وتوضح للمؤسسين أن العرض التجريبي القادر لا يعادل برنامجاً تستطيع المؤسسة اعتماده وتشغيله على نطاق واسع."
+        ]
+      }
+    }
+  },
+  {
+    "id": "sourced-yc-microsoft-ai-startups",
+    "slug": "yc-microsoft-ai-startups",
+    "title": "Y Combinator and Microsoft expand resources for AI startup founders",
+    "excerpt": "The expanded relationship gives eligible YC founders access to cloud credits, AI infrastructure and technical guidance.",
+    "content": "Y Combinator and Microsoft announced an expanded relationship to support founders building AI businesses on Azure. Microsoft's June announcement says YC itself uses Azure and Microsoft Foundry, and that the relationship brings more of those resources to companies in its ecosystem.\n\nEligible founders can access startup credits, technical guidance and go-to-market support, alongside high-performance infrastructure for demanding AI workloads. These are program resources subject to eligibility, not a disclosed investment round in YC companies.",
+    "category": "Ecosystem",
+    "imageUrl": "https://www.microsoft.com/en-us/startups/blog/wp-content/uploads/2026/06/Y-Combinator-Image.jpg",
+    "imageCredit": "Microsoft for Startups",
+    "sourceUrl": "https://www.microsoft.com/en-us/startups/blog/y-combinator-and-microsoft-partner-to-support-the-next-generation-of-ai-startups/",
+    "sourceName": "Microsoft for Startups",
+    "companies": ["Y Combinator", "Microsoft"],
+    "publishedAt": "2026-06-17T12:30:00Z",
+    "author": "Wosool news desk",
+    "tags": ["accelerators", "AI", "startup support"],
+    "translations": {
+      "ar": {
+        "title": "Y Combinator ومايكروسوفت توسعان الموارد المتاحة لمؤسسي شركات الذكاء الاصطناعي",
+        "excerpt": "العلاقة الموسعة توفر للمؤسسين المؤهلين أرصدة سحابية وبنية للذكاء الاصطناعي وإرشاداً تقنياً.",
+        "body": [
+          "أعلنت Y Combinator ومايكروسوفت توسيع العلاقة بينهما لدعم مؤسسي شركات الذكاء الاصطناعي الذين يبنون على Azure. وتقول مقالة مايكروسوفت في يونيو إن YC تستخدم Azure وMicrosoft Foundry في أعمالها، وإن العلاقة تتيح المزيد من هذه الموارد للشركات ضمن منظومتها.",
+          "يمكن للمؤسسين المؤهلين الوصول إلى أرصدة للشركات الناشئة وإرشاد تقني ودعم لدخول السوق، إلى جانب بنية عالية الأداء لأعباء الذكاء الاصطناعي. وهذه موارد برنامج تخضع لشروط الأهلية، وليست جولة استثمار معلنة في شركات YC."
+        ]
+      }
+    }
+  },
+  {
+    "id": "sourced-build-2026-startup-announcements",
+    "slug": "build-2026-startup-announcements",
+    "title": "Microsoft summarizes Build 2026 updates for AI startup teams",
+    "excerpt": "The recap covers Fireworks AI, business-data grounding, model options and discovery through Microsoft Marketplace.",
+    "content": "Microsoft's startup-focused recap of Build 2026 highlights updates intended to help small AI teams develop products and reach customers. It includes general availability of Fireworks AI in Microsoft Foundry, Fabric IQ for business context and a new family of MAI models.\n\nThe article also covers changes to discovery through Microsoft Marketplace and a simpler path into Microsoft for Startups. It brings several event announcements together in one founder briefing rather than reporting a separate financing transaction.",
+    "category": "Ecosystem",
+    "imageUrl": "https://www.microsoft.com/en-us/startups/blog/wp-content/uploads/2026/06/Startups-Post-Build-4.jpg.jpeg",
+    "imageCredit": "Microsoft for Startups",
+    "sourceUrl": "https://www.microsoft.com/en-us/startups/blog/microsoft-build-2026-5-top-announcements-every-startup-should-know/",
+    "sourceName": "Microsoft for Startups",
+    "companies": ["Microsoft", "Fireworks AI"],
+    "publishedAt": "2026-06-09T16:00:00Z",
+    "author": "Wosool news desk",
+    "tags": ["Build 2026", "AI infrastructure", "startup resources"],
+    "translations": {
+      "ar": {
+        "title": "مايكروسوفت تلخص تحديثات Build 2026 لفرق الشركات الناشئة",
+        "excerpt": "تشمل القراءة Fireworks AI وربط النماذج ببيانات الأعمال وخيارات النماذج واكتشاف المنتجات عبر Marketplace.",
+        "body": [
+          "يسلط ملخص مايكروسوفت الموجه للشركات الناشئة الضوء على تحديثات Build 2026 التي تساعد فرق الذكاء الاصطناعي الصغيرة على تطوير المنتجات والوصول إلى العملاء. وتشمل الإتاحة العامة لخدمة Fireworks AI في Microsoft Foundry وFabric IQ لسياق الأعمال وعائلة جديدة من نماذج MAI.",
+          "وتغطي المقالة أيضاً تغييرات اكتشاف المنتجات عبر Microsoft Marketplace ومساراً أبسط للانضمام إلى برنامج مايكروسوفت للشركات الناشئة. وهي تجمع عدة إعلانات من الحدث في قراءة للمؤسسين، ولا تتناول صفقة تمويل مستقلة."
+        ]
+      }
+    }
+  },
+  {
+    "id": "sourced-microsoft-startup-program-update",
+    "slug": "microsoft-startup-program-update",
+    "title": "Microsoft simplifies entry into its startup support program",
+    "excerpt": "Startups can apply directly and unlock additional credits, resources and enterprise sales support as they grow.",
+    "content": "Microsoft for Startups announced a more transparent path for founders to join its program and build enterprise businesses on Azure. The June update says startups can apply directly, begin with startup credits and unlock additional resources as their businesses develop.\n\nThe changes address more than infrastructure costs: Microsoft also describes technical support, enterprise readiness and go-to-market opportunities. Access depends on the program's requirements, so the announcement should not be read as an unconditional credit award to every applicant.",
+    "category": "Ecosystem",
+    "imageUrl": "https://www.microsoft.com/en-us/startups/blog/wp-content/uploads/2026/06/Startups-1.jpg",
+    "imageCredit": "Microsoft for Startups",
+    "sourceUrl": "https://www.microsoft.com/en-us/startups/blog/microsoft-for-startups-introduces-a-clearer-path-from-ai-development-to-enterprise-growth/",
+    "sourceName": "Microsoft for Startups",
+    "companies": ["Microsoft"],
+    "publishedAt": "2026-06-02T19:15:00Z",
+    "author": "Wosool news desk",
+    "tags": ["startup programs", "cloud credits", "go-to-market"],
+    "translations": {
+      "ar": {
+        "title": "مايكروسوفت تبسط الانضمام إلى برنامج دعم الشركات الناشئة",
+        "excerpt": "يمكن للشركات التقدم مباشرة والحصول على موارد وأرصدة إضافية ودعم للمبيعات المؤسسية مع تطورها.",
+        "body": [
+          "أعلن برنامج مايكروسوفت للشركات الناشئة مساراً أكثر وضوحاً لانضمام المؤسسين وبناء أعمال مؤسسية على Azure. وتقول مقالة يونيو إن الشركات تستطيع التقدم مباشرة والبدء بأرصدة للشركات الناشئة، ثم الحصول على موارد إضافية مع تطور أعمالها.",
+          "لا تقتصر التغييرات على تكلفة البنية التحتية؛ إذ تتناول مايكروسوفت أيضاً الدعم التقني والاستعداد للمؤسسات وفرص دخول السوق. ويخضع الوصول لمتطلبات البرنامج، لذا لا يعني الإعلان منح أرصدة غير مشروطة لكل متقدم."
+        ]
+      }
+    }
+  },
+  {
+    "id": "sourced-build-2026-startup-showcase",
+    "slug": "build-2026-startup-showcase",
+    "title": "Microsoft names 11 startups to watch at Build 2026",
+    "excerpt": "The lineup includes NeuBird, Replit, Anyscale and Moderne, spanning AI operations, development and infrastructure.",
+    "content": "Microsoft has highlighted 11 startups for Build 2026, focusing on products that address production challenges rather than demonstrations alone. The featured companies include NeuBird for incident response, Replit for application creation, Anyscale for distributed AI computing and Moderne for large-scale code modernization.\n\nThe profile also identifies Canva and Uber among users of Ray, the open-source framework behind Anyscale. The showcase links developer tooling and AI infrastructure with enterprise adoption; it does not announce a new investment in each featured business.",
+    "category": "Ecosystem",
+    "imageUrl": "https://www.microsoft.com/en-us/startups/blog/wp-content/uploads/2026/05/startups2watch-header.png",
+    "imageCredit": "Microsoft for Startups",
+    "sourceUrl": "https://www.microsoft.com/en-us/startups/blog/11-startups-to-watch-at-microsoft-build-2026/",
+    "sourceName": "Microsoft for Startups",
+    "companies": ["NeuBird AI", "Replit", "Anyscale", "Moderne", "Canva", "Uber", "Microsoft"],
+    "publishedAt": "2026-05-21T16:30:00Z",
+    "author": "Wosool news desk",
+    "tags": ["Build 2026", "startup showcase", "developer tools"],
+    "translations": {
+      "ar": {
+        "title": "مايكروسوفت تسلط الضوء على 11 شركة ناشئة في Build 2026",
+        "excerpt": "تشمل القائمة NeuBird وReplit وAnyscale وModerne في تشغيل الذكاء الاصطناعي والتطوير والبنية التحتية.",
+        "body": [
+          "سلطت مايكروسوفت الضوء على 11 شركة ناشئة ضمن Build 2026، مع التركيز على منتجات تعالج تحديات التشغيل الفعلي لا العروض التجريبية وحدها. وتشمل الشركات NeuBird للاستجابة للحوادث وReplit لإنشاء التطبيقات وAnyscale للحوسبة الموزعة وModerne لتحديث الشيفرة على نطاق واسع.",
+          "ويذكر الملف Canva وUber ضمن مستخدمي Ray، إطار العمل المفتوح المصدر الذي تقف وراءه Anyscale. ويربط العرض أدوات المطورين والبنية التحتية للذكاء الاصطناعي بتبني المؤسسات، ولا يعلن استثماراً جديداً في كل شركة مشاركة."
+        ]
+      }
+    }
+  },
+  {
+    "id": "sourced-neubird-ai-cloud-operations",
+    "slug": "neubird-ai-cloud-operations",
+    "title": "NeuBird AI applies agentic AI to cloud incident investigation",
+    "excerpt": "The company uses operational telemetry to help engineering teams identify root causes across distributed systems.",
+    "content": "NeuBird AI is using agentic AI to investigate cloud incidents and turn logs, metrics and alerts into actionable explanations. Microsoft's May profile describes the company using Microsoft Foundry to help engineering teams connect signals that would otherwise sit across separate observability tools.\n\nCo-founder Goutham Rao identifies alert overload and fragmented information as problems that grow alongside distributed systems. NeuBird's approach aims to reduce investigation work so engineering teams can spend more time building products rather than manually tracing operational failures.",
+    "category": "Product",
+    "imageUrl": "https://www.microsoft.com/en-us/startups/blog/wp-content/uploads/2026/05/Neubird-Header.jpg",
+    "imageCredit": "Microsoft for Startups",
+    "sourceUrl": "https://www.microsoft.com/en-us/startups/blog/how-neubird-ai-uses-agentic-ai-on-azure-to-transform-cloud-operations-and-incident-response/",
+    "sourceName": "Microsoft for Startups",
+    "companies": ["NeuBird AI", "Microsoft"],
+    "publishedAt": "2026-05-19T12:00:00Z",
+    "author": "Wosool news desk",
+    "tags": ["cloud operations", "AI agents", "observability"],
+    "translations": {
+      "ar": {
+        "title": "NeuBird AI تستخدم الوكلاء الذكيين للتحقيق في حوادث التشغيل السحابي",
+        "excerpt": "توظف الشركة بيانات التشغيل لمساعدة فرق الهندسة على تحديد الأسباب الجذرية في الأنظمة الموزعة.",
+        "body": [
+          "تستخدم NeuBird AI الذكاء الاصطناعي القائم على الوكلاء للتحقيق في الحوادث السحابية وتحويل السجلات والمقاييس والتنبيهات إلى تفسيرات قابلة للتنفيذ. ويصف ملف مايكروسوفت في مايو استخدامها Microsoft Foundry لربط إشارات موزعة بين أدوات مراقبة منفصلة.",
+          "يشير المؤسس المشارك غوثام راو إلى كثرة التنبيهات وتشتت المعلومات بوصفهما مشكلتين تتفاقمان مع نمو الأنظمة الموزعة. ويهدف نهج NeuBird إلى تقليل أعمال التحقيق حتى تخصص فرق الهندسة وقتاً أكبر لبناء المنتجات بدلاً من تتبع الأعطال يدوياً."
+        ]
+      }
+    }
+  },
+  {
+    "id": "sourced-ema-drishya-enterprise-ai-lessons",
+    "slug": "ema-drishya-enterprise-ai-lessons",
+    "title": "EMA and Drishya AI founders discuss the move from demos to enterprise systems",
+    "excerpt": "Microsoft's founder conversations focus on production readiness, workflows and proprietary data.",
+    "content": "Microsoft for Startups has published lessons from conversations with EMA founder Surojit Chatterjee, Drishya AI co-founder Sravan Rekandar and M12 managing partner Cheryl Cheng. The May article examines what distinguishes an impressive AI demonstration from a system enterprises can use reliably.\n\nThe discussion emphasizes understanding existing workflows, designing for production early and building differentiation around workflows and data. It also argues that enterprise scale requires operational systems, giving founders a practical lens on buyer expectations rather than reporting a funding deal.",
+    "category": "Ecosystem",
+    "imageUrl": "https://www.microsoft.com/en-us/startups/blog/wp-content/uploads/2026/05/AAPI-3.jpg",
+    "imageCredit": "Microsoft for Startups",
+    "sourceUrl": "https://www.microsoft.com/en-us/startups/blog/from-agents-to-enterprise-5-signals-that-matter-when-youre-building-ai-for-real-customers/",
+    "sourceName": "Microsoft for Startups",
+    "companies": ["EMA", "Drishya AI", "M12", "Microsoft"],
+    "publishedAt": "2026-05-13T16:13:32Z",
+    "author": "Wosool news desk",
+    "tags": ["founders", "enterprise AI", "product strategy"],
+    "translations": {
+      "ar": {
+        "title": "مؤسسو EMA وDrishya AI يناقشون الانتقال من العروض التجريبية إلى الأنظمة المؤسسية",
+        "excerpt": "تركز حوارات مايكروسوفت مع المؤسسين على جاهزية التشغيل وسير العمل والبيانات الخاصة.",
+        "body": [
+          "نشرت مايكروسوفت للشركات الناشئة دروساً من حوارات مع سوروجيت تشاترجي مؤسس EMA وسرافان ريكاندار المؤسس المشارك لـDrishya AI وشيريل تشينغ الشريكة الإدارية في M12. وتبحث مقالة مايو الفرق بين عرض ذكاء اصطناعي لافت ونظام تستطيع المؤسسات استخدامه بثقة.",
+          "تركز القراءة على فهم سير العمل القائم والتصميم للتشغيل الفعلي مبكراً وبناء التميز حول البيانات والعمليات. وتؤكد أيضاً أن التوسع المؤسسي يحتاج إلى أنظمة تشغيلية، مقدمة للمؤسسين منظوراً عملياً لتوقعات المشترين بدلاً من إعلان صفقة تمويل."
+        ]
+      }
+    }
+  },
+  {
+    "id": "sourced-panathenea-2026-athens",
+    "slug": "panathenea-2026-athens",
+    "title": "Panathēnea outlines an Athens meeting point for startups and investors",
+    "excerpt": "An April preview described the May 27–29 festival, investor programming and a startup competition.",
+    "content": "Microsoft's April preview of Panathēnea 2026 described a startup and technology festival scheduled for May 27–29 in Athens. The announcement expected more than 10,000 attendees and outlined opportunities for founders to meet investors, explore partnerships and take part in technical discussions.\n\nMicrosoft described plans to participate in Investor Day, the startup competition and related programming. The source is a pre-event announcement: its attendance figure is an expectation, not a verified count of people who ultimately attended.",
+    "category": "Ecosystem",
+    "imageUrl": "https://www.microsoft.com/en-us/startups/blog/wp-content/uploads/2026/04/Slide1.jpg",
+    "imageCredit": "Microsoft for Startups",
+    "sourceUrl": "https://www.microsoft.com/en-us/startups/blog/panathenea-2026-why-ai-startups-and-investors-are-showing-up-in-athens/",
+    "sourceName": "Microsoft for Startups",
+    "companies": ["Microsoft"],
+    "publishedAt": "2026-04-27T12:00:22Z",
+    "author": "Wosool news desk",
+    "tags": ["Athens", "startup events", "investors"],
+    "translations": {
+      "ar": {
+        "title": "Panathēnea تعرض برنامجاً يجمع الشركات الناشئة والمستثمرين في أثينا",
+        "excerpt": "تناولت قراءة أبريل مهرجان 27–29 مايو وبرنامج المستثمرين ومسابقة للشركات الناشئة.",
+        "body": [
+          "عرضت قراءة مايكروسوفت في أبريل مهرجان Panathēnea 2026 للشركات الناشئة والتكنولوجيا، الذي كان مقرراً في أثينا من 27 إلى 29 مايو. وتوقع الإعلان حضور أكثر من عشرة آلاف شخص، واستعرض فرص لقاء المستثمرين وبحث الشراكات والمشاركة في النقاشات التقنية.",
+          "وصفت مايكروسوفت خطط مشاركتها في يوم المستثمرين ومسابقة الشركات الناشئة والبرامج المرتبطة بالحدث. والمصدر إعلان سابق للمهرجان؛ لذا فإن رقم الحضور الوارد فيه توقع، وليس إحصاءً مؤكداً لمن حضروا فعلياً."
+        ]
+      }
+    }
+  },
+  {
+    "id": "sourced-nimble-enterprise-agent-data",
+    "slug": "nimble-enterprise-agent-data",
+    "title": "Nimble targets the live-data gap between AI prototypes and production",
+    "excerpt": "The startup is building web retrieval that gives enterprise agents current, relevant and structured information.",
+    "content": "Nimble is developing AI web search and retrieval for enterprise agents that need current, structured information. A Microsoft profile explains why generic search, stale indexes and maintenance-heavy scraping can fall short when an agent must support operational decisions rather than only answer questions.\n\nCo-founder and CEO Uriel Knorovich describes reliable live information as essential once AI systems begin doing work. The company's focus is the data layer connecting agents with task-specific web information that can be used in production workflows.",
+    "category": "Product",
+    "imageUrl": "https://www.microsoft.com/en-us/startups/blog/wp-content/uploads/2026/04/Nimble6.jpg",
+    "imageCredit": "Microsoft for Startups",
+    "sourceUrl": "https://www.microsoft.com/en-us/startups/blog/how-nimble-helps-enterprises-move-ai-agents-from-prototype-to-production/",
+    "sourceName": "Microsoft for Startups",
+    "companies": ["Nimble", "Microsoft"],
+    "publishedAt": "2026-04-09T15:30:00Z",
+    "author": "Wosool news desk",
+    "tags": ["web data", "AI agents", "enterprise"],
+    "translations": {
+      "ar": {
+        "title": "Nimble تعالج فجوة البيانات الحية بين نماذج الذكاء الاصطناعي الأولية والتشغيل",
+        "excerpt": "تطور الشركة استرجاعاً من الويب يزود وكلاء المؤسسات بمعلومات حديثة وملائمة ومنظمة.",
+        "body": [
+          "تطور Nimble البحث والاسترجاع من الويب لوكلاء الذكاء الاصطناعي المؤسسي الذين يحتاجون معلومات حديثة ومنظمة. ويوضح ملف مايكروسوفت قصور البحث العام والفهارس القديمة ومسارات جمع البيانات كثيفة الصيانة عندما يدعم الوكيل قرارات تشغيلية بدلاً من الإجابة عن الأسئلة فقط.",
+          "يصف المؤسس المشارك والرئيس التنفيذي يورييل كنوروفيتش المعلومات الحية الموثوقة بأنها ضرورة حين تبدأ الأنظمة بتنفيذ العمل. وتركز الشركة على طبقة بيانات تربط الوكلاء بمعلومات من الويب تناسب المهمة ويمكن استخدامها في العمليات الفعلية."
+        ]
+      }
+    }
+  },
+  {
+    "id": "sourced-microsoft-ip-co-sell-startups",
+    "slug": "microsoft-ip-co-sell-startups",
+    "title": "Microsoft introduces IP co-sell acceleration for qualified startups",
+    "excerpt": "The initiative aims to help enterprise-ready software companies sell through Marketplace and Microsoft's commercial channels.",
+    "content": "Microsoft for Startups announced an Intellectual Property co-sell acceleration opportunity for qualified software companies. The April article describes a route for approved products to be purchased through Microsoft Marketplace and included by Microsoft sellers in customer solutions.\n\nThe initiative addresses procurement friction and long sales cycles facing startups selling to large organizations. It is an eligibility-based go-to-market opportunity, not a promise that a listing will produce sales or that every startup will qualify.",
+    "category": "Ecosystem",
+    "imageUrl": "https://www.microsoft.com/en-us/startups/blog/wp-content/uploads/2026/04/MFS-Co-Sell-GTM-blog.png",
+    "imageCredit": "Microsoft for Startups",
+    "sourceUrl": "https://www.microsoft.com/en-us/startups/blog/a-faster-go-to-market-path-for-startups-intellectual-property-co-sell-at-microsoft-for-startups/",
+    "sourceName": "Microsoft for Startups",
+    "companies": ["Microsoft"],
+    "publishedAt": "2026-04-02T16:00:00Z",
+    "author": "Wosool news desk",
+    "tags": ["enterprise sales", "Marketplace", "go-to-market"],
+    "translations": {
+      "ar": {
+        "title": "مايكروسوفت تقدم مساراً لتسريع البيع المشترك للشركات الناشئة المؤهلة",
+        "excerpt": "تهدف المبادرة إلى مساعدة شركات البرمجيات الجاهزة للمؤسسات على البيع عبر Marketplace والقنوات التجارية لمايكروسوفت.",
+        "body": [
+          "أعلن برنامج مايكروسوفت للشركات الناشئة فرصة لتسريع البيع المشترك للملكية الفكرية لشركات البرمجيات المؤهلة. وتصف مقالة أبريل مساراً لشراء المنتجات المعتمدة عبر Microsoft Marketplace وإدراجها في الحلول التي يقدمها فريق مبيعات مايكروسوفت للعملاء.",
+          "تعالج المبادرة تعقيدات الشراء ودورات المبيعات الطويلة التي تواجه الشركات الناشئة لدى التعامل مع المؤسسات الكبيرة. وهي فرصة لدخول السوق تخضع للأهلية، وليست ضماناً لتحقيق مبيعات من الإدراج أو لتأهل كل شركة."
+        ]
+      }
+    }
+  },
+  {
+    "id": "sourced-notch-regulated-support-agents",
+    "slug": "notch-regulated-support-agents",
+    "title": "Notch describes guardrails for AI agents in regulated customer support",
+    "excerpt": "The startup's design combines permissions, validation and escalation when automated actions carry compliance risks.",
+    "content": "Notch has described how it builds AI agents that complete support workflows in regulated industries. Its approach grew from work in insurance, where actions involving identity, payments or account changes require clear limits and auditable records.\n\nThe company outlines layered safeguards including conversation checks, abuse defenses, access rules and escalation when information or policy is unclear. Notch reports processing more than 10 million support tickets and reaching up to 87% end-to-end resolution; these figures are company-reported, not independently audited in the article.",
+    "category": "Product",
+    "imageUrl": "https://www.microsoft.com/en-us/startups/blog/wp-content/uploads/2026/03/Slide3.jpg",
+    "imageCredit": "Microsoft for Startups",
+    "sourceUrl": "https://www.microsoft.com/en-us/startups/blog/how-notch-ships-action-taking-ai-agents-safely-in-regulated-customer-support/",
+    "sourceName": "Microsoft for Startups",
+    "companies": ["Notch", "Microsoft"],
+    "publishedAt": "2026-03-23T15:00:00Z",
+    "author": "Wosool news desk",
+    "tags": ["customer support", "AI safety", "regulated industries"],
+    "translations": {
+      "ar": {
+        "title": "Notch تشرح ضوابط وكلاء الذكاء الاصطناعي في خدمة العملاء الخاضعة للتنظيم",
+        "excerpt": "يجمع تصميم الشركة بين الصلاحيات والتحقق والتصعيد حين تحمل الإجراءات الآلية مخاطر امتثال.",
+        "body": [
+          "استعرضت Notch كيفية بناء وكلاء ذكاء اصطناعي ينجزون عمليات دعم العملاء في القطاعات الخاضعة للتنظيم. ونشأ نهجها من العمل في التأمين، حيث تتطلب إجراءات الهوية والمدفوعات وتعديل الحسابات حدوداً واضحة وسجلات قابلة للتدقيق.",
+          "تصف الشركة طبقات حماية تشمل فحص المحادثات والدفاع ضد إساءة الاستخدام وقواعد الوصول والتصعيد عند غموض المعلومات أو السياسة. وتقول Notch إنها عالجت أكثر من عشرة ملايين تذكرة وحققت حلاً كاملاً يصل إلى 87%؛ وهذه أرقام أبلغت عنها الشركة ولم تقدم المقالة تدقيقاً مستقلاً لها."
+        ]
+      }
+    }
+  },
+  {
+    "id": "sourced-overcut-agentic-developer-workflows",
+    "slug": "overcut-agentic-developer-workflows",
+    "title": "Overcut brings controlled AI workflows to software delivery teams",
+    "excerpt": "The startup automates repeatable development processes across GitHub, Azure DevOps and Jira with enterprise controls.",
+    "content": "Overcut is building an agentic workflow platform for software development teams using tools such as GitHub, Azure DevOps and Jira. Its January profile describes automation for ticket triage, root-cause analysis, test generation, documentation and release preparation.\n\nFounder and CEO Yuval Hazaz emphasizes controlled autonomy rather than isolated productivity demos. The platform runs agent workloads on Azure with isolation, identity-based access and observability intended to keep repeated development tasks within an organization's policies.",
+    "category": "Product",
+    "imageUrl": "https://www.microsoft.com/en-us/startups/blog/wp-content/uploads/2026/01/CLO22_RemoteHome_042.jpg",
+    "imageCredit": "Microsoft for Startups",
+    "sourceUrl": "https://www.microsoft.com/en-us/startups/blog/how-overcut-builds-secure-enterprise-ready-agentic-workflows-on-azure/",
+    "sourceName": "Microsoft for Startups",
+    "companies": ["Overcut", "GitHub", "Microsoft"],
+    "publishedAt": "2026-01-20T16:00:00Z",
+    "author": "Wosool news desk",
+    "tags": ["developer tools", "AI agents", "software delivery"],
+    "translations": {
+      "ar": {
+        "title": "Overcut تطور عمليات ذكاء اصطناعي منضبطة لفرق تطوير البرمجيات",
+        "excerpt": "تؤتمت الشركة عمليات تطوير متكررة عبر GitHub وAzure DevOps وJira مع ضوابط مؤسسية.",
+        "body": [
+          "تطور Overcut منصة لعمليات تطوير البرمجيات القائمة على الوكلاء لفرق تستخدم أدوات مثل GitHub وAzure DevOps وJira. ويصف ملف يناير أتمتة فرز التذاكر وتحليل الأسباب الجذرية وتوليد الاختبارات والتوثيق والتحضير للإصدارات.",
+          "يركز المؤسس والرئيس التنفيذي يوفال هازاز على الاستقلالية المنضبطة بدلاً من عروض إنتاجية منفصلة. وتشغل المنصة أعباء الوكلاء على Azure مع العزل والوصول القائم على الهوية والمراقبة، بهدف إبقاء مهام التطوير المتكررة ضمن سياسات المؤسسة."
+        ]
+      }
+    }
+  }
+]

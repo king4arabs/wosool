@@ -12,11 +12,12 @@ class NewsItem extends Model
     protected $fillable = [
         'title', 'slug', 'excerpt', 'content', 'category', 'image_url',
         'author_name', 'author_id', 'is_featured', 'is_public', 'status',
-        'tags', 'published_at',
+        'tags', 'published_at', 'source_url', 'source_name', 'image_credit', 'companies',
     ];
 
     protected $casts = [
         'tags' => 'array',
+        'companies' => 'array',
         'is_featured' => 'boolean',
         'is_public' => 'boolean',
         'published_at' => 'datetime',

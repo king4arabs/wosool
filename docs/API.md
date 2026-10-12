@@ -209,7 +209,7 @@ Content-Type: application/json
 | `/events` | `period` (`upcoming`, `past`, `today`, `this_week`, `this_month`), `type`, `mode`, `format`, `q`, `category`, `tag`, `per_page` (1–100) |
 | `/programs` | `open` |
 | `/partners` | `type` |
-| `/news` | `category`, `featured`, `per_page` |
+| `/news` | `category`, `featured`, `search`, `company`, `companies`, `per_page` (clamped to 1–50) |
 | `/resources` | `type`, `category`, `members_only`, `per_page` |
 
 ---
@@ -219,6 +219,16 @@ Content-Type: application/json
 Public list, detail, and calendar endpoints require public visibility and a published lifecycle state. Draft and private records return `404` on direct URLs. Internal invitations/settings and meeting join links are omitted from public JSON. Completed events are included in `period=past`; default/upcoming listings exclude them. `upcoming` uses the event end time, falling back to its start time, and sorts soonest first. `past` sorts most recent first.
 
 ## Response Notes
+
+### Startup news sources
+
+News JSON adds nullable `source_url`, `source_name`, and `image_credit`, plus `companies` (an array of company-name strings, not relationships; defaults to `[]`). Existing editorial records remain unchanged.
+
+`GET /api/v1/news?company=Acme` matches an exact string in `companies` or `tags`, never title/summary substrings. `?companies=فودكس,Foodics,foodics` OR-matches up to 10 comma-separated aliases (each up to 255 characters; whitespace is trimmed). Pass localized/English company names or explicitly stored slug/tag aliases. If both parameters are supplied, the combined list is limited to 10 aliases. Public listing/detail omit future-dated, draft, and private items; legacy published items without a publication date remain visible.
+
+Run `cd backend && php artisan news:sync` after migrations to import the verified Microsoft for Startups feed (`https://www.microsoft.com/en-us/startups/blog/feed/`). The existing Laravel scheduler runs this verified source daily; production must run `php artisan schedule:run` every minute. Microsoft is the single current default publisher and the source of the verified public news snapshot. Unverified Wamda/TechCrunch endpoints are disabled by default; explicitly opt in with `php artisan news:sync --include-unverified` only after deployment-network verification. Ingestion stores only plain-text feed summaries capped at 320 characters, never full articles or source HTML; `source_url` links to the publisher's full article. Feed image candidates come from Media RSS content/thumbnail, image enclosures, or the first description image; when the description has no image, only the first image URL from `content:encoded` is inspected, without storing the full content. Only HTTPS URLs on exact publisher hosts (including Microsoft's `www.microsoft.com`, plus Wamda's `wamda-prod.s3.amazonaws.com` bucket) are stored, with publisher attribution in `image_credit`; absent/unsafe images remain null and clients should provide a fallback. The backend does not download images. Companies are matched against public directory names in the title/summary.
+
+Source URLs are restricted to HTTPS publisher hosts. Requests disable redirects and bound time, response size, and item count; unsafe XML and future/missing dates are skipped. Repeats deduplicate by source URL without updating editorial changes or restoring deleted items. Feed failures return a nonzero exit code, retain all existing news, and do not stop other feeds. **Microsoft for Startups RSS access was confirmed with valid UTF-8 RSS; its article/image URLs were separately verified. Wamda and TechCrunch were DNS-blocked.** The configured Wamda `/feed` path remains unconfirmed; Wamda/TechCrunch paths and images require deployment-network verification. HTTP-fake tests validate ingestion behavior, not deployment feed availability. A blocked optional publisher can produce a nonzero exit code while Microsoft stories still import successfully.
 
 Read endpoints return JSON collections or objects. Submission endpoints return confirmation payloads. Auth endpoints return user objects with role information.
 

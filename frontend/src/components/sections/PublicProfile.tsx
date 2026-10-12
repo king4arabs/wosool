@@ -15,6 +15,7 @@ import { PublicLayout } from "@/components/layout/PublicLayout"
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import { CompanyCard } from "./CompanyCard"
+import { ProfileNews } from "./ProfileNews"
 
 type PublicCompany = ApiCompany & { founders?: ApiFounder[] }
 
@@ -81,6 +82,7 @@ export function PublicProfile({ kind }: { kind: "founder" | "company" }) {
           {founder && (founder.needs.length > 0 || founder.offers.length > 0) && <div className="grid gap-4 sm:grid-cols-2">{[[ar?'أبحث عن':'Looking for',founder.needs],[ar?'يمكنني المساعدة في':'I can help with',founder.offers]].map(([label,items])=>Array.isArray(items) && items.length > 0 && <section key={String(label)} className="rounded-3xl border border-indigo-100 bg-indigo-50 p-6"><h2 className="text-lg font-bold text-indigo-950">{label}</h2><ul className="mt-4 space-y-3 text-sm leading-7 text-indigo-900">{items.map(item=><li key={item} className="flex gap-2"><ArrowUpRight size={17} className="mt-1 shrink-0"/>{item}</li>)}</ul></section>)}</div>}
           {founder && ((data as ApiFounder).companies?.length ?? 0) > 0 && <section id="profile-companies" className="scroll-mt-24"><h2 className="mb-5 text-xl font-bold">{ar?'الشركات والمشاريع':'Companies & ventures'}</h2><div className="grid gap-5 sm:grid-cols-2">{(data as ApiFounder).companies?.map(item=><CompanyCard key={item.id} company={mapCompany(item)} linkToProfile={!snapshot}/>)}</div></section>}
           {company && ((data as PublicCompany).founders?.length ?? 0) > 0 && <section className="rounded-3xl border bg-white p-6"><h2 className="text-xl font-bold">{ar?'المؤسسون':'Founders'}</h2><ul className="mt-4 divide-y">{(data as PublicCompany).founders?.map(item=><li key={item.id}><Link className="flex min-h-14 items-center justify-between gap-3 py-3 font-semibold text-indigo-600" href={`/founders/${encodeURIComponent(item.slug)}`}>{mapFounder(item).name}<ArrowUpRight size={17}/></Link></li>)}</ul></section>}
+          <ProfileNews companyNames={kind === "founder" ? ((data as ApiFounder).companies ?? []).flatMap(item => [item.name, item.slug]) : [company?.name ?? "", company?.slug ?? ""]} />
         </div>
         <aside id="profile-connect" className="min-w-0 scroll-mt-24 space-y-4 lg:sticky lg:top-24">
           <section className="rounded-3xl border border-slate-200 bg-white p-6"><h2 className="text-lg font-bold">{ar?'ابدأ التواصل':'Make a connection'}</h2>
