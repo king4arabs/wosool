@@ -8,8 +8,10 @@ import { EoaLeadership } from './Leadership'
 import { EoaMentors } from './Mentors'
 import { EoGlobalNetwork } from './GlobalNetwork'
 import { EoaProgramDetails } from './EoaProgramDetails'
+import { EoaPerks } from './Perks'
+import { EoaDirectory } from './Directory'
 import { Eligibility } from './Eligibility'
-import { Notice, PartnerStrip, useEoaProgram } from './Shared'
+import { PartnerStrip, useEoaProgram } from './Shared'
 import { formatEoaDate } from '@/lib/eoa'
 const titles: Record<string, [string, string]> = {
   alumni: ['الخريجون ومتابعة النمو', 'Alumni & continued growth'],
@@ -26,11 +28,12 @@ const titles: Record<string, [string, string]> = {
   learning: ['التعلم والفعاليات', 'Learning & events'],
   leadership: ['قيادة البرنامج', 'Program leadership'],
   mentors: ['المرشدون والمستشارون', 'Mentors & advisors'],
+  perks: ['مزايا المسرّعة', 'Accelerator perks'],
 }
 export function EoaContent({ section }: { section: string }) {
   const { locale } = useLocale()
   const ar = locale === 'ar'
-  const { program, failed, retry } = useEoaProgram()
+  const { program } = useEoaProgram()
 
   return (
     <section className="eoa-section">
@@ -42,6 +45,7 @@ export function EoaContent({ section }: { section: string }) {
         {['program', 'alumni'].includes(section) && <CohortModel ar={ar} />}
         {section === 'alumni' && <div className="eoa-card eoa-space"><h2>{ar?'تستمر الرحلة بعد التخرج':'Your journey continues after graduation'}</h2><p>{ar?'تابع أهداف شركتك وتواصل مع مدربك وراجع الأنشطة ومواعيد المتابعة من حسابك. يسجل فريق البرنامج التخرج وخطة المتابعة، وتُقيّم أهلية EO بصورة مستقلة عند استيفاء شروطها.':'Keep tracking company goals, connect with your coach and review activities and follow-up dates in your account. The program team records graduation and follow-up plans; EO eligibility is assessed separately against its membership requirements.'}</p><Link href="/dashboard/eoa" className="eoa-btn">{ar?'افتح مساحة الخريجين':'Open your alumni workspace'}</Link></div>}
         {section === 'eligibility' && <Eligibility />}
+        {section === 'perks' && <EoaPerks />}
         {section === 'privacy' && <EoaPrivacy />}
         {section === 'about' && (
           <div className="eoa-two-grid">
@@ -165,30 +169,7 @@ export function EoaContent({ section }: { section: string }) {
                 ? 'استكشف جهات تدعم ريادة الأعمال والابتكار وتنمية القدرات، وتعرّف على برامجها وخدماتها عبر مواقعها الرسمية.'
                 : 'Explore organizations supporting entrepreneurship, innovation and capability building. Visit their official websites to discover their programs and services.'}
             </p>
-            {failed && (
-              <Notice error>
-                {ar
-                  ? 'تعذر تحميل الدليل.'
-                  : 'The directory could not load.'}
-                {' '}<button type="button" className="eoa-text-link" onClick={retry}>{ar ? 'إعادة المحاولة' : 'Try again'}</button>
-              </Notice>
-            )}
-            <div className="eoa-three-grid">
-              {program?.ecosystem.map((o) => (
-                <article className="eoa-card" key={o.id}>
-                  <h3>{ar ? o.name_ar : o.name_en}</h3>
-                  <p>{ar ? o.support_ar : o.support_en}</p>
-                  <a
-                    className="eoa-text-link"
-                    href={o.website}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    {ar ? 'الموقع الرسمي' : 'Official website'} ↗
-                  </a>
-                </article>
-              ))}
-            </div>
+            <EoaDirectory ar={ar} />
           </>
         )}
         {section === 'contact' && (

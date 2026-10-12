@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\DB;
 class ProgramService
 {
     public const SLUG = 'eo-riyadh-accelerator';
+    public const ANNUAL_JOURNEY_USD = 4000;
+    public const SPONSOR_SHARE_USD = 2000;
 
     public static function program(): Program
     {
@@ -56,6 +58,8 @@ class ProgramService
         return [
             'revenue_min_usd' => 250000, 'revenue_max_usd' => 999999,
             'annual_global_fee_usd' => 1750,
+            'annual_journey_usd' => self::ANNUAL_JOURNEY_USD,
+            'proposed_sponsor_share_usd' => self::SPONSOR_SHARE_USD,
             'verified_at' => '2026-10-09',
             'sources' => ['https://eonetwork.org/accelerator', 'https://eonetwork.org/accelerator/faqs/'],
         ];

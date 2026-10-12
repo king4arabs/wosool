@@ -1,0 +1,7 @@
+.controls { display: flex; justify-content: flex-end; gap: 0.75rem; margin-block: 1rem; }
+.controls button { border: 1px solid var(--border); background: var(--surface); color: var(--text); border-radius: var(--radius-control); min-width: 48px; min-height: 48px; cursor: pointer; }
+.controls button:focus-visible { outline: 2px solid var(--focus-ring); }
+.slider { display: flex; gap: 1rem; overflow-x: auto; scroll-snap-type: x mandatory; padding-block: 0.5rem 1rem; }
+.card { flex: 0 0 min(320px, 85vw); scroll-snap-align: start; }
+.logo { height: 72px; max-width: 170px; display: flex; align-items: center; margin-bottom: 1rem; }
+.logo img { max-width: 100%; max-height: 100%; object-fit: contain; }

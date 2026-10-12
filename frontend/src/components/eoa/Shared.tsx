@@ -122,6 +122,7 @@ export function EoaNav() {
           ['/eoa/about', ar ? 'عن المسرّعة' : 'About'],
           ['/eoa/program', ar ? 'البرنامج' : 'Program'],
           ['/eoa/eligibility', ar ? 'الأهلية والرسوم' : 'Eligibility & fees'],
+          ['/eoa/perks', ar ? 'المزايا' : 'Perks'],
           ['/eoa/learning', ar ? 'التعلم' : 'Learning'],
           ['/eoa/alumni', ar ? 'الخريجون' : 'Alumni'],
           ['/eoa/partners', ar ? 'الشركاء' : 'Partners'],

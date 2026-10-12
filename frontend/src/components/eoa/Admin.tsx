@@ -21,6 +21,7 @@ import { EoaEditorialManager } from './EoaEditorialManager'
 import { ManagementOverview, AccessGuide, type Management } from './ManagementOverview'
 import { AlumniManager } from './AlumniManager'
 import { TrackManager } from './TrackManager'
+import { PerkManager } from './PerkManager'
 import type { EoaTrack } from '@/lib/eoa'
 
 type Row = Record<string, string | number | boolean | null>
@@ -218,6 +219,7 @@ function AdminSession() {
                       ['enrollment', ar ? 'المشاركون' : 'Participants'],
                       ['alumni', ar ? 'التخرج والخريجون' : 'Graduation & alumni'],
                       ['partners', ar ? 'الشركاء' : 'Partners'],
+                      ...(review.capabilities.lead ? [['perks', ar ? 'المزايا' : 'Perks']] : []),
                       ['board', ar ? 'مجلس الإدارة' : 'Board members'],
                       ['mentors', ar ? 'المرشدون والمستشارون' : 'Mentors & advisors'],
                       ...(review.capabilities.lead ? [['editorial', ar ? 'محتوى الصفحة' : 'Page content']] : []),
@@ -249,6 +251,7 @@ function AdminSession() {
             )}
             {tab === 'board' && ops && <BoardManager lead={review.capabilities.lead} />}
             {tab === 'mentors' && ops && <MentorManager lead={review.capabilities.lead} />}
+            {tab === 'perks' && ops && review.capabilities.lead && <PerkManager organizations={ops.organizations} ar={ar} />}
             {tab === 'editorial' && ops && review.capabilities.lead && <EoaEditorialManager ar={ar} organizations={ops.organizations} onSaved={load} />}
             {tab === 'applications' && (
               <div className="eoa-admin-grid">
