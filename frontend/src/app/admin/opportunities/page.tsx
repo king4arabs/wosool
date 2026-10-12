@@ -54,9 +54,9 @@ export default function DataReview() {
   }
   return (
     <div>
-      <h1 className="gateway-heading">
+      <h2 className="gateway-heading">
         {t("مراجعة بيانات المنظومة", "Ecosystem source review")}
-      </h1>
+      </h2>
       <p className="gateway-lead">
         {t(
           "التعديلات تحفظ سجلًا للمراجعة وتقفل السجل أمام الاستيراد التلقائي. لا يؤثر هذا الدليل على بيانات المتقدمين.",

@@ -2,7 +2,7 @@
   "name": "wosool",
   "version": "0.6.0",
   "private": true,
-  "description": "Wosool — Founders to Founders platform",
+  "description": "Wosool \u2014 Founders to Founders platform",
   "scripts": {
     "setup": "npm run setup:frontend && npm run setup:backend",
     "setup:frontend": "npm --prefix frontend ci",
@@ -27,7 +27,9 @@
     "ops:ssl:repair": "node scripts/ssl-repair.mjs",
     "test:frontend": "npm --prefix frontend test",
     "test:backend": "composer --working-dir=backend run test",
-    "eoa:install": "php backend/artisan eoa:install"
+    "eoa:install": "php backend/artisan eoa:install",
+    "qa": "npm run verify && npm --prefix frontend run qa:crawl",
+    "qa:crawl": "npm --prefix frontend run qa:crawl"
   },
   "engines": {
     "node": "^22.12.0 || ^24.0.0"

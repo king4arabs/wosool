@@ -6,6 +6,19 @@ This project follows **Semantic Versioning** and a Keep a Changelog-inspired for
 
 ---
 
+## Emails, forms, heroes and plain-language copy — 2026-10-12
+
+- **Email:** every transactional email now uses one bilingual layout — Arabic (right-to-left) first, English second — with a branded theme, a single action button, a copy-paste fallback link and a bilingual footer. Converted: password reset, email verification (accelerator, founder, EOA), EOA status notices, founder activation (with code), membership approval, introduction accepted and application update. Removed Laravel's default English-only greeting, sign-off and button note.
+- **New emails:** confirmation to anyone who sends a contact, sponsorship or membership-application form, plus a team alert to `MAIL_TEAM_ADDRESS` with Reply-To set to the sender. A mail outage is logged and never fails a saved submission.
+- **Forms:** the sponsorship form was not connected to anything; it now submits through the contact API with validation, server-error mapping and a success state. The contact page was Arabic-only; it is now bilingual, accepts `?category=` and `?subject=` pre-fill, and keeps focus while typing.
+- **Pages:** the Terms page is now bilingual (English marked as a translation of the Arabic text) with correct right-to-left layout. Removed invented sponsor statistics (250+ founders, SAR 500M+, 85% decision makers) and replaced them with verifiable facts.
+- **Heroes:** one shared, start-aligned `PageHero` (eyebrow, headline, one sentence, at most two actions) for contact, events, programs, partners, sponsors and terms; the home hero drops its duplicate side panel and decorative clutter.
+- **Copy:** rewrote generic, AI-sounding headlines and descriptions in both languages across home, events, programs, partners, founders and sponsors; home news cards show the localized title and topic.
+- **More heroes:** About, Founders, Companies and News now use the same `PageHero`.
+- **QA loop:** `npm run qa` (verify + browser crawl) and `npm run qa:crawl` visit every page in Arabic and English, desktop and mobile, as visitor, member and admin, and fail on page errors, API 5xx, horizontal overflow, error boundaries and missing or duplicate `<h1>`. First run: 416 visits, 12 issues (duplicate `<h1>` on 6 admin pages) — fixed, re-run clean.
+- **Deployment:** `DEPLOYMENT.md` lists the post-deploy content imports in order.
+- **Tests:** backend 212 passing (4 new email tests), frontend 81 passing.
+
 ## Sourced newsroom and founder scorecards — 2026-10-12
 
 - **News:** 14 new independent briefs from reliable sources (Wamda, Arab News, Fintech Futures, Argaam/MAGNiTT, Saudi Press Agency, Mubasher, BRIDGE, Arab Founders) — Saudi first, then GCC and MENA — covering Q3 and September 2026 funding, Barq, Tabby, Lendo, Rize, Paymob, Fasset, Moove, Foodics–Norma, StartupBlink and MAGNiTT data. Each has key facts, an Arabic translation and a direct source link. The local demo seeder no longer creates invented news.

@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Mail\IntroductionConnectedMail;
+use App\Mail\WosoolMail;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreIntroductionRequest;
@@ -418,9 +418,8 @@ class IntroductionController extends Controller
         }
 
         try {
-            $url = rtrim((string) config('app.frontend_url'), '/').'/dashboard/messages';
-            Mail::to($sourceEmail)->send(new IntroductionConnectedMail($sourceName, $targetName, $url));
-            Mail::to($targetEmail)->send(new IntroductionConnectedMail($targetName, $sourceName, $url));
+            Mail::to($sourceEmail)->send(WosoolMail::introductionConnected($sourceName, $targetName));
+            Mail::to($targetEmail)->send(WosoolMail::introductionConnected($targetName, $sourceName));
         } catch (\Throwable $exception) {
             Log::warning('Failed to send intro email.', [
                 'source_email' => $sourceEmail,

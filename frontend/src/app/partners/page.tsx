@@ -1,6 +1,7 @@
 "use client"
 
 import Link from "next/link"
+import { PageHero } from "@/components/sections/PageHero"
 import { BarChart3, Lightbulb, Rocket, Scale } from "lucide-react"
 import { usePublicCollection } from "@/lib/use-public-collection"
 import { CollectionStatus } from "@/components/sections/CollectionStatus"
@@ -24,46 +25,7 @@ export default function PartnersPage() {
 
   return (
     <PublicLayout>
-      {/* ── Hero ── */}
-      <section className="relative overflow-hidden bg-slate-50/60 px-4 pt-28 pb-20">
-        <div className="pointer-events-none absolute inset-0" aria-hidden="true">
-          <div className="absolute top-0 right-1/4 w-[500px] h-[500px] rounded-full bg-[#3B52D4]/5 blur-[140px]" />
-          <div className="absolute bottom-0 left-1/4 w-[400px] h-[400px] rounded-full bg-indigo-400/4 blur-[140px]" />
-          <div className="absolute inset-0 bg-[radial-gradient(rgba(59,82,212,0.06)_1px,transparent_1px)] bg-[size:28px_28px] [mask-image:radial-gradient(ellipse_80%_80%_at_50%_40%,black_10%,transparent_70%)]" />
-        </div>
-
-        <div className="relative mx-auto max-w-3xl text-center">
-          <div className="inline-flex items-center gap-2 bg-[#EEF1FF] border border-[#E4E7F0] px-3 py-1 rounded-full text-xs font-bold text-[#3B52D4] mb-6">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#3B52D4] animate-pulse" />
-            {copy.badge}
-          </div>
-
-          <h1 className="text-4xl lg:text-5xl font-black text-slate-900 tracking-tight leading-[1.15] mb-5">
-            {copy.title.split(" ").slice(0, 2).join(" ")}{" "}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#3B52D4] to-indigo-500">
-              {copy.title.split(" ").slice(2).join(" ")}
-            </span>
-          </h1>
-
-          <p className="text-base lg:text-lg text-slate-600 max-w-2xl mx-auto leading-relaxed">
-            {copy.description}
-          </p>
-
-          {/* Partner type chips */}
-          <div className="flex flex-wrap items-center justify-center gap-2 mt-8">
-            {copy.types.map((type) => (
-              <div
-                key={type}
-                className="inline-flex items-center gap-1.5 bg-white border border-slate-200/80 px-3 py-1.5 rounded-full text-xs font-bold text-slate-600"
-                style={{ boxShadow: "0 2px 8px -2px rgba(59,82,212,0.06)" }}
-              >
-                <span className="w-1.5 h-1.5 rounded-full bg-[#3B52D4]" />
-                {type}
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+      <PageHero eyebrow={copy.badge} title={copy.title} description={copy.description} />
       {collection.error && <CollectionStatus {...collection} hasMore={false} empty={false} />}
 
       {/* ── Partners grid ── */}

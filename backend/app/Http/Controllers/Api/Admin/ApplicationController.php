@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Api\Admin;
 
-use App\Mail\ApplicationInvitationMail;
+use App\Mail\WosoolMail;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ApplicationResource;
@@ -117,7 +117,7 @@ class ApplicationController extends Controller
             ? rtrim((string) config('app.frontend_url'), '/') . '/login'
             : rtrim((string) config('app.frontend_url'), '/') . '/register?email=' . urlencode((string) $application->email) . '&invite=' . urlencode($token);
         try {
-            Mail::to($application->email)->send(new ApplicationInvitationMail((string) $application->full_name, $inviteUrl, $existingUser !== null));
+            Mail::to($application->email)->send(WosoolMail::applicationInvitation((string) $application->full_name, $inviteUrl, $existingUser !== null));
         } catch (\Throwable $exception) {
             Log::warning('Failed to send invitation email.', ['application_id' => $application->id, 'error' => $exception->getMessage()]);
             throw new ServiceUnavailableHttpException(null, 'Could not send the invitation email.');

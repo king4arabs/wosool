@@ -58,7 +58,7 @@ export default function AdminChatPage() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-bold">إشراف المحادثات</h1>
+      <h2 className="text-2xl font-bold">إشراف المحادثات</h2>
 
       <Card>
         <CardHeader><h2 className="font-semibold">طلبات المساعدة غير المحلولة</h2></CardHeader>

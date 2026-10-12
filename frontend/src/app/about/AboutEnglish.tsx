@@ -1,9 +1,9 @@
 import Link from "next/link"
 import { Globe, Heart, Lightbulb, Shield, Users } from "lucide-react"
+import { PageHero } from "@/components/sections/PageHero"
 import { PublicLayout } from "@/components/layout/PublicLayout"
 import { SectionHeader } from "@/components/sections/SectionHeader"
 import { WosoolBoard } from "@/components/sections/WosoolBoard"
-import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 
 const objectives = [
@@ -24,15 +24,7 @@ export function AboutEnglish() {
   return (
     <PublicLayout>
       <div lang="en" dir="ltr">
-        <section className="bg-[var(--surface-inverse)] px-4 py-24 text-[var(--on-dark)]">
-          <div className="mx-auto max-w-4xl text-center">
-            <Badge variant="gold" className="mb-4 px-4 py-1.5 text-xs tracking-widest">OUR STORY</Badge>
-            <h1 className="mb-6 text-5xl font-bold tracking-tight sm:text-6xl">About Wosool</h1>
-            <p className="mx-auto max-w-2xl text-xl leading-relaxed text-[var(--on-dark-muted)]">
-              Born in London. Built by founders, for founders.
-            </p>
-          </div>
-        </section>
+        <PageHero tone="dark" eyebrow="Our story" title="About Wosool" description="Born in London. Built by founders, for founders." />
 
         <section className="bg-[var(--surface)] px-4 py-24">
           <div className="mx-auto grid max-w-7xl items-center gap-12 lg:grid-cols-2">

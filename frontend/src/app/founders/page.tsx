@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import { PageHero, heroPrimary, heroSecondary } from "@/components/sections/PageHero"
 import Link from "next/link"
 import { ArrowLeft, ArrowRight, Search } from "lucide-react"
 import { PublicLayout } from "@/components/layout/PublicLayout"
@@ -45,14 +46,12 @@ function FounderDirectory() {
   const filtersKey = `${isSpotlight}-${search}-${sector}-${stage}-${location}`
 
   return <PublicLayout><div className={styles.home} dir={direction} lang={locale}>
-    <section className="border-b border-[var(--border-soft)] bg-[var(--surface-soft)] px-4 py-14 sm:py-20" aria-labelledby="founder-directory-title">
-      <div className="mx-auto max-w-5xl">
-        <p className={styles.eyebrow}>{isSpotlight ? ar ? 'مؤسسون تحت الضوء' : 'FOUNDER SPOTLIGHT' : copy.badge}</p>
-        <h1 id="founder-directory-title" className="max-w-3xl text-3xl font-extrabold leading-snug text-[var(--text-strong)] sm:text-5xl">{isSpotlight ? ar ? 'تعرّف على الأشخاص وراء الشركات.' : 'Meet the people behind the companies.' : copy.title}</h1>
-        <p className={styles.lead}>{isSpotlight ? ar ? 'تعرّف على مؤسسين يبنون شركات في السعودية وخارجها. استكشف خبراتهم وأعمالهم من خلال ملفات عامة ومصادر منشورة.' : 'Meet founders building companies across Saudi Arabia and beyond. Explore their experience and businesses through public profiles and published sources.' : ar ? 'استكشف ملفات مؤسسي المجتمع وشركاتهم وخبراتهم، واعثر على اهتمامات مشتركة تبدأ منها محادثتك القادمة.' : 'Explore community founders, their companies and their experience. Find a shared interest to start your next conversation.'}</p>
-        <div className={styles.actions}><a href="#founder-directory" className={styles.primary}>{ar ? 'استكشف المؤسسين' : 'Explore founders'}<Arrow size={17} aria-hidden="true" /></a><Link href="/apply" className={styles.secondary}>{ar ? 'انضم إلى مجتمع وصول' : 'Join the Wosool community'}</Link></div>
-      </div>
-    </section>
+    <PageHero
+      eyebrow={isSpotlight ? ar ? 'مؤسسون من السعودية والعالم' : 'Founders from Saudi Arabia and beyond' : copy.badge}
+      title={isSpotlight ? ar ? 'المؤسسون وشركاتهم' : 'Founders and their companies' : copy.title}
+      description={isSpotlight ? ar ? 'ملفات عامة مبنية على مصادر منشورة لمؤسسين في السعودية والخليج والعالم، مع رابط لكل مصدر.' : 'Public profiles built from published sources, covering founders in Saudi Arabia, the Gulf and worldwide, with a link to every source.' : copy.description}
+      actions={<><a href="#founder-directory" className={heroPrimary}>{ar ? 'تصفّح المؤسسين' : 'Browse founders'}<Arrow size={17} aria-hidden="true" /></a><Link href="/apply" className={heroSecondary}>{ar ? 'قدّم طلب العضوية' : 'Apply for membership'}</Link></>}
+    />
     {collection.error && <div className={`${styles.container} ${styles.availability}`} role="status"><span>{ar ? 'ملفات أعضاء المجتمع غير متاحة مؤقتًا.' : 'Community member profiles are temporarily unavailable.'}</span><button type="button" disabled={collection.loading} onClick={collection.retry}>{ar ? 'إعادة المحاولة' : 'Try again'}</button></div>}
 
     {featured.length > 0 && <section className={`${styles.container} ${styles.section}`} aria-labelledby="featured-founders-title">

@@ -115,4 +115,17 @@ return [
         'name' => env('MAIL_FROM_NAME', env('APP_NAME', 'Laravel')),
     ],
 
+    /*
+    | Team inbox for operational alerts (contact messages, membership applications).
+    | Defaults to the sender address so alerts are never silently dropped.
+    */
+    'team_address' => env('MAIL_TEAM_ADDRESS', env('MAIL_FROM_ADDRESS', 'hello@example.com')),
+
+    'markdown' => [
+        'theme' => env('MAIL_MARKDOWN_THEME', 'wosool'),
+        'paths' => [
+            resource_path('views/vendor/mail'),
+        ],
+    ],
+
 ];

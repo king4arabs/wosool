@@ -2,7 +2,7 @@
 
 namespace App\Jobs;
 
-use App\Mail\ApplicationUpdateMail;
+use App\Mail\WosoolMail;
 
 use App\Models\ApplicationEvent;
 use App\Models\ProgramApplication;
@@ -52,7 +52,7 @@ class SendApplicationUpdate implements ShouldBeUnique, ShouldQueue
                 return;
             }
             $url = rtrim(config('app.frontend_url'), '/').'/accelerator/apply';
-            Mail::to($user->email)->send(new ApplicationUpdateMail($url));
+            Mail::to($user->email)->send(WosoolMail::applicationUpdate($url));
             $event->update(['notification_sent_at' => now()]);
         });
     }

@@ -12,7 +12,8 @@
     "lint": "eslint",
     "type-check": "tsc --noEmit",
     "validate:entrepreneurs": "node --import tsx scripts/validate-entrepreneurs.ts",
-    "test": "node --import tsx --test src/lib/*.test.ts"
+    "test": "node --import tsx --test src/lib/*.test.ts",
+    "qa:crawl": "node scripts/qa-crawl.mjs"
   },
   "dependencies": {
     "@fontsource-variable/cairo": "5.3.0",
@@ -42,6 +43,7 @@
     "eslint": "^9",
     "eslint-config-next": "16.2.2",
     "eslint-plugin-react-hooks": "7.0.1",
+    "playwright": "^1.64.0",
     "tailwindcss": "^4",
     "tsx": "^4.23.0",
     "typescript": "^5"

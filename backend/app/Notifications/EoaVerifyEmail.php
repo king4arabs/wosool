@@ -16,12 +16,17 @@ class EoaVerifyEmail extends VerifyEmail implements ShouldQueue
 
     protected function buildMailMessage($url)
     {
-        return (new MailMessage)
-            ->subject('Verify your account / توثيق حسابك — EO Riyadh Accelerator')
-            ->line('Verify your email to save and submit your application / وثّق بريدك لحفظ طلبك وتقديمه.')
-            ->action('Verify email / توثيق البريد', $url)
-            ->line('This link expires in 60 minutes / تنتهي صلاحية الرابط خلال 60 دقيقة.')
-            ->line('If you did not create this account, ignore this email / إذا لم تنشئ هذا الحساب، تجاهل الرسالة.');
+        return \App\Mail\BilingualEmail::message('توثيق حسابك في مسرّعة EO الرياض', 'Verify your EO Riyadh Accelerator account', \App\Mail\BilingualEmail::data(
+            ar: ['title' => 'وثّق بريدك لحفظ طلبك', 'lines' => [
+                'تحتاج إلى بريد موثّق لحفظ طلبك في مسرّعة EO الرياض وتقديمه.',
+                'الرابط صالح لمدة 60 دقيقة.',
+            ], 'after' => ['إذا لم تنشئ هذا الحساب فتجاهل الرسالة.']],
+            en: ['title' => 'Verify your email to save your application', 'lines' => [
+                'You need a verified email to save and submit your EO Riyadh Accelerator application.',
+                'The link is valid for 60 minutes.',
+            ], 'after' => ['If you did not create this account, you can ignore this email.']],
+            action: \App\Mail\BilingualEmail::action($url, 'توثيق البريد', 'Verify email'),
+        ));
     }
 
     protected function verificationUrl($notifiable): string

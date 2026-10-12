@@ -1,6 +1,7 @@
 "use client"
 
 import Link from "next/link"
+import { PageHero } from "@/components/sections/PageHero"
 import { useState } from "react"
 import { Briefcase, Search, TrendingUp, Users } from "lucide-react"
 import { usePublicCollection } from "@/lib/use-public-collection"
@@ -9,7 +10,6 @@ import { PublicLayout } from "@/components/layout/PublicLayout"
 import { SectionHeader } from "@/components/sections/SectionHeader"
 import { CardBrowser } from "@/components/sections/CardBrowser"
 import { CompanyCard } from "@/components/sections/CompanyCard"
-import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import {
   companiesPageCopy,
@@ -37,15 +37,7 @@ export default function CompaniesPage() {
 
   return (
     <PublicLayout>
-      <section className="bg-[#0A1628] px-4 py-20 text-white">
-        <div className="mx-auto max-w-4xl text-center">
-          <Badge variant="gold" className="mb-4 px-4 py-1.5 text-xs uppercase tracking-widest">
-            {copy.badge}
-          </Badge>
-          <h1 className="mb-4 text-5xl font-bold tracking-tight">{copy.title}</h1>
-          <p className="mx-auto max-w-2xl text-xl text-gray-300">{copy.description}</p>
-        </div>
-      </section>
+      <PageHero eyebrow={copy.badge} title={copy.title} description={copy.description} />
       {collection.error && <CollectionStatus {...collection} hasMore={false} empty={false} />}
 
       <section className="border-b border-gray-100 bg-white px-4 py-12">

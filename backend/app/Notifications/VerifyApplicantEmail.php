@@ -35,9 +35,16 @@ class VerifyApplicantEmail extends Notification implements ShouldQueue
             ['id' => $notifiable->getKey(), 'hash' => sha1($notifiable->getEmailForVerification())], absolute: false);
         $url = rtrim(config('app.frontend_url'), '/').'/verify-email?'.http_build_query(['path' => $path]);
 
-        return (new MailMessage)->subject('Wosool | تأكيد البريد الإلكتروني')
-            ->line('Confirm your email to start your EO Riyadh Accelerator application. أكّد بريدك الإلكتروني لبدء طلبك.')
-            ->action('Verify email | تأكيد البريد', $url)
-            ->line('This link expires in 60 minutes. تنتهي صلاحية الرابط خلال ٦٠ دقيقة.');
+        return \App\Mail\BilingualEmail::message('تأكيد بريدك الإلكتروني', 'Confirm your email', \App\Mail\BilingualEmail::data(
+            ar: ['title' => 'أكّد بريدك الإلكتروني', 'lines' => [
+                'خطوة واحدة قبل أن تبدأ طلبك في مسرّعة EO الرياض: أكّد أن هذا البريد يخصك.',
+                'الرابط صالح لمدة 60 دقيقة.',
+            ]],
+            en: ['title' => 'Confirm your email', 'lines' => [
+                'One step before you start your EO Riyadh Accelerator application: confirm this email address is yours.',
+                'The link is valid for 60 minutes.',
+            ]],
+            action: \App\Mail\BilingualEmail::action($url, 'تأكيد البريد', 'Confirm email'),
+        ));
     }
 }

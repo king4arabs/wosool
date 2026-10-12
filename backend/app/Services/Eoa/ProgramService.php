@@ -49,7 +49,7 @@ class ProgramService
             'created_at' => now(), 'updated_at' => now(),
         ]);
         if (self::mailConfigured()) {
-            $user->notify((new EoaNotice($message))->afterCommit());
+            $user->notify((new EoaNotice($message, $event))->afterCommit());
         }
     }
 

@@ -37,7 +37,7 @@ GATEWAY_PRIVACY_READY=false
 GATEWAY_EMAIL_UPDATES=false
 ```
 
-Keep the existing `APP_KEY`. Configure database credentials, a real mail transport and sender, and appropriate queue/cache drivers. The default `MAIL_MAILER=log` is local-only and cannot deliver account recovery messages. Public websocket keys may be exposed to the frontend; secrets may not.
+Keep the existing `APP_KEY`. Set `MAIL_TEAM_ADDRESS` to the inbox that should receive contact, sponsorship and membership-application alerts (defaults to `MAIL_FROM_ADDRESS`). Configure database credentials, a real mail transport and sender, and appropriate queue/cache drivers. The default `MAIL_MAILER=log` is local-only and cannot deliver account recovery messages. Public websocket keys may be exposed to the frontend; secrets may not.
 
 ### Hostinger Web App (wosool.org)
 
@@ -78,6 +78,21 @@ Hostinger's Node.js build sandbox cannot spawn Turbopack's PostCSS worker (build
 4. Switch the host to the new processes/artifacts, then verify the checks below. Rebuild the frontend whenever `NEXT_PUBLIC_*` variables change.
 
 Never run `migrate:fresh`, rotate `APP_KEY`, or seed demonstration accounts during deployment. Provision production roles separately with `php artisan db:seed --class=RoleAndPermissionSeeder --force` only when needed.
+
+## Post-deploy content imports
+
+All imports are idempotent and never overwrite edits made in the admin. Run them after `migrate`:
+
+```bash
+cd backend
+php artisan eoa:install                 # EO Riyadh Accelerator records (intake stays closed)
+php artisan wosool:import-founders      # researched founder scorecards, Saudi first
+php artisan wosool:import-news          # reviewed, sourced news briefs
+php artisan directory:import            # startup directory (pending evidence stays hidden)
+php artisan news:sync                   # verified publisher feed (also scheduled daily)
+```
+
+`wosool:import-ecosystem` (programs and opportunities) is gated: run it without flags to review, then with `--apply --backup-verified --staging-verified` only after the checks in [accelerator operations](docs/ACCELERATOR_OPERATIONS.md).
 
 ## Verification
 

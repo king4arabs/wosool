@@ -1,10 +1,9 @@
 .home { color:var(--text); background:var(--surface); }
 .container { width:min(1200px,calc(100% - 48px)); margin-inline:auto; }
 .hero { position:relative; overflow:hidden; background:var(--brand-navy); color:var(--on-dark); }
-.hero::before,.hero::after { content:""; position:absolute; border-radius:50%; pointer-events:none; }
-.hero::before { width:clamp(160px,24vw,340px); aspect-ratio:1; background:var(--brand-pink); inset-block-start:-100px; inset-inline-end:-60px; }
-.hero::after { width:120px; aspect-ratio:1; background:var(--brand-orange); inset-block-end:-80px; inset-inline-start:40%; }
-.heroGrid { position:relative; z-index:1; display:grid; grid-template-columns:minmax(0,1.3fr) minmax(0,1fr); align-items:center; gap:64px; padding-block:var(--section-space); }
+/* One quiet brand accent; the copy carries the hero. */
+.hero::before { content:""; position:absolute; border-radius:50%; pointer-events:none; width:clamp(120px,16vw,220px); aspect-ratio:1; background:var(--brand-pink); opacity:.9; inset-block-start:-90px; inset-inline-end:-60px; }
+.heroGrid { position:relative; z-index:1; display:grid; grid-template-columns:minmax(0,820px); align-items:center; gap:32px; padding-block:var(--section-space); }
 .eyebrow { font-size:12px; font-weight:700; color:var(--action-bg); margin-bottom:16px; }
 .hero .eyebrow { color:var(--on-dark-muted); }
 .hero h1 { font-size:clamp(2.75rem,6.4vw,5.5rem); line-height:1.18; font-weight:700; }

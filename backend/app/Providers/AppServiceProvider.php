@@ -2,9 +2,9 @@
 
 namespace App\Providers;
 
+use App\Mail\BilingualEmail;
 use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
@@ -30,13 +30,21 @@ class AppServiceProvider extends ServiceProvider
                 'email' => $user->getEmailForPasswordReset(),
             ]);
         ResetPassword::createUrlUsing($resetUrl);
-        ResetPassword::toMailUsing(fn ($user, string $token) => (new MailMessage)
-            ->subject('Wosool | Reset your password / إعادة تعيين كلمة المرور')
-            ->greeting('Reset your password | إعادة تعيين كلمة المرور')
-            ->line('We received a request to reset your Wosool password. تلقّينا طلباً لإعادة تعيين كلمة المرور لحسابك في وصول.')
-            ->line('This link expires in '.config('auth.passwords.users.expire').' minutes. تنتهي صلاحية الرابط خلال '.config('auth.passwords.users.expire').' دقيقة.')
-            ->action('Reset password | إعادة تعيين كلمة المرور', $resetUrl($user, $token))
-            ->line('If you did not request this change, you can ignore this email. إذا لم تطلب ذلك، تجاهل هذه الرسالة.'));
+        ResetPassword::toMailUsing(function ($user, string $token) use ($resetUrl) {
+            $minutes = (int) config('auth.passwords.users.expire');
+
+            return BilingualEmail::message('إعادة تعيين كلمة المرور', 'Reset your password', BilingualEmail::data(
+                ar: ['title' => 'إعادة تعيين كلمة المرور', 'lines' => [
+                    'وصلنا طلب لإعادة تعيين كلمة المرور لحسابك في وصول.',
+                    "الرابط صالح لمدة {$minutes} دقيقة ويُستخدم مرة واحدة.",
+                ], 'after' => ['إذا لم تطلب ذلك فلا داعي لأي إجراء، وستبقى كلمة المرور الحالية كما هي.']],
+                en: ['title' => 'Reset your password', 'lines' => [
+                    'We received a request to reset the password for your Wosool account.',
+                    "This link expires in {$minutes} minutes and can be used once.",
+                ], 'after' => ['If you did not ask for this, no action is needed and your current password stays the same.']],
+                action: BilingualEmail::action($resetUrl($user, $token), 'تعيين كلمة مرور جديدة', 'Choose a new password'),
+            ));
+        });
 
         // Enforce strict model behavior in non-production environments
         Model::shouldBeStrict(! $this->app->isProduction());
