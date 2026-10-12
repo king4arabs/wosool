@@ -69,6 +69,7 @@ class FounderActivationTest extends TestCase
         $this->assertNotNull($user->email_verified_at); $this->assertTrue($user->hasRole('member')); $this->assertTrue($p->fresh()->communityActive());
         $this->activate($token)->assertUnprocessable();
         $this->actingAs($user)->getJson('/api/v1/member/founder-profile')->assertOk()->assertJsonPath('data.slug', $p->slug);
+        $this->getJson('/api/v1/member/scorecard')->assertOk()->assertJsonPath('data.founder_profile_id', $p->id);
         $this->getJson('/api/v1/member/chat/rooms')->assertOk();
     }
     public function test_activation_requires_email_code_and_limits_guesses(): void
@@ -79,6 +80,8 @@ class FounderActivationTest extends TestCase
         $html = (string) app(\Illuminate\Mail\Markdown::class)->render($message->markdown, $message->viewData);
         $this->assertStringContainsString($this->code, $html);
         $this->assertStringContainsString('&lt;Founder&gt;', $html);
+        $this->assertStringContainsString('wosool-network-logo.png', $html);
+        $this->assertStringContainsString('Founders to Founders', $html);
         $this->activate($token, ['code' => '123'])->assertUnprocessable();
         $wrong = $this->code === '000000' ? '999999' : '000000';
         for ($i = 0; $i < 5; $i++) {

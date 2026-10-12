@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Application;
 use App\Models\FounderProfile;
+use App\Models\Scorecard;
 use App\Models\User;
 use App\Services\FounderInvitationService;
 use Illuminate\Http\Request;
@@ -70,6 +71,7 @@ class FounderActivationController extends Controller
             Role::findOrCreate('member', 'web');
             $user->assignRole('member');
             $founder->update(['user_id' => $user->id, 'claimed_at' => now()]);
+            Scorecard::firstOrCreate(['founder_profile_id' => $founder->id], ['historical_logs' => []]);
             Application::query()->whereRaw('LOWER(email) = ?', [strtolower($user->email)])
                 ->where('status', 'approved')->whereNull('user_id')
                 ->update(['user_id' => $user->id, 'invite_token' => null]);

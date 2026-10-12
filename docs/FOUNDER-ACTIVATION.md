@@ -26,7 +26,7 @@ The application sends synchronously and marks `sent` only after the configured m
 
 Members can edit display name, position, biography, portrait URL, location, country, skills, needs, offers and social links, and choose public visibility. Existing directory asset paths are accepted for portraits. Imported translations stop overriding fields once an owner edits them. Companies remain available to other co-founders if one founder removes their association.
 
-The public **Message founder** action opens an idempotent private room with precisely the two participants. Unclaimed and suspended profiles cannot start community communication; unauthorized users cannot read room history. Admins can hide, publish, feature, suspend and resume profiles, and review invitation state. Community introduction and admin matching selectors include only member-owned profiles, and the server rejects unclaimed match participants. A hidden profile returns 404 publicly; a suspended member is denied community endpoints.
+The public **Message founder** action opens an idempotent private room with precisely the two participants. Unclaimed and suspended profiles cannot start community communication; unauthorized users cannot read room history. Activation creates a private, initially unscored scorecard for the claimed founder profile without implying a verified growth rating. Admins can hide, publish, feature, suspend and resume profiles, and review invitation state. Community introduction and admin matching selectors include only member-owned profiles, and the server rejects unclaimed match participants. A hidden profile returns 404 publicly; a suspended member is denied community endpoints.
 
 ## Release checks
 
