@@ -33,7 +33,7 @@ class NewsSyncTest extends TestCase
             description: '<p>Acme and PrivateCo raised funding. '.str_repeat('Brief news. ', 100).'</p>',
         )));
 
-        $this->artisan('news:sync')->assertSuccessful();
+        $this->artisan('news:sync', ['--include-unverified' => true])->assertSuccessful();
         $article = NewsItem::firstOrFail();
         $this->assertSame('https://www.wamda.com/2026/10/acme-funding', $article->source_url);
         $this->assertSame('Wamda', $article->source_name);
@@ -47,7 +47,7 @@ class NewsSyncTest extends TestCase
 
         $article->update(['title' => 'Editorial title', 'companies' => ['EditorialCo'], 'status' => 'draft']);
         $slug = $article->slug;
-        $this->artisan('news:sync')->assertSuccessful();
+        $this->artisan('news:sync', ['--include-unverified' => true])->assertSuccessful();
         $this->assertDatabaseCount('news_items', 1);
         $this->assertSame('Editorial title', $article->fresh()->title);
         $this->assertSame(['EditorialCo'], $article->fresh()->companies);
@@ -59,9 +59,9 @@ class NewsSyncTest extends TestCase
     {
         $manual = $this->manualNews();
         $this->fakeFeed($this->rss($this->item()));
-        $this->artisan('news:sync')->assertSuccessful();
+        $this->artisan('news:sync', ['--include-unverified' => true])->assertSuccessful();
         NewsItem::whereNotNull('source_url')->firstOrFail()->delete();
-        $this->artisan('news:sync')->assertSuccessful();
+        $this->artisan('news:sync', ['--include-unverified' => true])->assertSuccessful();
 
         $this->assertDatabaseCount('news_items', 2);
         $this->assertSame(1, NewsItem::count());
@@ -82,9 +82,9 @@ class NewsSyncTest extends TestCase
             'https://techcrunch.com/category/startups/feed/' => Http::response($this->rss($this->item(
                 url: 'https://techcrunch.com/2026/10/10/acme-funding/',
             ))),
-            '*' => Http::response($this->rss('')),
+            '*' => fn () => Http::response($this->rss('')),
         ]);
-        $this->artisan('news:sync')->assertFailed();
+        $this->artisan('news:sync', ['--include-unverified' => true])->assertFailed();
         $this->assertDatabaseCount('news_items', 2);
         $this->assertSame('Manual news', $manual->fresh()->title);
         $this->assertDatabaseHas('news_items', ['source_name' => 'TechCrunch']);
@@ -92,7 +92,7 @@ class NewsSyncTest extends TestCase
         Http::swap(new Factory);
         Http::preventStrayRequests();
         Http::fake(['*' => Http::failedConnection()]);
-        $this->artisan('news:sync')->assertFailed();
+        $this->artisan('news:sync', ['--include-unverified' => true])->assertFailed();
         $this->assertDatabaseCount('news_items', 2);
     }
 
@@ -117,7 +117,7 @@ class NewsSyncTest extends TestCase
         $items .= $this->item(url: 'https://www.wamda.com/invalid-date', date: 'Sat, 31 Feb 2026 12:00:00 +0000');
         $this->fakeFeed($this->rss($items));
 
-        $this->artisan('news:sync')->assertSuccessful();
+        $this->artisan('news:sync', ['--include-unverified' => true])->assertSuccessful();
         $this->assertDatabaseCount('news_items', 0);
     }
 
@@ -134,7 +134,7 @@ class NewsSyncTest extends TestCase
             str_repeat(' ', 1_048_577),
         ] as $body) {
             $this->fakeFeed($body);
-            $this->artisan('news:sync')->assertFailed();
+            $this->artisan('news:sync', ['--include-unverified' => true])->assertFailed();
         }
 
         $this->assertDatabaseCount('news_items', 1);
@@ -149,7 +149,7 @@ class NewsSyncTest extends TestCase
             $items .= $this->item(url: 'https://www.wamda.com/story-'.$i);
         }
         $this->fakeFeed($this->rss($items));
-        $this->artisan('news:sync')->assertSuccessful();
+        $this->artisan('news:sync', ['--include-unverified' => true])->assertSuccessful();
 
         $this->assertDatabaseCount('news_items', 49);
         $this->assertDatabaseHas('news_items', ['source_url' => 'https://www.wamda.com/story']);
@@ -164,7 +164,7 @@ class NewsSyncTest extends TestCase
 
             return Http::response('', 302, ['Location' => 'http://127.0.0.1/private']);
         });
-        $this->artisan('news:sync')->assertFailed();
+        $this->artisan('news:sync', ['--include-unverified' => true])->assertFailed();
         foreach ($requestOptions as $options) {
             $this->assertFalse($options['allow_redirects']);
             $this->assertTrue($options['stream']);
@@ -172,15 +172,16 @@ class NewsSyncTest extends TestCase
             $this->assertSame(3, $options['connect_timeout']);
             $this->assertSame(3, $options['read_timeout']);
         }
-        Http::assertSentCount(3);
+        Http::assertSentCount(4);
         Http::assertSent(fn (Request $request) => $request->url() === 'https://www.wamda.com/feed');
+        Http::assertSent(fn (Request $request) => $request->url() === 'https://www.microsoft.com/en-us/startups/blog/feed/');
         $this->assertDatabaseCount('news_items', 0);
     }
 
     public function test_public_news_resource_exposes_source_and_company_names(): void
     {
         $this->fakeFeed($this->rss($this->item()));
-        $this->artisan('news:sync')->assertSuccessful();
+        $this->artisan('news:sync', ['--include-unverified' => true])->assertSuccessful();
         $article = NewsItem::firstOrFail();
         $article->update(['companies' => ['Acme']]);
 
@@ -210,13 +211,13 @@ class NewsSyncTest extends TestCase
                 description: $candidate['description'] ?? '<p>Acme raised funding.</p>',
                 imageXml: $candidate['xml'] ?? '',
             )));
-            $this->artisan('news:sync')->assertSuccessful();
+            $this->artisan('news:sync', ['--include-unverified' => true])->assertSuccessful();
             $this->assertDatabaseHas('news_items', [
                 'source_url' => 'https://www.wamda.com/image-story-'.$i,
                 'image_url' => $image,
                 'image_credit' => 'Wamda',
             ]);
-            Http::assertSentCount(3);
+            Http::assertSentCount(4);
         }
 
         $techCrunchImage = 'https://techcrunch.com/wp-content/uploads/2026/10/acme.jpg';
@@ -229,7 +230,7 @@ class NewsSyncTest extends TestCase
             ))),
             '*' => fn () => Http::response($this->rss('')),
         ]);
-        $this->artisan('news:sync')->assertSuccessful();
+        $this->artisan('news:sync', ['--include-unverified' => true])->assertSuccessful();
         $this->assertDatabaseHas('news_items', ['image_url' => $techCrunchImage, 'image_credit' => 'TechCrunch']);
     }
 
@@ -251,7 +252,7 @@ class NewsSyncTest extends TestCase
                 description: '<p>Acme raised funding.</p><img src="'.htmlspecialchars($image, ENT_QUOTES).'">',
                 imageXml: '<media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="'.htmlspecialchars($image, ENT_XML1).'"/>',
             )));
-            $this->artisan('news:sync')->assertSuccessful();
+            $this->artisan('news:sync', ['--include-unverified' => true])->assertSuccessful();
             $this->assertDatabaseHas('news_items', [
                 'source_url' => 'https://www.wamda.com/unsafe-image-'.$i,
                 'image_url' => null,
@@ -262,8 +263,35 @@ class NewsSyncTest extends TestCase
             url: 'https://www.wamda.com/video-not-image',
             imageXml: '<media:content xmlns:media="http://search.yahoo.com/mrss/" medium="video" type="video/mp4" url="https://www.wamda.com/video.mp4"/>',
         )));
-        $this->artisan('news:sync')->assertSuccessful();
+        $this->artisan('news:sync', ['--include-unverified' => true])->assertSuccessful();
         $this->assertDatabaseHas('news_items', ['source_url' => 'https://www.wamda.com/video-not-image', 'image_url' => null]);
+    }
+
+    public function test_sync_imports_verified_microsoft_startup_feed_with_publisher_image_credit(): void
+    {
+        $source = 'https://www.microsoft.com/en-us/startups/blog/2026/09/15/startup-story/';
+        $image = 'https://www.microsoft.com/en-us/startups/blog/wp-content/uploads/2026/09/startup-story.jpg';
+        Http::fake([
+            'https://www.microsoft.com/en-us/startups/blog/feed/' => fn () => Http::response($this->rss($this->item(
+                url: $source,
+                date: 'Tue, 15 Sep 2026 12:00:00 +0000',
+                description: '<p>Acme startup brief.</p><img src="'.$image.'">',
+            ))),
+            '*' => fn () => Http::response($this->rss('')),
+        ]);
+
+        $this->artisan('news:sync')->assertSuccessful();
+        $this->artisan('news:sync')->assertSuccessful();
+        Http::assertSentCount(2);
+        Http::assertNotSent(fn (Request $request) => $request->url() !== 'https://www.microsoft.com/en-us/startups/blog/feed/');
+        $this->assertDatabaseCount('news_items', 1);
+        $this->assertDatabaseHas('news_items', [
+            'source_url' => $source,
+            'source_name' => 'Microsoft for Startups',
+            'image_url' => $image,
+            'image_credit' => 'Microsoft for Startups',
+            'content' => null,
+        ]);
     }
 
     public function test_admin_can_validate_and_edit_source_metadata(): void
@@ -292,6 +320,49 @@ class NewsSyncTest extends TestCase
         $this->postJson('/api/v1/admin/news', $data)
             ->assertUnprocessable()
             ->assertJsonValidationErrors(['source_url']);
+    }
+
+    public function test_microsoft_content_encoded_image_is_used_only_when_description_has_no_image(): void
+    {
+        $image = 'https://www.microsoft.com/en-us/startups/blog/wp-content/uploads/2026/09/content-image.jpg';
+        $descriptionImage = 'https://www.microsoft.com/en-us/startups/blog/wp-content/uploads/2026/09/description-image.jpg';
+        $fullContent = '<h1>Full article text must not be stored.</h1><img src="'.$image.'">';
+        $items = $this->item(
+            url: 'https://www.microsoft.com/en-us/startups/blog/content-image/',
+            description: '<p>Only this brief should be stored.</p>',
+            content: $fullContent,
+        ).$this->item(
+            url: 'https://www.microsoft.com/en-us/startups/blog/description-image/',
+            description: '<p>Another brief.</p><img src="'.$descriptionImage.'">',
+            content: $fullContent,
+        ).$this->item(
+            url: 'https://www.microsoft.com/en-us/startups/blog/unsafe-content-image/',
+            content: '<p>Full source article.</p><img src="https://evil.example/image.jpg">',
+        );
+        Http::fake([
+            'https://www.microsoft.com/en-us/startups/blog/feed/' => fn () => Http::response($this->rss($items)),
+        ]);
+
+        $this->artisan('news:sync')->assertSuccessful();
+        $this->assertDatabaseHas('news_items', [
+            'source_url' => 'https://www.microsoft.com/en-us/startups/blog/content-image/',
+            'image_url' => $image,
+            'image_credit' => 'Microsoft for Startups',
+            'excerpt' => 'Only this brief should be stored.',
+            'content' => null,
+        ]);
+        $this->assertDatabaseHas('news_items', [
+            'source_url' => 'https://www.microsoft.com/en-us/startups/blog/description-image/',
+            'image_url' => $descriptionImage,
+            'content' => null,
+        ]);
+        $this->assertDatabaseHas('news_items', [
+            'source_url' => 'https://www.microsoft.com/en-us/startups/blog/unsafe-content-image/',
+            'image_url' => null,
+            'image_credit' => null,
+            'content' => null,
+        ]);
+        Http::assertSentCount(1);
     }
 
     public function test_company_filter_matches_only_exact_company_names_or_tags(): void
@@ -439,10 +510,11 @@ class NewsSyncTest extends TestCase
         string $date = 'Sat, 10 Oct 2026 12:00:00 +0000',
         string $description = '<p>Acme raised seed funding.</p>',
         string $imageXml = '',
+        string $content = 'Full article must not be copied.',
     ): string {
         return '<item><title><![CDATA[Acme <b>raises</b> funding]]></title><link>'
             .htmlspecialchars($url, ENT_XML1).'</link><pubDate>'.$date.'</pubDate><description><![CDATA['
-            .$description.']]></description><content:encoded xmlns:content="http://purl.org/rss/1.0/modules/content/"><![CDATA[Full article must not be copied.]]></content:encoded>'
+            .$description.']]></description><content:encoded xmlns:content="http://purl.org/rss/1.0/modules/content/"><![CDATA['.$content.']]></content:encoded>'
             .$imageXml.'<enclosure url="https://evil.example/image.jpg" type="image/jpeg"/></item>';
     }
 

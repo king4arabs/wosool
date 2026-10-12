@@ -16,7 +16,7 @@ use Throwable;
 
 class SyncNews extends Command
 {
-    protected $signature = 'news:sync';
+    protected $signature = 'news:sync {--include-unverified : Also attempt unverified Wamda and TechCrunch feed endpoints}';
 
     protected $description = 'Import brief startup RSS news summaries from trusted publishers without replacing editorial records.';
 
@@ -25,6 +25,12 @@ class SyncNews extends Command
     private const MAX_ITEMS = 50;
 
     private const FEEDS = [
+        [
+            'url' => 'https://www.microsoft.com/en-us/startups/blog/feed/',
+            'name' => 'Microsoft for Startups',
+            'hosts' => ['www.microsoft.com'],
+            'image_hosts' => ['www.microsoft.com'],
+        ],
         [
             'url' => 'https://www.wamda.com/feed',
             'name' => 'Wamda',
@@ -52,6 +58,10 @@ class SyncNews extends Command
         $companyNames = CompanyProfile::query()->where('is_public', true)->pluck('name')->all();
 
         foreach (self::FEEDS as $feed) {
+            if ($feed['name'] !== 'Microsoft for Startups' && ! $this->option('include-unverified')) {
+                continue;
+            }
+
             try {
                 $xml = $this->fetch($feed['url']);
                 $items = $this->parse($xml);
@@ -228,19 +238,13 @@ class SyncNews extends Command
             }
         }
 
-        $previous = libxml_use_internal_errors(true);
-        try {
-            $html = new DOMDocument;
-            $description = html_entity_decode((string) $item->description, ENT_QUOTES | ENT_HTML5, 'UTF-8');
-            if ($description !== '' && $html->loadHTML($description, LIBXML_NONET | LIBXML_NOERROR | LIBXML_NOWARNING)) {
-                $image = $html->getElementsByTagName('img')->item(0);
-                if ($image !== null) {
-                    $candidates[] = $image->getAttribute('src');
-                }
-            }
-        } finally {
-            libxml_clear_errors();
-            libxml_use_internal_errors($previous);
+        $image = $this->firstImageSrc((string) $item->description);
+        if ($image === null) {
+            $content = $item->children('http://purl.org/rss/1.0/modules/content/');
+            $image = $this->firstImageSrc((string) $content->encoded);
+        }
+        if ($image !== null) {
+            $candidates[] = $image;
         }
 
         foreach ($candidates as $candidate) {
@@ -251,6 +255,23 @@ class SyncNews extends Command
         }
 
         return null;
+    }
+
+    private function firstImageSrc(string $markup): ?string
+    {
+        $previous = libxml_use_internal_errors(true);
+        try {
+            $html = new DOMDocument;
+            $markup = html_entity_decode($markup, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+            if ($markup !== '' && $html->loadHTML($markup, LIBXML_NONET | LIBXML_NOERROR | LIBXML_NOWARNING)) {
+                return $html->getElementsByTagName('img')->item(0)?->getAttribute('src');
+            }
+
+            return null;
+        } finally {
+            libxml_clear_errors();
+            libxml_use_internal_errors($previous);
+        }
     }
 
     private function publicationDate(string $value): ?CarbonImmutable
