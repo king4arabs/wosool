@@ -125,8 +125,13 @@ class HelpRequestController extends Controller
             return false;
         }
 
-        return in_array($helpRequest->visibility, self::SHARED_VISIBILITY, true)
-            || $helpRequest->suggestedHelpers()->where('helper_user_id', $user->id)->exists();
+        if (in_array($helpRequest->visibility, self::SHARED_VISIBILITY, true)) {
+            return true;
+        }
+
+        // A suggestion only grants access while the owner still shares the question with matched founders.
+        return $helpRequest->visibility === 'matched_founders'
+            && $helpRequest->suggestedHelpers()->where('helper_user_id', $user->id)->exists();
     }
 
     public function show(Request $request, HelpRequest $helpRequest): JsonResponse
@@ -314,13 +319,28 @@ class HelpRequestController extends Controller
 
         // Rank members whose profile says they can help with this topic; fall back to other active members.
         $keywords = self::TOPIC_KEYWORDS[$helpRequest->category] ?? [];
-        $candidates = User::query()
+        $eligible = fn () => User::query()
             ->where('id', '<>', $helpRequest->requester_user_id)
             ->whereHas('roles', fn ($roles) => $roles->whereIn('name', ['member', 'admin']))
             ->whereNotNull('email_verified_at')
-            ->with('founderProfile:id,user_id,offers,skills,skills_tags,bio,tagline,sector')
-            ->limit(200)
-            ->get()
+            ->with('founderProfile:id,user_id,offers,skills,skills_tags,bio,tagline,sector');
+
+        // Filter on the profile text in SQL so topic matches are found however large the community is.
+        $matching = $keywords ? $eligible()
+            ->whereHas('founderProfile', function ($profile) use ($keywords) {
+                $profile->where(function ($text) use ($keywords) {
+                    foreach ($keywords as $word) {
+                        foreach (['offers', 'skills', 'skills_tags', 'bio', 'tagline', 'sector'] as $column) {
+                            $text->orWhereRaw('lower('.$column.') like ?', ['%'.mb_strtolower($word).'%']);
+                        }
+                    }
+                });
+            })
+            ->limit(100)
+            ->get() : collect();
+        $fallback = $eligible()->whereNotIn('id', $matching->pluck('id'))->latest('id')->limit(5)->get();
+
+        $candidates = $matching->concat($fallback)
             ->map(function (User $user) use ($keywords) {
                 $profile = $user->founderProfile;
                 $text = mb_strtolower(json_encode([$profile?->offers, $profile?->skills, $profile?->skills_tags, $profile?->bio, $profile?->tagline, $profile?->sector], JSON_UNESCAPED_UNICODE) ?: '');

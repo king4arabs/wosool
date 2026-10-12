@@ -24,7 +24,7 @@ export function EoaProgramDetails({
   )
   const faqs = eoaFaqs(program?.editorial)
   const faqItems: FaqItem[] = faqs.map((faq, index) => ({
-    id: `eoa-${faq.question_en.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 60) || index}`,
+    id: `eoa-${index + 1}-${faq.question_en.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 50) || 'question'}`,
     category: 'events',
     q: { ar: faq.question_ar, en: faq.question_en },
     a: { ar: faq.answer_ar.split(/\n{2,}/), en: faq.answer_en.split(/\n{2,}/) },

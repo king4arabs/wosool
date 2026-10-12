@@ -43,10 +43,12 @@ test("FAQ links point at pages that exist", () => {
 test("search ignores Arabic diacritics and letter variants, and works across languages", () => {
   assert.equal(normalizeSearch("أَسأل الأعضاء"), "اسال الاعضاء")
   const fees = FAQS.find(item => item.id === "membership-fees")!
-  assert.ok(matchesFaq(fees, "ar", "رسوم"))
-  assert.ok(matchesFaq(fees, "ar", "fees"))
-  assert.ok(matchesFaq(fees, "en", "FEES membership"))
-  assert.ok(!matchesFaq(fees, "en", "password"))
+  assert.ok(matchesFaq(fees, "رسوم"))
+  assert.ok(matchesFaq(fees, "fees"))
+  assert.ok(matchesFaq(fees, "FEES membership"))
+  assert.ok(!matchesFaq(fees, "password"))
   const reset = FAQS.find(item => item.id === "reset-password")!
-  assert.ok(matchesFaq(reset, "ar", "كلمه المرور"))
+  assert.ok(matchesFaq(reset, "كلمه المرور"))
+  // A term that only appears in the English answer is found from either view.
+  assert.ok(matchesFaq(reset, "60 minutes"))
 })

@@ -1,7 +1,7 @@
 "use client"
 
 import Link from "next/link"
-import { Suspense, useCallback, useEffect, useMemo, useState } from "react"
+import { Suspense, useCallback, useEffect, useState } from "react"
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
 import { CheckCircle2, Clock3, HandHelping, Lightbulb, Loader2, MessageCircle, MessagesSquare, Plus, Search, Users } from "lucide-react"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
@@ -22,6 +22,9 @@ type CommunityQuestion = {
   created_at: string; requester: { name: string | null }; helpers_count: number; offered_by_me: boolean; chat_room_id: number | null
 }
 type Page<T> = { data: T[]; current_page?: number; last_page?: number; total?: number }
+
+const PAGE_SIZE = 20
+const meta = (page: { current_page?: number; last_page?: number; total?: number; data: unknown[] }) => ({ page: page.current_page ?? 1, last: page.last_page ?? 1, total: page.total ?? page.data.length })
 
 const L = (locale: Locale, ar: string, en: string) => (locale === "ar" ? ar : en)
 
@@ -84,6 +87,9 @@ function AskTheCommunity() {
   const [community, setCommunity] = useState<CommunityQuestion[]>([])
   const [mine, setMine] = useState<MyQuestion[]>([])
   const [loading, setLoading] = useState(true)
+  const [communityMeta, setCommunityMeta] = useState({ page: 1, last: 1, total: 0 })
+  const [mineMeta, setMineMeta] = useState({ page: 1, last: 1, total: 0 })
+  const [loadingMore, setLoadingMore] = useState(false)
   const [failed, setFailed] = useState(false)
   const [query, setQuery] = useState("")
   const [debounced, setDebounced] = useState("")
@@ -101,24 +107,56 @@ function AskTheCommunity() {
 
   useEffect(() => { const id = window.setTimeout(() => setDebounced(query.trim()), 300); return () => window.clearTimeout(id) }, [query])
 
+  const communityParams = useCallback((page: number) => ({ scope: "community", q: debounced || undefined, category: category || undefined, per_page: PAGE_SIZE, page }), [debounced, category])
+
   const load = useCallback(async () => {
     setLoading(true)
     setFailed(false)
     try {
       const [shared, own] = await Promise.all([
-        api.get<Page<CommunityQuestion>>("/member/help-requests", { params: { scope: "community", q: debounced || undefined, category: category || undefined, per_page: 50 } }),
-        api.get<Page<MyQuestion>>("/member/help-requests", { params: { scope: "mine", per_page: 50 } }),
+        api.get<Page<CommunityQuestion>>("/member/help-requests", { params: communityParams(1) }),
+        api.get<Page<MyQuestion>>("/member/help-requests", { params: { scope: "mine", per_page: PAGE_SIZE, page: 1 } }),
       ])
       setCommunity(shared.data ?? [])
       setMine(own.data ?? [])
+      setCommunityMeta(meta(shared))
+      setMineMeta(meta(own))
     } catch {
       setFailed(true)
     } finally {
       setLoading(false)
     }
-  }, [debounced, category])
+  }, [communityParams])
 
   useEffect(() => { void load() }, [load])
+
+  async function loadMore(which: "community" | "mine") {
+    const current = which === "community" ? communityMeta : mineMeta
+    if (current.page >= current.last) return
+    setLoadingMore(true)
+    try {
+      if (which === "community") {
+        const next = await api.get<Page<CommunityQuestion>>("/member/help-requests", { params: communityParams(current.page + 1) })
+        setCommunity(previous => [...previous, ...(next.data ?? []).filter(item => !previous.some(row => row.id === item.id))])
+        setCommunityMeta(meta(next))
+      } else {
+        const next = await api.get<Page<MyQuestion>>("/member/help-requests", { params: { scope: "mine", per_page: PAGE_SIZE, page: current.page + 1 } })
+        setMine(previous => [...previous, ...(next.data ?? []).filter(item => !previous.some(row => row.id === item.id))])
+        setMineMeta(meta(next))
+      }
+    } catch (error) {
+      toast(errorText(error, L(locale, "تعذر تحميل المزيد.", "Couldn't load more.")), "error")
+    } finally {
+      setLoadingMore(false)
+    }
+  }
+
+  const moreButton = (which: "community" | "mine") => {
+    const current = which === "community" ? communityMeta : mineMeta
+    const shown = which === "community" ? community.length : mine.length
+    if (loading || current.page >= current.last) return null
+    return <div className="text-center"><button type="button" disabled={loadingMore} onClick={() => void loadMore(which)} className="inline-flex min-h-11 items-center gap-2 rounded-xl border border-slate-200 bg-white px-5 text-sm font-bold text-slate-800 hover:border-indigo-400 disabled:opacity-60">{loadingMore && <Loader2 size={16} className="animate-spin" aria-hidden="true" />}{L(locale, `عرض المزيد (${current.total - shown})`, `Show more (${current.total - shown})`)}</button></div>
+  }
 
   const setTab = (next: "community" | "mine") => {
     const search = new URLSearchParams(params.toString())
@@ -126,7 +164,6 @@ function AskTheCommunity() {
     router.replace(search.toString() ? `${pathname}?${search}` : pathname, { scroll: false })
   }
 
-  const openMine = useMemo(() => mine.filter(item => !["resolved", "closed"].includes(item.status)).length, [mine])
 
   async function submit(event: React.FormEvent) {
     event.preventDefault()
@@ -205,8 +242,8 @@ function AskTheCommunity() {
     </header>
 
     <div role="tablist" aria-label={L(locale, "الأسئلة", "Questions")} className="inline-flex flex-wrap gap-1 rounded-2xl bg-slate-100 p-1">
-      {tabButton("community", L(locale, "أسئلة المؤسسين", "Questions from founders"), community.length)}
-      {tabButton("mine", L(locale, "أسئلتي", "My questions"), openMine)}
+      {tabButton("community", L(locale, "أسئلة المؤسسين", "Questions from founders"), communityMeta.total)}
+      {tabButton("mine", L(locale, "أسئلتي", "My questions"), mineMeta.total)}
     </div>
 
     {failed && <div role="alert" className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-red-200 bg-red-50 p-4 text-sm text-red-800">
@@ -261,6 +298,7 @@ function AskTheCommunity() {
           </article>
         </li>)}
       </ul>}
+      {moreButton("community")}
     </section>}
 
     {tab === "mine" && <section id="panel-mine" role="tabpanel" aria-labelledby="tab-mine" className="space-y-3">
@@ -299,6 +337,7 @@ function AskTheCommunity() {
           </div>
         </article>
       })}
+      {moreButton("mine")}
     </section>}
 
     <p className="text-sm text-slate-500">{L(locale, "لديك سؤال عن استخدام وصول نفسها؟ ", "A question about using Wosool itself? ")}<Link href="/faq" className="font-bold text-indigo-700 hover:underline">{L(locale, "راجع الأسئلة الشائعة", "See the FAQ")}</Link></p>

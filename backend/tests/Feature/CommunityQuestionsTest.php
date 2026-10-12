@@ -140,6 +140,21 @@ class CommunityQuestionsTest extends TestCase
         $this->actingAs($seller)->getJson('/api/v1/member/help-requests?scope=community')->assertJsonFragment(['id' => $question->id]);
     }
 
+    public function test_making_a_matched_question_private_revokes_suggested_access(): void
+    {
+        $asker = $this->member('Sara Asker');
+        $suggested = $this->member('Omar Suggested');
+        $question = $this->ask($asker, 'matched_founders');
+        $question->suggestedHelpers()->create(['helper_user_id' => $suggested->id, 'status' => 'suggested', 'reason' => 'Test', 'score' => 70]);
+        $this->actingAs($suggested)->getJson("/api/v1/member/help-requests/{$question->id}")->assertOk();
+
+        $this->actingAs($asker)->patchJson("/api/v1/member/help-requests/{$question->id}", ['visibility' => 'private_admin'])->assertOk();
+
+        $this->actingAs($suggested)->getJson("/api/v1/member/help-requests/{$question->id}")->assertForbidden();
+        $this->actingAs($suggested)->postJson("/api/v1/member/help-requests/{$question->id}/offer-help")->assertForbidden();
+        $this->actingAs($suggested)->getJson('/api/v1/member/help-requests?scope=community')->assertJsonMissing(['id' => $question->id]);
+    }
+
     public function test_non_members_cannot_browse_or_offer(): void
     {
         $asker = $this->member('Sara Asker');

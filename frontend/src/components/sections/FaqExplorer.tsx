@@ -43,12 +43,12 @@ export function FaqExplorer({
   // Callers often pass fresh arrays; read the latest list from a ref so the hash listener is attached once.
   const scopedRef = useRef(scoped)
   useEffect(() => { scopedRef.current = scoped }, [scoped])
-  const visible = useMemo(() => scoped.filter(item => (!category || item.category === category) && matchesFaq(item, locale, query)), [scoped, category, query, locale])
+  const visible = useMemo(() => scoped.filter(item => (!category || item.category === category) && matchesFaq(item, query)), [scoped, category, query])
   const counts = useMemo(() => {
     const result: Record<string, number> = {}
-    for (const item of scoped) if (matchesFaq(item, locale, query)) result[item.category] = (result[item.category] ?? 0) + 1
+    for (const item of scoped) if (matchesFaq(item, query)) result[item.category] = (result[item.category] ?? 0) + 1
     return result
-  }, [scoped, query, locale])
+  }, [scoped, query])
   const shownCategories = FAQ_CATEGORIES.filter(entry => categories.includes(entry.id))
 
   // Deep links: /faq#reset-password opens and scrolls to that answer.
