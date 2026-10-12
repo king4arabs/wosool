@@ -116,6 +116,9 @@ class NewsController extends Controller
             'tags' => ['nullable', 'array'],
             'tags.*' => ['string', 'max:50'],
             'published_at' => ['nullable', 'date'],
+            'region' => ['nullable', Rule::in(['saudi', 'gcc', 'mena', 'global'])],
+            'key_facts' => ['nullable', 'array', 'max:8'],
+            'key_facts.*' => ['string', 'max:300'],
         ]);
     }
 }

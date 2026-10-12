@@ -36,6 +36,8 @@ export function CompanyCard({ company, linkToProfile = true }: { company: Compan
         location: company.location,
         sector: company.sector,
         stage: company.stage,
+        foundedYear: company.foundedYear || undefined,
+        traction: company.traction,
         founder: founder?.name,
         portrait: founder?.avatarUrl,
         role: founder?.position,

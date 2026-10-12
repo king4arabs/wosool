@@ -1,6 +1,6 @@
 import test from "node:test"
 import assert from "node:assert/strict"
-import { curatedNews, mergeNews, companyMatches, companyAliases, newsFounders, safeNewsUrl, newsDate } from "./news-feed"
+import { relatedNews, curatedNews, mergeNews, companyMatches, companyAliases, newsFounders, safeNewsUrl, newsDate } from "./news-feed"
 import { getLocalizedNewsContent } from "./news-content"
 import type { NewsItem } from "../types"
 
@@ -41,14 +41,32 @@ test("external news URLs reject executable, insecure and credentialed links", ()
   assert.equal(newsDate("", "en"), "Date unavailable")
 })
 
-test("curated newsroom has at least twenty unique dated sourced photo stories", () => {
-  assert.ok(curatedNews.length >= 20)
+test("curated newsroom has unique, dated, sourced stories with credited images when present", () => {
+  assert.ok(curatedNews.length >= 30)
   assert.equal(new Set(curatedNews.map(item => item.slug)).size, curatedNews.length)
   assert.equal(new Set(curatedNews.map(item => item.sourceUrl)).size, curatedNews.length)
   for (const item of curatedNews) {
     assert.ok(safeNewsUrl(item.sourceUrl))
-    assert.ok(safeNewsUrl(item.imageUrl) || item.imageUrl?.startsWith("/"))
-    assert.ok(item.imageCredit && item.sourceName && item.content && item.translations?.ar.body.length)
+    // Stories without a verified publisher image render a branded source tile instead.
+    if (item.imageUrl) assert.ok((safeNewsUrl(item.imageUrl) || item.imageUrl.startsWith("/")) && item.imageCredit, item.slug)
+    assert.ok(item.sourceName && item.content && item.translations?.ar.body.length)
     assert.ok(Date.parse(item.publishedAt) <= Date.parse("2026-10-12T23:59:59Z"))
   }
+})
+
+test("Saudi and GCC coverage carries region, key facts and Arabic key facts", () => {
+  const regional = curatedNews.filter(item => item.region && item.region !== "global")
+  assert.ok(regional.filter(item => item.region === "saudi").length >= 8)
+  for (const item of regional) {
+    assert.ok((item.keyFacts?.length ?? 0) >= 3, item.slug)
+    assert.equal(item.translations?.ar.keyFacts?.length, item.keyFacts?.length, item.slug)
+  }
+})
+
+test("related news prefers the same company, then the same region", () => {
+  const barq = curatedNews.find(item => item.slug === "barq-329-million-series-a-unicorn")!
+  const related = relatedNews(barq, curatedNews)
+  assert.ok(related.length > 0)
+  assert.ok(related.every(item => item.slug !== barq.slug))
+  assert.ok(related[0].companies?.includes("Barq"))
 })

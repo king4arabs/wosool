@@ -24,6 +24,7 @@ class CompanyResource extends JsonResource
             'location' => $localized['location'] ?? $this->location,
             'country_code' => $this->country_code,
             'founded_year' => $this->founded_year,
+            'traction' => $this->tractionSignal(),
             'team_size' => $this->team_size,
             'is_hiring' => (bool) $this->is_hiring,
             'is_fundraising' => (bool) $this->is_fundraising,
@@ -39,6 +40,21 @@ class CompanyResource extends JsonResource
             ]),
             'created_at' => $this->created_at?->toIso8601String(),
             'updated_at' => $this->updated_at?->toIso8601String(),
+        ];
+    }
+
+    /** Localized, sourced traction signal imported from the reviewed founder directory. */
+    private function tractionSignal(): ?array
+    {
+        $metrics = $this->metrics_summary;
+        if (! is_array($metrics) || empty($metrics['en']) || empty($metrics['source_url'])) {
+            return null;
+        }
+
+        return [
+            'text' => (app()->getLocale() === 'ar' && ! empty($metrics['ar'])) ? $metrics['ar'] : $metrics['en'],
+            'source_url' => $metrics['source_url'],
+            'reviewed_at' => $metrics['reviewed_at'] ?? null,
         ];
     }
 }

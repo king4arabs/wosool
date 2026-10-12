@@ -225,18 +225,9 @@ class WosoolSeeder extends Seeder
             SponsorProfile::firstOrCreate(['slug' => $sponsorData['slug']], $sponsorData);
         }
 
-        $newsData = [
-            ['title' => 'Wosool Launches Q2 2024 Founder Circle Cohort', 'slug' => 'wosool-q2-founder-circle-launch', 'excerpt' => 'We are excited to welcome 32 new founders to the Q2 Founder Circle cohort — our most diverse group yet.', 'category' => 'announcement', 'author_name' => 'Wosool Team', 'is_featured' => true, 'status' => 'published', 'published_at' => now()->subDays(3), 'tags' => ['circles', 'cohort', 'community']],
-            ['title' => 'MedBridge Closes SAR 5M Seed Round with KAUST Investment', 'slug' => 'medbridge-seed-round-kaust', 'excerpt' => 'Wosool founder Sara Al-Rashidi\'s MedBridge has announced a SAR 5M seed round co-led by KAUST Innovation Fund.', 'category' => 'company-milestone', 'author_name' => 'Wosool Editorial', 'is_featured' => true, 'status' => 'published', 'published_at' => now()->subDays(7), 'tags' => ['funding', 'healthtech', 'saudi']],
-            ['title' => 'PayFlow Expands to Kuwait and Bahrain Markets', 'slug' => 'payflow-gcc-expansion', 'excerpt' => 'Dubai-based FinTech startup PayFlow has officially launched in Kuwait and Bahrain.', 'category' => 'company-milestone', 'author_name' => 'Wosool Editorial', 'is_featured' => false, 'status' => 'published', 'published_at' => now()->subDays(12), 'tags' => ['fintech', 'expansion', 'gcc']],
-            ['title' => 'Recap: Saudi Startup Ecosystem Report 2024', 'slug' => 'saudi-startup-ecosystem-report-2024', 'excerpt' => 'The latest data shows Saudi Arabia\'s startup ecosystem grew 45% in investment volume in 2023.', 'category' => 'editorial', 'author_name' => 'Wosool Research Team', 'is_featured' => false, 'status' => 'published', 'published_at' => now()->subDays(18), 'tags' => ['research', 'ecosystem', 'saudi']],
-            ['title' => 'Upcoming: Wosool Founders Dinner — Riyadh April Edition', 'slug' => 'founders-dinner-riyadh-april-preview', 'excerpt' => 'We are hosting an intimate dinner for 30 Wosool founders in Riyadh.', 'category' => 'announcement', 'author_name' => 'Wosool Team', 'is_featured' => false, 'status' => 'published', 'published_at' => now()->subDays(2), 'tags' => ['events', 'networking', 'riyadh']],
-            ['title' => 'How Wosool Members Are Using AI in Their Startups', 'slug' => 'wosool-founders-ai-usage', 'excerpt' => 'A roundup of the most impactful AI tools and workflows Wosool founders are using to accelerate their growth.', 'category' => 'editorial', 'author_name' => 'Wosool Editorial', 'is_featured' => false, 'status' => 'published', 'published_at' => now()->subDays(5), 'tags' => ['ai', 'tools', 'growth']],
-        ];
-
-        foreach ($newsData as $newsItemData) {
-            NewsItem::firstOrCreate(['slug' => $newsItemData['slug']], array_merge($newsItemData, ['is_public' => true]));
-        }
+        // Public news comes only from reviewed, sourced briefs — never invented stories.
+        \Illuminate\Support\Facades\Artisan::call('wosool:import-news');
+        \Illuminate\Support\Facades\Artisan::call('wosool:import-founders');
 
         $applicationsData = [
             [

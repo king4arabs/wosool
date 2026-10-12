@@ -12,7 +12,7 @@ class FounderDirectoryImporter
     public function run(): array
     {
         $records = json_decode(file_get_contents(resource_path('data/founder-directory.json')), true, 512, JSON_THROW_ON_ERROR);
-        $counts = ['founders_created' => 0, 'companies_created' => 0, 'preserved' => 0];
+        $counts = ['founders_created' => 0, 'companies_created' => 0, 'preserved' => 0, 'companies_enriched' => 0];
         DB::transaction(function () use ($records, &$counts) {
             foreach ($records as $row) {
                 $company = CompanyProfile::where('directory_key', $row['company_key'])->first();
@@ -29,9 +29,13 @@ class FounderDirectoryImporter
                         'location' => $row['country_en'], 'country_code' => $row['country_code'],
                         'status' => 'active', 'is_public' => true, 'source_urls' => $row['source_urls'],
                         'source_reviewed_at' => $row['reviewed_at'],
+                        'founded_year' => $row['founded_year'] ?? null,
+                        'metrics_summary' => $this->traction($row),
                         'translations' => ['ar' => ['name' => $row['company_name_ar'], 'description' => $row['company_brief_ar'], 'sector' => $row['sector_ar'], 'location' => $row['country_ar']]],
                     ]);
                     $counts['companies_created']++;
+                } elseif ($this->enrich($company, $row)) {
+                    $counts['companies_enriched']++;
                 }
                 $founder = FounderProfile::where('directory_key', $row['slug'])->first();
                 if (! $founder) {
@@ -57,6 +61,40 @@ class FounderDirectoryImporter
             }
         });
         return $counts;
+    }
+
+    /** Sourced traction signal stored on the company; null when the record carries none. */
+    private function traction(array $row): ?array
+    {
+        if (empty($row['traction_en']) || empty($row['traction_source_url'])) {
+            return null;
+        }
+
+        return [
+            'en' => $row['traction_en'],
+            'ar' => $row['traction_ar'] ?? null,
+            'source_url' => $row['traction_source_url'],
+            'reviewed_at' => $row['reviewed_at'],
+        ];
+    }
+
+    /** Fill sourced facts that are still empty without overwriting editorial changes. */
+    private function enrich(CompanyProfile $company, array $row): bool
+    {
+        $changes = [];
+        if (! $company->founded_year && ! empty($row['founded_year'])) {
+            $changes['founded_year'] = $row['founded_year'];
+        }
+        if (empty($company->metrics_summary) && ($traction = $this->traction($row))) {
+            $changes['metrics_summary'] = $traction;
+            $changes['source_urls'] = array_values(array_unique([...($company->source_urls ?? []), $traction['source_url']]));
+        }
+        if (! $changes) {
+            return false;
+        }
+        $company->update($changes);
+
+        return true;
     }
 
     private function slug(string $model, string $base): string

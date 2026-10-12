@@ -6,6 +6,14 @@ This project follows **Semantic Versioning** and a Keep a Changelog-inspired for
 
 ---
 
+## Sourced newsroom and founder scorecards — 2026-10-12
+
+- **News:** 14 new independent briefs from reliable sources (Wamda, Arab News, Fintech Futures, Argaam/MAGNiTT, Saudi Press Agency, Mubasher, BRIDGE, Arab Founders) — Saudi first, then GCC and MENA — covering Q3 and September 2026 funding, Barq, Tabby, Lendo, Rize, Paymob, Fasset, Moove, Foodics–Norma, StartupBlink and MAGNiTT data. Each has key facts, an Arabic translation and a direct source link. The local demo seeder no longer creates invented news.
+- **/news experience:** region tabs with counts (Saudi, GCC, MENA, Global), topic chips, search across companies/investors/sources, newest/oldest sort, a lead story with key figures, “Show more” pagination and shareable filter URLs. Articles add an “At a glance” panel, region/topic labels, share/copy link, companies in the story and related stories by company then region. Stories without a verified image show a branded source tile.
+- **Founder scorecards:** 14 new researched founders of operating, revenue-generating companies — 9 Saudi (Tabby, Barq, Lendo, Rize, Lean Technologies, Lucidya, Mozn, Ninja, Floward), Careem, Paymob, Stripe, Canva and Nubank — 29 in total, ordered Saudi → GCC → MENA → global. Cards and profiles show a sourced “Operations & traction” signal and founding year.
+- **Backend:** `wosool:import-news` (idempotent, editor-safe); news `region`, `key_facts`, `translations` with a `region` API filter; admin news editing of source, region, companies and key facts; founder import stores traction in `metrics_summary` and backfills existing companies; company API exposes `traction`.
+- **Tests:** backend 206 passing, frontend 80 passing.
+
 ## End-to-end member journey repair — 2026-10-12
 
 Verified with a full browser run on a fresh install: apply → admin approval → invitation email → registration → profile and company onboarding → introduction request → recipient acceptance → private conversation.
