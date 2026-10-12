@@ -34,9 +34,14 @@ function AccountForm({
   const [busy, setBusy] = useState(false);
   async function submit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    setBusy(true);
+    if (busy) return;
     setError("");
     const f = new FormData(e.currentTarget);
+    if (mode === "register" && f.get("password") !== f.get("password_confirmation")) {
+      setError(ar ? "كلمتا المرور غير متطابقتين." : "The passwords do not match.");
+      return;
+    }
+    setBusy(true);
     try {
       const data = Object.fromEntries(f.entries());
       await api.post(
@@ -82,7 +87,7 @@ function AccountForm({
           )}
         </p>
       )}
-      <form onSubmit={submit} className="gateway-card space-y-5">
+      <form onSubmit={submit} className="gateway-card space-y-5" aria-busy={busy}>
         <h2 className="text-2xl font-bold">
           {t("حسابك، وخطوتك الأولى", "Your account. Your first step.")}
         </h2>
