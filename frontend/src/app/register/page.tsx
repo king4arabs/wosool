@@ -29,6 +29,10 @@ export default function RegisterPage() {
       setError(t("كلمتا المرور غير متطابقتين.", "The passwords do not match."));
       return;
     }
+    if (password.length < 8 || !/[a-z]/.test(password) || !/[A-Z]/.test(password) || !/[0-9]/.test(password)) {
+      setError(t("استخدم 8 أحرف على الأقل، منها أحرف كبيرة وصغيرة ورقم واحد على الأقل.", "Use at least 8 characters, including uppercase and lowercase letters and a number."));
+      return;
+    }
     setIsSubmitting(true);
     try {
       await register(name.trim(), email.trim(), password, passwordConfirmation, inviteToken || undefined);

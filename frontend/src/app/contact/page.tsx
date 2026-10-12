@@ -1,11 +1,12 @@
 "use client"
 
-import { useState, useCallback, useEffect } from "react"
+import { useState, useCallback, useEffect, useRef } from "react"
 import Link from "next/link"
 import { PublicLayout } from "@/components/layout/PublicLayout"
 import { Button } from "@/components/ui/button"
 import { useToast } from "@/components/ui/toast"
 import { api, ApiError } from "@/lib/api"
+import { gatewayError } from "@/lib/gateway"
 import {
   Mail,
   Users,
@@ -22,6 +23,8 @@ const categories = [
   { icon: Users,     label: "شراكات",       value: "partnerships", description: "شراكات تدعم مجتمع وصول أو برامجه" },
   { icon: Building,  label: "رعاية",        value: "sponsorship",  description: "الرعاية المرتبطة بالمنصة أو الفعاليات" },
   { icon: Newspaper, label: "إعلام",        value: "media",        description: "استفسارات الصحافة والظهور الإعلامي" },
+  { icon: Users,     label: "دعم المؤسسين", value: "founder-support", description: "أسئلة حول موارد وخدمات المؤسسين" },
+  { icon: Clock,     label: "ساعات الخبرة", value: "office-hours", description: "طلب جلسة مباشرة مع الفريق" },
 ]
 
 interface ContactFormData {
@@ -54,6 +57,10 @@ function validateContact(data: ContactFormData): ContactErrors {
   if (!data.subject.trim()) errors.subject  = "يرجى كتابة عنوان الرسالة."
   if (!data.message.trim()) errors.message  = "يرجى كتابة الرسالة."
   if (data.message.length > 3000) errors.message = "يجب ألا تتجاوز الرسالة 3000 حرف."
+  if (data.name.length > 255) errors.name = "يجب ألا يتجاوز الاسم 255 حرفًا."
+  if (data.email.length > 255) errors.email = "يجب ألا يتجاوز البريد الإلكتروني 255 حرفًا."
+  if (data.subject.length > 255) errors.subject = "يجب ألا يتجاوز العنوان 255 حرفًا."
+  if (data.company.length > 255) errors.company = "يجب ألا يتجاوز اسم الشركة 255 حرفًا."
   return errors
 }
 
@@ -75,6 +82,7 @@ export default function ContactPage() {
   const [errors, setErrors]       = useState<ContactErrors>({})
   const [submitting, setSubmitting] = useState(false)
   const [submitted, setSubmitted] = useState(false)
+  const inFlight = useRef(false)
   const { toast } = useToast()
   useEffect(() => {
     const subject = new URLSearchParams(window.location.search).get('subject')?.slice(0, 255)
@@ -96,30 +104,34 @@ export default function ContactPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    if (inFlight.current) return
     const validationErrors = validateContact(formData)
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors)
-      toast("يرجى استكمال جميع الحقول المطلوبة.", "error")
+      toast("يرجى مراجعة الحقول المعلّمة وتصحيحها.", "error")
       return
     }
+    inFlight.current = true
     setSubmitting(true)
     try {
       await api.post("/contact", formData)
       setSubmitted(true)
       toast("تم إرسال الرسالة بنجاح.", "success")
     } catch (err) {
-      if (err instanceof ApiError && err.data && typeof err.data === "object" && "errors" in err.data) {
-        const serverErrors = (err.data as { errors: Record<string, string[]> }).errors
+      const serverErrors = err instanceof ApiError && err.data && typeof err.data === "object" && "errors" in err.data
+        ? (err.data as { errors?: unknown }).errors : null
+      if (serverErrors && typeof serverErrors === "object") {
         const mapped: ContactErrors = {}
         for (const [key, messages] of Object.entries(serverErrors)) {
-          if (key in formData) mapped[key as keyof ContactFormData] = messages[0]
+          if (Object.hasOwn(initialFormData, key) && Array.isArray(messages) && typeof messages[0] === "string") mapped[key as keyof ContactFormData] = messages[0]
         }
         setErrors(mapped)
         toast("يرجى مراجعة الحقول المعلّمة وتصحيحها.", "error")
       } else {
-        toast("حدث خطأ غير متوقع. يرجى المحاولة مرة أخرى.", "error")
+        toast(gatewayError(err, true), "error")
       }
     } finally {
+      inFlight.current = false
       setSubmitting(false)
     }
   }
@@ -152,7 +164,7 @@ export default function ContactPage() {
               </p>
               <p className="text-sm text-slate-500 mb-8 leading-relaxed">
                 سيعود إليك الفريق خلال يومي إلى ثلاثة أيام عمل على{" "}
-                <span className="font-medium text-[#3B52D4]">{formData.email}</span>.
+                <span className="break-all font-medium text-[#3B52D4]">{formData.email}</span>.
               </p>
               <div className="flex flex-col sm:flex-row gap-3 justify-center">
                 <Button
@@ -299,7 +311,7 @@ export default function ContactPage() {
             </div>
 
             {/* Right: Form */}
-            <div className="lg:col-span-3">
+            <div className="min-w-0 lg:col-span-3">
               <div
                 className="bg-white/90 backdrop-blur-sm border border-slate-200/80 rounded-2xl p-7"
                 style={{ boxShadow: "0 4px 24px -4px rgba(59,82,212,0.07)" }}
@@ -348,7 +360,9 @@ export default function ContactPage() {
                         placeholder="اسم الشركة أو الجهة"
                         value={formData.company}
                         onChange={(e) => updateField("company", e.target.value)}
+                        aria-invalid={!!errors.company}
                       />
+                      <FieldError message={errors.company} />
                     </div>
                   </div>
 

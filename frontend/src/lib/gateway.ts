@@ -147,6 +147,14 @@ export function gatewayError(error: unknown, ar: boolean): string {
       return ar
         ? "الخدمة غير متاحة حاليًا. حاول لاحقًا."
         : "This service is currently unavailable. Please try later.";
+    if (error.status === 419)
+      return ar
+        ? "انتهت صلاحية الجلسة الآمنة. حدّث الصفحة وحاول مجددًا."
+        : "Your secure session expired. Refresh the page and try again.";
+    if (error.status >= 500)
+      return ar
+        ? "تعذر إتمام الطلب بسبب خطأ في الخدمة. تحقق من النتيجة قبل إعادة المحاولة."
+        : "The service could not complete the request. Check the result before retrying.";
     if (error.status === 401)
       return ar
         ? "انتهت الجلسة. سجّل الدخول مجددًا."
@@ -179,8 +187,8 @@ export function gatewayError(error: unknown, ar: boolean): string {
     }
   }
   return ar
-    ? "تعذر الاتصال بالخدمة. لم يتم تأكيد الحفظ. حاول مجددًا."
-    : "The service could not be reached. Saving is not confirmed. Please retry.";
+    ? "تعذر تأكيد الطلب. تحقق من اتصالك ونتيجة العملية قبل إعادة المحاولة."
+    : "The request could not be confirmed. Check your connection and the result before retrying.";
 }
 
 const recordLabels: Record<string, [string, string]> = {

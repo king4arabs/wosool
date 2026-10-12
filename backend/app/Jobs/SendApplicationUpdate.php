@@ -46,6 +46,9 @@ class SendApplicationUpdate implements ShouldBeUnique, ShouldQueue
             if (! $user || ! $user->hasVerifiedEmail()) {
                 return;
             }
+            if (($user->userSetting?->notifications['program_updates'] ?? true) === false) {
+                return;
+            }
             $url = rtrim(config('app.frontend_url'), '/').'/accelerator/apply';
             Mail::raw("There is an update to your Wosool application. Sign in to review it.\nيوجد تحديث على طلبك في وصول. سجّل الدخول للاطلاع عليه.\n".$url,
                 fn ($mail) => $mail->to($user->email)->subject('Wosool application update | تحديث طلب وصول'));
