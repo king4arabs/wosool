@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import { Handshake, Lightbulb, ThumbsUp } from "lucide-react"
 import { useLocale } from "@/lib/locale"
 
 export function SocietyPostActionsBar({
@@ -35,9 +36,9 @@ export function SocietyPostActionsBar({
           {ar ? "تفاعل" : "React"}
         </button>
         <div hidden={!reactionsOpen} onKeyDown={event => { if (event.key === "Escape") setReactionsOpen(false) }} className="absolute bottom-full start-0 z-20 mb-2 min-w-44 rounded-xl border border-slate-200 bg-white p-2 shadow-lg">
-          <button onClick={() => { onReactSelect("like"); setReactionsOpen(false) }} disabled={loading} className="rounded-full px-2 py-1 text-xs font-semibold text-slate-700 hover:bg-slate-50 disabled:opacity-60">{ar ? "👏 تهنئة" : "👏 Like"}</button>
-          <button onClick={() => { onReactSelect("insightful"); setReactionsOpen(false) }} disabled={loading} className="rounded-full px-2 py-1 text-xs font-semibold text-slate-700 hover:bg-slate-50 disabled:opacity-60">{ar ? "🔥 ممتاز" : "🔥 Insightful"}</button>
-          <button onClick={() => { onReactSelect("support"); setReactionsOpen(false) }} disabled={loading} className="rounded-full px-2 py-1 text-xs font-semibold text-slate-700 hover:bg-slate-50 disabled:opacity-60">{ar ? "🤝 دعم" : "🤝 Support"}</button>
+          <button onClick={() => { onReactSelect("like"); setReactionsOpen(false) }} disabled={loading} className="flex items-center gap-1.5 rounded-full px-2 py-1 text-xs font-semibold text-slate-700 hover:bg-slate-50 disabled:opacity-60"><ThumbsUp className="h-4 w-4 text-[var(--brand-blue)]" aria-hidden="true" />{ar ? "تهنئة" : "Like"}</button>
+          <button onClick={() => { onReactSelect("insightful"); setReactionsOpen(false) }} disabled={loading} className="flex items-center gap-1.5 rounded-full px-2 py-1 text-xs font-semibold text-slate-700 hover:bg-slate-50 disabled:opacity-60"><Lightbulb className="h-4 w-4 text-[var(--brand-dark-orange)]" aria-hidden="true" />{ar ? "ممتاز" : "Insightful"}</button>
+          <button onClick={() => { onReactSelect("support"); setReactionsOpen(false) }} disabled={loading} className="flex items-center gap-1.5 rounded-full px-2 py-1 text-xs font-semibold text-slate-700 hover:bg-slate-50 disabled:opacity-60"><Handshake className="h-4 w-4 text-[var(--brand-dark-green)]" aria-hidden="true" />{ar ? "دعم" : "Support"}</button>
         </div>
       </div>
       <button onClick={onComment} disabled={loading} className="bg-white hover:bg-slate-50 text-slate-700 font-semibold px-3 py-1.5 border border-slate-200 rounded-md text-xs transition-colors disabled:opacity-60">{ar ? "تعليق" : "Comment"}</button>

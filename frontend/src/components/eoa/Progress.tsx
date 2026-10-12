@@ -1,5 +1,6 @@
 'use client'
 import Link from 'next/link'
+import { Check } from 'lucide-react'
 import { eoaJourneyStage } from '@/lib/eoa-journey'
 
 export function EoaProgress({ status, verified, participantStatus, onboardingComplete, ar }: {
@@ -27,7 +28,7 @@ export function EoaProgress({ status, verified, participantStatus, onboardingCom
   if (participantStatus === 'alumni') { steps[4] = ar ? 'الخريجون والنمو المستمر' : 'Alumni & continued growth'; message = ar ? 'أكملت دفعتك. تابع خطة الدعم ومواعيد المتابعة وأهداف شركتك في مساحة الخريجين.' : 'Your cohort is complete. Continue your support plan, follow-up meetings and company goals in the alumni workspace.'; action = ar ? 'فتح مساحة الخريجين' : 'Open alumni workspace' }
   return <section className="eoa-card eoa-space" aria-labelledby="eoa-next-step">
     <h2 id="eoa-next-step">{ar ? 'خطوتك التالية' : 'Your next step'}</h2>
-    <ol className="eoa-journey-progress" aria-label={ar ? 'مراحل رحلتك' : 'Your journey stages'}>{steps.map((label, i) => <li key={label} aria-current={i === stage ? 'step' : undefined} data-complete={i < stage}><span aria-hidden="true">{i < stage ? '✓' : i + 1}</span>{label}<span className="sr-only">{i < stage ? (ar ? ' — مكتمل' : ' — complete') : ''}</span></li>)}</ol>
+    <ol className="eoa-journey-progress" aria-label={ar ? 'مراحل رحلتك' : 'Your journey stages'}>{steps.map((label, i) => <li key={label} aria-current={i === stage ? 'step' : undefined} data-complete={i < stage}><span aria-hidden="true">{i < stage ? <Check size={16} strokeWidth={2.5} /> : i + 1}</span>{label}<span className="sr-only">{i < stage ? (ar ? ' — مكتمل' : ' — complete') : ''}</span></li>)}</ol>
     <p>{message}</p><Link className="eoa-btn" href={href}>{action}</Link>
   </section>
 }

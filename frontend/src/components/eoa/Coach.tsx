@@ -1,6 +1,7 @@
 'use client'
 import { useCallback, useEffect, useState } from 'react'
 import Link from 'next/link'
+import { Circle, CircleCheck } from 'lucide-react'
 import { useAuth } from '@/lib/auth'
 import { useLocale } from '@/lib/locale'
 import { api } from '@/lib/api'
@@ -95,8 +96,8 @@ function CoachSession() {
             >
               <h2>{p.name}</h2><p className="eoa-badge">{learningSummary(p.progress?.milestones ?? [], []).completed} / {p.progress?.milestones?.length ?? 0} {ar?'أهداف مكتملة':'goals completed'}</p>
               {p.progress?.milestones?.map((m, i) => (
-                <p key={i}>
-                  {m.completed ? '✓' : '○'} {m.title} {m.due_date} {pillars.find(([key])=>key===m.pillar)?.[ar?1:2]}
+                <p key={i} className="flex items-center gap-2">
+                  {m.completed ? <CircleCheck size={16} className="shrink-0 text-[var(--success-text)]" aria-hidden="true" /> : <Circle size={16} className="shrink-0 text-[var(--text-muted)]" aria-hidden="true" />} {m.title} {m.due_date} {pillars.find(([key])=>key===m.pillar)?.[ar?1:2]}
                 </p>
               ))}
               <p>{p.progress?.self_assessment}</p>

@@ -1,6 +1,7 @@
 "use client"
 
 import Link from "next/link"
+import { BarChart3, Lightbulb, Rocket, Scale } from "lucide-react"
 import { usePublicCollection } from "@/lib/use-public-collection"
 import { CollectionStatus } from "@/components/sections/CollectionStatus"
 import { PublicLayout } from "@/components/layout/PublicLayout"
@@ -10,7 +11,7 @@ import { localizePartner, partnersPageCopy } from "@/data/localized-seed"
 import { type ApiPartner, mapPartner } from "@/lib/content-api"
 import { useLocale } from "@/lib/locale"
 
-const topicIcons: Record<number, string> = { 0: "⚖️", 1: "📊", 2: "🚀" }
+const topicIcons = [Scale, BarChart3, Rocket]
 
 export default function PartnersPage() {
   const { locale } = useLocale()
@@ -95,17 +96,22 @@ export default function PartnersPage() {
           </div>
 
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-3 mb-8">
-            {copy.accessTopics.map((topic, i) => (
+            {copy.accessTopics.map((topic, i) => {
+              const Icon = topicIcons[i] ?? Lightbulb
+              return (
               <div
                 key={topic}
                 className="bg-white border border-slate-200/80 rounded-2xl p-6 text-center transition-all duration-300 hover:border-[#3B52D4]/30 hover:-translate-y-1"
                 style={{ boxShadow: "0 2px 12px -2px rgba(15,22,40,0.06)" }}
               >
-                <div className="text-2xl mb-3">{topicIcons[i] ?? "💡"}</div>
+                <div className="mx-auto mb-3 grid h-12 w-12 place-items-center rounded-2xl bg-[var(--surface-blue)] text-[var(--brand-blue)]" aria-hidden="true">
+                  <Icon className="h-6 w-6" strokeWidth={1.8} />
+                </div>
                 <h3 className="text-sm font-black text-slate-900 mb-1">{topic}</h3>
                 <p className="text-xs text-slate-400 font-medium">{copy.accessHint}</p>
               </div>
-            ))}
+              )
+            })}
           </div>
 
           <div className="text-center">

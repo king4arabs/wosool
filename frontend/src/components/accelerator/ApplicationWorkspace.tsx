@@ -7,6 +7,7 @@ import {
   type FormEvent,
 } from "react";
 import Link from "next/link";
+import { Circle, CircleCheck } from "lucide-react";
 import { PublicLayout } from "@/components/layout/PublicLayout";
 import { useAuth } from "@/lib/auth";
 import { useLocale } from "@/lib/locale";
@@ -923,8 +924,8 @@ export function ApplicationWorkspace() {
                     {application.milestones.length > 0 && (
                       <ul className="mt-6 space-y-2">
                         {application.milestones.map((m, i) => (
-                          <li key={i} className="text-sm">
-                            {m.completed ? "✓" : "○"} {m.title}
+                          <li key={i} className="flex items-center gap-2 text-sm">
+                            {m.completed ? <CircleCheck className="h-4 w-4 shrink-0 text-[var(--success-text)]" aria-hidden="true" /> : <Circle className="h-4 w-4 shrink-0 text-[var(--text-muted)]" aria-hidden="true" />} {m.title}
                           </li>
                         ))}
                       </ul>

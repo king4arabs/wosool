@@ -2,14 +2,14 @@
 
 import Link from "next/link"
 import type { Program } from "@/types"
-import { Clock, CheckCircle2, ArrowLeft, ArrowRight } from "lucide-react"
+import { Clock, CheckCircle2, ArrowLeft, ArrowRight, Rocket, Handshake, TrendingUp, Lightbulb, ListChecks } from "lucide-react"
 import { useLocale } from "@/lib/locale"
 
-const categoryMap: Record<string, { icon: string; color: string; bg: string }> = {
-  Onboarding:     { icon: "🚀", color: "#3B52D4", bg: "#EEF1FF" },
-  "Peer Learning":{ icon: "🤝", color: "#0891b2", bg: "#E0F2FE" },
-  Growth:         { icon: "📈", color: "#059669", bg: "#D1FAE5" },
-  Fundraising:    { icon: "💡", color: "#7c3aed", bg: "#EDE9FE" },
+const categoryMap = {
+  Onboarding:     { icon: Rocket, color: "var(--brand-blue)", bg: "var(--surface-blue)" },
+  "Peer Learning":{ icon: Handshake, color: "var(--brand-dark-green)", bg: "var(--success-bg)" },
+  Growth:         { icon: TrendingUp, color: "var(--brand-dark-orange)", bg: "var(--brand-light-orange)" },
+  Fundraising:    { icon: Lightbulb, color: "var(--brand-dark-pink)", bg: "var(--error-bg)" },
 }
 
 interface ProgramCardProps {
@@ -18,7 +18,8 @@ interface ProgramCardProps {
 
 export function ProgramCard({ program }: ProgramCardProps) {
   const { locale, direction } = useLocale()
-  const cat = categoryMap[program.category] ?? { icon: "📋", color: "#3B52D4", bg: "#EEF1FF" }
+  const cat = categoryMap[program.category as keyof typeof categoryMap] ?? { icon: ListChecks, color: "var(--brand-blue)", bg: "var(--surface-blue)" }
+  const CategoryIcon = cat.icon
   const copy = {
     ar: { open: "مفتوح", closed: "قريبًا", learnMore: "عرض البرنامج" },
     en: { open: "Open", closed: "Coming soon", learnMore: "View program" },
@@ -51,11 +52,11 @@ export function ProgramCard({ program }: ProgramCardProps) {
         {/* Header */}
         <div className="flex items-start gap-3">
           <div
-            className="h-11 w-11 rounded-xl flex items-center justify-center text-xl shrink-0"
-            style={{ background: cat.bg }}
+            className="h-11 w-11 rounded-xl flex items-center justify-center shrink-0"
+            style={{ background: cat.bg, color: cat.color }}
             aria-hidden="true"
           >
-            {cat.icon}
+            <CategoryIcon className="h-5 w-5" strokeWidth={1.8} />
           </div>
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 mb-1">

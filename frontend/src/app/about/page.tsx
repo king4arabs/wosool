@@ -1,7 +1,7 @@
 "use client"
 
 import Link from "next/link"
-import { Globe, Heart, Lightbulb, Shield, Users } from "lucide-react"
+import { Check, Globe, Heart, Lightbulb, Shield, Users } from "lucide-react"
 import { AboutEnglish } from "./AboutEnglish"
 import { PublicLayout } from "@/components/layout/PublicLayout"
 import { SectionHeader } from "@/components/sections/SectionHeader"
@@ -185,7 +185,7 @@ export default function AboutPage() {
               "لا تُباع بيانات الأعضاء لأي طرف ثالث، ولا تُستخدم إلا في إطار الخدمة وتجربة العضوية.",
             ].map((item) => (
               <div key={item} className="flex items-start gap-3">
-                <span className="mt-0.5 text-[var(--color-logo-blue)]">✓</span>
+                <Check className="mt-0.5 h-4 w-4 shrink-0 text-[var(--brand-blue)]" aria-hidden="true" />
                 <p className="text-gray-700">{item}</p>
               </div>
             ))}
