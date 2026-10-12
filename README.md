@@ -314,6 +314,7 @@ Remaining external dependencies include configured hosting/deployment access, pr
 | [Architecture](ARCHITECTURE.md) | System structure and engineering context |
 | [API reference](docs/API.md) | Backend interfaces |
 | [Community homepage](docs/COMMUNITY-HOMEPAGE.md) | Main Wosool community experience |
+| [Founder activation](docs/FOUNDER-ACTIVATION.md) | Sourced profile import, verified invitations, and release checks |
 | [Founder calendar](docs/FOUNDER-CALENDAR-2026-10-12.md) | Founder learning calendar, Ramadan off days, international holidays and May 2027 milestones |
 | [EOA operations](docs/EOA.md) | Authoritative Accelerator workflows, access, and approvals |
 | [Startup directory](docs/STARTUP-DIRECTORY.md) | Sourcing, imports, review, and publication controls |
