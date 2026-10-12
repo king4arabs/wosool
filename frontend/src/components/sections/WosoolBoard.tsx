@@ -29,7 +29,7 @@ export function WosoolBoard() {
               <span className={styles.number} aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>
               <div className={styles.portrait}>
                 {member.photo ? (
-                  <Image src={member.photo} alt={ar ? member.nameAr : member.name} width={96} height={96} sizes="96px" />
+                  <Image src={member.photo} alt={ar ? member.nameAr : member.name} width={96} height={96} sizes="64px" />
                 ) : (
                   <span aria-label={ar ? `صورة ${member.nameAr} غير متاحة` : `Photo of ${member.name} unavailable`} role="img">{member.name.split(" ").map(part => part[0]).join("")}</span>
                 )}
