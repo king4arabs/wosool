@@ -8,7 +8,7 @@ const members = [
   { name: "Thamer Aldhafiri", nameAr: "ثامر الظفيري", company: "Cipher", description: "Cipher Company for Cybersecurity", website: "https://cipher.com.sa", linkedIn: "https://www.linkedin.com/in/thameraldhafiri", photo: "/wosool/board/thamer-aldhafiri.webp", photoSize: 460 },
   { name: "Mohammed Alsolami", nameAr: "محمد السلمي", company: "RABEH", description: "Rabeh FinTech", website: "https://rabeh.sa", linkedIn: "https://www.linkedin.com/in/mohammedalsolami", photo: "/wosool/board/mohammed-alsolami.webp", photoSize: 512 },
   { name: "Anas Alsahali", nameAr: "أنس السهلي", company: "SEQUENCIVE", description: "SEQUENCIVE", website: "https://sequencive.com", linkedIn: null, photo: null, photoSize: 0 },
-  { name: "Faisal Almukles", nameAr: "فيصل المخلص", company: "Torood", description: "Torod Logistics", website: "https://torod.co", linkedIn: null, photo: null, photoSize: 0 },
+  { name: "Faisal Almukles", nameAr: "فيصل المخلص", company: "Torood", description: "Torod Logistics", website: "https://torod.co", linkedIn: null, photo: "/wosool/board/faisal-almukles.webp", photoSize: 512 },
   { name: "Rayan Alzamil", nameAr: "ريان الزامل", company: "Salesfine", description: "SalesFine FinTech", website: "https://salesfine.co", linkedIn: null, photo: null, photoSize: 0 },
   { name: "Majid Alrasheed", nameAr: "ماجد الرشيد", company: "Madkhool", description: "Madkhol Capital", website: "https://madkhool.sa", linkedIn: null, photo: null, photoSize: 0 },
 ] as const
