@@ -209,7 +209,7 @@ Content-Type: application/json
 | `/events` | `period` (`upcoming`, `past`, `today`, `this_week`, `this_month`), `type`, `mode`, `format`, `q`, `category`, `tag`, `per_page` (1–100) |
 | `/programs` | `open` |
 | `/partners` | `type` |
-| `/news` | `category`, `featured`, `per_page` |
+| `/news` | `category`, `featured`, `search`, `company`, `companies`, `per_page` (clamped to 1–50) |
 | `/resources` | `type`, `category`, `members_only`, `per_page` |
 
 ---
@@ -224,7 +224,9 @@ Public list, detail, and calendar endpoints require public visibility and a publ
 
 News JSON adds nullable `source_url`, `source_name`, and `image_credit`, plus `companies` (an array of company-name strings, not relationships; defaults to `[]`). Existing editorial records remain unchanged.
 
-Run `cd backend && php artisan news:sync` after migrations to import trusted Wamda and TechCrunch startup/venture RSS feeds. The existing Laravel scheduler runs it daily; production must run `php artisan schedule:run` every minute. Ingestion stores only plain-text feed summaries capped at 320 characters, never full articles or source HTML; `source_url` links to the publisher's full article. Images are intentionally omitted because image licensing/CDN trust is not established. Companies are matched against public directory names in the title/summary.
+`GET /api/v1/news?company=Acme` matches an exact string in `companies` or `tags`, never title/summary substrings. `?companies=فودكس,Foodics,foodics` OR-matches up to 10 comma-separated aliases (each up to 255 characters; whitespace is trimmed). Pass localized/English company names or explicitly stored slug/tag aliases. If both parameters are supplied, the combined list is limited to 10 aliases. Public listing/detail omit future-dated, draft, and private items; legacy published items without a publication date remain visible.
+
+Run `cd backend && php artisan news:sync` after migrations to import trusted Wamda and TechCrunch startup/venture RSS feeds. The existing Laravel scheduler runs it daily; production must run `php artisan schedule:run` every minute. Ingestion stores only plain-text feed summaries capped at 320 characters, never full articles or source HTML; `source_url` links to the publisher's full article. Feed image candidates come from Media RSS content/thumbnail, image enclosures, or the first description image. Only HTTPS URLs on exact publisher hosts (plus Wamda's `wamda-prod.s3.amazonaws.com` bucket) are stored, with publisher attribution in `image_credit`; absent/unsafe images remain null and clients should provide a fallback. The backend does not download images. Companies are matched against public directory names in the title/summary.
 
 Source URLs are restricted to HTTPS publisher hosts. Requests disable redirects and bound time, response size, and item count; unsafe XML and future/missing dates are skipped. Repeats deduplicate by source URL without updating editorial changes or restoring deleted items. Feed failures return a nonzero exit code, retain all existing news, and do not stop other feeds. Publisher availability (including the Wamda feed path) must be verified from the deployment network.
 

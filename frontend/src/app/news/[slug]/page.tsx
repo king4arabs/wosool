@@ -33,22 +33,24 @@ export default function NewsArticlePage() {
   const story = getLocalizedNewsContent(item, locale)
   const founders = newsFounders(item)
   const source = safeNewsUrl(item.sourceUrl)
+  const publisherExcerpt = item.slug.startsWith("rss-")
+  const contentLanguage = publisherExcerpt ? "en" : locale
   const related = curatedNews.filter(other => other.slug !== item.slug && companyMatches(other, item.companies ?? [])).slice(0, 3)
   return <PublicLayout><div dir={direction} lang={locale} className="bg-[var(--page-bg)] text-[var(--text)]">
     <header className="bg-[var(--surface-inverse)] px-4 py-10 text-[var(--on-dark)] sm:px-6 sm:py-16"><div className="mx-auto max-w-5xl">
       <Link href="/news" className="inline-flex min-h-11 items-center gap-2 text-sm text-[var(--on-dark-muted)]"><Back size={16} />{ar ? "العودة للأخبار" : "Back to news"}</Link>
       <p className="mt-6 text-sm font-bold text-[var(--on-dark-muted)]">{item.category} · {item.sourceName || item.author}</p>
-      <h1 className="mt-4 max-w-4xl text-3xl font-extrabold leading-tight sm:text-5xl">{story.title}</h1>
-      <p className="mt-6 max-w-3xl text-lg leading-8 text-[var(--on-dark-muted)]">{story.excerpt}</p>
-      <div className="mt-6 flex flex-wrap gap-4 text-sm text-[var(--on-dark-muted)]"><time dateTime={item.publishedAt || undefined}>{newsDate(item.publishedAt, locale)}</time><span>{story.readTime}</span>{source && <span>{ar ? "ملخص مستقل من وصول" : "Independent Wosool brief"}</span>}</div>
+      <h1 lang={contentLanguage} dir={contentLanguage === "ar" ? "rtl" : "ltr"} className="mt-4 max-w-4xl text-3xl font-extrabold leading-tight sm:text-5xl">{story.title}</h1>
+      <p lang={contentLanguage} dir={contentLanguage === "ar" ? "rtl" : "ltr"} className="mt-6 max-w-3xl text-lg leading-8 text-[var(--on-dark-muted)]">{story.excerpt}</p>
+      <div className="mt-6 flex flex-wrap gap-4 text-sm text-[var(--on-dark-muted)]"><time dateTime={item.publishedAt || undefined}>{newsDate(item.publishedAt, locale)}</time><span>{story.readTime}</span>{source && <span>{story.authorRole}</span>}</div>
     </div></header>
     <div className="mx-auto max-w-5xl px-4 py-10 sm:px-6">
       <figure className="overflow-hidden rounded-[var(--radius-panel)] bg-[var(--surface)]"><NewsImage src={item.imageUrl} alt={story.title} eager />{item.imageCredit && <figcaption className="p-4 text-xs text-[var(--text-muted)]">{ar ? "الصورة:" : "Image:"} {item.imageCredit}</figcaption>}</figure>
       <div className="mt-8 grid items-start gap-8 lg:grid-cols-[minmax(0,1fr)_280px]">
         <article className="min-w-0 rounded-[var(--radius-card)] bg-[var(--surface)] p-6 sm:p-8">
           <h2 className="mb-5 text-xl font-bold">{ar ? "تفاصيل الخبر" : "The story in brief"}</h2>
-          <div className="space-y-6">{story.body.map((paragraph, index) => <p key={index} className="whitespace-pre-wrap text-base leading-8 text-[var(--text-muted)]">{paragraph}</p>)}</div>
-          {source && <div className="mt-8 border-t border-[var(--border-soft)] pt-6"><p className="text-sm leading-7 text-[var(--text-muted)]">{ar ? "هذا ملخص مستقل، وليس إعادة نشر للمقال الأصلي. اقرأ التغطية الكاملة والصور الإضافية لدى المصدر." : "This is an independent brief, not a republication. Read the complete reporting and additional photographs at the source."}</p><a href={source} target="_blank" rel="noopener noreferrer" className="mt-4 inline-flex min-h-12 items-center gap-2 rounded-xl bg-[var(--action-bg)] px-5 py-3 font-bold text-[var(--action-fg)] hover:bg-[var(--action-hover)]">{ar ? "اقرأ الخبر الكامل" : "Read full source story"}<ArrowUpRight size={18} /></a></div>}
+          <div lang={contentLanguage} dir={contentLanguage === "ar" ? "rtl" : "ltr"} className="space-y-6">{story.body.map((paragraph, index) => <p key={index} className="whitespace-pre-wrap text-base leading-8 text-[var(--text-muted)]">{paragraph}</p>)}</div>
+          {source && <div className="mt-8 border-t border-[var(--border-soft)] pt-6"><p className="text-sm leading-7 text-[var(--text-muted)]">{publisherExcerpt ? ar ? "مقتطف قصير من موجز الناشر. اقرأ الخبر الكامل والصور الإضافية لدى المصدر." : "A short excerpt from the publisher’s feed. Read the complete reporting and additional photographs at the source." : ar ? "هذا ملخص مستقل، وليس إعادة نشر للمقال الأصلي. اقرأ التغطية الكاملة والصور الإضافية لدى المصدر." : "This is an independent brief, not a republication. Read the complete reporting and additional photographs at the source."}</p><a href={source} target="_blank" rel="noopener noreferrer" className="mt-4 inline-flex min-h-12 items-center gap-2 rounded-xl bg-[var(--action-bg)] px-5 py-3 font-bold text-[var(--action-fg)] hover:bg-[var(--action-hover)]">{ar ? "اقرأ الخبر الكامل" : "Read full source story"}<ArrowUpRight size={18} /></a></div>}
         </article>
         <aside className="space-y-5">
           {source && <section className="rounded-2xl border border-[var(--border-soft)] bg-[var(--surface)] p-5"><h2 className="font-bold">{ar ? "المصدر" : "Source & attribution"}</h2><p className="mt-3 text-sm">{item.sourceName}</p><a className="mt-2 inline-flex min-h-11 items-center gap-2 break-all text-sm text-[var(--link)] underline" href={source} target="_blank" rel="noopener noreferrer">{new URL(source).hostname}<ArrowUpRight size={16} /></a></section>}

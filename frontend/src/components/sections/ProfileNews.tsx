@@ -2,7 +2,7 @@
 
 import { useMemo } from "react"
 import Link from "next/link"
-import { companyMatches, mergeNews } from "@/lib/news-feed"
+import { companyAliases, companyMatches, mergeNews } from "@/lib/news-feed"
 import { mapNewsItem, type ApiNewsItem } from "@/lib/content-api"
 import { usePublicCollection } from "@/lib/use-public-collection"
 import { useLocale } from "@/lib/locale"
@@ -10,10 +10,11 @@ import { NewsCard } from "./NewsCard"
 
 export function ProfileNews({ companyNames }: { companyNames: string[] }) {
   const { locale } = useLocale()
-  const primary = companyNames.find(Boolean)
-  const collection = usePublicCollection<ApiNewsItem>(`/news?companies=${encodeURIComponent(companyNames.filter(Boolean).slice(0, 10).join(","))}`)
+  const aliases = companyAliases(companyNames)
+  const primary = aliases.find(Boolean)
+  const collection = usePublicCollection<ApiNewsItem>(`/news?companies=${encodeURIComponent(aliases.slice(0, 10).join(","))}`)
   const items = useMemo(() => mergeNews(collection.items.map(mapNewsItem)), [collection.items])
-    .filter(item => companyMatches(item, companyNames))
+    .filter(item => companyMatches(item, aliases))
   if (!primary || !items.length) return null
   return <section id="profile-news" className="scroll-mt-24">
     <div className="mb-5 flex flex-wrap items-center justify-between gap-3"><h2 className="text-xl font-bold text-[var(--text-strong)]">{locale === "ar" ? "في الأخبار" : "In the news"}</h2><Link href="/news" className="inline-flex min-h-11 items-center text-sm font-bold text-[var(--link)]">{locale === "ar" ? "غرفة الأخبار" : "Newsroom"}</Link></div>

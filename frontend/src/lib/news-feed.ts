@@ -23,9 +23,17 @@ function normalize(value: string) {
   return value.normalize("NFKC").toLocaleLowerCase().replace(/[\s_-]+/g, " ").trim()
 }
 
-export function companyMatches(item: NewsItem, names: string[]) {
+export function companyMatches(item: Pick<NewsItem, "companies">, names: string[]) {
   const keys = names.filter(Boolean).map(normalize)
   return (item.companies ?? []).some(company => keys.includes(normalize(company)))
+}
+
+export function companyAliases(names: string[]) {
+  const aliases = profiles.filter(profile => companyMatches(
+    { companies: names },
+    [profile.company_key, profile.company_name_en, profile.company_name_ar],
+  )).flatMap(profile => [profile.company_key, profile.company_name_en, profile.company_name_ar])
+  return [...new Set([...names, ...aliases].filter(Boolean))]
 }
 
 export function newsFounders(item: NewsItem) {

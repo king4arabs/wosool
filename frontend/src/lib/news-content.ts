@@ -12,7 +12,7 @@ export function getLocalizedNewsContent(item: NewsItem, locale: NewsLocale) {
     title: translation?.title ?? item.title,
     excerpt: translation?.excerpt ?? item.excerpt,
     body,
-    authorRole: item.sourceName ? (locale === "ar" ? "ملخص مستقل من وصول" : "Independent Wosool brief") : "",
+    authorRole: item.sourceName ? (item.slug.startsWith("rss-") ? (locale === "ar" ? "مقتطف من المصدر" : "Publisher excerpt") : (locale === "ar" ? "ملخص مستقل من وصول" : "Independent Wosool brief")) : "",
     readTime: locale === "ar" ? `${minutes} دقيقة قراءة` : `${minutes} min read`,
   }
 }

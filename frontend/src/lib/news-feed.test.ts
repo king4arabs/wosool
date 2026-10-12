@@ -1,6 +1,6 @@
 import test from "node:test"
 import assert from "node:assert/strict"
-import { curatedNews, mergeNews, companyMatches, newsFounders, safeNewsUrl, newsDate } from "./news-feed"
+import { curatedNews, mergeNews, companyMatches, companyAliases, newsFounders, safeNewsUrl, newsDate } from "./news-feed"
 import { getLocalizedNewsContent } from "./news-content"
 import type { NewsItem } from "../types"
 
@@ -25,6 +25,7 @@ test("profile news uses exact company associations, not incidental mentions", ()
   assert.equal(companyMatches(story, ["Food"]), false)
   assert.equal(companyMatches({ ...story, companies: [] }, ["Real reporting"]), false)
   assert.equal(newsFounders(story)[0]?.slug, "foodics")
+  assert.ok(companyAliases(["فودكس", "foodics"]).includes("Foodics"))
 })
 
 test("external news URLs reject executable, insecure and credentialed links", () => {

@@ -6,6 +6,7 @@ use App\Models\CompanyProfile;
 use App\Models\NewsItem;
 use Carbon\CarbonImmutable;
 use DateTimeImmutable;
+use DOMDocument;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
@@ -24,9 +25,24 @@ class SyncNews extends Command
     private const MAX_ITEMS = 50;
 
     private const FEEDS = [
-        ['url' => 'https://www.wamda.com/feed', 'name' => 'Wamda', 'hosts' => ['www.wamda.com', 'wamda.com']],
-        ['url' => 'https://techcrunch.com/category/startups/feed/', 'name' => 'TechCrunch', 'hosts' => ['techcrunch.com', 'www.techcrunch.com']],
-        ['url' => 'https://techcrunch.com/category/venture/feed/', 'name' => 'TechCrunch', 'hosts' => ['techcrunch.com', 'www.techcrunch.com']],
+        [
+            'url' => 'https://www.wamda.com/feed',
+            'name' => 'Wamda',
+            'hosts' => ['www.wamda.com', 'wamda.com'],
+            'image_hosts' => ['www.wamda.com', 'wamda.com', 'wamda-prod.s3.amazonaws.com'],
+        ],
+        [
+            'url' => 'https://techcrunch.com/category/startups/feed/',
+            'name' => 'TechCrunch',
+            'hosts' => ['techcrunch.com', 'www.techcrunch.com'],
+            'image_hosts' => ['techcrunch.com', 'www.techcrunch.com'],
+        ],
+        [
+            'url' => 'https://techcrunch.com/category/venture/feed/',
+            'name' => 'TechCrunch',
+            'hosts' => ['techcrunch.com', 'www.techcrunch.com'],
+            'image_hosts' => ['techcrunch.com', 'www.techcrunch.com'],
+        ],
     ];
 
     public function handle(): int
@@ -108,7 +124,9 @@ class SyncNews extends Command
     private function parse(string $body): SimpleXMLElement
     {
         if (! mb_check_encoding($body, 'UTF-8') || str_contains($body, "\0")
-            || preg_match('/<!\s*(DOCTYPE|ENTITY)\b/i', $body)) {
+            || preg_match('/<!\s*(DOCTYPE|ENTITY)\b/i', $body)
+            || (preg_match('/<\?xml\b[^?]*\bencoding\s*=\s*["\']([^"\']+)["\']/i', $body, $encoding)
+                && ! in_array(strtolower($encoding[1]), ['utf-8', 'utf8'], true))) {
             throw new RuntimeException('Unsafe feed XML.');
         }
 
@@ -141,6 +159,7 @@ class SyncNews extends Command
         $companies = array_values(array_filter($companyNames, fn ($name) => is_string($name)
             && mb_strlen($name) >= 2
             && preg_match('/(?<![\pL\pN])'.preg_quote($name, '/').'(?![\pL\pN])/iu', $searchText)));
+        $imageUrl = $this->imageUrl($item, $feed['image_hosts']);
 
         return [
             'source_url' => $url,
@@ -153,8 +172,8 @@ class SyncNews extends Command
             'author_name' => $feed['name'],
             'companies' => array_values(array_unique($companies)),
             'tags' => [],
-            'image_url' => null,
-            'image_credit' => null,
+            'image_url' => $imageUrl,
+            'image_credit' => $imageUrl !== null ? $feed['name'] : null,
             'is_featured' => false,
             'is_public' => true,
             'status' => 'published',
@@ -187,6 +206,51 @@ class SyncNews extends Command
         $text = trim(preg_replace('/\s+/u', ' ', $text) ?? '');
 
         return Str::limit($text, $limit, '');
+    }
+
+    private function imageUrl(SimpleXMLElement $item, array $hosts): ?string
+    {
+        $media = $item->children('http://search.yahoo.com/mrss/');
+        $candidates = [];
+        foreach (['content', 'thumbnail'] as $element) {
+            foreach ($media->{$element} as $image) {
+                $attributes = $image->attributes();
+                $type = strtolower((string) $attributes['type']);
+                $medium = strtolower((string) $attributes['medium']);
+                if (($type === '' || str_starts_with($type, 'image/')) && ($medium === '' || $medium === 'image')) {
+                    $candidates[] = (string) $attributes['url'];
+                }
+            }
+        }
+        foreach ($item->enclosure as $enclosure) {
+            if (str_starts_with(strtolower((string) $enclosure['type']), 'image/')) {
+                $candidates[] = (string) $enclosure['url'];
+            }
+        }
+
+        $previous = libxml_use_internal_errors(true);
+        try {
+            $html = new DOMDocument;
+            $description = html_entity_decode((string) $item->description, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+            if ($description !== '' && $html->loadHTML($description, LIBXML_NONET | LIBXML_NOERROR | LIBXML_NOWARNING)) {
+                $image = $html->getElementsByTagName('img')->item(0);
+                if ($image !== null) {
+                    $candidates[] = $image->getAttribute('src');
+                }
+            }
+        } finally {
+            libxml_clear_errors();
+            libxml_use_internal_errors($previous);
+        }
+
+        foreach ($candidates as $candidate) {
+            $url = $this->sourceUrl(trim($candidate), $hosts);
+            if ($url !== null) {
+                return $url;
+            }
+        }
+
+        return null;
     }
 
     private function publicationDate(string $value): ?CarbonImmutable
