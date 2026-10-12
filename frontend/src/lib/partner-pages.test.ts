@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
 import { loadPartnerPages } from './partner-pages'
-import { uniquePartnerLogos } from './partner-logos'
+import { acceleratorPartnerLogos, communityPartnerLogos, uniquePartnerLogos } from './partner-logos'
 import type { ApiPartner } from './content-api'
 
 const partner = (id: number): ApiPartner => ({ id, name: `Partner ${id}`, slug: `partner-${id}`, status: 'confirmed', type: 'ecosystem' })
@@ -33,4 +33,12 @@ test('unsafe partner links cannot render and official hotlinks deduplicate again
   assert.equal(items.length, 2)
   assert.equal(items[0].logo_path, '/partners/the-garage.png')
   assert.equal(items[1].website, undefined)
+})
+
+test('the homepage and EOA snapshots include the supplied Cipher artwork and local RDIA logo', () => {
+  for (const partners of [communityPartnerLogos, acceleratorPartnerLogos]) {
+    const logos = uniquePartnerLogos(partners)
+    assert.equal(logos.find(partner => partner.id === 'cipher-ventures')?.logo_path, 'https://github.com/user-attachments/assets/b9cb90be-b844-4ec2-b8a7-8612ae762ea9')
+    assert.equal(logos.find(partner => partner.id === 'rdia')?.logo_path, '/partners/rdia.svg')
+  }
 })

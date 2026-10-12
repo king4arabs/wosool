@@ -16,6 +16,9 @@
 .slot { display:flex; align-items:center; justify-content:center; min-width:0; min-height:100px; flex:0 0 var(--partner-slot); }
 .logoFrame { display:flex; align-items:center; justify-content:center; width:var(--partner-slot); height:100px; padding:16px 10px; border:1px solid transparent; border-radius:8px; background:transparent; }
 .logoFrame:is(a):hover { border-color:var(--border-soft); }
+.logoFrame[data-partner="cipher-ventures"] { padding-block:4px; }
+.logoFrame [data-brand-logo] { filter:grayscale(1); opacity:.72; transition:filter .25s ease,opacity .25s ease; }
+.logoFrame:is(:hover,:focus-visible) [data-brand-logo] { filter:none; opacity:1; }
 .logoFrame[data-dark] { height:64px; background:var(--brand-navy); color:#fff; }
 .grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(160px,100%),1fr)); align-items:center; gap:20px 28px; }
 .grid .logoFrame { width:100%; max-width:180px; }
@@ -27,8 +30,9 @@
   .section .heading h2 { font-size:14px; }
   .headingActions { gap:8px 14px; }
   .logoFrame { height:88px; padding:12px 8px; }
+  .logoFrame[data-partner="cipher-ventures"] { padding-block:2px; }
   .slot { min-height:88px; }
   .logoFrame[data-dark] { height:56px; }
   .grid { grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px 16px; }
 }
-@media(prefers-reduced-motion:reduce) { .viewport { scroll-behavior:auto; } }
+@media(prefers-reduced-motion:reduce) { .viewport { scroll-behavior:auto; } .logoFrame [data-brand-logo] { transition:none; } }

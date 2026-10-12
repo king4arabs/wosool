@@ -15,7 +15,9 @@ On October 11, `https://wosool.org/api/v1/partners` returned HTTP 500. During th
 
 EOA uses the same release snapshot while its program data is unavailable, and retains the existing EO chapter mark once a successful API response arrives. These display lists record the owner's October 11 instruction; they are not a claim that externally verified partnership agreements were obtained. No production database rows, approval flags, or relationship evidence were changed. Existing administrator publication controls continue to govern successful API responses.
 
-RIDA remains unresolved: the supplied abbreviation does not establish a specific organization. RDIA's existing asset remains available for API-approved records; it is not substituted for RIDA.
+RIDA remains unresolved: the supplied abbreviation does not establish a specific organization. RDIA is a separate, identified organization and is not substituted for RIDA.
+
+On October 12, the owner supplied a Cipher Ventures image for the homepage and EOA fallback strips. Both strips now include Cipher Ventures via its [supplied GitHub attachment](https://github.com/user-attachments/assets/b9cb90be-b844-4ec2-b8a7-8612ae762ea9) and RDIA via the existing `/partners/rdia.svg`. The attachment is served externally because its image host could not be reached from the build environment; it is not a locally verified transparent original. Logo frames keep their aspect ratios, the portrait Cipher image receives more vertical space, and the strip applies a grayscale/muted filter that clears on hover or keyboard focus. Successful API responses still govern the published lists; this change does not alter publication approvals. Monsha’at and Community Jameel remain pending suitable artwork.
 
 ## Additional original artwork
 
