@@ -21,8 +21,8 @@ export function WosoolBoard() {
     <section id="wosool-board" className={styles.section} aria-labelledby="wosool-board-title" lang={locale} dir={ar ? "rtl" : "ltr"}>
       <div className={styles.container}>
         <p className={styles.eyebrow}>{ar ? "من مؤسسين إلى مؤسسين" : "FOUNDERS TO FOUNDERS"}</p>
-        <h2 id="wosool-board-title">{ar ? "مجلس إدارة وصول وخريجو Multiverse" : "Wosool board members & Multiverse graduates"}</h2>
-        <p className={styles.intro}>{ar ? "ستة مؤسسين جمعهم التعلّم والعمل المشترك، ويواصلون بناء مجتمع وصول." : "Six founders brought together by shared learning and collaboration, now building the Wosool community."}</p>
+        <h2 id="wosool-board-title">{ar ? "مجلس إدارة وصول" : "Wosool board members"}</h2>
+        <p className={styles.intro}>{ar ? "مؤسسين جمعهم التعلّم والعمل المشترك، ويواصلون بناء مجتمع وصول." : "Founders brought together by shared learning and collaboration, now building the Wosool community."}</p>
         <div className={styles.list}>
           {members.map((member, index) => (
             <article className={styles.card} key={member.name}>
