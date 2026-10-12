@@ -153,6 +153,22 @@ class AcceleratorGatewayTest extends TestCase
         $this->assertNull($internal->fresh()->notification_sent_at);
     }
 
+    public function test_program_update_email_respects_user_opt_out(): void
+    {
+        config(['gateway.email_updates' => true]);
+        $user = $this->applicant();
+        $application = ProgramApplication::create(['program_id' => Gateway::program()->id, 'user_id' => $user->id, 'status' => 'submitted', 'motivation' => 'Test learning']);
+        $event = ApplicationEvent::create(['application_id' => $application->id, 'to_status' => 'submitted', 'is_internal' => false]);
+        $settings = \App\Models\UserSetting::defaults();
+        $settings['notifications']['program_updates'] = false;
+        $user->userSetting()->create($settings);
+
+        Mail::shouldReceive('raw')->never();
+        (new SendApplicationUpdate($event->id))->handle();
+
+        $this->assertNull($event->fresh()->notification_sent_at);
+    }
+
 
 
     public function test_retired_writes_cannot_bypass_canonical_approvals_or_create_enrollment(): void
