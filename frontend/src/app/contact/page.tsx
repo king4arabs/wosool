@@ -216,8 +216,8 @@ export default function ContactPage() {
               style={{ boxShadow: "0 2px 8px -2px rgba(59,82,212,0.06)" }}
             >
               <MessageSquare className="h-3 w-3 text-[#3B52D4]" />
-              <a href="mailto:hello@wosool.org" className="hover:text-[#3B52D4] transition-colors">
-                hello@wosool.org
+              <a href="mailto:Info@wosool.org" className="hover:text-[#3B52D4] transition-colors">
+                Info@wosool.org
               </a>
             </div>
           </div>

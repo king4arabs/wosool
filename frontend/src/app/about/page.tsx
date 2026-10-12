@@ -2,6 +2,7 @@ import Link from "next/link"
 import { Globe, Heart, Lightbulb, Shield, Users } from "lucide-react"
 import { PublicLayout } from "@/components/layout/PublicLayout"
 import { SectionHeader } from "@/components/sections/SectionHeader"
+import { WosoolBoard } from "@/components/sections/WosoolBoard"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 
@@ -43,7 +44,7 @@ export default function AboutPage() {
           </Badge>
           <h1 className="mb-6 text-5xl font-bold tracking-tight sm:text-6xl">عن وصول</h1>
           <p className="mx-auto max-w-2xl text-xl leading-relaxed text-gray-300">
-            بنينا وصول لأننا نؤمن بأن المؤسسين في السعودية والخليج يستحقون شبكة دعم أكثر نضجًا من مجرد فعاليات متكررة أو مجتمع واسع بلا قيمة عملية.
+            من لقاء مؤسسين في لندن إلى مجتمع يبني فيه المؤسسون القيمة لبعضهم بعضًا.
           </p>
         </div>
       </section>
@@ -53,21 +54,50 @@ export default function AboutPage() {
           <div className="grid grid-cols-1 items-center gap-16 lg:grid-cols-2">
             <div>
               <p className="mb-3 text-sm font-semibold tracking-widest text-[var(--color-logo-blue)]">رسالتنا</p>
-              <h2 className="mb-6 text-4xl font-bold text-[#0A1628]">تسريع المؤسسين الأقوى في الخليج</h2>
+              <h2 className="mb-6 text-4xl font-bold text-[#0A1628]">من مؤسس إلى مؤسس</h2>
               <p className="mb-6 leading-relaxed text-gray-600">
-                يربط وصول المؤسسين الطموحين بالأشخاص والبرامج والموارد التي يحتاجون إليها لبناء شركاتهم بوضوح أكبر وسرعة أعلى.
+                رسالتنا أن نجمع المؤسسين في مجتمع يتبادلون فيه الخبرة والدعم، ونفتح لهم سبل الوصول إلى العلاقات والفرص والموارد المناسبة لبناء شركاتهم.
               </p>
               <p className="leading-relaxed text-gray-600">
-                تأسس وصول على يد رواد أعمال ومشغلين يعرفون تعقيدات البناء في المنطقة، لذلك صُممت التجربة حول احتياجات واقعية لا حول افتراضات عامة.
+                نبدأ من احتياجات المؤسس الحقيقية، ونحوّل قيمة كل لقاء إلى تعاون يستمر بعده.
               </p>
             </div>
             <div className="rounded-3xl bg-[#F7F8FB] p-10">
               <p className="mb-3 text-sm font-semibold tracking-widest text-[var(--color-logo-blue)]">رؤيتنا</p>
-              <h3 className="mb-4 text-2xl font-bold text-[#0A1628]">السعودية والخليج كبيئة جاذبة للمؤسسين الأقوى</h3>
+              <h3 className="mb-4 text-2xl font-bold text-[#0A1628]">مجتمع ينمو بعطاء مؤسسيه</h3>
               <p className="leading-relaxed text-gray-600">
-                نطمح إلى منظومة تجعل المنطقة خيارًا طبيعيًا لبناء شركات ذات مستوى عالمي، وأن يكون وصول هو الحلقة التي تربط بين الطموح والموارد والعلاقات المناسبة.
+                رؤيتنا شبكة مؤسسين من السعودية إلى العالم، يساند بعضهم بعضًا لبناء شركات أقوى وأثر أبقى.
               </p>
             </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="section-cream px-4 py-24" id="story">
+        <div className="mx-auto max-w-4xl">
+          <SectionHeader eyebrow="قصة وصول" heading="بدأت الحكاية في لندن" centered />
+          <div className="space-y-5 rounded-2xl bg-white p-8 leading-relaxed text-gray-700 shadow-sm">
+            <p>خلال برنامج Multiverse من CODE التابع لوزارة الاتصالات وتقنية المعلومات، التقى مؤسسون في لندن ووجدوا في تبادل الخبرات ومساندة بعضهم بعضًا قيمة تستحق أن تستمر بعد البرنامج.</p>
+            <p>من تلك التجربة نشأت وصول: مبادرة من المؤسسين للمؤسسين، نمت بدعم المؤسسين ووزارة الاتصالات وتقنية المعلومات لتصبح مجتمعًا منظّمًا يجمعهم حول التعاون والثقة.</p>
+            <p>شكر خاص لمعالي السواحه ومعالي الروبيعان وفرق وزارة الاتصالات وتقنية المعلومات على دعمهم.</p>
+          </div>
+        </div>
+      </section>
+
+      <section className="bg-white px-4 py-24" id="objectives">
+        <div className="mx-auto max-w-7xl">
+          <SectionHeader eyebrow="أهدافنا" heading="ما الذي نسعى إلى تحقيقه؟" centered />
+          <div className="grid gap-6 md:grid-cols-3">
+            {[
+              { title: "تبادل الخبرة", text: "إتاحة مساحة آمنة يشارك فيها المؤسسون دروسهم وتحدياتهم العملية." },
+              { title: "بناء العلاقات", text: "تيسير التعارف الهادف بين المؤسسين وممكّني المنظومة والشركاء." },
+              { title: "تحويل التواصل إلى أثر", text: "تمكين التعاون الذي يساعد المؤسسين على تطوير شركاتهم وتوسيع فرصها." },
+            ].map(({ title, text }) => (
+              <article key={title} className="rounded-2xl bg-[var(--surface-soft)] p-8">
+                <h3 className="mb-3 text-xl font-bold text-[var(--text-strong)]">{title}</h3>
+                <p className="leading-relaxed text-[var(--text-muted)]">{text}</p>
+              </article>
+            ))}
           </div>
         </div>
       </section>
@@ -156,24 +186,7 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <section className="bg-white px-4 py-24" id="team">
-        <div className="mx-auto max-w-7xl text-center">
-          <SectionHeader eyebrow="الفريق" heading="الأشخاص وراء وصول" centered />
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {["المؤسس والرئيس التنفيذي", "قيادة المجتمع", "قيادة البرامج"].map((role) => (
-              <div key={role} className="flex flex-col items-center gap-4 rounded-2xl bg-[#F7F8FB] p-8">
-                <div className="flex h-20 w-20 items-center justify-center rounded-full bg-[#0A1628]">
-                  <Users className="h-8 w-8 text-[var(--color-logo-blue)]" />
-                </div>
-                <div className="text-center">
-                  <p className="font-semibold text-[#0A1628]">قريبًا</p>
-                  <p className="text-sm text-gray-500">{role}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+      <WosoolBoard />
 
       <section className="bg-[#EEF2FF] px-4 py-20">
         <div className="mx-auto max-w-2xl text-center">
