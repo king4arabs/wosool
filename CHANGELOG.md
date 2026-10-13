@@ -6,6 +6,12 @@ This project follows **Semantic Versioning** and a Keep a Changelog-inspired for
 
 ---
 
+## Partner logos always shown — 2026-10-13
+
+- **Problem:** the "نفخر بشركائنا / Proud of our Partners" strips on the home page and `/eoa` showed the owner's partner logos only while the partners API was down. Now that the API answers, it returns no published partners, so the home strip showed an empty message and the EOA strip showed only the EO mark.
+- **Fix:** both strips use published partners with logos when there are any, and otherwise show the owner's display list (home: EO Riyadh, The Garage, Misk, CODE, Cipher Ventures, RDIA; EOA adds LAMARKA and HUMAIN). Admin-published partners still take priority as soon as one exists.
+- **Tests:** new `partner-logos` tests for the fallback and for every fallback entry having artwork and an https website; logos checked in the browser on both pages in Arabic and English at 390px and 1366px.
+
 ## Home page intro line — 2026-10-13
 
 - Replaced the home-page hero description with the owner's wording: "مجتمع وصول، من مؤسسين إلى مؤسسين، لمشاركة التجارب والخبرات وتقوية العلاقات وتعزيز فرص النمو." The English version now carries the same message.

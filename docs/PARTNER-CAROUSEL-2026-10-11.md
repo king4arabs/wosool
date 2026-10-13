@@ -37,3 +37,7 @@ The production webpack build generated all 81 routes successfully. Full frontend
 Chromium checks covered the homepage and `/eoa` in Arabic and English at 320, 390, 768, and 1440 pixels; the final source was rechecked at 390 and 1440 pixels. These checks confirmed uniform gaps across repeat boundaries, rightward motion, loaded artwork, no horizontal page overflow, no JavaScript errors, and hidden duplicate tab stops. Desktop and mobile strip/grid screenshots were visually reviewed. Separate control checks passed for pause, arrows, loop wrapping, keyboard focus and navigation. Reduced-motion grids, successful empty API responses, all nine previously available assets, and retaining an empty publication list after a failed refresh were checked with browser fixtures. Fixtures do not establish live API or database success.
 
 The available WebKit runtime cannot launch because required native libraries are missing; Safari is not runtime-verified. Code publication is separate from production deployment; the repository CI workflow does not deploy hosting. The production API failure requires hosting/API follow-up independently of this frontend change.
+
+## Update — October 13, 2026
+
+Once the production API recovered it returned an empty partner list, which hid the logos. On the owner's instruction the strips now fall back to the display lists above whenever the API has no published partners with artwork (`partnersToDisplay` in `frontend/src/lib/partner-logos.ts`). Published API partners still take priority.
