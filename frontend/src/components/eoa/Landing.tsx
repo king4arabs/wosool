@@ -20,6 +20,7 @@ import { EoaJourney } from "./Journey"
 import { EoaLogo } from "./Logo"
 import { EoaBoard } from "./Board"
 import { EoaMentors } from "./Mentors"
+import { EoGlobalNetwork } from "./GlobalNetwork"
 import { EoaProgramDetails } from "./EoaProgramDetails"
 import { EoaPillars } from "./Pillars"
 import { Notice, PartnerStrip, useEoaProgram } from "./Shared"
@@ -171,7 +172,8 @@ export function EoaLanding() {
 
       <div className="eoa-container eoa-section"><CohortModel ar={ar} /></div>
       <EoaJourney program={program} />
-      <EoaMentors key={ar ? "ar" : "en"} mentors={program?.mentors ?? []} ar={ar} loading={!program && !failed} failed={failed} retry={retry} compact />
+      {!!program?.mentors?.length && <EoaMentors key={ar ? "ar" : "en"} mentors={program.mentors} ar={ar} compact />}
+      <div className="eoa-container eoa-section"><EoGlobalNetwork key={ar ? "ar" : "en"} ar={ar} /></div>
       <EoaProgramDetails program={program} />
       <EoaBoard members={program?.board_members ?? []} ar={ar} />
 

@@ -30,7 +30,7 @@ function ProfileCard({ profile: p, ar }: { profile: EoNetworkProfile; ar: boolea
       <div className={styles.company}><span>{ar ? 'الشركة / المؤسسة' : 'COMPANY / ORGANIZATION'}</span><strong dir="auto">{p.company}</strong></div>
       <p className={styles.bio}>{ar ? p.bio_ar : p.bio}</p>
       <div className={styles.links}>
-        <a href={p.linkedin} target="_blank" rel="noopener noreferrer" aria-label={`${p.name} — LinkedIn (${ar ? 'نافذة جديدة' : 'new tab'})`}><UserRound size={16} aria-hidden="true" />LinkedIn<ArrowUpRight size={14} aria-hidden="true" /></a>
+        {p.linkedin && <a href={p.linkedin} target="_blank" rel="noopener noreferrer" aria-label={`${p.name} — LinkedIn (${ar ? 'نافذة جديدة' : 'new tab'})`}><UserRound size={16} aria-hidden="true" />LinkedIn<ArrowUpRight size={14} aria-hidden="true" /></a>}
         <a href={p.source} target="_blank" rel="noopener noreferrer" aria-label={`${p.name} — ${ar ? 'ملف EO، نافذة جديدة' : 'EO profile, new tab'}`}>{ar ? 'ملف EO' : 'EO profile'}<ArrowUpRight size={14} aria-hidden="true" /></a>
       </div>
     </div>

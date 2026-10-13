@@ -65,6 +65,7 @@ class EoaBoardMembersTest extends TestCase
         foreach ($response->json('data.board_members') as $row) {
             $this->assertArrayNotHasKey('source_references', $row);
             $this->assertArrayNotHasKey('verified_at', $row);
+            $this->assertArrayNotHasKey('version', $row);
             $this->assertArrayNotHasKey('program_id', $row);
         }
     }
@@ -92,17 +93,17 @@ class EoaBoardMembersTest extends TestCase
         $staff = $this->account('eoa_staff');
         $id = $this->actingAs($staff)->postJson('/api/v1/eoa/operations/board-members', $this->payload())
             ->assertCreated()->assertJsonPath('data.publication_status', 'draft')->json('data.id');
-        $this->patchJson('/api/v1/eoa/operations/board-members/'.$id, ['company_name_en' => 'Example Company'])->assertOk();
-        $this->patchJson('/api/v1/eoa/operations/board-members/'.$id, ['publication_status' => 'published'])->assertForbidden();
+        $this->patchJson('/api/v1/eoa/operations/board-members/'.$id, ['version' => 1, 'company_name_en' => 'Example Company'])->assertOk();
+        $this->patchJson('/api/v1/eoa/operations/board-members/'.$id, ['version' => 2, 'publication_status' => 'published'])->assertForbidden();
         $this->postJson('/api/v1/eoa/operations/board-members', $this->payload(['slug' => 'second', 'publication_status' => 'published']))->assertForbidden();
         $this->getJson('/api/v1/eoa/program')->assertJsonCount(0, 'data.board_members');
 
         $lead = $this->account('eoa_lead');
-        $this->actingAs($lead)->patchJson('/api/v1/eoa/operations/board-members/'.$id, ['publication_status' => 'published'])->assertOk();
+        $this->actingAs($lead)->patchJson('/api/v1/eoa/operations/board-members/'.$id, ['version' => 2, 'publication_status' => 'published'])->assertOk();
         $this->getJson('/api/v1/eoa/program')->assertJsonCount(1, 'data.board_members');
-        $this->actingAs($staff)->patchJson('/api/v1/eoa/operations/board-members/'.$id, ['company_name_en' => 'Unreviewed change'])->assertForbidden();
-        $this->patchJson('/api/v1/eoa/operations/board-members/'.$id, ['publication_status' => 'draft'])->assertForbidden();
-        $this->actingAs($lead)->patchJson('/api/v1/eoa/operations/board-members/'.$id, ['is_active' => false])->assertOk();
+        $this->actingAs($staff)->patchJson('/api/v1/eoa/operations/board-members/'.$id, ['version' => 3, 'company_name_en' => 'Unreviewed change'])->assertForbidden();
+        $this->patchJson('/api/v1/eoa/operations/board-members/'.$id, ['version' => 3, 'publication_status' => 'draft'])->assertForbidden();
+        $this->actingAs($lead)->patchJson('/api/v1/eoa/operations/board-members/'.$id, ['version' => 3, 'is_active' => false])->assertOk();
         $this->getJson('/api/v1/eoa/program')->assertJsonCount(0, 'data.board_members');
         $this->assertDatabaseHas('admin_actions', ['admin_id' => $staff->id, 'action' => 'eoa.board_created', 'entity_id' => $id]);
         $this->assertDatabaseHas('admin_actions', ['admin_id' => $lead->id, 'action' => 'eoa.board_updated', 'entity_id' => $id]);
@@ -112,19 +113,19 @@ class EoaBoardMembersTest extends TestCase
     {
         $other = Program::create(['name' => 'Other program', 'slug' => 'private-board-program', 'category' => 'growth']);
         $row = $this->member(['program_id' => $other->id]);
-        $this->actingAs($this->account('admin'))->patchJson('/api/v1/eoa/operations/board-members/'.$row->id, ['name_en' => 'Changed'])->assertNotFound();
+        $this->actingAs($this->account('admin'))->patchJson('/api/v1/eoa/operations/board-members/'.$row->id, ['version' => 1, 'name_en' => 'Changed'])->assertNotFound();
         $this->getJson('/api/v1/eoa/operations/board-members')->assertOk()->assertJsonCount(0, 'data');
     }
 
     public function test_publishing_requires_a_portrait_and_live_cards_cannot_lose_it(): void
     {
         $row = $this->member(['portrait_path' => null]);
-        $this->actingAs($this->account('eoa_lead'))->patchJson('/api/v1/eoa/operations/board-members/'.$row->id, ['publication_status' => 'published'])
+        $this->actingAs($this->account('eoa_lead'))->patchJson('/api/v1/eoa/operations/board-members/'.$row->id, ['version' => 1, 'publication_status' => 'published'])
             ->assertUnprocessable()->assertJsonValidationErrors('portrait_path');
-        $this->patchJson('/api/v1/eoa/operations/board-members/'.$row->id, ['publication_status' => 'published', 'portrait_path' => '/eoa/board/verified-portrait.webp'])->assertOk();
-        $this->patchJson('/api/v1/eoa/operations/board-members/'.$row->id, ['portrait_path' => null])
+        $this->patchJson('/api/v1/eoa/operations/board-members/'.$row->id, ['version' => 1, 'publication_status' => 'published', 'portrait_path' => '/eoa/board/verified-portrait.webp'])->assertOk();
+        $this->patchJson('/api/v1/eoa/operations/board-members/'.$row->id, ['version' => 2, 'portrait_path' => null])
             ->assertUnprocessable()->assertJsonValidationErrors('portrait_path');
-        $this->patchJson('/api/v1/eoa/operations/board-members/'.$row->id, ['publication_status' => 'draft', 'portrait_path' => null])->assertOk();
+        $this->patchJson('/api/v1/eoa/operations/board-members/'.$row->id, ['version' => 2, 'publication_status' => 'draft', 'portrait_path' => null])->assertOk();
     }
 
     public function test_link_and_portrait_path_validation_blocks_unsafe_or_mislabelled_destinations(): void
@@ -142,10 +143,10 @@ class EoaBoardMembersTest extends TestCase
             ['portrait_path' => '/eoa/board/../../portrait.jpg'],
             ['portrait_path' => '/eoa/board/portrait.svg'],
         ] as $payload) {
-            $this->patchJson('/api/v1/eoa/operations/board-members/'.$row->id, $payload)->assertUnprocessable();
+            $this->patchJson('/api/v1/eoa/operations/board-members/'.$row->id, $payload + ['version' => 1])->assertUnprocessable();
         }
         $this->patchJson('/api/v1/eoa/operations/board-members/'.$row->id, [
-            'company_url' => 'https://example.com/company', 'linkedin_url' => 'https://www.linkedin.com/in/person/',
+            'version' => 1, 'company_url' => 'https://example.com/company', 'linkedin_url' => 'https://www.linkedin.com/in/person/',
             'twitter_url' => 'https://x.com/person', 'facebook_url' => 'https://www.facebook.com/person',
             'instagram_url' => 'https://www.instagram.com/person/',
         ])->assertOk();
@@ -158,7 +159,7 @@ class EoaBoardMembersTest extends TestCase
         $staff = $this->account('eoa_staff');
         $this->actingAs($staff);
         $response = $this->post('/api/v1/eoa/operations/board-members/'.$row->id.'/portrait', [
-            'portrait' => UploadedFile::fake()->image('untrusted-name.php.jpg', 320, 320),
+            'version' => 1, 'portrait' => UploadedFile::fake()->image('untrusted-name.php.jpg', 320, 320),
         ], ['Accept' => 'application/json'])->assertOk();
         $path = $response->json('data.portrait_path');
         $this->assertMatchesRegularExpression('~^/storage/eoa/board/[a-f0-9-]{36}\.jpg$~', $path);
@@ -168,11 +169,50 @@ class EoaBoardMembersTest extends TestCase
             UploadedFile::fake()->create('script.svg', 20, 'image/svg+xml'),
             UploadedFile::fake()->image('oversized.jpg', 320, 320)->size(2049),
         ] as $file) {
-            $this->post('/api/v1/eoa/operations/board-members/'.$row->id.'/portrait', ['portrait' => $file], ['Accept' => 'application/json'])->assertUnprocessable();
+            $this->post('/api/v1/eoa/operations/board-members/'.$row->id.'/portrait', ['version' => 2, 'portrait' => $file], ['Accept' => 'application/json'])->assertUnprocessable();
         }
         $row->update(['publication_status' => 'published']);
-        $this->post('/api/v1/eoa/operations/board-members/'.$row->id.'/portrait', ['portrait' => UploadedFile::fake()->image('portrait.jpg', 320, 320)], ['Accept' => 'application/json'])->assertForbidden();
+        $this->post('/api/v1/eoa/operations/board-members/'.$row->id.'/portrait', ['version' => 2, 'portrait' => UploadedFile::fake()->image('portrait.jpg', 320, 320)], ['Accept' => 'application/json'])->assertForbidden();
         $this->assertCount(1, Storage::disk('public')->allFiles('eoa/board'));
+    }
+
+    public function test_stale_board_edits_and_portraits_cannot_overwrite_newer_changes(): void
+    {
+        Storage::fake('public');
+        $row = $this->member();
+        $this->actingAs($this->account('eoa_lead'));
+        $url = '/api/v1/eoa/operations/board-members/'.$row->id;
+        $this->patchJson($url, ['version' => 1, 'company_name_en' => 'Latest company'])
+            ->assertOk()->assertJsonPath('data.version', 2);
+        $this->patchJson($url, ['version' => 1, 'company_name_en' => 'Old company'])->assertConflict();
+        $this->post($url.'/portrait', [
+            'version' => 1, 'portrait' => UploadedFile::fake()->image('portrait.jpg', 320, 320),
+        ], ['Accept' => 'application/json'])->assertConflict();
+        $this->assertSame('Latest company', $row->fresh()->company_name_en);
+        $this->assertSame(2, $row->fresh()->version);
+        $this->assertCount(0, Storage::disk('public')->allFiles('eoa/board'));
+        $this->assertDatabaseCount('admin_actions', 1);
+
+        $this->post($url.'/portrait', [
+            'version' => '2', 'portrait' => UploadedFile::fake()->image('portrait.jpg', 320, 320),
+        ], ['Accept' => 'application/json'])->assertOk()->assertJsonPath('data.version', 3);
+        $this->patchJson($url, ['version' => 2, 'company_name_en' => 'Before portrait'])->assertConflict();
+        $this->patchJson($url, ['version' => 3, 'publication_status' => 'published'])
+            ->assertOk()->assertJsonPath('data.version', 4);
+    }
+
+    public function test_board_writes_require_a_version_and_cannot_set_an_arbitrary_revision(): void
+    {
+        $this->actingAs($this->account('eoa_lead'));
+        $row = $this->postJson('/api/v1/eoa/operations/board-members', $this->payload(['version' => 99]))
+            ->assertCreated()->assertJsonPath('data.version', 1)->json('data');
+        $url = '/api/v1/eoa/operations/board-members/'.$row['id'];
+        $this->patchJson($url, ['company_name_en' => 'Missing revision'])
+            ->assertUnprocessable()->assertJsonValidationErrors('version');
+        $this->post($url.'/portrait', ['portrait' => UploadedFile::fake()->image('portrait.jpg', 320, 320)], ['Accept' => 'application/json'])
+            ->assertUnprocessable()->assertJsonValidationErrors('version');
+        $this->patchJson($url, ['version' => 99, 'name_en' => 'Forged revision'])->assertConflict();
+        $this->assertDatabaseHas('eoa_board_members', ['id' => $row['id'], 'version' => 1, 'name_en' => 'Board Member']);
     }
 
     public function test_reinstall_does_not_overwrite_local_board_edits_or_publication_decisions(): void

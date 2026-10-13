@@ -25,6 +25,8 @@ Wosool brings founder profiles, startup and venture discovery, events, learning,
 
 Wosool also provides the dedicated digital gateway for **EO Riyadh Accelerator** at **`/eoa`**: **Riyadh-based Founders. Global Connections. Extraordinary Growth.** Wosool community membership, Accelerator admission, official enrollment, graduation, and EO membership remain separate decisions and workflows.
 
+> **Board and mentor update (14 October 2026):** JOZO correction, 36 EO community profiles on `/eoa` and `/eoa/mentors`, and protected concurrent board editing. [Sources, checks and release steps](docs/BOARD-MENTORS-2026-10-14.md).
+
 > **Release boundary:** GitHub CI validates source, security checks, tests, and production builds. A commit, merge, or green workflow does **not** by itself prove that production hosting has deployed the change.
 
 ### Start here

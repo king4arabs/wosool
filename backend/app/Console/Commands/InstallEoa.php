@@ -30,7 +30,7 @@ class InstallEoa extends Command
             $program = Program::firstOrCreate(['slug' => ProgramService::SLUG], [
                 'name' => 'EO Riyadh Accelerator', 'title' => 'EO Riyadh Accelerator', 'category' => 'growth',
                 'description' => 'Wosool digital gateway for EO Riyadh Accelerator. Saudi Founders. Global Connections. Extraordinary Growth.',
-                'duration' => '2 years', 'program_type' => 'accelerator', 'city_region' => 'Riyadh', 'language' => 'ar',
+                'duration' => '6 months', 'program_type' => 'accelerator', 'city_region' => 'Riyadh', 'language' => 'ar',
                 'visibility' => 'public', 'is_open' => false, 'status_flow' => 'draft', 'format' => 'cohort-based',
                 'settings' => ['eoa' => ['approval_status' => 'draft', 'local_fee_status' => 'draft']],
             ]);

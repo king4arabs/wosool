@@ -68,7 +68,11 @@ export function BoardManager({ lead }: { lead: boolean }) {
     const controller = new AbortController()
     api.get<{ data: EoaBoardMember[] }>(endpoint, { signal: controller.signal })
       .then(response => {
-        if (!controller.signal.aborted) setMembers(response.data)
+        if (!controller.signal.aborted) {
+          setMembers(response.data)
+          setSelected(current => current ? response.data.find(member => member.id === current.id) ?? null : null)
+          setFormVersion(version => version + 1)
+        }
       })
       .catch(cause => { if (!controller.signal.aborted) setError(errorText(cause)) })
       .finally(() => { if (!controller.signal.aborted) setLoading(false) })
@@ -104,6 +108,7 @@ export function BoardManager({ lead }: { lead: boolean }) {
     })).filter(source => source.label)
     const deferPublication = lead && text('publication_status') === 'published' && !selected?.portrait_path && portrait instanceof File && portrait.size > 0
     const payload = {
+      ...(selected ? { version: selected.version } : {}),
       ...Object.fromEntries([...profileFields, ...linkFields].map(([key]) => [key, text(key)])),
       slug: text('slug'),
       board_term: text('board_term'),
@@ -126,17 +131,20 @@ export function BoardManager({ lead }: { lead: boolean }) {
         ? await api.patch<{ data: EoaBoardMember }>(`${endpoint}/${selected.id}`, payload)
         : await api.post<{ data: EoaBoardMember }>(endpoint, payload)
       profileSaved = true
+      let saved = response.data
       remember(response.data)
       if (portrait instanceof File && portrait.size) {
         failedStep = 'portrait'
         const upload = new FormData()
         upload.append('portrait', portrait)
+        upload.append('version', String(saved.version))
         const uploaded = await api.post<{ data: EoaBoardMember }>(`${endpoint}/${response.data.id}/portrait`, upload)
         remember(uploaded.data)
+        saved = uploaded.data
       }
       if (deferPublication) {
         failedStep = 'publication'
-        const published = await api.patch<{ data: EoaBoardMember }>(`${endpoint}/${response.data.id}`, { publication_status: 'published' })
+        const published = await api.patch<{ data: EoaBoardMember }>(`${endpoint}/${response.data.id}`, { publication_status: 'published', version: saved.version })
         remember(published.data)
       }
       setFormVersion(version => version + 1)

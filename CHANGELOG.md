@@ -1,5 +1,14 @@
 # Changelog
 
+## Wosool board and EO community directory — 2026-10-14
+
+- Corrected ماجد الرشيد’s Wosool Board company to JOZO, with its official website and fractional real-estate description.
+- Added 10 sourced EO community profiles, increasing the directory to 36 people across 33 chapters. Each new profile has an original EO portrait, bilingual biography, company, role, expertise, chapter and EO source. LinkedIn is shown only when the identity is verified.
+- Made the EO community directory available on `/eoa` as well as `/eoa/mentors`, retaining the searchable carousel and grid. Confirmed program appointments retain their separate API-managed section.
+- Protected board profile edits and portrait uploads with revision checks. Stale writes return HTTP 409 without modifying the record or storing an orphaned photo. The admin save/upload/publish flow carries the latest revision, and reloading refreshes the selected form.
+- Corrected fresh EOA installation duration to six months while preserving existing program settings.
+- Release requires `php artisan migrate --force` before deploying the updated API and admin UI. See `docs/BOARD-MENTORS-2026-10-14.md`.
+
 All notable changes to **Wosool** are documented here.
 
 This project follows **Semantic Versioning** and a Keep a Changelog-inspired format. Date-based entries document significant product and operating-system upgrades between numbered application releases.

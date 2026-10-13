@@ -26,6 +26,14 @@ class EoaAlumniTest extends TestCase
         return $u;
     }
 
+    public function test_install_uses_six_month_duration_and_preserves_local_program_edits(): void
+    {
+        $this->assertSame('6 months', ProgramService::program()->duration);
+        ProgramService::program()->update(['duration' => '6 months plus alumni support']);
+        $this->artisan('eoa:install')->assertSuccessful();
+        $this->assertSame('6 months plus alumni support', ProgramService::program()->duration);
+    }
+
     public function test_local_model_and_new_cohort_default_are_six_months(): void
     {
         $this->getJson('/api/v1/eoa/program')->assertOk()->assertJsonPath('data.delivery_model.duration_months', 6)->assertJsonPath('data.delivery_model.cohort_interval_months', 6)->assertJsonPath('data.delivery_model.eo_membership_automatic', false)->assertJsonMissingPath('data.facts.duration_years');

@@ -26,6 +26,7 @@ export type EoaBoardMember = {
   publication_status: 'draft' | 'published'
   source_references?: BoardSource[] | null
   verified_at?: string | null
+  version?: number
 }
 
 /** Missing or unsafe URLs never become public, clickable profile links. */

@@ -21,7 +21,7 @@ const members: readonly BoardMember[] = [
   { name: "Anas Alsahali", nameAr: "أنس السهلي", company: "SEQUENCIVE", description: "SEQUENCIVE", website: "https://sequencive.com", linkedIn: null, photo: "/wosool/board/anas-alsahali.webp", photoSize: 160 },
   { name: "Faisal Almukles", nameAr: "فيصل المخلص", company: "Torood", description: "Torod Logistics", website: "https://torod.co", linkedIn: null, photo: "/wosool/board/faisal-almukles.webp", photoSize: 512 },
   { name: "Rayan Alzamil", nameAr: "ريان الزامل", company: "Salesfine", description: "SalesFine FinTech", website: "https://salesfine.co", linkedIn: null, photo: "/wosool/board/rayan-alzamil.webp", photoSize: 512 },
-  { name: "Majid Alrasheed", nameAr: "ماجد الرشيد", company: "Madkhool", description: "Madkhol Capital", website: "https://madkhool.sa", linkedIn: null, photo: "/wosool/board/majid-alrasheed.webp", photoSize: 270 },
+  { name: "Majid Alrasheed", nameAr: "ماجد الرشيد", company: "JOZO", description: "Fractional real estate ownership", website: "https://jozo.sa", linkedIn: null, photo: "/wosool/board/majid-alrasheed.webp", photoSize: 270 },
 ]
 
 export function WosoolBoard() {

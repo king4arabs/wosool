@@ -49,10 +49,11 @@ class BoardMemberController extends Controller
             $row = EoaBoardMember::where('program_id', $program->id)->lockForUpdate()->findOrFail($member);
             $this->authorizeEdit($request, $row);
             $data = $this->validated($request, $program->id, $row->id);
+            abort_unless((int) $data['version'] === $row->version, 409, 'This board member changed. Reload the list and select the member again before saving.');
             abort_if(($data['publication_status'] ?? $row->publication_status) === 'published' && ! Access::lead($request->user()), 403);
             $this->validatePublication(array_replace($row->toArray(), $data));
             $before = $row->toArray();
-            $row->update($data);
+            $row->update(array_replace($data, ['version' => $row->version + 1]));
             AdminAction::log($request->user()->id, 'eoa.board_updated', 'eoa_board_member', $row->id, null, $before, $row->fresh()->toArray());
 
             return response()->json(['data' => $row->fresh()]);
@@ -62,15 +63,17 @@ class BoardMemberController extends Controller
     public function portrait(Request $request, int $member)
     {
         abort_unless(Access::staff($request->user()), 403);
-        $request->validate([
+        $data = $request->validate([
+            'version' => 'required|integer|min:1',
             'portrait' => 'required|file|image|mimes:jpg,jpeg,png,webp|mimetypes:image/jpeg,image/png,image/webp|max:2048|dimensions:min_width=160,min_height=160,max_width=6000,max_height=6000',
         ]);
         $program = ProgramService::program();
         $storedPath = null;
         try {
-            return DB::transaction(function () use ($request, $program, $member, &$storedPath) {
+            return DB::transaction(function () use ($request, $program, $member, $data, &$storedPath) {
                 $row = EoaBoardMember::where('program_id', $program->id)->lockForUpdate()->findOrFail($member);
                 $this->authorizeEdit($request, $row);
+                abort_unless((int) $data['version'] === $row->version, 409, 'This board member changed. Reload the list and select the member again before uploading.');
                 $file = $request->file('portrait');
                 $extension = match ($file->getMimeType()) {
                     'image/jpeg' => 'jpg', 'image/png' => 'png', 'image/webp' => 'webp',
@@ -78,9 +81,9 @@ class BoardMemberController extends Controller
                 };
                 $storedPath = Storage::disk('public')->putFileAs('eoa/board', $file, Str::uuid().'.'.$extension);
                 abort_unless($storedPath, 500, 'The portrait could not be saved. Please try again.');
-                $before = ['portrait_path' => $row->portrait_path];
-                $row->update(['portrait_path' => '/storage/'.$storedPath]);
-                AdminAction::log($request->user()->id, 'eoa.board_portrait_updated', 'eoa_board_member', $row->id, null, $before, ['portrait_path' => $row->portrait_path]);
+                $before = ['portrait_path' => $row->portrait_path, 'version' => $row->version];
+                $row->update(['portrait_path' => '/storage/'.$storedPath, 'version' => $row->version + 1]);
+                AdminAction::log($request->user()->id, 'eoa.board_portrait_updated', 'eoa_board_member', $row->id, null, $before, ['portrait_path' => $row->portrait_path, 'version' => $row->version]);
 
                 return response()->json(['data' => $row->fresh()]);
             });
@@ -131,6 +134,7 @@ class BoardMemberController extends Controller
             'source_references.*.note' => 'nullable|string|max:2000',
             'verified_at' => 'nullable|date_format:Y-m-d|before_or_equal:today',
         ];
+        if ($member) $rules['version'] = 'required|integer|min:1';
         foreach (['company', 'linkedin', 'twitter', 'facebook', 'instagram'] as $platform) {
             $rules[$platform.'_url'] = ['nullable', 'string', 'max:2048', 'url:http,https', $this->webUrl($platform === 'company' ? null : $platform)];
         }

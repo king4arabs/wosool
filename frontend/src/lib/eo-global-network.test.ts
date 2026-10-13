@@ -7,7 +7,7 @@ test('network profiles have unique identities, local portraits and traceable pro
   assert.equal(new Set(eoNetworkProfiles.map(p => p.id)).size, eoNetworkProfiles.length)
   for (const p of eoNetworkProfiles) {
     assert.ok(p.name && p.company && p.chapter && p.position && p.position_ar && p.bio && p.bio_ar)
-    assert.match(p.linkedin, /^https:\/\/www\.linkedin\.com\/in\/[^/]+\/$/)
+    if (p.linkedin) assert.match(p.linkedin, /^https:\/\/www\.linkedin\.com\/in\/[^/]+\/$/)
     assert.ok(['eonetwork.org', 'event.eonetwork.org'].includes(new URL(p.source).hostname))
     assert.match(p.image, /^\/eoa\/mentors\/global\/[a-z0-9-]+\.webp$/)
     assert.ok(existsSync(`public${p.image}`), `Missing portrait: ${p.name}`)
