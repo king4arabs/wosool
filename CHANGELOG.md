@@ -6,6 +6,10 @@ This project follows **Semantic Versioning** and a Keep a Changelog-inspired for
 
 ---
 
+## Home page intro line — 2026-10-13
+
+- Replaced the home-page hero description with the owner's wording: "مجتمع وصول، من مؤسسين إلى مؤسسين، لمشاركة التجارب والخبرات وتقوية العلاقات وتعزيز فرص النمو." The English version now carries the same message.
+
 ## Event detail page: bilingual, visitor-safe, Riyadh time — 2026-10-13
 
 - **Navigation:** event and program detail pages (`/events/[slug]`, `/programs/[slug]`) rendered without the site header, footer or `<main>` landmark, leaving visitors on a dead-end page. Both now use `PublicLayout`.
