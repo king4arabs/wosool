@@ -6,6 +6,10 @@ This project follows **Semantic Versioning** and a Keep a Changelog-inspired for
 
 ---
 
+## Events calendar: fewer explanatory notes — 2026-10-13
+
+- At the owner's request, removed explanatory notes from the founder calendar on `/events`: the Ramadan/Eid tentative-dates note, the international-occasions note, the "outside the program window" note, the "choose a day / coloured dots" hint, the "overlaps an expected holiday" card notice, and the "times, speakers, venues… will be announced" sentence. The Ramadan break card now just says "No accelerator activities". Loading and error messages remain.
+
 ## Partner logos always shown — 2026-10-13
 
 - **Problem:** the "نفخر بشركائنا / Proud of our Partners" strips on the home page and `/eoa` showed the owner's partner logos only while the partners API was down. Now that the API answers, it returns no published partners, so the home strip showed an empty message and the EOA strip showed only the EO mark.
