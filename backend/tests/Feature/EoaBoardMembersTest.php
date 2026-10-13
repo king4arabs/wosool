@@ -215,6 +215,47 @@ class EoaBoardMembersTest extends TestCase
         $this->assertDatabaseHas('eoa_board_members', ['id' => $row['id'], 'version' => 1, 'name_en' => 'Board Member']);
     }
 
+    public function test_title_correction_updates_existing_roster_without_changing_profiles_or_other_terms(): void
+    {
+        $this->artisan('eoa:install')->assertSuccessful();
+        $expected = [
+            'mohamed-balsharaf' => ['Partnership Chair', 'رئيس الشراكات'],
+            'gilbert-rustom' => ['Marketing and Communication Chair', 'رئيس التسويق والاتصال المؤسسي'],
+            'faisal-alqarni' => ['Financial Chair', 'رئيس الشؤون المالية'],
+            'abdulaziz-alothaim' => ['Engagement Chair', 'رئيس تفاعل الأعضاء'],
+        ];
+        $profiles = [];
+        foreach ($expected as $slug => [$english, $arabic]) {
+            $member = EoaBoardMember::where('slug', $slug)->firstOrFail();
+            $this->assertSame($english, $member->position_en);
+            $this->assertSame($arabic, $member->position_ar);
+            $member->update(['position_en' => 'Old title', 'position_ar' => 'المنصب السابق', 'version' => 7]);
+            $profiles[$slug] = $member->fresh()->only(['name_en', 'company_name_en', 'portrait_path', 'publication_status']);
+        }
+        $otherProgram = Program::create(['name' => 'Other program', 'slug' => 'other-board-program', 'category' => 'growth']);
+        $other = $this->member(['slug' => 'gilbert-rustom', 'program_id' => $otherProgram->id]);
+        $unchanged = $other->fresh()->getAttributes();
+
+        $migration = require database_path('migrations/2026_10_14_010000_correct_eoa_board_chair_titles.php');
+        $migration->up();
+
+        foreach ($expected as $slug => [$english, $arabic]) {
+            $member = EoaBoardMember::where('program_id', ProgramService::program()->id)
+                ->where('slug', $slug)->where('board_term', '2026/27')->firstOrFail();
+            $this->assertSame($english, $member->position_en);
+            $this->assertSame($arabic, $member->position_ar);
+            $this->assertSame(8, $member->version);
+            $this->assertSame($profiles[$slug], $member->only(array_keys($profiles[$slug])));
+        }
+        $this->assertSame($unchanged, $other->fresh()->getAttributes());
+
+        $future = EoaBoardMember::where('slug', 'faisal-alqarni')->firstOrFail();
+        $future->update(['board_term' => '2027/28', 'position_en' => 'Future role']);
+        $futureAttributes = $future->fresh()->getAttributes();
+        $migration->up();
+        $this->assertSame($futureAttributes, $future->fresh()->getAttributes());
+    }
+
     public function test_reinstall_does_not_overwrite_local_board_edits_or_publication_decisions(): void
     {
         $this->artisan('eoa:install')->assertSuccessful();

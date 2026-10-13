@@ -1,5 +1,10 @@
 # Changelog
 
+## EO Riyadh board titles — 2026-10-14
+
+- Updated Mohamed Balsharaf, Gilbert Rustom, Faisal Alqarni and Abdulaziz Alothaim’s board titles in Arabic and English, as confirmed by the program chair.
+- Updated the frontend roster and installer data. Run `php artisan migrate --force` to apply the titles to existing 2026/27 EO Riyadh board records; other profile fields and board terms are preserved.
+
 ## Wosool board and EO community directory — 2026-10-14
 
 - Corrected ماجد الرشيد’s Wosool Board company to JOZO, with its official website and fractional real-estate description.
