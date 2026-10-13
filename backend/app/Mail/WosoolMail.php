@@ -103,6 +103,23 @@ class WosoolMail extends Mailable
         ));
     }
 
+    /** Tells a member that another founder offered to help with their question; no contact details are shared. */
+    public static function helpOffered(string $recipient, string $helper, string $question, ?int $roomId): self
+    {
+        return new self('help-offered', "{$helper} يريد المساعدة في سؤالك", "{$helper} offered to help with your question", BilingualEmail::data(
+            ar: ['title' => 'عرض مساعدة جديد', 'greeting' => "مرحباً {$recipient}،", 'lines' => [
+                "عرض {$helper} المساعدة في سؤالك، وانضم إلى غرفة المحادثة الخاصة به.",
+                'ردّ عليه من المحادثة، وعلّم السؤال «تم الحل» عندما تحصل على ما تحتاجه.',
+            ]],
+            en: ['title' => 'Someone offered to help', 'greeting' => "Hello {$recipient},", 'lines' => [
+                "{$helper} offered to help with your question and joined its private conversation.",
+                'Reply in the conversation, and mark the question resolved once you have what you need.',
+            ]],
+            action: BilingualEmail::action(self::url($roomId ? "/dashboard/messages?room={$roomId}" : '/dashboard/help-requests'), 'فتح المحادثة', 'Open the conversation'),
+            details: [['ar' => 'السؤال', 'en' => 'Question', 'value' => $question]],
+        ));
+    }
+
     /** Confirmation to the sender of a contact or sponsorship message. */
     public static function contactReceived(string $name, string $subject): self
     {
