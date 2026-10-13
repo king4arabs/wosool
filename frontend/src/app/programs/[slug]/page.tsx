@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react"
 import { useParams } from "next/navigation"
 import { api, ApiError } from "@/lib/api"
 import { Button } from "@/components/ui/button"
+import { PublicLayout } from "@/components/layout/PublicLayout"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
@@ -84,6 +85,15 @@ function ctaFromStatus(program: ProgramDetails | null, applicationStatus: string
 }
 
 export default function ProgramDetailPage() {
+  // Detail pages need the site header, footer and <main> landmark like every other public page.
+  return (
+    <PublicLayout>
+      <ProgramDetailPageContent />
+    </PublicLayout>
+  )
+}
+
+function ProgramDetailPageContent() {
   const params = useParams<{ slug: string }>()
   const slug = params?.slug
   const { toast } = useToast()

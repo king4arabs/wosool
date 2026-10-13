@@ -26,7 +26,7 @@ const LOCALES = (process.env.QA_LOCALES || "ar,en").split(",")
 const VIEWPORTS = [{ name: "desktop", width: 1366, height: 900 }, { name: "mobile", width: 390, height: 844 }]
 // Sample records for dynamic routes; override with QA_DYNAMIC="/founders/x,/news/y".
 const BLOCK_EXTERNAL = process.env.QA_BLOCK_EXTERNAL ? process.env.QA_BLOCK_EXTERNAL === "1" : /localhost|127\.0\.0\.1/.test(BASE)
-const DYNAMIC = (process.env.QA_DYNAMIC || "/news/barq-329-million-series-a-unicorn,/founders/hosam-arab,/eoa/about,/eoa/faq,/admin/events/1,/admin/programs/1").split(",").filter(Boolean)
+const DYNAMIC = (process.env.QA_DYNAMIC || "/news/barq-329-million-series-a-unicorn,/founders/hosam-arab,/eoa/about,/eoa/faq,/admin/events/1,/admin/programs/1,/events/fundraising-readiness-workshop-april").split(",").filter(Boolean)
 
 function routes(dir = APP_DIR) {
   const found = []
