@@ -3,6 +3,8 @@
 namespace Tests\Feature;
 
 use App\Models\Event;
+use App\Models\EventBookmark;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -44,6 +46,18 @@ class PublicEventListingTest extends TestCase
         $this->event('public');
         $response = $this->getJson('/api/v1/events?period=upcoming')->assertOk();
         $this->assertSame(['public'], array_column($response->json('data'), 'slug'));
+    }
+
+    public function test_event_detail_reports_saved_state_for_the_signed_in_member_only(): void
+    {
+        $event = $this->event('saved-event');
+        $member = User::factory()->member()->create();
+        $other = User::factory()->member()->create();
+        EventBookmark::create(['event_id' => $event->id, 'user_id' => $member->id]);
+
+        $this->getJson('/api/v1/events/saved-event')->assertOk()->assertJsonPath('data.is_saved', false);
+        $this->actingAs($other)->getJson('/api/v1/events/saved-event')->assertOk()->assertJsonPath('data.is_saved', false);
+        $this->actingAs($member)->getJson('/api/v1/events/saved-event')->assertOk()->assertJsonPath('data.is_saved', true);
     }
 
     public function test_private_and_draft_details_and_calendars_are_not_public(): void

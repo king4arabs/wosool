@@ -95,6 +95,10 @@ class EventController extends Controller
 
         $event->relevance_score = $this->computeRelevanceScore($event);
         $event->why_recommended = $this->buildRecommendationReason($event);
+        // Signed-in members see whether they already saved this event, as on the listing.
+        $authUser = request()->user();
+        $event->is_saved = $authUser && Schema::hasTable('event_bookmarks')
+            && EventBookmark::query()->where('user_id', $authUser->id)->where('event_id', $event->id)->exists();
 
         AnalyticsEvent::track(
             eventName: 'event.viewed',

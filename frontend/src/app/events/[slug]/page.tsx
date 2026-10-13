@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useState } from "react"
 import Link from "next/link"
 import { useParams } from "next/navigation"
-import { api } from "@/lib/api"
+import { api, ApiError } from "@/lib/api"
 import { Button } from "@/components/ui/button"
 import { PublicLayout } from "@/components/layout/PublicLayout"
 import { Badge } from "@/components/ui/badge"
@@ -19,6 +19,9 @@ import { useLocale } from "@/lib/locale"
 import {
   canOpenRsvp,
   eventSignInHref,
+  eventTypeLabel,
+  isAcceleratorOnlyAccount,
+  rsvpSuccessMessage,
   formatEventDateTime,
   formatEventTime,
   holdsRegistration,
@@ -92,11 +95,6 @@ const FORMAT_LABELS: Record<string, { ar: string; en: string }> = {
   hybrid: { ar: "حضوري وعن بُعد", en: "In person and online" },
 }
 
-const TYPE_LABELS: Record<string, { ar: string; en: string }> = {
-  wosool: { ar: "فعالية وصول", en: "Wosool event" },
-  partner: { ar: "فعالية شريك", en: "Partner event" },
-}
-
 export default function EventDetailPage() {
   // Detail pages need the site header, footer and <main> landmark like every other public page.
   return (
@@ -114,6 +112,10 @@ function EventDetailPageContent() {
   const t = useCallback((arabic: string, english: string) => (ar ? arabic : english), [ar])
   const { user, isLoading: authLoading } = useAuth()
   const signedIn = Boolean(user)
+  // Member tools need Wosool membership, not just an account: EO Accelerator-only
+  // accounts are known up front, and a 403 from the status check settles the rest.
+  const [memberDenied, setMemberDenied] = useState(false)
+  const isMember = signedIn && !memberDenied && !isAcceleratorOnlyAccount(user)
   const params = useParams<{ slug: string }>()
   const slug = params?.slug
   const [event, setEvent] = useState<EventDetails | null>(null)
@@ -153,13 +155,14 @@ function EventDetailPageContent() {
   useEffect(() => {
     setRegistrationState("open")
     setEventState(null)
-    if (!slug || authLoading || !signedIn) return
+    setMemberDenied(false)
+    if (!slug || authLoading || !signedIn || isAcceleratorOnlyAccount(user)) return
     let active = true
     api.get<{ data: { event_state: string; registration_state: string } }>(`/member/events/${slug}/registration-status`, { cache: "no-store" })
       .then((res) => { if (active) { setRegistrationState(res.data.registration_state); setEventState(res.data.event_state) } })
-      .catch(() => {})
+      .catch((err) => { if (active && err instanceof ApiError && err.status === 403) setMemberDenied(true) })
     return () => { active = false }
-  }, [slug, authLoading, signedIn])
+  }, [slug, authLoading, signedIn, user])
 
   const timing = event ? { date: event.starts_at, endDate: event.ends_at ?? undefined, status: event.status ?? undefined, statusFlow: event.status_flow ?? undefined, registrationDeadline: event.registration_deadline ?? undefined } : null
   const registrationOpen = Boolean(timing && canRegisterForEvent(timing, now) &&
@@ -171,7 +174,7 @@ function EventDetailPageContent() {
     setBusyAction("rsvp")
     try {
       const res = await api.post<{ message?: string; registration_state?: string }>(`/member/events/${event.slug}/rsvp`, formData)
-      toast(res.message || t("تم تسجيلك في الفعالية.", "You are registered for this event."), "success")
+      toast(rsvpSuccessMessage(res.registration_state, locale), "success")
       setRegistrationState(res.registration_state || "registered")
       setIsModalOpen(false)
     } catch (err) {
@@ -221,7 +224,7 @@ function EventDetailPageContent() {
     const fallbackUrl = `${window.location.origin}/events/${event.slug}`
     try {
       // Members get a tracked link; visitors copy the public page address.
-      const res = signedIn
+      const res = isMember
         ? await api.post<{ data?: { share_url?: string } }>(`/member/events/${event.slug}/share`).catch(() => null)
         : null
       await navigator.clipboard.writeText(res?.data?.share_url || fallbackUrl)
@@ -239,7 +242,7 @@ function EventDetailPageContent() {
       <div className="mx-auto max-w-5xl px-4 py-8 space-y-3">
         <h1 className="text-xl font-bold text-slate-900">{t("لم نجد هذه الفعالية", "We could not find this event")}</h1>
         <p className="text-sm text-rose-600">{error || t("ربما أُزيلت أو تغيّر رابطها.", "It may have been removed or its link changed.")}</p>
-        <Link href="/events" className="text-sm font-semibold text-[#3B52D4] underline-offset-4 hover:underline">{t("كل الفعاليات", "All events")}</Link>
+        <Link href="/events" className="text-sm font-semibold text-[var(--link)] underline-offset-4 hover:underline">{t("كل الفعاليات", "All events")}</Link>
       </div>
     )
   }
@@ -248,7 +251,7 @@ function EventDetailPageContent() {
   const summary = event.short_description || event.description
   const formatKey = event.format || event.mode || ""
   const formatLabel = FORMAT_LABELS[formatKey]?.[locale] ?? formatKey
-  const typeLabel = TYPE_LABELS[event.type || ""]?.[locale] ?? (event.type || t("فعالية", "Event"))
+  const typeLabel = eventTypeLabel(event.type, locale)
   const place = event.location && event.location.toLowerCase() !== "online"
     ? event.location
     : [event.city, event.country].filter(Boolean).join(ar ? "، " : ", ")
@@ -362,22 +365,26 @@ function EventDetailPageContent() {
               ) : (
                 <p className="text-xs text-slate-500">{t("لا تحتاج هذه الفعالية إلى تسجيل.", "This event does not need registration.")}</p>
               )}
-              {showRegistration && !signedIn && !authLoading ? (
+              {showRegistration && !isMember && !authLoading ? (
                 registrationOpen ? (
                   <>
-                    <Button asChild className="w-full">
-                      <Link href={eventSignInHref(event.slug)}>{t("سجّل الدخول للتسجيل", "Sign in to register")}</Link>
-                    </Button>
+                    {!signedIn ? (
+                      <Button asChild className="w-full">
+                        <Link href={eventSignInHref(event.slug)}>{t("سجّل الدخول للتسجيل", "Sign in to register")}</Link>
+                      </Button>
+                    ) : null}
                     <p className="text-xs text-slate-500">
-                      {t("التسجيل متاح لأعضاء وصول. ليس لديك حساب؟", "Registration is for Wosool members. No account yet?")}{" "}
-                      <Link href="/apply" className="font-semibold text-[#3B52D4] underline-offset-4 hover:underline">{t("قدّم على العضوية", "Apply to join")}</Link>
+                      {signedIn
+                        ? t("التسجيل متاح لأعضاء وصول. حسابك ليس عضوية في وصول بعد.", "Registration is for Wosool members. Your account is not a Wosool membership yet.")
+                        : t("التسجيل متاح لأعضاء وصول. ليس لديك حساب؟", "Registration is for Wosool members. No account yet?")}{" "}
+                      <Link href="/apply" className="font-semibold text-[var(--link)] underline-offset-4 hover:underline">{t("قدّم على العضوية", "Apply to join")}</Link>
                     </p>
                   </>
                 ) : (
                   <Button className="w-full" disabled>{registrationCtaLabel("registration_closed", locale)}</Button>
                 )
               ) : null}
-              {showRegistration && signedIn ? (
+              {showRegistration && isMember ? (
                 <>
                   <Button className="w-full" onClick={() => (canOpenRsvp(effectiveRegistrationState) ? setIsModalOpen(true) : undefined)} disabled={busyAction === "rsvp" || !canOpenRsvp(effectiveRegistrationState)}>
                     {busyAction === "rsvp" ? t("جارٍ التسجيل...", "Registering...") : registrationCtaLabel(effectiveRegistrationState, locale)}
@@ -389,7 +396,7 @@ function EventDetailPageContent() {
                   ) : null}
                 </>
               ) : null}
-              {signedIn ? (
+              {isMember ? (
                 <Button variant="outline" className="w-full" onClick={handleSave} disabled={busyAction === "save"} aria-pressed={isSaved}>
                   {busyAction === "save" ? t("جارٍ الحفظ...", "Saving...") : isSaved ? t("إزالة من المحفوظات", "Remove from saved") : t("احفظ الفعالية", "Save event")}
                 </Button>
