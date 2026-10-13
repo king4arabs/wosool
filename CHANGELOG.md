@@ -6,6 +6,18 @@ This project follows **Semantic Versioning** and a Keep a Changelog-inspired for
 
 ---
 
+## Event detail page: bilingual, visitor-safe, Riyadh time — 2026-10-13
+
+- **Navigation:** event and program detail pages (`/events/[slug]`, `/programs/[slug]`) rendered without the site header, footer or `<main>` landmark, leaving visitors on a dead-end page. Both now use `PublicLayout`.
+- **Missing description:** the event page read only `short_description`/`full_description`, so events with a plain `description` (all seeded and most admin-created events) showed "no description". It now falls back to `description`.
+- **Language:** the event page was Arabic-only. Headings, badges, registration states, buttons, the registration form, toasts and empty states now follow the selected language; English event content keeps correct punctuation inside the Arabic layout (`dir="auto"`).
+- **Visitors:** the page called the member-only registration-status endpoint for everyone (a 401 on every visit) and offered Register/Save buttons that could only fail. Visitors now see "Sign in to register" (returning to the same event) and an "Apply to join" link; copying the link works without an account.
+- **Dates:** times were formatted in the device timezone with the Hijri calendar in Arabic. They are now shown in Riyadh time, Gregorian, as a start–end range with a "Riyadh time" label.
+- **Plain copy:** removed the generic "Relevance 60%" badge and the English-only "Recommended based on your member activity" line, which is derived only from the event type. Event type and format (online, in person) are labelled in both languages.
+- **Accessibility:** registration-form labels are tied to their fields; the calendar link is no longer a button nested in a link; resources without a URL are not rendered as `href="#"` links.
+- **Tests and QA:** new `event-registration` tests (Riyadh-time formatting and ranges, bilingual registration labels, sign-in return link); the QA crawl now visits a seeded event page.
+- **Checks:** `npm run verify` green (frontend 88, backend 212); QA crawl 436 visits as visitor, member and admin in Arabic and English, 0 problems; registration and cancellation checked in the browser at 390px and 1366px in both languages.
+
 ## Admin language parity and detail-page headings — 2026-10-12
 
 - **Headings:** Event management (`/admin/events/[id]`) and Program management (`/admin/programs/[id]`) still rendered a second `<h1>` under the admin layout's; they now start at `<h2>`. A new frontend test fails if any admin page renders an `<h1>`.
