@@ -8,7 +8,7 @@ test('public spotlights stay separate from member profiles and provide supported
   for (const locale of ['ar', 'en'] as const) {
     const profiles = getFounderSpotlights(locale)
     assert.equal(profiles.length, sourceProfiles.length)
-    assert.ok(profiles.length >= 29)
+    assert.ok(profiles.length >= 43)
     assert.equal(new Set(profiles.map(profile => profile.id)).size, profiles.length)
     for (const profile of profiles) {
       assert.equal(profile.externalProfileOnly, true)
@@ -26,7 +26,7 @@ test('public spotlights stay separate from member profiles and provide supported
 test('frontend source snapshots and database import share the same reviewed records', () => {
   const database = JSON.parse(readFileSync(new URL('../../../backend/resources/data/founder-directory.json', import.meta.url), 'utf8'))
   assert.deepEqual(database, sourceProfiles)
-  assert.equal(new Set(sourceProfiles.map(profile => profile.company_key)).size, 22)
+  assert.equal(new Set(sourceProfiles.map(profile => profile.company_key)).size, 33)
   assert.equal(new Set(sourceProfiles.map(profile => profile.slug)).size, sourceProfiles.length)
   assert.ok(sourceProfiles.every(profile => profile.source_urls.length > 0 && profile.reviewed_at))
 })

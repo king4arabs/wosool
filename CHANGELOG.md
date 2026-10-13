@@ -1,5 +1,12 @@
 # Changelog
 
+## Saudi founder research and EOA copy — 2026-10-14
+
+- Added 14 sourced bilingual founders at 11 companies connected to CODE/Tech Founders/Multiverse, Misk, Monsha’at, LEAP, Money20/20 and the Saudi startup ecosystem. The directory now contains 43 founders at 33 companies.
+- Added 15 local sourced portrait/logo assets, six dated news briefs, and revenue evidence for existing Swarm Robotics and Jahez profiles. Funding and operating volume are identified separately from income.
+- Updated the exact Arabic LAMARKA note on `/eoa` as requested.
+- Run both additive research imports after deployment; see [source notes and deployment steps](docs/FOUNDER-RESEARCH-2026-10-14.md).
+
 ## EO Riyadh board titles — 2026-10-14
 
 - Updated Mohamed Balsharaf, Gilbert Rustom, Faisal Alqarni and Abdulaziz Alothaim’s board titles in Arabic and English, as confirmed by the program chair.

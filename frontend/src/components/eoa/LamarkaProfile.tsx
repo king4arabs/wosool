@@ -43,7 +43,7 @@ export function LamarkaProfile({ ar }: { ar: boolean }) {
     <dl className={styles.metrics}>
       {(ar ? [['2015', 'بداية دعم الشركات'], ['500+', 'شركة ناشئة دعمتها البرامج'], ['20', 'شركة ناشئة في المحفظة']] : [['2015', 'Supporting startups since'], ['500+', 'Startups supported through programs'], ['20', 'Startups in the portfolio']]).map(([value, label]) => <div key={value}><dt>{label}</dt><dd dir="ltr">{value}</dd></div>)}
     </dl>
-    <p className={styles.sourceNote}>{ar ? 'الأرقام والخبرات وفق ملف LAMARKA Ventures التعريفي المقدم في أكتوبر 2026.' : 'Figures and experience reported in the LAMARKA Ventures profile supplied in October 2026.'}</p>
+    <p className={styles.sourceNote}>{ar ? 'خبرات شريك التشغيل LAMARKA لخدمة الأفضل ل EOA' : 'Figures and experience reported in the LAMARKA Ventures profile supplied in October 2026.'}</p>
     <div className={styles.engines}>
       {engines.map(([title, label, detail], index) => {
         const Icon = icons[index]

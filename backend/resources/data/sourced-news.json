@@ -868,6 +868,49 @@
     }
   },
   {
+    "id": "sourced-penny-lendo-procurement-financing-2026",
+    "slug": "penny-lendo-procurement-financing-2026",
+    "title": "Penny Software and Lendo sign procurement-financing MoU",
+    "excerpt": "Penny Software and Lendo announced an MoU to connect procurement workflows with financing solutions. The announcement describes a partnership, without disclosing company revenue.",
+    "content": "Penny Software and Lendo announced an MoU to connect procurement workflows with financing solutions. The announcement describes a partnership, without disclosing company revenue.",
+    "category": "Ecosystem",
+    "region": "saudi",
+    "imageUrl": "/startup-directory/penny-logo.webp",
+    "imageCredit": "Penny Software",
+    "sourceUrl": "https://penny.co/news/penny-software-lendo-partnership/",
+    "sourceName": "Penny Software",
+    "companies": [
+      "Penny Software",
+      "بيني",
+      "penny"
+    ],
+    "publishedAt": "2026-06-18T00:00:00Z",
+    "author": "Wosool news desk",
+    "tags": [
+      "Penny Software",
+      "Saudi Arabia"
+    ],
+    "keyFacts": [
+      "MoU announced June 2026",
+      "Procurement and financing partnership",
+      "No revenue figure disclosed"
+    ],
+    "translations": {
+      "ar": {
+        "title": "بيني وليندو توقعان مذكرة تفاهم لتمويل المشتريات",
+        "excerpt": "أعلنت بيني وليندو مذكرة تفاهم لربط إجراءات المشتريات بحلول التمويل. يصف الإعلان شراكة دون الإفصاح عن إيرادات الشركة.",
+        "body": [
+          "أعلنت بيني وليندو مذكرة تفاهم لربط إجراءات المشتريات بحلول التمويل. يصف الإعلان شراكة دون الإفصاح عن إيرادات الشركة."
+        ],
+        "keyFacts": [
+          "إعلان مذكرة التفاهم في يونيو 2026",
+          "شراكة في المشتريات والتمويل",
+          "لم يُفصح عن رقم للإيرادات"
+        ]
+      }
+    }
+  },
+  {
     "id": "sourced-yc-microsoft-ai-startups",
     "slug": "yc-microsoft-ai-startups",
     "title": "Y Combinator and Microsoft expand resources for AI startup founders",
@@ -1336,5 +1379,220 @@
       }
     },
     "region": "global"
+  },
+  {
+    "id": "sourced-gameit-founder-code-school-clinic-sales",
+    "slug": "gameit-founder-code-school-clinic-sales",
+    "title": "Gameit founder describes CODE support and sales to schools and clinics",
+    "excerpt": "Heba Atyah described Gameit’s participation in CODE’s Tech Founders program and revenue from selling games to schools and clinics. The interview does not disclose a revenue amount.",
+    "content": "Heba Atyah described Gameit’s participation in CODE’s Tech Founders program and revenue from selling games to schools and clinics. The interview does not disclose a revenue amount.",
+    "category": "Ecosystem",
+    "region": "saudi",
+    "imageUrl": "/startup-directory/heba-atyah.webp",
+    "imageCredit": "LEAP",
+    "sourceUrl": "https://ecosystemsaudi.com/magazine/inspiring-saudi-women-entrepreneurs-heba-mohammed-atyah",
+    "sourceName": "Ecosystem Saudi",
+    "companies": [
+      "Gameit",
+      "جيمت",
+      "gameit"
+    ],
+    "publishedAt": "2025-11-07T00:00:00Z",
+    "author": "Wosool news desk",
+    "tags": [
+      "Gameit",
+      "Saudi Arabia"
+    ],
+    "keyFacts": [
+      "CODE Tech Founders participant",
+      "Revenue reported from school and clinic sales",
+      "No revenue amount disclosed"
+    ],
+    "translations": {
+      "ar": {
+        "title": "مؤسسة جيمت تتحدث عن دعم كود والمبيعات للمدارس والعيادات",
+        "excerpt": "تحدثت هبة عطية عن مشاركة جيمت في برنامج Tech Founders من كود وتحقيق إيرادات من بيع الألعاب للمدارس والعيادات، دون الإفصاح عن قيمتها.",
+        "body": [
+          "تحدثت هبة عطية عن مشاركة جيمت في برنامج Tech Founders من كود وتحقيق إيرادات من بيع الألعاب للمدارس والعيادات، دون الإفصاح عن قيمتها."
+        ],
+        "keyFacts": [
+          "مشاركة في Tech Founders من كود",
+          "إيرادات معلنة من مبيعات المدارس والعيادات",
+          "لم يُفصح عن قيمة الإيرادات"
+        ]
+      }
+    }
+  },
+  {
+    "id": "sourced-lahint-founder-saudi-accelerators",
+    "slug": "lahint-founder-saudi-accelerators",
+    "title": "Lahint founder recounts participation in Saudi accelerator programs",
+    "excerpt": "Mohamed Ibrahim discussed building Lahint’s government-service platform and participating in Misk, CODE’s Tech Founders and Unlocked by Sanabil 500.",
+    "content": "Mohamed Ibrahim discussed building Lahint’s government-service platform and participating in Misk, CODE’s Tech Founders and Unlocked by Sanabil 500.",
+    "category": "Ecosystem",
+    "region": "saudi",
+    "imageUrl": "/startup-directory/lahint-logo.webp",
+    "imageCredit": "Lahint",
+    "sourceUrl": "https://gulfstartups.co/case-study/lahint/",
+    "sourceName": "Gulf Startups",
+    "companies": [
+      "Lahint",
+      "لاهنت",
+      "lahint"
+    ],
+    "publishedAt": "2025-07-14T00:00:00Z",
+    "author": "Wosool news desk",
+    "tags": [
+      "Lahint",
+      "Saudi Arabia"
+    ],
+    "keyFacts": [
+      "Founder interview published July 2025",
+      "Participation in Misk and CODE programs",
+      "Government-service automation"
+    ],
+    "translations": {
+      "ar": {
+        "title": "مؤسس لاهنت يروي تجربة المشاركة في مسرعات سعودية",
+        "excerpt": "تحدث محمد إبراهيم عن تطوير منصة لاهنت للخدمات الحكومية والمشاركة في مسك وTech Founders من كود وUnlocked من Sanabil 500.",
+        "body": [
+          "تحدث محمد إبراهيم عن تطوير منصة لاهنت للخدمات الحكومية والمشاركة في مسك وTech Founders من كود وUnlocked من Sanabil 500."
+        ],
+        "keyFacts": [
+          "مقابلة المؤسس منشورة في يوليو 2025",
+          "مشاركة في برامج مسك وكود",
+          "أتمتة الخدمات الحكومية"
+        ]
+      }
+    }
+  },
+  {
+    "id": "sourced-ynmo-waed-investment-2024",
+    "slug": "ynmo-waed-investment-2024",
+    "title": "Ynmo announces investment led by Wa’ed Ventures",
+    "excerpt": "Ynmo published its investment announcement led by Wa’ed Ventures, supporting its child-development and rehabilitation technology. The company was founded in 2017 by Fahad Al-Nemary, Abdullah Murad and Faisal Al-Nemary.",
+    "content": "Ynmo published its investment announcement led by Wa’ed Ventures, supporting its child-development and rehabilitation technology. The company was founded in 2017 by Fahad Al-Nemary, Abdullah Murad and Faisal Al-Nemary.",
+    "category": "Funding",
+    "region": "saudi",
+    "imageUrl": "",
+    "imageCredit": "",
+    "sourceUrl": "https://ynmodata.com/en/waedynmo/",
+    "sourceName": "Ynmo",
+    "companies": [
+      "Ynmo",
+      "ينمو",
+      "ynmo"
+    ],
+    "publishedAt": "2024-12-25T00:00:00Z",
+    "author": "Wosool news desk",
+    "tags": [
+      "Ynmo",
+      "Saudi Arabia"
+    ],
+    "keyFacts": [
+      "Investment led by Wa’ed Ventures",
+      "Founded in 2017",
+      "Child-development and rehabilitation technology"
+    ],
+    "translations": {
+      "ar": {
+        "title": "ينمو تعلن استثمارًا بقيادة واعد فنتشرز",
+        "excerpt": "نشرت ينمو إعلان استثمار بقيادة واعد فنتشرز لدعم تقنياتها لنمو الطفل والتأهيل. تأسست الشركة عام 2017 على يد فهد النمري وعبدالله مراد وفيصل النمري.",
+        "body": [
+          "نشرت ينمو إعلان استثمار بقيادة واعد فنتشرز لدعم تقنياتها لنمو الطفل والتأهيل. تأسست الشركة عام 2017 على يد فهد النمري وعبدالله مراد وفيصل النمري."
+        ],
+        "keyFacts": [
+          "استثمار بقيادة واعد فنتشرز",
+          "تأسست عام 2017",
+          "تقنيات نمو الطفل والتأهيل"
+        ]
+      }
+    }
+  },
+  {
+    "id": "sourced-syarah-series-c-2024",
+    "slug": "syarah-series-c-2024",
+    "title": "Syarah announces $60 million Series C financing package",
+    "excerpt": "Syarah announced a $60 million Series C package including $20 million in venture debt. The company also reported selling more than 12,000 cars annually; that figure describes units sold, not revenue.",
+    "content": "Syarah announced a $60 million Series C package including $20 million in venture debt. The company also reported selling more than 12,000 cars annually; that figure describes units sold, not revenue.",
+    "category": "Funding",
+    "region": "saudi",
+    "imageUrl": "/startup-directory/syarah-logo.webp",
+    "imageCredit": "Syarah",
+    "sourceUrl": "https://syarah.com/carsguide/en/syarah-series-c-investment/",
+    "sourceName": "Syarah",
+    "companies": [
+      "Syarah",
+      "سيارة",
+      "syarah"
+    ],
+    "publishedAt": "2024-09-03T00:00:00Z",
+    "author": "Wosool news desk",
+    "tags": [
+      "Syarah",
+      "Saudi Arabia"
+    ],
+    "keyFacts": [
+      "$60M financing package",
+      "$20M of the package is venture debt",
+      "12,000+ cars sold annually, as reported in 2024"
+    ],
+    "translations": {
+      "ar": {
+        "title": "سيارة تعلن حزمة تمويل بقيمة 60 مليون دولار في المرحلة ج",
+        "excerpt": "أعلنت سيارة حزمة تمويل للمرحلة ج بقيمة 60 مليون دولار تشمل 20 مليون دولار من ديون رأس المال الجريء. وذكرت بيع أكثر من 12 ألف سيارة سنويًا، وهو عدد السيارات المباعة وليس قيمة الإيرادات.",
+        "body": [
+          "أعلنت سيارة حزمة تمويل للمرحلة ج بقيمة 60 مليون دولار تشمل 20 مليون دولار من ديون رأس المال الجريء. وذكرت بيع أكثر من 12 ألف سيارة سنويًا، وهو عدد السيارات المباعة وليس قيمة الإيرادات."
+        ],
+        "keyFacts": [
+          "حزمة تمويل بقيمة 60 مليون دولار",
+          "تشمل 20 مليون دولار من ديون رأس المال الجريء",
+          "أكثر من 12 ألف سيارة مباعة سنويًا وفق إعلان 2024"
+        ]
+      }
+    }
+  },
+  {
+    "id": "sourced-qawafel-seed-2022",
+    "slug": "qawafel-seed-2022",
+    "title": "Qawafel raises $3 million seed round",
+    "excerpt": "Qawafel announced $3 million in seed funding and reported supporting more than 300 local factories. The B2B commerce company was founded in 2020.",
+    "content": "Qawafel announced $3 million in seed funding and reported supporting more than 300 local factories. The B2B commerce company was founded in 2020.",
+    "category": "Funding",
+    "region": "saudi",
+    "imageUrl": "/startup-directory/qawafel-logo.webp",
+    "imageCredit": "Qawafel",
+    "sourceUrl": "https://www.wamda.com/ar/2022/03/saudi-qawafel-raises-3-million-seed-round",
+    "sourceName": "Wamda",
+    "companies": [
+      "Qawafel",
+      "قوافل",
+      "qawafel"
+    ],
+    "publishedAt": "2022-03-13T00:00:00Z",
+    "author": "Wosool news desk",
+    "tags": [
+      "Qawafel",
+      "Saudi Arabia"
+    ],
+    "keyFacts": [
+      "$3M seed round in March 2022",
+      "300+ local factories supported",
+      "Founded in 2020"
+    ],
+    "translations": {
+      "ar": {
+        "title": "قوافل تجمع 3 ملايين دولار في جولة تأسيسية",
+        "excerpt": "أعلنت قوافل جمع 3 ملايين دولار في جولة تأسيسية ودعم أكثر من 300 مصنع محلي. تأسست شركة التجارة بين الشركات في 2020.",
+        "body": [
+          "أعلنت قوافل جمع 3 ملايين دولار في جولة تأسيسية ودعم أكثر من 300 مصنع محلي. تأسست شركة التجارة بين الشركات في 2020."
+        ],
+        "keyFacts": [
+          "جولة تأسيسية بقيمة 3 ملايين دولار في مارس 2022",
+          "دعم أكثر من 300 مصنع محلي",
+          "تأسست عام 2020"
+        ]
+      }
+    }
   }
 ]
