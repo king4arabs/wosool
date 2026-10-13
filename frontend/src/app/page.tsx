@@ -19,7 +19,7 @@ const content = {
   ar: {
     eyebrow: "وصول · مجتمع المؤسسين", title: "من مؤسس", highlight: "إلى مؤسس",
     intro: "شبكة أعضاء للمؤسسين في السعودية والخليج وخارجها.",
-    description: "اسأل مؤسسين آخرين كيف وظّفوا وسعّروا وجمعوا التمويل وتوسّعوا. كل عضو تمت مراجعة طلبه، والملفات حقيقية، والتعارف يتم بموافقة الطرف الآخر.",
+    description: "مجتمع وصول، من مؤسسين إلى مؤسسين، لمشاركة التجارب والخبرات وتقوية العلاقات وتعزيز فرص النمو.",
     join: "قدّم طلب العضوية", explore: "تصفّح المؤسسين", note: "يراجع الفريق طلبات العضوية. لبرامج النمو مثل مسرّعة EO الرياض طلبات مستقلة.",
     panelTitle: "أشخاص يفهمون رحلتك.", panelText: "اسأل عن تحدٍّ. شارك درسًا. ابدأ علاقة تستمر.",
     panelItems: ["خبرات من أرض الواقع", "علاقات قبل المعاملات", "تعاون يصنع قيمة للطرفين"],
@@ -43,7 +43,7 @@ const content = {
   en: {
     eyebrow: "WOSOOL · THE FOUNDER COMMUNITY", title: "Founders", highlight: "to Founders",
     intro: "A members' network for founders in Saudi Arabia, the Gulf and beyond.",
-    description: "Ask other founders how they hired, priced, raised and expanded. Every member is reviewed, profiles are real, and introductions happen only when the other founder agrees.",
+    description: "The Wosool community, from founders to founders: sharing experience and expertise, strengthening relationships and opening up growth opportunities.",
     join: "Apply for membership", explore: "Browse founders", note: "The team reviews membership applications. Growth programs such as EO Riyadh Accelerator have their own application.",
     why: "WHAT BRINGS US TOGETHER", whyTitle: "Different companies. Similar problems.",
     benefits: [
