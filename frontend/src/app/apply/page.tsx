@@ -2,7 +2,9 @@
 
 import { useEffect, useRef, useState, type FormEvent, type HTMLInputAutoCompleteAttribute } from "react";
 import Link from "next/link";
-import { CheckCircle2, ChevronDown, ChevronUp, Loader2 } from "lucide-react";
+import { CheckCircle2, Loader2 } from "lucide-react";
+import { FaqExplorer } from "@/components/sections/FaqExplorer";
+import { FAQS } from "@/data/faq";
 import { PublicLayout } from "@/components/layout/PublicLayout";
 import { api, ApiError } from "@/lib/api";
 import { useLocale } from "@/lib/locale";
@@ -18,12 +20,7 @@ const criteria = [
   ["أن تملك وضوحًا تشغيليًا مع مسار تمويلي أو تشغيلي جاد للمرحلة المقبلة.", "You have a clear operating model and a serious plan for your next stage."],
   ["أن تدخل المجتمع بروح المشاركة والإضافة، لا بهدف الاستفادة الأحادية فقط.", "You want to contribute to the community and support other founders."],
 ];
-const faqs = [
-  ["كم يستغرق تقديم الطلب؟", "How long does the application take?", "يستغرق النموذج عادة بين 10 و15 دقيقة. نراجع الطلبات بشكل مستمر.", "The form usually takes 10–15 minutes. Applications are reviewed on an ongoing basis."],
-  ["هل توجد رسوم عضوية؟", "Are there membership fees?", "الوصول إلى المجتمع يتم حاليًا عبر الدعوة أو التقديم. تُشارك تفاصيل الرسوم والخيارات المتاحة بعد مراجعة الطلب بحسب المرحلة وملاءمة العضوية.", "Access is currently by invitation or application. Fees and available options are shared after review, based on your stage and membership fit."],
-  ["هل يمكنني التقديم إذا كنت ما زلت قبل إطلاق المنتج؟", "Can I apply before launching my product?", "نعم، ما دمت تملك تصورًا واضحًا، وتعمل بجدية على البناء، ولديك اهتمام فعلي بالسوق السعودي أو الخليجي.", "Yes, if you have a clear vision, are actively building, and have a real interest in the Saudi or Gulf market."],
-  ["ماذا يحدث بعد إرسال الطلب؟", "What happens after I apply?", "يراجع الفريق طلبك وقد يتواصل معك لترتيب مكالمة تعريفية قصيرة قبل إتمام القبول.", "The team reviews your application and may contact you for a short introductory call before a membership decision."],
-];
+const applyFaqIds = ["how-to-apply", "after-applying", "membership-fees", "pre-launch", "membership-vs-accelerator"];
 
 function ApplicationField({ field, label, value, error, onChange, type = "text", required, maxLength = 255, placeholder, autoComplete, multiline, options }: {
   field: FormField; label: string; value: string; error?: string;
@@ -53,7 +50,6 @@ export default function ApplyPage() {
   const t = (arabic: string, english: string) => ar ? arabic : english;
   const stepLabels = [t("البيانات الشخصية", "Personal details"), t("بيانات الشركة", "Company details"), t("الأهداف والدوافع", "Goals and motivation")];
   const [currentStep, setCurrentStep] = useState(1);
-  const [openFaq, setOpenFaq] = useState<number | null>(null);
   const [formData, setFormData] = useState<ApplicationForm>(initialFormData);
   const [errors, setErrors] = useState<FormErrors>({});
   const [submitError, setSubmitError] = useState("");
@@ -166,7 +162,7 @@ export default function ApplyPage() {
 
   return (
     <PublicLayout>
-      <section className="gateway-section">
+      <section id="eligibility" className="gateway-section scroll-mt-24">
         <div className="mx-auto max-w-5xl">
           <div className="mb-10 max-w-2xl">
             <p className="gateway-eyebrow">{t("عضوية المجتمع", "COMMUNITY MEMBERSHIP")}</p>
@@ -232,12 +228,8 @@ export default function ApplyPage() {
       <section className="gateway-section bg-[#F5F7FF]">
         <div className="mx-auto max-w-2xl">
           <h2 className="mb-8 text-2xl font-bold">{t("أسئلة متكررة", "Frequently asked questions")}</h2>
-          <div className="space-y-3">
-            {faqs.map(([questionAr, questionEn, answerAr, answerEn], index) => <div key={index} className="overflow-hidden rounded-2xl border border-slate-200 bg-white">
-              <h3><button type="button" onClick={() => setOpenFaq(openFaq === index ? null : index)} className="flex min-h-11 w-full items-center justify-between gap-4 p-5 text-start font-bold" aria-expanded={openFaq === index} aria-controls={`application-faq-${index}`}><span>{t(questionAr, questionEn)}</span>{openFaq === index ? <ChevronUp size={20} className="shrink-0" aria-hidden="true" /> : <ChevronDown size={20} className="shrink-0" aria-hidden="true" />}</button></h3>
-              <p id={`application-faq-${index}`} hidden={openFaq !== index} className="border-t border-slate-100 p-5 text-base leading-relaxed text-slate-600">{t(answerAr, answerEn)}</p>
-            </div>)}
-          </div>
+          <FaqExplorer items={FAQS.filter(item => applyFaqIds.includes(item.id))} searchable={false} grouped={false} jsonLd={false} footer={false} />
+          <Link href="/faq" className="mt-6 inline-flex min-h-11 items-center font-bold text-[var(--link)] hover:underline">{t("كل الأسئلة الشائعة", "All questions and answers")}</Link>
         </div>
       </section>
     </PublicLayout>

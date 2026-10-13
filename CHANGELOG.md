@@ -19,6 +19,13 @@ This project follows **Semantic Versioning** and a Keep a Changelog-inspired for
 - **Accessibility:** registration-form labels are tied to their fields; the calendar link is no longer a button nested in a link; resources without a URL are not rendered as `href="#"` links.
 - **Tests and QA:** new `event-registration` tests (Riyadh-time formatting, same-day and multi-day ranges, labels for every API registration state and admin event type, localized confirmations, accelerator-only accounts, sign-in return link) and a backend test for per-member `is_saved`; the QA crawl now visits a seeded event page.
 - **Checks:** `npm run verify` green (frontend 92, backend 213); QA crawl 436 visits as visitor, member and admin in Arabic and English, 0 problems; registration and cancellation checked in the browser at 390px and 1366px in both languages.
+## Questions & answers — 2026-10-13
+
+- **FAQ:** new bilingual `/faq` with 28 answers in 7 topics (membership, account, profile & privacy, introductions & asking for help, events & programs, news & founder profiles, partners & sponsors). Every answer describes current product behaviour and links to the page that does it. Search folds Arabic diacritics and letter variants and works across both languages; topic filters with live counts; shareable deep links (`/faq#reset-password`) with copy-link; expand/collapse all; an empty state that turns the search into a pre-filled contact message; FAQPage structured data. Linked from the footer and sitemap.
+- **Shared FAQ component:** the membership questions on `/apply` and the EO Riyadh Accelerator FAQ (still admin-editable) now use the same accessible accordion, with search on the accelerator list.
+- **Ask the community (fix):** questions shared with the community were only ever visible to the person who asked. Members now get a *Questions from founders* feed (shared and matched questions, urgent first, search and topic filter, no email addresses exposed) and an *I can help* action that joins the question's private conversation with an optional first message and emails the founder who asked. Helper suggestions now rank members whose profiles mention the topic.
+- **Ask the community (UI):** bilingual page in the member menu with *Questions from founders* / *My questions* tabs, a guided ask form (clear visibility choices, urgency, inline validation), readable status labels, change-who-sees-it, mark resolved and reopen.
+- **Tests:** backend 219 passing (7 new), frontend 85 passing (3 new). Long question lists page with “Show more”.
 
 ## Admin language parity and detail-page headings — 2026-10-12
 
