@@ -9,9 +9,9 @@ export type PartnerLogo = {
   logo_path?: string
 }
 
-// Owner-requested display list (2026-10-11), used only while the public API is
-// unavailable. A successful API response, including an empty list, takes priority.
-// Artwork sources and unresolved assets: docs/PARTNER-CAROUSEL-2026-10-11.md.
+// Owner-requested display list (2026-10-11). Shown whenever the public API has no
+// published partners to display (outage or empty list, owner instruction 2026-10-13);
+// published API partners take priority. Sources: docs/PARTNER-CAROUSEL-2026-10-11.md.
 const eo: PartnerLogo = { id: 'eo-riyadh', name_ar: 'EO الرياض', name_en: 'EO Riyadh', website: 'https://eoriyadh.org/', logo_path: '/partners/eo-riyadh.png' }
 const garage: PartnerLogo = { id: 'the-garage', name_ar: 'الكراج', name_en: 'The Garage', website: 'https://thegarage.sa/', logo_path: '/partners/the-garage.png' }
 const misk: PartnerLogo = { id: 'misk', name_ar: 'مؤسسة مسك', name_en: 'Misk Foundation', website: 'https://misk.org.sa/en/', logo_path: '/partners/misk.svg' }
@@ -35,4 +35,9 @@ export function uniquePartnerLogos(partners: PartnerLogo[], includeEo = false): 
     unique.set(key, { ...partner, logo_path: logo, website })
   }
   return [...unique.values()]
+}
+
+/** Published partners when there are any; otherwise the owner's display list, so the strip is never empty. */
+export function partnersToDisplay(published: PartnerLogo[] | null | undefined, fallback: PartnerLogo[]): PartnerLogo[] {
+  return published && published.some(partner => partner.logo_path) ? published : fallback
 }

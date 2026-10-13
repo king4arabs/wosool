@@ -15,7 +15,7 @@ import { api } from '@/lib/api'
 import type { EoaPartner, EoaProgram } from '@/lib/eoa'
 import { useLocale } from '@/lib/locale'
 import { PartnerCarousel } from './PartnerCarousel'
-import { acceleratorPartnerLogos } from '@/lib/partner-logos'
+import { acceleratorPartnerLogos, partnersToDisplay } from '@/lib/partner-logos'
 
 export function useEoaProgram() {
   const [program, setProgram] = useState<EoaProgram | null>(null)
@@ -94,7 +94,7 @@ export function Field({
 
 export function PartnerStrip({ partners }: { partners?: EoaPartner[] }) {
   const { locale } = useLocale()
-  return <PartnerCarousel partners={partners ?? acceleratorPartnerLogos} ar={locale === 'ar'} />
+  return <PartnerCarousel partners={partnersToDisplay(partners, acceleratorPartnerLogos)} ar={locale === 'ar'} />
 }
 
 export function EoaNav() {
