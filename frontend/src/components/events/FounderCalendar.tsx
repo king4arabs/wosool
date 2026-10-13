@@ -71,7 +71,6 @@ export function FounderCalendar({ events, now, loading, error, retry }: { events
   function entryCard(entry: CalendarEntry) {
     const isPlan = entry.status === "planned"
     const isHoliday = ["holiday", "international", "break"].includes(entry.kind)
-    const holidayOverlap = (isPlan || entry.kind === "milestone") && saudiCalendarHolidays(Number(entry.date.slice(0, 4))).some((holiday) => holiday.date === entry.date && !holiday.id.startsWith("ramadan"))
     return <article key={entry.id} className="rounded-2xl border border-slate-200 bg-white p-5 text-start shadow-sm" data-calendar-entry={entry.id}>
       <div className="mb-3 flex flex-wrap items-center gap-2 text-xs font-bold">
         <span className={`rounded-lg border px-2.5 py-1 ${styles[entry.kind].badge}`}>{label(entry.kind)}</span>
@@ -99,7 +98,6 @@ export function FounderCalendar({ events, now, loading, error, retry }: { events
         <div><dt className="text-slate-500">{ar ? "الوقت · الرياض" : "Time · Riyadh"}</dt><dd className="mt-1 font-bold text-slate-800">{ar ? "يُعلن لاحقًا (TBA)" : "TBA"}</dd></div>
         <div><dt className="text-slate-500">{ar ? "التسجيل والبرنامج" : "Registration & agenda"}</dt><dd className="mt-1 font-bold text-slate-800">{ar ? "يُعلن لاحقًا (TBA)" : "TBA"}</dd></div>
       </dl>}
-      {holidayOverlap && <p className="mt-3 rounded-xl bg-amber-50 p-3 text-xs leading-6 text-amber-900">{ar ? "يتزامن مع مناسبة أو إجازة متوقعة؛ ترتيبات الفعالية النهائية تُعلن لاحقًا." : "Overlaps an expected holiday or occasion; final event arrangements TBA."}</p>}
       {isHoliday && entry.source && <a href={entry.source} target="_blank" rel="noreferrer noopener" className="mt-4 inline-flex min-h-11 items-center gap-2 text-xs font-bold text-[#3B52D4] underline underline-offset-4">{ar ? "مرجع التاريخ" : "Date reference"}<Globe2 size={14} aria-hidden="true" /></a>}
       {entry.event && <Link href={`/events/${encodeURIComponent(entry.event.slug)}`} className="mt-4 inline-flex min-h-11 items-center gap-2 text-sm font-bold text-[#3B52D4]">{ar ? "تفاصيل الفعالية" : "Event details"}{ar ? <ArrowLeft size={16} /> : <ArrowRight size={16} />}</Link>}
     </article>
@@ -111,7 +109,7 @@ export function FounderCalendar({ events, now, loading, error, retry }: { events
         <div className="max-w-2xl">
           <p className="mb-2 text-xs font-extrabold tracking-wide text-[#3B52D4]">{ar ? "تعلّم. زُر. شارك. انمُ." : "LEARN. EXPLORE. CONNECT. GROW."}</p>
           <h2 id="founder-calendar-title" className="text-2xl font-black text-slate-900 sm:text-3xl">{ar ? "تقويم نمو المؤسسين" : "Your founder growth calendar"}</h2>
-          <p className="mt-3 text-sm leading-7 text-slate-600">{ar ? "٢٦ أسبوعًا للتعلّم بموضوعات مختلفة، مع إجازة رمضان ومحطات رئيسية في مايو. الأوقات والمتحدثون والمواقع وروابط الانضمام تُعلن لاحقًا." : "26 active learning weeks with a different focus, a Ramadan break, and key milestones in May. Times, speakers, venues, and joining links will be announced."}</p>
+          <p className="mt-3 text-sm leading-7 text-slate-600">{ar ? "٢٦ أسبوعًا للتعلّم بموضوعات مختلفة، مع إجازة رمضان ومحطات رئيسية في مايو." : "26 learning weeks, each with its own focus, a Ramadan break, and key milestones in May."}</p>
         </div>
         <div className="rounded-2xl border border-indigo-100 bg-white px-4 py-3 text-xs leading-6 text-slate-600"><strong className="block text-slate-900">{ar ? "فترة التعلّم المقترحة" : "Proposed learning window"}</strong>{periodText}<span className="block">{ar ? "جميع المواعيد بتوقيت الرياض (UTC+3)" : "All dates in Riyadh time (UTC+3)"}</span></div>
       </div>
@@ -129,7 +127,7 @@ export function FounderCalendar({ events, now, loading, error, retry }: { events
         {[acceleratorBreak, ...cohortMilestones].map((entry) => <button type="button" key={entry.id} onClick={() => { setChosenMonth(entry.date.slice(0, 7)); setChosenDate(entry.date); setKind("all"); setQuery(""); setView("calendar"); document.getElementById("calendar-month-panel")?.scrollIntoView({ block: "start" }) }} className={`rounded-2xl border p-5 text-start ${styles[entry.kind].badge}`}>
           <span className="block text-xs font-bold">{calendarDateLabel(entry.date, locale, { year: "numeric" })}{entry.endDate ? ` – ${calendarDateLabel(entry.endDate, locale, { year: "numeric" })}` : ""}</span>
           <span className="mt-2 block text-base font-extrabold leading-7">{entry.title[locale]}</span>
-          <span className="mt-2 block text-xs leading-6">{entry.kind === "break" ? (ar ? "لا أنشطة للمسرّعة · تواريخ تقديرية" : "Accelerator off days · expected dates") : entry.location?.[locale]}</span>
+          <span className="mt-2 block text-xs leading-6">{entry.kind === "break" ? (ar ? "لا أنشطة للمسرّعة" : "No accelerator activities") : entry.location?.[locale]}</span>
         </button>)}
       </div>
 
@@ -170,7 +168,6 @@ export function FounderCalendar({ events, now, loading, error, retry }: { events
                 </button></td>
               })}</tr>)}</tbody>
             </table>
-            <p className="px-2 pt-3 text-xs leading-6 text-slate-500">{ar ? "اختر يومًا لعرض الموضوع والتفاصيل. النقاط الملوّنة تدل على نوع النشاط." : "Choose a day to see its topics and details. Coloured dots indicate the activity type."}</p>
           </div>
           <aside aria-label={ar ? "تفاصيل اليوم المحدد" : "Selected day details"} className="min-w-0 border-t border-slate-200 bg-slate-50/70 p-4 sm:p-5 xl:border-s xl:border-t-0" aria-live="polite">
             <p className="text-xs font-bold text-[#3B52D4]">{ar ? "يومك في وصول" : "YOUR DAY AT WOSOOL"}</p>
@@ -179,13 +176,10 @@ export function FounderCalendar({ events, now, loading, error, retry }: { events
           </aside>
         </div> : <div className="p-4 sm:p-6"><p role="status" className="mb-5 text-sm text-slate-600">{ar ? `${monthEntries.length} نشاط في ${monthLabel}` : `${monthEntries.length} activities in ${monthLabel}`}</p>{monthEntries.length ? <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">{monthEntries.map(entryCard)}</div> : <p className="rounded-xl bg-slate-50 p-8 text-center text-sm text-slate-500">{ar ? "لا توجد أنشطة مطابقة في هذا الشهر." : "No matching activities this month."}</p>}</div>}
 
-        <div className="space-y-2 border-t border-slate-200 bg-slate-50/60 px-5 py-4 text-xs leading-6 text-slate-600">
-          {(month < PROGRAM_START.slice(0, 7) || month > PROGRAM_END.slice(0, 7)) && <p>{ar ? "هذا الشهر خارج فترة الخطة المقترحة. تفاصيل برامج الدفعات الأخرى تُعلن لاحقًا." : "This month is outside the proposed program window. Other cohort schedules will be announced."}</p>}
-          <p>{ar ? "رمضان إجازة للمسرّعة. تواريخ رمضان والعيدين تقديرية وتخضع للإعلان الرسمي. تُستكمل موضوعات البرنامج بعد رمضان؛ ترتيبات إجازات العيد تُعلن لاحقًا." : "The accelerator is off throughout Ramadan. Ramadan and Eid dates are tentative and subject to official announcement. The curriculum resumes afterward; Eid holiday arrangements TBA."}{year !== 2027 && (ar ? " المواعيد القمرية لهذا العام تُضاف بعد مراجعتها." : " Lunar dates for this year will be added after review.")}</p>
-          <p>{ar ? "المناسبات الدولية مرجع لتوافر الشركاء عالميًا؛ ليست إجازات سعودية أو إجازات تلقائية للمسرّعة، وقد تختلف تواريخها حسب البلد والتقاليد." : "International occasions help with global partner planning. They are not Saudi public holidays or automatic accelerator off days, and dates may vary by country and tradition."}</p>
+        {(loading || error) && <div className="space-y-2 border-t border-slate-200 bg-slate-50/60 px-5 py-4 text-xs leading-6 text-slate-600">
           {loading && <p role="status">{ar ? "جارٍ تحميل فعاليات المجتمع…" : "Loading community events…"}</p>}
           {error && <p role="status">{ar ? "تعذر تحميل بعض فعاليات المجتمع؛ خطة البرنامج والإجازات متاحة." : "Some community events could not be loaded; the program plan and holidays remain available."} <button type="button" onClick={retry} className="min-h-11 px-2 font-bold text-[#3B52D4] underline">{ar ? "إعادة المحاولة" : "Retry"}</button></p>}
-        </div>
+        </div>}
       </div>
     </div>
   </section>
