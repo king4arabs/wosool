@@ -1,5 +1,9 @@
 # Roadmap
 
+## Current execution plan — 14 October 2026
+
+Use [Continuous development](docs/CONTINUOUS-DEVELOPMENT.md) as the current phased plan and acceptance gates. The older release tables below are historical planning context, not evidence of current completion. Next: verify production release/imports and cron, complete API field schemas, extend profile SEO, and make newsroom filtering cover the full database.
+
 ## Roadmap Framing
 
 Wosool should mature through **sequenced execution**, not uncontrolled feature expansion. The roadmap is organized to first strengthen delivery foundations, then unlock real product workflows, then scale regionally with production discipline.

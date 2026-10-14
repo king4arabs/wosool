@@ -1,5 +1,14 @@
 # Changelog
 
+## Knowledge, public API and verified content loop — 2026-10-14
+
+- Added bilingual `/wiki` with four practical guides and `/api` with a downloadable OpenAPI 3.1 contract for seven public read endpoints. Existing Laravel proxy and session authorization are preserved.
+- Added server-loaded news article metadata/JSON-LD and live public news/founder sitemap URLs. Explicit missing/private responses cannot restore story snapshots; outage snapshots are noindex. News lists respect successful empty responses. Founder activation pages now carry private/noindex headers.
+- New RSS imports are private drafts, with existing deduplication, timeout, URL/XML safeguards and editor/deletion protection retained.
+- Added Rami Panayoti (SiFi), corrected Ahmed Alhakbani's co-founder role and refreshed attributed SiFi traction; added two original bilingual news briefs from SiFi and Penny. Snapshots now contain 44 founders, 33 companies and 42 stories. Existing database corrections require the admin editor because imports preserve prior content.
+- Added `content:check` (also in CI) and `content:review` with a 30-day founder review queue. Defined delivery phases and next actions in [Continuous development](docs/CONTINUOUS-DEVELOPMENT.md).
+- Local validation: 103 frontend tests, 224 backend tests / 1,676 assertions, production build, and repeatable isolated database imports. Live deployment and production imports are separate verification gates.
+
 ## Squashed filters, consistent borders — 2026-10-14
 
 - **News filters (mobile):** on `/news` at phone width the region chips (All, Saudi Arabia, GCC, MENA, Global) shrank to fit the row instead of scrolling, so each label was stacked one letter per line. The chips now keep their width and the row scrolls sideways.

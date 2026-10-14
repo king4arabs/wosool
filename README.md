@@ -29,6 +29,8 @@ Wosool also provides the dedicated digital gateway for **EO Riyadh Accelerator**
 
 > **Release boundary:** GitHub CI validates source, security checks, tests, and production builds. A commit, merge, or green workflow does **not** by itself prove that production hosting has deployed the change.
 
+> **Knowledge, API and content cycle (14 October 2026):** bilingual `/wiki`, public `/api` reference and OpenAPI, server-rendered news metadata, public-record sitemap, draft-only RSS discovery, and **44 founders / 33 companies / 42 stories** in source snapshots. See [development phases and next actions](docs/CONTINUOUS-DEVELOPMENT.md) and [source evidence](docs/research/KNOWLEDGE-CONTENT-2026-10-14.md). Production deployment/import remain separate release steps.
+
 ### Start here
 
 | If you want to… | Read |
@@ -39,7 +41,7 @@ Wosool also provides the dedicated digital gateway for **EO Riyadh Accelerator**
 | Test or deploy a change | [Testing](TESTING.md) and [Deployment](DEPLOYMENT.md); CI does not deploy |
 | Report a security issue | [Security policy](SECURITY.md) for private reporting |
 
-## Current platform snapshot — October 12, 2026
+## Current platform snapshot — October 14, 2026
 
 The latest product and brand upgrade includes:
 
@@ -47,7 +49,7 @@ The latest product and brand upgrade includes:
 - **Unified product design system:** semantic tokens, Cairo as the primary Arabic and English typeface, responsive spacing, consistent cards, accessible controls, visible focus states, and reduced-motion behavior.
 - **Trusted founder and venture scorecards:** company logo, founder portrait, role, short company/founder summaries, sector, stage, location, official links, verification, review freshness, source evidence, and opportunity signals where data is available.
 - **Founder browsing:** one responsive scorecard row advances physically right every three seconds, with arrows, swipe, pause and reduced-motion support. Expand the grid below for numbered pages, page-size options, search and sector filters in both languages.
-- **Founder spotlight:** eight researched public founder profiles keep the homepage and directory useful during API outages, clearly separated from approved member profiles.
+- **Founder spotlight:** 44 researched public founder profiles keep the homepage and directory useful during API outages, clearly separated from approved member profiles.
 - **Mentors and advisors:** responsive mentor cards on `/eoa` and `/eoa/mentors`, expertise filters, portrait management, audited draft/publish controls and confirmed public appointments.
 - **Bilingual account journeys:** shared registration/application layouts, working invitation email entry, recoverable validation, draft-storage resilience and direct EOA sign-in destinations.
 - **Reviewed founder introductions:** authenticated members can discover approved founders, state the purpose and intended value of a connection, submit through the established introduction API, and track the request.
@@ -93,6 +95,8 @@ Sourced founder/company cards connect to public profiles and an administrator-ma
 | Wosool community | `/` | Founder-community discovery and its own membership journey |
 | Founder directory | `/founders` | Approved public founders, with a separately labeled editorial spotlight |
 | Accelerator mentors | `/eoa/mentors` | Published mentor profiles, expertise and professional links |
+| Knowledge hub | `/wiki` | Bilingual founder, company evidence, Accelerator and source guides |
+| Public API reference | `/api` | Read-only endpoints and `/api/openapi.json` contract |
 | Startup directory | `/startups` | Sourced startup, scaleup, and venture discovery |
 | Member workspace | `/dashboard` | Profiles, companies, community, matches, events, programs, and messages |
 | EO Riyadh Accelerator | `/eoa` | Program discovery, eligibility, accounts, applications, and public content |
@@ -194,6 +198,8 @@ Run commands from the repository root after setup:
 | --- | --- |
 | `npm run dev` | Start frontend and backend together; stop both with Ctrl+C |
 | `npm run dev:frontend` / `npm run dev:backend` | Start one application independently |
+| `npm run content:check` | Check founder/news source integrity and frontend/backend snapshot parity |
+| `npm run content:review` | Emit 30-day founder review queue; does not verify sources automatically |
 | `npm run lint` | Run frontend ESLint |
 | `npm run type-check` | Check frontend TypeScript |
 | `npm run test` | Run frontend and backend regression suites |
@@ -313,6 +319,7 @@ Remaining external dependencies include configured hosting/deployment access, pr
 
 | Guide | Contents |
 | --- | --- |
+| [Continuous development](docs/CONTINUOUS-DEVELOPMENT.md) | Phases, acceptance gates, scheduled content review and next actions |
 | [Architecture](ARCHITECTURE.md) | System structure and engineering context |
 | [API reference](docs/API.md) | Backend interfaces |
 | [Community homepage](docs/COMMUNITY-HOMEPAGE.md) | Main Wosool community experience |

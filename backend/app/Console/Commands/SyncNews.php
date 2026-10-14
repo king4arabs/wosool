@@ -89,7 +89,7 @@ class SyncNews extends Command
             }
         }
 
-        $this->info("Imported {$imported} news summaries.");
+        $this->info("Imported {$imported} news drafts for editorial review.");
 
         return $failed ? self::FAILURE : self::SUCCESS;
     }
@@ -185,8 +185,9 @@ class SyncNews extends Command
             'image_url' => $imageUrl,
             'image_credit' => $imageUrl !== null ? $feed['name'] : null,
             'is_featured' => false,
-            'is_public' => true,
-            'status' => 'published',
+            // Discovery is not verification: editors review source, claims and media rights.
+            'is_public' => false,
+            'status' => 'draft',
             'published_at' => $publishedAt,
         ];
     }

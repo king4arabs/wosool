@@ -5,7 +5,7 @@ export default function robots(): MetadataRoute.Robots {
   return {
     rules: {
       userAgent: "*",
-      allow: "/",
+      allow: ["/", "/api/openapi.json"],
       disallow: [
         "/api/",
         "/admin",
@@ -13,6 +13,11 @@ export default function robots(): MetadataRoute.Robots {
         "/accelerator/apply",
         "/review",
         "/verify-email",
+        "/activate-founder",
+        "/login",
+        "/register",
+        "/forgot-password",
+        "/reset-password",
         "/eoa/account",
         "/eoa/apply",
         "/eoa/admin",

@@ -1,9 +1,15 @@
 import type { MetadataRoute } from "next"
 import { env } from "@/lib/env"
+import { wikiArticles } from "@/lib/wiki"
+import { readSitemapRecords } from "@/lib/public-records"
+
+export const dynamic = "force-dynamic"
 
 const publicRoutes = [
   "/",
   "/startups",
+  "/api",
+  "/wiki",
   "/eoa",
   "/eoa/about",
   "/eoa/program",
@@ -32,9 +38,14 @@ const publicRoutes = [
   "/terms",
 ]
 
-export default function sitemap(): MetadataRoute.Sitemap {
-  // Only stable public routes; never publish member/admin or token-bearing URLs.
-  return publicRoutes.map((path) => ({
-    url: new URL(path, env.siteUrl).toString(),
-  }))
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const [news, founders] = await Promise.all([
+    readSitemapRecords("news", env.apiUrl), readSitemapRecords("founders", env.apiUrl),
+  ])
+  return [
+    ...publicRoutes.map(path => ({ url: new URL(path, env.siteUrl).href })),
+    ...wikiArticles.map(article => ({ url: new URL(`/wiki/${article.slug}`, env.siteUrl).href, lastModified: article.updatedAt })),
+    ...news.map(record => ({ url: new URL(`/news/${record.slug}`, env.siteUrl).href })),
+    ...founders.map(record => ({ url: new URL(`/founders/${record.slug}`, env.siteUrl).href })),
+  ]
 }

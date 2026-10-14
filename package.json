@@ -20,7 +20,7 @@
     "type-check": "npm --prefix frontend run type-check",
     "validate:entrepreneurs": "npm --prefix frontend run validate:entrepreneurs",
     "test": "npm run test:frontend && npm run test:backend",
-    "verify": "npm run lint && npm run type-check && npm run test && npm run validate:entrepreneurs && npm run build",
+    "verify": "npm run content:check && npm run lint && npm run type-check && npm run test && npm run validate:entrepreneurs && npm run build",
     "dev": "./scripts/run-app.sh",
     "dev:frontend": "npm --prefix frontend run dev",
     "dev:backend": "php backend/artisan serve --host=127.0.0.1",
@@ -29,7 +29,9 @@
     "test:backend": "composer --working-dir=backend run test",
     "eoa:install": "php backend/artisan eoa:install",
     "qa": "npm run verify && npm --prefix frontend run qa:crawl",
-    "qa:crawl": "npm --prefix frontend run qa:crawl"
+    "qa:crawl": "npm --prefix frontend run qa:crawl",
+    "content:check": "node scripts/content-review.mjs --check",
+    "content:review": "node scripts/content-review.mjs"
   },
   "engines": {
     "node": "^22.12.0 || ^24.0.0"

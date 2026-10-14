@@ -2,7 +2,7 @@
 
 import { useMemo } from "react"
 import Link from "next/link"
-import { companyAliases, companyMatches, mergeNews } from "@/lib/news-feed"
+import { companyAliases, companyMatches, mergeNews, curatedNews } from "@/lib/news-feed"
 import { mapNewsItem, type ApiNewsItem } from "@/lib/content-api"
 import { usePublicCollection } from "@/lib/use-public-collection"
 import { useLocale } from "@/lib/locale"
@@ -13,7 +13,7 @@ export function ProfileNews({ companyNames }: { companyNames: string[] }) {
   const aliases = companyAliases(companyNames)
   const primary = aliases.find(Boolean)
   const collection = usePublicCollection<ApiNewsItem>(`/news?companies=${encodeURIComponent(aliases.slice(0, 10).join(","))}`)
-  const items = useMemo(() => mergeNews(collection.items.map(mapNewsItem)), [collection.items])
+  const items = useMemo(() => mergeNews(collection.items.map(mapNewsItem), collection.error && !collection.items.length ? curatedNews : []), [collection.items, collection.error])
     .filter(item => companyMatches(item, aliases))
   if (!primary || !items.length) return null
   return <section id="profile-news" className="scroll-mt-24">

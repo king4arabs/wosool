@@ -37,6 +37,10 @@ class NewsSyncTest extends TestCase
         $article = NewsItem::firstOrFail();
         $this->assertSame('https://www.wamda.com/2026/10/acme-funding', $article->source_url);
         $this->assertSame('Wamda', $article->source_name);
+        $this->assertSame('draft', $article->status);
+        $this->assertFalse($article->is_public);
+        $this->getJson('/api/v1/news')->assertOk()->assertJsonCount(0, 'data');
+        $this->getJson('/api/v1/news/'.$article->slug)->assertNotFound();
         $this->assertSame(['Acme'], $article->companies);
         $this->assertLessThanOrEqual(320, mb_strlen($article->excerpt));
         $this->assertStringNotContainsString('<', $article->excerpt);
@@ -183,7 +187,8 @@ class NewsSyncTest extends TestCase
         $this->fakeFeed($this->rss($this->item()));
         $this->artisan('news:sync', ['--include-unverified' => true])->assertSuccessful();
         $article = NewsItem::firstOrFail();
-        $article->update(['companies' => ['Acme']]);
+        // Public visibility requires explicit editorial publication.
+        $article->update(['companies' => ['Acme'], 'status' => 'published', 'is_public' => true]);
 
         $this->getJson('/api/v1/news/'.$article->slug)
             ->assertOk()

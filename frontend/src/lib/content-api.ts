@@ -170,6 +170,8 @@ export interface ApiSponsor {
 }
 
 export interface ApiNewsItem {
+  status?: string
+  is_public?: boolean
   id: number
   title: string
   slug: string

@@ -485,6 +485,48 @@
     }
   },
   {
+    "id": "sourced-sifi-idemia-tap-to-activate-2026",
+    "slug": "sifi-idemia-tap-to-activate-2026",
+    "title": "SiFi announces tap-based card activation with IDEMIA",
+    "excerpt": "A Money20/20 announcement connects physical cards with mobile activation.",
+    "content": "SiFi says its IDEMIA collaboration enables phone-based activation of business cards. The page is dated September 13; its release text dates the Riyadh event September 14, 2026.",
+    "category": "Product",
+    "region": "saudi",
+    "imageUrl": "",
+    "imageCredit": "",
+    "sourceUrl": "https://www.sifi.app/en/resources/news/sifi-and-idemia-secure-transactions-expand-partnership-and-with-launch-of-tap-to-activate-at-money20-20-middle-east/",
+    "sourceName": "SiFi",
+    "companies": [
+      "SiFi",
+      "IDEMIA"
+    ],
+    "publishedAt": "2026-09-13",
+    "author": "Wosool news desk",
+    "tags": [
+      "SiFi",
+      "IDEMIA"
+    ],
+    "keyFacts": [
+      "Business-card activation by smartphone",
+      "Announcement linked to Money20/20 Middle East",
+      "Publication and event dates differ in the source"
+    ],
+    "translations": {
+      "ar": {
+        "title": "ساي فاي تعلن تفعيل البطاقات باللمس مع IDEMIA",
+        "excerpt": "إعلان مرتبط بمعرض Money20/20 يربط البطاقات الفعلية بالتفعيل عبر الهاتف.",
+        "body": [
+          "تقول ساي فاي إن تعاونها مع IDEMIA يتيح تفعيل بطاقات الأعمال بالهاتف. تاريخ الصفحة 13 سبتمبر، بينما يؤرخ نص البيان فعالية الرياض في 14 سبتمبر 2026."
+        ],
+        "keyFacts": [
+          "تفعيل بطاقات الأعمال بالهاتف",
+          "إعلان مرتبط بمعرض Money20/20 الشرق الأوسط",
+          "اختلاف تاريخ النشر والفعالية في المصدر"
+        ]
+      }
+    }
+  },
+  {
     "id": "sourced-welcount-financial-access-ai",
     "slug": "welcount-financial-access-ai",
     "title": "Welcount uses AI to simplify financial access for newcomers in Europe",
@@ -559,6 +601,50 @@
           "تقييم مليار دولار وتمويل إجمالي يتجاوز 150 مليون",
           "أكثر من 40 مليار دولار سنوياً و3 ملايين محفظة",
           "أكثر من ألف عميل مؤسسي في 125 دولة"
+        ]
+      }
+    }
+  },
+  {
+    "id": "sourced-penny-local-content-tracker-sap-store-2026",
+    "slug": "penny-local-content-tracker-sap-store-2026",
+    "title": "Penny announces Local Content Tracker on SAP Store",
+    "excerpt": "The product connects procurement data with local-content reporting.",
+    "content": "Penny reports that its tracker integrates with SAP Ariba and SAP S/4HANA to calculate local-content performance. The page was published August 31, 2026; the release text carries an August 18 dateline.",
+    "category": "Product",
+    "region": "saudi",
+    "imageUrl": "",
+    "imageCredit": "",
+    "sourceUrl": "https://penny.co/news/local-content-tracker-sap-store/",
+    "sourceName": "Penny AI",
+    "companies": [
+      "Penny Software",
+      "Penny AI",
+      "SAP"
+    ],
+    "publishedAt": "2026-08-31",
+    "author": "Wosool news desk",
+    "tags": [
+      "Penny Software",
+      "Penny AI",
+      "SAP"
+    ],
+    "keyFacts": [
+      "Listed on SAP Store, according to Penny",
+      "Integrates with SAP Ariba and SAP S/4HANA",
+      "Publication date: August 31, 2026"
+    ],
+    "translations": {
+      "ar": {
+        "title": "بيني تعلن إتاحة متتبع المحتوى المحلي على SAP Store",
+        "excerpt": "يربط المنتج بيانات المشتريات بمتابعة المحتوى المحلي.",
+        "body": [
+          "تذكر بيني أن المتتبع يتكامل مع SAP Ariba وSAP S/4HANA لحساب أداء المحتوى المحلي. نُشرت الصفحة في 31 أغسطس 2026، ويحمل نص البيان تاريخ 18 أغسطس."
+        ],
+        "keyFacts": [
+          "متاح على SAP Store وفق إعلان بيني",
+          "تكامل مع SAP Ariba وSAP S/4HANA",
+          "تاريخ النشر: 31 أغسطس 2026"
         ]
       }
     }

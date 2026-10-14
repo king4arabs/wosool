@@ -33,6 +33,8 @@ const footerCopy = {
       ],
       "عن وصول": [
         { href: "/about", label: "عن وصول" },
+        { href: "/wiki", label: "مركز المعرفة" },
+        { href: "/api", label: "واجهة البيانات" },
         { href: "/login", label: "حسابي" },
         { href: "/privacy", label: "الخصوصية" },
         { href: "/terms", label: "شروط الاستخدام" },
@@ -67,6 +69,8 @@ const footerCopy = {
       ],
       "About Wosool": [
         { href: "/about", label: "About Wosool" },
+        { href: "/wiki", label: "Knowledge hub" },
+        { href: "/api", label: "API reference" },
         { href: "/login", label: "My account" },
         { href: "/privacy", label: "Privacy" },
         { href: "/terms", label: "Terms of use" },

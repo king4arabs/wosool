@@ -9,7 +9,7 @@ import { NewsCard } from "@/components/sections/NewsCard"
 import { PageHero } from "@/components/sections/PageHero"
 import { usePublicCollection } from "@/lib/use-public-collection"
 import { mapNewsItem, type ApiNewsItem } from "@/lib/content-api"
-import { NEWS_REGIONS, categoryLabel, mergeNews, newsDate, newsRegion, regionLabel, type NewsRegion } from "@/lib/news-feed"
+import { NEWS_REGIONS, categoryLabel, mergeNews, curatedNews, newsDate, newsRegion, regionLabel, type NewsRegion } from "@/lib/news-feed"
 import { getLocalizedNewsContent } from "@/lib/news-content"
 import { useLocale } from "@/lib/locale"
 
@@ -41,7 +41,7 @@ function NewsroomContent() {
     router.replace(search ? `${pathname}?${search}` : pathname, { scroll: false })
   }, [params, pathname, router])
 
-  const items = useMemo(() => mergeNews(collection.items.map(mapNewsItem)), [collection.items])
+  const items = useMemo(() => mergeNews(collection.items.map(mapNewsItem), collection.error && !collection.items.length ? curatedNews : []), [collection.items, collection.error])
   const regionCounts = useMemo(() => {
     const counts: Record<string, number> = { "": items.length }
     for (const item of items) counts[newsRegion(item)] = (counts[newsRegion(item)] ?? 0) + 1
