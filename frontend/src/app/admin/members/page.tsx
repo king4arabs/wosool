@@ -149,14 +149,15 @@ export default function AdminMembersPage() {
               onChange={(event) => setSearch(event.target.value)}
               onKeyDown={(event) => event.key === "Enter" && loadApplications().catch((err: Error) => toast(err.message, "error"))}
               placeholder="ابحث بالاسم أو البريد أو الشركة"
+              aria-label="ابحث بالاسم أو البريد أو الشركة"
             />
-            <Select value={status} onChange={(event) => setStatus(event.target.value)}>
+            <Select aria-label="حالة الطلب" value={status} onChange={(event) => setStatus(event.target.value)}>
               <option value="">كل الحالات</option>
               {statusOptions.map((option) => (
                 <option key={option} value={option}>{statusLabel[option]}</option>
               ))}
             </Select>
-            <Button onClick={() => loadApplications().catch((err: Error) => toast(err.message, "error"))}>بحث</Button>
+            <Button className="shrink-0" onClick={() => loadApplications().catch((err: Error) => toast(err.message, "error"))}>بحث</Button>
           </div>
         </CardContent>
       </Card>
