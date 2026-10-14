@@ -61,6 +61,23 @@
   --color-success: var(--success-text);
 }
 
+/*
+ * Tailwind v4 draws a bare `border`, `border-t` or `divide-y` in currentColor, so cards and
+ * separators without a border-color class rendered as near-black lines next to the soft grey
+ * ones. Give every border the design-system default instead; controls keep the stronger
+ * `--border` used by Input and the outline Button. In the base layer so any border-* utility
+ * still wins.
+ */
+@layer base {
+  *, ::before, ::after, ::backdrop, ::file-selector-button {
+    border-color: var(--border-soft, currentcolor);
+  }
+
+  button, input, select, textarea {
+    border-color: var(--border, currentcolor);
+  }
+}
+
 body {
   background: var(--background);
   color: var(--foreground);

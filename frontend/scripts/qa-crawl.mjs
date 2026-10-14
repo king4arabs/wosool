@@ -8,6 +8,7 @@
  *   - API responses with status >= 500
  *   - horizontal overflow (layout wider than the viewport)
  *   - a missing or duplicated <h1>
+ *   - a button or link squeezed so narrow that a single word breaks across lines
  *
  * Usage (frontend and backend running):
  *   npm run qa:crawl
@@ -90,9 +91,24 @@ for (const role of roles.filter(role => !ONLY_ROLES || ONLY_ROLES.includes(role.
           overflow: document.documentElement.scrollWidth - window.innerWidth,
           h1: document.querySelectorAll("main h1, h1").length,
           crashed: /Something went wrong|Application error|حدث خطأ غير متوقع/.test(document.body.innerText),
+          // A button or link squeezed so narrow that a single word breaks across lines (e.g. "بحث" stacked letter by letter).
+          squashed: [...document.querySelectorAll("button, a")].flatMap(element => {
+            const walker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT)
+            for (let node = walker.nextNode(); node; node = walker.nextNode()) {
+              // Measure each word on its own, so "Saudi Arabia" is checked as "Saudi" and "Arabia".
+              for (const match of node.textContent.matchAll(/\S{2,}/g)) {
+                const range = document.createRange()
+                range.setStart(node, match.index)
+                range.setEnd(node, match.index + match[0].length)
+                if (new Set([...range.getClientRects()].filter(rect => rect.width > 0).map(rect => Math.round(rect.top))).size > 1) return [match[0]]
+              }
+            }
+            return []
+          }).slice(0, 3),
         }))
         if (check.crashed) problems.push("error boundary shown")
         if (check.overflow > 1) problems.push(`horizontal overflow ${check.overflow}px`)
+        if (check.squashed.length) problems.push(`word broken across lines in a button or link: ${check.squashed.join(", ")}`)
         if (check.h1 === 0 && !isPrivate(route)) problems.push("no <h1>")
         if (check.h1 > 1) problems.push(`${check.h1} <h1> elements`)
       } catch (error) {

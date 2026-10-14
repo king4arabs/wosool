@@ -1,5 +1,13 @@
 # Changelog
 
+## Squashed filters, consistent borders — 2026-10-14
+
+- **News filters (mobile):** on `/news` at phone width the region chips (All, Saudi Arabia, GCC, MENA, Global) shrank to fit the row instead of scrolling, so each label was stacked one letter per line. The chips now keep their width and the row scrolls sideways.
+- **Membership requests (admin):** the "بحث" search button on `/admin/members` was squeezed to one letter per line beside the search field and status filter. It now keeps its width; the search field and status filter also have accessible names.
+- **Borders:** with Tailwind v4 a bare `border`, `border-t` or `divide-y` is drawn in the text colour, so on founder and company profiles the "Founders", "At a glance" and "Sources" cards, the share button and list dividers had near-black outlines next to the soft grey ones. All borders without a colour now use the design-system default (`--border-soft`; buttons and form fields use `--border`, like `Input` and the outline `Button`). Any explicit `border-*` colour still wins.
+- **QA crawl:** now also fails when a button or link is so narrow that a single word breaks across lines, the check that found both bugs above.
+- **Checks:** `npm run verify` green; QA crawl 440 visits as visitor, member and admin in Arabic and English at 390px and 1366px, 0 problems; every founder, company and news detail page (468 visits) 0 problems; new `border-defaults` test.
+
 ## Saudi founder research and EOA copy — 2026-10-14
 
 - Added 14 sourced bilingual founders at 11 companies connected to CODE/Tech Founders/Multiverse, Misk, Monsha’at, LEAP, Money20/20 and the Saudi startup ecosystem. The directory now contains 43 founders at 33 companies.

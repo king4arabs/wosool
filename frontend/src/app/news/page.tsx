@@ -68,7 +68,7 @@ function NewsroomContent() {
   const saudiLatest = items.find(item => newsRegion(item) === "saudi")
   const filtersActive = Boolean(query || region || category || sort !== "newest")
 
-  const chip = (active: boolean) => `inline-flex min-h-11 items-center gap-2 rounded-full border px-4 text-sm font-bold transition-colors ${active ? "border-[var(--action-bg)] bg-[var(--action-bg)] text-[var(--action-fg)]" : "border-[var(--border)] bg-[var(--surface)] text-[var(--text)] hover:border-[var(--action-bg)]"}`
+  const chip = (active: boolean) => `inline-flex min-h-11 shrink-0 items-center gap-2 whitespace-nowrap rounded-full border px-4 text-sm font-bold transition-colors ${active ? "border-[var(--action-bg)] bg-[var(--action-bg)] text-[var(--action-fg)]" : "border-[var(--border)] bg-[var(--surface)] text-[var(--text)] hover:border-[var(--action-bg)]"}`
 
   return <div dir={direction} lang={locale} className="min-h-screen bg-[var(--page-bg)]">
     <PageHero
