@@ -95,11 +95,13 @@ for (const role of roles.filter(role => !ONLY_ROLES || ONLY_ROLES.includes(role.
           squashed: [...document.querySelectorAll("button, a")].flatMap(element => {
             const walker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT)
             for (let node = walker.nextNode(); node; node = walker.nextNode()) {
-              const word = node.textContent.trim()
-              if (word.length < 2 || /\s/.test(word)) continue
-              const range = document.createRange()
-              range.selectNodeContents(node)
-              if (new Set([...range.getClientRects()].filter(rect => rect.width > 0).map(rect => Math.round(rect.top))).size > 1) return [word]
+              // Measure each word on its own, so "Saudi Arabia" is checked as "Saudi" and "Arabia".
+              for (const match of node.textContent.matchAll(/\S{2,}/g)) {
+                const range = document.createRange()
+                range.setStart(node, match.index)
+                range.setEnd(node, match.index + match[0].length)
+                if (new Set([...range.getClientRects()].filter(rect => rect.width > 0).map(rect => Math.round(rect.top))).size > 1) return [match[0]]
+              }
             }
             return []
           }).slice(0, 3),
