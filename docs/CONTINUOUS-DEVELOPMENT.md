@@ -1,13 +1,13 @@
 # Wosool continuous development
 
-Updated: 14 October 2026. Work in bounded, reviewable cycles: inspect → verify sources → implement → test → publish source → verify release → choose the next incomplete outcome. Completion applies to acceptance criteria, not a promise that software or research needs no further maintenance.
+Updated: 15 October 2026. Work in bounded, reviewable cycles: inspect → verify sources → implement → test → publish source → verify release → choose the next incomplete outcome. Completion applies to acceptance criteria, not a promise that software or research needs no further maintenance.
 
 ## Phases and acceptance criteria
 
 | Phase | Delivered in this cycle | Completion gate / next action |
 | --- | --- | --- |
 | 1. Baseline and reliability | Latest main inspected; preserved concurrent board, founder and news work; new RSS records become private drafts | Required frontend/backend checks pass; production revision and readiness verified |
-| 2. Discovery and SEO | `/api`, four bilingual `/wiki` guides, article metadata/JSON-LD, live founder/news sitemap entries, activation-page noindex | Live canonical/metadata/robots checks; extend server-rendered founder/company detail metadata next |
+| 2. Discovery and SEO | `/api`, four bilingual `/wiki` guides, article metadata/JSON-LD, live founder/news sitemap entries, activation-page noindex; founder/company-specific metadata with public-visibility guards | Live canonical/metadata/robots checks; local profile transition checks pass but do not establish deployed behavior |
 | 3. Public API | OpenAPI 3.1 at `/api/openapi.json` describes seven implemented GET routes, pagination, filters and error responses | Expand extensible record objects into field-level schemas; add automatic backend contract-drift checks before describing this as a complete API contract |
 | 4. Founder and news quality | 44 founders / 33 companies / 42 stories in matched source snapshots; source-integrity validation; 30-day founder review report | Import reviewed additions on the deployed API; apply existing-record corrections through admin; verify resulting live counts |
 | 5. Operations | Daily news sync already scheduled in Laravel; daily development/source-review task; repeatable checks and release instructions | Verify host cron, shared lock/cache, worker supervision, failed-job monitoring and backup restore; source configuration alone does not prove execution |
@@ -51,6 +51,7 @@ The daily ChatGPT task was updated to cover development and source review, begin
 - `/wiki` and four articles are statically generated and linked from the footer. Unknown article slugs are not published.
 - The sitemap reads currently public news and founders with bounded pagination: 50 records/page, at most 20 pages/collection, three-second request timeouts. API outages omit those collections instead of advertising possibly withdrawn snapshots. Expand to sitemap indexes before exceeding 1,000 records in either collection.
 - Article metadata and body share one server-side request. An authoritative 401/403/404/410 never restores a bundled story. Network failures may use a reviewed snapshot with `noindex` and no current NewsArticle structured data. Next.js streaming can return HTTP 200 for a late not-found browser response; blocking crawler metadata and noindex protect missing-story indexing.
+- Founder/company metadata reads only the anonymous public detail endpoint, with no persistent cache, redirects or forwarded credentials and a five-second timeout. Only matching active public records with a name are indexable. Unavailable records retain the existing client view but emit generic `noindex` metadata, not a server 404; neither private fields nor snapshot metadata are restored. Arabic metadata matches the site's default locale; switching the client language does not create a separate localized URL. [15 October checks](research/PROFILE-SEO-2026-10-15.md).
 - News lists and profile news use snapshots only when the API fails before returning any records. A successful empty response stays empty. Filters cover loaded pages; use the existing load-more control to request additional API pages.
 - Public API record schemas are intentionally extensible in this first contract. This is not a supported third-party write API, API-key platform, SDK or service-level guarantee.
 
@@ -58,7 +59,7 @@ The daily ChatGPT task was updated to cover development and source review, begin
 
 1. Deploy both services from the verified revision; run the reviewed additive imports; apply existing-record corrections through admin; verify the new routes, sitemap, metadata and imported counts live.
 2. Verify actual scheduled draft ingestion and failure reporting on the host; document the deployed revision and backup restore evidence.
-3. Complete field-level OpenAPI schemas and backend schema contract tests; expand public founder/company metadata without exposing private fields.
+3. Complete field-level OpenAPI schemas and backend schema contract tests; verify the new founder/company metadata against the deployed public API.
 4. Move newsroom search/filtering to server-side pagination so filters cover the full growing database; review snapshot withdrawal behavior across the remaining founder/company surfaces.
 5. Add source-review history and admin review queues for changed existing founder/company facts, with revision checks and protected owner edits.
 6. Add publisher-specific feed sources only after verifying endpoint availability, permitted use and failure behavior; review growth by distinct verified founders and companies, not raw scrape volume.

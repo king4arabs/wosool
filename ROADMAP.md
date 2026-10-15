@@ -1,8 +1,8 @@
 # Roadmap
 
-## Current execution plan — 14 October 2026
+## Current execution plan — 15 October 2026
 
-Use [Continuous development](docs/CONTINUOUS-DEVELOPMENT.md) as the current phased plan and acceptance gates. The older release tables below are historical planning context, not evidence of current completion. Next: verify production release/imports and cron, complete API field schemas, extend profile SEO, and make newsroom filtering cover the full database.
+Use [Continuous development](docs/CONTINUOUS-DEVELOPMENT.md) as the current phased plan and acceptance gates. The older release tables below are historical planning context, not evidence of current completion. Founder/company record-specific metadata and noindex-on-unavailability are implemented and locally tested. Next: verify live profile metadata and production release/imports/cron, complete API field schemas, and make newsroom filtering cover the full database. Source publication is not evidence of production deployment or import.
 
 ## Roadmap Framing
 

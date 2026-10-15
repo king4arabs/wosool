@@ -1,5 +1,12 @@
 # Changelog
 
+## Public profile metadata — 2026-10-15
+
+- Added founder/company-specific server metadata, using the site's default Arabic API locale, bilingual profile labels, and explicit canonical/Open Graph URLs. Public names and biography/description are the only record content exposed; no membership or verification claims are inferred.
+- Metadata reads are anonymous, uncached, redirect-disabled and bounded by a five-second timeout. Non-public/inactive, mismatched, missing, malformed and unreachable records receive `noindex` (including Googlebot), never stale snapshot metadata. Existing client profile behavior and editorial data are unchanged.
+- Validation: 109 frontend tests, lint, type-check, production build, entrepreneur validation, and 10 production-rendered crawler checks passed. `content:check`/`content:review`: 44 founders, 33 companies, 42 stories; zero integrity problems and zero reviews due. Backend tests require CI because this environment has no PHP/Composer.
+- Spot-checked Unifonic and SiFi primary sources; no new revenue qualification, records or review-date changes. [Evidence and release boundaries](docs/research/PROFILE-SEO-2026-10-15.md). No production database import is required by this change.
+
 ## Knowledge, public API and verified content loop — 2026-10-14
 
 - Added bilingual `/wiki` with four practical guides and `/api` with a downloadable OpenAPI 3.1 contract for seven public read endpoints. Existing Laravel proxy and session authorization are preserved.

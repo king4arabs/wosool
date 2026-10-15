@@ -31,6 +31,8 @@ Wosool also provides the dedicated digital gateway for **EO Riyadh Accelerator**
 
 > **Knowledge, API and content cycle (14 October 2026):** bilingual `/wiki`, public `/api` reference and OpenAPI, server-rendered news metadata, public-record sitemap, draft-only RSS discovery, and **44 founders / 33 companies / 42 stories** in source snapshots. See [development phases and next actions](docs/CONTINUOUS-DEVELOPMENT.md) and [source evidence](docs/research/KNOWLEDGE-CONTENT-2026-10-14.md). Production deployment/import remain separate release steps.
 
+> **Profile SEO (15 October 2026):** founder/company detail pages now generate record-specific titles, descriptions and canonical/share URLs from the anonymous public API. Missing, hidden, invalid or unreachable records are `noindex`, without a metadata snapshot fallback. No membership claims, private fields or new research records are introduced. See [checks and release boundaries](docs/research/PROFILE-SEO-2026-10-15.md).
+
 ### Start here
 
 | If you want to… | Read |
