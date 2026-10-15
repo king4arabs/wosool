@@ -1,5 +1,13 @@
 # Changelog
 
+## Startup directory: Arabic reporting periods and program names — 2026-10-15
+
+- **Problem:** on `/startups` in Arabic, each card's "Published revenue evidence" box showed the reporting period in English (for example "الفترة: Year ended 31 December 2024", "Annual revenue; year not specified by Misk"), and the program or investor that links a company to the ecosystem was shown by its English name (Misk, Impact46, LEAP, GITEX) even though the filter above already uses the Arabic names.
+- **Fix:** every revenue record now has an Arabic reporting period (`period_ar`) and every ecosystem source an Arabic name (`label_ar`), translated from the existing sourced wording; no figures, sources or dates changed. Arabic cards use them, English cards are unchanged, and records imported before this change fall back to English. `directory:import` now rejects records without the Arabic fields. The public API keeps `period` and `label` as they were and adds the two fields.
+- **Deploy:** run `php artisan directory:import` after deploying so existing directory records pick up the Arabic fields (records with a newer review date are left alone, as before).
+- **Tests:** new `startup-directory` frontend tests (Arabic/English selection, fallback for older records, every data row bilingual) and a backend test that every public record returns Arabic period and program names.
+- **Checks:** `npm run verify` green (frontend 106, backend 225); QA crawl 448 visits as visitor, member and admin in Arabic and English at 390px and 1366px, 0 problems; `/startups` checked in the browser in Arabic at 390px and 1366px and English at 390px.
+
 ## Public profile metadata — 2026-10-15
 
 - Added founder/company-specific server metadata, using the site's default Arabic API locale, bilingual profile labels, and explicit canonical/Open Graph URLs. Public names and biography/description are the only record content exposed; no membership or verification claims are inferred.
