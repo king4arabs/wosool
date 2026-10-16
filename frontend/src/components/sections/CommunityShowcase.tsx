@@ -87,6 +87,13 @@ function FounderRow({ founders, suspended }: { founders: FounderCardProfile[]; s
   </div>
 }
 
+const gccCountryCodes = new Set(["AE", "BH", "KW", "OM", "QA"])
+const menaCountryCodes = new Set(["EG", "JO", "LB", "IQ", "MA", "TN", "DZ", "LY", "PS", "SY", "YE", "SD"])
+function founderRegion(founder: FounderCardProfile): "saudi" | "gcc" | "mena" | "other" {
+  const country = founder.countryCode?.toUpperCase()
+  return country === "SA" ? "saudi" : country && gccCountryCodes.has(country) ? "gcc" : country && menaCountryCodes.has(country) ? "mena" : "other"
+}
+
 export function FounderShowcase({ founders, showFilters = true }: { founders: FounderCardProfile[]; showFilters?: boolean }) {
   const { locale } = useLocale()
   const ar = locale === 'ar'
@@ -96,16 +103,25 @@ export function FounderShowcase({ founders, showFilters = true }: { founders: Fo
   const gridToggle = useRef<HTMLButtonElement>(null)
   const [search, setSearch] = useState('')
   const [sector, setSector] = useState('')
+  const [region, setRegion] = useState('all')
   const [gridOpen, setGridOpen] = useState(false)
   const [pageSize, setPageSize] = useState(6)
   const [page, setPage] = useState(1)
   const sectors = [...new Set(founders.map(founder => founder.primaryCompany?.sector || founder.sector).filter(Boolean))].sort((a, b) => a.localeCompare(b, locale))
+  const regions = [
+    { key: 'saudi', label: ar ? 'السعودية' : 'Saudi Arabia' },
+    { key: 'gcc', label: ar ? 'الخليج' : 'GCC' },
+    { key: 'mena', label: ar ? 'الشرق الأوسط وشمال أفريقيا' : 'MENA' },
+    { key: 'other', label: ar ? 'دول أخرى' : 'Other' },
+  ].map(item => ({ ...item, count: founders.filter(founder => founderRegion(founder) === item.key).length }))
+    .filter(item => item.count > 0)
   const filtered = useMemo(() => founders.filter(founder => {
     const company = founder.primaryCompany
     const matchesSector = !sector || (company?.sector || founder.sector) === sector
+    const matchesRegion = region === 'all' || founderRegion(founder) === region
     const haystack = [founder.name, founder.companyName, company?.name, founder.position, founder.bio, founder.location, founder.sector, company?.sector].filter(Boolean).join(' ').toLocaleLowerCase(locale)
-    return matchesSector && haystack.includes(search.trim().toLocaleLowerCase(locale))
-  }), [founders, locale, search, sector])
+    return matchesSector && matchesRegion && haystack.includes(search.trim().toLocaleLowerCase(locale))
+  }), [founders, locale, search, sector, region])
   const pages = Math.max(1, Math.ceil(filtered.length / pageSize))
   const current = Math.min(page, pages)
   const visible = filtered.slice((current - 1) * pageSize, current * pageSize)
@@ -132,9 +148,15 @@ export function FounderShowcase({ founders, showFilters = true }: { founders: Fo
       <label className={styles.sectorFilter}><span>{ar ? 'القطاع' : 'Sector'}</span><select value={sector} onChange={event => { setSector(event.target.value); setPage(1) }}><option value="">{ar ? 'جميع القطاعات' : 'All sectors'}</option>{sectors.map(value => <option key={value} value={value}>{value}</option>)}</select></label>
       {(search || sector) && <button type="button" className={styles.clearFilters} onClick={() => { setSearch(''); setSector(''); setPage(1) }}>{ar ? 'مسح البحث' : 'Clear filters'}</button>}
     </div>}
+    {regions.length > 1 && <>
+    <div className="mb-2 flex flex-wrap items-center gap-2" role="group" aria-label={ar ? "تصفية المؤسسين حسب المنطقة" : "Filter founders by region"}>
+      <button type="button" aria-pressed={region === 'all'} className={region === 'all' ? "min-h-9 rounded-full border border-[var(--action-bg)] bg-[var(--surface-soft)] px-3 text-xs font-bold text-[var(--text)]" : "min-h-9 rounded-full border border-[var(--border)] px-3 text-xs font-semibold text-[var(--text-muted)] hover:text-[var(--text)]"} onClick={() => { setRegion('all'); setPage(1) }}>{ar ? 'الكل' : 'All'} · {founders.length}</button>
+      {regions.map(item => <button type="button" key={item.key} aria-pressed={region === item.key} className={region === item.key ? "min-h-9 rounded-full border border-[var(--action-bg)] bg-[var(--surface-soft)] px-3 text-xs font-bold text-[var(--text)]" : "min-h-9 rounded-full border border-[var(--border)] px-3 text-xs font-semibold text-[var(--text-muted)] hover:text-[var(--text)]"} onClick={() => { setRegion(item.key); setPage(1) }}>{item.label} · {item.count}</button>)}
+    </div>
+    </>}
     <div className={styles.founderResults}><p role="status" aria-live="polite">{filtered.length ? ar ? `${filtered.length} ملفات مؤسسين للاستكشاف` : `${filtered.length} founder profiles to explore` : ar ? 'لا توجد ملفات مطابقة. جرّب اسمًا أو قطاعًا آخر.' : 'No matching profiles. Try another name or sector.'}</p></div>
     {!!filtered.length && <>
-      <FounderRow key={`${locale}-${search}-${sector}`} founders={filtered} suspended={gridOpen} />
+      <FounderRow key={`${locale}-${search}-${sector}-${region}`} founders={filtered.slice(0, 18)} suspended={gridOpen} />
       <div className={styles.gridInvitation}><button ref={gridToggle} type="button" className={styles.gridToggle} aria-expanded={gridOpen} aria-controls={gridId} onClick={toggleGrid}><LayoutGrid size={18} aria-hidden="true" />{gridOpen ? ar ? 'إخفاء شبكة المؤسسين' : 'Hide founder grid' : ar ? 'عرض جميع المؤسسين' : 'View all founders'}{gridOpen ? <ChevronUp size={18} aria-hidden="true" /> : <ChevronDown size={18} aria-hidden="true" />}</button><span>{ar ? 'استكشف الملفات في شبكة مرتّبة مع صفحات' : 'Browse the full collection in a paginated grid'}</span></div>
     </>}
     <section ref={grid} id={gridId} className={styles.founderGridSection} hidden={!gridOpen || !filtered.length} tabIndex={-1} aria-labelledby={`${gridId}-title`}>

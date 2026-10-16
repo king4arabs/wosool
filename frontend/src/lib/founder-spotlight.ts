@@ -1,10 +1,16 @@
-import profiles from '../data/founder-spotlight.json'
+import historicalProfiles from '../data/founder-spotlight.json'
+import additionalProfiles from '../data/founder-spotlight-expansion-2026-10-16.json'
 import type { Founder } from '../types'
 
 export type FounderSpotlight = Founder & {
   externalProfileOnly: true
   sourceUrl: string
 }
+
+/** Both curated datasets are snapshots only, not registered or verified members. */
+const priority: Record<string, number> = { saudi: 0, gcc: 1, mena: 2, global: 3 }
+const profiles = [...historicalProfiles, ...additionalProfiles]
+  .sort((left, right) => (priority[left.region] ?? 4) - (priority[right.region] ?? 4))
 
 /** Public editorial profiles, kept separate from approved community membership. */
 export function getFounderSpotlights(locale: 'ar' | 'en'): FounderSpotlight[] {

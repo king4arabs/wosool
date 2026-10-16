@@ -41,7 +41,7 @@ export function FounderCard({
         href: !external && company?.slug ? `/founders/companies/${encodeURIComponent(company.slug)}` : undefined,
         sources: founder.sourceUrls ?? (founder.sourceUrl ? [founder.sourceUrl] : undefined),
         reviewedAt: founder.sourceReviewedAt,
-        signals: founder.activationStatus ? [{label: founder.activationStatus === 'active' ? (locale === 'ar' ? 'عضو نشط' : 'Active member') : (locale === 'ar' ? 'بانتظار التفعيل' : 'Awaiting activation'), tone: founder.activationStatus === 'active' ? 'success' : 'neutral'}] : undefined,
+        signals: external ? [{ label: locale === 'ar' ? 'ملف من مصادر منشورة' : 'Public-source profile', tone: 'neutral' }] : founder.activationStatus ? [{label: founder.activationStatus === 'active' ? (locale === 'ar' ? 'عضو نشط' : 'Active member') : (locale === 'ar' ? 'بانتظار التفعيل' : 'Awaiting activation'), tone: founder.activationStatus === 'active' ? 'success' : 'neutral'}] : undefined,
         founderSocials: [
           { label: "LinkedIn", url: founder.linkedinUrl ?? "" },
           { label: "X", url: founder.twitterUrl ?? "" },

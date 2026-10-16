@@ -11,7 +11,10 @@ class FounderDirectoryImporter
 {
     public function run(): array
     {
-        $records = json_decode(file_get_contents(resource_path('data/founder-directory.json')), true, 512, JSON_THROW_ON_ERROR);
+        $base = json_decode(file_get_contents(resource_path('data/founder-directory.json')), true, 512, JSON_THROW_ON_ERROR);
+        $expansion = json_decode(file_get_contents(resource_path('data/founder-directory-expansion-2026-10-16.json')), true, 512, JSON_THROW_ON_ERROR);
+        $records = [...$base, ...$expansion];
+        $this->validateRecords($records);
         $counts = ['founders_created' => 0, 'companies_created' => 0, 'preserved' => 0, 'companies_enriched' => 0];
         DB::transaction(function () use ($records, &$counts) {
             foreach ($records as $row) {
@@ -61,6 +64,39 @@ class FounderDirectoryImporter
             }
         });
         return $counts;
+    }
+
+    /** Fail closed on ambiguous or unsourced directory data before touching production records. */
+    private function validateRecords(array $records): void
+    {
+        $seen = [];
+        foreach ($records as $index => $row) {
+            foreach (['slug', 'company_key', 'founder_name_en', 'founder_name_ar', 'company_name_en',
+                'company_name_ar', 'role_en', 'role_ar', 'founder_brief_en', 'founder_brief_ar',
+                'company_brief_en', 'company_brief_ar', 'country_en', 'country_ar',
+                'country_code', 'sector_en', 'sector_ar', 'website', 'source_url', 'reviewed_at'] as $field) {
+                if (! is_string($row[$field] ?? null) || trim($row[$field]) === '') {
+                    throw new \UnexpectedValueException("Founder directory row {$index} has invalid {$field}");
+                }
+            }
+            $slug = $row['slug'];
+            if (isset($seen[$slug])) {
+                throw new \UnexpectedValueException("Duplicate founder directory key: {$slug}");
+            }
+            $seen[$slug] = true;
+            if (! in_array($row['region'] ?? null, ['saudi', 'gcc', 'mena', 'global'], true)) {
+                throw new \UnexpectedValueException("Invalid region for {$slug}");
+            }
+            if (! is_array($row['source_urls'] ?? null) || ! in_array($row['source_url'], $row['source_urls'], true)) {
+                throw new \UnexpectedValueException("Missing primary evidence link for {$slug}");
+            }
+            foreach ([$row['website'], ...$row['source_urls']] as $url) {
+                if (! is_string($url) || parse_url($url, PHP_URL_SCHEME) !== 'https'
+                    || ! parse_url($url, PHP_URL_HOST)) {
+                    throw new \UnexpectedValueException("Invalid HTTPS evidence URL for {$slug}");
+                }
+            }
+        }
     }
 
     /** Sourced traction signal stored on the company; null when the record carries none. */
