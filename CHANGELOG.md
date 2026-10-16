@@ -1,5 +1,12 @@
 # Changelog
 
+## API reference in Arabic — 2026-10-16
+
+- **Problem:** on `/api` in Arabic, every endpoint card showed its description in English ("Service liveness", "Discover public founders", "Parameters: …"), and the kicker read "WOSOOL / DEVELOPERS". The list endpoints' notes on what is included and the `per_page` limits were not shown on the page in either language, only in the downloadable specification.
+- **Fix:** endpoint cards now take their wording from a small Arabic copy table keyed by OpenAPI `operationId`; English cards keep the specification's wording. Each list endpoint also shows its note (public records only, `per_page` limits, revenue-evidence requirement), and the "Parameters" label and kicker are translated. Parameter names stay as code, left-to-right. The OpenAPI contract at `/api/openapi.json` is unchanged.
+- **Tests:** new `api-reference` tests: every endpoint has Arabic copy (with a note wherever the contract has one), Arabic and English rows select the right wording, and parameter names match the contract.
+- **Checks:** `npm run verify` green (frontend 114, backend 225); QA crawl 372 visits as visitor and admin in Arabic and English at 390px and 1366px, 0 problems; `/api` checked in the browser in Arabic and English at 390px and 1366px.
+
 ## Startup directory: Arabic reporting periods and program names — 2026-10-15
 
 - **Problem:** on `/startups` in Arabic, each card's "Published revenue evidence" box showed the reporting period in English (for example "الفترة: Year ended 31 December 2024", "Annual revenue; year not specified by Misk"), and the program or investor that links a company to the ecosystem was shown by its English name (Misk, Impact46, LEAP, GITEX) even though the filter above already uses the Arabic names.
