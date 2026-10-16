@@ -3,7 +3,7 @@
   position: relative;
   isolation: isolate;
   display: flex;
-  min-height: min(940px, calc(100svh - 64px));
+  min-height: min(760px, calc(100svh - 88px));
   overflow: hidden;
   background: var(--brand-navy);
 }
@@ -80,7 +80,7 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding-block: clamp(4.5rem, 10vh, 7rem) 3rem;
+  padding-block: clamp(2.5rem, 5vh, 4rem) 3rem;
 }
 
 .eoa-hero .eoa-hero-grid {
@@ -237,7 +237,7 @@
 
 @media (max-width: 640px) {
   .eoa-hero-shell {
-    padding-block: 3.5rem 5rem;
+    padding-block: 2.5rem 5rem;
   }
 
   .eoa-hero .eoa-hero-title {

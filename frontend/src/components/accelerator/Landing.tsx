@@ -55,7 +55,7 @@ export function Landing({ home = false }: { home?: boolean }) {
   }
   return (
     <PublicLayout>
-      <section className="gateway-hero px-5 py-16 sm:py-24 lg:py-28">
+      <section className="gateway-hero px-5 pb-16 pt-10 sm:pb-24 sm:pt-14 lg:pb-28 lg:pt-16">
         <div className="mx-auto grid max-w-6xl items-center gap-14 lg:grid-cols-[1.15fr_0.85fr]">
           <div>
             <p className="gateway-eyebrow">
