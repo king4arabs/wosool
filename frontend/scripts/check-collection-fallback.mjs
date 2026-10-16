@@ -20,8 +20,9 @@ try {
   await eventually(() => log.includes("Ready"))
   browser = await chromium.launch()
   for (const locale of ["ar", "en"]) for (const width of [390, 1366]) {
-    for (const path of ["/founders", "/news", "/founders/unifonic"]) {
+    for (const path of ["/founders", "/news", "/founders/fixture-founder"]) {
       for (const status of [200, 401, 403, 404, 410, 429, 503]) {
+        console.log(`Checking ${locale} ${width}px ${path}: HTTP ${status}`)
         const context = await browser.newContext({ viewport: { width, height: 900 }, reducedMotion: "reduce" })
         await context.addInitScript(value => localStorage.setItem("wosool-locale", value), locale)
         const page = await context.newPage()
@@ -35,7 +36,8 @@ try {
           const url = new URL(route.request().url())
           if (url.origin !== origin) return route.abort()
           if (!url.pathname.startsWith("/api/")) return route.continue()
-          if (url.pathname === "/api/v1/founders/unifonic") return route.fulfill({ json: { data: { id: 1, slug: "unifonic", name: "Fixture founder", bio: "Fixture biography", status: "active", is_public: true, companies: [{ id: 1, slug: "unifonic", name: "Unifonic" }] } } })
+          // SiFi has associated briefs in the reviewed snapshot; Unifonic has none.
+          if (url.pathname === "/api/v1/founders/fixture-founder") return route.fulfill({ json: { data: { id: 1, slug: "fixture-founder", name: "Fixture founder", bio: "Fixture biography", status: "active", is_public: true, companies: [{ id: 1, slug: "sifi", name: "SiFi" }] } } })
           if (["/api/v1/news", "/api/v1/founders"].includes(url.pathname)) {
             await gate
             requests++
@@ -54,12 +56,12 @@ try {
         await eventually(() => requests > 0)
         if (status === 503) await eventually(async () => await page.locator(selector).count() > 0)
         else {
-          if (path !== "/founders/unifonic" && status !== 200) await page.getByRole("button", { name: locale === "ar" ? "إعادة المحاولة" : path === "/news" ? "Retry live updates" : "Try again", exact: true }).waitFor()
+          if (path !== "/founders/fixture-founder" && status !== 200) await page.getByRole("button", { name: locale === "ar" ? "إعادة المحاولة" : path === "/news" ? "Retry live updates" : "Try again", exact: true }).waitFor()
           await delay(100)
           assert.equal(await page.locator(selector).count(), 0, `${path}: ${status} must not restore snapshots`)
         }
         // A denial after an outage removes the snapshot; a later outage cannot restore it.
-        if (status === 503 && path !== "/founders/unifonic") {
+        if (status === 503 && path !== "/founders/fixture-founder") {
           const retry = page.getByRole("button", { name: locale === "ar" ? "إعادة المحاولة" : path === "/news" ? "Retry live updates" : "Try again", exact: true })
           for (const next of [403, 503]) {
             const before = requests
