@@ -45,6 +45,12 @@ Wosool also provides the dedicated digital gateway for **EO Riyadh Accelerator**
 | Test or deploy a change | [Testing](TESTING.md) and [Deployment](DEPLOYMENT.md); CI does not deploy |
 | Report a security issue | [Security policy](SECURITY.md) for private reporting |
 
+## Founder directory expansion (16 October 2026)
+
+The directory's checked-in catalogs contain **144 public entrepreneur profiles** (44 existing + 100 newly researched) across **79 company groups**, prioritizing Saudi Arabia, the GCC and MENA. New entries have bilingual summaries and named evidence sources without invented portraits, financial metrics or community memberships.
+
+See [sources, counts, quality policy and production import runbook](docs/FOUNDER-EXPANSION-2026-10-16.md). Production publication requires deploying the same frontend/backend revision, backing up and migrating the database, and running `php artisan wosool:import-founders`; a GitHub code update alone does not change the live database.
+
 ## Current platform snapshot — October 14, 2026
 
 The latest product and brand upgrade includes:
