@@ -22,7 +22,7 @@ export function PageHero({
 }) {
   const dark = tone === "dark"
   return (
-    <header className={`${dark ? "bg-[var(--surface-inverse)] text-[var(--on-dark)]" : "border-b border-[var(--border-soft)] bg-[var(--surface-soft)] text-[var(--text-strong)]"} px-4 py-14 sm:px-6 sm:py-20`}>
+    <header className={`${dark ? "bg-[var(--surface-inverse)] text-[var(--on-dark)]" : "border-b border-[var(--border-soft)] bg-[var(--surface-soft)] text-[var(--text-strong)]"} px-4 pb-14 pt-10 sm:px-6 sm:pb-20 sm:pt-14`}>
       <div className="mx-auto max-w-6xl">
         {eyebrow && <p className={`text-xs font-bold uppercase tracking-[0.08em] ${dark ? "text-[var(--on-dark-muted)]" : "text-[var(--action-bg)]"}`}>{eyebrow}</p>}
         <h1 className="mt-4 max-w-3xl text-balance text-4xl font-extrabold leading-[1.2] sm:text-5xl">{title}</h1>
