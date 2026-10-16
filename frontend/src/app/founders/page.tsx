@@ -24,7 +24,7 @@ function FounderDirectory() {
   const ar = locale === "ar"
   const copy = foundersPageCopy[locale]
   const collection = usePublicCollection<ApiFounder>("/founders")
-  const isSpotlight = collection.items.length === 0 && (collection.loading || Boolean(collection.error))
+  const isSpotlight = collection.snapshotAllowed
   const founders: FounderCardProfile[] = isSpotlight
     ? getFounderSpotlights(locale)
     : collection.items.map(mapFounder)
@@ -70,7 +70,7 @@ function FounderDirectory() {
         </div>
         {hasFilters && <button type="button" className="min-h-11 justify-self-start px-3 text-sm font-bold text-[var(--action-bg)] underline underline-offset-4" onClick={() => { setSearch(''); setSector(''); setStage(''); setLocation('') }}>{ar ? 'مسح الفلاتر' : 'Clear filters'}</button>}
       </div>
-      <FounderShowcase key={filtersKey} founders={filtered} showFilters={false} />
+      {collection.loading && founders.length === 0 ? <p role="status" className="py-8 text-center">{ar ? 'جارٍ تحميل الملفات العامة…' : 'Loading public profiles…'}</p> : <FounderShowcase key={filtersKey} founders={filtered} showFilters={false} />}
       {!isSpotlight && collection.hasMore && <div className="mt-7 text-center"><button type="button" className={styles.secondary} disabled={collection.loading} onClick={collection.loadMore}>{collection.loading ? ar ? 'جارٍ التحميل…' : 'Loading…' : ar ? 'تحميل المزيد من المؤسسين' : 'Load more founders'}</button></div>}
       {!isSpotlight && <div className="mt-8 flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-[var(--border-soft)] bg-[var(--surface-soft)] p-5"><p className="max-w-xl text-sm leading-relaxed text-[var(--text-muted)]">{ar ? 'بعض الملفات الكاملة متاحة للأعضاء فقط. سجّل دخولك للوصول إلى التفاصيل والتواصل المباشر.' : 'Some full profiles are available to members only. Sign in to access details and direct introductions.'}</p><Link className={styles.secondary} href="/login">{copy.login}<Arrow size={16} aria-hidden="true" /></Link></div>}
     </section>

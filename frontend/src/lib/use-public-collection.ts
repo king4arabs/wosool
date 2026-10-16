@@ -3,34 +3,29 @@
 import { useCallback, useEffect, useRef, useState } from "react"
 import { api } from "./api"
 import { useLocale } from "./locale"
+import { beginCollection, failCollection, initialCollection, receiveCollection, type Collection } from "./public-collection-state"
 
-type CollectionMeta = { current_page?: number; last_page?: number; total?: number; sectors?: { en: string; ar: string }[] }
-type Collection<T> = { data: T[]; meta?: CollectionMeta; links?: { next?: string | null } }
 export function usePublicCollection<T extends { id: string | number }>(path: string) {
   const { locale } = useLocale()
-  const [items, setItems] = useState<T[]>([])
-  const [meta, setMeta] = useState<CollectionMeta>({})
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
-  const [nextPage, setNextPage] = useState<number | null>(null)
+  const key = `${path}\u0000${locale}`
+  const [stored, setState] = useState(() => initialCollection<T>(key))
+  // Never render the previous resource/language while its replacement is loading.
+  const state = stored.key === key ? stored : initialCollection<T>(key)
   const pending = useRef<AbortController | null>(null)
-  const failedPage = useRef(1)
   const load = useCallback(async (page = 1) => {
     pending.current?.abort()
     const controller = new AbortController()
     pending.current = controller
-    failedPage.current = page
-    setLoading(true); setError(null)
-    if (page === 1) { setItems([]); setNextPage(null) }
+    setState(previous => beginCollection(previous.key === key ? previous : initialCollection<T>(key), page))
     try {
       const response = await api.get<Collection<T>>(path, { params: { page, per_page: 24 }, headers: { "X-Locale": locale }, signal: controller.signal })
       if (controller.signal.aborted) return
-      setMeta(response.meta ?? {})
-      setItems(current => page === 1 ? response.data : [...new Map([...current, ...response.data].map(item => [item.id, item])).values()])
-      setNextPage(response.links?.next || (response.meta?.last_page ?? 1) > page ? page + 1 : null)
-    } catch (error) { if (!controller.signal.aborted) setError(error instanceof Error ? error.message : "Unable to load content") }
-    finally { if (!controller.signal.aborted) setLoading(false) }
-  }, [path, locale])
+      if (!response || !Array.isArray(response.data)) throw new Error("Invalid public collection response")
+      setState(previous => previous.key === key ? receiveCollection(previous, response, page) : previous)
+    } catch (error) {
+      if (!controller.signal.aborted) setState(previous => previous.key === key ? failCollection(previous, error) : previous)
+    }
+  }, [path, locale, key])
   useEffect(() => { void load(); return () => pending.current?.abort() }, [load])
-  return { items, meta, loading, error, hasMore: nextPage !== null, retry: () => void load(failedPage.current), loadMore: () => { if (nextPage && !loading) void load(nextPage) } }
+  return { items: state.items, meta: state.meta, loading: state.loading, error: state.error, snapshotAllowed: state.snapshotAllowed, hasMore: state.nextPage !== null, retry: () => void load(state.failedPage), loadMore: () => { if (state.nextPage && !state.loading) void load(state.nextPage) } }
 }

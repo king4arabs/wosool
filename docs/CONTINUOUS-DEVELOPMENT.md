@@ -1,6 +1,6 @@
 # Wosool continuous development
 
-Updated: 15 October 2026. Work in bounded, reviewable cycles: inspect → verify sources → implement → test → publish source → verify release → choose the next incomplete outcome. Completion applies to acceptance criteria, not a promise that software or research needs no further maintenance.
+Updated: 16 October 2026. Work in bounded, reviewable cycles: inspect → verify sources → implement → test → publish source → verify release → choose the next incomplete outcome. Completion applies to acceptance criteria, not a promise that software or research needs no further maintenance.
 
 ## Phases and acceptance criteria
 
@@ -52,7 +52,8 @@ The daily ChatGPT task was updated to cover development and source review, begin
 - The sitemap reads currently public news and founders with bounded pagination: 50 records/page, at most 20 pages/collection, three-second request timeouts. API outages omit those collections instead of advertising possibly withdrawn snapshots. Expand to sitemap indexes before exceeding 1,000 records in either collection.
 - Article metadata and body share one server-side request. An authoritative 401/403/404/410 never restores a bundled story. Network failures may use a reviewed snapshot with `noindex` and no current NewsArticle structured data. Next.js streaming can return HTTP 200 for a late not-found browser response; blocking crawler metadata and noindex protect missing-story indexing.
 - Founder/company metadata reads only the anonymous public detail endpoint, with no persistent cache, redirects or forwarded credentials and a five-second timeout. Only matching active public records with a name are indexable. Unavailable records retain the existing client view but emit generic `noindex` metadata, not a server 404; neither private fields nor snapshot metadata are restored. Arabic metadata matches the site's default locale; switching the client language does not create a separate localized URL. [15 October checks](research/PROFILE-SEO-2026-10-15.md).
-- News lists and profile news use snapshots only when the API fails before returning any records. A successful empty response stays empty. Filters cover loaded pages; use the existing load-more control to request additional API pages.
+- Founder/news lists and profile news use snapshots only after an initial network/server failure. Initial loading, successful empty responses and client errors never authorize fallback. After any successful/client-error response in a mounted collection, later outages cannot restore snapshots. Client errors clear earlier loaded pages and reset retries; later-page network/server failures retain live records and retry that page. Changing path/language creates a separate collection state. This is not a persistent cross-session withdrawal ledger; homepage and detail fallback review remains separate. [State/browser checks](research/COLLECTION-WITHDRAWAL-2026-10-16.md).
+- News filters still cover loaded pages; use the existing load-more control to request additional API pages. Full-database filtering remains a separate next action.
 - Public API record schemas are intentionally extensible in this first contract. This is not a supported third-party write API, API-key platform, SDK or service-level guarantee.
 
 ## Next actions

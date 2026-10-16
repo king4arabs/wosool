@@ -1,5 +1,12 @@
 # Changelog
 
+## Public collection withdrawal safeguards — 2026-10-16
+
+- Founder/news lists and profile news now restore bundled records only after an initial network/server failure, never during loading, after a successful empty response, or after a client error (including 401/403/404/410/422/429).
+- A client error on a later page clears prior records, counts and pagination; retry starts at page one. A later outage cannot undo an authoritative response within the mounted collection. Transient later-page failures retain loaded records and retry the failed page without mixing snapshots. Changing collection/language hides the previous resource immediately.
+- Added six state-transition regression tests and an isolated production-browser CI gate covering Arabic/English, mobile/desktop and all three snapshot consumers. Local lint, types, 115 unit tests, content checks and production build passed; local Chromium installation failed, so browser acceptance is delegated to the required CI gate, not claimed locally.
+- Source spot-checks retained Swarm's unspecified reporting year and Mohtwize's unresolved revenue/current-role evidence. No data, review dates, moderation or account records changed. [Evidence and release boundaries](docs/research/COLLECTION-WITHDRAWAL-2026-10-16.md).
+
 ## Public profile metadata — 2026-10-15
 
 - Added founder/company-specific server metadata, using the site's default Arabic API locale, bilingual profile labels, and explicit canonical/Open Graph URLs. Public names and biography/description are the only record content exposed; no membership or verification claims are inferred.

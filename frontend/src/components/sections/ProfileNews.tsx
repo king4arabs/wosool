@@ -13,7 +13,7 @@ export function ProfileNews({ companyNames }: { companyNames: string[] }) {
   const aliases = companyAliases(companyNames)
   const primary = aliases.find(Boolean)
   const collection = usePublicCollection<ApiNewsItem>(`/news?companies=${encodeURIComponent(aliases.slice(0, 10).join(","))}`)
-  const items = useMemo(() => mergeNews(collection.items.map(mapNewsItem), collection.error && !collection.items.length ? curatedNews : []), [collection.items, collection.error])
+  const items = useMemo(() => mergeNews(collection.items.map(mapNewsItem), collection.snapshotAllowed ? curatedNews : []), [collection.items, collection.snapshotAllowed])
     .filter(item => companyMatches(item, aliases))
   if (!primary || !items.length) return null
   return <section id="profile-news" className="scroll-mt-24">
