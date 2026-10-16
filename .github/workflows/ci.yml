@@ -38,6 +38,10 @@ jobs:
         env:
           NEXT_PUBLIC_SITE_URL: https://wosool.org
           NEXT_PUBLIC_API_URL: http://localhost:8000
+      - name: Install Chromium for isolated public-collection checks
+        run: npx playwright install --with-deps chromium
+      - name: Verify public collection fallback in both languages and viewport sizes
+        run: npm run test:collections:browser
   backend:
     runs-on: ubuntu-latest
     timeout-minutes: 15

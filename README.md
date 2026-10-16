@@ -33,6 +33,8 @@ Wosool also provides the dedicated digital gateway for **EO Riyadh Accelerator**
 
 > **Profile SEO (15 October 2026):** founder/company detail pages now generate record-specific titles, descriptions and canonical/share URLs from the anonymous public API. Missing, hidden, invalid or unreachable records are `noindex`, without a metadata snapshot fallback. No membership claims, private fields or new research records are introduced. See [checks and release boundaries](docs/research/PROFILE-SEO-2026-10-15.md).
 
+> **Collection withdrawal safeguards (16 October 2026):** founder/news lists and profile news no longer restore saved records after client errors or while the first request is loading. Denied later pages clear previously loaded records; retries respect earlier authoritative responses. [Scope, source review and release checks](docs/research/COLLECTION-WITHDRAWAL-2026-10-16.md).
+
 ### Start here
 
 | If you want to… | Read |

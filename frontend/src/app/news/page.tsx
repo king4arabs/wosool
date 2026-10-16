@@ -41,7 +41,7 @@ function NewsroomContent() {
     router.replace(search ? `${pathname}?${search}` : pathname, { scroll: false })
   }, [params, pathname, router])
 
-  const items = useMemo(() => mergeNews(collection.items.map(mapNewsItem), collection.error && !collection.items.length ? curatedNews : []), [collection.items, collection.error])
+  const items = useMemo(() => mergeNews(collection.items.map(mapNewsItem), collection.snapshotAllowed ? curatedNews : []), [collection.items, collection.snapshotAllowed])
   const regionCounts = useMemo(() => {
     const counts: Record<string, number> = { "": items.length }
     for (const item of items) counts[newsRegion(item)] = (counts[newsRegion(item)] ?? 0) + 1
@@ -109,12 +109,12 @@ function NewsroomContent() {
         {filtersActive && <button type="button" onClick={() => router.replace(pathname, { scroll: false })} className="min-h-11 text-sm font-bold text-[var(--link)]">{ar ? "مسح الفلاتر" : "Clear filters"}</button>}
       </div>
 
-      {collection.error && <div className="mb-6 rounded-xl border border-[var(--border-soft)] bg-[var(--surface)] p-4 text-sm text-[var(--text-muted)]"><p>{ar ? "التحديث المباشر غير متاح. الأخبار المحفوظة تبقى متاحة للقراءة." : "Live updates are temporarily unavailable. Saved, sourced stories remain readable."}</p><button onClick={collection.retry} className="mt-2 min-h-11 font-bold text-[var(--link)]">{ar ? "إعادة المحاولة" : "Retry live updates"}</button></div>}
+      {collection.error && <div role="status" className="mb-6 rounded-xl border border-[var(--border-soft)] bg-[var(--surface)] p-4 text-sm text-[var(--text-muted)]"><p>{collection.snapshotAllowed ? ar ? "التحديث المباشر غير متاح. الأخبار المحفوظة تبقى متاحة للقراءة." : "Live updates are temporarily unavailable. Saved, sourced stories remain readable." : ar ? "تعذر تحميل الأخبار. لم تُضف أخبار من النسخة المحفوظة." : "Stories could not be loaded. No saved stories have been added."}</p><button onClick={collection.retry} className="mt-2 min-h-11 font-bold text-[var(--link)]">{ar ? "إعادة المحاولة" : "Retry live updates"}</button></div>}
 
       {lead && <div className="mb-8"><NewsCard item={lead} variant="lead" /></div>}
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">{shown.map(item => <NewsCard key={item.sourceUrl || item.slug} item={item} />)}</div>
       {rest.length > shown.length && <div className="mt-8 text-center"><button type="button" onClick={() => setParams({ show: String(visible + PAGE_SIZE) })} className="min-h-12 rounded-xl border border-[var(--border)] bg-[var(--surface)] px-6 font-bold text-[var(--text)] hover:border-[var(--action-bg)]">{ar ? `عرض المزيد (${rest.length - shown.length})` : `Show more (${rest.length - shown.length})`}</button></div>}
-      {!filtered.length && <div className="rounded-2xl border border-[var(--border-soft)] bg-[var(--surface)] p-10 text-center"><p>{ar ? "لا توجد أخبار مطابقة. جرّب بحثاً آخر." : "No matching stories. Try a different search."}</p><button onClick={() => router.replace(pathname, { scroll: false })} className="mt-4 min-h-11 font-bold text-[var(--link)]">{ar ? "مسح الفلاتر" : "Clear filters"}</button></div>}
+      {!collection.loading && !collection.error && !filtered.length && <div className="rounded-2xl border border-[var(--border-soft)] bg-[var(--surface)] p-10 text-center"><p>{ar ? "لا توجد أخبار مطابقة. جرّب بحثاً آخر." : "No matching stories. Try a different search."}</p><button onClick={() => router.replace(pathname, { scroll: false })} className="mt-4 min-h-11 font-bold text-[var(--link)]">{ar ? "مسح الفلاتر" : "Clear filters"}</button></div>}
       {!collection.error && <CollectionStatus {...collection} empty={false} />}
     </section>
   </div>
