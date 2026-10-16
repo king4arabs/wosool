@@ -49,20 +49,21 @@ try {
         await eventually(() => page.evaluate(value => document.documentElement.lang === value, locale))
         const selector = path === "/founders" ? '#founder-directory a[href^="/founders/"]' : path === "/news" ? "article" : "#profile-news article"
         if (path === "/founders") {
-          await page.getByText(locale === "ar" ? "جارٍ تحميل الملفات العامة…" : "Loading public profiles…", { exact: true }).waitFor()
+          // Next may briefly retain a hidden prerender tree during hydration.
+          await page.getByText(locale === "ar" ? "جارٍ تحميل الملفات العامة…" : "Loading public profiles…", { exact: true }).filter({ visible: true }).first().waitFor()
           assert.equal(await page.locator(selector).count(), 0, "No founder snapshot during loading")
         }
         release()
         await eventually(() => requests > 0)
         if (status === 503) await eventually(async () => await page.locator(selector).count() > 0)
         else {
-          if (path !== "/founders/fixture-founder" && status !== 200) await page.getByRole("button", { name: locale === "ar" ? "إعادة المحاولة" : path === "/news" ? "Retry live updates" : "Try again", exact: true }).waitFor()
+          if (path !== "/founders/fixture-founder" && status !== 200) await page.getByRole("button", { name: locale === "ar" ? "إعادة المحاولة" : path === "/news" ? "Retry live updates" : "Try again", exact: true }).filter({ visible: true }).first().waitFor()
           await delay(100)
           assert.equal(await page.locator(selector).count(), 0, `${path}: ${status} must not restore snapshots`)
         }
         // A denial after an outage removes the snapshot; a later outage cannot restore it.
         if (status === 503 && path !== "/founders/fixture-founder") {
-          const retry = page.getByRole("button", { name: locale === "ar" ? "إعادة المحاولة" : path === "/news" ? "Retry live updates" : "Try again", exact: true })
+          const retry = page.getByRole("button", { name: locale === "ar" ? "إعادة المحاولة" : path === "/news" ? "Retry live updates" : "Try again", exact: true }).filter({ visible: true }).first()
           for (const next of [403, 503]) {
             const before = requests
             responseStatus = next
