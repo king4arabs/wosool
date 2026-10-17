@@ -10,6 +10,8 @@ Use [Continuous development](docs/CONTINUOUS-DEVELOPMENT.md) as the current phas
 
 ## Roadmap Framing
 
+17 October API checkpoint: news list/detail now have field-level OpenAPI schemas and real-response Laravel contract tests. The schema/document change requires frontend deployment; it adds no backend runtime behavior or database import. Next contract slice: founder/company/scorecard serialization, then the revenue-evidenced startup directory. Hosting revision/import validation remains external; the public founder API still reports 29 visible records. Track the inherited, currently unpatched dev-only `braces` advisory in the lint dependency chain separately from the clean production dependency audit.
+
 Wosool should mature through **sequenced execution**, not uncontrolled feature expansion. The roadmap is organized to first strengthen delivery foundations, then unlock real product workflows, then scale regionally with production discipline.
 
 | Phase | Focus | Status |

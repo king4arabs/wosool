@@ -1,3 +1,5 @@
+import { publicNewsSchemas } from './public-news-schemas'
+
 /** Read-only contract, derived from backend/routes/api.php and its public controllers. */
 const json = (schema: object) => ({ "application/json": { schema } })
 const query = (name: string, schema: object, description: string) => ({ name, in: "query", required: false, description, schema })
@@ -10,19 +12,36 @@ const slug = { name: "slug", in: "path", required: true, schema: string, descrip
 const list = (operationId: string, summary: string, description: string, parameters: object[]) => ({ get: { operationId, summary, description, parameters, responses: { "200": { description: "Paginated public records. Nullable fields may be absent; clients must tolerate additional fields.", content: json(collection) }, ...errors } } })
 const detail = (operationId: string, summary: string) => ({ get: { operationId, summary, parameters: [slug], responses: { "200": { description: "One published public record", content: json({ type: "object", required: ["data"], properties: { data: record } }) }, "404": { description: "Missing, private, unpublished or unavailable record" }, "429": errors["429"] } } })
 const page = query("page", { type: "integer", minimum: 1, default: 1 }, "Page number")
+const schemaRef = (name: keyof typeof publicNewsSchemas) => ({ $ref: `#/components/schemas/${name}` })
+const newsErrors = {
+  '422': { description: 'Invalid company aliases or region', content: json(schemaRef('PublicValidationError')) },
+  '429': { description: 'Rate limit exceeded; respect Retry-After when returned. Intermediary response bodies are not covered by the Laravel JSON schema.' },
+}
+const newsList = (...args: Parameters<typeof list>) => ({ get: {
+  ...list(...args).get,
+  responses: {
+    '200': { description: 'Paginated published public stories, including nullable editorial fields and translations', content: json(schemaRef('NewsCollection')) },
+    ...newsErrors,
+  },
+} })
 
 export const publicApiSpec = {
   openapi: "3.1.0",
-  info: { title: "Wosool public read API", version: "1.0.0", description: "Read-only discovery contract. This initial specification covers public founders, news, startup directory and health endpoints. Record objects are intentionally extensible; this is not a complete field-level schema or a contract for private member/admin endpoints. No API key is required for these reads. Private operations use Sanctum sessions, CSRF and server-side authorization; they are outside this specification." },
+  info: { title: "Wosool public read API", version: "1.1.0", description: "Read-only discovery contract. News list/detail responses have field-level schemas tested against Laravel responses. Founder and startup-directory record objects remain extensible and do not yet have complete field-level schemas. No API key is required for these reads. Private operations use Sanctum sessions, CSRF and server-side authorization; they are outside this specification." },
   servers: [{ url: "/", description: "Same-origin Laravel proxy" }],
   security: [],
+  components: { schemas: publicNewsSchemas },
   paths: {
     "/api/health": { get: { operationId: "getHealth", summary: "Service liveness", responses: { "200": { description: "Process responds; does not prove database readiness", content: json({ type: "object", required: ["status", "version", "timestamp"], properties: { status: { const: "healthy" }, version: string, timestamp: { type: "string", format: "date-time" } } }) } } } },
     "/api/ready": { get: { operationId: "getReadiness", summary: "Database and migration readiness", responses: { "200": { description: "Required checks passed", content: json({ type: "object", properties: { status: { const: "ready" } } }) }, "503": { description: "Database, schema or program setup unavailable", content: json({ type: "object", properties: { status: { const: "unavailable" } } }) } } } },
     "/api/v1/founders": list("listFounders", "Discover public founders", "Active, public profiles. Editorial profiles do not establish community membership. per_page is clamped to 1–100.", [page, query("per_page", { type: "integer", minimum: 1, maximum: 100, default: 12 }, "Page size"), ...["sector", "stage", "search"].map(name => query(name, string, "Optional filter")), query("community", { type: "boolean" }, "Limit to claimed/member profiles"), query("featured", { type: "boolean" }, "Only featured profiles")]),
     "/api/v1/founders/{slug}": detail("getFounder", "Read a public founder profile"),
-    "/api/v1/news": list("listNews", "Read published news", "Only published, public stories whose publication date is not in the future. Company matching uses exact company names or tags. per_page is clamped to 1–50.", [page, query("per_page", { type: "integer", minimum: 1, maximum: 50, default: 10 }, "Page size"), query("search", string, "Title, excerpt or publisher search"), query("category", string, "Exact category value"), query("region", { type: "string", enum: ["saudi", "gcc", "mena", "global"] }, "Region"), query("company", { type: "string", maxLength: 255 }, "One company alias"), query("companies", { type: "string", maxLength: 2559 }, "Comma-separated aliases; at most 10 combined with company; each at most 255 characters"), query("featured", { type: "boolean" }, "Only featured stories")]),
-    "/api/v1/news/{slug}": detail("getNews", "Read a published news story"),
+    "/api/v1/news": newsList("listNews", "Read published news", "Only published, public stories with a null publication date or a date not in the future. Company matching uses exact company names or tags. per_page is clamped to 1–50.", [page, query("per_page", { type: "integer", minimum: 1, maximum: 50, default: 10 }, "Page size"), query("search", string, "Title, excerpt or publisher search"), query("category", string, "Exact category value"), query("region", { type: "string", enum: ["saudi", "gcc", "mena", "global"] }, "Region"), query("company", { type: "string", maxLength: 255 }, "One company alias"), query("companies", { type: "string", maxLength: 2559 }, "Comma-separated aliases; at most 10 combined with company; each at most 255 characters"), query("featured", { type: "boolean" }, "Only featured stories")]),
+    "/api/v1/news/{slug}": { get: { operationId: 'getNews', summary: 'Read a published news story', parameters: [slug], responses: {
+      '200': { description: 'Published public story; optional content and source fields can be null', content: json(schemaRef('NewsDetail')) },
+      '404': { description: 'Missing, private, draft, archived, deleted or future-dated story', content: json(schemaRef('PublicApiError')) },
+      '429': newsErrors['429'],
+    } } },
     "/api/v1/startup-directory": list("listStartups", "Discover revenue-evidenced startups", "Published records with active websites and reported/financial-statement revenue evidence. Unlike the founder directory, this collection requires revenue evidence. Pagination meta includes sector options. Invalid page sizes return 422.", [page, query("per_page", { type: "integer", minimum: 1, maximum: 100, default: 24 }, "Page size"), query("region", { type: "string", enum: ["Saudi Arabia", "GCC", "MENA", "Global"] }, "Region; values differ from the news API"), query("business_type", { type: "string", enum: ["technology", "traditional"] }, "Primary offering"), query("search", { type: "string", maxLength: 120 }, "Literal text search"), query("sector", { type: "string", maxLength: 100 }, "English sector name"), query("source", { type: "string", maxLength: 40 }, "Source registry key")]),
   },
 }

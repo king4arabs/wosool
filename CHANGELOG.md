@@ -1,5 +1,11 @@
 # Changelog
 
+## Public news field contract — 2026-10-17
+
+- OpenAPI document 1.1.0 adds named schemas for all 22 public news fields, translation variants, nullable editorial values, list/detail envelopes, Laravel pagination and JSON 404/422 errors. Existing paths, operation IDs, query parameters and backend behavior remain unchanged. Founder/startup record schemas remain explicitly incomplete; intermediary 429 bodies are not asserted.
+- Added five frontend contract tests and seven Laravel feature tests validating real responses against the exported schemas with Ajv 2020-12 and format validation. Tests cover imported bilingual content, manual stories, empty pages, visibility/deletion/future-date rules, invalid filters, legacy associative fields and deliberate schema/privacy regressions.
+- Required backend CI installs the shared test validator. No records, review dates, imports or production configuration change. [Checks, dependency finding and deployment boundary](docs/API-NEWS-CONTRACT-2026-10-17.md).
+
 ## Full founder content-review coverage — 2026-10-17
 
 - Fixed `content:check` and `content:review` omitting the 100-profile expansion. Both now inspect the original and expansion pairs, report 144 founders / 79 company groups / 42 stories, and include catalog provenance in the review queue.
