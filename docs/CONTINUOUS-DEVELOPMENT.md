@@ -1,6 +1,6 @@
 # Wosool continuous development
 
-Updated: 16 October 2026. Work in bounded, reviewable cycles: inspect → verify sources → implement → test → publish source → verify release → choose the next incomplete outcome. Completion applies to acceptance criteria, not a promise that software or research needs no further maintenance.
+Updated: 17 October 2026. Work in bounded, reviewable cycles: inspect → verify sources → implement → test → publish source → verify release → choose the next incomplete outcome. Completion applies to acceptance criteria, not a promise that software or research needs no further maintenance.
 
 ## Phases and acceptance criteria
 
@@ -9,7 +9,7 @@ Updated: 16 October 2026. Work in bounded, reviewable cycles: inspect → verify
 | 1. Baseline and reliability | Latest main inspected; preserved concurrent board, founder and news work; new RSS records become private drafts | Required frontend/backend checks pass; production revision and readiness verified |
 | 2. Discovery and SEO | `/api`, four bilingual `/wiki` guides, article metadata/JSON-LD, live founder/news sitemap entries, activation-page noindex; founder/company-specific metadata with public-visibility guards | Live canonical/metadata/robots checks; local profile transition checks pass but do not establish deployed behavior |
 | 3. Public API | OpenAPI 3.1 at `/api/openapi.json` describes seven implemented GET routes, pagination, filters and error responses | Expand extensible record objects into field-level schemas; add automatic backend contract-drift checks before describing this as a complete API contract |
-| 4. Founder and news quality | 44 founders / 33 companies / 42 stories in matched source snapshots; source-integrity validation; 30-day founder review report | Import reviewed additions on the deployed API; apply existing-record corrections through admin; verify resulting live counts |
+| 4. Founder and news quality | 144 founders / 79 company groups / 42 stories in matched source snapshots; integrity and 30-day review cover both founder catalogs | Import reviewed additions on the deployed API; apply existing-record corrections through admin; verify resulting live counts |
 | 5. Operations | Daily news sync already scheduled in Laravel; daily development/source-review task; repeatable checks and release instructions | Verify host cron, shared lock/cache, worker supervision, failed-job monitoring and backup restore; source configuration alone does not prove execution |
 | 6. Maintenance | Repeat highest-value incomplete phase, then ongoing evidence review | No unresolved critical regression; bounded sourced additions with measurable checks and clear blockers |
 
@@ -17,6 +17,7 @@ Updated: 16 October 2026. Work in bounded, reviewable cycles: inspect → verify
 
 ```bash
 # Repository snapshots: no network access, no production writes.
+npm run content:test
 npm run content:check
 npm run content:review > /tmp/wosool-content-review.json
 
@@ -44,6 +45,8 @@ Before publishing: check original source and dates, rewrite a concise original b
 The daily ChatGPT task was updated to cover development and source review, beginning 15 October at approximately 08:00 Asia/Riyadh. It prioritizes CODE/MCIT, Multiverse, Tech Founders, Monsha'at, Misk, The Garage, LEAP, Money20/20, GITEX and relevant company/investor sources. It remains a separate research/development task, not evidence that host cron or production imports ran.
 
 `content:check` rejects snapshot drift, duplicate slugs/news URLs, invalid dates/HTTPS sources and incomplete bilingual records. `content:review` emits an actionable 30-day founder review queue with source links. Neither command fetches websites or changes review dates. There is no automatic claim that facts remain correct merely because links respond.
+
+Both commands now include the original 44-founder catalog and the 100-profile expansion. Reports identify catalog paths and review-row provenance; company totals are deduplicated across catalogs. Unregistered `founder-directory*.json` / `founder-spotlight*.json` files fail coverage checks instead of being silently skipped or auto-published. Register each reviewed pair in `scripts/lib/content-review.mjs` alongside the importer and frontend integration. `content:test` runs in required CI and `npm run verify`; it tests both catalog coverage and the existing news guards. See [17 October evidence and limits](research/CONTENT-COVERAGE-2026-10-17.md).
 
 ### Public search and availability
 

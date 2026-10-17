@@ -1,5 +1,11 @@
 # Changelog
 
+## Full founder content-review coverage — 2026-10-17
+
+- Fixed `content:check` and `content:review` omitting the 100-profile expansion. Both now inspect the original and expansion pairs, report 144 founders / 79 company groups / 42 stories, and include catalog provenance in the review queue.
+- Added cross-catalog duplicate detection, unregistered founder-file guards, strict calendar review dates, primary-evidence inclusion and bilingual company/role validation. Invalid data yields actionable failures instead of silently passing or crashing; stale valid records remain a review queue rather than a publication decision.
+- Added `content:test` to `npm run verify` and required CI, with regression coverage for omissions, malformed records, parity drift and exact 30-day deadlines. No runtime page, importer, source record, review date or moderation changes. [Verification and source-review scope](docs/research/CONTENT-COVERAGE-2026-10-17.md).
+
 ## Public collection withdrawal safeguards — 2026-10-16
 
 - Founder/news lists and profile news now restore bundled records only after an initial network/server failure, never during loading, after a successful empty response, or after a client error (including 401/403/404/410/422/429).
