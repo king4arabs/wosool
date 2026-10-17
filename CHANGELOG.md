@@ -1,5 +1,27 @@
 # Changelog
 
+## Newsroom heading in the first page load — 2026-10-17
+
+- **Problem:** `/news` reads its filters from the URL, and the whole page sat inside that Suspense boundary, so the server HTML contained only an empty block: no heading, introduction or filters until JavaScript ran. Search engines and slow phones saw a blank newsroom (the live site's `/news` has no `<h1>` in its HTML).
+- **Fix:** the prerendered fallback is now the unfiltered newsroom itself, so the heading, introduction, region chips, search and sort are in the first HTML; URL filters (`?region=`, `?q=`, `?sort=`) still apply after hydration. While the first response loads, counts show "—" instead of "0". Stories still come from the API, with bundled snapshots only after an outage, as before.
+- **QA crawl:** now also fails when a static public page has no `<h1>` in its server HTML. Account/application forms (login, register, password reset, email verification, apply) and record pages are excluded because they read the URL or load the record in the browser. Against the previous build the check flagged only `/news`.
+- **Checks:** `npm run verify` green (frontend 120, backend 225 / 1,696 assertions); QA crawl 372 visits, 0 problems; `/news?region=saudi&sort=oldest` checked in the browser in Arabic and English at 390px and 1366px (filters applied, no hydration errors).
+
+## API reference in Arabic — 2026-10-16
+
+- **Problem:** on `/api` in Arabic, every endpoint card showed its description in English ("Service liveness", "Discover public founders", "Parameters: …"), and the kicker read "WOSOOL / DEVELOPERS". The list endpoints' notes on what is included and the `per_page` limits were not shown on the page in either language, only in the downloadable specification.
+- **Fix:** endpoint cards now take their wording from a small Arabic copy table keyed by OpenAPI `operationId`; English cards keep the specification's wording. Each list endpoint also shows its note (public records only, `per_page` limits, revenue-evidence requirement), and the "Parameters" label and kicker are translated. Parameter names stay as code, left-to-right. The OpenAPI contract at `/api/openapi.json` is unchanged.
+- **Tests:** new `api-reference` tests: every endpoint has Arabic copy (with a note wherever the contract has one), Arabic and English rows select the right wording, and parameter names match the contract.
+- **Checks:** `npm run verify` green (frontend 114, backend 225); QA crawl 372 visits as visitor and admin in Arabic and English at 390px and 1366px, 0 problems; `/api` checked in the browser in Arabic and English at 390px and 1366px.
+
+## Startup directory: Arabic reporting periods and program names — 2026-10-15
+
+- **Problem:** on `/startups` in Arabic, each card's "Published revenue evidence" box showed the reporting period in English (for example "الفترة: Year ended 31 December 2024", "Annual revenue; year not specified by Misk"), and the program or investor that links a company to the ecosystem was shown by its English name (Misk, Impact46, LEAP, GITEX) even though the filter above already uses the Arabic names.
+- **Fix:** every revenue record now has an Arabic reporting period (`period_ar`) and every ecosystem source an Arabic name (`label_ar`), translated from the existing sourced wording; no figures, sources or dates changed. Arabic cards use them, English cards are unchanged, and records imported before this change fall back to English. `directory:import` now rejects records without the Arabic fields. The public API keeps `period` and `label` as they were and adds the two fields.
+- **Deploy:** run `php artisan directory:import` after deploying so existing directory records pick up the Arabic fields (records with a newer review date are left alone, as before).
+- **Tests:** new `startup-directory` frontend tests (Arabic/English selection, fallback for older records, every data row bilingual) and a backend test that every public record returns Arabic period and program names.
+- **Checks:** `npm run verify` green (frontend 106, backend 225); QA crawl 448 visits as visitor, member and admin in Arabic and English at 390px and 1366px, 0 problems; `/startups` checked in the browser in Arabic at 390px and 1366px and English at 390px.
+
 ## Public collection withdrawal safeguards — 2026-10-16
 
 - Founder/news lists and profile news now restore bundled records only after an initial network/server failure, never during loading, after a successful empty response, or after a client error (including 401/403/404/410/422/429).

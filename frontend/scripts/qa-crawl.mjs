@@ -8,6 +8,7 @@
  *   - API responses with status >= 500
  *   - horizontal overflow (layout wider than the viewport)
  *   - a missing or duplicated <h1>
+ *   - a static public page whose server HTML (before JavaScript) has no <h1>
  *   - a button or link squeezed so narrow that a single word breaks across lines
  *
  * Usage (frontend and backend running):
@@ -43,6 +44,8 @@ function routes(dir = APP_DIR) {
 }
 
 const isPrivate = route => /^\/(admin|dashboard|review)(\/|$)|^\/eoa\/(admin|coach|account)(\/|$)/.test(route)
+// Account and application forms read a token or redirect from the URL, so they render on the client.
+const isClientForm = route => /(^|\/)(login|register|forgot-password|reset-password|verify-email|apply)$/.test(route)
 const ignorableConsole = text => /401 \(Unauthorized\)|403 \(Forbidden\)|404 \(Not Found\)|ERR_TUNNEL|ERR_NAME_NOT_RESOLVED|net::ERR_|Failed to load resource/.test(text)
 
 async function login(context, email, password) {
@@ -66,6 +69,17 @@ const all = [...routes(), ...DYNAMIC].filter(route => !ONLY_ROUTES || ONLY_ROUTE
 const browser = await chromium.launch(existsSync("/opt/pw-browsers/chromium") ? { executablePath: "/opt/pw-browsers/chromium" } : {})
 const failures = []
 let visits = 0
+
+// Crawlers and slow phones see the server HTML first; a page that only gets its heading
+// after hydration (e.g. a whole page behind a useSearchParams Suspense boundary) shows nothing.
+if (!ONLY_ROLES || ONLY_ROLES.includes("visitor")) {
+  // Static routes only: record pages (/founders/[slug], /events/[slug]) load the record in the browser.
+  for (const route of all.filter(route => !DYNAMIC.includes(route) && !isPrivate(route) && !isClientForm(route))) {
+    const response = await fetch(BASE + route, { redirect: "manual" }).catch(error => ({ error }))
+    if (response.error || response.status !== 200) continue
+    if (!/<h1[\s>]/.test(await response.text())) failures.push({ role: "visitor", locale: "server-html", viewport: "-", route, final: route, problems: ["no <h1> in server HTML"] })
+  }
+}
 
 for (const role of roles.filter(role => !ONLY_ROLES || ONLY_ROLES.includes(role.name))) {
   const targets = role.name === "visitor" ? all : all.filter(isPrivate)
