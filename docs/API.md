@@ -1,6 +1,6 @@
 # API Documentation
 
-Public developer reference: `/api`; downloadable initial OpenAPI 3.1 contract: `/api/openapi.json`. The contract covers seven read endpoints and intentionally extensible record shapes; private/member/admin writes remain documented separately below. `/api/ready` checks database/migration readiness and returns 503 when unavailable.
+Public developer reference: `/api`; downloadable OpenAPI 3.1 contract: `/api/openapi.json` (document version 1.1.0). The contract covers seven read endpoints. News list/detail have complete public resource field schemas and real-response contract tests; founder and startup-directory record shapes remain extensible and incomplete. Private/member/admin writes remain documented separately below. `/api/ready` checks database/migration readiness and returns 503 when unavailable. See [news contract scope and test prerequisites](API-NEWS-CONTRACT-2026-10-17.md).
 
 **EO Accelerator integration, 2026-10-09:** `/api/v1/eoa/*` is the canonical application, review and participant API. The earlier gateway registration/draft/submission/onboarding/review/operations write endpoints return HTTP 410; their data is retained and owned legacy reads remain private and read-only. Ecosystem/editorial/privacy APIs remain available. See [EOA operations](EOA.md) and [integration notes](EOA-INTEGRATION-2026-10-09.md). Authenticated `GET/POST /api/v1/eoa/privacy-requests` provides owned data-rights requests and resolution tracking.
 

@@ -37,6 +37,8 @@ Wosool also provides the dedicated digital gateway for **EO Riyadh Accelerator**
 
 ### Start here
 
+**News API contract (17 October 2026):** OpenAPI document version 1.1.0 describes every public news field, nullable values, translations, pagination and JSON 404/422 errors. Laravel response tests use the same exported schemas; founder and startup-directory schemas remain incomplete. [Contract scope and verification](docs/API-NEWS-CONTRACT-2026-10-17.md).
+
 **Content review coverage (17 October 2026):** integrity and 30-day review commands now cover both founder catalogs: **144 founders / 79 company groups / 42 stories**. Catalog-specific diagnostics, cross-catalog duplicate checks and unregistered-file guards prevent silent omissions. These are repository counts, not newly verified people or production imports. [Checks and source-review limits](docs/research/CONTENT-COVERAGE-2026-10-17.md).
 
 | If you want to… | Read |
