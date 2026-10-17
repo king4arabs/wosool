@@ -29,7 +29,7 @@ Wosool also provides the dedicated digital gateway for **EO Riyadh Accelerator**
 
 > **Release boundary:** GitHub CI validates source, security checks, tests, and production builds. A commit, merge, or green workflow does **not** by itself prove that production hosting has deployed the change.
 
-> **Knowledge, API and content cycle (14 October 2026):** bilingual `/wiki`, public `/api` reference and OpenAPI, server-rendered news metadata, public-record sitemap, draft-only RSS discovery, and **44 founders / 33 companies / 42 stories** in source snapshots. See [development phases and next actions](docs/CONTINUOUS-DEVELOPMENT.md) and [source evidence](docs/research/KNOWLEDGE-CONTENT-2026-10-14.md). Production deployment/import remain separate release steps.
+> **Knowledge, API and content cycle (16 October 2026):** bilingual `/wiki`, public `/api` reference and OpenAPI, server-rendered news metadata, public-record sitemap, draft-only RSS discovery, and **144 founders / 79 companies / 42 stories** in checked-in source snapshots. See [development phases and next actions](docs/CONTINUOUS-DEVELOPMENT.md) and [source evidence](docs/research/KNOWLEDGE-CONTENT-2026-10-14.md). Production deployment/import remain separate release steps.
 
 > **Profile SEO (15 October 2026):** founder/company detail pages now generate record-specific titles, descriptions and canonical/share URLs from the anonymous public API. Missing, hidden, invalid or unreachable records are `noindex`, without a metadata snapshot fallback. No membership claims, private fields or new research records are introduced. See [checks and release boundaries](docs/research/PROFILE-SEO-2026-10-15.md).
 
@@ -44,6 +44,12 @@ Wosool also provides the dedicated digital gateway for **EO Riyadh Accelerator**
 | Work on the Accelerator | [EOA operations](docs/EOA.md) for workflows, approvals, and release gates |
 | Test or deploy a change | [Testing](TESTING.md) and [Deployment](DEPLOYMENT.md); CI does not deploy |
 | Report a security issue | [Security policy](SECURITY.md) for private reporting |
+
+## Founder directory expansion (16 October 2026)
+
+The directory's checked-in catalogs contain **144 public entrepreneur profiles** (44 existing + 100 newly researched) across **79 company groups**, prioritizing Saudi Arabia, the GCC and MENA. New entries have bilingual summaries and named evidence sources without invented portraits, financial metrics or community memberships.
+
+See [sources, counts, quality policy and production import runbook](docs/FOUNDER-EXPANSION-2026-10-16.md). Production publication requires deploying the same frontend/backend revision, backing up and migrating the database, and running `php artisan wosool:import-founders`; a GitHub code update alone does not change the live database.
 
 ## Current platform snapshot — October 14, 2026
 

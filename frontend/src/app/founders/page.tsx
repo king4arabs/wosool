@@ -23,7 +23,7 @@ function FounderDirectory() {
   const { locale, direction } = useLocale()
   const ar = locale === "ar"
   const copy = foundersPageCopy[locale]
-  const collection = usePublicCollection<ApiFounder>("/founders")
+  const collection = usePublicCollection<ApiFounder>("/founders", 100)
   const isSpotlight = collection.snapshotAllowed
   const founders: FounderCardProfile[] = isSpotlight
     ? getFounderSpotlights(locale)
