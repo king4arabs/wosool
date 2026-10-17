@@ -15,13 +15,14 @@ import { useLocale } from "@/lib/locale"
 
 const PAGE_SIZE = 12
 
+type SearchParamsLike = Pick<URLSearchParams, "get" | "toString">
+
 /** Filter state lives in the URL so a filtered view can be shared or bookmarked. */
-function NewsroomContent() {
+function Newsroom({ params }: { params: SearchParamsLike }) {
   const { locale, direction } = useLocale()
   const ar = locale === "ar"
   const router = useRouter()
   const pathname = usePathname()
-  const params = useSearchParams()
   const collection = usePublicCollection<ApiNewsItem>("/news")
 
   const query = params.get("q") ?? ""
@@ -67,6 +68,9 @@ function NewsroomContent() {
   const shown = rest.slice(0, visible)
   const saudiLatest = items.find(item => newsRegion(item) === "saudi")
   const filtersActive = Boolean(query || region || category || sort !== "newest")
+  // Until the first response arrives, show a placeholder rather than "0 stories".
+  const counting = collection.loading && items.length === 0
+  const count = (value: number) => counting ? "—" : value
 
   const chip = (active: boolean) => `inline-flex min-h-11 shrink-0 items-center gap-2 whitespace-nowrap rounded-full border px-4 text-sm font-bold transition-colors ${active ? "border-[var(--action-bg)] bg-[var(--action-bg)] text-[var(--action-fg)]" : "border-[var(--border)] bg-[var(--surface)] text-[var(--text)] hover:border-[var(--action-bg)]"}`
 
@@ -78,8 +82,8 @@ function NewsroomContent() {
       description={ar ? "ملخصات قصيرة لأخبار التمويل والاستحواذ والتقارير من السعودية والخليج والعالم، مع أبرز الأرقام ورابط المصدر لكل خبر." : "Short briefs on funding, acquisitions and reports from Saudi Arabia, the Gulf and the world, with the key figures and a source link for every story."}
     >
       <dl className="grid max-w-3xl grid-cols-2 gap-3 sm:grid-cols-3">
-        <div className="rounded-2xl border border-white/15 p-4"><dt className="text-xs text-[var(--on-dark-muted)]">{ar ? "أخبار موثّقة المصدر" : "Sourced stories"}</dt><dd className="mt-1 text-2xl font-extrabold">{items.length}</dd></div>
-        <div className="rounded-2xl border border-white/15 p-4"><dt className="text-xs text-[var(--on-dark-muted)]">{ar ? "من السعودية" : "From Saudi Arabia"}</dt><dd className="mt-1 text-2xl font-extrabold">{regionCounts.saudi ?? 0}</dd></div>
+        <div className="rounded-2xl border border-white/15 p-4"><dt className="text-xs text-[var(--on-dark-muted)]">{ar ? "أخبار موثّقة المصدر" : "Sourced stories"}</dt><dd className="mt-1 text-2xl font-extrabold">{count(items.length)}</dd></div>
+        <div className="rounded-2xl border border-white/15 p-4"><dt className="text-xs text-[var(--on-dark-muted)]">{ar ? "من السعودية" : "From Saudi Arabia"}</dt><dd className="mt-1 text-2xl font-extrabold">{count(regionCounts.saudi ?? 0)}</dd></div>
         <div className="col-span-2 rounded-2xl border border-white/15 p-4 sm:col-span-1"><dt className="text-xs text-[var(--on-dark-muted)]">{ar ? "آخر خبر سعودي" : "Latest Saudi story"}</dt><dd className="mt-1 text-base font-bold">{saudiLatest ? newsDate(saudiLatest.publishedAt, locale) : "—"}</dd></div>
       </dl>
       <p className="mt-6 flex items-center gap-2 text-sm text-[var(--on-dark-muted)]"><ShieldCheck size={18} aria-hidden="true" />{ar ? "مصادر مسمّاة · تواريخ نشر حقيقية · ملخصات وليست إعادة نشر" : "Named sources · Real publication dates · Briefs, not republications"}</p>
@@ -90,7 +94,7 @@ function NewsroomContent() {
 
       <div role="group" aria-label={ar ? "المنطقة" : "Region"} className="mt-6 flex gap-2 overflow-x-auto pb-1">
         {(["", ...NEWS_REGIONS] as const).map(value => <button key={value || "all"} type="button" aria-pressed={region === value} onClick={() => setParams({ region: value || null, topic: null })} className={chip(region === value)}>
-          {value ? regionLabel(value, locale) : ar ? "الكل" : "All"}<span className="rounded-full bg-black/10 px-2 text-xs">{regionCounts[value] ?? 0}</span>
+          {value ? regionLabel(value, locale) : ar ? "الكل" : "All"}<span className="rounded-full bg-black/10 px-2 text-xs">{count(regionCounts[value] ?? 0)}</span>
         </button>)}
       </div>
 
@@ -105,7 +109,7 @@ function NewsroomContent() {
       </div>}
 
       <div className="mb-6 mt-6 flex flex-wrap items-center justify-between gap-3">
-        <p role="status" className="text-sm text-[var(--text-muted)]">{filtered.length} {ar ? "نتيجة • ملخصات ومقتطفات، وليست مقالات كاملة" : "results • Briefs and excerpts, not full article reproductions"}</p>
+        <p role="status" className="text-sm text-[var(--text-muted)]">{count(filtered.length)} {ar ? "نتيجة • ملخصات ومقتطفات، وليست مقالات كاملة" : "results • Briefs and excerpts, not full article reproductions"}</p>
         {filtersActive && <button type="button" onClick={() => router.replace(pathname, { scroll: false })} className="min-h-11 text-sm font-bold text-[var(--link)]">{ar ? "مسح الفلاتر" : "Clear filters"}</button>}
       </div>
 
@@ -120,6 +124,14 @@ function NewsroomContent() {
   </div>
 }
 
+function NewsroomFromUrl() {
+  return <Newsroom params={useSearchParams()} />
+}
+
+// Search params are unknown while prerendering, so the fallback is the unfiltered newsroom:
+// the heading, introduction and filters are in the initial HTML instead of an empty block.
+const NO_FILTERS = new URLSearchParams()
+
 export default function NewsPage() {
-  return <PublicLayout><Suspense fallback={<div className="min-h-screen bg-[var(--page-bg)]" />}><NewsroomContent /></Suspense></PublicLayout>
+  return <PublicLayout><Suspense fallback={<Newsroom params={NO_FILTERS} />}><NewsroomFromUrl /></Suspense></PublicLayout>
 }

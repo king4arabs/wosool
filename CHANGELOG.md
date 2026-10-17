@@ -1,5 +1,12 @@
 # Changelog
 
+## Newsroom heading in the first page load — 2026-10-17
+
+- **Problem:** `/news` reads its filters from the URL, and the whole page sat inside that Suspense boundary, so the server HTML contained only an empty block: no heading, introduction or filters until JavaScript ran. Search engines and slow phones saw a blank newsroom (the live site's `/news` has no `<h1>` in its HTML).
+- **Fix:** the prerendered fallback is now the unfiltered newsroom itself, so the heading, introduction, region chips, search and sort are in the first HTML; URL filters (`?region=`, `?q=`, `?sort=`) still apply after hydration. While the first response loads, counts show "—" instead of "0". Stories still come from the API, with bundled snapshots only after an outage, as before.
+- **QA crawl:** now also fails when a static public page has no `<h1>` in its server HTML. Account/application forms (login, register, password reset, email verification, apply) and record pages are excluded because they read the URL or load the record in the browser. Against the previous build the check flagged only `/news`.
+- **Checks:** `npm run verify` green (frontend 120, backend 225 / 1,696 assertions); QA crawl 372 visits, 0 problems; `/news?region=saudi&sort=oldest` checked in the browser in Arabic and English at 390px and 1366px (filters applied, no hydration errors).
+
 ## API reference in Arabic — 2026-10-16
 
 - **Problem:** on `/api` in Arabic, every endpoint card showed its description in English ("Service liveness", "Discover public founders", "Parameters: …"), and the kicker read "WOSOOL / DEVELOPERS". The list endpoints' notes on what is included and the `per_page` limits were not shown on the page in either language, only in the downloadable specification.
