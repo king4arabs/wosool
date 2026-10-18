@@ -1,12 +1,16 @@
 # Roadmap
 
-## Current execution plan — 16 October 2026
+## Current execution plan — 17 October 2026
 
 Use [Continuous development](docs/CONTINUOUS-DEVELOPMENT.md) as the current phased plan and acceptance gates. The older release tables below are historical planning context, not evidence of current completion. Founder/company record-specific metadata and noindex-on-unavailability are implemented and locally tested. Next: verify live profile metadata and production release/imports/cron, complete API field schemas, and make newsroom filtering cover the full database. Source publication is not evidence of production deployment or import.
 
 16 October checkpoint: founder/company-specific metadata and missing-profile noindex were observed on Wosool.org; the hosting source SHA and prior imports remain unverified. The next bounded fix protects public collection snapshot fallback from denial/withdrawal responses, with state tests and a required isolated-browser CI gate. After release verification, continue field-level OpenAPI work, whole-database news filtering and remaining homepage/detail fallback review.
 
+17 October checkpoint: fixed the content commands' omission of the already-merged 100-profile expansion. All 144 founders / 79 company groups / 42 stories now enter integrity checks and freshness reporting, without advancing review dates or implying production import. Added regression/CI coverage and a guard against future unregistered founder catalogs. Live `/founders` initial HTML now includes the loading placeholder and omits saved founder links; readiness responds `ready`, but the deployed SHA and full browser withdrawal behavior remain unverified. Next: deployment/import verification, then field-level OpenAPI contracts; preserve concurrent Arabic/API/news work in PR #70.
+
 ## Roadmap Framing
+
+17 October API checkpoint: news list/detail now have field-level OpenAPI schemas and real-response Laravel contract tests. The schema/document change requires frontend deployment; it adds no backend runtime behavior or database import. Next contract slice: founder/company/scorecard serialization, then the revenue-evidenced startup directory. Hosting revision/import validation remains external; the public founder API still reports 29 visible records. Track the inherited, currently unpatched dev-only `braces` advisory in the lint dependency chain separately from the clean production dependency audit.
 
 Wosool should mature through **sequenced execution**, not uncontrolled feature expansion. The roadmap is organized to first strengthen delivery foundations, then unlock real product workflows, then scale regionally with production discipline.
 

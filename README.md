@@ -37,6 +37,10 @@ Wosool also provides the dedicated digital gateway for **EO Riyadh Accelerator**
 
 ### Start here
 
+**News API contract (17 October 2026):** OpenAPI document version 1.1.0 describes every public news field, nullable values, translations, pagination and JSON 404/422 errors. Laravel response tests use the same exported schemas; founder and startup-directory schemas remain incomplete. [Contract scope and verification](docs/API-NEWS-CONTRACT-2026-10-17.md).
+
+**Content review coverage (17 October 2026):** integrity and 30-day review commands now cover both founder catalogs: **144 founders / 79 company groups / 42 stories**. Catalog-specific diagnostics, cross-catalog duplicate checks and unregistered-file guards prevent silent omissions. These are repository counts, not newly verified people or production imports. [Checks and source-review limits](docs/research/CONTENT-COVERAGE-2026-10-17.md).
+
 | If you want to… | Read |
 | --- | --- |
 | Run the applications locally | [Quick start](#quick-start), then [Development commands](#development-commands) |
@@ -59,7 +63,7 @@ The latest product and brand upgrade includes:
 - **Unified product design system:** semantic tokens, Cairo as the primary Arabic and English typeface, responsive spacing, consistent cards, accessible controls, visible focus states, and reduced-motion behavior.
 - **Trusted founder and venture scorecards:** company logo, founder portrait, role, short company/founder summaries, sector, stage, location, official links, verification, review freshness, source evidence, and opportunity signals where data is available.
 - **Founder browsing:** one responsive scorecard row advances physically right every three seconds, with arrows, swipe, pause and reduced-motion support. Expand the grid below for numbered pages, page-size options, search and sector filters in both languages.
-- **Founder spotlight:** 44 researched public founder profiles keep the homepage and directory useful during API outages, clearly separated from approved member profiles.
+- **Founder spotlight:** 144 public-source editorial profiles across both catalogs keep the homepage and directory useful during API outages, clearly separated from approved member profiles. Source structure checks do not independently verify each person's current role.
 - **Mentors and advisors:** responsive mentor cards on `/eoa` and `/eoa/mentors`, expertise filters, portrait management, audited draft/publish controls and confirmed public appointments.
 - **Bilingual account journeys:** shared registration/application layouts, working invitation email entry, recoverable validation, draft-storage resilience and direct EOA sign-in destinations.
 - **Reviewed founder introductions:** authenticated members can discover approved founders, state the purpose and intended value of a connection, submit through the established introduction API, and track the request.
@@ -209,6 +213,7 @@ Run commands from the repository root after setup:
 | `npm run dev` | Start frontend and backend together; stop both with Ctrl+C |
 | `npm run dev:frontend` / `npm run dev:backend` | Start one application independently |
 | `npm run content:check` | Check founder/news source integrity and frontend/backend snapshot parity |
+| `npm run content:test` | Regression tests for full-catalog coverage, parity, validation and review deadlines |
 | `npm run content:review` | Emit 30-day founder review queue; does not verify sources automatically |
 | `npm run lint` | Run frontend ESLint |
 | `npm run type-check` | Check frontend TypeScript |

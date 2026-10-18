@@ -1,6 +1,6 @@
 # Wosool continuous development
 
-Updated: 16 October 2026. Work in bounded, reviewable cycles: inspect → verify sources → implement → test → publish source → verify release → choose the next incomplete outcome. Completion applies to acceptance criteria, not a promise that software or research needs no further maintenance.
+Updated: 17 October 2026. Work in bounded, reviewable cycles: inspect → verify sources → implement → test → publish source → verify release → choose the next incomplete outcome. Completion applies to acceptance criteria, not a promise that software or research needs no further maintenance.
 
 ## Phases and acceptance criteria
 
@@ -8,8 +8,8 @@ Updated: 16 October 2026. Work in bounded, reviewable cycles: inspect → verify
 | --- | --- | --- |
 | 1. Baseline and reliability | Latest main inspected; preserved concurrent board, founder and news work; new RSS records become private drafts | Required frontend/backend checks pass; production revision and readiness verified |
 | 2. Discovery and SEO | `/api`, four bilingual `/wiki` guides, article metadata/JSON-LD, live founder/news sitemap entries, activation-page noindex; founder/company-specific metadata with public-visibility guards | Live canonical/metadata/robots checks; local profile transition checks pass but do not establish deployed behavior |
-| 3. Public API | OpenAPI 3.1 at `/api/openapi.json` describes seven implemented GET routes, pagination, filters and error responses | Expand extensible record objects into field-level schemas; add automatic backend contract-drift checks before describing this as a complete API contract |
-| 4. Founder and news quality | 44 founders / 33 companies / 42 stories in matched source snapshots; source-integrity validation; 30-day founder review report | Import reviewed additions on the deployed API; apply existing-record corrections through admin; verify resulting live counts |
+| 3. Public API | OpenAPI document 1.1.0 describes seven GET routes; news list/detail now have 22-field resource schemas and real Laravel response validation | Complete founder/company/scorecard and startup-directory schemas; this is still not a complete public API contract |
+| 4. Founder and news quality | 144 founders / 79 company groups / 42 stories in matched source snapshots; integrity and 30-day review cover both founder catalogs | Import reviewed additions on the deployed API; apply existing-record corrections through admin; verify resulting live counts |
 | 5. Operations | Daily news sync already scheduled in Laravel; daily development/source-review task; repeatable checks and release instructions | Verify host cron, shared lock/cache, worker supervision, failed-job monitoring and backup restore; source configuration alone does not prove execution |
 | 6. Maintenance | Repeat highest-value incomplete phase, then ongoing evidence review | No unresolved critical regression; bounded sourced additions with measurable checks and clear blockers |
 
@@ -17,6 +17,7 @@ Updated: 16 October 2026. Work in bounded, reviewable cycles: inspect → verify
 
 ```bash
 # Repository snapshots: no network access, no production writes.
+npm run content:test
 npm run content:check
 npm run content:review > /tmp/wosool-content-review.json
 
@@ -45,6 +46,8 @@ The daily ChatGPT task was updated to cover development and source review, begin
 
 `content:check` rejects snapshot drift, duplicate slugs/news URLs, invalid dates/HTTPS sources and incomplete bilingual records. `content:review` emits an actionable 30-day founder review queue with source links. Neither command fetches websites or changes review dates. There is no automatic claim that facts remain correct merely because links respond.
 
+Both commands now include the original 44-founder catalog and the 100-profile expansion. Reports identify catalog paths and review-row provenance; company totals are deduplicated across catalogs. Unregistered `founder-directory*.json` / `founder-spotlight*.json` files fail coverage checks instead of being silently skipped or auto-published. Register each reviewed pair in `scripts/lib/content-review.mjs` alongside the importer and frontend integration. `content:test` runs in required CI and `npm run verify`; it tests both catalog coverage and the existing news guards. See [17 October evidence and limits](research/CONTENT-COVERAGE-2026-10-17.md).
+
 ### Public search and availability
 
 - `/api` is a frontend documentation page; `/api/v1/*`, health and readiness retain the existing Laravel proxy. `/api/openapi.json` is a static Next route. No credential or private-field export is introduced.
@@ -54,13 +57,13 @@ The daily ChatGPT task was updated to cover development and source review, begin
 - Founder/company metadata reads only the anonymous public detail endpoint, with no persistent cache, redirects or forwarded credentials and a five-second timeout. Only matching active public records with a name are indexable. Unavailable records retain the existing client view but emit generic `noindex` metadata, not a server 404; neither private fields nor snapshot metadata are restored. Arabic metadata matches the site's default locale; switching the client language does not create a separate localized URL. [15 October checks](research/PROFILE-SEO-2026-10-15.md).
 - Founder/news lists and profile news use snapshots only after an initial network/server failure. Initial loading, successful empty responses and client errors never authorize fallback. After any successful/client-error response in a mounted collection, later outages cannot restore snapshots. Client errors clear earlier loaded pages and reset retries; later-page network/server failures retain live records and retry that page. Changing path/language creates a separate collection state. This is not a persistent cross-session withdrawal ledger; homepage and detail fallback review remains separate. [State/browser checks](research/COLLECTION-WITHDRAWAL-2026-10-16.md).
 - News filters still cover loaded pages; use the existing load-more control to request additional API pages. Full-database filtering remains a separate next action.
-- Public API record schemas are intentionally extensible in this first contract. This is not a supported third-party write API, API-key platform, SDK or service-level guarantee.
+- News list/detail fields, pagination and JSON 404/422 errors are validated against the exported OpenAPI schemas in Laravel tests. Founder and startup-directory record schemas remain extensible and incomplete. Intermediary 429 bodies are outside the JSON guarantees. This is not a third-party write API, API-key platform, SDK or service-level guarantee. [Contract checks and prerequisites](API-NEWS-CONTRACT-2026-10-17.md).
 
 ## Next actions
 
 1. Deploy both services from the verified revision; run the reviewed additive imports; apply existing-record corrections through admin; verify the new routes, sitemap, metadata and imported counts live.
 2. Verify actual scheduled draft ingestion and failure reporting on the host; document the deployed revision and backup restore evidence.
-3. Complete field-level OpenAPI schemas and backend schema contract tests; verify the new founder/company metadata against the deployed public API.
+3. Extend field-level OpenAPI schemas and backend contract tests from news to founders/company relationships/scorecards, then startup-directory revenue evidence; verify metadata and the downloaded contract on the deployed frontend.
 4. Move newsroom search/filtering to server-side pagination so filters cover the full growing database; review snapshot withdrawal behavior across the remaining founder/company surfaces.
 5. Add source-review history and admin review queues for changed existing founder/company facts, with revision checks and protected owner edits.
 6. Add publisher-specific feed sources only after verifying endpoint availability, permitted use and failure behavior; review growth by distinct verified founders and companies, not raw scrape volume.

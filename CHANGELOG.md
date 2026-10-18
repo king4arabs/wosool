@@ -1,5 +1,17 @@
 # Changelog
 
+## Public news field contract — 2026-10-17
+
+- OpenAPI document 1.1.0 adds named schemas for all 22 public news fields, translation variants, nullable editorial values, list/detail envelopes, Laravel pagination and JSON 404/422 errors. Existing paths, operation IDs, query parameters and backend behavior remain unchanged. Founder/startup record schemas remain explicitly incomplete; intermediary 429 bodies are not asserted.
+- Added five frontend contract tests and seven Laravel feature tests validating real responses against the exported schemas with Ajv 2020-12 and format validation. Tests cover imported bilingual content, manual stories, empty pages, visibility/deletion/future-date rules, invalid filters, legacy associative fields and deliberate schema/privacy regressions.
+- Required backend CI installs the shared test validator. No records, review dates, imports or production configuration change. [Checks, dependency finding and deployment boundary](docs/API-NEWS-CONTRACT-2026-10-17.md).
+
+## Full founder content-review coverage — 2026-10-17
+
+- Fixed `content:check` and `content:review` omitting the 100-profile expansion. Both now inspect the original and expansion pairs, report 144 founders / 79 company groups / 42 stories, and include catalog provenance in the review queue.
+- Added cross-catalog duplicate detection, unregistered founder-file guards, strict calendar review dates, primary-evidence inclusion and bilingual company/role validation. Invalid data yields actionable failures instead of silently passing or crashing; stale valid records remain a review queue rather than a publication decision.
+- Added `content:test` to `npm run verify` and required CI, with regression coverage for omissions, malformed records, parity drift and exact 30-day deadlines. No runtime page, importer, source record, review date or moderation changes. [Verification and source-review scope](docs/research/CONTENT-COVERAGE-2026-10-17.md).
+
 ## Newsroom heading in the first page load — 2026-10-17
 
 - **Problem:** `/news` reads its filters from the URL, and the whole page sat inside that Suspense boundary, so the server HTML contained only an empty block: no heading, introduction or filters until JavaScript ran. Search engines and slow phones saw a blank newsroom (the live site's `/news` has no `<h1>` in its HTML).
