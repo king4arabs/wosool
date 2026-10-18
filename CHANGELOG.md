@@ -1,5 +1,12 @@
 # Changelog
 
+## Founder region filter keeps its selection — 2026-10-18
+
+- **Problem:** on `/founders`, choosing a region chip (Saudi Arabia, GCC, MENA…) and then typing in the search box or changing a dropdown silently put the region back to "All", because the founder list is rebuilt on every filter change and the region lived inside it. "Clear filters" on the home page did not reset the region either, the sector list offered sectors that do not exist in the chosen region (so a click could empty the list with no visible reason), and Arabic counts read "144 ملفات مؤسسين" / "من 5 ملفًا".
+- **Fix:** `/founders` now keeps the region with its other filters, and "Clear filters" resets it. The sector list follows the selected region and a sector that is not in the new region is cleared. A region chip stays visible while selected even if the search leaves it empty. Arabic counts agree with the number (ملف واحد، ملفان، 3 ملفات، 144 ملفًا); English uses "1 profile". The empty message now mentions the region.
+- **Tests:** new `founder-filters` tests (region mapping, combined filters, sector options per region, chip counts, Arabic number agreement, every spotlight region has sectors in both languages).
+- **Checks:** `npm run verify` green (frontend 132, backend 232 / 1,743 assertions); QA crawl 372 visits as visitor and admin in Arabic and English at 390px and 1366px, 0 problems; browser check at 390px in Arabic and English: the GCC chip survives a search and is reset by "Clear filters".
+
 ## Public news field contract — 2026-10-17
 
 - OpenAPI document 1.1.0 adds named schemas for all 22 public news fields, translation variants, nullable editorial values, list/detail envelopes, Laravel pagination and JSON 404/422 errors. Existing paths, operation IDs, query parameters and backend behavior remain unchanged. Founder/startup record schemas remain explicitly incomplete; intermediary 429 bodies are not asserted.
