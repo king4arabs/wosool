@@ -1,5 +1,11 @@
 # Changelog
 
+## Revenue eligibility correction — 2026-10-18
+
+- Retained Swarm Robotics and Huspy as pending research records after re-reading their primary evidence. Misk's annual revenue testimonial omits the year; Huspy's cited announcement does not give a specific revenue/ARR result and reporting period. Funding and GMV are not substitutes. Eight of 14 startup records remain eligible in a fresh import; the broader founder catalogs are unchanged.
+- The startup API now excludes absent, null or empty revenue source URLs and periods before computing facets, counts and pagination. Human source review remains necessary for the meaning of a nonempty period. Added regression coverage for these gates and for pending records staying out of search/source filters without deleting records or changing moderation.
+- Only the reviewed revenue evidence and Misk/Falak registry dates advance. Whole-profile, website, founder and image verification dates remain unchanged. Production corrections require the existing deployment/import workflow and review of newer editorial records. [Sources and release boundaries](docs/research/REVENUE-ELIGIBILITY-2026-10-18.md).
+
 ## Public news field contract — 2026-10-17
 
 - OpenAPI document 1.1.0 adds named schemas for all 22 public news fields, translation variants, nullable editorial values, list/detail envelopes, Laravel pagination and JSON 404/422 errors. Existing paths, operation IDs, query parameters and backend behavior remain unchanged. Founder/startup record schemas remain explicitly incomplete; intermediary 429 bodies are not asserted.

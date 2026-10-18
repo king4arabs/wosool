@@ -279,7 +279,8 @@
     "review_due_at": "2027-01-07",
     "sources": [
       "https://www.huspy.com/about",
-      "https://huspy.com/blog/huspy-among-top-10-uae-startups-by-linkedin"
+      "https://huspy.com/blog/huspy-among-top-10-uae-startups-by-linkedin",
+      "https://huspy.com/blog/huspy-series-a"
     ],
     "asset_sources": [
       {
@@ -295,13 +296,13 @@
     "website_verified_at": "2026-10-09",
     "website_verification_method": "official_site_content_review",
     "ecosystem_sources": [],
-    "revenue_status": "reported",
+    "revenue_status": "pending",
     "revenue_evidence": {
       "source_url": "https://huspy.com/blog/huspy-among-top-10-uae-startups-by-linkedin",
-      "period": "2022 announcement",
-      "summary_en": "Huspy described revenue growth in its 2022 company announcement; no revenue amount was disclosed. Historical evidence, not a current revenue estimate.",
-      "summary_ar": "ذكرت هسبي نمو إيراداتها في إعلانها لعام 2022 دون ذكر مبلغ. دليل تاريخي وليس تقديراً لإيراداتها الحالية.",
-      "reviewed_at": "2026-10-09"
+      "period": "Not established; announcement published 28 September 2022",
+      "summary_en": "Huspy mentions revenue growth among several areas of progress, without a specific earned-revenue or ARR result and reporting period. Its separate June 2022 announcement reports funding and annualised GMV, not revenue. Retained for research; not qualified for publication.",
+      "summary_ar": "تذكر هسبي نمو الإيرادات ضمن جوانب تقدم متعددة، دون نتيجة محددة للإيرادات المكتسبة أو المتكررة وفترة تقريرها. ويذكر إعلان يونيو 2022 التمويل والقيمة السنوية للمعاملات، لا الإيرادات. يبقى السجل للبحث ولا يستوفي شروط النشر.",
+      "reviewed_at": "2026-10-18"
     }
   },
   {
@@ -556,13 +557,13 @@
         "relationship_ar": "قصة مؤسسين في مسك الانطلاق"
       }
     ],
-    "revenue_status": "reported",
+    "revenue_status": "pending",
     "revenue_evidence": {
       "source_url": "https://hub.misk.org.sa/en/programs/entrepreneurship/misk-launchpad/",
       "period": "Annual revenue; year not specified by Misk",
       "summary_en": "Misk reports annual revenue above USD 200,000. The testimonial does not specify the reporting year.",
       "summary_ar": "تذكر مسك إيرادات سنوية تتجاوز 200 ألف دولار دون تحديد السنة المالية.",
-      "reviewed_at": "2026-10-11"
+      "reviewed_at": "2026-10-18"
     }
   },
   {

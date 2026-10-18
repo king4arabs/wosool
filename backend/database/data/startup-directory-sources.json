@@ -3,11 +3,11 @@
     "key": "misk",
     "label": "Misk",
     "url": "https://hub.misk.org.sa/en/programs/entrepreneurship/misk-launchpad/",
-    "status": "qualified",
+    "status": "revenue_pending",
     "candidate": "Swarm Robotics",
-    "reviewed_at": "2026-10-11",
-    "review_note": "Re-read Swarm testimonial: annual revenue above USD 200,000 remains program-reported with no reporting year. No year inferred; other testimonials do not establish revenue.",
-    "last_attempted_at": "2026-10-11",
+    "reviewed_at": "2026-10-18",
+    "review_note": "Re-read the Misk testimonial and Swarm official about page. Misk reports annual revenue above USD 200,000 without a reporting year. Swarm is now revenue_pending in research and revenue_status=pending in the catalog, excluded from revenue-qualified publication. No year inferred, audit asserted or program approval implied.",
+    "last_attempted_at": "2026-10-18",
     "retrieval_status": "retrieved"
   },
   {
@@ -66,9 +66,9 @@
     "url": "https://www.falak.sa/en/startups",
     "status": "revenue_pending",
     "candidate": "Mohtwize",
-    "reviewed_at": "2026-10-11",
-    "review_note": "Read 10 June 2021 Mohtwize story and official company site. Production fees, sponsorships and subscriptions describe a business model, without a revenue result for a stated period. Remains pending.",
-    "last_attempted_at": "2026-10-11",
+    "reviewed_at": "2026-10-18",
+    "review_note": "Re-read only Falak's 10 June 2021 Mohtwize story in this review. Production fees, sponsorships and subscriptions describe a business model, without a revenue result for a stated period. Remains pending; company-site, current-role and imagery verification dates are not refreshed.",
+    "last_attempted_at": "2026-10-18",
     "retrieval_status": "retrieved",
     "review_sources": [
       "https://falak.sa/en/blogs/22/Startup-Story:-Mohtwize",
