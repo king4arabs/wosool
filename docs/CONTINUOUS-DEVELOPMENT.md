@@ -1,6 +1,8 @@
 # Wosool continuous development
 
-Updated: 17 October 2026. Work in bounded, reviewable cycles: inspect → verify sources → implement → test → publish source → verify release → choose the next incomplete outcome. Completion applies to acceptance criteria, not a promise that software or research needs no further maintenance.
+Updated: 18 October 2026. Work in bounded, reviewable cycles: inspect → verify sources → implement → test → publish source → verify release → choose the next incomplete outcome. Completion applies to acceptance criteria, not a promise that software or research needs no further maintenance.
+
+Current bounded correction: Swarm Robotics and Huspy remain in the startup research queue with `revenue_status=pending`, because their cited evidence does not establish a specific revenue result and period together. The revenue-gated catalog has eight eligible records out of 14; the separate 144-founder catalogs remain unchanged. API source/period presence checks run before facets and pagination. See [18 October evidence and production correction requirements](research/REVENUE-ELIGIBILITY-2026-10-18.md). The live `/api/openapi.json` download still returned 404 in this review; source/CI completion must not be reported as hosting delivery.
 
 ## Phases and acceptance criteria
 
