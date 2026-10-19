@@ -42,7 +42,10 @@ export const publicFounderSchemas = {
       stage: nullableText,
       location: nullableText,
       country_code: nullableText,
-      founded_year: { type: ['integer', 'null'] },
+      founded_year: {
+        description: 'Uncast database YEAR value: production can serialize four-digit strings while SQLite returns integers. Clients must accept both without assuming coercion.',
+        anyOf: [{ type: ['integer', 'null'] }, { type: 'string', pattern: '^[0-9]{4}$' }],
+      },
       traction: nullableRef('FounderCompanyTraction'),
       team_size: { type: ['integer', 'null'] },
       is_hiring: boolean,

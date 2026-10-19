@@ -60,7 +60,7 @@ test('OpenAPI download exports the same contract and preserves operation identif
   assert.equal(response.status, 200)
   assert.equal(response.headers.get('X-Content-Type-Options'), 'nosniff')
   assert.deepEqual(await response.json(), publicApiSpec)
-  assert.equal(publicApiSpec.info.version, '1.2.0')
+  assert.equal(publicApiSpec.info.version, '1.2.1')
   assert.equal(Object.keys(publicApiSpec.paths).length, 7)
   assert.equal(publicApiSpec.paths['/api/v1/news'].get.operationId, 'listNews')
   assert.equal(publicApiSpec.paths['/api/v1/news/{slug}'].get.operationId, 'getNews')

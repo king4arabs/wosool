@@ -2,6 +2,7 @@
 
 ## Anonymous founder field contract — 2026-10-19
 
+- Follow-up document 1.2.1 corrects company `founded_year` compatibility: the uncast database value can serialize as a four-digit string in production or an integer in SQLite. The full live 29-founder check caught 13 string-year responses missed by the initial one-record sample. Added regression coverage accepting both observed representations without coercion, while rejecting arbitrary strings and invalid types. No backend runtime or data changes.
 - OpenAPI document 1.2.0 adds schemas for the 35-field anonymous founder response, nested public company relationships, nullable account/scorecard data, pagination and JSON 404 errors. Existing routes and operation IDs remain unchanged. Removed the unsupported founder-query 422 promise; controller behavior is unchanged.
 - Added four frontend tests and seven Laravel contract tests covering both imported catalogs in both locales, claimed versus unclaimed profiles, visibility/deletion, pagination limits, computed scorecard fields and deliberate field/contact leaks. Legacy scorecard log internals remain explicitly untyped, not privacy-certified.
 - No content, review dates, moderation, accounts, invitations, runtime backend code or production imports changed. The Garage eligibility page and Amplifai funding announcement did not qualify additional revenue records. [Source checks, test scope and hosting blocker](docs/API-FOUNDER-CONTRACT-2026-10-19.md).

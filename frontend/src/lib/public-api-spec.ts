@@ -34,7 +34,7 @@ const founderList = (...args: Parameters<typeof list>) => ({ get: {
 
 export const publicApiSpec = {
   openapi: "3.1.0",
-  info: { title: "Wosool public read API", version: "1.2.0", description: "Read-only discovery contract for anonymous requests without credentials. News and founder list/detail fields are tested against Laravel responses, including founder company relationships and scorecards. Legacy scorecard log contents remain untyped; separate company endpoints and startup-directory field schemas remain future work. No API key is required. Authenticated member/admin variants use Sanctum sessions, CSRF and server-side authorization and are outside this specification." },
+  info: { title: "Wosool public read API", version: "1.2.1", description: "Read-only discovery contract for anonymous requests without credentials. News and founder list/detail fields are tested against Laravel responses, including founder company relationships and scorecards. Legacy scorecard log contents remain untyped; separate company endpoints and startup-directory field schemas remain future work. No API key is required. Authenticated member/admin variants use Sanctum sessions, CSRF and server-side authorization and are outside this specification." },
   servers: [{ url: "/", description: "Same-origin Laravel proxy" }],
   security: [],
   components: { schemas: { ...publicNewsSchemas, ...publicFounderSchemas } },
