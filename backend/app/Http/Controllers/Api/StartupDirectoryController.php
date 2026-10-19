@@ -23,7 +23,14 @@ class StartupDirectoryController extends Controller
         $query = StartupDirectoryEntry::where('is_published', true)
             ->where('website_status', 'active')
             ->whereIn('revenue_status', ['reported', 'financial_statement'])
-            ->whereNotNull('profile->revenue_evidence->source_url');
+            // Imported rows are validated, but older/editor-managed records may
+            // lack evidence. Apply these gates before facets and pagination too.
+            // A populated period still requires human source review; a publication
+            // date or an unspecified year does not establish a revenue period.
+            ->whereNotNull('profile->revenue_evidence->source_url')
+            ->where('profile->revenue_evidence->source_url', '<>', '')
+            ->whereNotNull('profile->revenue_evidence->period')
+            ->where('profile->revenue_evidence->period', '<>', '');
         $sectors = (clone $query)->select('profile->sector_en as en', 'profile->sector_ar as ar')->distinct()->get()->map(fn ($row) => ['en' => $row->en, 'ar' => $row->ar]);
         if (isset($input['region'])) $query->where('region', $input['region']);
         if (isset($input['business_type'])) $query->where('business_type', $input['business_type']);

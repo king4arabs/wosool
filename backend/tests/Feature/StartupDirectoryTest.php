@@ -28,24 +28,24 @@ class StartupDirectoryTest extends TestCase
     {
         $this->artisan('directory:import')->assertSuccessful();
         $response = $this->getJson('/api/v1/startup-directory?per_page=6')->assertOk()->assertJsonPath('meta.last_page', 2);
-        $this->assertSame(['Saudi Arabia','Saudi Arabia','Saudi Arabia','Saudi Arabia','Saudi Arabia','GCC'], array_column($response->json('data'), 'region'));
-        $this->getJson('/api/v1/startup-directory?page=2&per_page=6')->assertOk()->assertJsonPath('data.2.region', 'MENA')->assertJsonPath('data.3.region', 'Global');
+        $this->assertSame(['Saudi Arabia','Saudi Arabia','Saudi Arabia','Saudi Arabia','GCC','GCC'], array_column($response->json('data'), 'region'));
+        $this->getJson('/api/v1/startup-directory?page=2&per_page=6')->assertOk()->assertJsonPath('data.0.region', 'MENA')->assertJsonPath('data.1.region', 'Global');
         StartupDirectoryEntry::where('slug', 'foodics')->update(['is_published' => false]);
-        $this->getJson('/api/v1/startup-directory?region=Saudi%20Arabia')->assertOk()->assertJsonPath('meta.total', 4);
+        $this->getJson('/api/v1/startup-directory?region=Saudi%20Arabia')->assertOk()->assertJsonPath('meta.total', 3);
         $this->getJson('/api/v1/startup-directory?per_page=101')->assertUnprocessable();
     }
 
     public function test_revenue_and_website_gates_exclude_unqualified_businesses(): void
     {
         $this->artisan('directory:import')->assertSuccessful();
-        $response = $this->getJson('/api/v1/startup-directory')->assertOk()->assertJsonPath('meta.total', 10);
+        $response = $this->getJson('/api/v1/startup-directory')->assertOk()->assertJsonPath('meta.total', 8);
         $this->assertNotContains('salla', array_column($response->json('data'), 'slug'));
         StartupDirectoryEntry::where('slug', 'foodics')->update(['website_status' => 'unavailable']);
         $entry = StartupDirectoryEntry::where('slug', 'tamara')->first();
         $profile = $entry->profile;
         unset($profile['revenue_evidence']);
         $entry->update(['profile' => $profile]);
-        $this->getJson('/api/v1/startup-directory')->assertOk()->assertJsonPath('meta.total', 8);
+        $this->getJson('/api/v1/startup-directory')->assertOk()->assertJsonPath('meta.total', 6);
     }
 
     public function test_business_focus_and_program_filters_apply_before_pagination(): void
@@ -59,7 +59,7 @@ class StartupDirectoryTest extends TestCase
         $this->getJson('/api/v1/startup-directory?source=leap&per_page=1&page=2')
             ->assertOk()->assertJsonPath('meta.total', 2)->assertJsonPath('data.0.slug', 'verofax');
         $this->getJson('/api/v1/startup-directory?search=robotics')
-            ->assertOk()->assertJsonPath('meta.total', 1)->assertJsonPath('data.0.slug', 'swarm-robotics');
+            ->assertOk()->assertJsonPath('meta.total', 0);
         $this->getJson('/api/v1/startup-directory?search=%25')->assertOk()->assertJsonPath('meta.total', 0);
         $this->getJson('/api/v1/startup-directory?source=misk&business_type=traditional')
             ->assertOk()->assertJsonPath('meta.total', 0);
@@ -115,6 +115,50 @@ class StartupDirectoryTest extends TestCase
                 $this->assertMatchesRegularExpression('/\p{Arabic}/u', $source['label_ar'], $row['slug']);
             }
         }
+    }
+
+    public function test_uncertain_revenue_remains_in_research_and_out_of_public_results(): void
+    {
+        $this->artisan('directory:import')->assertSuccessful();
+        foreach (['swarm-robotics', 'huspy'] as $slug) {
+            $entry = StartupDirectoryEntry::where('slug', $slug)->firstOrFail();
+            $this->assertSame('pending', $entry->revenue_status);
+            $this->assertTrue($entry->is_published); // Eligibility is separate from moderation.
+            $this->assertNotEmpty($entry->profile['revenue_evidence']['source_url']);
+            $this->assertSame('2026-10-18', $entry->profile['revenue_evidence']['reviewed_at']);
+            $this->assertSame('2026-10-09', $entry->reviewed_at); // No invented whole-profile review.
+            $this->assertSame('2026-10-09', $entry->profile['website_verified_at']);
+        }
+        $response = $this->getJson('/api/v1/startup-directory')->assertOk()->assertJsonPath('meta.total', 8);
+        $this->assertNotContains('swarm-robotics', array_column($response->json('data'), 'slug'));
+        $this->assertNotContains('huspy', array_column($response->json('data'), 'slug'));
+        $this->assertNotContains('Industrial automation', array_column($response->json('meta.sectors'), 'en'));
+        $this->getJson('/api/v1/startup-directory?source=misk')->assertOk()->assertJsonPath('meta.total', 0);
+        $this->getJson('/api/v1/startup-directory?search=huspy')->assertOk()->assertJsonPath('meta.total', 0);
+    }
+
+    public function test_missing_or_empty_revenue_source_and_period_are_excluded_before_pagination_and_facets(): void
+    {
+        $this->artisan('directory:import')->assertSuccessful();
+        $entry = StartupDirectoryEntry::where('slug', 'foodics')->firstOrFail();
+        $original = $entry->profile;
+        foreach (['source_url', 'period'] as $field) {
+            foreach (['missing', 'null', 'empty'] as $variant) {
+                $profile = $original;
+                if ($variant === 'missing') {
+                    unset($profile['revenue_evidence'][$field]);
+                } else {
+                    $profile['revenue_evidence'][$field] = $variant === 'null' ? null : '';
+                }
+                $entry->update(['profile' => $profile]);
+                $response = $this->getJson('/api/v1/startup-directory?per_page=1')->assertOk()
+                    ->assertJsonPath('meta.total', 7)->assertJsonPath('meta.last_page', 7);
+                $this->assertNotContains($original['sector_en'], array_column($response->json('meta.sectors'), 'en'));
+                $this->getJson('/api/v1/startup-directory?search=foodics')->assertOk()->assertJsonPath('meta.total', 0);
+            }
+        }
+        $entry->update(['profile' => $original]);
+        $this->getJson('/api/v1/startup-directory?search=foodics')->assertOk()->assertJsonPath('meta.total', 1);
     }
 
     public function test_overdue_reviews_are_exposed_without_falsely_refreshing_the_source_date(): void

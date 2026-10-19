@@ -1,8 +1,10 @@
 # Roadmap
 
-## Current execution plan — 17 October 2026
+## Current execution plan — 18 October 2026
 
 Use [Continuous development](docs/CONTINUOUS-DEVELOPMENT.md) as the current phased plan and acceptance gates. The older release tables below are historical planning context, not evidence of current completion. Founder/company record-specific metadata and noindex-on-unavailability are implemented and locally tested. Next: verify live profile metadata and production release/imports/cron, complete API field schemas, and make newsroom filtering cover the full database. Source publication is not evidence of production deployment or import.
+
+18 October evidence checkpoint: Swarm and Huspy are retained as pending in the revenue-qualified startup catalog; eight of 14 records remain eligible. Missing/null/empty revenue source URLs and periods are excluded before API pagination and sector facets. No broader founder profile or moderation flag changed. The live OpenAPI download still returns 404; its hosting cause and deployed revision are unverified. Next: deploy the reviewed eligibility changes, apply skipped existing-record corrections through the authorized admin process, and verify live counts; complete founder/company API schemas after these release checks. [Sources and acceptance boundaries](docs/research/REVENUE-ELIGIBILITY-2026-10-18.md).
 
 16 October checkpoint: founder/company-specific metadata and missing-profile noindex were observed on Wosool.org; the hosting source SHA and prior imports remain unverified. The next bounded fix protects public collection snapshot fallback from denial/withdrawal responses, with state tests and a required isolated-browser CI gate. After release verification, continue field-level OpenAPI work, whole-database news filtering and remaining homepage/detail fallback review.
 
