@@ -225,10 +225,10 @@ export const FAQS: FaqItem[] = [
     id: "office-hours", category: "events",
     q: { ar: "هل يمكنني حجز ساعات مكتبية مع الفريق؟", en: "Can I book office hours with the team?" },
     a: {
-      ar: ["أرسل طلبك من صفحة التواصل بتصنيف «ساعات مكتبية» مع موضوعك، وسيرد عليك الفريق بالخيارات المتاحة."],
-      en: ["Send a request from the contact page under Office hours with your topic, and the team will reply with what is available."],
+      ar: ["أرسل طلبك من صفحة التواصل بتصنيف «جلسة مع الفريق» مع موضوعك، وسيرد عليك الفريق بالخيارات المتاحة."],
+      en: ["Send a request from the contact page under “Time with the team” with your topic, and the team will reply with what is available."],
     },
-    link: { href: "/contact?category=office-hours", ar: "اطلب ساعات مكتبية", en: "Request office hours" },
+    link: { href: "/contact?category=office-hours", ar: "اطلب جلسة مع الفريق", en: "Request time with the team" },
   },
 
   // Content — news briefs, founder spotlight sourcing, activation invitations

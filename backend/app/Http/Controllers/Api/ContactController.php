@@ -11,15 +11,6 @@ use Illuminate\Support\Str;
 
 class ContactController extends Controller
 {
-    private const CATEGORIES = [
-        'general' => ['استفسار عام', 'General enquiry'],
-        'partnerships' => ['شراكة', 'Partnership'],
-        'sponsorship' => ['رعاية', 'Sponsorship'],
-        'founder-support' => ['دعم المؤسسين', 'Founder support'],
-        'media' => ['إعلام', 'Media'],
-        'office-hours' => ['ساعات مكتبية', 'Office hours'],
-    ];
-
     public function store(StoreContactRequest $request): JsonResponse
     {
         $validated = $request->validated();
@@ -29,7 +20,7 @@ class ContactController extends Controller
             'ip_address' => $request->ip(),
         ]);
 
-        [$categoryAr, $categoryEn] = self::CATEGORIES[$validated['category']];
+        [$categoryAr, $categoryEn] = ContactMessage::CATEGORIES[$validated['category']];
         Mailer::safely($validated['email'], WosoolMail::contactReceived($validated['name'], $validated['subject']), ['contact_message_id' => $message->id]);
         Mailer::safely(Mailer::team(), WosoolMail::teamAlert(
             "رسالة جديدة ({$categoryAr}): {$validated['subject']}",
@@ -41,7 +32,7 @@ class ContactController extends Controller
                 ['ar' => 'التصنيف', 'en' => 'Category', 'value' => "{$categoryAr} / {$categoryEn}"],
                 ['ar' => 'الرسالة', 'en' => 'Message', 'value' => Str::limit($validated['message'], 1500)],
             ],
-            '/admin',
+            '/admin/messages',
             $validated['email'],
             $validated['name'],
         ), ['contact_message_id' => $message->id]);
