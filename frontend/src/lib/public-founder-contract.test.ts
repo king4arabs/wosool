@@ -63,3 +63,23 @@ test('founder pagination supports 100 records and 404s without promising malform
   assert.equal(validatePublicResponse('/api/v1/founders/{slug}', 404, { message: 'Not found' }).valid, true)
   assert.throws(() => validatePublicResponse('/api/v1/founders', 422, {}), /No JSON response schema/)
 })
+
+test('nested company years accept observed database representations without coercing arbitrary strings', () => {
+  const company = {
+    id: 1, source_urls: [], source_reviewed_at: null, name: 'Fixture', slug: 'fixture',
+    description: null, logo_url: null, website: null, sector: null, stage: null,
+    location: null, country_code: null, founded_year: null, traction: null, team_size: null,
+    is_hiring: false, is_fundraising: false, is_collaborating: false, is_featured: false,
+    is_public: true, status: 'active', pivot: { role: null, is_primary: true },
+    created_at: null, updated_at: null,
+  }
+  for (const founded_year of [null, 2016, '2016']) {
+    const body = { ...founder(), companies: [{ ...company, founded_year }] }
+    const before = structuredClone(body)
+    assert.equal(detail(body).valid, true, JSON.stringify(founded_year))
+    assert.deepEqual(body, before)
+  }
+  for (const founded_year of ['', 'unknown', '2016.5', ' 2016', '201', 2016.5, true, {}]) {
+    assert.equal(detail({ ...founder(), companies: [{ ...company, founded_year }] }).valid, false, JSON.stringify(founded_year))
+  }
+})

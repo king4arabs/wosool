@@ -41,6 +41,8 @@ Wosool also provides the dedicated digital gateway for **EO Riyadh Accelerator**
 
 **Public API contracts (19 October 2026):** OpenAPI document version 1.2.0 covers the 22-field news and 35-field anonymous founder responses, including founder company relationships, nullable accounts and scorecards. Laravel response tests use the same exported schemas. Legacy scorecard log contents remain untyped; standalone company and startup-directory schemas remain incomplete. No backend response, content or account behavior changes. [Founder contract scope and verification](docs/API-FOUNDER-CONTRACT-2026-10-19.md).
 
+The follow-up 1.2.1 contract accepts founding years as integers or four-digit strings, matching the existing SQLite/production serialization difference found when checking all 29 live founder records. It does not coerce or modify data.
+
 **Content review coverage (17 October 2026):** integrity and 30-day review commands now cover both founder catalogs: **144 founders / 79 company groups / 42 stories**. Catalog-specific diagnostics, cross-catalog duplicate checks and unregistered-file guards prevent silent omissions. These are repository counts, not newly verified people or production imports. [Checks and source-review limits](docs/research/CONTENT-COVERAGE-2026-10-17.md).
 
 | If you want to… | Read |

@@ -30,6 +30,12 @@ No qualifying additions, company/founder biography changes, registry dates or pr
 
 ## Release boundary and next priority
 
+### Full-collection compatibility correction
+
+After PR #78 passed CI (240 backend tests / 1,870 assertions, 124 frontend tests, 12 content tests and 84 browser scenarios), verification expanded from one live founder to all 29. Thirteen founder responses included company `founded_year` values as four-digit strings, which 1.2.0 rejected; SQLite fixtures had integers. The model/resource does not cast this database YEAR value. Document 1.2.1 accepts integers, null and four-digit strings without coercion; a dedicated regression rejects arbitrary strings, fractions and other invalid types. This is a schema compatibility correction, not a production data repair or a new runtime field. Required CI must pass again before the follow-up merges.
+
+The corrected schema passed a fresh anonymous collection containing all 29 live founders on 19 October; all 125 frontend tests passed locally. This verifies response compatibility, not the truth of each record's biography or revenue claims.
+
 `https://wosool.org/api/openapi.json` returned HTTP 404 HTML on 19 October. The live anonymous founder list reported 29 records, not the 144 in checked-in catalogs. The hosting revision, routing cause, deployed frontend/backend and production import state remain unverified; configured hosting access is unavailable in this environment. No deployment, database import or admin correction was performed.
 
 Publish this source only after local checks; merge only after required CI passes. Existing deployment processes must deliver and verify the frontend OpenAPI route separately. No database import is required for this contract change. After that external release gate, continue standalone company/startup schemas and full-database newsroom filters, preserving concurrent PR #70 work.

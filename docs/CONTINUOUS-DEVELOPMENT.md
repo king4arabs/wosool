@@ -4,6 +4,8 @@ Updated: 19 October 2026. Work in bounded, reviewable cycles: inspect → verify
 
 Current contract slice: OpenAPI 1.2.0 adds the 35-field anonymous founder response, company relationships, nullable accounts and scorecards, with real Laravel response tests. Backend runtime behavior and all data remain unchanged. Live checks on 19 October still found 29 public founders and a 404 OpenAPI download. Hosting access is unavailable; do not advance the deployment/import acceptance gate. [Checks, limitations and limited source review](API-FOUNDER-CONTRACT-2026-10-19.md).
 
+Follow-up contract 1.2.1 accepts existing integer and four-digit string company founding years. The full 29-record live collection exposed a database representation difference absent from the first response and SQLite fixtures. Future contract acceptance must check all available public rows, not only one-record samples. Runtime serialization remains unchanged.
+
 Current bounded correction: Swarm Robotics and Huspy remain in the startup research queue with `revenue_status=pending`, because their cited evidence does not establish a specific revenue result and period together. The revenue-gated catalog has eight eligible records out of 14; the separate 144-founder catalogs remain unchanged. API source/period presence checks run before facets and pagination. See [18 October evidence and production correction requirements](research/REVENUE-ELIGIBILITY-2026-10-18.md). The live `/api/openapi.json` download still returned 404 in this review; source/CI completion must not be reported as hosting delivery.
 
 ## Phases and acceptance criteria
