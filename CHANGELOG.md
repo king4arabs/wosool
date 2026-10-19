@@ -1,5 +1,11 @@
 # Changelog
 
+## Anonymous founder field contract — 2026-10-19
+
+- OpenAPI document 1.2.0 adds schemas for the 35-field anonymous founder response, nested public company relationships, nullable account/scorecard data, pagination and JSON 404 errors. Existing routes and operation IDs remain unchanged. Removed the unsupported founder-query 422 promise; controller behavior is unchanged.
+- Added four frontend tests and seven Laravel contract tests covering both imported catalogs in both locales, claimed versus unclaimed profiles, visibility/deletion, pagination limits, computed scorecard fields and deliberate field/contact leaks. Legacy scorecard log internals remain explicitly untyped, not privacy-certified.
+- No content, review dates, moderation, accounts, invitations, runtime backend code or production imports changed. The Garage eligibility page and Amplifai funding announcement did not qualify additional revenue records. [Source checks, test scope and hosting blocker](docs/API-FOUNDER-CONTRACT-2026-10-19.md).
+
 ## Revenue eligibility correction — 2026-10-18
 
 - Retained Swarm Robotics and Huspy as pending research records after re-reading their primary evidence. Misk's annual revenue testimonial omits the year; Huspy's cited announcement does not give a specific revenue/ARR result and reporting period. Funding and GMV are not substitutes. Eight of 14 startup records remain eligible in a fresh import; the broader founder catalogs are unchanged.
