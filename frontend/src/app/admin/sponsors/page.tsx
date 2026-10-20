@@ -125,8 +125,8 @@ export default function AdminSponsorsPage() {
                 </div>
               </div>
               <div className="flex gap-2">
-                <Button size="sm" variant="ghost" onClick={() => openEditor(sponsor)}><Pencil className="h-4 w-4" /></Button>
-                <Button size="sm" variant="ghost" onClick={() => destroy(sponsor)}><Trash2 className="h-4 w-4 text-red-500" /></Button>
+                <Button size="sm" variant="ghost" onClick={() => openEditor(sponsor)} aria-label={`Edit ${sponsor.name}`} title="Edit"><Pencil className="h-4 w-4" aria-hidden="true" /></Button>
+                <Button size="sm" variant="ghost" onClick={() => destroy(sponsor)} aria-label={`Delete ${sponsor.name}`} title="Delete"><Trash2 className="h-4 w-4 text-red-500" aria-hidden="true" /></Button>
               </div>
             </div>
           ))}

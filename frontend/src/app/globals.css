@@ -559,7 +559,7 @@ input, select, textarea {
 .eoa-faq summary { cursor:pointer; min-height:44px; font-size:19px; font-weight:700; }
 .eoa-faq p { margin-top:16px; max-width:800px; }
 .eoa-source { margin-top:65px; border-top:1px solid var(--eoa-border); padding-top:22px; font-size:12px; line-height:2; color:var(--text-muted); }
-.eoa-source a { color:var(--link); }
+.eoa-source a { color:var(--link); text-decoration:underline; text-underline-offset:3px; }
 .eoa-source .eoa-actions { margin-top:18px; }
 .eoa-partners { padding-block:25px; border-bottom:1px solid var(--eoa-border); background:var(--surface); }
 .eoa-partners h2 { font-size:13px; text-align:center; margin-bottom:25px; color:var(--text-muted); }

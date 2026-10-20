@@ -219,7 +219,7 @@ export default function AdminNewsPage() {
                   <tr key={article.id} className="hover:bg-gray-50 transition-colors">
                     <td className="px-6 py-4">
                       <p className="font-medium text-gray-900 max-w-sm truncate">{article.title}</p>
-                      <p className="text-xs text-gray-400 mt-0.5">By {article.author_name}</p>
+                      <p className="text-xs text-gray-500 mt-0.5">By {article.author_name}</p>
                     </td>
                     <td className="px-6 py-4"><Badge variant="secondary">{article.category}</Badge></td>
                     <td className="px-6 py-4">
@@ -230,8 +230,8 @@ export default function AdminNewsPage() {
                     <td className="px-6 py-4 text-gray-500 text-xs">{formatDate(article.published_at)}</td>
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-2">
-                        <button className="text-gray-500 hover:text-gray-700" onClick={() => openEditor(article)}><Pencil className="h-4 w-4" /></button>
-                        <button className="text-red-500 hover:text-red-700" onClick={() => deleteArticle(article)}><Trash2 className="h-4 w-4" /></button>
+                        <button className="text-gray-500 hover:text-gray-700" onClick={() => openEditor(article)} aria-label={`تعديل ${article.title}`} title="تعديل"><Pencil className="h-4 w-4" aria-hidden="true" /></button>
+                        <button className="text-red-500 hover:text-red-700" onClick={() => deleteArticle(article)} aria-label={`حذف ${article.title}`} title="حذف"><Trash2 className="h-4 w-4" aria-hidden="true" /></button>
                       </div>
                     </td>
                   </tr>

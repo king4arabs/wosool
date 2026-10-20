@@ -65,7 +65,7 @@ export function ProgramCard({ program }: ProgramCardProps) {
                 style={
                   program.isOpen
                     ? { background: "#DCFCE7", color: "#166534" }
-                    : { background: "#F1F5F9", color: "#64748b" }
+                    : { background: "#F1F5F9", color: "#475569" }
                 }
               >
                 {program.isOpen && <span className="w-1 h-1 rounded-full bg-emerald-500 animate-pulse" />}

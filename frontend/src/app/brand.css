@@ -39,7 +39,7 @@
   --text: #10112f;
   --text-strong: var(--brand-navy);
   --text-muted: #666a80;
-  --text-subtle: #85889b;
+  --text-subtle: #6b6e82; /* 4.5:1 on --surface-soft (WCAG AA small text) */
   --border: #c9cad5;
   --border-soft: #e4e5ee;
   --border-strong: #aeb0c0;

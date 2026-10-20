@@ -64,10 +64,10 @@ export function EventCard({ event, now }: EventCardProps) {
           <div
             className="flex flex-col items-center justify-center rounded-xl shrink-0 h-14 w-14 border"
             style={{ background: "#EEF1FF", borderColor: "#E4E7F0" }}
-            aria-label={d.full}
           >
-            <span className="text-xs font-extrabold uppercase tracking-widest text-[#3B52D4]">{d.month}</span>
-            <span className="text-xl font-black text-slate-900 leading-none">{d.day}</span>
+            <span className="sr-only">{d.full}</span>
+            <span aria-hidden="true" className="text-xs font-extrabold uppercase tracking-widest text-[#3B52D4]">{d.month}</span>
+            <span aria-hidden="true" className="text-xl font-black text-slate-900 leading-none">{d.day}</span>
           </div>
 
           <div className="flex-1 min-w-0">

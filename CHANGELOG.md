@@ -1,5 +1,12 @@
 # Changelog
 
+## Accessibility pass and axe-core gate — 2026-10-20
+
+- **Problem:** an axe-core audit (WCAG 2.1 A/AA) of every route, Arabic and English, 390px and 1366px, failed on all 378 crawl visits. Every page had a notifications container with an `aria-label` but no role. Small grey labels (`--text-subtle`, #85889b) on founder and company cards, the contact form and admin lists measured 3.2–3.5:1 against the required 4.5:1. Gold section labels and sponsor links (#C9A84C) measured 2.1–2.3:1 on white. Edit, delete and website icons in the admin tables (companies, events, news, programs, sponsors) had no accessible name. Calendar day buttons, the EOA password-recovery logo link and several labelled `<div>`s exposed names that screen readers ignore or that differed from the visible text. The `/api` code sample could not be scrolled with the keyboard, and EOA footer links were told apart from the text by colour alone.
+- **Fix:** `--text-subtle` is now #6b6e82 (4.5:1 on `--surface-soft`, 5:1 on white). Gold text on light backgrounds uses #86691a (4.7–5.2:1); the gold on dark sections is unchanged. Icon buttons and links have names in the page's language; labelled groups, carousels and the toast area have roles; calendar days read their full date and activities from screen-reader text; the code sample is focusable; EOA footer links are underlined; admin metadata text moved from gray-400 to gray-500; admin sidebar headings from 45% to 70% white. No copy, data or layout changes.
+- **Guard:** `npm run qa:crawl` now runs axe-core on every visit and fails on serious or critical WCAG 2.1 A/AA findings (`QA_AXE=0` skips it). New `npm run test:a11y:browser` runs the same check on all public pages against the built site with the API blocked, and is a required step in the frontend CI job. `axe-core` is now a direct dev dependency (it was already installed through the ESLint config).
+- **Also:** merged `main` (#78, #79) into this branch; the only conflict was `CHANGELOG.md`, both sides kept.
+
 ## Anonymous founder field contract — 2026-10-19
 
 - Follow-up document 1.2.1 corrects company `founded_year` compatibility: the uncast database value can serialize as a four-digit string in production or an integer in SQLite. The full live 29-founder check caught 13 string-year responses missed by the initial one-record sample. Added regression coverage accepting both observed representations without coercion, while rejecting arbitrary strings and invalid types. No backend runtime or data changes.

@@ -196,7 +196,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
           <nav className="flex-1 overflow-y-auto px-3 py-4" aria-label={t.navigation}>
             {groups.map((group) => (
               <section key={group.key} className="mb-5">
-                <h2 className="px-3 pb-2 text-[10px] font-extrabold uppercase tracking-[.16em] text-white/45">
+                <h2 className="px-3 pb-2 text-[10px] font-extrabold uppercase tracking-[.16em] text-white/70">
                   {t.groups[group.key]}
                 </h2>
                 <div className="space-y-1">

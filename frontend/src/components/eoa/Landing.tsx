@@ -111,7 +111,7 @@ export function EoaLanding() {
             </aside>
           </div>
 
-          <div className="eoa-hero-metrics" aria-label={ar ? "مؤشرات البرنامج" : "Program highlights"}>
+          <div role="group" className="eoa-hero-metrics" aria-label={ar ? "مؤشرات البرنامج" : "Program highlights"}>
             {metrics.map(([value, label]) => <div className="eoa-hero-metric" key={label}><strong dir="ltr">{value}</strong><span>{label}</span></div>)}
           </div>
         </div>

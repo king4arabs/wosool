@@ -36,7 +36,7 @@ export function SectionHeader({
     >
       <div className={cn(centered && "mx-auto", "max-w-2xl")}>
         {eyebrow && (
-          <p className="text-sm font-semibold text-[#C9A84C] uppercase tracking-widest mb-3">
+          <p className={cn("text-sm font-semibold uppercase tracking-widest mb-3", light ? "text-[#C9A84C]" : "text-[#86691a]")}>
             {eyebrow}
           </p>
         )}
@@ -63,7 +63,7 @@ export function SectionHeader({
       {ctaLabel && ctaHref && !centered && (
         <Link
           href={ctaHref}
-          className="inline-flex items-center gap-2 text-sm font-semibold text-[#C9A84C] hover:gap-3 transition-all shrink-0"
+          className={cn("inline-flex items-center gap-2 text-sm font-semibold hover:gap-3 transition-all shrink-0", light ? "text-[#C9A84C]" : "text-[#86691a]")}
         >
           {ctaLabel}
           <ArrowIcon className="h-4 w-4" />
@@ -74,7 +74,7 @@ export function SectionHeader({
         <div className="mt-6">
           <Link
             href={ctaHref}
-            className="inline-flex items-center gap-2 text-sm font-semibold text-[#C9A84C] hover:gap-3 transition-all"
+            className={cn("inline-flex items-center gap-2 text-sm font-semibold hover:gap-3 transition-all", light ? "text-[#C9A84C]" : "text-[#86691a]")}
           >
             {ctaLabel}
             <ArrowIcon className="h-4 w-4" />

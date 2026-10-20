@@ -10,6 +10,7 @@
  *   - a missing or duplicated <h1>
  *   - a static public page whose server HTML (before JavaScript) has no <h1>
  *   - a button or link squeezed so narrow that a single word breaks across lines
+ *   - serious or critical WCAG 2.1 A/AA violations reported by axe-core (QA_AXE=0 skips this)
  *
  * Usage (frontend and backend running):
  *   npm run qa:crawl
@@ -19,8 +20,9 @@
  * Writes qa-report.json next to the working directory and exits 1 when anything fails.
  */
 import { chromium } from "playwright"
-import { readdirSync, statSync, writeFileSync, existsSync } from "node:fs"
+import { readdirSync, readFileSync, statSync, writeFileSync, existsSync } from "node:fs"
 import { join, relative, sep } from "node:path"
+import { createRequire } from "node:module"
 
 const BASE = (process.env.QA_BASE_URL || "http://localhost:3000").replace(/\/+$/, "")
 const APP_DIR = new URL("../src/app", import.meta.url).pathname
@@ -46,6 +48,9 @@ function routes(dir = APP_DIR) {
 const isPrivate = route => /^\/(admin|dashboard|review)(\/|$)|^\/eoa\/(admin|coach|account)(\/|$)/.test(route)
 // Account and application forms read a token or redirect from the URL, so they render on the client.
 const isClientForm = route => /(^|\/)(login|register|forgot-password|reset-password|verify-email|apply)$/.test(route)
+// axe-core runs in the page; only serious/critical WCAG 2.1 A/AA findings fail the crawl.
+const AXE = process.env.QA_AXE === "0" ? null : readFileSync(createRequire(import.meta.url).resolve("axe-core/axe.min.js"), "utf8")
+const AXE_TAGS = ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"]
 const ignorableConsole = text => /401 \(Unauthorized\)|403 \(Forbidden\)|404 \(Not Found\)|ERR_TUNNEL|ERR_NAME_NOT_RESOLVED|net::ERR_|Failed to load resource/.test(text)
 
 async function login(context, email, password) {
@@ -125,6 +130,13 @@ for (const role of roles.filter(role => !ONLY_ROLES || ONLY_ROLES.includes(role.
         if (check.squashed.length) problems.push(`word broken across lines in a button or link: ${check.squashed.join(", ")}`)
         if (check.h1 === 0 && !isPrivate(route)) problems.push("no <h1>")
         if (check.h1 > 1) problems.push(`${check.h1} <h1> elements`)
+        if (AXE) {
+          if (!(await page.evaluate(() => typeof window.axe === "object"))) await page.addScriptTag({ content: AXE })
+          const violations = await page.evaluate(async tags => (await window.axe.run(document, { runOnly: tags, resultTypes: ["violations"] })).violations
+            .filter(violation => violation.impact === "serious" || violation.impact === "critical")
+            .map(violation => `a11y ${violation.id} (${violation.nodes.length}): ${violation.nodes[0].target.join(" ").slice(0, 120)}`), AXE_TAGS)
+          problems.push(...violations)
+        }
       } catch (error) {
         problems.push(`navigation failed: ${String(error).slice(0, 120)}`)
       }

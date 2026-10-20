@@ -43,6 +43,8 @@ jobs:
         run: npx playwright install --with-deps chromium
       - name: Verify public collection fallback in both languages and viewport sizes
         run: npm run test:collections:browser
+      - name: Check public pages for serious WCAG 2.1 A/AA violations (axe-core)
+        run: npm run test:a11y:browser
   backend:
     runs-on: ubuntu-latest
     timeout-minutes: 15

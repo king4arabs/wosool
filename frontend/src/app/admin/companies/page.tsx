@@ -219,7 +219,7 @@ export default function AdminCompaniesPage() {
                         </div>
                         <div>
                           <p className="font-medium text-gray-900">{company.name}</p>
-                          <p className="text-xs text-gray-400">{company.location || "—"}</p>
+                          <p className="text-xs text-gray-500">{company.location || "—"}</p>
                         </div>
                       </div>
                     </td>
@@ -238,15 +238,15 @@ export default function AdminCompaniesPage() {
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-2">
                         {company.website && (
-                          <a href={company.website} target="_blank" rel="noreferrer" className="text-gray-500 hover:text-gray-700">
-                            <ExternalLink className="h-4 w-4" />
+                          <a href={company.website} target="_blank" rel="noreferrer" className="text-gray-500 hover:text-gray-700" aria-label={`${company.name} website (opens in a new tab)`} title="Website">
+                            <ExternalLink className="h-4 w-4" aria-hidden="true" />
                           </a>
                         )}
-                        <button className="text-gray-500 hover:text-gray-700" onClick={() => openEditor(company)}>
-                          <Pencil className="h-4 w-4" />
+                        <button className="text-gray-500 hover:text-gray-700" onClick={() => openEditor(company)} aria-label={`Edit ${company.name}`} title="Edit">
+                          <Pencil className="h-4 w-4" aria-hidden="true" />
                         </button>
-                        <button className="text-red-500 hover:text-red-700" onClick={() => deleteCompany(company)}>
-                          <Trash2 className="h-4 w-4" />
+                        <button className="text-red-500 hover:text-red-700" onClick={() => deleteCompany(company)} aria-label={`Delete ${company.name}`} title="Delete">
+                          <Trash2 className="h-4 w-4" aria-hidden="true" />
                         </button>
                       </div>
                     </td>

@@ -76,7 +76,7 @@ export function PasswordRecovery({ mode, eoa = false }: { mode: "forgot" | "rese
     <section id={eoa ? "eoa-recovery" : undefined} className="gateway-section flex items-center justify-center" dir={direction}>
       <div className="w-full max-w-md">
         {eoa && <div className="mb-8 flex items-center justify-between gap-3">
-          <Link href={eoa ? "/eoa" : "/"} aria-label={t.home} className="flex items-center gap-3 text-xl font-black text-slate-900">
+          <Link href={eoa ? "/eoa" : "/"} aria-label={`WOSOOL — ${t.home}`} className="flex items-center gap-3 text-xl font-black text-slate-900">
             <Image src="/wosool-network-logo.png" alt="" width={40} height={40} /> WOSOOL
           </Link>
           <button type="button" lang={locale === "ar" ? "en" : "ar"} onClick={() => setLocale(locale === "ar" ? "en" : "ar")} className="min-h-11 rounded-xl border border-slate-200 bg-white px-4 text-sm text-slate-700">

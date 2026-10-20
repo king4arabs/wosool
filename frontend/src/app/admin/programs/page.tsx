@@ -203,7 +203,7 @@ export default function AdminProgramsPage() {
           <Card key={program.id}>
             <CardHeader>
               <div className="flex items-center justify-between">
-                <div><h3 className="font-semibold text-gray-900">{program.title || program.name}</h3><p className="text-xs text-gray-400 mt-0.5">{program.program_type || program.category}</p></div>
+                <div><h3 className="font-semibold text-gray-900">{program.title || program.name}</h3><p className="text-xs text-gray-500 mt-0.5">{program.program_type || program.category}</p></div>
                 <Badge variant={program.is_open ? "success" : "secondary"}>{program.is_open ? "مفتوح" : "مغلق"}</Badge>
               </div>
             </CardHeader>
@@ -211,13 +211,13 @@ export default function AdminProgramsPage() {
               <p className="text-sm text-gray-600 mb-4 line-clamp-2">{program.short_description || program.description}</p>
               <div className="flex items-center justify-between pt-3 border-t border-gray-100">
                 <div className="flex gap-4">
-                  <div><p className="text-xs text-gray-400">طلبات</p><p className="text-sm font-bold text-[#0A1628]">{program.applications_count || 0}</p></div>
-                  <div><p className="text-xs text-gray-400">دفعات</p><p className="text-sm font-bold text-[#0A1628]">{program.cohorts_count || 0}</p></div>
+                  <div><p className="text-xs text-gray-500">طلبات</p><p className="text-sm font-bold text-[#0A1628]">{program.applications_count || 0}</p></div>
+                  <div><p className="text-xs text-gray-500">دفعات</p><p className="text-sm font-bold text-[#0A1628]">{program.cohorts_count || 0}</p></div>
                 </div>
                 <div className="flex items-center gap-3">
                   <Link href={`/admin/programs/${program.id}`} className="text-blue-600 hover:text-blue-800 text-xs font-semibold">إدارة</Link>
-                  <button className="text-gray-500 hover:text-gray-700" onClick={() => openEditor(program)}><Pencil className="h-4 w-4" /></button>
-                  <button className="text-red-500 hover:text-red-700" onClick={() => deleteProgram(program)}><Trash2 className="h-4 w-4" /></button>
+                  <button className="text-gray-500 hover:text-gray-700" onClick={() => openEditor(program)} aria-label={`تعديل ${program.title || program.name}`} title="تعديل"><Pencil className="h-4 w-4" aria-hidden="true" /></button>
+                  <button className="text-red-500 hover:text-red-700" onClick={() => deleteProgram(program)} aria-label={`حذف ${program.title || program.name}`} title="حذف"><Trash2 className="h-4 w-4" aria-hidden="true" /></button>
                 </div>
               </div>
             </CardContent>

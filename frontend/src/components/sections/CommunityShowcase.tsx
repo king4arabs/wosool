@@ -76,7 +76,7 @@ function FounderRow({ founders, suspended }: { founders: FounderCardProfile[]; s
   return <div className={styles.founderRow}>
     <div className={styles.founderRowHead}>
       <span>{ar ? 'تعرّف على المؤسسين' : 'Meet the founders'}<small>{ar ? 'اسحب أو استخدم الأسهم للاستكشاف' : 'Swipe or use the arrows to explore'}</small></span>
-      <div className={styles.controls} dir="ltr" aria-label={ar ? 'التحكم ببطاقات المؤسسين' : 'Founder carousel controls'}>
+      <div role="group" className={styles.controls} dir="ltr" aria-label={ar ? 'التحكم ببطاقات المؤسسين' : 'Founder carousel controls'}>
         <button type="button" aria-controls={id} aria-label={ar ? 'تحريك بطاقات المؤسسين إلى اليسار' : 'Move founder cards left'} disabled={!overflow} onClick={() => manualMove('left')}><ArrowLeft size={19} aria-hidden="true" /></button>
         {!reducedMotion && <button type="button" aria-controls={id} aria-label={paused ? ar ? 'تشغيل حركة بطاقات المؤسسين' : 'Resume founder movement' : ar ? 'إيقاف حركة بطاقات المؤسسين' : 'Pause founder movement'} disabled={!overflow || suspended} onClick={() => setPaused(value => !value)}>{paused ? <Play size={17} aria-hidden="true" /> : <Pause size={17} aria-hidden="true" />}</button>}
         <button type="button" aria-controls={id} aria-label={ar ? 'تحريك بطاقات المؤسسين إلى اليمين' : 'Move founder cards right'} disabled={!overflow} onClick={() => manualMove('right')}><ArrowRight size={19} aria-hidden="true" /></button>

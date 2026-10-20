@@ -14,6 +14,7 @@
     "validate:entrepreneurs": "node --import tsx scripts/validate-entrepreneurs.ts",
     "test": "node --import tsx --test src/lib/*.test.ts",
     "test:collections:browser": "node scripts/check-collection-fallback.mjs",
+    "test:a11y:browser": "node scripts/check-accessibility.mjs",
     "qa:crawl": "node scripts/qa-crawl.mjs"
   },
   "dependencies": {
@@ -43,6 +44,7 @@
     "@types/react-dom": "^19",
     "ajv": "8.20.0",
     "ajv-formats": "3.0.1",
+    "axe-core": "^4.14.0",
     "eslint": "^9",
     "eslint-config-next": "16.2.2",
     "eslint-plugin-react-hooks": "7.0.1",
