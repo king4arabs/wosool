@@ -1,8 +1,12 @@
 # Roadmap
 
-## Current execution plan — 18 October 2026
+## Current execution plan — 19 October 2026
 
 Use [Continuous development](docs/CONTINUOUS-DEVELOPMENT.md) as the current phased plan and acceptance gates. The older release tables below are historical planning context, not evidence of current completion. Founder/company record-specific metadata and noindex-on-unavailability are implemented and locally tested. Next: verify live profile metadata and production release/imports/cron, complete API field schemas, and make newsroom filtering cover the full database. Source publication is not evidence of production deployment or import.
+
+19 October API checkpoint: anonymous founder list/detail schemas cover all 35 fields, nested companies, nullable account/scorecard relationships, pagination and JSON 404s. Real-response tests cover all 144 imported profiles in Arabic and English without creating accounts. Standalone company/startup-directory schemas remain next; legacy scorecard logs are not a typed or privacy-certified payload. Live founder total remains 29 and the OpenAPI download returns 404; no hosting revision or import is claimed. [Contract scope and source checks](docs/API-FOUNDER-CONTRACT-2026-10-19.md).
+
+The same-day 1.2.1 follow-up handles the live database's string-valued founding years, discovered by extending the initial sample to every visible founder. Future contract slices must include full available live collections and database-driver representation differences, not only SQLite fixtures.
 
 18 October evidence checkpoint: Swarm and Huspy are retained as pending in the revenue-qualified startup catalog; eight of 14 records remain eligible. Missing/null/empty revenue source URLs and periods are excluded before API pagination and sector facets. No broader founder profile or moderation flag changed. The live OpenAPI download still returns 404; its hosting cause and deployed revision are unverified. Next: deploy the reviewed eligibility changes, apply skipped existing-record corrections through the authorized admin process, and verify live counts; complete founder/company API schemas after these release checks. [Sources and acceptance boundaries](docs/research/REVENUE-ELIGIBILITY-2026-10-18.md).
 

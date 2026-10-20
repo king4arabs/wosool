@@ -1,6 +1,6 @@
 # API Documentation
 
-Public developer reference: `/api`; downloadable OpenAPI 3.1 contract: `/api/openapi.json` (document version 1.1.0). The contract covers seven read endpoints. News list/detail have complete public resource field schemas and real-response contract tests; founder and startup-directory record shapes remain extensible and incomplete. Private/member/admin writes remain documented separately below. `/api/ready` checks database/migration readiness and returns 503 when unavailable. See [news contract scope and test prerequisites](API-NEWS-CONTRACT-2026-10-17.md).
+Public developer reference: `/api`; downloadable OpenAPI 3.1 contract: `/api/openapi.json` (document version 1.2.1). The contract covers seven read endpoints. News and anonymous founder list/detail have field schemas and real-response contract tests, including company relationships and nullable scorecards. Company founding years can be integers or four-digit strings, matching existing database serialization. Legacy scorecard log internals are untyped; standalone company and startup-directory shapes remain incomplete. Private/member/admin variants remain outside this download. `/api/ready` checks database/migration readiness and returns 503 when unavailable. See [news test prerequisites](API-NEWS-CONTRACT-2026-10-17.md) and [founder scope and release limits](API-FOUNDER-CONTRACT-2026-10-19.md).
 
 **EO Accelerator integration, 2026-10-09:** `/api/v1/eoa/*` is the canonical application, review and participant API. The earlier gateway registration/draft/submission/onboarding/review/operations write endpoints return HTTP 410; their data is retained and owned legacy reads remain private and read-only. Ecosystem/editorial/privacy APIs remain available. See [EOA operations](EOA.md) and [integration notes](EOA-INTEGRATION-2026-10-09.md). Authenticated `GET/POST /api/v1/eoa/privacy-requests` provides owned data-rights requests and resolution tracking.
 
@@ -279,7 +279,7 @@ Read endpoints return JSON collections or objects. Submission endpoints return c
 | Rate limiting | Applications/contact/login: 10/min; registration/recovery: 5/min |
 | Authentication | Sanctum SPA sessions for protected endpoints |
 | RBAC | Spatie permissions with admin and member roles |
-| OpenAPI export | Planned |
+| OpenAPI export | `/api/openapi.json` implemented in source; field coverage is partial and production availability must be checked separately |
 
 ---
 
