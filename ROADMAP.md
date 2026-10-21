@@ -1,10 +1,12 @@
 # Roadmap
 
-## Current execution plan — 19 October 2026
+## Current execution plan — 21 October 2026
 
 Use [Continuous development](docs/CONTINUOUS-DEVELOPMENT.md) as the current phased plan and acceptance gates. The older release tables below are historical planning context, not evidence of current completion. Founder/company record-specific metadata and noindex-on-unavailability are implemented and locally tested. Next: verify live profile metadata and production release/imports/cron, complete API field schemas, and make newsroom filtering cover the full database. Source publication is not evidence of production deployment or import.
 
-19 October API checkpoint: anonymous founder list/detail schemas cover all 35 fields, nested companies, nullable account/scorecard relationships, pagination and JSON 404s. Real-response tests cover all 144 imported profiles in Arabic and English without creating accounts. Standalone company/startup-directory schemas remain next; legacy scorecard logs are not a typed or privacy-certified payload. Live founder total remains 29 and the OpenAPI download returns 404; no hosting revision or import is claimed. [Contract scope and source checks](docs/API-FOUNDER-CONTRACT-2026-10-19.md).
+21 October API checkpoint: OpenAPI 1.3.0 adds standalone company list/detail schemas and real-response tests. Public company counts now exclude private, inactive and deleted founder relationships, matching the returned founder array. All 22 live companies passed the local contract; the checked-in 79-company import is exercised in both locales by required CI. The live OpenAPI route still returns 404 and the startup API reports zero records, so hosting deployment and production import remain incomplete. Next API slice: revenue-evidenced startup-directory records. [Checks and release boundaries](docs/API-COMPANY-CONTRACT-2026-10-21.md).
+
+19 October API checkpoint: anonymous founder list/detail schemas cover all 35 fields, nested companies, nullable account/scorecard relationships, pagination and JSON 404s. Real-response tests cover all 144 imported profiles in Arabic and English without creating accounts. Legacy scorecard logs are not a typed or privacy-certified payload. Live founder total was 29 and the OpenAPI download returned 404; no hosting revision or import was claimed. [Contract scope and source checks](docs/API-FOUNDER-CONTRACT-2026-10-19.md).
 
 The same-day 1.2.1 follow-up handles the live database's string-valued founding years, discovered by extending the initial sample to every visible founder. Future contract slices must include full available live collections and database-driver representation differences, not only SQLite fixtures.
 
