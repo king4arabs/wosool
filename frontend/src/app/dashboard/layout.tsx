@@ -378,7 +378,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               <button
                 onClick={cycleLocale}
                 className="flex items-center gap-1.5 p-2 rounded-xl text-slate-500 hover:bg-slate-100 hover:text-[#3B52D4] transition-colors"
-                aria-label={copy.layout.switchLanguage}
+                aria-label={`${locale.toUpperCase()} · ${copy.layout.switchLanguage}`}
                 title={localeOptions.find((o) => o.code === locale)?.nativeLabel}
               >
                 <Globe className="h-4 w-4" />

@@ -22,6 +22,9 @@ use Illuminate\Support\Facades\Schema;
 
 class DashboardController extends Controller
 {
+    /** RSVP pivot states in which the member no longer holds a place or a pending request. */
+    private const RELEASED_RSVP_STATUSES = ['cancelled', 'cancelled_by_user', 'rejected', 'no_show'];
+
     public function __invoke(Request $request): JsonResponse
     {
         $user = $request->user();
@@ -35,8 +38,14 @@ class DashboardController extends Controller
             ->limit(3)
             ->get();
 
+        // Only places the member still holds, at events that have not finished.
         $upcomingRsvps = $user->eventRsvps()
             ->whereIn('events.status', ['upcoming', 'live'])
+            ->wherePivotNotIn('status', self::RELEASED_RSVP_STATUSES)
+            ->where(function ($query) {
+                $query->where('events.ends_at', '>', now())
+                    ->orWhere(fn ($open) => $open->whereNull('events.ends_at')->where('events.starts_at', '>', now()));
+            })
             ->orderBy('events.starts_at')
             ->limit(3)
             ->get();
@@ -160,7 +169,10 @@ class DashboardController extends Controller
                     'sector' => $this->modelAttr($company, ['sector']),
                     'is_primary' => (bool) ($company->pivot?->is_primary ?? false),
                 ]) ?? [],
-                'upcoming_rsvps' => EventResource::collection($upcomingRsvps),
+                'upcoming_rsvps' => $upcomingRsvps->map(fn (Event $event) => array_merge(
+                    (new EventResource($event))->resolve($request),
+                    ['rsvp_status' => (string) ($event->pivot?->status ?? 'registered')],
+                ))->values(),
                 'program_applications' => $programApplications->map(fn ($application) => [
                     'id' => $application->id,
                     'status' => $application->status,

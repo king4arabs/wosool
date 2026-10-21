@@ -1,5 +1,7 @@
 "use client"
 
+import { useId } from "react"
+
 type Tab = "all" | "asks" | "offers"
 
 export function FeedFilterBar({
@@ -15,6 +17,7 @@ export function FeedFilterBar({
   onSector: (sector: string) => void
   counts: { all: number; asks: number; offers: number }
 }) {
+  const sectorId = useId()
   return (
     <div className="bg-white border border-slate-200 rounded-xl p-3 flex flex-col md:flex-row gap-3 justify-between items-stretch md:items-center shadow-sm">
       <div className="flex flex-wrap items-center gap-1">
@@ -29,8 +32,8 @@ export function FeedFilterBar({
         </button>
       </div>
       <div className="flex items-center gap-2 min-w-[200px] border-t md:border-t-0 pt-2 md:pt-0 border-slate-100">
-        <label className="text-xs font-bold text-slate-400 uppercase whitespace-nowrap">القطاع:</label>
-        <select value={sector} onChange={(e) => onSector(e.target.value)} className="w-full bg-slate-50 border border-slate-200 rounded-lg p-1.5 text-xs text-slate-700 focus:outline-none focus:border-slate-400 cursor-pointer">
+        <label htmlFor={sectorId} className="text-xs font-bold text-slate-500 uppercase whitespace-nowrap">القطاع:</label>
+        <select id={sectorId} value={sector} onChange={(e) => onSector(e.target.value)} className="w-full bg-slate-50 border border-slate-200 rounded-lg p-1.5 text-xs text-slate-700 focus:outline-none focus:border-slate-400 cursor-pointer">
           <option value="">جميع القطاعات التشغيلية</option>
           <option value="fintech">التقنية المالية (FinTech)</option>
           <option value="saas">البرمجيات المؤسسية (SaaS)</option>

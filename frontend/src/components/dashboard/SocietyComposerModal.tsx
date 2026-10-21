@@ -47,16 +47,16 @@ export function SocietyComposerModal({
             <button type="button" onClick={() => setForm({ ...form, post_type: "offer" })} className={`${form.post_type === "offer" ? "border-2 border-[#3B52D4] bg-[#EEF1FF]" : "border border-slate-200 bg-white"} p-3 rounded-xl text-xs font-bold`}>عرض قيمة</button>
           </div>
 
-          <input value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} required className="w-full bg-slate-50 border border-slate-200 rounded-lg p-2.5 text-xs" placeholder="عنوان المنشور" />
-          <textarea value={form.content} onChange={(e) => setForm({ ...form, content: e.target.value })} required className="w-full h-28 resize-none bg-slate-50 border border-slate-200 rounded-lg p-2.5 text-xs" placeholder="تفاصيل المنشور" />
+          <input value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} required aria-label="عنوان المنشور" className="w-full bg-slate-50 border border-slate-200 rounded-lg p-2.5 text-xs" placeholder="عنوان المنشور" />
+          <textarea value={form.content} onChange={(e) => setForm({ ...form, content: e.target.value })} required aria-label="تفاصيل المنشور" className="w-full h-28 resize-none bg-slate-50 border border-slate-200 rounded-lg p-2.5 text-xs" placeholder="تفاصيل المنشور" />
 
           <div className="grid grid-cols-2 gap-3">
-            <select value={form.sector} onChange={(e) => setForm({ ...form, sector: e.target.value as SocietyPostForm["sector"] })} className="bg-slate-50 border border-slate-200 rounded-lg p-2 text-xs">
+            <select aria-label="القطاع" value={form.sector} onChange={(e) => setForm({ ...form, sector: e.target.value as SocietyPostForm["sector"] })} className="bg-slate-50 border border-slate-200 rounded-lg p-2 text-xs">
               <option value="fintech">FinTech</option>
               <option value="saas">SaaS</option>
               <option value="ai">AI</option>
             </select>
-            <select value={form.priority} onChange={(e) => setForm({ ...form, priority: e.target.value as SocietyPostForm["priority"] })} className="bg-slate-50 border border-slate-200 rounded-lg p-2 text-xs">
+            <select aria-label="الأولوية" value={form.priority} onChange={(e) => setForm({ ...form, priority: e.target.value as SocietyPostForm["priority"] })} className="bg-slate-50 border border-slate-200 rounded-lg p-2 text-xs">
               <option value="normal">عادي</option>
               <option value="urgent">حرج</option>
             </select>

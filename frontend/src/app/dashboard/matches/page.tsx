@@ -105,7 +105,7 @@ export default function MatchesPage() {
             <h1 className="text-xl font-bold tracking-tight text-slate-900 mt-1">المطابقة الموجهة وتقصي الأقران</h1>
             <p className="text-xs text-slate-500 mt-0.5">تعرّف على مؤسسين تتكامل خبراتهم مع احتياجاتك، وأرسل طلب التعارف المناسب.</p>
           </div>
-          <div className="bg-slate-950 text-slate-400 font-sans text-xs px-3 py-1.5 rounded-lg border border-slate-800 text-center shrink-0">
+          <div className="bg-slate-950 text-white/80 font-sans text-xs px-3 py-1.5 rounded-lg border border-slate-800 text-center shrink-0">
             الرصيد المتاح: <span className="text-amber-400 font-bold">{creditRemaining} طلبات تقديم/الشهر</span>
           </div>
         </div>
