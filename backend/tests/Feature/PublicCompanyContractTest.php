@@ -99,7 +99,8 @@ class PublicCompanyContractTest extends TestCase
         $this->assertSame(1, $samples[2]['body']->meta->per_page);
         $this->assertSame(100, $samples[3]['body']->meta->per_page);
         $this->assertSame([], $samples[4]['body']->data);
-        foreach ([5, 6, 7, 8] as $index) $this->assertSame(1, $samples[$index]['body']->meta->total);
+        $this->assertSame(2, $samples[5]['body']->meta->total);
+        foreach ([6, 7, 8] as $index) $this->assertSame(1, $samples[$index]['body']->meta->total);
         $this->assertContracts($samples);
     }
 
