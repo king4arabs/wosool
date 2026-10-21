@@ -138,7 +138,7 @@ export default function AdminEventManagePage() {
                   <td className="px-4 py-3">
                     <div className="flex flex-wrap gap-1">
                       {ACTIONS.map((action) => (
-                        <Button key={action.key} size="sm" variant="outline" disabled={busyKey === `${row.user_id}:${action.key}`} onClick={() => act(row.user_id, action.key)}>
+                        <Button key={action.key} size="sm" variant="outline" className="whitespace-nowrap" disabled={busyKey === `${row.user_id}:${action.key}`} onClick={() => act(row.user_id, action.key)}>
                           {ar ? action.ar : action.en}
                         </Button>
                       ))}
