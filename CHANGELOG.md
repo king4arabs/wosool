@@ -1,5 +1,11 @@
 # Changelog
 
+## Standalone company field contract — 2026-10-21
+
+- OpenAPI document 1.3.0 adds typed standalone company list/detail routes: 24 detail fields, 25 list fields, 33-field active-public founder relationships, pagination and JSON 404s. Existing filters and backend response fields remain unchanged.
+- Fixed `founders_count` to apply the same active/public visibility rules as the returned `founders` array. Private, inactive and deleted founder relationships no longer affect the anonymous count. Added four frontend and six Laravel tests covering the 79-company import, both locales, visibility/deletion, filters, pagination, database year formats and deliberate nested contact leaks.
+- All 22 live company responses passed the corrected contract locally. No content, moderation, account, source-review date or production database record changed. The Garage program page, Impact46's Jahez investment announcement and Monsha'at program reporting did not qualify a new revenue record. [Checks and release boundaries](docs/API-COMPANY-CONTRACT-2026-10-21.md).
+
 ## Anonymous founder field contract — 2026-10-19
 
 - Follow-up document 1.2.1 corrects company `founded_year` compatibility: the uncast database value can serialize as a four-digit string in production or an integer in SQLite. The full live 29-founder check caught 13 string-year responses missed by the initial one-record sample. Added regression coverage accepting both observed representations without coercion, while rejecting arbitrary strings and invalid types. No backend runtime or data changes.
