@@ -29,7 +29,7 @@
 - [ ] Admin analytics dashboard backed by real tracking.
 - [ ] Admin review workflow for program applications and event capacity.
 - [ ] Member-facing program application form on the dashboard.
-- [ ] Surface member's RSVPs and program applications on the dashboard home.
+- [x] Surface member's RSVPs and program applications on the dashboard home (2026-10-21).
 
 ---
 

@@ -6,6 +6,7 @@ import Link from "next/link"
 import { ArrowLeft, ArrowRight, Search } from "lucide-react"
 import { PublicLayout } from "@/components/layout/PublicLayout"
 import { FounderShowcase } from "@/components/sections/CommunityShowcase"
+import type { FounderRegionFilter } from "@/lib/founder-filters"
 import { type FounderCardProfile } from "@/components/sections/FounderCard"
 import { foundersPageCopy } from "@/data/localized-seed"
 import { type ApiFounder, mapFounder } from "@/lib/content-api"
@@ -32,9 +33,11 @@ function FounderDirectory() {
   const [sector, setSector] = useState("")
   const [stage, setStage] = useState("")
   const [location, setLocation] = useState("")
+  // Kept here because the showcase below is remounted whenever the search or dropdowns change.
+  const [region, setRegion] = useState<FounderRegionFilter>("all")
   const Arrow = ar ? ArrowLeft : ArrowRight
   const featured = isSpotlight ? [] : founders.filter(founder => founder.isFeatured)
-  const hasFilters = Boolean(search || sector || stage || location)
+  const hasFilters = Boolean(search || sector || stage || location || region !== 'all')
   const filtered = founders.filter(founder => {
     const query = search.trim().toLocaleLowerCase(locale)
     const haystack = [founder.name, founder.companyName, founder.tagline, founder.bio, founder.position].filter(Boolean).join(' ').toLocaleLowerCase(locale)
@@ -68,9 +71,9 @@ function FounderDirectory() {
           <label className={label}><span>{ar ? 'الموقع' : 'Location'}</span><select value={location} onChange={event => setLocation(event.target.value)} className={control}><option value="">{copy.locations[0]}</option>{options('location').map(value => <option value={value} key={value}>{value}</option>)}</select></label>
           {options('stage').length > 0 && <label className={label}><span>{ar ? 'المرحلة' : 'Stage'}</span><select value={stage} onChange={event => setStage(event.target.value)} className={control}><option value="">{copy.stages[0]}</option>{options('stage').map(value => <option value={value} key={value}>{value}</option>)}</select></label>}
         </div>
-        {hasFilters && <button type="button" className="min-h-11 justify-self-start px-3 text-sm font-bold text-[var(--action-bg)] underline underline-offset-4" onClick={() => { setSearch(''); setSector(''); setStage(''); setLocation('') }}>{ar ? 'مسح الفلاتر' : 'Clear filters'}</button>}
+        {hasFilters && <button type="button" className="min-h-11 justify-self-start px-3 text-sm font-bold text-[var(--action-bg)] underline underline-offset-4" onClick={() => { setSearch(''); setSector(''); setStage(''); setLocation(''); setRegion('all') }}>{ar ? 'مسح الفلاتر' : 'Clear filters'}</button>}
       </div>
-      {collection.loading && founders.length === 0 ? <p role="status" className="py-8 text-center">{ar ? 'جارٍ تحميل الملفات العامة…' : 'Loading public profiles…'}</p> : <FounderShowcase key={filtersKey} founders={filtered} showFilters={false} />}
+      {collection.loading && founders.length === 0 ? <p role="status" className="py-8 text-center">{ar ? 'جارٍ تحميل الملفات العامة…' : 'Loading public profiles…'}</p> : <FounderShowcase key={filtersKey} founders={filtered} showFilters={false} region={region} onRegionChange={setRegion} />}
       {!isSpotlight && collection.hasMore && <div className="mt-7 text-center"><button type="button" className={styles.secondary} disabled={collection.loading} onClick={collection.loadMore}>{collection.loading ? ar ? 'جارٍ التحميل…' : 'Loading…' : ar ? 'تحميل المزيد من المؤسسين' : 'Load more founders'}</button></div>}
       {!isSpotlight && <div className="mt-8 flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-[var(--border-soft)] bg-[var(--surface-soft)] p-5"><p className="max-w-xl text-sm leading-relaxed text-[var(--text-muted)]">{ar ? 'بعض الملفات الكاملة متاحة للأعضاء فقط. سجّل دخولك للوصول إلى التفاصيل والتواصل المباشر.' : 'Some full profiles are available to members only. Sign in to access details and direct introductions.'}</p><Link className={styles.secondary} href="/login">{copy.login}<Arrow size={16} aria-hidden="true" /></Link></div>}
     </section>

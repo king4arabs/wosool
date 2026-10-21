@@ -17,10 +17,7 @@ class StoreContactRequest extends FormRequest
         return [
             'name' => 'required|string|max:255',
             'email' => 'required|email|max:255',
-            'category' => ['required', Rule::in([
-                'general', 'partnerships', 'sponsorship',
-                'founder-support', 'media', 'office-hours',
-            ])],
+            'category' => ['required', Rule::in(array_keys(\App\Models\ContactMessage::CATEGORIES))],
             'subject' => 'required|string|max:255',
             'message' => 'required|string|max:3000',
             'company' => 'nullable|string|max:255',

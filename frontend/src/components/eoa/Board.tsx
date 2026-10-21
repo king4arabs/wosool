@@ -52,7 +52,7 @@ function BoardCard({ member, ar, index, count, slide }: { member: EoaBoardMember
       {companyRole && <p>{companyRole}</p>}
       {company && <strong>{company}</strong>}
     </div>
-    <div className={styles.links} aria-label={ar ? `روابط ${name}` : `${name} links`}>
+    <div role="group" className={styles.links} aria-label={ar ? `روابط ${name}` : `${name} links`}>
       {companyUrl && <a href={companyUrl} target="_blank" rel="noopener noreferrer" aria-label={ar ? `موقع شركة ${name} (نافذة جديدة)` : `${name} company website (opens in a new tab)`} title={ar ? 'موقع الشركة' : 'Company website'}><Globe2 size={19} aria-hidden="true" /></a>}
       {socials.map(([kind, label, value]) => {
         const url = boardExternalUrl(value)
@@ -144,13 +144,13 @@ export function EoaBoard({ members, ar, layout = 'carousel' }: { members: EoaBoa
     <div className="eoa-container">
       <div className={styles.heading}>
         <div><span className="eoa-eyebrow">{ar ? 'قيادة المجتمع الريادي' : 'FOUNDERS LEADING FOUNDERS'}</span><h2 id={`${id}-title`}>{ar ? 'مجلس إدارة EO الرياض' : 'EO Riyadh Board'}</h2><p>{ar ? 'تعرّف على رواد الأعمال الذين يقودون مجتمع EO الرياض.' : 'Meet the entrepreneurs leading the EO Riyadh community.'}</p></div>
-        {layout === 'carousel' && overflow && <div className={styles.controls} dir="ltr" aria-label={ar ? 'التحكم في عرض أعضاء المجلس' : 'Board carousel controls'}>
+        {layout === 'carousel' && overflow && <div role="group" className={styles.controls} dir="ltr" aria-label={ar ? 'التحكم في عرض أعضاء المجلس' : 'Board carousel controls'}>
           <button type="button" aria-controls={`${id}-cards`} onClick={() => move('left')} aria-label={ar ? 'تحريك البطاقات إلى اليسار' : 'Move cards left'}><ArrowLeft size={20} aria-hidden="true" /></button>
           {!reducedMotion && <button type="button" aria-controls={`${id}-cards`} onClick={() => setPaused(value => !value)} aria-label={paused ? ar ? 'تشغيل الحركة التلقائية' : 'Start automatic movement' : ar ? 'إيقاف الحركة التلقائية' : 'Pause automatic movement'}>{paused ? <Play size={17} aria-hidden="true" /> : <Pause size={17} aria-hidden="true" />}</button>}
           <button type="button" aria-controls={`${id}-cards`} onClick={() => move('right')} aria-label={ar ? 'تحريك البطاقات إلى اليمين' : 'Move cards right'}><ArrowRight size={20} aria-hidden="true" /></button>
         </div>}
       </div>
-      <div ref={viewport} id={`${id}-cards`} className={styles.viewport} dir={layout === 'grid' ? (ar ? 'rtl' : 'ltr') : 'ltr'} tabIndex={layout === 'carousel' && overflow ? 0 : undefined} aria-label={ar ? 'أعضاء مجلس الإدارة' : 'Board members'} onKeyDown={layout === 'carousel' ? handleKey : undefined} onPointerEnter={event => { if (event.pointerType !== 'touch') setHovered(true) }} onPointerLeave={() => setHovered(false)} onPointerDown={() => setPaused(true)} onWheel={() => setPaused(true)} onFocusCapture={() => { setFocused(true); setPaused(true) }} onBlurCapture={event => { if (!event.currentTarget.contains(event.relatedTarget)) setFocused(false) }}>
+      <div ref={viewport} id={`${id}-cards`} role="region" className={styles.viewport} dir={layout === 'grid' ? (ar ? 'rtl' : 'ltr') : 'ltr'} tabIndex={layout === 'carousel' && overflow ? 0 : undefined} aria-label={ar ? 'أعضاء مجلس الإدارة' : 'Board members'} onKeyDown={layout === 'carousel' ? handleKey : undefined} onPointerEnter={event => { if (event.pointerType !== 'touch') setHovered(true) }} onPointerLeave={() => setHovered(false)} onPointerDown={() => setPaused(true)} onWheel={() => setPaused(true)} onFocusCapture={() => { setFocused(true); setPaused(true) }} onBlurCapture={event => { if (!event.currentTarget.contains(event.relatedTarget)) setFocused(false) }}>
         <div ref={track} className={layout === 'grid' ? styles.grid : styles.track} aria-live="off">
           {roster.map((member, index) => <BoardCard key={member.id} member={member} ar={ar} index={index} count={roster.length} slide={layout === 'carousel'} />)}
         </div>

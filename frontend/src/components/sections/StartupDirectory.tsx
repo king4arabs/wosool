@@ -5,6 +5,7 @@ import { useLocale } from '@/lib/locale'
 import { usePublicCollection } from '@/lib/use-public-collection'
 import { CardBrowser } from './CardBrowser'
 import { ProfileCard } from './ProfileCard'
+import { ecosystemSourceLabel, revenuePeriod, type StartupEcosystemSource, type StartupRevenueEvidence } from '@/lib/startup-directory'
 import { CollectionStatus } from './CollectionStatus'
 
 export type StartupProfile = {
@@ -15,8 +16,8 @@ export type StartupProfile = {
   business_type: 'technology' | 'traditional'; focus_area_en: string; focus_area_ar: string
   logo_url?: string; logo_tone?: 'dark'; portrait_url?: string; website: string; website_verified_at: string
   reviewed_at: string; review_due?: boolean; revenue_status: 'reported' | 'financial_statement'
-  revenue_evidence: { summary_en: string; summary_ar: string; period: string; source_url: string }
-  ecosystem_sources: { key: string; label: string; relationship_en: string; relationship_ar: string; url: string }[]
+  revenue_evidence: StartupRevenueEvidence
+  ecosystem_sources: StartupEcosystemSource[]
   company_socials: { label: string; url: string }[]; founder_socials: { label: string; url: string }[]; sources: string[]
 }
 const sources = [['misk','Misk','مسك'],['code','CODE by MCIT','كود'],['monshaat','Monshaat','منشآت'],['multiverse','Multiverse by MCIT','ملتيفيرس'],['impact46','Impact46','إمباكت 46'],['falak','Falak','فلك'],['lamarka','Lamarka','لاماركا'],['the-garage','The Garage','الكراج'],['leap','LEAP','ليب'],['gitex','GITEX','جيتكس']]
@@ -55,8 +56,8 @@ export function StartupDirectory({ compact = false }: { compact?: boolean }) {
       logo:p.logo_url,logoTone:p.logo_tone,portrait:p.portrait_url,website:p.website,companySocials:p.company_socials,
       founderSocials:p.founder_socials,sources:p.sources,reviewedAt:p.reviewed_at,reviewDue:p.review_due,assetCredit:p.asset_credit,
       businessType:typeLabel(p.business_type),focusArea:p[`focus_area_${lang}`],websiteVerifiedAt:p.website_verified_at,
-      revenue:p.revenue_evidence ? {summary:p.revenue_evidence[`summary_${lang}`],period:p.revenue_evidence.period,source:p.revenue_evidence.source_url,financialStatement:p.revenue_status==='financial_statement'} : undefined,
-      ecosystemSources:p.ecosystem_sources?.map(s=>({label:s.label,url:s.url,relationship:s[`relationship_${lang}`]}))
+      revenue:p.revenue_evidence ? {summary:p.revenue_evidence[`summary_${lang}`],period:revenuePeriod(p.revenue_evidence,lang),source:p.revenue_evidence.source_url,financialStatement:p.revenue_status==='financial_statement'} : undefined,
+      ecosystemSources:p.ecosystem_sources?.map(s=>({label:ecosystemSourceLabel(s,lang),url:s.url,relationship:s[`relationship_${lang}`]}))
     }}/>}))} />
     <CollectionStatus {...collection} empty={!collection.items.length} emptyMessage={query ? (ar ? 'لا توجد شركات مستوفية للشروط ضمن هذه الفلاتر. جرّب تغيير البحث.' : 'No qualifying businesses match these filters. Try changing your search.') : undefined} />
     <div className="mt-6 flex flex-wrap gap-6 text-blue-700">{compact && <Link className="min-h-11 inline-flex items-center font-bold underline" href="/startups">{ar ? 'استكشف الدليل' : 'Explore the directory'}</Link>}<Link className="min-h-11 inline-flex items-center underline" href="/contact?category=directory-correction">{ar ? 'اقتراح شركة أو تصحيح معلومة' : 'Suggest a company or correction'}</Link></div>

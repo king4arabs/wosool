@@ -62,7 +62,7 @@ export function SponsorCard({ sponsor }: SponsorCardProps) {
             href={sponsor.website}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-1 text-xs text-[#C9A84C] hover:underline"
+            className="inline-flex items-center gap-1 text-xs text-[#86691a] hover:underline"
           >
             {visitWebsite}
             <ExternalLink className={`h-3 w-3 ${direction === "rtl" ? "order-first" : ""}`} />

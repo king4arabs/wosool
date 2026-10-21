@@ -13,6 +13,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { getInitials } from "@/lib/utils"
 import ScorecardWidget from "@/components/dashboard/ScorecardWidget"
 import NextSteps from "@/components/dashboard/NextSteps"
+import { applicationHref, applicationStatus, homePrograms, homeSchedule, rsvpStatus, type HomeApplication, type HomeEvent, type StatusTone } from "@/lib/dashboard-home"
 
 interface DashboardData {
   profile_completion?: number
@@ -21,10 +22,22 @@ interface DashboardData {
   intro_requests?: {pending_count: number; inbound_count: number; outbound_count: number}
   recommended_matches?: Array<{id: number; founder_a?: ApiFounder; founder_b?: ApiFounder}>
   upcoming_appointments?: Array<{id: number; scheduled_at: string; type?: string; host_name?: string; guest_name?: string}>
-  upcoming_events?: Array<{id: number; title: string; slug: string; starts_at: string}>
+  upcoming_events?: HomeEvent[]
+  upcoming_rsvps?: HomeEvent[]
+  program_applications?: HomeApplication[]
   recommended_programs?: Array<{id: number; name: string; slug: string; category?: string}>
 }
 const panel = "min-w-0 rounded-3xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6"
+const toneClass: Record<StatusTone, string> = {
+  confirmed: "bg-emerald-50 text-emerald-800",
+  pending: "bg-indigo-50 text-indigo-800",
+  waiting: "bg-amber-50 text-amber-900",
+  closed: "bg-slate-100 text-slate-700",
+  draft: "bg-slate-100 text-slate-700",
+}
+function StatusBadge({ label, tone }: { label: string; tone: StatusTone }) {
+  return <span className={`inline-flex shrink-0 items-center rounded-full px-2.5 py-1 text-xs font-semibold leading-5 ${toneClass[tone]}`}>{label}</span>
+}
 
 export default function DashboardPage() {
   const { locale } = useLocale()
@@ -63,7 +76,9 @@ export default function DashboardPage() {
     const other = String(match.founder_a?.id) === String(profile?.id) ? match.founder_b : match.founder_a
     return other ? mapFounder(other) : null
   }).filter(item => item !== null)
-  const events = (data?.upcoming_events ?? []).filter(event => event.slug && Date.parse(event.starts_at) > (updated?.getTime() ?? Infinity))
+  const schedule = homeSchedule(data?.upcoming_rsvps, data?.upcoming_events, updated?.getTime() ?? Infinity)
+  const programs = homePrograms(data?.program_applications, data?.recommended_programs)
+  const appointments = data?.upcoming_appointments ?? []
   return <div className="space-y-6" aria-busy={loading}>
     <header className="relative overflow-hidden rounded-3xl bg-[#101035] p-6 text-white sm:p-8">
       <div className="absolute -end-16 -top-24 h-72 w-72 rounded-full bg-indigo-500/25 blur-3xl" aria-hidden="true" />
@@ -86,8 +101,25 @@ export default function DashboardPage() {
       <section className={panel}><div className="flex flex-wrap items-center justify-between gap-3"><h2 className="text-xl font-bold text-slate-950">{ar?'علاقات تستحق البداية':'People worth connecting with'}</h2><Link className="inline-flex min-h-11 items-center text-sm font-semibold text-indigo-600" href="/dashboard/matches">{ar?'كل المقترحات':'All suggestions'}<ArrowUpRight size={16}/></Link></div><p className="text-sm leading-7 text-slate-500">{ar?'راجع الملفات قبل طلب التعارف، ووضح ما ترغب في تحقيقه.':'Explore their profiles and make your introduction purposeful.'}</p><div className="mt-5 space-y-3">{matches.map(person=><Link key={person.id} href={`/founders/${person.slug}`} className="flex items-center gap-3 rounded-2xl border border-slate-200 p-4 hover:border-indigo-300"><Avatar className="h-12 w-12 shrink-0"><AvatarImage src={person.avatarUrl} alt={person.name}/><AvatarFallback>{getInitials(person.name)}</AvatarFallback></Avatar><div className="min-w-0 flex-1"><h3 className="font-bold text-slate-900">{person.name}</h3><p className="mt-1 text-xs leading-5 text-slate-500">{person.position || person.tagline}</p></div><ArrowUpRight size={17} className="shrink-0 text-indigo-600"/></Link>)}{data && !matches.length && <div className="rounded-2xl bg-indigo-50 p-5"><p className="text-sm leading-7 text-indigo-950">{ar?'لا توجد مقترحات حالياً. ابحث في المجتمع عن خبرة تكمل خبرتك.':'No suggestions yet. Explore the community to find experience that complements yours.'}</p><Link href="/dashboard/directory" className="mt-3 inline-flex min-h-11 items-center text-sm font-bold text-indigo-700 underline">{ar?'تصفح المجتمع':'Browse the community'}</Link></div>}</div></section>
       <ScorecardWidget key={`${locale}-${updated?.getTime()}`} initialScorecard={score} locale={locale}/>
     </div>
-    <div className="grid gap-6 xl:grid-cols-2"><section className={panel}><div className="flex items-center gap-3"><CalendarDays className="text-indigo-600" size={21}/><h2 className="text-xl font-bold">{ar?'في جدولك القادم':'Coming up'}</h2></div><p className="mt-2 text-xs text-slate-500">{ar?'الأوقات بتوقيت الرياض':'Times shown in Riyadh time'}</p><div className="mt-5 divide-y divide-slate-100">{(data?.upcoming_appointments??[]).map(item=><article key={`appointment-${item.id}`} className="py-4"><p className="text-sm font-semibold">{item.type || (ar?'موعد':'Appointment')}</p><time dateTime={item.scheduled_at} className="mt-1 block text-sm text-slate-500">{date(item.scheduled_at)}</time></article>)}{events.map(event=><Link key={event.id} href={`/events/${event.slug}`} className="block py-4 hover:text-indigo-600"><h3 className="text-sm font-bold">{event.title}</h3><time dateTime={event.starts_at} className="mt-1 block text-sm text-slate-500">{date(event.starts_at)}</time></Link>)}{data && !events.length && !data.upcoming_appointments?.length && <p className="py-4 text-sm leading-7 text-slate-500">{ar?'لا توجد مواعيد قادمة. اكتشف فعالية تناسب اهتماماتك.':'Your calendar is clear. Find an event that matches your interests.'}</p>}</div><Link href="/dashboard/events" className="mt-3 inline-flex min-h-11 items-center text-sm font-bold text-indigo-600">{ar?'استكشف الفعاليات':'Explore events'}<ArrowUpRight size={17}/></Link></section>
-      <section className={panel}><h2 className="text-xl font-bold">{ar?'فرص لتطوير شركتك':'Opportunities for your company'}</h2><div className="mt-5 space-y-3">{(data?.recommended_programs??[]).filter(p=>p.slug).map(program=><Link key={program.id} href={`/programs/${program.slug}`} className="block rounded-2xl border border-slate-200 p-4 hover:border-indigo-400"><p className="text-xs text-indigo-600">{program.category}</p><h3 className="mt-1 font-bold text-slate-900">{program.name}</h3></Link>)}{data && !data.recommended_programs?.length && <p className="text-sm leading-7 text-slate-500">{ar?'ستظهر البرامج المناسبة هنا عند توفرها. يمكنك استكشاف جميع البرامج الآن.':'Relevant programs will appear here when available. Explore all programs in the meantime.'}</p>}</div><Link href="/dashboard/programs" className="mt-4 inline-flex min-h-11 items-center text-sm font-bold text-indigo-600">{ar?'استكشف البرامج':'Explore programs'}<ArrowUpRight size={17}/></Link></section></div>
+    <div className="grid gap-6 xl:grid-cols-2">
+      <section className={panel} aria-labelledby="dashboard-schedule">
+        <div className="flex items-center gap-3"><CalendarDays className="text-indigo-600" size={21}/><h2 id="dashboard-schedule" className="text-xl font-bold">{ar?'في جدولك القادم':'Coming up'}</h2></div>
+        <p className="mt-2 text-xs text-slate-500">{ar?'الأوقات بتوقيت الرياض':'Times shown in Riyadh time'}</p>
+        <div className="mt-5 divide-y divide-slate-100">
+          {appointments.map(item=><article key={`appointment-${item.id}`} className="py-4"><p className="text-sm font-semibold">{item.type || (ar?'موعد':'Appointment')}</p><time dateTime={item.scheduled_at} className="mt-1 block text-sm text-slate-500">{date(item.scheduled_at)}</time></article>)}
+          {schedule.mine.map(event=>{const status=rsvpStatus(event.rsvp_status,locale);return <Link key={`rsvp-${event.id}`} href={`/events/${event.slug}`} className="flex flex-wrap items-start justify-between gap-x-3 gap-y-2 py-4 hover:text-indigo-600"><span className="min-w-0"><span className="block text-sm font-bold">{event.title}</span><time dateTime={event.starts_at} className="mt-1 block text-sm text-slate-500">{date(event.starts_at)}</time></span><StatusBadge {...status}/></Link>})}
+          {data && !appointments.length && !schedule.mine.length && <p className="py-4 text-sm leading-7 text-slate-500">{ar?'لست مسجلاً في أي فعالية قادمة، ولا توجد لديك مواعيد.':'You are not registered for any upcoming event and have no appointments.'}</p>}
+        </div>
+        {schedule.suggested.length > 0 && <div className="mt-4 border-t border-slate-100 pt-4"><h3 className="text-sm font-bold text-slate-700">{ar?'فعاليات قادمة في المجتمع':'Upcoming community events'}</h3><ul className="mt-2 divide-y divide-slate-100">{schedule.suggested.map(event=><li key={`event-${event.id}`}><Link href={`/events/${event.slug}`} className="block py-3 hover:text-indigo-600"><span className="block text-sm font-semibold">{event.title}</span><time dateTime={event.starts_at} className="mt-1 block text-sm text-slate-500">{date(event.starts_at)}</time></Link></li>)}</ul></div>}
+        <Link href="/dashboard/events" className="mt-3 inline-flex min-h-11 items-center text-sm font-bold text-indigo-600">{ar?'كل الفعاليات':'All events'}<ArrowUpRight size={17}/></Link>
+      </section>
+      <section className={panel} aria-labelledby="dashboard-programs">
+        <h2 id="dashboard-programs" className="text-xl font-bold">{ar?'البرامج':'Programs'}</h2>
+        {programs.mine.length > 0 && <div className="mt-5"><h3 className="text-sm font-bold text-slate-700">{ar?'طلباتك':'Your applications'}</h3><ul className="mt-3 space-y-3">{programs.mine.map(application=>{const status=applicationStatus(application.status,locale);return <li key={`application-${application.id}`}><Link href={applicationHref(application.program.slug)} className="flex flex-wrap items-start justify-between gap-x-3 gap-y-2 rounded-2xl border border-slate-200 p-4 hover:border-indigo-400"><span className="min-w-0 font-bold text-slate-900">{application.program.name}</span><StatusBadge {...status}/></Link></li>})}</ul></div>}
+        <div className="mt-5">{programs.mine.length > 0 && programs.suggested.length > 0 && <h3 className="text-sm font-bold text-slate-700">{ar?'مقترحة لشركتك':'Suggested for your company'}</h3>}<div className="mt-3 space-y-3">{programs.suggested.map(program=><Link key={program.id} href={`/programs/${program.slug}`} className="block rounded-2xl border border-slate-200 p-4 font-bold text-slate-900 hover:border-indigo-400">{program.name}</Link>)}</div>{data && !programs.suggested.length && !programs.mine.length && <p className="text-sm leading-7 text-slate-500">{ar?'لا توجد برامج مفتوحة تناسب مرحلة شركتك الآن. يمكنك تصفح كل البرامج.':'No open programs match your company stage right now. You can browse all programs.'}</p>}</div>
+        <Link href="/dashboard/programs" className="mt-4 inline-flex min-h-11 items-center text-sm font-bold text-indigo-600">{ar?'كل البرامج':'All programs'}<ArrowUpRight size={17}/></Link>
+      </section>
+    </div>
     {updated && <p className="text-xs text-slate-500">{ar?'آخر تحديث: ':'Last refreshed: '}{date(updated.toISOString())}</p>}
   </div>
 }

@@ -24,6 +24,8 @@ The command runs ESLint, TypeScript, frontend regression tests, Laravel tests, t
 
 The Laravel suite uses in-memory SQLite and the array mail driver. Notifications are faked in password tests; running the tests does not send user email. Positive member fixtures use `User::factory()->member()`; an ordinary factory user must remain forbidden from member endpoints.
 
+Accessibility: `npm --prefix frontend run test:a11y:browser` (after a build) runs axe-core on every public page in Arabic and English at 390px and 1366px with the API blocked, and fails on serious or critical WCAG 2.1 A/AA violations. CI runs it after the public-collection browser check. The QA crawl (`npm run qa:crawl`) runs the same axe check on every page it visits, including member and admin pages; set `QA_AXE=0` to skip it. axe finds only machine-detectable problems; the keyboard and screen-reader checks below remain manual.
+
 The production dependency checks are:
 
 ```bash

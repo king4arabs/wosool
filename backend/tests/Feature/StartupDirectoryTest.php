@@ -100,6 +100,23 @@ class StartupDirectoryTest extends TestCase
         $this->assertNotEmpty($thiqa->profile['revenue_evidence']['source_url']);
     }
 
+    public function test_revenue_periods_and_program_labels_are_bilingual(): void
+    {
+        $this->artisan('directory:import')->assertSuccessful();
+        $jahez = StartupDirectoryEntry::where('slug', 'jahez')->firstOrFail();
+        $this->assertSame('السنة المنتهية في 31 ديسمبر 2024', $jahez->profile['revenue_evidence']['period_ar']);
+        $this->assertSame('إمباكت 46', $jahez->profile['ecosystem_sources'][0]['label_ar']);
+
+        $rows = $this->getJson('/api/v1/startup-directory?per_page=100')->assertOk()->json('data');
+        $this->assertNotEmpty($rows);
+        foreach ($rows as $row) {
+            $this->assertMatchesRegularExpression('/\p{Arabic}/u', $row['revenue_evidence']['period_ar'], $row['slug']);
+            foreach ($row['ecosystem_sources'] as $source) {
+                $this->assertMatchesRegularExpression('/\p{Arabic}/u', $source['label_ar'], $row['slug']);
+            }
+        }
+    }
+
     public function test_uncertain_revenue_remains_in_research_and_out_of_public_results(): void
     {
         $this->artisan('directory:import')->assertSuccessful();

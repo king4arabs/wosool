@@ -51,7 +51,7 @@ export default function EventsPage() {
         style={{ boxShadow: "0 2px 8px -2px rgba(15,22,40,0.04)" }}
       >
         <div className="mx-auto max-w-7xl">
-          <div className="mb-3 flex gap-2" aria-label={locale === "ar" ? "الفترة" : "Event period"}>
+          <div role="group" className="mb-3 flex gap-2" aria-label={locale === "ar" ? "الفترة" : "Event period"}>
             {(["upcoming", "past"] as const).map((value) => <button key={value} type="button" aria-pressed={period === value} onClick={() => setPeriod(value)} className={`min-h-11 rounded-xl px-4 text-sm font-bold ${period === value ? "bg-slate-900 text-white" : "bg-slate-100 text-slate-700"}`}>
               {value === "upcoming" ? (locale === "ar" ? "الفعاليات القادمة" : "Upcoming events") : (locale === "ar" ? "الفعاليات السابقة" : "Past events")}
             </button>)}

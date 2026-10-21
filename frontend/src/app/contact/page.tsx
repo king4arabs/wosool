@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState, type FormEvent, type ReactNode } from "react"
 import Link from "next/link"
-import { Building, CheckCircle2, Clock, Loader2, Mail, Newspaper, Users, type LucideIcon } from "lucide-react"
+import { Building, CheckCircle2, Clock, Handshake, Loader2, Mail, Newspaper, Users, type LucideIcon } from "lucide-react"
 import { PublicLayout } from "@/components/layout/PublicLayout"
 import { PageHero } from "@/components/sections/PageHero"
 import { api, ApiError } from "@/lib/api"
@@ -14,7 +14,7 @@ type Category = "general" | "partnerships" | "sponsorship" | "media" | "founder-
 const categories: { value: Category; icon: LucideIcon; ar: [string, string]; en: [string, string] }[] = [
   { value: "general", icon: Mail, ar: ["سؤال عام", "عن وصول أو العضوية أو أي شيء آخر"], en: ["General question", "About Wosool, membership or anything else"] },
   { value: "founder-support", icon: Users, ar: ["دعم المؤسسين", "حسابك أو ملفك أو التعارف"], en: ["Founder support", "Your account, profile or introductions"] },
-  { value: "partnerships", icon: Users, ar: ["شراكة", "برامج أو فعاليات مشتركة"], en: ["Partnership", "Joint programs or events"] },
+  { value: "partnerships", icon: Handshake, ar: ["شراكة", "برامج أو فعاليات مشتركة"], en: ["Partnership", "Joint programs or events"] },
   { value: "sponsorship", icon: Building, ar: ["رعاية", "رعاية فعالية أو لقاء مؤسسين"], en: ["Sponsorship", "Sponsor an event or founder gathering"] },
   { value: "media", icon: Newspaper, ar: ["إعلام", "طلبات الصحافة والمقابلات"], en: ["Media", "Press requests and interviews"] },
   { value: "office-hours", icon: Clock, ar: ["جلسة مع الفريق", "حجز وقت قصير للنقاش"], en: ["Time with the team", "Book a short call"] },

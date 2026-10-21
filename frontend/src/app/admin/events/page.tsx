@@ -335,24 +335,24 @@ export default function AdminEventsPage() {
                   <tr key={event.id} className="hover:bg-gray-50 transition-colors">
                     <td className="px-6 py-4">
                       <p className="font-medium text-gray-900">{event.title}</p>
-                      <p className="text-xs text-gray-400">{event.location}</p>
+                      <p className="text-xs text-gray-500">{event.location}</p>
                     </td>
                     <td className="px-6 py-4">
                       <p className="text-gray-700">{formatDate(event.starts_at)}</p>
-                      <p className="text-xs text-gray-400">{new Date(event.starts_at).toLocaleTimeString("ar-SA", { hour: "numeric", minute: "2-digit" })}</p>
+                      <p className="text-xs text-gray-500">{new Date(event.starts_at).toLocaleTimeString("ar-SA", { hour: "numeric", minute: "2-digit" })}</p>
                     </td>
                     <td className="px-6 py-4">
                       <Badge variant={event.format === "virtual" ? "secondary" : "outline"}>{event.format}</Badge>
                     </td>
                     <td className="px-6 py-4">
                       <span className="font-medium text-gray-900">{event.rsvp_count || 0}</span>
-                      {event.max_attendees ? <span className="text-xs text-gray-400"> / {event.max_attendees}</span> : null}
+                      {event.max_attendees ? <span className="text-xs text-gray-500"> / {event.max_attendees}</span> : null}
                     </td>
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-2">
                         <Link href={`/admin/events/${event.id}`} className="text-blue-600 hover:text-blue-800 text-xs font-semibold">إدارة</Link>
-                        <button className="text-gray-500 hover:text-gray-700" onClick={() => openEditor(event)}><Pencil className="h-4 w-4" /></button>
-                        <button className="text-red-500 hover:text-red-700" onClick={() => deleteEvent(event)}><Trash2 className="h-4 w-4" /></button>
+                        <button className="text-gray-500 hover:text-gray-700" onClick={() => openEditor(event)} aria-label={`تعديل ${event.title}`} title="تعديل"><Pencil className="h-4 w-4" aria-hidden="true" /></button>
+                        <button className="text-red-500 hover:text-red-700" onClick={() => deleteEvent(event)} aria-label={`حذف ${event.title}`} title="حذف"><Trash2 className="h-4 w-4" aria-hidden="true" /></button>
                       </div>
                     </td>
                   </tr>

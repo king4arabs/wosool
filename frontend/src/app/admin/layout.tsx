@@ -12,6 +12,7 @@ import {
   Compass,
   GraduationCap,
   Handshake,
+  Inbox,
   LayoutDashboard,
   MessageCircle,
   Newspaper,
@@ -53,6 +54,7 @@ const labels = {
       "/admin/scorecards": "بطاقات التقييم",
       "/admin/matches": "التوافق الذكي",
       "/admin/intros": "طلبات التعارف",
+      "/admin/messages": "رسائل التواصل",
       "/admin/chat": "إشراف المحادثات",
       "/admin/events": "الفعاليات",
       "/admin/programs": "البرامج",
@@ -87,6 +89,7 @@ const labels = {
       "/admin/scorecards": "Scorecards",
       "/admin/matches": "Smart matching",
       "/admin/intros": "Introductions",
+      "/admin/messages": "Contact messages",
       "/admin/chat": "Chat moderation",
       "/admin/events": "Events",
       "/admin/programs": "Programs",
@@ -120,6 +123,7 @@ const groups: NavigationGroup[] = [
       { href: "/admin/scorecards", icon: ClipboardList },
       { href: "/admin/matches", icon: Sparkles },
       { href: "/admin/intros", icon: Handshake },
+      { href: "/admin/messages", icon: Inbox },
       { href: "/admin/chat", icon: MessageCircle },
     ],
   },
@@ -192,7 +196,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
           <nav className="flex-1 overflow-y-auto px-3 py-4" aria-label={t.navigation}>
             {groups.map((group) => (
               <section key={group.key} className="mb-5">
-                <h2 className="px-3 pb-2 text-[10px] font-extrabold uppercase tracking-[.16em] text-white/45">
+                <h2 className="px-3 pb-2 text-[10px] font-extrabold uppercase tracking-[.16em] text-white/70">
                   {t.groups[group.key]}
                 </h2>
                 <div className="space-y-1">

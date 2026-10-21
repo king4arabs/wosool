@@ -251,7 +251,7 @@ export function ProfileCard({ data, variant = "company" }: { data: ProfileCardDa
         )}
 
         {!!data.signals?.length && (
-          <div
+          <div role="group"
             className={styles.signalRow}
             aria-label={ar ? "إشارات الشركة" : "Company signals"}
           >

@@ -134,7 +134,7 @@ export default function ScorecardPage() {
       <div className="mx-auto max-w-6xl space-y-8">
         <div className="flex flex-col items-start justify-between gap-4 border-b border-slate-200 pb-6 md:flex-row md:items-center">
           <div>
-            <span className="text-xs font-bold uppercase tracking-wider text-amber-600">{isAr ? "لوحة التحكم الإستراتيجية" : "Strategic Control Panel"}</span>
+            <span className="text-xs font-bold uppercase tracking-wider text-amber-800">{isAr ? "لوحة التحكم الإستراتيجية" : "Strategic Control Panel"}</span>
             <h1 className="mt-1 text-2xl font-bold text-slate-900 md:text-3xl">{isAr ? "بطاقة أداء شركتي الناشئة (Scorecard)" : "My Startup Performance Card (Scorecard)"}</h1>
             <p className="mt-1 text-sm text-slate-500">{isAr ? "تحليل ديناميكي فوري يعكس مؤشرات الزخم والجهوزية بناءً على آخر تحديثاتك التشغيلية." : "Live dynamic analysis of momentum and readiness based on your latest operational updates."}</p>
           </div>
@@ -147,8 +147,8 @@ export default function ScorecardPage() {
                 <div className="h-2 w-2 animate-pulse rounded-full bg-amber-500" />
                 <h2 className="text-sm font-bold text-slate-800">{isAr ? "توثيق الإنجاز الحالي (Milestone Entry)" : "Current Milestone Entry"}</h2>
               </div>
-              <textarea readOnly value={latestUpdateText || milestonePlaceholder} className="h-36 w-full resize-none rounded-lg border border-slate-200 bg-slate-50 p-3 text-xs text-slate-700" />
-              <textarea value={updateText} onChange={(e) => setUpdateText(e.target.value)} disabled={submitting} className="h-24 w-full resize-none rounded-lg border border-slate-200 bg-white p-3 text-xs text-slate-700 disabled:opacity-70" placeholder={isAr ? "اكتب تحديثًا تشغيليًا جديدًا..." : "Write a new operational update..."} />
+              <textarea readOnly aria-label={isAr ? "آخر تحديث تشغيلي" : "Latest operational update"} value={latestUpdateText || milestonePlaceholder} className="h-36 w-full resize-none rounded-lg border border-slate-200 bg-slate-50 p-3 text-xs text-slate-700" />
+              <textarea aria-label={isAr ? "تحديث تشغيلي جديد" : "New operational update"} value={updateText} onChange={(e) => setUpdateText(e.target.value)} disabled={submitting} className="h-24 w-full resize-none rounded-lg border border-slate-200 bg-white p-3 text-xs text-slate-700 disabled:opacity-70" placeholder={isAr ? "اكتب تحديثًا تشغيليًا جديدًا..." : "Write a new operational update..."} />
               {submitting ? (
                 <div className="flex items-center gap-2 rounded-lg border border-[#3B52D4]/20 bg-[#EEF1FF] px-3 py-2 text-xs font-medium text-[#2E44C8]">
                   <span className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-[#3B52D4]/30 border-t-[#3B52D4]" />
@@ -171,8 +171,8 @@ export default function ScorecardPage() {
           </div>
 
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:col-span-2">
-            <MetricCard title={isAr ? "زخم الشركة الناشئة (Momentum)" : "Startup Momentum"} description={isAr ? "يقيس سرعة تنفيذ وإطلاق الميزات والحلول في السوق." : "Measures execution speed and shipping cadence."} value={computed.momentum} valueClass="text-emerald-600" barClass="bg-emerald-500" trend={isAr ? "قراءة مباشرة من نشاط التنفيذ" : "Live reading from execution activity"} trendClass="text-emerald-600" />
-            <MetricCard title={isAr ? "الجهوزية للتمويل (Fundraising Readiness)" : "Fundraising Readiness"} description={isAr ? "مدى اكتمال جاهزية البيانات والمواد للمستثمرين." : "Measures data room and investor-material readiness."} value={computed.fundraising} valueClass="text-amber-600" barClass="bg-amber-500" trend={isAr ? "مربوط بمؤشرات الجاهزية الحالية" : "Mapped from current readiness indicators"} trendClass="text-amber-600" />
+            <MetricCard title={isAr ? "زخم الشركة الناشئة (Momentum)" : "Startup Momentum"} description={isAr ? "يقيس سرعة تنفيذ وإطلاق الميزات والحلول في السوق." : "Measures execution speed and shipping cadence."} value={computed.momentum} valueClass="text-emerald-700" barClass="bg-emerald-500" trend={isAr ? "قراءة مباشرة من نشاط التنفيذ" : "Live reading from execution activity"} trendClass="text-emerald-700" />
+            <MetricCard title={isAr ? "الجهوزية للتمويل (Fundraising Readiness)" : "Fundraising Readiness"} description={isAr ? "مدى اكتمال جاهزية البيانات والمواد للمستثمرين." : "Measures data room and investor-material readiness."} value={computed.fundraising} valueClass="text-amber-800" barClass="bg-amber-500" trend={isAr ? "مربوط بمؤشرات الجاهزية الحالية" : "Mapped from current readiness indicators"} trendClass="text-amber-800" />
             <MetricCard title={isAr ? "مؤشر النمو الرقمي (Growth Score)" : "Growth Score"} description={isAr ? "يراقب مسار النمو وفق الإشارات التشغيلية." : "Tracks growth trajectory from operational signals."} value={computed.growth} valueClass="text-blue-600" barClass="bg-blue-500" trend={isAr ? "نمو ضمن المسار المستهدف" : "Growth within target trajectory"} trendClass="text-slate-500" />
             <MetricCard title={isAr ? "مستوى الاحتياج للدعم (Support Need)" : "Support Need"} description={isAr ? "يرصد العقبات التي تحتاج دعمًا من الشبكة." : "Reflects blockers that require ecosystem support."} value={computed.supportNeed} valueClass="text-rose-600" barClass="bg-rose-500" trend={isAr ? "انخفاض القيمة يعني حاجة دعم أقل" : "Lower value indicates reduced support demand"} trendClass="text-rose-600" />
 

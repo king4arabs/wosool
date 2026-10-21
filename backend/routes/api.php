@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\Admin\DashboardController as AdminDashboardControll
 use App\Http\Controllers\Api\Admin\EventController as AdminEventController;
 use App\Http\Controllers\Api\Admin\EventRegistrationController as AdminEventRegistrationController;
 use App\Http\Controllers\Api\Admin\FounderController as AdminFounderController;
+use App\Http\Controllers\Api\Admin\ContactMessageController as AdminContactMessageController;
 use App\Http\Controllers\Api\Admin\IntroductionController as AdminIntroductionController;
 use App\Http\Controllers\Api\Admin\MatchController as AdminMatchController;
 use App\Http\Controllers\Api\Admin\NewsController as AdminNewsController;
@@ -234,6 +235,8 @@ Route::prefix('v1')->group(function () {
         Route::post('/matches', [AdminMatchController::class, 'store']);
         Route::get('/intros', [AdminIntroductionController::class, 'index']);
         Route::patch('/intros/{intro}', [AdminIntroductionController::class, 'update']);
+        Route::get('/contact-messages', [AdminContactMessageController::class, 'index']);
+        Route::patch('/contact-messages/{message}', [AdminContactMessageController::class, 'update']);
         Route::get('/scorecards', [AdminScorecardController::class, 'index']);
         Route::get('/scorecards/{scorecard}', [AdminScorecardController::class, 'show']);
         Route::post('/scorecards/{scorecard}/verify-email', [AdminScorecardController::class, 'sendVerification'])->middleware('throttle:10,1');

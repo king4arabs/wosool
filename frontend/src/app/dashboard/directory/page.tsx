@@ -208,6 +208,7 @@ export default function FounderDirectoryPage() {
       {loading && (
         <div
           className="grid gap-5 md:grid-cols-2 xl:grid-cols-3"
+          role="status"
           aria-label={ar ? "جارٍ تحميل الملفات" : "Loading profiles"}
         >
           {Array.from({ length: 6 }, (_, index) => (

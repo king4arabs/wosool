@@ -59,6 +59,7 @@
     "revenue_evidence": {
       "source_url": "https://www.linkedin.com/posts/foodics_the-h1-2025-performance-numbers-are-in-proud-activity-7354120078851747840--28Z",
       "period": "H1 2025",
+      "period_ar": "النصف الأول من 2025",
       "summary_en": "Foodics reported 29% year-on-year ARR growth. No absolute revenue amount was disclosed.",
       "summary_ar": "أعلنت فودكس نمو الإيرادات السنوية المتكررة بنسبة 29٪ مقارنة بالعام السابق، دون الإفصاح عن مبلغها.",
       "reviewed_at": "2026-10-09"
@@ -237,6 +238,7 @@
     "revenue_evidence": {
       "source_url": "https://files.tamara.co/public/financial-reports/financial-statement-2nd-quarter-2025_20250807.pdf",
       "period": "H1 2025",
+      "period_ar": "النصف الأول من 2025",
       "summary_en": "Tamara Finance Company reported SAR 495.93 million total revenue for the six months ended 30 June 2025; interim figures are unaudited. This is the finance entity, not a group-wide estimate.",
       "summary_ar": "أعلنت شركة تمارا للتمويل إيرادات إجمالية قدرها 495.93 مليون ريال للنصف الأول من 2025 في قوائم أولية غير مدققة؛ الرقم يخص شركة التمويل وليس تقديراً للمجموعة.",
       "reviewed_at": "2026-10-09"
@@ -300,6 +302,7 @@
     "revenue_evidence": {
       "source_url": "https://huspy.com/blog/huspy-among-top-10-uae-startups-by-linkedin",
       "period": "Not established; announcement published 28 September 2022",
+      "period_ar": "لم تُحدد؛ نُشر الإعلان في 28 سبتمبر 2022",
       "summary_en": "Huspy mentions revenue growth among several areas of progress, without a specific earned-revenue or ARR result and reporting period. Its separate June 2022 announcement reports funding and annualised GMV, not revenue. Retained for research; not qualified for publication.",
       "summary_ar": "تذكر هسبي نمو الإيرادات ضمن جوانب تقدم متعددة، دون نتيجة محددة للإيرادات المكتسبة أو المتكررة وفترة تقريرها. ويذكر إعلان يونيو 2022 التمويل والقيمة السنوية للمعاملات، لا الإيرادات. يبقى السجل للبحث ولا يستوفي شروط النشر.",
       "reviewed_at": "2026-10-18"
@@ -425,6 +428,7 @@
     "revenue_evidence": {
       "source_url": "https://www.mubadala.com/en/news/mubadala-invests-in-the-35-million-pre-series-c-round-in-paymob",
       "period": "18 months to September 2026",
+      "period_ar": "18 شهراً حتى سبتمبر 2026",
       "summary_en": "Mubadala reported threefold consolidated revenue growth across Paymob’s four markets. No absolute revenue amount was disclosed.",
       "summary_ar": "أفادت مبادلة بنمو إيرادات باي موب المجمعة ثلاثة أضعاف عبر أربع أسواق، دون الإفصاح عن مبلغ الإيرادات.",
       "reviewed_at": "2026-10-09"
@@ -489,6 +493,7 @@
     "revenue_evidence": {
       "source_url": "https://www.canva.com/newsroom/news/canva-2025-wrap/",
       "period": "2025 review",
+      "period_ar": "تقرير عام 2025",
       "summary_en": "Canva’s own 2025 review reports reaching USD 3.5 billion in revenue. This is a company-reported figure.",
       "summary_ar": "ذكر تقرير كانفا عن عام 2025 وصول الإيرادات إلى 3.5 مليار دولار؛ الرقم معلن من الشركة.",
       "reviewed_at": "2026-10-11"
@@ -552,6 +557,7 @@
       {
         "key": "misk",
         "label": "Misk",
+        "label_ar": "مسك",
         "url": "https://hub.misk.org.sa/en/programs/entrepreneurship/misk-launchpad/",
         "relationship_en": "Launchpad founder testimonial",
         "relationship_ar": "قصة مؤسسين في مسك الانطلاق"
@@ -561,6 +567,7 @@
     "revenue_evidence": {
       "source_url": "https://hub.misk.org.sa/en/programs/entrepreneurship/misk-launchpad/",
       "period": "Annual revenue; year not specified by Misk",
+      "period_ar": "إيرادات سنوية؛ لم تحدد مسك السنة",
       "summary_en": "Misk reports annual revenue above USD 200,000. The testimonial does not specify the reporting year.",
       "summary_ar": "تذكر مسك إيرادات سنوية تتجاوز 200 ألف دولار دون تحديد السنة المالية.",
       "reviewed_at": "2026-10-18"
@@ -618,6 +625,7 @@
       {
         "key": "impact46",
         "label": "Impact46",
+        "label_ar": "إمباكت 46",
         "url": "https://impact46.sa/",
         "relationship_en": "Investor identifies Rasan among its IPO-backed businesses",
         "relationship_ar": "تذكر الجهة رسن ضمن الشركات التي دعمت طرحها"
@@ -627,6 +635,7 @@
     "revenue_evidence": {
       "source_url": "https://gamma.euroland.com/tools/PressReleases/GetPressRelease/?ID=8116409&companycode=sa-rasan&lang=en-GB&v=ticker",
       "period": "Six months ended 30 June 2026",
+      "period_ar": "الأشهر الستة المنتهية في 30 يونيو 2026",
       "summary_en": "Rasan’s issuer interim-results announcement reports SAR 517.5 million revenue for the six months ended 30 June 2026. Source: issuer disclosure carried by Euroland; the full financial statement was not inspected in this review. No audit claim is made.",
       "summary_ar": "يعلن إفصاح رسن عن النتائج الأولية إيرادات قدرها 517.5 مليون ريال للستة أشهر المنتهية في 30 يونيو 2026. المصدر إفصاح الشركة المنشور عبر يورولاند؛ لم تُفحص القوائم المالية الكاملة في هذه المراجعة ولا يُدّعى تدقيق الرقم.",
       "reviewed_at": "2026-10-11"
@@ -687,6 +696,7 @@
       {
         "key": "leap",
         "label": "LEAP",
+        "label_ar": "ليب",
         "url": "https://www.insights.onegiantleap.com/blogs/a-year-after-rocket-fuel-lisans-growth-story/",
         "relationship_en": "2025 Rocket Fuel Shooting Star winner",
         "relationship_ar": "فائز بجائزة النجم الصاعد في روكيت فيول 2025"
@@ -696,6 +706,7 @@
     "revenue_evidence": {
       "source_url": "https://www.insights.onegiantleap.com/blogs/a-year-after-rocket-fuel-lisans-growth-story/",
       "period": "18 August 2026 report; ARR",
+      "period_ar": "تقرير 18 أغسطس 2026؛ إيرادات سنوية متكررة",
       "summary_en": "LEAP reports approximately USD 2.6 million in annual recurring revenue (ARR). ARR is an annualized recurring metric, not recognized annual revenue.",
       "summary_ar": "أفادت ليب بإيرادات سنوية متكررة تقارب 2.6 مليون دولار. هذا مقياس سنوي متكرر وليس إيرادات سنوية محققة محاسبياً.",
       "reviewed_at": "2026-10-11"
@@ -755,6 +766,7 @@
       {
         "key": "leap",
         "label": "LEAP",
+        "label_ar": "ليب",
         "url": "https://www.insights.onegiantleap.com/blogs/rocket-fuelled-results-verofax-is-scaling-up/",
         "relationship_en": "2023 Rocket Fuel AI award winner",
         "relationship_ar": "فائز بجائزة الذكاء الاصطناعي في روكيت فيول 2023"
@@ -764,6 +776,7 @@
     "revenue_evidence": {
       "source_url": "https://www.insights.onegiantleap.com/blogs/rocket-fuelled-results-verofax-is-scaling-up/",
       "period": "2022 revenue; interview published 25 July 2023",
+      "period_ar": "إيرادات 2022؛ مقابلة نُشرت في 25 يوليو 2023",
       "summary_en": "The founder reported revenue exceeding USD 1 million in 2022. This is historical, self-reported revenue, not a current estimate.",
       "summary_ar": "ذكر المؤسس إيرادات تتجاوز مليون دولار في 2022. هذا تصريح تاريخي من المؤسس وليس تقديراً حالياً.",
       "reviewed_at": "2026-10-11"
@@ -830,6 +843,7 @@
       {
         "key": "gitex",
         "label": "GITEX / Expand North Star",
+        "label_ar": "جيتكس / إكسباند نورث ستار",
         "url": "https://plus.gitex.com/newfront/exhibitor/thiqa-education",
         "relationship_en": "Expand North Star 2025 exhibitor",
         "relationship_ar": "عارض في إكسباند نورث ستار 2025"
@@ -839,6 +853,7 @@
     "revenue_evidence": {
       "source_url": "https://plus.gitex.com/newfront/exhibitor/thiqa-education",
       "period": "Cumulative to exhibitor statement; cutoff date not specified",
+      "period_ar": "تراكمية حتى بيان العارض؛ تاريخ النهاية غير محدد",
       "summary_en": "An indexed GITEX exhibitor profile states cumulative revenue above AED 8 million. The cutoff date is unspecified and direct retrieval failed on 11 October 2026. Retained as a research lead; not approved for public eligibility.",
       "summary_ar": "يذكر ملف عارض مفهرس لدى جيتكس إيرادات تراكمية تتجاوز 8 ملايين درهم دون تاريخ نهاية محدد. تعذر جلب الصفحة مباشرة في 11 أكتوبر 2026؛ يُحتفظ به كدليل بحثي غير مؤهل للنشر العام.",
       "reviewed_at": "2026-10-09"
@@ -901,6 +916,7 @@
       {
         "key": "impact46",
         "label": "Impact46",
+        "label_ar": "إمباكت 46",
         "relationship_en": "Impact46 announced leading Jahez’s Series A; investment is not the revenue evidence.",
         "relationship_ar": "أعلنت إمباكت46 قيادة جولة جاهز الاستثمارية؛ الاستثمار ليس دليل الإيرادات.",
         "url": "https://impact46.sa/jahez-successfully-closed-its-series-a-funding-round-led-by-impact46-vc-in-saudi-arabia/"
@@ -910,6 +926,7 @@
     "revenue_evidence": {
       "source_url": "https://jahezgroup.com/jahez-ar/2024/assets/img/pdfs/financials/Consolidated%20Statement%20of%20Profit%20or%20Loss%20and%20Other%20Comprehensive%20Income.pdf",
       "period": "Year ended 31 December 2024",
+      "period_ar": "السنة المنتهية في 31 ديسمبر 2024",
       "summary_en": "Jahez’s consolidated statement reports SAR 2,218,662,735 revenue for the year ended 31 December 2024. This is group revenue, not order value or a current run rate. No independent audit verification is claimed.",
       "summary_ar": "تورد قائمة الدخل الموحدة لجاهز إيرادات قدرها 2,218,662,735 ريال للسنة المنتهية في 31 ديسمبر 2024. الرقم إيرادات المجموعة وليس قيمة الطلبات أو معدل الإيرادات الحالي، ولا يُدّعى التحقق المستقل من التدقيق.",
       "reviewed_at": "2026-10-11"

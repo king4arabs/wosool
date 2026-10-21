@@ -37,7 +37,7 @@ function MentorCard({ mentor, ar, index, total }: { mentor: EoaMentor; ar: boole
       <p className={styles.bio}>{expanded ? bio : excerpt}</p>
       {bio.length > 240 && <button className={styles.readMore} type="button" aria-expanded={expanded} onClick={() => setExpanded(value => !value)}>{expanded ? ar ? 'عرض أقل' : 'Read less' : ar ? 'اقرأ النبذة كاملة' : 'Read full bio'}</button>}
       {expertise.length > 0 && <ul className={styles.tags} aria-label={ar ? 'مجالات الخبرة' : 'Areas of expertise'}>{expertise.map(subject => <li key={subject}>{subject}</li>)}</ul>}
-      {links.some(([url]) => url) && <div className={styles.links} aria-label={ar ? `روابط ${name}` : `${name} links`}>
+      {links.some(([url]) => url) && <div className={styles.links} role="group" aria-label={ar ? `روابط ${name}` : `${name} links`}>
         {links.map(([url, label], position) => url && <a className={styles.profileLink} key={label} href={url} target="_blank" rel="noopener noreferrer" aria-label={ar ? `${name} — ${label} (نافذة جديدة)` : `${name} — ${label} (opens in a new tab)`}>{position === 0 ? <Globe2 size={15} aria-hidden="true" /> : <ArrowUpRight size={15} aria-hidden="true" />}{label}</a>)}
       </div>}
     </div>
@@ -96,7 +96,7 @@ export function EoaMentors({ mentors, ar, loading = false, failed = false, retry
     <div className="eoa-container">
       <div className={styles.heading}>
         <div><span className="eoa-eyebrow">{ar ? 'خبرة تدعم قراراتك' : 'EXPERIENCE TO INFORM YOUR NEXT MOVE'}</span><h2 id={`${id}-title`}>{ar ? 'المرشدون والمستشارون' : 'Mentors & advisors'}</h2><p>{ar ? 'رؤى عملية تساعد المؤسسين على ترتيب أولويات النمو، ومناقشة القرارات، وتحويل التعلم إلى خطوات داخل الشركة.' : 'Practical perspectives to help founders prioritize growth, work through decisions and turn learning into action inside their businesses.'}</p></div>
-        {(range.previous || range.next) && <div className={styles.controls} aria-label={ar ? 'التنقل بين المرشدين' : 'Mentor carousel controls'}>
+        {(range.previous || range.next) && <div role="group" className={styles.controls} aria-label={ar ? 'التنقل بين المرشدين' : 'Mentor carousel controls'}>
           <button type="button" disabled={!range.previous} onClick={() => move(false)} aria-controls={`${id}-cards`} aria-label={ar ? 'المرشد السابق' : 'Previous mentor'}>{ar ? <ArrowRight size={20} /> : <ArrowLeft size={20} />}</button>
           <button type="button" disabled={!range.next} onClick={() => move(true)} aria-controls={`${id}-cards`} aria-label={ar ? 'المرشد التالي' : 'Next mentor'}>{ar ? <ArrowLeft size={20} /> : <ArrowRight size={20} />}</button>
         </div>}
