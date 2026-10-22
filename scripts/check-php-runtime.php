@@ -6,7 +6,7 @@ declare(strict_types=1);
 function wosoolPhpRuntimeIsPatched(string $version): bool
 {
     $floors = ['8.3' => '8.3.36', '8.4' => '8.4.27', '8.5' => '8.5.12'];
-    if (! preg_match('/^(8\.[345])\.(\d+)(?:$|\+[a-zA-Z0-9.-]+$)/', $version, $matches)) {
+    if (! preg_match('/^(8\.[345])\.(\d+)(?:$|\+[a-zA-Z0-9.-]+$|-[0-9][a-zA-Z0-9.+~:-]*$)/', $version, $matches)) {
         return false;
     }
 
