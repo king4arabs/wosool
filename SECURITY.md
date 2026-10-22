@@ -34,3 +34,12 @@ See [the October review](docs/REVIEW_2026-10-08.md) for the current audit and va
 Verified email, owner/reviewer/admin boundaries, strict status transitions, revision checks and internal-note filtering protect application records. New applicant profiles remain private; community membership is a separate grant. Application APIs send private/no-store and noindex headers. Verification links are account-bound, signed and expire after 60 minutes. New application accounts require 12-character mixed-case/numeric passwords.
 
 Production intake defaults closed until the approved privacy notice, controller/contact, retention and processor register are in place. Privacy requests have an administrative review workflow; deletion/export and retention policy decisions are operational obligations, not automatic effects of changing a request status. See [gateway operations](docs/ACCELERATOR_OPERATIONS.md).
+
+## 22 October 2026 hardening
+
+- Composer install/update preflight rejects unpatched upstream PHP versions; CI covers patched 8.3, 8.4 and 8.5 runtimes.
+- Production session cookies default to Secure when no explicit environment override exists. Local HTTP development remains supported; keep `SESSION_SECURE_COOKIE=true` in production.
+- Canonical and Hostinger-mounted auth/member/admin API responses use private/no-store and noindex headers, including middleware-handled error responses. Public APIs retain their cache policy. API responses receive nosniff and a restrictive referrer policy.
+- Regression tests cover private/public caching and patched PHP version boundaries.
+
+Review scope: runtime floors, locked PHP dependency advisories, API response headers and session-cookie defaults. This is not a full penetration test or a guarantee that no security issues remain. The 124 locked Composer packages had no matching advisories in the Packagist advisory feed checked on 22 October; Composer's native audit remains required in CI. PHP/Composer were unavailable in the editing workspace, so PHPUnit execution must be confirmed in CI. See DEPLOYMENT.md for the observed live runtime and hosting steps still required.

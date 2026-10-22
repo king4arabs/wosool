@@ -35,6 +35,8 @@
         }
     },
     "scripts": {
+        "pre-install-cmd": ["@php ../scripts/check-php-runtime.php"],
+        "pre-update-cmd": ["@php ../scripts/check-php-runtime.php"],
         "setup": [
             "composer install",
             "@php ../scripts/prepare-backend.php",
