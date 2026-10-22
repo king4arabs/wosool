@@ -1,0 +1,174 @@
+"use client"
+
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from "react"
+import type { User } from "@/types"
+import { currentLocale, sessionFetch } from "./session-request"
+
+interface AuthContextValue {
+  user: User | null
+  isLoading: boolean
+  error: string | null
+  isAuthenticated: boolean
+  login: (email: string, password: string) => Promise<void>
+  register: (name: string, email: string, password: string, passwordConfirmation: string, inviteToken?: string) => Promise<void>
+  logout: () => Promise<void>
+  refresh: () => Promise<void>
+}
+
+const AuthContext = createContext<AuthContextValue | undefined>(undefined)
+
+function resolveLocaleHeader(): string {
+  return currentLocale()
+}
+
+function timeoutSignal(ms: number): AbortSignal {
+  const controller = new AbortController()
+  setTimeout(() => controller.abort(), ms)
+  return controller.signal
+}
+
+export function AuthProvider({ children }: { children: React.ReactNode }) {
+  const [user, setUser] = useState<User | null>(null)
+  const [isLoading, setIsLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+
+  const fetchUser = useCallback(async () => {
+    setIsLoading(true)
+    setError(null)
+    try {
+      const res = await sessionFetch("/api/v1/auth/me", {
+        credentials: "include",
+        headers: { Accept: "application/json", "X-Locale": resolveLocaleHeader() },
+        signal: timeoutSignal(7000),
+      })
+      if (res.ok) {
+        const data = await res.json()
+        setUser(data.user ? { ...data.user, roleToken: data.user.role_token, isAdmin: data.user.is_admin } : null)
+      } else if (res.status === 401) {
+        setUser(null)
+      } else {
+        throw new Error("Session unavailable")
+      }
+    } catch {
+      setError(currentLocale() === "ar" ? "تعذر التحقق من الجلسة. يرجى المحاولة مجددًا." : "Unable to check your session. Please try again.")
+    } finally {
+      setIsLoading(false)
+    }
+  }, [])
+
+  useEffect(() => {
+    fetchUser()
+  }, [fetchUser])
+
+  const login = useCallback(async (email: string, password: string) => {
+    await sessionFetch("/api/v1/auth/csrf-cookie", {
+      credentials: "include",
+      headers: { Accept: "application/json", "X-Locale": resolveLocaleHeader() },
+      signal: timeoutSignal(7000),
+    })
+
+    const res = await sessionFetch("/api/v1/auth/login", {
+      method: "POST",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        "X-Locale": resolveLocaleHeader(),
+      },
+      body: JSON.stringify({ email, password }),
+      signal: timeoutSignal(10000),
+    })
+
+    if (!res.ok) {
+      const data = await res.json().catch(() => null)
+      throw new Error(data?.message || data?.errors?.email?.[0] || "Login failed")
+    }
+
+    const data = await res.json()
+    setError(null)
+    setUser(data.user ? { ...data.user, roleToken: data.user.role_token, isAdmin: data.user.is_admin } : null)
+  }, [])
+
+  const register = useCallback(
+    async (name: string, email: string, password: string, passwordConfirmation: string, inviteToken?: string) => {
+      await sessionFetch("/api/v1/auth/csrf-cookie", {
+        credentials: "include",
+        headers: { Accept: "application/json", "X-Locale": resolveLocaleHeader() },
+        signal: timeoutSignal(7000),
+      })
+
+      const res = await sessionFetch("/api/v1/auth/register", {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          "X-Locale": resolveLocaleHeader(),
+        },
+        body: JSON.stringify({
+          name,
+          email,
+          password,
+          password_confirmation: passwordConfirmation,
+          invite_token: inviteToken || undefined,
+        }),
+        signal: timeoutSignal(12000),
+      })
+
+      if (!res.ok) {
+        const data = await res.json().catch(() => null)
+        const firstError = data?.errors
+          ? Object.values(data.errors).flat()[0]
+          : null
+        throw new Error(
+          (firstError as string) || data?.message || "Registration failed"
+        )
+      }
+
+      const data = await res.json()
+      setError(null)
+      setUser(data.user ? { ...data.user, roleToken: data.user.role_token, isAdmin: data.user.is_admin } : null)
+    },
+    []
+  )
+
+  const logout = useCallback(async () => {
+    const response = await sessionFetch("/api/v1/auth/logout", { method: "POST" })
+    if (!response.ok && response.status !== 401) {
+      throw new Error(currentLocale() === "ar" ? "تعذر تسجيل الخروج. يرجى المحاولة مجددًا." : "Unable to sign out. Please try again.")
+    }
+    setUser(null)
+    setError(null)
+  }, [])
+
+  const value = useMemo<AuthContextValue>(
+    () => ({
+      user,
+      isLoading,
+      error,
+      isAuthenticated: !!user,
+      login,
+      register,
+      logout,
+      refresh: fetchUser,
+    }),
+    [user, isLoading, error, login, register, logout, fetchUser]
+  )
+
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
+}
+
+export function useAuth() {
+  const ctx = useContext(AuthContext)
+  if (!ctx) {
+    throw new Error("useAuth must be used within an AuthProvider")
+  }
+  return ctx
+}

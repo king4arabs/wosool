@@ -1,0 +1,120 @@
+"use client"
+
+import Link from "next/link"
+import { PageHero } from "@/components/sections/PageHero"
+import { BarChart3, Lightbulb, Rocket, Scale } from "lucide-react"
+import { usePublicCollection } from "@/lib/use-public-collection"
+import { CollectionStatus } from "@/components/sections/CollectionStatus"
+import { PublicLayout } from "@/components/layout/PublicLayout"
+import { PartnerCard } from "@/components/sections/PartnerCard"
+import { Button } from "@/components/ui/button"
+import { localizePartner, partnersPageCopy } from "@/data/localized-seed"
+import { type ApiPartner, mapPartner } from "@/lib/content-api"
+import { useLocale } from "@/lib/locale"
+
+const topicIcons = [Scale, BarChart3, Rocket]
+
+export default function PartnersPage() {
+  const { locale } = useLocale()
+  const copy = partnersPageCopy[locale]
+  const collection = usePublicCollection<ApiPartner>("/partners")
+  const partnerItems = collection.items.map(item => localizePartner(mapPartner(item), locale))
+
+
+
+
+  return (
+    <PublicLayout>
+      <PageHero eyebrow={copy.badge} title={copy.title} description={copy.description} />
+      {collection.error && <CollectionStatus {...collection} hasMore={false} empty={false} />}
+
+      {/* ── Partners grid ── */}
+      <section className="py-16 px-4 bg-white">
+        <div className="mx-auto max-w-7xl">
+          <div className="mb-10">
+            <div className="inline-flex items-center gap-2 bg-[#EEF1FF] border border-[#E4E7F0] px-3 py-1 rounded-full text-xs font-bold text-[#3B52D4] mb-3">
+              {copy.sectionEyebrow}
+            </div>
+            <h2 className="text-2xl lg:text-3xl font-black text-slate-900 tracking-tight">{copy.sectionTitle}</h2>
+          </div>
+
+          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+            {partnerItems.map((partner) => (
+              <PartnerCard key={partner.id} partner={partner} />
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── Partner Sessions ── */}
+      <section className="py-16 px-4 bg-[#F5F7FF]">
+        <div className="mx-auto max-w-5xl">
+          <div className="text-center mb-12">
+            <div className="inline-flex items-center gap-2 bg-[#EEF1FF] border border-[#E4E7F0] px-3 py-1 rounded-full text-xs font-bold text-[#3B52D4] mb-4">
+              {copy.accessEyebrow}
+            </div>
+            <h2 className="text-2xl lg:text-3xl font-black text-slate-900 tracking-tight mb-3">{copy.accessTitle}</h2>
+            <p className="text-sm text-slate-500 max-w-lg mx-auto leading-relaxed">{copy.accessBody}</p>
+          </div>
+
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-3 mb-8">
+            {copy.accessTopics.map((topic, i) => {
+              const Icon = topicIcons[i] ?? Lightbulb
+              return (
+              <div
+                key={topic}
+                className="bg-white border border-slate-200/80 rounded-2xl p-6 text-center transition-all duration-300 hover:border-[#3B52D4]/30 hover:-translate-y-1"
+                style={{ boxShadow: "0 2px 12px -2px rgba(15,22,40,0.06)" }}
+              >
+                <div className="mx-auto mb-3 grid h-12 w-12 place-items-center rounded-2xl bg-[var(--surface-blue)] text-[var(--brand-blue)]" aria-hidden="true">
+                  <Icon className="h-6 w-6" strokeWidth={1.8} />
+                </div>
+                <h3 className="text-sm font-black text-slate-900 mb-1">{topic}</h3>
+                <p className="text-xs text-slate-400 font-medium">{copy.accessHint}</p>
+              </div>
+              )
+            })}
+          </div>
+
+          <div className="text-center">
+            <Button
+              asChild
+              className="rounded-xl bg-[#3B52D4] hover:bg-[#2E44C8] text-white font-bold shadow-md shadow-[#3B52D4]/20"
+            >
+              <Link href="/login">{copy.accessCta}</Link>
+            </Button>
+          </div>
+        </div>
+      </section>
+
+      {/* ── CTA ── */}
+      <section className="py-20 px-4 bg-slate-50/60">
+        <div className="mx-auto max-w-2xl">
+          <div
+            className="bg-white/90 backdrop-blur-sm border border-slate-200/80 rounded-2xl px-8 py-12 text-center relative overflow-hidden"
+            style={{ boxShadow: "0 8px 40px -8px rgba(59,82,212,0.1)" }}
+          >
+            <div className="pointer-events-none absolute inset-0" aria-hidden="true">
+              <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[400px] h-[200px] rounded-full bg-[#3B52D4]/6 blur-[80px]" />
+            </div>
+            <div className="relative">
+              <div className="inline-flex items-center gap-2 bg-[#EEF1FF] border border-[#E4E7F0] px-3 py-1 rounded-full text-xs font-bold text-[#3B52D4] mb-5">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#3B52D4] animate-pulse" />
+                {locale === "ar" ? "انضم للشراكة" : "Partner with us"}
+              </div>
+              <h2 className="text-3xl font-black text-slate-900 tracking-tight mb-3">{copy.ctaTitle}</h2>
+              <p className="text-sm text-slate-500 mb-8 leading-relaxed max-w-md mx-auto">{copy.ctaBody}</p>
+              <Button
+                asChild
+                className="rounded-xl bg-[#3B52D4] hover:bg-[#2E44C8] text-white font-bold shadow-md shadow-[#3B52D4]/20"
+              >
+                <Link href="/contact">{copy.cta}</Link>
+              </Button>
+            </div>
+          </div>
+        </div>
+      </section>
+      {!collection.error && <CollectionStatus {...collection} empty={partnerItems.length === 0} />}
+    </PublicLayout>
+  )
+}

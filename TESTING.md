@@ -1,0 +1,64 @@
+# Testing
+
+## Automated checks
+
+CI also syntax-checks all PHP application/configuration/migration/route/test files. Integration regressions cover retired gateway writes, canonical `/EOA` discovery and `/dashboard/eoa` account routing, legacy data retention/ownership, isolated reviewer access, generic-admin bypass prevention and private data-rights requests. Browser/deployed-mail acceptance is a separate release requirement, not inferred from the unit suite.
+
+From the repository root after local setup:
+
+```bash
+npm run verify
+```
+
+The command runs ESLint, TypeScript, frontend regression tests, Laravel tests, the entrepreneur dataset validator, and both production builds. CI is defined in `.github/workflows/ci.yml`; workflows nested under `backend/.github/` are not executed by GitHub for this monorepo.
+
+| Coverage | Purpose |
+| --- | --- |
+| Frontend session requests | CSRF cookie decoding/bootstrap, custom headers, same-origin token handling |
+| Authentication navigation | Reject external, script, malformed, and looping redirects |
+| Event dates | Expired/invalid dates, ongoing events, ordering, and timezone-independent boundaries |
+| Backend authentication | Registration eligibility, login, role boundaries, account recovery and rate limiting |
+| Password recovery | Real notification dispatch through the broker, frontend link origin, password validation, expired and single-use tokens |
+| Public/member/admin API | Submission validation, profile/company ownership, event RSVP, program applications, settings, moderation and authorization |
+| Dataset validation | Explicitly fictional entrepreneur profiles and avatar/data constraints |
+
+The Laravel suite uses in-memory SQLite and the array mail driver. Notifications are faked in password tests; running the tests does not send user email. Positive member fixtures use `User::factory()->member()`; an ordinary factory user must remain forbidden from member endpoints.
+
+Accessibility: `npm --prefix frontend run test:a11y:browser` (after a build) runs axe-core on every public page in Arabic and English at 390px and 1366px with the API blocked, and fails on serious or critical WCAG 2.1 A/AA violations. CI runs it after the public-collection browser check. The QA crawl (`npm run qa:crawl`) runs the same axe check on every page it visits, including member and admin pages; set `QA_AXE=0` to skip it. axe finds only machine-detectable problems; the keyboard and screen-reader checks below remain manual.
+
+The production dependency checks are:
+
+```bash
+npm --prefix frontend audit --omit=dev --audit-level=high
+composer --working-dir=backend audit
+npm --prefix backend audit --audit-level=high
+```
+
+## Manual release checks
+
+- Public homepage and content links at mobile, tablet and desktop widths.
+- Arabic/English navigation, RTL/LTR alignment, keyboard-only use, focus visibility, Escape to close the mobile menu, and reduced-motion settings.
+- Application/contact validation errors preserve entered data and never claim success when the API fails.
+- A real staging account can log in, navigate, log out, request a reset email, and use that link once.
+- Upcoming/past event dates use Riyadh time; registration is rejected after the event ends.
+- Backend API outage gives an actionable event error/empty state and does not create fictional homepage membership evidence.
+- Canonical URLs, crawler exclusions, sitemap, and production asset delivery.
+
+Build and unit-test success do not establish browser rendering quality, actual SMTP delivery, or successful production deployment. Record those checks separately.
+
+## EO Accelerator regression coverage
+
+`AcceleratorGatewayTest` covers verified account creation, signed account-bound/expiring verification, private server-saved drafts and revision conflicts, complete review/information-request/onboarding lifecycle, assigned reviewer and final-decision boundaries, cohort isolation, configured eligibility, import preview/idempotency/editorial locks, partner approval, public resource privacy, privacy request handling, private cache headers/readiness, participant resources/mentors/milestones/attendance, notification completed-delivery deduplication and paused intake. Tests use in-memory SQLite with notification/mail fakes or mocks; no real applicant email is sent.
+
+Frontend gateway tests validate signed verification path handling. See [the release report](docs/EO_ACCELERATOR_RELEASE_2026-10-08.md) for actual results and [browser acceptance](docs/ACCELERATOR_OPERATIONS.md#browser-acceptance-gate) for the remaining hosted visual/email checks.
+## EO Accelerator
+
+`backend/tests/Feature/EoaPlatformTest.php` exercises verification/signature expiry, network isolation, private/versioned/encrypted drafts, required evidence and consent, scoped document/reviewer access, decisions and notifications, onboarding and official/fee confirmation, coach/cohort isolation, privacy/publication approvals, operational edits and inquiry handling. `frontend/src/lib/eoa.test.ts` checks USD/SAR eligibility boundaries, including the incorrect SAR250,000 equivalence and the US$1m progression boundary.
+
+See [the EOA verification matrix](docs/EOA.md#release-and-validation) for required browser, real mail, production-engine and deployment checks. API tests use faked notification delivery and SQLite; do not report them as live integration tests.
+
+## October 9 reliability and track checks
+
+`ChatReliabilityTest` covers newest-first pagination, inactive/closed-room writes, empty or privileged message types, cross-room references and broadcast failure after a successful save. `AdminMatchWorkflowTest` covers authorization, distinct active founders, duplicate proposals and audit logging. `EoaTracksAndRolesTest` covers administrator-only role management, verified accounts, role allowlisting/revocation, preserved community roles, active/program-scoped acceptance tracks and lead-only track publication. Complete EOA fixtures include a preferred track.
+
+Frontend regressions cover one-time CSRF renewal, no automatic replay of failed writes and chat message deduplication. For browser acceptance, test `/dashboard/eoa` with an EOA-only account (the community dashboard API must not be required), save a preferred track, accept with a track as leadership, inspect the applicant dashboard, and grant/revoke a reviewer role as a platform administrator. Use fixture data or staging accounts, not production applicants.

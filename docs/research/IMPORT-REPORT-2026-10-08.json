@@ -1,0 +1,274 @@
+{
+  "verified_at": "2026-10-08",
+  "environment": "isolated local SQLite rehearsal; not hosted staging or production",
+  "preview": {
+    "mode": "preview",
+    "added": [
+      "monshaat",
+      "code",
+      "the-garage",
+      "misk-foundation",
+      "svc",
+      "kafalah",
+      "social-development-bank",
+      "waed-ventures",
+      "endeavor-saudi-arabia",
+      "monshaat-support-centers",
+      "the-garage-accelerator",
+      "the-garage-challenge-2-2026",
+      "misk-launchpad-10",
+      "misk-startup-school",
+      "kafalah-startup-guarantee",
+      "sdb-entrepreneurs-financing",
+      "taqadam",
+      "flat6labs-riyadh-seed"
+    ],
+    "corrected": [],
+    "unchanged": [],
+    "archived": [],
+    "merged": [],
+    "unresolved": [
+      {
+        "key": "rida_identity",
+        "status": "needs_review",
+        "requested_label": "RIDA",
+        "reason": "The supplied acronym does not uniquely identify the intended Saudi partner. No substitution was made.",
+        "distinct_entities": [
+          {
+            "name": "Research, Development and Innovation Authority — RDIA",
+            "website_url": "https://www.rdia.gov.sa/en/"
+          },
+          {
+            "name": "National Entrepreneurship Institute — Riyadah",
+            "official_reference_url": "https://www.sdb.gov.sa/ar/our-partners/riyadah-center"
+          }
+        ],
+        "required_evidence": "Exact legal/brand name or official website from the requester."
+      },
+      {
+        "key": "wosool_partner_relationships",
+        "status": "needs_review",
+        "reason": "Research verifies organizations, not their contractual partnership with Wosool. Partner display requires the site owner’s relationship record."
+      },
+      {
+        "key": "misk_launchpad_duration",
+        "status": "needs_review",
+        "source_urls": [
+          "https://hub.misk.org.sa/en/programs/entrepreneurship/misk-launchpad/"
+        ],
+        "reason": "Explicit cohort calendar spans 6 September 2026–2 January 2027, while general FAQ says ten weeks. Use displayed dates without an inferred duration."
+      },
+      {
+        "key": "taqadam_attendance",
+        "status": "needs_review",
+        "source_urls": [
+          "https://taqadam.kaust.edu.sa/"
+        ],
+        "reason": "Different FAQ answers specify one versus two members attending required activities. Retained the consistent two-founder requirement and omitted attendance headcount."
+      },
+      {
+        "key": "waed_funding_widget",
+        "status": "needs_review",
+        "source_urls": [
+          "https://www.waed.com/EN/contact.php",
+          "https://edda-dealflow.waed.com/externalapi/submit-widget/embed/FsfsbswfxCkuDWDQC2qy/saudi_aramco"
+        ],
+        "reason": "Official linked application widget returned 502 during retrieval. This is a retrieval limitation, not proof the organization has stopped accepting pitches."
+      },
+      {
+        "key": "unknown_intakes",
+        "status": "needs_review",
+        "reason": "For undated evergreen organization/program pages, not_announced means no current intake verified. It must not be rendered as an assertion that a provider is inactive."
+      }
+    ]
+  },
+  "gateway": {
+    "mode": "applied",
+    "program": "add",
+    "partners_added": [
+      "eo-riyadh",
+      "the-garage",
+      "rida",
+      "misk",
+      "code"
+    ],
+    "partners_unchanged": []
+  },
+  "applied": {
+    "mode": "applied",
+    "added": [
+      "monshaat",
+      "code",
+      "the-garage",
+      "misk-foundation",
+      "svc",
+      "kafalah",
+      "social-development-bank",
+      "waed-ventures",
+      "endeavor-saudi-arabia",
+      "monshaat-support-centers",
+      "the-garage-accelerator",
+      "the-garage-challenge-2-2026",
+      "misk-launchpad-10",
+      "misk-startup-school",
+      "kafalah-startup-guarantee",
+      "sdb-entrepreneurs-financing",
+      "taqadam",
+      "flat6labs-riyadh-seed"
+    ],
+    "corrected": [],
+    "unchanged": [],
+    "archived": [],
+    "merged": [],
+    "unresolved": [
+      {
+        "key": "rida_identity",
+        "status": "needs_review",
+        "requested_label": "RIDA",
+        "reason": "The supplied acronym does not uniquely identify the intended Saudi partner. No substitution was made.",
+        "distinct_entities": [
+          {
+            "name": "Research, Development and Innovation Authority — RDIA",
+            "website_url": "https://www.rdia.gov.sa/en/"
+          },
+          {
+            "name": "National Entrepreneurship Institute — Riyadah",
+            "official_reference_url": "https://www.sdb.gov.sa/ar/our-partners/riyadah-center"
+          }
+        ],
+        "required_evidence": "Exact legal/brand name or official website from the requester."
+      },
+      {
+        "key": "wosool_partner_relationships",
+        "status": "needs_review",
+        "reason": "Research verifies organizations, not their contractual partnership with Wosool. Partner display requires the site owner’s relationship record."
+      },
+      {
+        "key": "misk_launchpad_duration",
+        "status": "needs_review",
+        "source_urls": [
+          "https://hub.misk.org.sa/en/programs/entrepreneurship/misk-launchpad/"
+        ],
+        "reason": "Explicit cohort calendar spans 6 September 2026–2 January 2027, while general FAQ says ten weeks. Use displayed dates without an inferred duration."
+      },
+      {
+        "key": "taqadam_attendance",
+        "status": "needs_review",
+        "source_urls": [
+          "https://taqadam.kaust.edu.sa/"
+        ],
+        "reason": "Different FAQ answers specify one versus two members attending required activities. Retained the consistent two-founder requirement and omitted attendance headcount."
+      },
+      {
+        "key": "waed_funding_widget",
+        "status": "needs_review",
+        "source_urls": [
+          "https://www.waed.com/EN/contact.php",
+          "https://edda-dealflow.waed.com/externalapi/submit-widget/embed/FsfsbswfxCkuDWDQC2qy/saudi_aramco"
+        ],
+        "reason": "Official linked application widget returned 502 during retrieval. This is a retrieval limitation, not proof the organization has stopped accepting pitches."
+      },
+      {
+        "key": "unknown_intakes",
+        "status": "needs_review",
+        "reason": "For undated evergreen organization/program pages, not_announced means no current intake verified. It must not be rendered as an assertion that a provider is inactive."
+      }
+    ]
+  },
+  "repeat": {
+    "mode": "applied",
+    "added": [],
+    "corrected": [],
+    "unchanged": [
+      "monshaat",
+      "code",
+      "the-garage",
+      "misk-foundation",
+      "svc",
+      "kafalah",
+      "social-development-bank",
+      "waed-ventures",
+      "endeavor-saudi-arabia",
+      "monshaat-support-centers",
+      "the-garage-accelerator",
+      "the-garage-challenge-2-2026",
+      "misk-launchpad-10",
+      "misk-startup-school",
+      "kafalah-startup-guarantee",
+      "sdb-entrepreneurs-financing",
+      "taqadam",
+      "flat6labs-riyadh-seed"
+    ],
+    "archived": [],
+    "merged": [],
+    "unresolved": [
+      {
+        "key": "rida_identity",
+        "status": "needs_review",
+        "requested_label": "RIDA",
+        "reason": "The supplied acronym does not uniquely identify the intended Saudi partner. No substitution was made.",
+        "distinct_entities": [
+          {
+            "name": "Research, Development and Innovation Authority — RDIA",
+            "website_url": "https://www.rdia.gov.sa/en/"
+          },
+          {
+            "name": "National Entrepreneurship Institute — Riyadah",
+            "official_reference_url": "https://www.sdb.gov.sa/ar/our-partners/riyadah-center"
+          }
+        ],
+        "required_evidence": "Exact legal/brand name or official website from the requester."
+      },
+      {
+        "key": "wosool_partner_relationships",
+        "status": "needs_review",
+        "reason": "Research verifies organizations, not their contractual partnership with Wosool. Partner display requires the site owner’s relationship record."
+      },
+      {
+        "key": "misk_launchpad_duration",
+        "status": "needs_review",
+        "source_urls": [
+          "https://hub.misk.org.sa/en/programs/entrepreneurship/misk-launchpad/"
+        ],
+        "reason": "Explicit cohort calendar spans 6 September 2026–2 January 2027, while general FAQ says ten weeks. Use displayed dates without an inferred duration."
+      },
+      {
+        "key": "taqadam_attendance",
+        "status": "needs_review",
+        "source_urls": [
+          "https://taqadam.kaust.edu.sa/"
+        ],
+        "reason": "Different FAQ answers specify one versus two members attending required activities. Retained the consistent two-founder requirement and omitted attendance headcount."
+      },
+      {
+        "key": "waed_funding_widget",
+        "status": "needs_review",
+        "source_urls": [
+          "https://www.waed.com/EN/contact.php",
+          "https://edda-dealflow.waed.com/externalapi/submit-widget/embed/FsfsbswfxCkuDWDQC2qy/saudi_aramco"
+        ],
+        "reason": "Official linked application widget returned 502 during retrieval. This is a retrieval limitation, not proof the organization has stopped accepting pitches."
+      },
+      {
+        "key": "unknown_intakes",
+        "status": "needs_review",
+        "reason": "For undated evergreen organization/program pages, not_announced means no current intake verified. It must not be rendered as an assertion that a provider is inactive."
+      }
+    ]
+  },
+  "recovery": {
+    "backup_api": "SQLite online backup",
+    "integrity_check": "ok",
+    "existing_user_preserved": true,
+    "restore_to_separate_database": true,
+    "restored_pre_migration_schema": true,
+    "replayed_forward_migration_and_import": true
+  },
+  "readiness_output": [
+    "PASS database",
+    "PASS gateway_program",
+    "PASS migrations",
+    "PASS application_key",
+    "Worker supervision, mail delivery, backup recovery and browser acceptance require separate evidence."
+  ]
+}

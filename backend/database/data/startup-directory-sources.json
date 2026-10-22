@@ -1,0 +1,126 @@
+[
+  {
+    "key": "misk",
+    "label": "Misk",
+    "url": "https://hub.misk.org.sa/en/programs/entrepreneurship/misk-launchpad/",
+    "status": "revenue_pending",
+    "candidate": "Swarm Robotics",
+    "reviewed_at": "2026-10-18",
+    "review_note": "Re-read the Misk testimonial and Swarm official about page. Misk reports annual revenue above USD 200,000 without a reporting year. Swarm is now revenue_pending in research and revenue_status=pending in the catalog, excluded from revenue-qualified publication. No year inferred, audit asserted or program approval implied.",
+    "last_attempted_at": "2026-10-18",
+    "retrieval_status": "retrieved"
+  },
+  {
+    "key": "code",
+    "label": "CODE by MCIT",
+    "url": "https://mcit.gov.sa/code",
+    "status": "research_pending",
+    "candidate": null,
+    "reviewed_at": "2026-10-11",
+    "review_note": "Official CODE URL redirects to https://mcit.gov.sa/code. Retrieved program information provides no qualifying company-specific revenue result. Verofax’s LEAP interview says MCIT scouted it; that does not prove CODE admission.",
+    "last_attempted_at": "2026-10-11",
+    "retrieval_status": "retrieved"
+  },
+  {
+    "key": "monshaat",
+    "label": "Monshaat",
+    "url": "https://www.monshaat.gov.sa/en/node/407842",
+    "status": "research_pending",
+    "candidate": null,
+    "reviewed_at": "2026-10-09",
+    "review_note": "Indexed official Princess Nourah accelerator report gives cohort revenue growth above 188%, not named-company revenue. Direct retrieval failed. No company qualified from aggregate statistics.",
+    "last_attempted_at": "2026-10-11",
+    "retrieval_status": "partial_or_failed",
+    "attempted_url": "https://www.monshaat.gov.sa/en/node/468929"
+  },
+  {
+    "key": "multiverse",
+    "label": "Multiverse by MCIT",
+    "url": "https://www.spa.gov.sa/en/N2411086",
+    "status": "research_pending",
+    "candidate": null,
+    "reviewed_at": "2026-10-09",
+    "review_note": "SPA’s indexed 30 September 2025 London-trip report confirms 20 Saudi startups and sectors, not individual revenue. Direct page has no readable article body. UK Multiverse and Multiverse Computing excluded as unrelated.",
+    "last_attempted_at": "2026-10-11",
+    "retrieval_status": "partial_or_failed"
+  },
+  {
+    "key": "impact46",
+    "label": "Impact46",
+    "url": "https://impact46.sa/",
+    "status": "qualified",
+    "candidate": "Rasan; Jahez",
+    "reviewed_at": "2026-10-11",
+    "review_note": "Reverified brand and Jahez founder/investment relationship. Added Jahez using its separate FY2024 consolidated revenue statement. Updated Rasan from H1 2026 issuer results; full statement retrieval failed, so no audited classification.",
+    "last_attempted_at": "2026-10-11",
+    "retrieval_status": "retrieved",
+    "review_sources": [
+      "https://impact46.sa/jahez-successfully-closed-its-series-a-funding-round-led-by-impact46-vc-in-saudi-arabia/",
+      "https://jahezgroup.com/jahez-ar/2024/assets/img/pdfs/financials/Consolidated%20Statement%20of%20Profit%20or%20Loss%20and%20Other%20Comprehensive%20Income.pdf",
+      "https://gamma.euroland.com/tools/PressReleases/GetPressRelease/?ID=8116409&companycode=sa-rasan&lang=en-GB&v=ticker"
+    ]
+  },
+  {
+    "key": "falak",
+    "label": "Falak Investment Hub",
+    "url": "https://www.falak.sa/en/startups",
+    "status": "revenue_pending",
+    "candidate": "Mohtwize",
+    "reviewed_at": "2026-10-18",
+    "review_note": "Re-read only Falak's 10 June 2021 Mohtwize story in this review. Production fees, sponsorships and subscriptions describe a business model, without a revenue result for a stated period. Remains pending; company-site, current-role and imagery verification dates are not refreshed.",
+    "last_attempted_at": "2026-10-18",
+    "retrieval_status": "retrieved",
+    "review_sources": [
+      "https://falak.sa/en/blogs/22/Startup-Story:-Mohtwize",
+      "https://www.mohtwize.com/en/us"
+    ]
+  },
+  {
+    "key": "lamarka",
+    "label": "Lamarka",
+    "url": "https://amplifaihealth.com/news/amplifai-health-secures-strategic-funding-to-scale-ai-powered-diabetic-foot-screening",
+    "status": "revenue_pending",
+    "candidate": "Amplifai Health",
+    "reviewed_at": "2026-10-11",
+    "review_note": "Re-read Amplifai Health’s 8 March 2025 announcement naming Lamarka as an existing backer. Funding and device approval do not establish earned revenue; remains pending.",
+    "last_attempted_at": "2026-10-11",
+    "retrieval_status": "retrieved"
+  },
+  {
+    "key": "the-garage",
+    "label": "The Garage",
+    "url": "https://thegarage.sa/garage-programs",
+    "status": "research_pending",
+    "candidate": "Bandar Digital Solutions",
+    "reviewed_at": "2026-10-11",
+    "review_note": "Re-read official programs page: accelerator targets businesses with sales, but eligibility alone supplies no named-company revenue evidence. Company-reported candidate Bandar Digital Solutions needs period and affiliation checks.",
+    "last_attempted_at": "2026-10-11",
+    "retrieval_status": "retrieved",
+    "review_sources": [
+      "https://thegarage.sa/garage-programs",
+      "https://bandar.solutions/ar/open-data"
+    ]
+  },
+  {
+    "key": "leap",
+    "label": "LEAP",
+    "url": "https://www.insights.onegiantleap.com/blogs/a-year-after-rocket-fuel-lisans-growth-story/",
+    "status": "qualified",
+    "candidate": "Lisan; Verofax",
+    "reviewed_at": "2026-10-11",
+    "review_note": "Re-read Lisan ARR report (18 August 2026) and Verofax interview (25 July 2023, revenue for 2022). Retain ARR/recognized-revenue distinction and historical periods.",
+    "last_attempted_at": "2026-10-11",
+    "retrieval_status": "retrieved"
+  },
+  {
+    "key": "gitex",
+    "label": "GITEX / Expand North Star",
+    "url": "https://plus.gitex.com/newfront/exhibitor/thiqa-education",
+    "status": "verification_pending",
+    "candidate": "Thiqa Education",
+    "reviewed_at": "2026-10-09",
+    "review_note": "Direct exhibitor retrieval failed; search still indexes AED 8M+ cumulative revenue without a confirmed cutoff. Thiqa official pages yielded no substantive content. Profile moved to pending eligibility; previous successful verification dates retained.",
+    "last_attempted_at": "2026-10-11",
+    "retrieval_status": "partial_or_failed"
+  }
+]

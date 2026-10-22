@@ -1,0 +1,233 @@
+'use client'
+import Link from 'next/link'
+import { useLocale } from '@/lib/locale'
+import { CohortModel } from './CohortModel'
+import { EoaPrivacy } from './Privacy'
+import { EoaContact } from './Contact'
+import { EoaLeadership } from './Leadership'
+import { EoaMentors } from './Mentors'
+import { EoGlobalNetwork } from './GlobalNetwork'
+import { EoaProgramDetails } from './EoaProgramDetails'
+import { EoaPerks } from './Perks'
+import { EoaDirectory } from './Directory'
+import { Eligibility } from './Eligibility'
+import { PartnerStrip, useEoaProgram } from './Shared'
+import { formatEoaDate } from '@/lib/eoa'
+const titles: Record<string, [string, string]> = {
+  alumni: ['الخريجون ومتابعة النمو', 'Alumni & continued growth'],
+  privacy: ['الخصوصية والبيانات', 'Privacy & data'],
+  about: ['عن المسرّعة', 'About the Accelerator'],
+  program: ['ماذا ستعمل عليه في البرنامج؟', 'What you’ll work on'],
+  eligibility: ['الأهلية والرسوم', 'Eligibility & fees'],
+  partners: [
+    'الشركاء وجهات الدعم',
+    'Partners & support',
+  ],
+  faq: ['الأسئلة الشائعة', 'Frequently asked questions'],
+  contact: ['تواصل مع فريق البرنامج', 'Talk to the program team'],
+  learning: ['التعلم والفعاليات', 'Learning & events'],
+  leadership: ['قيادة البرنامج', 'Program leadership'],
+  mentors: ['المرشدون والمستشارون', 'Mentors & advisors'],
+  perks: ['عروض الشركاء', 'Partner offers'],
+}
+export function EoaContent({ section }: { section: string }) {
+  const { locale } = useLocale()
+  const ar = locale === 'ar'
+  const { program } = useEoaProgram()
+
+  return (
+    <section className="eoa-section">
+      <div className="eoa-container">
+        <header className="eoa-page-heading">
+          <span className="eoa-eyebrow">EO RIYADH ACCELERATOR</span>
+          <h1>{titles[section]?.[ar ? 0 : 1]}</h1>
+        </header>
+        {['program', 'alumni'].includes(section) && <CohortModel ar={ar} />}
+        {section === 'alumni' && <div className="eoa-card eoa-space"><h2>{ar?'تستمر الرحلة بعد التخرج':'Your journey continues after graduation'}</h2><p>{ar?'تابع أهداف شركتك وتواصل مع مدربك وراجع الأنشطة ومواعيد المتابعة من حسابك. يسجل فريق البرنامج التخرج وخطة المتابعة، وتُقيّم أهلية EO بصورة مستقلة عند استيفاء شروطها.':'Keep tracking company goals, connect with your coach and review activities and follow-up dates in your account. The program team records graduation and follow-up plans; EO eligibility is assessed separately against its membership requirements.'}</p><Link href="/dashboard/eoa" className="eoa-btn">{ar?'افتح مساحة الخريجين':'Open your alumni workspace'}</Link></div>}
+        {section === 'eligibility' && <Eligibility />}
+        {section === 'perks' && <EoaPerks />}
+        {section === 'privacy' && <EoaPrivacy />}
+        {section === 'about' && (
+          <div className="eoa-two-grid">
+            <div>
+              <p className="eoa-lead">
+                {ar
+                  ? 'إذا كنت تدير شركة قائمة، فالبرنامج مساحة للعمل على القرارات التي تشغلك الآن.'
+                  : 'If you run a business, this is a place to work on the decisions in front of you.'}
+              </p>
+              <p>
+                {ar
+                  ? 'تستخدم مسرّعة EO الرياض إطاراً للتعلم في النقد والاستراتيجية والأفراد والتنفيذ. تناقش تحديات شركتك مع مؤسسين آخرين، وتعود إلى فريقك بخطوات تجرّبها. من حسابك في وصول يمكنك متابعة طلبك وجلساتك ومواد التعلم.'
+                  : 'EO Riyadh Accelerator uses four learning areas: Cash, Strategy, People and Execution. You discuss what’s happening in your business with other founders and take ideas back to your team. Your Wosool account keeps your application, sessions and learning materials in one place.'}
+              </p>
+              <div className="eoa-actions"><Link href="/eoa/eligibility" className="eoa-btn">{ar ? 'تحقق من الأهلية' : 'Check your eligibility'}</Link><Link href="/eoa/program" className="eoa-text-link">{ar ? 'استكشف رحلة التعلم' : 'Explore the learning journey'}</Link></div>
+            </div>
+            <div className="eoa-card">
+              <h3>{ar ? 'من الرياض، مع مؤسسين آخرين' : 'Start with founders in Riyadh'}</h3>
+              <p>
+                {ar
+                  ? 'في الدفعة، ستسمع كيف تعامل مؤسسون آخرون مع تحديات تشبه تحدياتك. وقد تتاح فرص للتعلم من تجارب عبر شبكة EO؛ تتحدد المشاركة وفق البرنامج.'
+                  : 'In your cohort, you’ll hear how other founders approached problems like yours. Opportunities to learn from the wider EO network depend on what the program makes available.'}
+              </p>
+              <Link className="eoa-text-link" href="/eoa/leadership">
+                {ar ? 'قيادة البرنامج' : 'Program leadership'} ↗
+              </Link>
+            </div>
+          </div>
+        )}
+        {section === 'program' && (
+          <>
+            <p className="eoa-lead">
+              {ar
+                ? 'تمتد الدفعة ستة أشهر. ستتعلم مع مؤسسين آخرين، وتراجع معهم ما طبقته في شركتك، وتواصل المتابعة في برنامج الخريجين بعد انتهاء الدفعة. تنطلق دفعة جديدة كل ستة أشهر.'
+                : 'A cohort lasts six months. Learn alongside other founders, check back on what you’ve tried in your business, and continue with alumni follow-ups afterward. A new cohort begins every six months.'}
+            </p>
+            <div className="eoa-four-grid">
+              {(ar
+                ? [['النقد', 'افهم دورة النقد وحدد ما يساعد شركتك على تمويل نموها.'], ['الاستراتيجية', 'وضح موقع شركتك وأولوياتها وفرص تميزها.'], ['الأفراد', 'طوّر فريقك ووضوح الأدوار وثقافة المسؤولية.'], ['التنفيذ', 'حوّل الاستراتيجية إلى أولويات ومقاييس ومتابعة منتظمة.']]
+                : [['Cash', 'Understand your cash cycle and what supports sustainable growth.'], ['Strategy', 'Clarify your position, priorities and opportunities to stand out.'], ['People', 'Build your team, clear roles and a culture of accountability.'], ['Execution', 'Turn strategy into priorities, measures and a steady review rhythm.']]
+              ).map(([title, body], i) => (
+                <div className="eoa-pillar" key={title}>
+                  <span>0{i + 1}</span>
+                  <h2>{title}</h2>
+                  <p>{body}</p>
+                </div>
+              ))}
+            </div>
+            <div className="eoa-two-grid eoa-space">
+              <div className="eoa-card">
+                <h3>{ar ? 'التعلم والمساءلة' : 'Learning & accountability'}</h3>
+                <p>
+                  {ar
+                    ? 'حضّر تحدياً من شركتك ليوم التعلم، واختر خطوات للتطبيق، ثم راجع تقدمك في لقاءات المساءلة مع أقرانك.'
+                    : 'Bring a business challenge to each learning day, choose actions to take, then review your progress with peers in accountability meetings.'}
+                </p>
+              </div>
+              <div className="eoa-card">
+                <h3>{ar ? 'علاقات وفرص' : 'Connections & opportunities'}</h3>
+                <p>
+                  {ar
+                    ? 'تبادل التجارب مع مؤسسين يواجهون قرارات مشابهة، واستكشف الأنشطة المحلية والعالمية التي يشاركها فريق البرنامج مع دفعتك.'
+                    : 'Exchange experiences with founders facing similar decisions and explore the local and global activities shared by the program team with your cohort.'}
+                </p>
+              </div>
+            </div>
+            <div className="eoa-actions eoa-space"><Link className="eoa-btn" href="/eoa/apply">{ar ? 'ابدأ طلبك' : 'Start your application'}</Link><Link className="eoa-text-link" href="/eoa/mentors">{ar ? 'استكشف الإرشاد' : 'Explore mentoring'}</Link></div>
+          </>
+        )}
+        {section === 'learning' && (
+          <div className="eoa-two-grid">
+            <div>
+              <p className="eoa-lead">
+                {ar
+                  ? 'إيقاع ثابت للتعلم والتطبيق.'
+                  : 'A steady rhythm of learning and action.'}
+              </p>
+              <p>
+                {ar
+                  ? 'تعرف على ركائز البرنامج الآن. ستظهر مواعيد جلسات دفعتك وموادها والتسجيل فيها في حسابك بعد تفعيل المشاركة.'
+                  : 'Explore the program pillars now. Your cohort calendar, materials and session registration appear in your account after enrollment.'}
+              </p>
+            </div>
+            <div className="eoa-card">
+              <h3>{ar ? 'تقويم الرياض' : 'Riyadh calendar'}</h3>
+              <p>
+                {ar
+                  ? 'من حسابك، راجع مواعيد دفعتك، وسجّل في الجلسات المتاحة، واطّلع على مكان اللقاء ومواد التحضير.'
+                  : 'Use your account to review cohort dates, register for available sessions, and find the meeting location and preparation materials.'}
+              </p>
+              <Link href="/eoa/account" className="eoa-btn">
+                {ar ? 'افتح حسابك' : 'Open your account'}
+              </Link>
+            </div>
+          </div>
+        )}
+        {section === 'leadership' && <EoaLeadership program={program} ar={ar} />}
+        {section === 'mentors' && <>
+          <EoGlobalNetwork key={ar ? "ar" : "en"} ar={ar} />
+          {!!program?.mentors?.length && <EoaMentors mentors={program.mentors} ar={ar} />}
+        </>}
+        {section === 'faq' && <EoaProgramDetails program={program} section="faq" />}
+        {section === 'partners' && <EoaProgramDetails program={program} section="operator" />}
+        {section === 'partners' && (
+          <>
+            <PartnerStrip partners={program?.partners} />
+            {!program?.partners.length && (
+              <p>
+                {ar
+                  ? 'ساهم بخبرتك أو مواردك في دعم نمو المؤسسين. تواصل مع الفريق لاستكشاف فرص الشراكة.'
+                  : 'Help founders grow through your expertise or resources. Contact the team to explore partnership opportunities.'}
+              </p>
+            )}
+            <h2 className="eoa-space">
+              {ar
+                ? 'منظومة الدعم في السعودية'
+                : 'Saudi founder support ecosystem'}
+            </h2>
+            <p>
+              {ar
+                ? 'هذه جهات تعمل مع رواد الأعمال في السعودية. زر مواقعها الرسمية لمعرفة خدماتها؛ إدراجها هنا لا يعني أنها شريكة في المسرّعة.'
+                : 'These organizations work with entrepreneurs in Saudi Arabia. Check their official sites for services; appearing here does not mean they are Accelerator partners.'}
+            </p>
+            <EoaDirectory ar={ar} />
+          </>
+        )}
+        {section === 'contact' && (
+          <div className="eoa-two-grid">
+            <div>
+              <p className="eoa-lead">
+                {ar
+                  ? 'لديك سؤال قبل التقديم؟'
+                  : 'Have a question before you apply?'}
+              </p>
+              <p>
+                {ar
+                  ? 'اسألنا عن الأهلية أو الرسوم أو خطوات التقديم. وإذا كنت ترغب في تقديم خبرتك أو مساحة عمل أو رعاية للمشاركين، أخبرنا بما يمكنك تقديمه.'
+                  : 'Ask about eligibility, fees or the application steps. If you can offer mentoring, workspace or sponsorship, tell us what you have in mind.'}
+              </p>
+            </div>
+            <div className="eoa-card">
+              <h3>{ar ? 'تواصل معنا' : 'Contact us'}</h3>
+              <EoaContact />
+              {program?.contact_email && (
+                <p>
+                  <a href={`mailto:${program.contact_email}`}>
+                    {program.contact_email}
+                  </a>
+                </p>
+              )}
+            </div>
+          </div>
+        )}
+        <footer className="eoa-source"><Link href="/eoa/privacy">{ar ? 'إشعار الخصوصية' : 'Data notice'}</Link> · 
+          {ar
+            ? 'نموذج الدفعات المحلي: قيادة برنامج الرياض. شروط EO: المصادر الرسمية.'
+            : 'Local cohort model: Riyadh program leadership. EO requirements: official EO publications.'}{' '}
+          {program?.facts.verified_at && <span>{ar ? 'آخر مراجعة مسجلة' : 'Last recorded review'}: {formatEoaDate(program.facts.verified_at, ar)} · </span>}
+          <a
+            href="https://eonetwork.org/accelerator"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            EO Accelerator ↗
+          </a>{' '}
+          ·{' '}
+          <a
+            href="https://eonetwork.org/accelerator/faqs/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            FAQ ↗
+          </a>
+          <div className="eoa-actions">
+            {Object.entries(titles).map(([slug, title]) => (
+              <Link key={slug} href={`/eoa/${slug}`}>
+                {title[ar ? 0 : 1]}
+              </Link>
+            ))}
+          </div>
+        </footer>
+      </div>
+    </section>
+  )
+}

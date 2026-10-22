@@ -1,0 +1,165 @@
+{
+  "source": "source-poster-2026-27.jpeg",
+  "source_dimensions": [
+    1170,
+    805
+  ],
+  "source_sha256": "59d8604c08a97d7aa6564694284d7a8e8e4fd4258f6cb5e98a2df2d7290337a1",
+  "method": "Deterministic square crops only. No generative changes, retouching, or upscaling. Source circular portrait borders retained.",
+  "portraits": [
+    {
+      "slug": "musaad-alkadi",
+      "name": "Musaad Alkadi",
+      "box_xyxy": [
+        88,
+        197,
+        218,
+        327
+      ],
+      "width": 130,
+      "height": 130,
+      "path": "musaad-alkadi.webp",
+      "thumbnail": "musaad-alkadi-96.webp"
+    },
+    {
+      "slug": "mohammed-alsolami",
+      "name": "Mohammed Alsolami",
+      "box_xyxy": [
+        250,
+        197,
+        380,
+        327
+      ],
+      "width": 130,
+      "height": 130,
+      "path": "mohammed-alsolami.webp",
+      "thumbnail": "mohammed-alsolami-96.webp"
+    },
+    {
+      "slug": "mohamed-balsharaf",
+      "name": "Mohamed Balsharaf",
+      "box_xyxy": [
+        420,
+        197,
+        550,
+        327
+      ],
+      "width": 130,
+      "height": 130,
+      "path": "mohamed-balsharaf.webp",
+      "thumbnail": "mohamed-balsharaf-96.webp"
+    },
+    {
+      "slug": "gilbert-rustom",
+      "name": "Gilbert Rustom",
+      "box_xyxy": [
+        588,
+        197,
+        718,
+        327
+      ],
+      "width": 130,
+      "height": 130,
+      "path": "gilbert-rustom.webp",
+      "thumbnail": "gilbert-rustom-96.webp"
+    },
+    {
+      "slug": "faisal-alqarni",
+      "name": "Faisal Alqarni",
+      "box_xyxy": [
+        758,
+        197,
+        888,
+        327
+      ],
+      "width": 130,
+      "height": 130,
+      "path": "faisal-alqarni.webp",
+      "thumbnail": "faisal-alqarni-96.webp"
+    },
+    {
+      "slug": "yasir-zahoor",
+      "name": "Yasir Zahoor",
+      "box_xyxy": [
+        926,
+        197,
+        1056,
+        327
+      ],
+      "width": 130,
+      "height": 130,
+      "path": "yasir-zahoor.webp",
+      "thumbnail": "yasir-zahoor-96.webp"
+    },
+    {
+      "slug": "abdulaziz-alothaim",
+      "name": "Abdulaziz Alothaim",
+      "box_xyxy": [
+        170,
+        462,
+        300,
+        592
+      ],
+      "width": 130,
+      "height": 130,
+      "path": "abdulaziz-alothaim.webp",
+      "thumbnail": "abdulaziz-alothaim-96.webp"
+    },
+    {
+      "slug": "seral-sofi",
+      "name": "Seral Sofi",
+      "box_xyxy": [
+        339,
+        462,
+        469,
+        592
+      ],
+      "width": 130,
+      "height": 130,
+      "path": "seral-sofi.webp",
+      "thumbnail": "seral-sofi-96.webp"
+    },
+    {
+      "slug": "mazin-alrukayani",
+      "name": "Mazin Alrukayani",
+      "box_xyxy": [
+        503,
+        462,
+        633,
+        592
+      ],
+      "width": 130,
+      "height": 130,
+      "path": "mazin-alrukayani.webp",
+      "thumbnail": "mazin-alrukayani-96.webp"
+    },
+    {
+      "slug": "abdelrahman-al-kuhaymi",
+      "name": "Abdelrahman Al kuhaymi",
+      "box_xyxy": [
+        673,
+        462,
+        803,
+        592
+      ],
+      "width": 130,
+      "height": 130,
+      "path": "abdelrahman-al-kuhaymi.webp",
+      "thumbnail": "abdelrahman-al-kuhaymi-96.webp"
+    },
+    {
+      "slug": "suhail-tarabulsi",
+      "name": "Suhail Tarabulsi",
+      "box_xyxy": [
+        847,
+        462,
+        977,
+        592
+      ],
+      "width": 130,
+      "height": 130,
+      "path": "suhail-tarabulsi.webp",
+      "thumbnail": "suhail-tarabulsi-96.webp"
+    }
+  ]
+}

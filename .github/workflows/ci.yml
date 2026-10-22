@@ -1,0 +1,118 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  frontend:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run type-check
+      - run: npm test
+      - run: npm --prefix .. run content:test
+      - run: node ../scripts/content-review.mjs --check
+      - run: npm run validate:entrepreneurs
+      - run: npm audit --omit=dev --audit-level=high
+      - run: npm run build
+        env:
+          NEXT_PUBLIC_SITE_URL: https://wosool.org
+          NEXT_PUBLIC_API_URL: http://localhost:8000
+      - name: Install Chromium for isolated public-collection checks
+        run: npx playwright install --with-deps chromium
+      - name: Verify public collection fallback in both languages and viewport sizes
+        run: npm run test:collections:browser
+      - name: Verify homepage founder discovery and fresh visit mixes
+        run: npm run test:founders:browser
+      - name: Check public pages for serious WCAG 2.1 A/AA violations (axe-core)
+        run: npm run test:a11y:browser
+  pnpm-install:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 11.24.0
+      - name: Install workspace with explicit build approvals
+        run: pnpm install --frozen-lockfile
+        env:
+          CI: true
+      - name: Verify approved native tools load
+        working-directory: frontend
+        run: |
+          node --import tsx --input-type=module -e "import './src/lib/founder-discovery.ts'; console.log('Approved esbuild transform works')"
+          pnpm run lint
+      - name: Verify standalone frontend hosting install and default build
+        env:
+          CI: true
+          # Next otherwise defaults to 63 page workers, as on the reported host.
+          CIRCLE_NODE_TOTAL: 64
+        run: |
+          set -o pipefail
+          standalone_frontend=$(mktemp -d)
+          git archive HEAD frontend | tar -x -C "$standalone_frontend" --strip-components=1
+          pnpm --dir "$standalone_frontend" install --frozen-lockfile --store-dir "$standalone_frontend/.pnpm-store"
+          pnpm --dir "$standalone_frontend" exec node --import tsx --input-type=module -e "import './src/lib/founder-discovery.ts'; console.log('Standalone esbuild transform works')"
+          pnpm --dir "$standalone_frontend" run lint
+          pnpm --dir "$standalone_frontend" run build | tee "$standalone_frontend/build.log"
+          grep -Fq 'Collecting page data using 1 worker' "$standalone_frontend/build.log"
+          grep -Fq 'Generating static pages using 1 worker' "$standalone_frontend/build.log"
+  backend:
+    strategy:
+      fail-fast: false
+      matrix:
+        php: ['8.3.36', '8.4.27', '8.5.12']
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: mbstring, dom, curl, pdo_sqlite, sqlite3
+          coverage: none
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: backend/package-lock.json
+      - run: php ../scripts/check-php-runtime.php
+      - run: composer validate --strict
+      - run: composer install --no-interaction --prefer-dist --no-progress
+      - name: Check PHP syntax across application and migrations
+        run: rg --files app bootstrap config database routes tests -g '*.php' -0 | xargs -0 -n1 php -l
+      - run: composer audit
+      - name: Install shared OpenAPI contract validator
+        run: npm --prefix ../frontend ci --ignore-scripts
+      - run: composer run test
+      - run: npm ci
+      - run: npm audit --audit-level=high
+      - run: npm run build

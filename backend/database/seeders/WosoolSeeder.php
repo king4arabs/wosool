@@ -1,0 +1,429 @@
+<?php
+namespace Database\Seeders;
+
+use App\Models\AdminAction;
+use App\Models\Application;
+use App\Models\CompanyProfile;
+use App\Models\Event;
+use App\Models\FounderProfile;
+use App\Models\NewsItem;
+use App\Models\PartnerProfile;
+use App\Models\Program;
+use App\Models\Scorecard;
+use App\Models\SponsorProfile;
+use App\Models\User;
+use Illuminate\Database\Seeder;
+
+class WosoolSeeder extends Seeder
+{
+    private const ADMIN_PASSWORD = 'wosool2024!';
+    private const MEMBER_PASSWORD = 'demo123!';
+    private const APPROVED_TEST_PASSWORD = 'Secret#123';
+
+    public function run(): void
+    {
+        if (app()->environment('production')) {
+            throw new \RuntimeException('Demo accounts must not be seeded in production. Provision real users through the approved membership process.');
+        }
+
+        $admin = User::firstOrCreate(
+            ['email' => 'admin@wosool.org'],
+            ['name' => 'Wosool Admin', 'password' => bcrypt(self::ADMIN_PASSWORD), 'email_verified_at' => now()]
+        );
+
+        if (method_exists($admin, 'assignRole') && ! $admin->hasRole('admin')) {
+            $admin->assignRole('admin');
+        }
+
+        $foundersData = [
+            [
+                'name' => 'Sara Al-Rashidi', 'email' => 'sara@example.com',
+                'slug' => 'sara-al-rashidi', 'tagline' => 'Building the future of healthcare AI in the GCC',
+                'bio' => 'Sara is a healthcare AI founder with 8 years of experience in digital health. Previously VP Product at a leading Saudi digital health company. Now building MedBridge to connect patients with specialized care using AI triage.',
+                'location' => 'Riyadh, Saudi Arabia', 'country_code' => 'SA',
+                'sector' => 'HealthTech', 'stage' => 'seed',
+                'needs' => ['Healthcare partnerships', 'Series A investors', 'Clinical advisors'],
+                'offers' => ['HealthTech expertise', 'Saudi MOH connections', 'Product strategy'],
+                'is_featured' => true, 'is_verified' => true,
+                'company' => ['name' => 'MedBridge', 'slug' => 'medbridge', 'description' => 'AI-powered healthcare navigation platform connecting patients to specialized care across the GCC.', 'sector' => 'HealthTech', 'stage' => 'seed', 'location' => 'Riyadh, Saudi Arabia', 'is_hiring' => true, 'is_fundraising' => true],
+            ],
+            [
+                'name' => 'Khalid Al-Mansouri', 'email' => 'khalid@example.com',
+                'slug' => 'khalid-al-mansouri', 'tagline' => 'Democratizing financial access for SMEs across MENA',
+                'bio' => 'Khalid is a fintech entrepreneur and former investment banker with Goldman Sachs. He\'s on a mission to bring embedded finance to the underserved SME market in Saudi Arabia and the wider MENA region.',
+                'location' => 'Dubai, UAE', 'country_code' => 'AE',
+                'sector' => 'FinTech', 'stage' => 'series-a',
+                'needs' => ['Banking partnerships', 'Regulatory guidance', 'CFO hire'],
+                'offers' => ['FinTech strategy', 'MENA market access', 'Fundraising support'],
+                'is_featured' => true, 'is_verified' => true,
+                'company' => ['name' => 'PayFlow', 'slug' => 'payflow', 'description' => 'Embedded finance infrastructure enabling SMEs to access working capital, payments, and insurance in one platform.', 'sector' => 'FinTech', 'stage' => 'series-a', 'location' => 'Dubai, UAE', 'is_hiring' => true, 'is_fundraising' => false, 'founded_year' => 2022],
+            ],
+            [
+                'name' => 'Nora Al-Zahrawi', 'email' => 'nora@example.com',
+                'slug' => 'nora-al-zahrawi', 'tagline' => 'Transforming talent development for the Saudi Vision 2030 workforce',
+                'bio' => 'Nora is an EdTech founder and former HR director passionate about upskilling the next generation of Saudi professionals. Her platform uses gamification and AI to make professional development engaging and measurable.',
+                'location' => 'Jeddah, Saudi Arabia', 'country_code' => 'SA',
+                'sector' => 'EdTech', 'stage' => 'seed',
+                'needs' => ['Corporate sales partnerships', 'Content creators', 'LMS integrations'],
+                'offers' => ['EdTech expertise', 'Saudi HR network', 'L&D consulting'],
+                'is_featured' => true, 'is_verified' => true,
+                'company' => ['name' => 'SkillPath', 'slug' => 'skillpath', 'description' => 'AI-powered professional development platform designed for the Arab workforce, with Arabic-first content and measurable skill outcomes.', 'sector' => 'EdTech', 'stage' => 'seed', 'location' => 'Jeddah, Saudi Arabia', 'is_hiring' => true, 'is_fundraising' => true, 'is_collaborating' => true],
+            ],
+            [
+                'name' => 'Ahmed Al-Farsi', 'email' => 'ahmed@example.com',
+                'slug' => 'ahmed-al-farsi', 'tagline' => 'Building smart logistics for the GCC e-commerce boom',
+                'bio' => 'Ahmed is a logistics tech founder with deep roots in supply chain operations. After spending 6 years running logistics for a major Saudi retailer, he built LogiQ to solve last-mile delivery challenges with AI routing.',
+                'location' => 'Manama, Bahrain', 'country_code' => 'BH',
+                'sector' => 'LogTech', 'stage' => 'pre-seed',
+                'needs' => ['Logistics partnerships', 'Seed investors', 'Operations team'],
+                'offers' => ['Logistics expertise', 'GCC market knowledge', 'Operations playbooks'],
+                'is_featured' => false, 'is_verified' => true,
+                'company' => ['name' => 'LogiQ', 'slug' => 'logiq', 'description' => 'Smart last-mile logistics platform using AI routing and real-time optimization for GCC e-commerce.', 'sector' => 'LogTech', 'stage' => 'pre-seed', 'location' => 'Manama, Bahrain', 'is_hiring' => false, 'is_fundraising' => true, 'is_collaborating' => true],
+            ],
+            [
+                'name' => 'Lina Al-Saud', 'email' => 'lina@example.com',
+                'slug' => 'lina-al-saud', 'tagline' => 'Reimagining hospitality technology for Saudi tourism growth',
+                'bio' => 'Lina is a HospTech founder and former McKinsey consultant. She\'s building Rihla to modernize hotel operations management and guest experience for the Saudi tourism mega-projects era.',
+                'location' => 'Riyadh, Saudi Arabia', 'country_code' => 'SA',
+                'sector' => 'HospTech', 'stage' => 'seed',
+                'needs' => ['Hotel partnerships', 'Technical co-founder', 'Tourism ecosystem connections'],
+                'offers' => ['Tourism market insights', 'Strategy consulting', 'NEOM/tourism ecosystem access'],
+                'is_featured' => false, 'is_verified' => false,
+                'company' => ['name' => 'Rihla', 'slug' => 'rihla', 'description' => 'Modern hospitality management platform built for Saudi mega-tourism projects and boutique hotels.', 'sector' => 'HospTech', 'stage' => 'seed', 'location' => 'Riyadh, Saudi Arabia', 'is_hiring' => true, 'is_collaborating' => true],
+            ],
+            [
+                'name' => 'Omar Al-Khoury', 'email' => 'omar@example.com',
+                'slug' => 'omar-al-khoury', 'tagline' => 'AI-powered legal tech for the GCC startup ecosystem',
+                'bio' => 'Omar is a LegalTech founder and former startup lawyer. He built LexGCC to automate contract generation, compliance checks, and legal workflows for startups and SMEs across the GCC region.',
+                'location' => 'Riyadh, Saudi Arabia', 'country_code' => 'SA',
+                'sector' => 'LegalTech', 'stage' => 'pre-seed',
+                'needs' => ['Legal firm partnerships', 'Angel investors', 'Product design help'],
+                'offers' => ['Legal tech expertise', 'Startup law knowledge', 'GCC regulatory insights'],
+                'is_featured' => false, 'is_verified' => true,
+                'company' => ['name' => 'LexGCC', 'slug' => 'lexgcc', 'description' => 'AI-powered legal platform automating contract creation, compliance monitoring, and legal workflows for GCC startups.', 'sector' => 'LegalTech', 'stage' => 'pre-seed', 'location' => 'Riyadh, Saudi Arabia', 'is_hiring' => false, 'is_fundraising' => true],
+            ],
+        ];
+
+        foreach ($foundersData as $data) {
+            $user = User::firstOrCreate(
+                ['email' => $data['email']],
+                ['name' => $data['name'], 'password' => bcrypt(self::MEMBER_PASSWORD), 'email_verified_at' => now()]
+            );
+
+            $companyData = $data['company'];
+            $company = CompanyProfile::firstOrCreate(
+                ['slug' => $companyData['slug']],
+                array_merge($companyData, [
+                    'country_code' => $data['country_code'],
+                    'founded_year' => $companyData['founded_year'] ?? 2023,
+                    'team_size' => rand(3, 15),
+                    'is_public' => true,
+                    'status' => 'active',
+                    'is_hiring' => $companyData['is_hiring'] ?? false,
+                    'is_fundraising' => $companyData['is_fundraising'] ?? false,
+                    'is_collaborating' => $companyData['is_collaborating'] ?? false,
+                ])
+            );
+
+            $founder = FounderProfile::firstOrCreate(
+                ['slug' => $data['slug']],
+                [
+                    'user_id' => $user->id,
+                    'tagline' => $data['tagline'],
+                    'bio' => $data['bio'],
+                    'location' => $data['location'],
+                    'country_code' => $data['country_code'],
+                    'sector' => $data['sector'],
+                    'stage' => $data['stage'],
+                    'needs' => $data['needs'],
+                    'offers' => $data['offers'],
+                    'is_featured' => $data['is_featured'],
+                    'is_verified' => $data['is_verified'],
+                    'is_public' => true,
+                    'status' => 'active',
+                ]
+            );
+
+            $founder->companies()->syncWithoutDetaching([$company->id => ['role' => 'Founder & CEO', 'is_primary' => true]]);
+
+            if (method_exists($user, 'assignRole') && ! $user->hasRole('member')) {
+                $user->assignRole('member');
+            }
+
+            Scorecard::firstOrCreate(
+                ['founder_profile_id' => $founder->id],
+                [
+                    'overall_score' => rand(65, 92),
+                    'profile_completeness' => rand(70, 100),
+                    'community_engagement' => rand(50, 95),
+                    'execution_track_record' => rand(60, 90),
+                    'network_strength' => rand(55, 85),
+                    'knowledge_contribution' => rand(40, 80),
+                    'calculated_at' => now(),
+                ]
+            );
+        }
+
+        $approvedTestUser = User::updateOrCreate(
+            ['email' => 'user@test.com'],
+            ['name' => 'Approved Test User', 'password' => bcrypt(self::APPROVED_TEST_PASSWORD), 'email_verified_at' => now()]
+        );
+
+        if (method_exists($approvedTestUser, 'assignRole') && ! $approvedTestUser->hasRole('member')) {
+            $approvedTestUser->assignRole('member');
+        }
+
+        $eventsData = [
+            ['title' => 'Wosool Founders Dinner — Riyadh', 'slug' => 'founders-dinner-riyadh-q2-2024', 'description' => 'An intimate dinner for Wosool founders to connect, share challenges, and build lasting relationships. Limited to 30 founders.', 'starts_at' => now()->addDays(14)->setTime(19, 0), 'ends_at' => now()->addDays(14)->setTime(22, 0), 'location' => 'The St. Regis Riyadh, Saudi Arabia', 'type' => 'wosool', 'format' => 'in-person', 'max_attendees' => 30, 'tags' => ['networking', 'dinner', 'riyadh']],
+            ['title' => 'Fundraising Readiness Workshop', 'slug' => 'fundraising-readiness-workshop-april', 'description' => 'A hands-on workshop covering pitch decks, investor narratives, term sheets, and how to approach GCC VCs.', 'starts_at' => now()->addDays(7)->setTime(10, 0), 'ends_at' => now()->addDays(7)->setTime(13, 0), 'location' => 'Online', 'type' => 'wosool', 'format' => 'virtual', 'virtual_link' => 'https://meet.example.com/wosool-fundraising', 'max_attendees' => 50, 'tags' => ['fundraising', 'workshop', 'virtual']],
+            ['title' => 'AI for Founders: Practical Tools & Workflows', 'slug' => 'ai-founders-tools-may', 'description' => 'Explore the most effective AI tools for founders — from customer research and product design to marketing automation.', 'starts_at' => now()->addDays(21)->setTime(14, 0), 'ends_at' => now()->addDays(21)->setTime(16, 30), 'location' => 'Online', 'type' => 'wosool', 'format' => 'virtual', 'max_attendees' => 100, 'tags' => ['ai', 'tools', 'productivity']],
+            ['title' => 'GITEX Startup Stage — Wosool Meetup', 'slug' => 'gitex-wosool-meetup-2024', 'description' => 'Meet Wosool founders and members at GITEX. A casual networking session before the main event day.', 'starts_at' => now()->addDays(45)->setTime(9, 0), 'ends_at' => now()->addDays(45)->setTime(11, 0), 'location' => 'Dubai World Trade Centre, UAE', 'type' => 'partner', 'format' => 'in-person', 'max_attendees' => 60, 'tags' => ['gitex', 'networking', 'dubai']],
+        ];
+
+        foreach ($eventsData as $eventData) {
+            Event::firstOrCreate(
+                ['slug' => $eventData['slug']],
+                array_merge($eventData, ['is_public' => true, 'requires_rsvp' => true, 'status' => 'upcoming', 'status_flow' => 'published', 'created_by' => $admin->id])
+            );
+        }
+
+        $programsData = [
+            ['name' => 'Founder Onboarding', 'slug' => 'founder-onboarding', 'description' => 'A structured onboarding journey to help new Wosool founders set up their profiles and make their first meaningful connections.', 'category' => 'onboarding', 'duration' => '2 weeks', 'target_stages' => ['pre-seed', 'seed'], 'cohort_size' => 20, 'benefits' => ['Platform orientation', 'Welcome call with team', 'First match introductions', 'Starter resource pack'], 'is_open' => true],
+            ['name' => 'Founder Circles', 'slug' => 'founder-circles', 'description' => 'Small, curated peer groups of 6-8 founders at similar stages who meet bi-weekly. Facilitated by experienced mentors.', 'category' => 'circles', 'duration' => '3 months', 'target_stages' => ['pre-seed', 'seed', 'series-a'], 'cohort_size' => 8, 'benefits' => ['Bi-weekly peer sessions', 'Accountability partner', 'Shared playbooks', 'Expert facilitator'], 'is_open' => true],
+            ['name' => 'Growth & Traction', 'slug' => 'growth-traction', 'description' => 'An intensive 6-week program focused on customer acquisition, growth metrics, and traction playbooks.', 'category' => 'growth', 'duration' => '6 weeks', 'target_stages' => ['seed', 'series-a'], 'cohort_size' => 15, 'benefits' => ['6 weekly workshops', '2x 1:1 coaching sessions', 'Growth toolkit', 'Peer accountability group'], 'is_open' => false, 'application_deadline' => now()->addDays(30)],
+            ['name' => 'Fundraising Readiness', 'slug' => 'fundraising-readiness', 'description' => 'Prepare your startup for a successful fundraise. From pitch narrative and deck creation to investor targeting.', 'category' => 'fundraising', 'duration' => '4 weeks', 'target_stages' => ['seed', 'series-a'], 'cohort_size' => 12, 'benefits' => ['Pitch deck review', 'Mock investor meetings', 'Investor database access', 'Term sheet workshop'], 'is_open' => true],
+        ];
+
+        foreach ($programsData as $programData) {
+            $deadline = $programData['application_deadline'] ?? null;
+            unset($programData['application_deadline']);
+            $programData['status_flow'] = ($programData['is_open'] ?? false) ? 'applications_open' : 'published';
+            $program = Program::firstOrCreate(['slug' => $programData['slug']], $programData);
+            if ($deadline) {
+                $program->update(['application_deadline' => $deadline]);
+            }
+        }
+
+        $partnersData = [
+            ['name' => 'Saudi Venture Capital Company', 'slug' => 'saudi-vc', 'description' => 'Leading venture capital firm focused on the Saudi startup ecosystem.', 'type' => 'strategic', 'status' => 'ecosystem-aligned', 'sector' => 'Venture Capital', 'website' => 'https://example.com', 'display_order' => 1],
+            ['name' => 'King Abdullah University of Science and Technology', 'slug' => 'kaust', 'description' => 'World-class research university and innovation ecosystem.', 'type' => 'knowledge', 'status' => 'prospective', 'sector' => 'Education & Research', 'website' => 'https://kaust.edu.sa', 'display_order' => 2],
+            ['name' => 'Flat6Labs Saudi Arabia', 'slug' => 'flat6labs-ksa', 'description' => 'Leading startup accelerator running pre-seed programs in Saudi Arabia.', 'type' => 'ecosystem', 'status' => 'ecosystem-aligned', 'sector' => 'Accelerator', 'website' => 'https://flat6labs.com', 'display_order' => 3],
+            ['name' => 'Endeavor Saudi Arabia', 'slug' => 'endeavor-ksa', 'description' => 'Global organization supporting high-impact entrepreneurs through mentorship and network access.', 'type' => 'community', 'status' => 'prospective', 'sector' => 'Entrepreneurship Support', 'website' => 'https://endeavor.org', 'display_order' => 4],
+        ];
+
+        foreach ($partnersData as $partnerData) {
+            PartnerProfile::firstOrCreate(['slug' => $partnerData['slug']], array_merge($partnerData, ['is_public' => true]));
+        }
+
+        $sponsorsData = [
+            ['name' => 'AlRajhi Capital', 'slug' => 'alrajhi-capital', 'description' => 'Leading financial institution supporting the Saudi startup ecosystem.', 'tier' => 'platinum', 'is_active' => true, 'website' => 'https://example.com', 'display_order' => 1],
+            ['name' => 'STC Ventures', 'slug' => 'stc-ventures', 'description' => 'Corporate venture arm of Saudi Telecom Company, investing in technology startups across MENA.', 'tier' => 'gold', 'is_active' => true, 'website' => 'https://example.com', 'display_order' => 2],
+            ['name' => 'Tamkeen Bahrain', 'slug' => 'tamkeen-bahrain', 'description' => 'Bahrain\'s leading authority for entrepreneurship development and workforce training.', 'tier' => 'silver', 'is_active' => true, 'website' => 'https://tamkeen.bh', 'display_order' => 3],
+        ];
+
+        foreach ($sponsorsData as $sponsorData) {
+            SponsorProfile::firstOrCreate(['slug' => $sponsorData['slug']], $sponsorData);
+        }
+
+        // Public news comes only from reviewed, sourced briefs — never invented stories.
+        \Illuminate\Support\Facades\Artisan::call('wosool:import-news');
+        \Illuminate\Support\Facades\Artisan::call('wosool:import-founders');
+
+        $applicationsData = [
+            [
+                'full_name' => 'Layla Al-Rashid',
+                'email' => 'layla@applicant.example',
+                'phone' => '+966500000001',
+                'company_name' => 'Nabd Commerce',
+                'company_website' => 'https://nabd.example.com',
+                'sector' => 'Commerce',
+                'stage' => 'seed',
+                'location' => 'Riyadh, Saudi Arabia',
+                'motivation' => 'Looking for strategic intros and a peer group as we expand into B2B retail tooling.',
+                'what_you_offer' => 'Marketplace growth, retail operations, omni-channel go-to-market.',
+                'what_you_need' => 'Strategic partners, logistics intros, growth-stage investors.',
+                'linkedin_url' => 'https://linkedin.com/in/layla-al-rashid',
+                'referral_source' => 'member-referral',
+                'referrer_name' => 'Sara Al-Rashidi',
+                'status' => 'submitted',
+            ],
+            [
+                'full_name' => 'Faisal Nasser',
+                'email' => 'faisal@applicant.example',
+                'phone' => '+971500000002',
+                'company_name' => 'Qimam AI',
+                'company_website' => 'https://qimam.example.com',
+                'sector' => 'AI Infrastructure',
+                'stage' => 'series-a',
+                'location' => 'Dubai, UAE',
+                'motivation' => 'Need deeper regional founder network access and investor introductions ahead of our next raise.',
+                'what_you_offer' => 'AI engineering leadership, enterprise product strategy.',
+                'what_you_need' => 'Enterprise design partners, board-ready mentors.',
+                'linkedin_url' => 'https://linkedin.com/in/faisal-nasser',
+                'referral_source' => 'event',
+                'referrer_name' => 'Wosool Founders Dinner',
+                'status' => 'reviewing',
+                'admin_notes' => 'Strong profile. Waiting on follow-up reference call.',
+                'reviewed_by' => $admin->id,
+                'reviewed_at' => now()->subDays(1),
+            ],
+            [
+                'full_name' => 'Mariam Al-Harbi',
+                'email' => 'mariam@applicant.example',
+                'phone' => '+966500000003',
+                'company_name' => 'Bostan Fresh',
+                'company_website' => 'https://bostan.example.com',
+                'sector' => 'AgriTech',
+                'stage' => 'pre-seed',
+                'location' => 'Jeddah, Saudi Arabia',
+                'motivation' => 'Want mentorship and introductions to distribution partners.',
+                'what_you_offer' => 'Supply chain digitization and agri-ops insight.',
+                'what_you_need' => 'Pilot customers and fundraising prep.',
+                'linkedin_url' => 'https://linkedin.com/in/mariam-al-harbi',
+                'referral_source' => 'website',
+                'status' => 'approved',
+                'admin_notes' => 'Excellent fit for founder circles.',
+                'reviewed_by' => $admin->id,
+                'reviewed_at' => now()->subDays(4),
+            ],
+            [
+                'full_name' => 'Rashed Al-Hamdan',
+                'email' => 'rashed@applicant.example',
+                'phone' => '+973500000004',
+                'company_name' => 'PortLink',
+                'company_website' => 'https://portlink.example.com',
+                'sector' => 'Logistics',
+                'stage' => 'seed',
+                'location' => 'Manama, Bahrain',
+                'motivation' => 'Seeking investor readiness support and GCC expansion advice.',
+                'what_you_offer' => 'Port operations expertise and enterprise sales knowledge.',
+                'what_you_need' => 'Fundraising guidance and ecosystem introductions.',
+                'linkedin_url' => 'https://linkedin.com/in/rashed-al-hamdan',
+                'referral_source' => 'partner',
+                'referrer_name' => 'Flat6Labs Saudi Arabia',
+                'status' => 'waitlisted',
+                'admin_notes' => 'Promising, but cohort is currently full.',
+                'reviewed_by' => $admin->id,
+                'reviewed_at' => now()->subDays(2),
+            ],
+            [
+                'full_name' => 'Dana Khatib',
+                'email' => 'dana@applicant.example',
+                'phone' => '+974500000005',
+                'company_name' => 'Saha Studio',
+                'company_website' => 'https://saha.example.com',
+                'sector' => 'Health & Wellness',
+                'stage' => 'pre-seed',
+                'location' => 'Doha, Qatar',
+                'motivation' => 'Exploring community support while validating product-market fit.',
+                'what_you_offer' => 'Brand strategy and consumer wellness insights.',
+                'what_you_need' => 'Mentors and pilot design partners.',
+                'linkedin_url' => 'https://linkedin.com/in/dana-khatib',
+                'referral_source' => 'newsletter',
+                'status' => 'rejected',
+                'admin_notes' => 'Not a fit yet. Suggested reapplying after traction milestones.',
+                'reviewed_by' => $admin->id,
+                'reviewed_at' => now()->subDays(6),
+            ],
+        ];
+
+        foreach ($applicationsData as $applicationData) {
+            Application::firstOrCreate(
+                ['email' => $applicationData['email']],
+                $applicationData
+            );
+        }
+
+        Application::firstOrCreate(
+            ['email' => 'user@test.com'],
+            [
+                'user_id' => $approvedTestUser->id,
+                'full_name' => 'Approved Test User',
+                'email' => 'user@test.com',
+                'phone' => '+212600000000',
+                'company_name' => 'Wosool Test Company',
+                'company_website' => 'https://example.com',
+                'sector' => 'Technology',
+                'stage' => 'seed',
+                'location' => 'Rabat, Morocco',
+                'motivation' => 'Seeded approved account for QA and local testing flows.',
+                'what_you_offer' => 'QA feedback and product testing.',
+                'what_you_need' => 'Access to approved member workflows.',
+                'linkedin_url' => 'https://linkedin.com/in/approved-test-user',
+                'referral_source' => 'internal',
+                'referrer_name' => 'Seeder',
+                'status' => 'approved',
+                'admin_notes' => 'Auto-approved seeded testing account.',
+                'reviewed_by' => $admin->id,
+                'reviewed_at' => now(),
+            ]
+        );
+
+        $draftAndArchivedNews = [
+            [
+                'title' => 'Wosool Community Playbook: Founder Referral Guidelines',
+                'slug' => 'wosool-founder-referral-guidelines',
+                'excerpt' => 'A practical draft guide for how founders can introduce each other to partners and investors with context and care.',
+                'content' => 'Draft internal content for an upcoming community guidelines article.',
+                'category' => 'announcement',
+                'author_name' => 'Wosool Team',
+                'author_id' => $admin->id,
+                'is_featured' => false,
+                'is_public' => false,
+                'status' => 'draft',
+                'tags' => ['community', 'guidelines'],
+            ],
+            [
+                'title' => 'Archive: 2023 Ecosystem Roundup',
+                'slug' => 'archive-2023-ecosystem-roundup',
+                'excerpt' => 'A prior-year recap retained for internal reference.',
+                'content' => 'Archived content kept for admin testing and review workflows.',
+                'category' => 'editorial',
+                'author_name' => 'Wosool Editorial',
+                'author_id' => $admin->id,
+                'is_featured' => false,
+                'is_public' => false,
+                'status' => 'archived',
+                'published_at' => now()->subYear(),
+                'tags' => ['archive'],
+            ],
+        ];
+
+        foreach ($draftAndArchivedNews as $newsItemData) {
+            NewsItem::firstOrCreate(['slug' => $newsItemData['slug']], $newsItemData);
+        }
+
+        $seedActions = [
+            ['action' => 'application.updated', 'entity_type' => 'application', 'entity_id' => 2, 'notes' => 'Application moved to reviewing'],
+            ['action' => 'application.updated', 'entity_type' => 'application', 'entity_id' => 3, 'notes' => 'Application approved'],
+            ['action' => 'event.created', 'entity_type' => 'event', 'entity_id' => 1, 'notes' => 'Seeded founders dinner event'],
+            ['action' => 'news.created', 'entity_type' => 'news', 'entity_id' => 1, 'notes' => 'Seeded launch announcement'],
+        ];
+
+        foreach ($seedActions as $seedAction) {
+            AdminAction::firstOrCreate(
+                [
+                    'admin_id' => $admin->id,
+                    'action' => $seedAction['action'],
+                    'entity_type' => $seedAction['entity_type'],
+                    'entity_id' => $seedAction['entity_id'],
+                ],
+                ['notes' => $seedAction['notes']]
+            );
+        }
+
+        if ($this->command) {
+            $this->command->info('✅ Wosool seed data created successfully!');
+            $this->command->newLine();
+            $this->command->warn('Seeded login accounts');
+            $this->command->line('Admin:  admin@wosool.org / ' . self::ADMIN_PASSWORD);
+            $this->command->line('Member: sara@example.com / ' . self::MEMBER_PASSWORD);
+            $this->command->line('Member: khalid@example.com / ' . self::MEMBER_PASSWORD);
+            $this->command->line('Member: nora@example.com / ' . self::MEMBER_PASSWORD);
+            $this->command->line('Member: ahmed@example.com / ' . self::MEMBER_PASSWORD);
+            $this->command->line('Member: lina@example.com / ' . self::MEMBER_PASSWORD);
+            $this->command->line('Member: omar@example.com / ' . self::MEMBER_PASSWORD);
+            $this->command->line('Member: user@test.com / ' . self::APPROVED_TEST_PASSWORD . ' (approved)');
+        }
+    }
+}

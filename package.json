@@ -1,0 +1,40 @@
+{
+  "name": "wosool",
+  "version": "0.6.0",
+  "private": true,
+  "description": "Wosool \u2014 Founders to Founders platform",
+  "scripts": {
+    "setup": "npm run setup:frontend && npm run setup:backend",
+    "setup:frontend": "npm --prefix frontend ci",
+    "setup:backend": "composer --working-dir=backend install --no-interaction --no-progress && npm --prefix backend ci && npm run backend:prepare",
+    "backend:prepare": "npm run backend:env && npm run backend:migrate && npm run eoa:install",
+    "backend:env": "php scripts/prepare-backend.php",
+    "backend:migrate": "php backend/artisan migrate",
+    "build": "npm run build:frontend && npm run build:backend",
+    "build:frontend": "npm --prefix frontend run build",
+    "build:backend": "npm --prefix backend run build",
+    "hostinger:install": "npm --prefix frontend ci --include=dev",
+    "hostinger:build": "npm --prefix frontend run build",
+    "hostinger:start": "npm --prefix frontend run start -- --hostname 0.0.0.0",
+    "lint": "npm --prefix frontend run lint",
+    "type-check": "npm --prefix frontend run type-check",
+    "validate:entrepreneurs": "npm --prefix frontend run validate:entrepreneurs",
+    "test": "npm run test:frontend && npm run test:backend",
+    "verify": "npm run content:test && npm run content:check && npm run lint && npm run type-check && npm run test && npm run validate:entrepreneurs && npm run build",
+    "dev": "./scripts/run-app.sh",
+    "dev:frontend": "npm --prefix frontend run dev",
+    "dev:backend": "php backend/artisan serve --host=127.0.0.1",
+    "ops:ssl:repair": "node scripts/ssl-repair.mjs",
+    "test:frontend": "npm --prefix frontend test",
+    "test:backend": "composer --working-dir=backend run test",
+    "eoa:install": "php backend/artisan eoa:install",
+    "qa": "npm run verify && npm --prefix frontend run qa:crawl",
+    "qa:crawl": "npm --prefix frontend run qa:crawl",
+    "content:test": "node --test scripts/content-review.test.mjs",
+    "content:check": "node scripts/content-review.mjs --check",
+    "content:review": "node scripts/content-review.mjs"
+  },
+  "engines": {
+    "node": "^22.12.0 || ^24.0.0"
+  }
+}

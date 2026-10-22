@@ -1,0 +1,51 @@
+import type { MetadataRoute } from "next"
+import { env } from "@/lib/env"
+import { wikiArticles } from "@/lib/wiki"
+import { readSitemapRecords } from "@/lib/public-records"
+
+export const dynamic = "force-dynamic"
+
+const publicRoutes = [
+  "/",
+  "/startups",
+  "/api",
+  "/wiki",
+  "/eoa",
+  "/eoa/about",
+  "/eoa/program",
+  "/eoa/alumni",
+  "/eoa/eligibility",
+  "/eoa/learning",
+  "/eoa/leadership",
+  "/eoa/mentors",
+  "/eoa/partners",
+  "/eoa/faq",
+  "/faq",
+  "/eoa/contact",
+  "/eoa/privacy",
+  "/opportunities",
+  "/about",
+  "/programs",
+  "/founders",
+  "/founders/companies",
+  "/events",
+  "/partners",
+  "/sponsors",
+  "/news",
+  "/apply",
+  "/contact",
+  "/privacy",
+  "/terms",
+]
+
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const [news, founders] = await Promise.all([
+    readSitemapRecords("news", env.apiUrl), readSitemapRecords("founders", env.apiUrl),
+  ])
+  return [
+    ...publicRoutes.map(path => ({ url: new URL(path, env.siteUrl).href })),
+    ...wikiArticles.map(article => ({ url: new URL(`/wiki/${article.slug}`, env.siteUrl).href, lastModified: article.updatedAt })),
+    ...news.map(record => ({ url: new URL(`/news/${record.slug}`, env.siteUrl).href })),
+    ...founders.map(record => ({ url: new URL(`/founders/${record.slug}`, env.siteUrl).href })),
+  ]
+}

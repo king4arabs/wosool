@@ -1,0 +1,242 @@
+[
+  {
+    "portrait_url": "https://res.cloudinary.com/sosv-development/image/upload/v1522909794/agegncyf3oglrfxf1jyf.jpg",
+    "logo_url": null,
+    "founder_socials": [],
+    "founded_year": null,
+    "traction_en": null,
+    "traction_ar": null,
+    "traction_source_url": null,
+    "slug": "hassan-albalawi",
+    "founder_name_en": "Hassan Albalawi",
+    "founder_name_ar": "حسن البلوي",
+    "role_en": "Co-founder & CEO",
+    "role_ar": "شريك مؤسس ورئيس تنفيذي",
+    "founder_brief_en": "Co-founded WakeCap and leads its construction technology business, connecting worksite data with safety and project controls.",
+    "founder_brief_ar": "شارك في تأسيس ويك كاب ويقود أعمالها في تقنيات البناء، لربط بيانات مواقع العمل بالسلامة وإدارة المشاريع.",
+    "company_name_en": "WakeCap",
+    "company_name_ar": "ويك كاب",
+    "company_brief_en": "Construction technology combining connected wearables, site data and analytics for workforce visibility, safety and project controls.",
+    "company_brief_ar": "تقنيات للبناء تجمع الأجهزة القابلة للارتداء وبيانات المواقع والتحليلات لمتابعة القوى العاملة والسلامة وإدارة المشاريع.",
+    "country_en": "Saudi Arabia",
+    "country_ar": "السعودية",
+    "country_code": "SA",
+    "sector_en": "Construction technology",
+    "sector_ar": "تقنيات البناء",
+    "website": "https://www.wakecap.com/",
+    "source_url": "https://sosv.com/company/wakecap/",
+    "source_urls": [
+      "https://sosv.com/company/wakecap/",
+      "https://www.wakecap.com/",
+      "https://qatar.websummit.com/attendees/qat26/f40574fd-fc77-4c25-8f8b-9aed0f7ac8db/hassan-albalawi/"
+    ],
+    "company_key": "wakecap",
+    "region": "saudi",
+    "asset_sources": [
+      {
+        "kind": "portrait",
+        "url": "https://res.cloudinary.com/sosv-development/image/upload/v1522909794/agegncyf3oglrfxf1jyf.jpg",
+        "page": "https://sosv.com/company/wakecap/"
+      }
+    ],
+    "reviewed_at": "2026-10-22"
+  },
+  {
+    "portrait_url": null,
+    "logo_url": null,
+    "founder_socials": [],
+    "founded_year": null,
+    "traction_en": null,
+    "traction_ar": null,
+    "traction_source_url": null,
+    "slug": "jad-antoun",
+    "founder_name_en": "Jad Antoun",
+    "founder_name_ar": "جاد أنطون",
+    "role_en": "Co-founder & CEO",
+    "role_ar": "شريك مؤسس ورئيس تنفيذي",
+    "founder_brief_en": "Co-founded Huspy and leads its work to simplify property search, financing and the home-buying process.",
+    "founder_brief_ar": "شارك في تأسيس هسبي ويقود تطوير خدماتها لتبسيط البحث عن العقارات وتمويلها وإجراءات شراء المنازل.",
+    "company_name_en": "Huspy",
+    "company_name_ar": "هسبي",
+    "company_brief_en": "Dubai-based property technology business helping buyers find homes and arrange mortgages through digital tools and specialist support.",
+    "company_brief_ar": "شركة تقنيات عقارية مقرها دبي تساعد المشترين على العثور على المنازل وترتيب التمويل العقاري عبر أدوات رقمية ودعم متخصص.",
+    "country_en": "United Arab Emirates",
+    "country_ar": "الإمارات",
+    "country_code": "AE",
+    "sector_en": "Property technology",
+    "sector_ar": "التقنيات العقارية",
+    "website": "https://www.huspy.com/ae",
+    "source_url": "https://www.huspy.com/ae/about",
+    "source_urls": [
+      "https://www.huspy.com/ae/about",
+      "https://www.huspy.com/ae/blog/jad-antoun-featured-as-one-of-the-gcc-s-most-influential-leaders"
+    ],
+    "company_key": "huspy",
+    "region": "gcc",
+    "reviewed_at": "2026-10-22"
+  },
+  {
+    "portrait_url": "https://grubtech.com/_astro/mohamed-al-fayed.BdGjba-P_YT6oJ.webp",
+    "logo_url": null,
+    "founder_socials": [],
+    "founded_year": 2019,
+    "traction_en": null,
+    "traction_ar": null,
+    "traction_source_url": null,
+    "slug": "mohamed-al-fayed",
+    "founder_name_en": "Mohamed Al Fayed",
+    "founder_name_ar": "محمد الفايد",
+    "role_en": "Co-founder & CEO",
+    "role_ar": "شريك مؤسس ورئيس تنفيذي",
+    "founder_brief_en": "A member of grubtech's founding team and its CEO, building software that connects restaurant orders, kitchens and delivery operations.",
+    "founder_brief_ar": "أحد أعضاء الفريق المؤسس لغربتك ورئيسها التنفيذي، ويعمل على تطوير برمجيات تربط طلبات المطاعم بالمطابخ وعمليات التوصيل.",
+    "company_name_en": "grubtech",
+    "company_name_ar": "غربتك",
+    "company_brief_en": "Restaurant and retail software that brings online orders, point-of-sale integrations, kitchen workflows and delivery management together.",
+    "company_brief_ar": "برمجيات للمطاعم والتجزئة تجمع الطلبات الإلكترونية وتكامل نقاط البيع وسير العمل بالمطابخ وإدارة التوصيل.",
+    "country_en": "United Arab Emirates",
+    "country_ar": "الإمارات",
+    "country_code": "AE",
+    "sector_en": "Restaurant technology",
+    "sector_ar": "تقنيات المطاعم",
+    "website": "https://grubtech.com/en",
+    "source_url": "https://grubtech.com/en/about",
+    "source_urls": [
+      "https://grubtech.com/en/about",
+      "https://grubtech.com/en"
+    ],
+    "company_key": "grubtech",
+    "region": "gcc",
+    "reviewed_at": "2026-10-22",
+    "asset_sources": [
+      {
+        "kind": "portrait",
+        "url": "https://grubtech.com/_astro/mohamed-al-fayed.BdGjba-P_YT6oJ.webp",
+        "page": "https://grubtech.com/en/about"
+      }
+    ]
+  },
+  {
+    "portrait_url": "https://news-assets.withairbnb.com/wp-content/uploads/sites/21/2016/10/Brian-Chesky-Headshot-IR-Crop-Airbnb-2.jpg",
+    "logo_url": null,
+    "founder_socials": [],
+    "founded_year": null,
+    "traction_en": null,
+    "traction_ar": null,
+    "traction_source_url": null,
+    "slug": "brian-chesky",
+    "founder_name_en": "Brian Chesky",
+    "founder_name_ar": "برايان تشيسكي",
+    "role_en": "Co-founder & CEO",
+    "role_ar": "شريك مؤسس ورئيس تنفيذي",
+    "founder_brief_en": "Co-founded Airbnb and leads its vision and strategy, drawing on his background in design.",
+    "founder_brief_ar": "شارك في تأسيس إير بي إن بي ويقود رؤيتها واستراتيجيتها مستفيدًا من خلفيته في التصميم.",
+    "company_name_en": "Airbnb",
+    "company_name_ar": "إير بي إن بي",
+    "company_brief_en": "An online marketplace connecting hosts and guests for accommodation, experiences and services.",
+    "company_brief_ar": "سوق إلكترونية تربط المضيفين والضيوف للإقامة والتجارب والخدمات.",
+    "country_en": "United States",
+    "country_ar": "الولايات المتحدة",
+    "country_code": "US",
+    "sector_en": "Travel technology",
+    "sector_ar": "تقنيات السفر",
+    "website": "https://www.airbnb.com/",
+    "source_url": "https://news.airbnb.com/about-us/leadership/brian-chesky",
+    "source_urls": [
+      "https://news.airbnb.com/about-us/leadership/brian-chesky",
+      "https://news.airbnb.com/about-us"
+    ],
+    "company_key": "airbnb",
+    "region": "global",
+    "asset_sources": [
+      {
+        "kind": "portrait",
+        "url": "https://news-assets.withairbnb.com/wp-content/uploads/sites/21/2016/10/Brian-Chesky-Headshot-IR-Crop-Airbnb-2.jpg",
+        "page": "https://news.airbnb.com/about-us/leadership/brian-chesky"
+      }
+    ],
+    "reviewed_at": "2026-10-22"
+  },
+  {
+    "portrait_url": "https://news-assets.withairbnb.com/wp-content/uploads/sites/21/2023/10/Nate-Blecharczyk-Headshot-Crop-Airbnb-2.jpg",
+    "logo_url": null,
+    "founder_socials": [],
+    "founded_year": null,
+    "traction_en": null,
+    "traction_ar": null,
+    "traction_source_url": null,
+    "slug": "nathan-blecharczyk",
+    "founder_name_en": "Nathan Blecharczyk",
+    "founder_name_ar": "ناثان بليتشارزيك",
+    "role_en": "Co-founder & Chief Strategy Officer",
+    "role_ar": "شريك مؤسس ورئيس الاستراتيجية",
+    "founder_brief_en": "Co-founded Airbnb and leads strategic initiatives, having helped build its engineering, data science and payments teams.",
+    "founder_brief_ar": "شارك في تأسيس إير بي إن بي ويقود مبادراتها الاستراتيجية، وأسهم في بناء فرق الهندسة وعلوم البيانات والمدفوعات.",
+    "company_name_en": "Airbnb",
+    "company_name_ar": "إير بي إن بي",
+    "company_brief_en": "An online marketplace connecting hosts and guests for accommodation, experiences and services.",
+    "company_brief_ar": "سوق إلكترونية تربط المضيفين والضيوف للإقامة والتجارب والخدمات.",
+    "country_en": "United States",
+    "country_ar": "الولايات المتحدة",
+    "country_code": "US",
+    "sector_en": "Travel technology",
+    "sector_ar": "تقنيات السفر",
+    "website": "https://www.airbnb.com/",
+    "source_url": "https://news.airbnb.com/about-us/leadership/nathan-blecharczyk",
+    "source_urls": [
+      "https://news.airbnb.com/about-us/leadership/nathan-blecharczyk",
+      "https://news.airbnb.com/about-us"
+    ],
+    "company_key": "airbnb",
+    "region": "global",
+    "asset_sources": [
+      {
+        "kind": "portrait",
+        "url": "https://news-assets.withairbnb.com/wp-content/uploads/sites/21/2023/10/Nate-Blecharczyk-Headshot-Crop-Airbnb-2.jpg",
+        "page": "https://news.airbnb.com/about-us/leadership/nathan-blecharczyk"
+      }
+    ],
+    "reviewed_at": "2026-10-22"
+  },
+  {
+    "portrait_url": "https://news-assets.withairbnb.com/wp-content/uploads/sites/21/2016/10/Airbnb_Joe_Square.jpg",
+    "logo_url": null,
+    "founder_socials": [],
+    "founded_year": null,
+    "traction_en": null,
+    "traction_ar": null,
+    "traction_source_url": null,
+    "slug": "joe-gebbia",
+    "founder_name_en": "Joe Gebbia",
+    "founder_name_ar": "جو غيبيا",
+    "role_en": "Co-founder",
+    "role_ar": "شريك مؤسس",
+    "founder_brief_en": "Co-founded Airbnb and brings a background in graphic and industrial design.",
+    "founder_brief_ar": "شارك في تأسيس إير بي إن بي ويحمل خلفية في التصميم الجرافيكي والصناعي.",
+    "company_name_en": "Airbnb",
+    "company_name_ar": "إير بي إن بي",
+    "company_brief_en": "An online marketplace connecting hosts and guests for accommodation, experiences and services.",
+    "company_brief_ar": "سوق إلكترونية تربط المضيفين والضيوف للإقامة والتجارب والخدمات.",
+    "country_en": "United States",
+    "country_ar": "الولايات المتحدة",
+    "country_code": "US",
+    "sector_en": "Travel technology",
+    "sector_ar": "تقنيات السفر",
+    "website": "https://www.airbnb.com/",
+    "source_url": "https://news.airbnb.com/about-us/leadership/joe-gebbia",
+    "source_urls": [
+      "https://news.airbnb.com/about-us/leadership/joe-gebbia",
+      "https://news.airbnb.com/about-us"
+    ],
+    "company_key": "airbnb",
+    "region": "global",
+    "reviewed_at": "2026-10-22",
+    "asset_sources": [
+      {
+        "kind": "portrait",
+        "url": "https://news-assets.withairbnb.com/wp-content/uploads/sites/21/2016/10/Airbnb_Joe_Square.jpg",
+        "page": "https://news.airbnb.com/about-us/leadership/joe-gebbia"
+      }
+    ]
+  }
+]
