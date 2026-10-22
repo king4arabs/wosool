@@ -79,8 +79,8 @@ jobs:
           pnpm --dir "$standalone_frontend" exec node --import tsx --input-type=module -e "import './src/lib/founder-discovery.ts'; console.log('Standalone esbuild transform works')"
           pnpm --dir "$standalone_frontend" run lint
           pnpm --dir "$standalone_frontend" run build | tee "$standalone_frontend/build.log"
-          rg -q 'Collecting page data using 1 worker' "$standalone_frontend/build.log"
-          rg -q 'Generating static pages using 1 worker' "$standalone_frontend/build.log"
+          grep -Fq 'Collecting page data using 1 worker' "$standalone_frontend/build.log"
+          grep -Fq 'Generating static pages using 1 worker' "$standalone_frontend/build.log"
   backend:
     strategy:
       fail-fast: false
