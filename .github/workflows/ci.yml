@@ -67,6 +67,16 @@ jobs:
         run: |
           node --import tsx --input-type=module -e "import './src/lib/founder-discovery.ts'; console.log('Approved esbuild transform works')"
           pnpm run lint
+      - name: Verify standalone frontend hosting install
+        env:
+          CI: true
+        run: |
+          standalone_frontend=$(mktemp -d)
+          git archive HEAD frontend | tar -x -C "$standalone_frontend" --strip-components=1
+          pnpm --dir "$standalone_frontend" install --frozen-lockfile --store-dir "$standalone_frontend/.pnpm-store"
+          pnpm --dir "$standalone_frontend" exec node --import tsx --input-type=module -e "import './src/lib/founder-discovery.ts'; console.log('Standalone esbuild transform works')"
+          pnpm --dir "$standalone_frontend" run lint
+          pnpm --dir "$standalone_frontend" run build:webpack
   backend:
     strategy:
       fail-fast: false

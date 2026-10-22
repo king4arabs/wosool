@@ -2,6 +2,8 @@
 
 ## Current execution plan — 22 October 2026
 
+Hosting install follow-up: frontend-only archives now include their own pnpm build approvals and lockfile, with a cold-store standalone CI check. Next: redeploy the merged revision in the existing Hostinger app and verify install, webpack build and live release.
+
 Homepage discovery checkpoint: expose the full 150-profile editorial collection, provide a fresh 36-card Saudi-first mix per visit and an explicit shuffle control, load every public founder API page, and preserve searchable stable grids. Six sourced additions across four company groups are registered in the additive importer and content review. A pnpm workspace build allowlist and frozen lockfile address hosting's ignored install scripts under Node 22. Next: verify frontend hosting release and the additive founder import through the existing deployment process. [Evidence and checks](docs/research/HOME-FOUNDER-DISCOVERY-2026-10-22.md).
 
 Use [Continuous development](docs/CONTINUOUS-DEVELOPMENT.md) as the current phased plan and acceptance gates. The older release tables below are historical planning context, not evidence of current completion. Founder/company record-specific metadata and noindex-on-unavailability are implemented and locally tested. Next: verify live profile metadata and production release/imports/cron, complete API field schemas, and make newsroom filtering cover the full database. Source publication is not evidence of production deployment or import.
