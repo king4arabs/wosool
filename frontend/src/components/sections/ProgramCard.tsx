@@ -4,12 +4,15 @@ import Link from "next/link"
 import type { Program } from "@/types"
 import { Clock, CheckCircle2, ArrowLeft, ArrowRight, Rocket, Handshake, TrendingUp, HandCoins, ListChecks } from "lucide-react"
 import { useLocale } from "@/lib/locale"
+import { programCode } from "@/lib/program-labels"
 
+// Keyed by the stored category code (see programCode).
 const categoryMap = {
-  Onboarding:     { icon: Rocket, color: "var(--brand-blue)", bg: "var(--surface-blue)" },
-  "Peer Learning":{ icon: Handshake, color: "var(--brand-dark-green)", bg: "var(--success-bg)" },
-  Growth:         { icon: TrendingUp, color: "var(--brand-dark-orange)", bg: "var(--brand-light-orange)" },
-  Fundraising:    { icon: HandCoins, color: "var(--brand-dark-pink)", bg: "var(--error-bg)" },
+  onboarding:      { icon: Rocket, color: "var(--brand-blue)", bg: "var(--surface-blue)" },
+  circles:         { icon: Handshake, color: "var(--brand-dark-green)", bg: "var(--success-bg)" },
+  "peer-learning": { icon: Handshake, color: "var(--brand-dark-green)", bg: "var(--success-bg)" },
+  growth:          { icon: TrendingUp, color: "var(--brand-dark-orange)", bg: "var(--brand-light-orange)" },
+  fundraising:     { icon: HandCoins, color: "var(--brand-dark-pink)", bg: "var(--error-bg)" },
 }
 
 interface ProgramCardProps {
@@ -18,7 +21,7 @@ interface ProgramCardProps {
 
 export function ProgramCard({ program }: ProgramCardProps) {
   const { locale, direction } = useLocale()
-  const cat = categoryMap[program.category as keyof typeof categoryMap] ?? { icon: ListChecks, color: "var(--brand-blue)", bg: "var(--surface-blue)" }
+  const cat = categoryMap[programCode(program.category ?? "") as keyof typeof categoryMap] ?? { icon: ListChecks, color: "var(--brand-blue)", bg: "var(--surface-blue)" }
   const CategoryIcon = cat.icon
   const copy = {
     ar: { open: "مفتوح", closed: "قريبًا", learnMore: "عرض البرنامج" },

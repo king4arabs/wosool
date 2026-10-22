@@ -8,7 +8,8 @@ import { CollectionStatus } from "@/components/sections/CollectionStatus"
 import { PublicLayout } from "@/components/layout/PublicLayout"
 import { ProgramCard } from "@/components/sections/ProgramCard"
 import { Button } from "@/components/ui/button"
-import { localizeProgram, programsPageCopy } from "@/data/localized-seed"
+import { programsPageCopy } from "@/data/localized-seed"
+import { localizeApiProgram, programCategoryLabel, programCode } from "@/lib/program-labels"
 import { type ApiProgram, mapProgram } from "@/lib/content-api"
 import { useLocale } from "@/lib/locale"
 
@@ -16,14 +17,13 @@ export default function ProgramsPage() {
   const { locale } = useLocale()
   const copy = programsPageCopy[locale]
   const collection = usePublicCollection<ApiProgram>("/programs")
-  const programs = collection.items.map(item => localizeProgram(mapProgram(item), locale))
-  const [activeCategory, setActiveCategory] = useState(0)
+  const programs = collection.items.map(item => localizeApiProgram(mapProgram(item), locale))
+  const [activeCategory, setActiveCategory] = useState("")
 
-
-
-
-  const categories = [copy.categories[0], ...new Set(programs.map(program => program.category).filter(Boolean))]
-  const visiblePrograms = programs.filter(program => activeCategory === 0 || program.category === categories[activeCategory])
+  // Filter on the stored category code; show its label in the page language.
+  const categoryByCode = new Map(programs.filter(program => program.category?.trim()).map(program => [programCode(program.category), program.category]))
+  const categories = [{ code: "", label: copy.categories[0] }, ...[...categoryByCode].map(([code, category]) => ({ code, label: programCategoryLabel(category, locale) }))]
+  const visiblePrograms = programs.filter(program => !activeCategory || (program.category && programCode(program.category) === activeCategory))
   const openPrograms = visiblePrograms.filter((p) => p.isOpen)
   const closedPrograms = visiblePrograms.filter((p) => !p.isOpen)
 
@@ -38,13 +38,15 @@ export default function ProgramsPage() {
       >
         <div className="mx-auto max-w-7xl">
           <div className="flex items-center gap-2 overflow-x-auto pb-0.5 scrollbar-none">
-            {categories.map((category, index) => (
+            {categories.map(({ code, label }) => (
               <button
-                key={category}
-                onClick={() => setActiveCategory(index)}
+                key={code || "all"}
+                type="button"
+                aria-pressed={activeCategory === code}
+                onClick={() => setActiveCategory(code)}
                 className="whitespace-nowrap rounded-full px-4 py-2 text-xs font-bold transition-all"
                 style={
-                  activeCategory === index
+                  activeCategory === code
                     ? {
                         background: "#3B52D4",
                         color: "#fff",
@@ -57,7 +59,7 @@ export default function ProgramsPage() {
                       }
                 }
               >
-                {category}
+                {label}
               </button>
             ))}
           </div>
