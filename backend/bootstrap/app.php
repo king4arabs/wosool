@@ -24,7 +24,7 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->statefulApi();
-        $middleware->api(prepend: [\App\Http\Middleware\SetLocaleFromHeader::class]);
+        $middleware->api(prepend: [\App\Http\Middleware\SetLocaleFromHeader::class, \App\Http\Middleware\ApiSecurityHeaders::class]);
         $middleware->alias([
             'admin' => \App\Http\Middleware\EnsureUserIsAdmin::class,
             'member' => \App\Http\Middleware\EnsureUserHasMemberAccess::class,

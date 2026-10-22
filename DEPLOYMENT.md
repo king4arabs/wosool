@@ -43,6 +43,20 @@ Keep the existing `APP_KEY`. Set `MAIL_TEAM_ADDRESS` to the inbox that should re
 
 Hostinger's Node.js build sandbox cannot spawn Turbopack's PostCSS worker (build fails on `src/app/globals.css`). The Hostinger Web App therefore uses root directory `frontend`, framework preset Next.js, Node 22.x, build script `build:webpack` (`next build --webpack`) and output directory `.next`, with `NEXT_PUBLIC_SITE_URL`, `NEXT_PUBLIC_API_URL` and `NEXT_PUBLIC_ENABLE_DEMO_CONTENT=false` set as build environment variables.
 
+## PHP security update — 22 October 2026
+
+The live API advertised `PHP/8.3.35` on 22 October 2026. This is below the upstream patched version. A version header cannot establish whether a provider backported fixes; obtain provider evidence if applicable.
+
+For the existing 8.3 installation, update to **8.3.36 or later on 8.3** immediately. CI additionally checks **8.4.27** and **8.5.12**; promote a newer branch only after tests and staging pass. These releases fix CVE-2026-109618 and CVE-2026-109619 ([PHP advisory](https://www.php.net/archive/2026.php#2026-10-21-5)). Application headers do not fix these runtime vulnerabilities.
+
+1. Confirm the PHP handler and account for `api.wosool.org` in Hostinger. Patch the actual web-serving PHP runtime, CLI, queue and scheduled-job runtimes; selecting a major/minor version alone does not prove the patch is installed.
+2. Restart the relevant PHP workers through the host's supported controls so old processes are replaced. Preserve the existing application key and database.
+3. Run `php scripts/check-php-runtime.php` from the repository root using the deployment PHP binary. Composer install/update also invokes this check. Do not bypass it with `--no-scripts`. For vendor backports below the upstream version floor, obtain provider attestation and review the gate explicitly rather than treating the displayed version as proof of safety.
+4. Verify the web handler's patch using authenticated hosting diagnostics; CLI `php -v` alone is insufficient. Do not publish a `phpinfo()` endpoint. Check API health/readiness, sign-in, CSRF, private downloads, queues and scheduled jobs.
+5. Set `expose_php=Off` in the hosting PHP configuration after verification. Removing the version header reduces disclosure but is not remediation.
+
+Repository CI does not deploy or restart hosting. Runtime installation/restart and production verification remain an operational release step.
+
 ## Release sequence
 
 1. Record the currently deployed commit, back up the database, and stage the candidate release. Run CI and `npm run verify` in development/staging.
