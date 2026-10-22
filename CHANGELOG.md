@@ -1,5 +1,11 @@
 # Changelog
 
+## Revenue-qualified startup API contract — 2026-10-22
+
+- OpenAPI document 1.4.0 adds typed startup-directory responses: 40 record properties, compact pagination, bilingual sector facets, active-website verification, social/asset provenance, ecosystem relationships and revenue evidence with its exact period. Reported revenue/ARR remains distinct from financial-statement sources; neither classification promises an audit, program approval, partnership or Wosool membership.
+- Added four frontend and four Laravel contract tests covering all eight eligible imports in both locales, filters, empty/out-of-range pages, 422 errors and deliberate eligibility/private-field drift. Existing controller behavior and all records, moderation flags, accounts and review dates are unchanged.
+- Re-opened the available company, investor and program sources. No candidate qualified: Misk omits Swarm's reporting year; The Garage supplies only generic sales eligibility; Impact46 and Lamarka evidence concerns investment; CODE/GITEX failed and Monsha'at/Multiverse/Falak timed out without bypass attempts. [Checks, evidence boundaries and release steps](docs/API-STARTUP-CONTRACT-2026-10-22.md).
+
 ## Member dashboard shows your own events and applications — 2026-10-21
 
 - **Problem:** the "Coming up" panel on `/dashboard` (Arabic heading "في جدولك القادم", "on your upcoming schedule") listed the next three public events for every member, whether or not they had registered, and never said whether a place was confirmed, awaiting approval or waitlisted. The programs panel only suggested programs, so a member could not see the status of an application from the home page, and was shown programs they had already applied to. The API already returned `upcoming_rsvps` and `program_applications`, but nothing used them, and `upcoming_rsvps` also included places the member had cancelled or been refused, and events that had already finished.

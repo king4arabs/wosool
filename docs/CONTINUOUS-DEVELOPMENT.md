@@ -1,6 +1,8 @@
 # Wosool continuous development
 
-Updated: 21 October 2026. Work in bounded, reviewable cycles: inspect → verify sources → implement → test → publish source → verify release → choose the next incomplete outcome. Completion applies to acceptance criteria, not a promise that software or research needs no further maintenance.
+Updated: 22 October 2026. Work in bounded, reviewable cycles: inspect → verify sources → implement → test → publish source → verify release → choose the next incomplete outcome. Completion applies to acceptance criteria, not a promise that software or research needs no further maintenance.
+
+Current contract slice: OpenAPI 1.4.0 types the revenue-qualified startup collection: 40 record properties, compact pagination, bilingual sector facets, website verification, source/asset provenance and attributed revenue evidence. It separates reported figures and ARR from financial-statement sources without implying an audit or program approval. All eight checked-in eligible records must pass the shared contract in both locales in required Laravel CI. [Checks, source review and release limits](API-STARTUP-CONTRACT-2026-10-22.md).
 
 Current contract slice: OpenAPI 1.3.0 adds standalone public company list/detail schemas, including public founder relationships. `founders_count` now uses the same active/public boundary as the returned array, preventing hidden profiles from affecting an anonymous count. All 22 live company responses pass the local schema. Required Laravel CI must exercise all 79 imported companies in both locales before merge. [Checks and release limits](API-COMPANY-CONTRACT-2026-10-21.md).
 
@@ -16,7 +18,7 @@ Current bounded correction: Swarm Robotics and Huspy remain in the startup resea
 | --- | --- | --- |
 | 1. Baseline and reliability | Latest main inspected; preserved concurrent board, founder and news work; new RSS records become private drafts | Required frontend/backend checks pass; production revision and readiness verified |
 | 2. Discovery and SEO | `/api`, four bilingual `/wiki` guides, article metadata/JSON-LD, live founder/news sitemap entries, activation-page noindex; founder/company-specific metadata with public-visibility guards | Live canonical/metadata/robots checks; local profile transition checks pass but do not establish deployed behavior |
-| 3. Public API | OpenAPI document 1.3.0 describes nine GET routes; news, 35-field anonymous founders and 24/25-field standalone companies have schemas and real Laravel validation | Complete startup-directory schemas; scorecard log internals remain untyped; verify the download live |
+| 3. Public API | OpenAPI document 1.4.0 describes nine GET routes; news, 35-field anonymous founders, 24/25-field standalone companies and 40-field startup records have schemas and real Laravel validation | Review legacy scorecard-log exposure separately; verify the download live |
 | 4. Founder and news quality | 144 founders / 79 company groups / 42 stories in matched source snapshots; integrity and 30-day review cover both founder catalogs | Import reviewed additions on the deployed API; apply existing-record corrections through admin; verify resulting live counts |
 | 5. Operations | Daily news sync already scheduled in Laravel; daily development/source-review task; repeatable checks and release instructions | Verify host cron, shared lock/cache, worker supervision, failed-job monitoring and backup restore; source configuration alone does not prove execution |
 | 6. Maintenance | Repeat highest-value incomplete phase, then ongoing evidence review | No unresolved critical regression; bounded sourced additions with measurable checks and clear blockers |
@@ -71,7 +73,7 @@ Both commands now include the original 44-founder catalog and the 100-profile ex
 
 1. Deploy both services from the verified revision; run the reviewed additive imports; apply existing-record corrections through admin; verify the new routes, sitemap, metadata and imported counts live.
 2. Verify actual scheduled draft ingestion and failure reporting on the host; document the deployed revision and backup restore evidence.
-3. Extend field-level OpenAPI schemas and backend contract tests to startup-directory revenue evidence; review legacy scorecard-log exposure separately, then verify metadata and the downloaded contract on the deployed frontend.
+3. Review legacy scorecard-log exposure separately, then verify metadata and OpenAPI 1.4.0 on the deployed frontend, including startup evidence periods and sector facets.
 4. Move newsroom search/filtering to server-side pagination so filters cover the full growing database; review snapshot withdrawal behavior across the remaining founder/company surfaces.
 5. Add source-review history and admin review queues for changed existing founder/company facts, with revision checks and protected owner edits.
 6. Add publisher-specific feed sources only after verifying endpoint availability, permitted use and failure behavior; review growth by distinct verified founders and companies, not raw scrape volume.
