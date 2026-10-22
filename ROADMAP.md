@@ -2,6 +2,8 @@
 
 ## Current execution plan — 22 October 2026
 
+Hosting build follow-up: the reported pnpm install now succeeds; the default frontend build explicitly uses webpack because Hostinger invoked `build`, not `build:webpack`. CI exercises the reported Node 22 / pnpm 11.24.0 command. Next: confirm a new hosting build completes with `(webpack)` in its log.
+
 Hosting install follow-up: frontend-only archives now include their own pnpm build approvals and lockfile, with a cold-store standalone CI check. Next: redeploy the merged revision in the existing Hostinger app and verify install, webpack build and live release.
 
 Homepage discovery checkpoint: expose the full 150-profile editorial collection, provide a fresh 36-card Saudi-first mix per visit and an explicit shuffle control, load every public founder API page, and preserve searchable stable grids. Six sourced additions across four company groups are registered in the additive importer and content review. A pnpm workspace build allowlist and frozen lockfile address hosting's ignored install scripts under Node 22. Next: verify frontend hosting release and the additive founder import through the existing deployment process. [Evidence and checks](docs/research/HOME-FOUNDER-DISCOVERY-2026-10-22.md).

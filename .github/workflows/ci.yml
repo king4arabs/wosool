@@ -57,7 +57,7 @@ jobs:
           node-version: 22
       - uses: pnpm/action-setup@v4
         with:
-          version: 12.14.0
+          version: 11.24.0
       - name: Install workspace with explicit build approvals
         run: pnpm install --frozen-lockfile
         env:
@@ -67,7 +67,7 @@ jobs:
         run: |
           node --import tsx --input-type=module -e "import './src/lib/founder-discovery.ts'; console.log('Approved esbuild transform works')"
           pnpm run lint
-      - name: Verify standalone frontend hosting install
+      - name: Verify standalone frontend hosting install and default build
         env:
           CI: true
         run: |
@@ -76,7 +76,7 @@ jobs:
           pnpm --dir "$standalone_frontend" install --frozen-lockfile --store-dir "$standalone_frontend/.pnpm-store"
           pnpm --dir "$standalone_frontend" exec node --import tsx --input-type=module -e "import './src/lib/founder-discovery.ts'; console.log('Standalone esbuild transform works')"
           pnpm --dir "$standalone_frontend" run lint
-          pnpm --dir "$standalone_frontend" run build:webpack
+          pnpm --dir "$standalone_frontend" run build
   backend:
     strategy:
       fail-fast: false
