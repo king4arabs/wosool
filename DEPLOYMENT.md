@@ -51,6 +51,12 @@ Build `01a162c9-3445-73d3-8205-a59e9d7f7946` successfully installed dependencies
 
 Use root directory `frontend`, framework preset Next.js, Node 22.x, package manager pnpm, build command `pnpm run build` and output directory `.next`, with `NEXT_PUBLIC_SITE_URL`, `NEXT_PUBLIC_API_URL` and `NEXT_PUBLIC_ENABLE_DEMO_CONTENT=false` set as build environment variables. A new build should print `Next.js 16.4.0 (webpack)`, complete compilation and generate the route table. If it still prints `(Turbopack)`, verify the checked-out revision and application root before retrying.
 
+Build `01a162f6-e836-7286-84a0-17766a96850f` checked out source `b7ad796` for a new deployment: installation, webpack compilation (20.7 seconds) and TypeScript passed. It then attempted **63 page-data workers** and aborted with Tokio `OS can't spawn worker thread` / `EAGAIN` / `SIGABRT`. This is resource exhaustion during the build, so no completed release can be inferred from that attempt. The log does not establish the account's exact process/thread quota.
+
+The build now caps `experimental.cpus` at **1** in `next.config.ts`. Both build scripts run `scripts/build.mjs`, which starts the webpack CLI with `TOKIO_WORKER_THREADS=1` and `RAYON_NUM_THREADS=1` before native modules initialize. These documented [Tokio](https://docs.rs/tokio/latest/tokio/runtime/struct.Builder.html#method.worker_threads) and [Rayon](https://docs.rs/rayon/latest/rayon/struct.ThreadPoolBuilder.html#method.num_threads) controls limit their worker pools; they do not claim to limit every Node/OS thread. The environment limits apply only to the build child process. No hosting environment edits or package changes are required.
+
+The standalone CI build sets `CIRCLE_NODE_TOTAL=64` (which would produce Next 16.4.0's 63-worker default) and verifies that both page collection and static generation instead report **1 worker**. On the next Hostinger attempt, check that same output, successful route generation, and the final publish/activation result. If the one-worker build still gets `EAGAIN`, obtain the account's actual task quota and usage through Hostinger support before increasing resources or concurrency. A local/CI build cannot measure the hosting account's limits.
+
 ## PHP security update — 22 October 2026
 
 The live API advertised `PHP/8.3.35` on 22 October 2026. This is below the upstream patched version. A version header cannot establish whether a provider backported fixes; obtain provider evidence if applicable.

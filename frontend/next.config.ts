@@ -8,6 +8,10 @@ const privateHeaders = [
 const nextConfig: NextConfig = {
   poweredByHeader: false,
   reactStrictMode: true,
+  experimental: {
+    // Shared hosts can report many CPUs while enforcing a much smaller process quota.
+    cpus: 1,
+  },
   images: {
     formats: ["image/avif", "image/webp"],
     remotePatterns: [

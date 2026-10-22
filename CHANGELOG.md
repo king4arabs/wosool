@@ -1,5 +1,11 @@
 # Changelog
 
+## Bound shared-host build concurrency — 2026-10-22
+
+- The next hosting attempt at `b7ad796` passed installation, webpack and TypeScript, but aborted while collecting page data with 63 workers: Tokio could not spawn threads (`EAGAIN` / `SIGABRT`).
+- Cap Next.js page workers at one and run both build entry points through a Node launcher with one Tokio worker and one Rayon worker per native pool, set before Next/SWC initializes. Retain webpack, route-cache cleanup and normal runtime startup.
+- Extend standalone pnpm CI to exercise a simulated 63-worker default and require one-worker page collection/generation. Node 22, pnpm, dependencies, lockfiles and production data are unchanged. Hostinger publish/activation still requires verification.
+
 ## Default hosting build uses webpack — 2026-10-22
 
 - The reported Hostinger build at `82a6496` installed dependencies successfully but ran the default `next build`, then timed out during Turbopack compilation. The existing `build:webpack` alias was not being used by hosting.

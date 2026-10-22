@@ -5,9 +5,9 @@
   "scripts": {
     "dev": "next dev",
     "prebuild": "node scripts/reset-route-cache.mjs",
-    "build": "next build --webpack",
+    "build": "node scripts/build.mjs",
     "prebuild:webpack": "node scripts/reset-route-cache.mjs",
-    "build:webpack": "next build --webpack",
+    "build:webpack": "node scripts/build.mjs",
     "start": "next start",
     "lint": "eslint",
     "type-check": "tsc --noEmit",
