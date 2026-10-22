@@ -5,6 +5,7 @@ import { ArrowUpRight, Handshake, Lightbulb, Users } from "lucide-react"
 import { getLocalizedNewsContent } from "@/lib/news-content"
 import { categoryLabel } from "@/lib/news-feed"
 import { getFounderSpotlights } from "@/lib/founder-spotlight"
+import { editorialFounders } from "@/lib/founder-discovery"
 import { PublicLayout } from "@/components/layout/PublicLayout"
 import { UpcomingEvents } from "@/components/sections/UpcomingEvents"
 import { StartupDirectory } from "@/components/sections/StartupDirectory"
@@ -69,16 +70,19 @@ export default function HomePage() {
   const copy = content[locale]
   const { founders, partners, partnersLoaded, newsItems, loading, failed, retry } = useHomeContent()
   const icons = [Lightbulb, Users, Handshake]
-  const isSpotlight = founders.length === 0 && (loading || failed.includes("founders"))
-  const displayedFounders = isSpotlight ? getFounderSpotlights(locale) : founders
+  const spotlights = editorialFounders(getFounderSpotlights(locale), founders)
   return <PublicLayout><div className={styles.home} lang={locale} dir={locale === "ar" ? "rtl" : "ltr"}>
     <section className={styles.hero} aria-labelledby="home-title"><div className={`${styles.container} ${styles.heroGrid}`}>
       <div><p className={styles.eyebrow}>{copy.eyebrow}</p><h1 id="home-title">{copy.title}<br /><span>{copy.highlight}</span></h1><p className={styles.intro}>{copy.intro}</p><p className={styles.lead}>{copy.description}</p><div className={styles.actions}><Link className={styles.primary} href="/apply">{copy.join}<ArrowUpRight size={18} /></Link><Link className={styles.secondary} href="#founder-community">{copy.explore}</Link></div><p className={styles.note}>{copy.note}</p></div>
     </div></section>
     <CommunityPartners partners={partners} loaded={partnersLoaded} loading={loading} failed={failed.includes("partners")} retry={retry} />
-    <section id="founder-community" className={styles.founders} aria-labelledby="founders-title"><div className={styles.container}><div className={styles.sectionHead}><div><p className={styles.eyebrow}>{isSpotlight ? copy.spotlightLabel : copy.foundersLabel}</p><h2 id="founders-title">{isSpotlight ? copy.spotlightTitle : copy.foundersTitle}</h2><p className={styles.lead}>{isSpotlight ? copy.spotlightText : copy.foundersText}</p></div><Link className={styles.textLink} href="/founders">{copy.allFounders}<ArrowUpRight size={18} /></Link></div>
-      {failed.includes("founders") && <div className={styles.availability} role="status"><span>{copy.error}</span><button type="button" onClick={retry} disabled={loading}>{loading ? copy.loading : copy.retry}</button></div>}
-      {displayedFounders.length ? <FounderShowcase key={`${locale}-${isSpotlight ? 'spotlight' : 'members'}`} founders={displayedFounders} /> : <div className={styles.empty} role="status"><p>{loading ? copy.loading : copy.empty}</p><Link className={styles.textLink} href="/apply">{copy.join}</Link></div>}
+    <section id="founder-community" className={styles.founders} aria-labelledby="founders-title"><div className={styles.container}><div className={styles.sectionHead}><div><p className={styles.eyebrow}>{copy.spotlightLabel}</p><h2 id="founders-title">{locale === 'ar' ? 'تعرّف على المؤسسين' : 'Meet the founders'}</h2><p className={styles.lead}>{copy.spotlightText}</p></div><Link className={styles.textLink} href="/founders">{copy.allFounders}<ArrowUpRight size={18} /></Link></div>
+      <p className={styles.note}>{locale === 'ar' ? 'مجموعة متجددة في كل زيارة. الملفات أدناه من مصادر منشورة؛ العضوية والتواصل يعرضان في ملفات المجتمع بصورة مستقلة.' : 'A fresh mix on every visit. These are public-source profiles; community membership and messaging are shown separately below.'}</p>
+      <div id="founder-spotlight"><FounderShowcase founders={spotlights} randomize /></div>
+      {(founders.length > 0 || failed.includes('founders')) && <section className="mt-12" aria-labelledby="community-profiles-title"><div className={styles.sectionHead}><div><p className={styles.eyebrow}>{copy.foundersLabel}</p><h3 id="community-profiles-title">{copy.foundersTitle}</h3><p className={styles.lead}>{copy.foundersText}</p></div></div>
+        {failed.includes('founders') && <div className={styles.availability} role="status"><span>{copy.error}</span><button type="button" onClick={retry} disabled={loading}>{loading ? copy.loading : copy.retry}</button></div>}
+        {founders.length > 0 && <FounderShowcase founders={founders} randomize />}
+      </section>}
       <div className={styles.directoryLinks}><Link className={styles.textLink} href="/startups">{locale === "ar" ? "دليل الشركات الناشئة" : "Startup directory"}<ArrowUpRight size={18} aria-hidden="true" /></Link><Link className={styles.textLink} href="/founders/companies">{copy.allCompanies}<ArrowUpRight size={18} aria-hidden="true" /></Link></div>
     </div></section>
     <section className={`${styles.container} ${styles.section}`} aria-labelledby="why-title"><p className={styles.eyebrow}>{copy.why}</p><h2 id="why-title">{copy.whyTitle}</h2><div className={styles.benefits}>{copy.benefits.map((benefit,i) => { const Icon = icons[i]; return <article key={benefit.title}><Icon size={25} aria-hidden="true" /><h3>{benefit.title}</h3><p>{benefit.text}</p></article> })}</div></section>

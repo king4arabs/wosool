@@ -2,12 +2,13 @@
 
 import { useCallback, useEffect, useId, useMemo, useRef, useState, useSyncExternalStore, type KeyboardEvent } from "react"
 import Link from "next/link"
-import { ArrowLeft, ArrowRight, ChevronDown, ChevronUp, LayoutGrid, Pause, Play, Search } from "lucide-react"
+import { ArrowLeft, ArrowRight, ChevronDown, ChevronUp, LayoutGrid, Pause, Play, Search, Shuffle } from "lucide-react"
 import { PartnerCarousel } from "@/components/eoa/PartnerCarousel"
 import { communityPartnerLogos, partnersToDisplay } from "@/lib/partner-logos"
 import { useLocale } from "@/lib/locale"
 import { FounderCard, type FounderCardProfile } from "./FounderCard"
 import { arabicProfileCount, filterFounders, regionOptions, sectorOptions, type FounderRegionFilter } from "@/lib/founder-filters"
+import { createFounderMixStore, founderDiscoveryOrder } from "@/lib/founder-discovery"
 import type { Partner } from "@/types"
 import styles from "./community.module.css"
 
@@ -18,7 +19,7 @@ function subscribeMotion(callback: () => void) {
 }
 function motionSnapshot() { return window.matchMedia('(prefers-reduced-motion: reduce)').matches }
 
-function FounderRow({ founders, suspended }: { founders: FounderCardProfile[]; suspended: boolean }) {
+function FounderRow({ founders, suspended, onShuffle }: { founders: FounderCardProfile[]; suspended: boolean; onShuffle?: () => void }) {
   const { locale, direction } = useLocale()
   const ar = locale === 'ar'
   const id = useId()
@@ -77,6 +78,7 @@ function FounderRow({ founders, suspended }: { founders: FounderCardProfile[]; s
     <div className={styles.founderRowHead}>
       <span>{ar ? 'تعرّف على المؤسسين' : 'Meet the founders'}<small>{ar ? 'اسحب أو استخدم الأسهم للاستكشاف' : 'Swipe or use the arrows to explore'}</small></span>
       <div role="group" className={styles.controls} dir="ltr" aria-label={ar ? 'التحكم ببطاقات المؤسسين' : 'Founder carousel controls'}>
+        {onShuffle && <button type="button" onClick={onShuffle} aria-label={ar ? 'اعرض مجموعة أخرى من المؤسسين' : 'Show another founder mix'} title={ar ? 'اعرض مجموعة أخرى' : 'Show another mix'}><Shuffle size={18} aria-hidden="true" /></button>}
         <button type="button" aria-controls={id} aria-label={ar ? 'تحريك بطاقات المؤسسين إلى اليسار' : 'Move founder cards left'} disabled={!overflow} onClick={() => manualMove('left')}><ArrowLeft size={19} aria-hidden="true" /></button>
         {!reducedMotion && <button type="button" aria-controls={id} aria-label={paused ? ar ? 'تشغيل حركة بطاقات المؤسسين' : 'Resume founder movement' : ar ? 'إيقاف حركة بطاقات المؤسسين' : 'Pause founder movement'} disabled={!overflow || suspended} onClick={() => setPaused(value => !value)}>{paused ? <Play size={17} aria-hidden="true" /> : <Pause size={17} aria-hidden="true" />}</button>}
         <button type="button" aria-controls={id} aria-label={ar ? 'تحريك بطاقات المؤسسين إلى اليمين' : 'Move founder cards right'} disabled={!overflow} onClick={() => manualMove('right')}><ArrowRight size={19} aria-hidden="true" /></button>
@@ -88,9 +90,11 @@ function FounderRow({ founders, suspended }: { founders: FounderCardProfile[]; s
   </div>
 }
 
-export function FounderShowcase({ founders, showFilters = true, region: controlledRegion, onRegionChange }: {
+export function FounderShowcase({ founders, showFilters = true, region: controlledRegion, onRegionChange, randomize = false }: {
   founders: FounderCardProfile[]
   showFilters?: boolean
+  /** Homepage discovery only; directory/grid order remains stable. */
+  randomize?: boolean
   /** Lets a parent keep the region selection when it remounts this showcase for its own filters. */
   region?: FounderRegionFilter
   onRegionChange?: (region: FounderRegionFilter) => void
@@ -111,6 +115,9 @@ export function FounderShowcase({ founders, showFilters = true, region: controll
   const sectors = sectorOptions(founders, region, locale)
   const regions = regionOptions(founders, region, locale)
   const filtered = useMemo(() => filterFounders(founders, { search, sector, region }, locale), [founders, locale, search, sector, region])
+  const [mixStore] = useState(createFounderMixStore)
+  const mixSeed = useSyncExternalStore(mixStore.subscribe, mixStore.getSnapshot, mixStore.getServerSnapshot)
+  const carouselFounders = useMemo(() => randomize ? founderDiscoveryOrder(filtered, mixSeed).slice(0, 36) : filtered.slice(0, 18), [filtered, randomize, mixSeed])
   const hasFilters = Boolean(search || sector || region !== 'all')
   function changeRegion(value: FounderRegionFilter) {
     setOwnRegion(value)
@@ -158,7 +165,7 @@ export function FounderShowcase({ founders, showFilters = true, region: controll
     </>}
     <div className={styles.founderResults}><p role="status" aria-live="polite">{filtered.length ? ar ? `${arabicProfileCount(filtered.length)} للاستكشاف` : `${filtered.length} founder ${filtered.length === 1 ? 'profile' : 'profiles'} to explore` : ar ? 'لا توجد ملفات مطابقة. جرّب اسمًا أو قطاعًا أو منطقة أخرى.' : 'No matching profiles. Try another name, sector or region.'}</p></div>
     {!!filtered.length && <>
-      <FounderRow key={`${locale}-${search}-${sector}-${region}`} founders={filtered.slice(0, 18)} suspended={gridOpen} />
+      <FounderRow key={`${locale}-${search}-${sector}-${region}`} founders={carouselFounders} suspended={gridOpen} onShuffle={randomize ? mixStore.shuffle : undefined} />
       <div className={styles.gridInvitation}><button ref={gridToggle} type="button" className={styles.gridToggle} aria-expanded={gridOpen} aria-controls={gridId} onClick={toggleGrid}><LayoutGrid size={18} aria-hidden="true" />{gridOpen ? ar ? 'إخفاء شبكة المؤسسين' : 'Hide founder grid' : ar ? 'عرض جميع المؤسسين' : 'View all founders'}{gridOpen ? <ChevronUp size={18} aria-hidden="true" /> : <ChevronDown size={18} aria-hidden="true" />}</button><span>{ar ? 'استكشف الملفات في شبكة مرتّبة مع صفحات' : 'Browse the full collection in a paginated grid'}</span></div>
     </>}
     <section ref={grid} id={gridId} className={styles.founderGridSection} hidden={!gridOpen || !filtered.length} tabIndex={-1} aria-labelledby={`${gridId}-title`}>

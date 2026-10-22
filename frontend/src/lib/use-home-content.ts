@@ -2,10 +2,11 @@
 
 import { useEffect, useState } from "react"
 import type { Company, Founder, NewsItem, Partner } from "@/types"
-import { api } from "./api"
+import { api, ApiError } from "./api"
 import { mapCompany, mapFounder, mapNewsItem, mapPartner, type ApiCompany, type ApiFounder, type ApiNewsItem, type ApiPartner, type WrappedResponse } from "./content-api"
 import { useLocale } from "./locale"
 import { loadPartnerPages } from "./partner-pages"
+import { loadFounderPages } from "./founder-pages"
 
 interface HomeContent { founders: Founder[]; companies: Company[]; partners: Partner[]; partnersLoaded: boolean; newsItems: NewsItem[]; loading: boolean; failed: string[] }
 const empty: HomeContent = { founders: [], companies: [], partners: [], partnersLoaded: false, newsItems: [], loading: true, failed: [] }
@@ -26,14 +27,17 @@ export function useHomeContent(): HomeContent & { retry: () => void } {
       try {
         const result = await request
         if (active) setContent(previous => ({ ...previous, ...map(Array.isArray(result.data) ? result.data : []), failed: previous.failed.filter(value => value !== key) }))
-      } catch {
-        if (active) setContent(previous => ({ ...previous, failed: [...new Set([...previous.failed, key])] }))
+      } catch (error) {
+        if (active) setContent(previous => ({ ...previous,
+          ...(key === 'founders' && error instanceof ApiError && error.status >= 400 && error.status < 500 ? { founders: [] } : {}),
+          failed: [...new Set([...previous.failed, key])],
+        }))
       } finally {
         pending -= 1
         if (active && pending === 0) setContent(previous => ({ ...previous, loading: false }))
       }
     }
-    void section('founders', api.get<WrappedResponse<ApiFounder[]>>("/founders", options), items => ({ founders: items.map(mapFounder) }))
+    void section('founders', loadFounderPages(page => api.get<{ data: ApiFounder[]; meta?: { last_page?: number } }>("/founders", { ...options, params: { per_page: 100, page } })), items => ({ founders: items.map(mapFounder) }))
     void section('companies', api.get<WrappedResponse<ApiCompany[]>>("/companies", options), items => ({ companies: items.map(mapCompany) }))
     void section('partners', loadPartnerPages(page => api.get<{ data: ApiPartner[]; meta?: { last_page?: number } }>("/partners", { ...options, params: { per_page: 100, page } })), items => ({ partners: items.map(mapPartner).filter(partner => partner.status === 'Confirmed'), partnersLoaded: true }))
     void section('news', api.get<WrappedResponse<ApiNewsItem[]>>("/news", options), items => ({ newsItems: items.map(mapNewsItem) }))

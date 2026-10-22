@@ -36,6 +36,7 @@ export function FounderCard({
         sector: company?.sector || founder.sector,
         stage: company?.stage || founder.stage,
         foundedYear: company?.foundedYear || undefined,
+        traction: company?.traction,
         profileVerified: founder.isVerified,
         founderHref: `/founders/${encodeURIComponent(founder.slug)}`,
         href: !external && company?.slug ? `/founders/companies/${encodeURIComponent(company.slug)}` : undefined,

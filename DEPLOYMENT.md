@@ -41,6 +41,8 @@ Keep the existing `APP_KEY`. Set `MAIL_TEAM_ADDRESS` to the inbox that should re
 
 ### Hostinger Web App (wosool.org)
 
+Keep the hosting package manager as **pnpm** and Node.js as **22.x**. The repository root `pnpm-workspace.yaml` approves only the required `esbuild` and `unrs-resolver` installers through `allowBuilds`; do not add a competing `onlyBuiltDependencies` policy or enable all build scripts. The shared `pnpm-lock.yaml` covers both applications. `pnpm install --frozen-lockfile` is the non-interactive install gate, also exercised in CI on Node 22. Existing npm locks are retained for the npm CI jobs. This configuration fixes `ERR_PNPM_IGNORED_BUILDS`; it does not itself trigger a hosting rebuild.
+
 Hostinger's Node.js build sandbox cannot spawn Turbopack's PostCSS worker (build fails on `src/app/globals.css`). The Hostinger Web App therefore uses root directory `frontend`, framework preset Next.js, Node 22.x, build script `build:webpack` (`next build --webpack`) and output directory `.next`, with `NEXT_PUBLIC_SITE_URL`, `NEXT_PUBLIC_API_URL` and `NEXT_PUBLIC_ENABLE_DEMO_CONTENT=false` set as build environment variables.
 
 ## PHP security update — 22 October 2026

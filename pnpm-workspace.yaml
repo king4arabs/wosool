@@ -1,0 +1,8 @@
+packages:
+  - frontend
+  - backend
+
+# Explicit, non-interactive approval for required native toolchain installers.
+allowBuilds:
+  esbuild: true
+  unrs-resolver: true

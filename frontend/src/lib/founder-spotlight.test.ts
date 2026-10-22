@@ -3,9 +3,10 @@ import test from 'node:test'
 import { readFileSync } from 'node:fs'
 import historicalProfiles from '../data/founder-spotlight.json'
 import additionalProfiles from '../data/founder-spotlight-expansion-2026-10-16.json'
+import discoveryProfiles from '../data/founder-spotlight-expansion-2026-10-22.json'
 
 const rank: Record<string, number> = { saudi: 0, gcc: 1, mena: 2, global: 3 }
-const sourceProfiles = [...historicalProfiles, ...additionalProfiles]
+const sourceProfiles = [...historicalProfiles, ...additionalProfiles, ...discoveryProfiles]
   .sort((left, right) => (rank[left.region] ?? 4) - (rank[right.region] ?? 4))
 import { getFounderSpotlights } from './founder-spotlight'
 
@@ -34,7 +35,10 @@ test('frontend source snapshots and database import share the same reviewed reco
   assert.equal(additionalProfiles.length, 100)
   assert.deepEqual(databaseBase, historicalProfiles)
   assert.deepEqual(databaseExpansion, additionalProfiles)
-  assert.equal(new Set(sourceProfiles.map(profile => profile.company_key)).size, 79)
+  const databaseDiscovery = JSON.parse(readFileSync(new URL('../../../backend/resources/data/founder-directory-expansion-2026-10-22.json', import.meta.url), 'utf8'))
+  assert.deepEqual(databaseDiscovery, discoveryProfiles)
+  assert.equal(discoveryProfiles.length, 6)
+  assert.equal(new Set(sourceProfiles.map(profile => profile.company_key)).size, 83)
   assert.equal(new Set(sourceProfiles.map(profile => profile.founder_name_en.toLowerCase())).size, sourceProfiles.length)
   assert.equal(new Set(sourceProfiles.map(profile => profile.slug)).size, sourceProfiles.length)
   assert.ok(sourceProfiles.every(profile => profile.source_urls.length > 0 && profile.reviewed_at))
