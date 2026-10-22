@@ -73,6 +73,7 @@ jobs:
           # Next otherwise defaults to 63 page workers, as on the reported host.
           CIRCLE_NODE_TOTAL: 64
         run: |
+          set -o pipefail
           standalone_frontend=$(mktemp -d)
           git archive HEAD frontend | tar -x -C "$standalone_frontend" --strip-components=1
           pnpm --dir "$standalone_frontend" install --frozen-lockfile --store-dir "$standalone_frontend/.pnpm-store"
