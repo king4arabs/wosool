@@ -2,7 +2,7 @@
 
 ## Current execution plan — 22 October 2026
 
-Hosting build follow-up: the reported pnpm install now succeeds; the default frontend build explicitly uses webpack because Hostinger invoked `build`, not `build:webpack`. CI exercises the reported Node 22 / pnpm 11.24.0 command. Next: confirm a new hosting build completes with `(webpack)` in its log.
+Hosting build follow-up: source `b7ad796` passed pnpm installation, webpack compilation and TypeScript on Hostinger, then exhausted thread resources with 63 page workers. Page collection/generation now uses one worker, with build-only Tokio/Rayon pool limits. CI checks the Node 22 / pnpm 11.24.0 command against a simulated 63-worker default. Next: verify one-worker generation and final publish/activation on Hostinger; the account's exact task quota remains unknown.
 
 Hosting install follow-up: frontend-only archives now include their own pnpm build approvals and lockfile, with a cold-store standalone CI check. Next: redeploy the merged revision in the existing Hostinger app and verify install, webpack build and live release.
 
