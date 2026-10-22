@@ -2,6 +2,18 @@
 
 Wosool has two deployable applications: `frontend/` is a Next.js Node.js server; `backend/` is a Laravel API with a database. Repository CI validates code and does not perform production deployment. Existing host names and process-manager services must be confirmed in the hosting account before a release.
 
+## Production deployment contract (October 22, 2026)
+
+Keep the **single GitHub monorepo** but deploy two independent services. The Next.js website runs at `https://wosool.org` with Hostinger Web App root `frontend/`, Node 22, pnpm, `pnpm run build`, output `.next`, and a managed server process. The Laravel API runs separately at `https://api.wosool.org`, serving `backend/public/`. Its database, private storage, queue workers and scheduler must not be coupled to the frontend build. Do not move the application files out of `frontend/`; that directory is the **source root**, not part of the public URL.
+
+**Release environment gate:** from `frontend/`, run `pnpm run preflight:production` with the actual Hostinger build environment. It rejects non-HTTPS/missing site/API origins and demo mode not explicitly disabled. Set `NEXT_PUBLIC_SITE_URL=https://wosool.org`, `NEXT_PUBLIC_API_URL=https://api.wosool.org`, and `NEXT_PUBLIC_ENABLE_DEMO_CONTENT=false` as build environment variables. Hostinger may inject variables without a physical `.env` file. Do not print private values. Rebuild after changing public environment variables. The existing `pnpm run build` stays unchanged until Hostinger is configured to run the separate preflight gate; CI tests the gate with safe example values.
+
+**Safe release order:** backup the live database and record both deployed source SHAs; validate staging with its own restricted domain and separate database; deploy compatible Laravel code and additive migrations; verify direct API readiness, authorization, queues and real SMTP; deploy the matching Next.js revision; verify the website and the same-origin proxy; record the result. Preserve `APP_KEY`, private media, uploads, and data. No automatic destructive migrations or demonstration seeders. Revert to the previous host artifact if verification fails, and never blindly restore a pre-release database over live user writes.
+
+**Post-release smoke check:** run `node scripts/production-smoke.mjs` from the repository root. This requests the homepage, `/eoa`, frontend `/health`, Laravel `/api/health` and `/api/ready`, and the frontend proxy `/api/health`. The hourly [production health workflow](.github/workflows/production-health.yml) and manual GitHub Actions run detect regressions; configure failed-workflow notifications plus independent uptime/paging because Actions is not an instant alerting service. A green build or merged PR does not establish successful Hostinger publication.
+
+**Diagnosing HTTP 500:** check Hostinger's Deployments page for the active source SHA and build status, the web-app root, effective Node/pnpm versions, generated `.next`, startup logs and resource limits. Check whether `api.wosool.org` has a healthy PHP handler/database independently. Never publish debug output or secrets to browser responses. Restore the previous successful web-app release if safe, then fix the cause and redeploy both compatible revisions.
+
 For EO Accelerator, the authoritative workflow is [EOA operations](docs/EOA.md). Read the [October 9 integration notes](docs/EOA-INTEGRATION-2026-10-09.md) before release: legacy gateway writes are retired, existing data is retained, and EOA settings govern privacy/intake approvals.
 
 ## Runtime and configuration

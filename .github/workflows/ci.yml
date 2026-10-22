@@ -82,6 +82,23 @@ jobs:
           pnpm --dir "$standalone_frontend" run build | tee "$standalone_frontend/build.log"
           grep -Fq 'Collecting page data using 1 worker' "$standalone_frontend/build.log"
           grep -Fq 'Generating static pages using 1 worker' "$standalone_frontend/build.log"
+  production-guardrails:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Test deployment contract and smoke-check failure handling
+        run: node --test frontend/scripts/hosting-preflight.test.mjs scripts/production-smoke.test.mjs
+      - name: Verify frontend environment contract using nonsecret examples
+        env:
+          NEXT_PUBLIC_SITE_URL: https://wosool.org
+          NEXT_PUBLIC_API_URL: https://api.wosool.org
+          NEXT_PUBLIC_ENABLE_DEMO_CONTENT: "false"
+        run: node frontend/scripts/hosting-preflight.mjs
+
   backend:
     strategy:
       fail-fast: false
