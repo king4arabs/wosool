@@ -45,7 +45,7 @@ test("durations use Arabic number agreement and stay readable in RTL", () => {
 })
 
 const base: Program = {
-  id: "7", name: "EO Riyadh Accelerator", slug: "eo-riyadh-accelerator", description: "English description from the API",
+  id: "7", name: "EO Riyadh Accelerator", slug: "eo-riyadh-accelerator", description: "Wosool digital gateway for EO Riyadh Accelerator. Saudi Founders. Global Connections. Extraordinary Growth.",
   category: "growth", duration: "6 months", targetStage: ["seed", "series-a"], benefits: ["Monthly forum"], isOpen: false,
 }
 
@@ -62,6 +62,10 @@ test("API programs: Arabic cards get Arabic stages and duration; the installed a
   assert.equal(en.name, base.name)
   assert.equal(en.description, base.description)
   assert.deepEqual(en.targetStage, ["Seed", "Series A"])
+
+  const edited = localizeApiProgram({ ...base, name: "EO Riyadh Accelerator 2027", description: "Applications open in January." }, "ar")
+  assert.equal(edited.name, "EO Riyadh Accelerator 2027", "an administrator's edited title is shown")
+  assert.equal(edited.description, "Applications open in January.", "an administrator's edited description is shown")
 
   const other = localizeApiProgram({ ...base, slug: "founder-circles", name: "Founder Circles", duration: "" }, "ar")
   assert.equal(other.name, "Founder Circles", "no Arabic name is made up for admin-created programs")

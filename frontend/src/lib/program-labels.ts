@@ -26,11 +26,17 @@ const STAGE_LABELS: Record<string, Label> = {
   "scale-up": { ar: "التوسّع", en: "Scale-up" },
 }
 
-/** The one program the platform installs itself (`php artisan eoa:install`); wording follows the /eoa page. */
-const PROGRAM_ARABIC: Record<string, Partial<Pick<Program, "name" | "description">>> = {
+/**
+ * The one program the platform installs itself (`php artisan eoa:install`); wording follows the /eoa page.
+ * Each Arabic value replaces only the installer's own English default, so an administrator's edit is always shown.
+ */
+const INSTALLED_PROGRAM_ARABIC: Record<string, { name: [string, string]; description: [string, string] }> = {
   "eo-riyadh-accelerator": {
-    name: "مسرّعة EO الرياض",
-    description: "اعمل على النقد والاستراتيجية والفريق والتنفيذ مع أصحاب أعمال آخرين ضمن دفعة مسرّعة EO الرياض لمدة ستة أشهر.",
+    name: ["EO Riyadh Accelerator", "مسرّعة EO الرياض"],
+    description: [
+      "Wosool digital gateway for EO Riyadh Accelerator. Saudi Founders. Global Connections. Extraordinary Growth.",
+      "اعمل على النقد والاستراتيجية والفريق والتنفيذ مع أصحاب أعمال آخرين ضمن دفعة مسرّعة EO الرياض لمدة ستة أشهر.",
+    ],
   },
 }
 
@@ -87,10 +93,11 @@ export function programDurationLabel(duration: string, locale: Locale): string {
 
 /** Card-ready program in the selected language. `category` keeps its code so filtering stays stable. */
 export function localizeApiProgram(program: Program, locale: Locale): Program {
-  const arabic = locale === "ar" ? PROGRAM_ARABIC[program.slug] : undefined
+  const installed = locale === "ar" ? INSTALLED_PROGRAM_ARABIC[program.slug] : undefined
+  const unlessEdited = (value: string, [installerDefault, arabic]: [string, string]) => value.trim() === installerDefault ? arabic : value
   return {
     ...program,
-    ...arabic,
+    ...(installed && { name: unlessEdited(program.name, installed.name), description: unlessEdited(program.description, installed.description) }),
     duration: program.duration ? programDurationLabel(program.duration, locale) : "",
     targetStage: program.targetStage.map(stage => programStageLabel(stage, locale)),
   }
