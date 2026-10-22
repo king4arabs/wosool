@@ -37,7 +37,7 @@ export function useHomeContent(): HomeContent & { retry: () => void } {
         if (active && pending === 0) setContent(previous => ({ ...previous, loading: false }))
       }
     }
-    void section('founders', loadFounderPages(page => api.get<{ data: ApiFounder[]; meta?: { last_page?: number } }>("/founders", { ...options, params: { per_page: 100, page } })), items => ({ founders: items.map(mapFounder) }))
+    void section('founders', loadFounderPages(page => api.get<{ data: ApiFounder[]; meta?: { last_page?: number } }>("/founders", { ...options, params: { per_page: 100, page, community: 1 } })), items => ({ founders: items.map(mapFounder) }))
     void section('companies', api.get<WrappedResponse<ApiCompany[]>>("/companies", options), items => ({ companies: items.map(mapCompany) }))
     void section('partners', loadPartnerPages(page => api.get<{ data: ApiPartner[]; meta?: { last_page?: number } }>("/partners", { ...options, params: { per_page: 100, page } })), items => ({ partners: items.map(mapPartner).filter(partner => partner.status === 'Confirmed'), partnersLoaded: true }))
     void section('news', api.get<WrappedResponse<ApiNewsItem[]>>("/news", options), items => ({ newsItems: items.map(mapNewsItem) }))

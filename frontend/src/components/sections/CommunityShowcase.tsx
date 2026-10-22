@@ -112,6 +112,13 @@ export function FounderShowcase({ founders, showFilters = true, region: controll
   const [gridOpen, setGridOpen] = useState(false)
   const [pageSize, setPageSize] = useState(6)
   const [page, setPage] = useState(1)
+  const [filterLocale, setFilterLocale] = useState(locale)
+  // Sector values are translated strings; reset them without remounting the visit's mix store.
+  if (filterLocale !== locale) {
+    setFilterLocale(locale)
+    setSector('')
+    setPage(1)
+  }
   const sectors = sectorOptions(founders, region, locale)
   const regions = regionOptions(founders, region, locale)
   const filtered = useMemo(() => filterFounders(founders, { search, sector, region }, locale), [founders, locale, search, sector, region])
