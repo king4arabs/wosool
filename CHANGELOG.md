@@ -1,5 +1,12 @@
 # Changelog
 
+## Homepage founder discovery and pnpm install approvals — 2026-10-22
+
+- The homepage's editorial founder spotlight is now a permanent, labeled collection rather than an outage fallback. It draws a fresh Saudi-first 36-card mix on each mount and offers a shuffle button. Search, regional/sector filters and the complete paginated grid remain available; directory ordering stays stable. Current live public profiles use the community-only API filter, appear separately, and matching slugs are excluded from the spotlight. Language changes clear translated sector selections and reset grid pagination while retaining the visit mix.
+- Homepage founder requests now retrieve every page (100 per page, bounded to 20 pages), deduplicate slugs and reject partial pagination failures. Authoritative client errors clear previously loaded live founders. Founder scorecards now display available sourced company traction alongside biographies, role, company, sector, location, website and evidence.
+- Added six bilingual sourced profiles: Hassan Albalawi (WakeCap), Jad Antoun (Huspy), Mohamed Al Fayed (grubtech), Brian Chesky, Nathan Blecharczyk and Joe Gebbia (Airbnb). Five portraits come from official company or investor pages. All three founder catalogs enter integrity checks and additive imports: 150 founders / 83 company groups. No revenue qualification or membership is inferred.
+- Added `pnpm-workspace.yaml` with only `esbuild` and `unrs-resolver` approved to run install scripts, plus the imported pnpm lockfile. Frozen installs pass with Node 22; existing npm locks support the established CI pipeline. Added pnpm install/native-tool and bilingual/mobile homepage browser gates. [Sources and release boundaries](docs/research/HOME-FOUNDER-DISCOVERY-2026-10-22.md).
+
 ## Programs page in Arabic — 2026-10-22
 
 - **Company API reference:** after #80 and #70 merged, `main` CI failed because the `listCompanies` and `getCompany` operations had no Arabic copy on `/api`. This branch added it; `main` has since fixed it separately (c5fa704), and the merge keeps that wording.

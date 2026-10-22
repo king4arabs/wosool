@@ -13,7 +13,8 @@ class FounderDirectoryImporter
     {
         $base = json_decode(file_get_contents(resource_path('data/founder-directory.json')), true, 512, JSON_THROW_ON_ERROR);
         $expansion = json_decode(file_get_contents(resource_path('data/founder-directory-expansion-2026-10-16.json')), true, 512, JSON_THROW_ON_ERROR);
-        $records = [...$base, ...$expansion];
+        $discovery = json_decode(file_get_contents(resource_path('data/founder-directory-expansion-2026-10-22.json')), true, 512, JSON_THROW_ON_ERROR);
+        $records = [...$base, ...$expansion, ...$discovery];
         $this->validateRecords($records);
         $counts = ['founders_created' => 0, 'companies_created' => 0, 'preserved' => 0, 'companies_enriched' => 0];
         DB::transaction(function () use ($records, &$counts) {

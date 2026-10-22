@@ -14,6 +14,7 @@
     "validate:entrepreneurs": "node --import tsx scripts/validate-entrepreneurs.ts",
     "test": "node --import tsx --test src/lib/*.test.ts",
     "test:collections:browser": "node scripts/check-collection-fallback.mjs",
+    "test:founders:browser": "node scripts/check-founder-discovery.mjs",
     "test:a11y:browser": "node scripts/check-accessibility.mjs",
     "qa:crawl": "node scripts/qa-crawl.mjs"
   },

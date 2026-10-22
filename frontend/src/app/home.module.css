@@ -17,6 +17,7 @@
 .primary:hover { background:var(--action-hover); border-color:var(--action-hover); }
 .secondary { background:var(--surface); border:1px solid var(--border); color:var(--text); }
 .secondary:hover { background:var(--surface-soft); border-color:var(--action-bg); }
+.spotlightNote { color:var(--text-muted); }
 .note { font-size:12px; line-height:1.9; margin-top:18px; max-width:540px; }
 .heroPanel { padding:36px; border-radius:var(--radius-card); background:var(--surface); color:var(--text); box-shadow:var(--shadow-card); }
 .panelBrand { display:flex; align-items:center; gap:14px; font-size:14px; font-weight:700; color:var(--text); }

@@ -37,6 +37,10 @@ Wosool also provides the dedicated digital gateway for **EO Riyadh Accelerator**
 
 ### Start here
 
+**Homepage founder discovery (22 October 2026):** a fresh Saudi-first mix of up to 36 scorecards per visit, an accessible shuffle control and a searchable grid draw from 150 sourced founders across 83 company groups. Six newly researched profiles include bilingual biographies and five authentic portraits. Live public profiles load across all pages and appear separately from the editorial spotlight, with matching slugs removed from the spotlight. [Sources and release checks](docs/research/HOME-FOUNDER-DISCOVERY-2026-10-22.md).
+
+**pnpm hosting install (22 October 2026):** `pnpm-workspace.yaml` explicitly allows the `esbuild` and `unrs-resolver` install scripts. The committed `pnpm-lock.yaml` imports the existing dependency locks; Node 22 and pnpm remain supported. A separate CI job verifies a frozen pnpm install and the native toolchain. Existing npm locks remain for the established npm CI jobs.
+
 **Revenue evidence correction (18 October 2026):** Swarm Robotics and Huspy now remain pending in the revenue-gated startup catalog. Their cited sources do not establish a specific revenue result and reporting period together. The API also excludes missing/null/empty revenue sources or periods before pagination and sector filters. The 14-record catalog now has eight eligible records; broader founder profiles are unchanged. [Evidence, checks and production correction steps](docs/research/REVENUE-ELIGIBILITY-2026-10-18.md).
 
 **Public API contracts (22 October 2026):** OpenAPI document version 1.4.0 covers news, anonymous founders, standalone companies and the revenue-qualified startup collection. Startup schemas type 40 record properties, compact pagination, bilingual sector facets, website verification and attributed revenue evidence while keeping reported figures distinct from financial-statement sources. Laravel tests use the same exported schemas. Legacy scorecard-log internals remain intentionally untyped. [Startup contract scope and verification](docs/API-STARTUP-CONTRACT-2026-10-22.md).

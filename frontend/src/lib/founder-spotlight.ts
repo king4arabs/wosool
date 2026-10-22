@@ -1,5 +1,6 @@
 import historicalProfiles from '../data/founder-spotlight.json'
 import additionalProfiles from '../data/founder-spotlight-expansion-2026-10-16.json'
+import discoveryProfiles from '../data/founder-spotlight-expansion-2026-10-22.json'
 import type { Founder } from '../types'
 
 export type FounderSpotlight = Founder & {
@@ -7,9 +8,9 @@ export type FounderSpotlight = Founder & {
   sourceUrl: string
 }
 
-/** Both curated datasets are snapshots only, not registered or verified members. */
+/** Curated editorial datasets do not establish registered or verified membership. */
 const priority: Record<string, number> = { saudi: 0, gcc: 1, mena: 2, global: 3 }
-const profiles = [...historicalProfiles, ...additionalProfiles]
+const profiles = [...historicalProfiles, ...additionalProfiles, ...discoveryProfiles]
   .sort((left, right) => (priority[left.region] ?? 4) - (priority[right.region] ?? 4))
 
 /** Public editorial profiles, kept separate from approved community membership. */
