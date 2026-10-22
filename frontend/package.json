@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "preflight:production": "node scripts/hosting-preflight.mjs",
     "prebuild": "node scripts/reset-route-cache.mjs",
     "build": "node scripts/build.mjs",
     "prebuild:webpack": "node scripts/reset-route-cache.mjs",

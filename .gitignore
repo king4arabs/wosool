@@ -32,3 +32,9 @@ Thumbs.db
 .vscode/
 *.sublime-project
 *.sublime-workspace
+
+# Protect real environment files at the root and inside each application.
+**/.env
+**/.env.*
+!**/.env.example
+!**/.env.production.example

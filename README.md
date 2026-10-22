@@ -27,7 +27,7 @@ Wosool also provides the dedicated digital gateway for **EO Riyadh Accelerator**
 
 > **Board and mentor update (14 October 2026):** JOZO correction, 36 EO community profiles on `/eoa` and `/eoa/mentors`, and protected concurrent board editing. [Sources, checks and release steps](docs/BOARD-MENTORS-2026-10-14.md).
 
-> **Release boundary:** GitHub CI validates source, security checks, tests, and production builds. A commit, merge, or green workflow does **not** by itself prove that production hosting has deployed the change.
+> **Release boundary:** GitHub CI validates source, security checks, tests, and production builds. A commit, merge, or green workflow does **not** by itself prove that production hosting has deployed the change. See the [production deployment contract, preflight and health monitoring](DEPLOYMENT.md#production-deployment-contract-october-22-2026).
 
 > **Knowledge, API and content cycle (16 October 2026):** bilingual `/wiki`, public `/api` reference and OpenAPI, server-rendered news metadata, public-record sitemap, draft-only RSS discovery, and **144 founders / 79 companies / 42 stories** in checked-in source snapshots. See [development phases and next actions](docs/CONTINUOUS-DEVELOPMENT.md) and [source evidence](docs/research/KNOWLEDGE-CONTENT-2026-10-14.md). Production deployment/import remain separate release steps.
 
