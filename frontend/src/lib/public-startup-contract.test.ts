@@ -33,6 +33,8 @@ test('startup contract rejects eligibility drift, missing periods and unexpected
   for (const changes of [
     { revenue_status: 'pending' }, { website_status: 'pending' }, { business_type: 'hybrid' },
     { revenue_evidence: { ...startup().revenue_evidence, period: null } },
+    { revenue_evidence: { ...startup().revenue_evidence, period: '' } },
+    { revenue_evidence: { ...startup().revenue_evidence, period_ar: '' } },
     { owner_email: 'private@example.test' }, { sources: ['http://example.com'] },
   ]) {
     const record = { ...startup(), ...changes }

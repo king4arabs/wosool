@@ -49,12 +49,14 @@ class PublicStartupContractTest extends TestCase
     {
         $this->artisan('directory:import')->assertSuccessful();
         $original = $this->sample($this->getJson('/api/v1/startup-directory?per_page=1')->assertOk());
-        foreach (['pending_revenue', 'missing_period', 'private_field', 'bad_date'] as $case) {
+        foreach (['pending_revenue', 'missing_period', 'empty_period', 'private_field', 'bad_date'] as $case) {
             $sample = unserialize(serialize($original));
             if ($case === 'pending_revenue') {
                 $sample['body']->data[0]->revenue_status = 'pending';
             } elseif ($case === 'missing_period') {
                 unset($sample['body']->data[0]->revenue_evidence->period);
+            } elseif ($case === 'empty_period') {
+                $sample['body']->data[0]->revenue_evidence->period = '';
             } elseif ($case === 'private_field') {
                 $sample['body']->data[0]->owner_email = 'private@example.test';
             } else {

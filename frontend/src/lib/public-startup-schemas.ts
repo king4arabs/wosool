@@ -1,7 +1,8 @@
 /** Revenue-qualified StartupDirectoryController wire format. */
 const text = { type: 'string' }
+const nonEmptyText = { type: 'string', minLength: 1 }
 const day = { type: 'string', format: 'date' }
-const httpsUrl = { type: 'string', pattern: '^https://' }
+const httpsUrl = { type: 'string', format: 'uri', pattern: '^https://' }
 const publicAssetUrl = { type: ['string', 'null'], pattern: '^(https://|/startup-directory/)' }
 const ref = (name: string) => ({ $ref: `#/components/schemas/${name}` })
 const object = (properties: Record<string, object>, required = Object.keys(properties), additionalProperties = false) => ({ type: 'object', properties, required, additionalProperties })
@@ -63,7 +64,7 @@ export const publicStartupSchemas = {
     relationship_ar: text,
   }),
   StartupRevenueEvidence: {
-    ...object({ source_url: httpsUrl, period: text, period_ar: text, summary_en: text, summary_ar: text, reviewed_at: day }),
+    ...object({ source_url: httpsUrl, period: nonEmptyText, period_ar: nonEmptyText, summary_en: nonEmptyText, summary_ar: nonEmptyText, reviewed_at: day }),
     description: 'Published earned-revenue or ARR evidence with its exact reporting period. reported is company/program/investor-reported; financial_statement identifies a statement source but does not itself promise an audit opinion.',
   },
   PublicStartup: {
