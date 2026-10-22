@@ -55,7 +55,7 @@ try {
     await eventually(async () => JSON.stringify(await ids()) !== JSON.stringify(first))
     const shuffled = await ids()
     const search = spotlight.getByRole('searchbox')
-    await search.fill('Brian Chesky')
+    await search.fill(locale === 'ar' ? 'برايان تشيسكي' : 'Brian Chesky')
     await eventually(async () => await rail.locator('article').count() === 1)
     await search.fill('')
     await eventually(async () => await rail.locator('article').count() === 36)
