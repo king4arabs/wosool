@@ -2,7 +2,7 @@
 
 import Image from "next/image"
 import Link from "next/link"
-import { ArrowUp, ArrowUpRight, AtSign, Camera, Globe } from "lucide-react"
+import { ArrowUp, ArrowUpRight } from "lucide-react"
 import { usePathname } from "next/navigation"
 import { useLocale } from "@/lib/locale"
 import { publicJourney } from "@/lib/navigation"
@@ -86,7 +86,8 @@ const footerCopy = {
 export function Footer() {
   const { locale } = useLocale()
   const copy = footerCopy[locale]
-  const { isEoa } = publicJourney(usePathname())
+  const pathname = usePathname()
+  const { isEoa } = publicJourney(pathname)
   const ar = locale === "ar"
   const footerColumns: Array<[string, Array<{ href: string; label: string }>]> = isEoa ? [
     [ar ? "المسرّعة" : "Accelerator", [
@@ -141,10 +142,14 @@ export function Footer() {
               />
             </Link>
             <p className={styles.description}>{isEoa ? (ar ? "بوابتك الرقمية إلى مسرّعة EO الرياض. تعلّم مع المؤسسين، وطبّق ما تتعلمه، وتابع رحلة نمو شركتك." : "Your digital gateway to EO Riyadh Accelerator. Learn alongside founders, put ideas into practice and follow your company’s growth journey.") : copy.description}</p>
-            <div className="flex items-center gap-3">
-              <a href="https://twitter.com/AboutWosool" target="_blank" rel="noopener noreferrer" aria-label="Wosool on X" className={styles.socialLink}><AtSign className="h-4 w-4" /></a>
-              <a href="https://linkedin.com/company/wosool" target="_blank" rel="noopener noreferrer" aria-label="Wosool on LinkedIn" className={styles.socialLink}><Globe className="h-4 w-4" /></a>
-              <a href="https://instagram.com/aboutwosool" target="_blank" rel="noopener noreferrer" aria-label="Wosool on Instagram" className={styles.socialLink}><Camera className="h-4 w-4" /></a>
+            <div className={styles.socials}>
+              <a href="https://twitter.com/AboutWosool" target="_blank" rel="noopener noreferrer" aria-label={ar ? "وصول على X — يفتح في نافذة جديدة" : "Wosool on X — opens in a new tab"} className={styles.socialLink}>
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true"><path d="M18.9 2H22l-6.8 7.8L23.2 22h-6.3L12 14.6 5.5 22H2.3l7.4-8.5L.8 2h6.5l4.5 6.8L18.9 2Zm-1.1 18h1.7L6.4 3.9H4.6L17.8 20Z" /></svg><span dir="ltr">X</span>
+              </a>
+              <a href="https://linkedin.com/company/wosool" target="_blank" rel="noopener noreferrer" aria-label={ar ? "وصول على LinkedIn — يفتح في نافذة جديدة" : "Wosool on LinkedIn — opens in a new tab"} className={styles.socialLink}>
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true"><path d="M20.45 2H3.55C2.69 2 2 2.68 2 3.52v16.96c0 .84.69 1.52 1.55 1.52h16.9c.86 0 1.55-.68 1.55-1.52V3.52c0-.84-.69-1.52-1.55-1.52ZM7.93 18.75H4.98V9.2h2.95v9.55ZM6.45 7.9a1.71 1.71 0 1 1 0-3.42 1.71 1.71 0 0 1 0 3.42ZM19 18.75h-2.95V14.1c0-1.11-.02-2.54-1.55-2.54-1.55 0-1.79 1.21-1.79 2.46v4.73H9.76V9.2h2.83v1.3h.04c.39-.74 1.35-1.52 2.79-1.52 2.98 0 3.58 1.96 3.58 4.51v5.26Z" /></svg><span dir="ltr">LinkedIn</span>
+              </a>
+              <a href="https://instagram.com/aboutwosool" target="_blank" rel="noopener noreferrer" aria-label={ar ? "وصول على Instagram — يفتح في نافذة جديدة" : "Wosool on Instagram — opens in a new tab"} className={styles.socialLink}><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5" /><circle cx="12" cy="12" r="4" /><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none" /></svg><span dir="ltr">Instagram</span></a>
             </div>
           </div>
 
@@ -154,7 +159,7 @@ export function Footer() {
               <h3 className={styles.groupTitle}>{category}</h3>
               <ul className={styles.linkList}>
                 {links.map((link) => (
-                  <li key={link.href}><Link href={link.href} className={`text-sm ${styles.muted}`}>{link.label}</Link></li>
+                  <li key={link.href}><Link href={link.href} aria-current={pathname === link.href ? "page" : undefined} className={`text-sm ${styles.muted}`}>{link.label}</Link></li>
                 ))}
               </ul>
             </div>
