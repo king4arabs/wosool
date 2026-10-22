@@ -116,7 +116,7 @@ export function Footer() {
 
   return (
     <footer className={styles.footer} lang={locale} dir={locale === "ar" ? "rtl" : "ltr"} aria-label={locale === "ar" ? "تذييل الموقع" : "Site footer"}>
-      <div className="mx-auto max-w-[var(--container-wide)] px-4 py-16 sm:px-6 lg:px-8">
+      <div className={styles.container}>
         {!isEoa && (
           <div className={styles.invitation}>
             <div>
@@ -128,9 +128,9 @@ export function Footer() {
           </div>
         )}
 
-        <div className="grid grid-cols-1 gap-12 md:grid-cols-2 lg:grid-cols-6">
-          <div className="lg:col-span-2">
-            <Link href="/" className="mb-6 inline-flex max-w-full" aria-label={locale === "ar" ? "وصول — من مؤسس إلى مؤسس" : "Wosool — Founders to Founders"}>
+        <div className={styles.main}>
+          <div className={styles.brand}>
+            <Link href="/" className={styles.logo} aria-label={locale === "ar" ? "وصول — من مؤسس إلى مؤسس" : "Wosool — Founders to Founders"}>
               <Image
                 src="/wosool-logo-white.svg"
                 alt="Wosool — Founders to Founders"
@@ -140,7 +140,7 @@ export function Footer() {
                 className="h-auto w-[270px] max-w-full object-contain sm:w-[310px]"
               />
             </Link>
-            <p className={`mb-6 max-w-sm text-sm leading-7 ${styles.muted}`}>{isEoa ? (ar ? "بوابتك الرقمية إلى مسرّعة EO الرياض. تعلّم مع المؤسسين، وطبّق ما تتعلمه، وتابع رحلة نمو شركتك." : "Your digital gateway to EO Riyadh Accelerator. Learn alongside founders, put ideas into practice and follow your company’s growth journey.") : copy.description}</p>
+            <p className={styles.description}>{isEoa ? (ar ? "بوابتك الرقمية إلى مسرّعة EO الرياض. تعلّم مع المؤسسين، وطبّق ما تتعلمه، وتابع رحلة نمو شركتك." : "Your digital gateway to EO Riyadh Accelerator. Learn alongside founders, put ideas into practice and follow your company’s growth journey.") : copy.description}</p>
             <div className="flex items-center gap-3">
               <a href="https://twitter.com/AboutWosool" target="_blank" rel="noopener noreferrer" aria-label="Wosool on X" className={styles.socialLink}><AtSign className="h-4 w-4" /></a>
               <a href="https://linkedin.com/company/wosool" target="_blank" rel="noopener noreferrer" aria-label="Wosool on LinkedIn" className={styles.socialLink}><Globe className="h-4 w-4" /></a>
@@ -148,21 +148,23 @@ export function Footer() {
             </div>
           </div>
 
+          <nav className={styles.navigation} aria-label={ar ? "روابط التذييل" : "Footer navigation"}>
           {footerColumns.map(([category, links]) => (
-            <div key={category}>
-              <h3 className="mb-4 text-sm font-bold">{category}</h3>
-              <ul className="space-y-3">
+            <div key={category} className={styles.linkGroup}>
+              <h3 className={styles.groupTitle}>{category}</h3>
+              <ul className={styles.linkList}>
                 {links.map((link) => (
                   <li key={link.href}><Link href={link.href} className={`text-sm ${styles.muted}`}>{link.label}</Link></li>
                 ))}
               </ul>
             </div>
           ))}
+          </nav>
         </div>
 
-        <div className={`mt-12 flex flex-col items-center justify-between gap-4 border-t pt-8 sm:flex-row ${styles.bottom}`}>
+        <div className={styles.bottom}>
           <p className={`text-sm ${styles.muted}`}>© {new Date().getFullYear()} Wosool. {copy.copyright}</p>
-          <div className="flex flex-wrap items-center justify-center gap-6">
+          <div className={styles.legalLinks}>
             <Link href={isEoa ? "/eoa/privacy" : "/privacy"} className={`text-sm ${styles.muted}`}>{copy.privacy}</Link>
             <Link href="/terms" className={`text-sm ${styles.muted}`}>{copy.terms}</Link>
             <Link href={isEoa ? "/eoa/contact" : "/contact"} className={`text-sm ${styles.muted}`}>{copy.contact}</Link>

@@ -20,3 +20,39 @@
 .footer :is(a,button):focus-visible { outline:3px solid var(--on-dark); outline-offset:4px; border-radius:var(--radius-control); }
 @media(max-width:720px) { .invitation {flex-direction:column; align-items:start;} }
 @media(prefers-reduced-motion:reduce) { .footer a {transition:none;} }
+
+/* Logical spacing keeps the same hierarchy in Arabic and English. */
+.container { max-width:var(--container-wide); margin-inline:auto; padding:56px max(24px,env(safe-area-inset-right)) max(24px,env(safe-area-inset-bottom)) max(24px,env(safe-area-inset-left)); }
+.main { display:grid; grid-template-columns:minmax(0,1.1fr) minmax(0,2fr); gap:48px; }
+.brand,.linkGroup { min-width:0; }
+.logo { display:inline-flex; max-width:100%; margin-bottom:20px; }
+.description { max-width:40ch; font-size:14px; line-height:1.9; color:var(--on-dark-muted); margin-bottom:24px; }
+.navigation { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:24px; }
+.groupTitle { font-size:15px; font-weight:700; line-height:1.6; margin-bottom:12px; }
+.linkList { margin:0; padding:0; list-style:none; }
+.linkList a { width:100%; padding-block:8px; font-size:14px; line-height:1.6; overflow-wrap:anywhere; }
+.bottom { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:16px 32px; margin-top:40px; padding-top:20px; border-top-width:1px; border-top-style:solid; }
+.legalLinks { display:flex; flex-wrap:wrap; align-items:center; gap:4px 24px; }
+.bottom p { line-height:1.7; }
+.backTop { gap:8px; padding:8px 12px; border:1px solid color-mix(in srgb,var(--on-dark) 25%,transparent); border-radius:var(--radius-control); }
+.footer[dir="rtl"] .invitation>a svg { transform:scaleX(-1); }
+@media(max-width:1100px) {
+  .main { grid-template-columns:minmax(0,1fr) minmax(0,1.5fr); gap:32px; }
+  .navigation { grid-template-columns:repeat(2,minmax(0,1fr)); gap:24px 32px; }
+}
+@media(max-width:720px) {
+  .container { padding-top:32px; padding-inline:max(20px,env(safe-area-inset-left)) max(20px,env(safe-area-inset-right)); }
+  .invitation { gap:20px; padding-bottom:28px; margin-bottom:28px; }
+  .invitation>a { width:100%; justify-content:space-between; }
+  .invitation h2 { font-size:26px; line-height:1.45; margin-block:8px; }
+  .main { grid-template-columns:minmax(0,1fr); gap:28px; }
+  .logo { margin-bottom:16px; }
+  .logo img { width:230px; }
+  .description { max-width:60ch; margin-bottom:18px; }
+  .navigation { gap:24px 20px; padding-top:24px; border-top:1px solid color-mix(in srgb,var(--on-dark) 20%,transparent); }
+  .groupTitle { margin-bottom:6px; }
+  .bottom { margin-top:28px; align-items:stretch; gap:12px; }
+  .bottom p { width:100%; }
+  .legalLinks { width:100%; gap:4px 16px; }
+  .backTop { justify-content:center; width:100%; margin-top:8px; min-height:48px; }
+}

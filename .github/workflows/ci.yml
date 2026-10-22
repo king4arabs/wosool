@@ -55,7 +55,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.3'
+          php-version: '8.3.36'
           extensions: mbstring, dom, curl, pdo_sqlite, sqlite3
           coverage: none
       - uses: actions/setup-node@v4
@@ -73,3 +73,4 @@ jobs:
       - run: npm ci
       - run: npm audit --audit-level=high
       - run: npm run build
+
