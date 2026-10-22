@@ -1,5 +1,11 @@
 # Changelog
 
+## Standalone frontend pnpm install — 2026-10-22
+
+- Reproduced `ERR_PNPM_IGNORED_BUILDS` when installing a frontend-only copy: the repository-root approval file is absent from that build input.
+- Ran `pnpm approve-builds esbuild unrs-resolver` locally and committed the resulting `frontend/pnpm-workspace.yaml`, plus a standalone pnpm lockfile imported from the frontend npm lock. Both deployment layouts use `allowBuilds`; Node 22 and pnpm are unchanged.
+- Added a CI gate that installs an isolated frontend archive with a fresh store and checks the native TypeScript loader and lint resolver. Hosting redeployment and live verification remain separate operations.
+
 ## Homepage founder discovery and pnpm install approvals — 2026-10-22
 
 - The homepage's editorial founder spotlight is now a permanent, labeled collection rather than an outage fallback. It draws a fresh Saudi-first 36-card mix on each mount and offers a shuffle button. Search, regional/sector filters and the complete paginated grid remain available; directory ordering stays stable. Current live public profiles use the community-only API filter, appear separately, and matching slugs are excluded from the spotlight. Language changes clear translated sector selections and reset grid pagination while retaining the visit mix.
