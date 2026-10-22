@@ -1,5 +1,11 @@
 # Changelog
 
+## Default hosting build uses webpack — 2026-10-22
+
+- The reported Hostinger build at `82a6496` installed dependencies successfully but ran the default `next build`, then timed out during Turbopack compilation. The existing `build:webpack` alias was not being used by hosting.
+- Set the default frontend build to `next build --webpack`, so the host's existing `pnpm run build` command selects webpack. Keep the route-cache cleanup and explicit webpack alias.
+- Match the hosting install CI job to Node 22 / pnpm 11.24.0 and test the exact default build command in an isolated frontend archive. Dependency versions, lockfiles and application data are unchanged. Live hosting rebuild verification is a separate release step.
+
 ## Standalone frontend pnpm install — 2026-10-22
 
 - Reproduced `ERR_PNPM_IGNORED_BUILDS` when installing a frontend-only copy: the repository-root approval file is absent from that build input.

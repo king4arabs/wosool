@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "prebuild": "node scripts/reset-route-cache.mjs",
-    "build": "next build",
+    "build": "next build --webpack",
     "prebuild:webpack": "node scripts/reset-route-cache.mjs",
     "build:webpack": "next build --webpack",
     "start": "next start",
