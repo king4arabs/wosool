@@ -12,6 +12,7 @@ type BoardMember = {
   website: string | null
   linkedIn: string | null
   photo: string | null
+  photoHeight?: number
   photoSize: number
 }
 
@@ -21,7 +22,7 @@ const members: readonly BoardMember[] = [
   { name: "Anas Alsahali", nameAr: "أنس السهلي", company: "SEQUENCIVE", description: "SEQUENCIVE", website: "https://sequencive.com", linkedIn: null, photo: "/wosool/board/anas-alsahali.webp", photoSize: 160 },
   { name: "Faisal Almukles", nameAr: "فيصل المخلص", company: "Torood", description: "Torod Logistics", website: "https://torod.co", linkedIn: null, photo: "/wosool/board/faisal-almukles.webp", photoSize: 512 },
   { name: "Rayan Alzamil", nameAr: "ريان الزامل", company: "Salesfine", description: "SalesFine FinTech", website: "https://salesfine.co", linkedIn: null, photo: "/wosool/board/rayan-alzamil.webp", photoSize: 512 },
-  { name: "Majid Alrasheed", nameAr: "ماجد الرشيد", company: "JOZO", description: "Fractional real estate ownership", website: "https://jozo.sa", linkedIn: null, photo: "/wosool/board/majid-alrasheed.webp", photoSize: 270 },
+  { name: "Faisal Al-Abdulsalam", nameAr: "فيصل العبدالسلام", company: "Core Vision", description: "", website: null, linkedIn: null, photo: "/wosool/board/faisal-al-abdulsalam.jpeg", photoSize: 1008, photoHeight: 1050 },
 ]
 
 export function WosoolBoard() {
@@ -40,14 +41,14 @@ export function WosoolBoard() {
               <span className={styles.number} aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>
               <div className={styles.portrait}>
                 {member.photo ? (
-                  <Image src={member.photo} alt={ar ? member.nameAr : member.name} width={member.photoSize} height={member.photoSize} sizes="64px" />
+                  <Image src={member.photo} alt={ar ? member.nameAr : member.name} width={member.photoSize} height={member.photoHeight ?? member.photoSize} sizes="64px" />
                 ) : (
                   <span aria-label={ar ? `صورة ${member.nameAr} غير متاحة` : `Photo of ${member.name} unavailable`} role="img">{member.name.split(" ").map(part => part[0]).join("")}</span>
                 )}
               </div>
               <div className={styles.details}>
                 <h3>{ar ? member.nameAr : member.name}</h3>
-                <p>{member.company} · {member.description}</p>
+                <p>{member.company}{member.description && ` · ${member.description}`}</p>
               </div>
               <div className={styles.links}>
                 {member.website && <a href={member.website} target="_blank" rel="noopener noreferrer" aria-label={`${member.company} ${ar ? "موقع الشركة" : "website"}`}>{ar ? "موقع الشركة" : "Website"}</a>}
