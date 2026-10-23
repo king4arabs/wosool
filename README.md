@@ -21,6 +21,8 @@
   <a href="https://github.com/king4arabs/wosool/issues">Report a bug</a>
 </p>
 
+Content refresh (23 October 2026): **153 founder profiles, 85 companies and 45 news briefs** in synchronized repository catalogs. Three founders and three news briefs were added; public editorial/process notes were removed in both languages. See [source review and publication steps](docs/CONTENT-REFRESH-2026-10-23.md). Production database imports and live release verification are recorded separately.
+
 Wosool brings founder profiles, startup and venture discovery, events, learning, reviewed introductions, collaboration, and administration into one Arabic/English platform. This monorepo contains the Next.js frontend, Laravel API, database migrations, tests, operating tools, and production documentation.
 
 Wosool also provides the dedicated digital gateway for **EO Riyadh Accelerator** at **`/eoa`**: **Riyadh-based Founders. Global Connections. Extraordinary Growth.** Wosool community membership, Accelerator admission, official enrollment, graduation, and EO membership remain separate decisions and workflows.

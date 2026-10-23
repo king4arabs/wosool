@@ -52,7 +52,7 @@ function FounderDirectory() {
     <PageHero
       eyebrow={isSpotlight ? ar ? 'مؤسسون من السعودية والعالم' : 'Founders from Saudi Arabia and beyond' : copy.badge}
       title={isSpotlight ? ar ? 'المؤسسون وشركاتهم' : 'Founders and their companies' : copy.title}
-      description={isSpotlight ? ar ? 'ملفات عامة مبنية على مصادر منشورة لمؤسسين في السعودية والخليج والعالم، مع رابط لكل مصدر.' : 'Public profiles built from published sources, covering founders in Saudi Arabia, the Gulf and worldwide, with a link to every source.' : copy.description}
+      description={isSpotlight ? ar ? 'اكتشف المؤسسين وشركاتهم وخبراتهم في السعودية والخليج والعالم.' : 'Discover founders, their companies and their experience across Saudi Arabia, the Gulf and beyond.' : copy.description}
       actions={<><a href="#founder-directory" className={heroPrimary}>{ar ? 'تصفّح المؤسسين' : 'Browse founders'}<Arrow size={17} aria-hidden="true" /></a><Link href="/apply" className={heroSecondary}>{ar ? 'قدّم طلب العضوية' : 'Apply for membership'}</Link></>}
     />
     {collection.error && <div className={`${styles.container} ${styles.availability}`} role="status"><span>{ar ? 'ملفات أعضاء المجتمع غير متاحة مؤقتًا.' : 'Community member profiles are temporarily unavailable.'}</span><button type="button" disabled={collection.loading} onClick={collection.retry}>{ar ? 'إعادة المحاولة' : 'Try again'}</button></div>}

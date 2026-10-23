@@ -2,7 +2,7 @@
 
 import { Suspense, useCallback, useMemo } from "react"
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
-import { Search, ShieldCheck } from "lucide-react"
+import { Search } from "lucide-react"
 import { PublicLayout } from "@/components/layout/PublicLayout"
 import { CollectionStatus } from "@/components/sections/CollectionStatus"
 import { NewsCard } from "@/components/sections/NewsCard"
@@ -78,15 +78,13 @@ function Newsroom({ params }: { params: SearchParamsLike }) {
     <PageHero
       tone="dark"
       eyebrow={ar ? "غرفة أخبار وصول" : "The Wosool newsroom"}
-      title={ar ? "أخبار الشركات الناشئة، السعودية أولاً" : "Startup news, Saudi first"}
-      description={ar ? "ملخصات قصيرة لأخبار التمويل والاستحواذ والتقارير من السعودية والخليج والعالم، مع أبرز الأرقام ورابط المصدر لكل خبر." : "Short briefs on funding, acquisitions and reports from Saudi Arabia, the Gulf and the world, with the key figures and a source link for every story."}
+      title={ar ? "أخبار الشركات الناشئة" : "Startup news"}
     >
       <dl className="grid max-w-3xl grid-cols-2 gap-3 sm:grid-cols-3">
-        <div className="rounded-2xl border border-white/15 p-4"><dt className="text-xs text-[var(--on-dark-muted)]">{ar ? "أخبار موثّقة المصدر" : "Sourced stories"}</dt><dd className="mt-1 text-2xl font-extrabold">{count(items.length)}</dd></div>
+        <div className="rounded-2xl border border-white/15 p-4"><dt className="text-xs text-[var(--on-dark-muted)]">{ar ? "الأخبار" : "Stories"}</dt><dd className="mt-1 text-2xl font-extrabold">{count(items.length)}</dd></div>
         <div className="rounded-2xl border border-white/15 p-4"><dt className="text-xs text-[var(--on-dark-muted)]">{ar ? "من السعودية" : "From Saudi Arabia"}</dt><dd className="mt-1 text-2xl font-extrabold">{count(regionCounts.saudi ?? 0)}</dd></div>
         <div className="col-span-2 rounded-2xl border border-white/15 p-4 sm:col-span-1"><dt className="text-xs text-[var(--on-dark-muted)]">{ar ? "آخر خبر سعودي" : "Latest Saudi story"}</dt><dd className="mt-1 text-base font-bold">{saudiLatest ? newsDate(saudiLatest.publishedAt, locale) : "—"}</dd></div>
       </dl>
-      <p className="mt-6 flex items-center gap-2 text-sm text-[var(--on-dark-muted)]"><ShieldCheck size={18} aria-hidden="true" />{ar ? "مصادر مسمّاة · تواريخ نشر حقيقية · ملخصات وليست إعادة نشر" : "Named sources · Real publication dates · Briefs, not republications"}</p>
     </PageHero>
 
     <section className="mx-auto max-w-6xl px-4 py-10 sm:px-6" aria-labelledby="stories-title">
@@ -109,7 +107,7 @@ function Newsroom({ params }: { params: SearchParamsLike }) {
       </div>}
 
       <div className="mb-6 mt-6 flex flex-wrap items-center justify-between gap-3">
-        <p role="status" className="text-sm text-[var(--text-muted)]">{count(filtered.length)} {ar ? "نتيجة • ملخصات ومقتطفات، وليست مقالات كاملة" : "results • Briefs and excerpts, not full article reproductions"}</p>
+        <p role="status" className="text-sm text-[var(--text-muted)]">{count(filtered.length)} {ar ? "نتيجة" : "results"}</p>
         {filtersActive && <button type="button" onClick={() => router.replace(pathname, { scroll: false })} className="min-h-11 text-sm font-bold text-[var(--link)]">{ar ? "مسح الفلاتر" : "Clear filters"}</button>}
       </div>
 

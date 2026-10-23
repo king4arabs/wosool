@@ -8,11 +8,9 @@ import {
   ArrowUpRight,
   BadgeCheck,
   Building2,
-  CalendarClock,
   ExternalLink,
   Globe2,
   MapPin,
-  ShieldCheck,
   UserRound,
 } from "lucide-react"
 import { BrandLogo } from "@/components/ui/BrandLogo"
@@ -172,21 +170,6 @@ export function ProfileCard({ data, variant = "company" }: { data: ProfileCardDa
               {ar ? "ملف موثّق" : "Verified profile"}
             </TrustSignal>
           )}
-          {data.websiteVerifiedAt && (
-            <TrustSignal icon={<Globe2 size={14} aria-hidden="true" />}>
-              {ar ? "موقع مُراجع" : "Website reviewed"}
-            </TrustSignal>
-          )}
-          {data.reviewedAt && !data.reviewDue && (
-            <TrustSignal icon={<ShieldCheck size={14} aria-hidden="true" />}>
-              {ar ? "ملف مُراجع" : "Profile reviewed"}
-            </TrustSignal>
-          )}
-          {data.reviewDue && (
-            <TrustSignal icon={<CalendarClock size={14} aria-hidden="true" />}>
-              {ar ? "بحاجة إلى مراجعة" : "Review due"}
-            </TrustSignal>
-          )}
         </div>
       </header>
 
@@ -239,7 +222,6 @@ export function ProfileCard({ data, variant = "company" }: { data: ProfileCardDa
 
         {data.traction && (
           <div className={styles.traction}>
-            <span>{ar ? "مؤشرات التشغيل والإيرادات" : "Operations & traction"}</span>
             <p>{data.traction.text}</p>
             {publicWebsite(data.traction.sourceUrl) && (
               <a href={publicWebsite(data.traction.sourceUrl)} target="_blank" rel="noopener noreferrer">
@@ -350,18 +332,6 @@ export function ProfileCard({ data, variant = "company" }: { data: ProfileCardDa
                     <ExternalLink size={13} aria-hidden="true" />
                   </a>
                 ))}
-              {data.websiteVerifiedAt && (
-                <p>
-                  {ar ? "مراجعة الموقع: " : "Website reviewed: "}
-                  <time dateTime={data.websiteVerifiedAt}>{data.websiteVerifiedAt}</time>
-                </p>
-              )}
-              {data.reviewedAt && (
-                <p>
-                  {ar ? "آخر مراجعة: " : "Last reviewed: "}
-                  <time dateTime={data.reviewedAt}>{data.reviewedAt}</time>
-                </p>
-              )}
               {data.assetCredit && <p>{data.assetCredit}</p>}
             </div>
           </details>
