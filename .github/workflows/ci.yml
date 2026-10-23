@@ -31,14 +31,16 @@ jobs:
       - run: npm run lint
       - run: npm run type-check
       - run: npm test
+      - run: npm run test:hosting
       - run: npm --prefix .. run content:test
       - run: node ../scripts/content-review.mjs --check
       - run: npm run validate:entrepreneurs
       - run: npm audit --omit=dev --audit-level=high
-      - run: npm run build
+      - run: npm run build:local
         env:
-          NEXT_PUBLIC_SITE_URL: https://wosool.org
+          NEXT_PUBLIC_SITE_URL: http://localhost:3000
           NEXT_PUBLIC_API_URL: http://localhost:8000
+          NEXT_PUBLIC_ENABLE_DEMO_CONTENT: "false"
       - name: Install Chromium for isolated public-collection checks
         run: npx playwright install --with-deps chromium
       - name: Verify public collection fallback in both languages and viewport sizes
@@ -72,6 +74,9 @@ jobs:
           CI: true
           # Next otherwise defaults to 63 page workers, as on the reported host.
           CIRCLE_NODE_TOTAL: 64
+          NEXT_PUBLIC_SITE_URL: https://wosool.org
+          NEXT_PUBLIC_API_URL: https://api.wosool.org
+          NEXT_PUBLIC_ENABLE_DEMO_CONTENT: "false"
         run: |
           set -o pipefail
           standalone_frontend=$(mktemp -d)
@@ -79,6 +84,7 @@ jobs:
           pnpm --dir "$standalone_frontend" install --frozen-lockfile --store-dir "$standalone_frontend/.pnpm-store"
           pnpm --dir "$standalone_frontend" exec node --import tsx --input-type=module -e "import './src/lib/founder-discovery.ts'; console.log('Standalone esbuild transform works')"
           pnpm --dir "$standalone_frontend" run lint
+          pnpm --dir "$standalone_frontend" run test:hosting
           pnpm --dir "$standalone_frontend" run build | tee "$standalone_frontend/build.log"
           grep -Fq 'Collecting page data using 1 worker' "$standalone_frontend/build.log"
           grep -Fq 'Generating static pages using 1 worker' "$standalone_frontend/build.log"
@@ -92,7 +98,7 @@ jobs:
         with:
           node-version: 22
       - name: Test deployment contract and smoke-check failure handling
-        run: node --test frontend/scripts/hosting-preflight.test.mjs scripts/production-smoke.test.mjs
+        run: node --test frontend/scripts/hosting-preflight.test.mjs frontend/scripts/hosting-assets.test.mjs scripts/production-smoke.test.mjs
       - name: Verify frontend environment contract using nonsecret examples
         env:
           NEXT_PUBLIC_SITE_URL: https://wosool.org
@@ -131,6 +137,15 @@ jobs:
       - name: Install shared OpenAPI contract validator
         run: npm --prefix ../frontend ci --ignore-scripts
       - run: composer run test
+      - name: Verify Laravel deployment caches compile
+        env:
+          APP_ENV: production
+          APP_DEBUG: "false"
+        run: |
+          php artisan config:cache
+          php artisan route:cache
+          php artisan view:cache
+          php artisan optimize:clear
       - run: npm ci
       - run: npm audit --audit-level=high
       - run: npm run build

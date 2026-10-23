@@ -17,13 +17,13 @@
     "hostinger:build": "npm --prefix frontend run build",
     "preflight:frontend": "npm --prefix frontend run preflight:production",
     "smoke:production": "node scripts/production-smoke.mjs",
-    "test:production-ops": "node --test frontend/scripts/hosting-preflight.test.mjs scripts/production-smoke.test.mjs",
+    "test:production-ops": "node --test frontend/scripts/hosting-preflight.test.mjs frontend/scripts/hosting-assets.test.mjs scripts/production-smoke.test.mjs",
     "hostinger:start": "npm --prefix frontend run start -- --hostname 0.0.0.0",
     "lint": "npm --prefix frontend run lint",
     "type-check": "npm --prefix frontend run type-check",
     "validate:entrepreneurs": "npm --prefix frontend run validate:entrepreneurs",
     "test": "npm run test:frontend && npm run test:backend",
-    "verify": "npm run content:test && npm run content:check && npm run lint && npm run type-check && npm run test && npm run validate:entrepreneurs && npm run build",
+    "verify": "npm run test:production-ops && npm --prefix frontend run test:hosting && npm run content:test && npm run content:check && npm run lint && npm run type-check && npm run test && npm run validate:entrepreneurs && npm run build",
     "dev": "./scripts/run-app.sh",
     "dev:frontend": "npm --prefix frontend run dev",
     "dev:backend": "php backend/artisan serve --host=127.0.0.1",
@@ -39,5 +39,6 @@
   },
   "engines": {
     "node": "^22.12.0 || ^24.0.0"
-  }
+  },
+  "packageManager": "pnpm@11.24.0"
 }

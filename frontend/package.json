@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "preflight:production": "node scripts/hosting-preflight.mjs",
+    "preflight:production": "node scripts/release-preflight.mjs",
     "prebuild": "node scripts/reset-route-cache.mjs",
     "build": "node scripts/build.mjs",
     "prebuild:webpack": "node scripts/reset-route-cache.mjs",
@@ -18,7 +18,10 @@
     "test:collections:browser": "node scripts/check-collection-fallback.mjs",
     "test:founders:browser": "node scripts/check-founder-discovery.mjs",
     "test:a11y:browser": "node scripts/check-accessibility.mjs",
-    "qa:crawl": "node scripts/qa-crawl.mjs"
+    "qa:crawl": "node scripts/qa-crawl.mjs",
+    "prebuild:local": "node scripts/reset-route-cache.mjs",
+    "build:local": "node scripts/build.mjs --local",
+    "test:hosting": "node --test scripts/hosting-preflight.test.mjs scripts/load-build-env.test.mjs scripts/hosting-assets.test.mjs"
   },
   "dependencies": {
     "@fontsource-variable/cairo": "5.3.0",
@@ -58,5 +61,6 @@
   },
   "engines": {
     "node": "^22.12.0 || ^24.0.0"
-  }
+  },
+  "packageManager": "pnpm@11.24.0"
 }

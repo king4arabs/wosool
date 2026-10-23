@@ -6,7 +6,7 @@ Wosool has two deployable applications: `frontend/` is a Next.js Node.js server;
 
 Keep the **single GitHub monorepo** but deploy two independent services. The Next.js website runs at `https://wosool.org` with Hostinger Web App root `frontend/`, Node 22, pnpm, `pnpm run build`, output `.next`, and a managed server process. The Laravel API runs separately at `https://api.wosool.org`, serving `backend/public/`. Its database, private storage, queue workers and scheduler must not be coupled to the frontend build. Do not move the application files out of `frontend/`; that directory is the **source root**, not part of the public URL.
 
-**Release environment gate:** from `frontend/`, run `pnpm run preflight:production` with the actual Hostinger build environment. It rejects non-HTTPS/missing site/API origins and demo mode not explicitly disabled. Set `NEXT_PUBLIC_SITE_URL=https://wosool.org`, `NEXT_PUBLIC_API_URL=https://api.wosool.org`, and `NEXT_PUBLIC_ENABLE_DEMO_CONTENT=false` as build environment variables. Hostinger may inject variables without a physical `.env` file. Do not print private values. Rebuild after changing public environment variables. The existing `pnpm run build` stays unchanged until Hostinger is configured to run the separate preflight gate; CI tests the gate with safe example values.
+**Release environment gate:** from `frontend/`, run `pnpm run preflight:production` with the actual Hostinger build environment. It rejects non-HTTPS/missing site/API origins and demo mode not explicitly disabled. Set `NEXT_PUBLIC_SITE_URL=https://wosool.org`, `NEXT_PUBLIC_API_URL=https://api.wosool.org`, and `NEXT_PUBLIC_ENABLE_DEMO_CONTENT=false` as build environment variables. Hostinger may inject variables without a physical `.env` file. Do not print private values. Rebuild after changing public environment variables. The default `pnpm run build` now runs this gate automatically before compilation. It loads `.env.production.local`, `.env.local`, `.env.production` and `.env` with Next.js precedence; injected host variables take priority. Missing settings, loopback API targets, matching site/API origins, paths/credentials in origins, and enabled demo content stop the build. Use `frontend/.env.production.example` for the public production values. A physical `.env` file is optional when Hostinger injects all three values.
 
 **Safe release order:** backup the live database and record both deployed source SHAs; validate staging with its own restricted domain and separate database; deploy compatible Laravel code and additive migrations; verify direct API readiness, authorization, queues and real SMTP; deploy the matching Next.js revision; verify the website and the same-origin proxy; record the result. Preserve `APP_KEY`, private media, uploads, and data. No automatic destructive migrations or demonstration seeders. Revert to the previous host artifact if verification fails, and never blindly restore a pre-release database over live user writes.
 
@@ -20,8 +20,8 @@ For EO Accelerator, the authoritative workflow is [EOA operations](docs/EOA.md).
 
 | Surface | Runtime / configuration |
 | --- | --- |
-| Frontend | Node.js 22.12+ (22.x) or 24.x; production origin `https://wosool.org` |
-| Backend | PHP 8.3+, Composer 2; web root must point to `backend/public/` |
+| Frontend | Node.js 22.x or 24.x with the current provider security patch; production origin `https://wosool.org` |
+| Backend | PHP 8.3.36+, 8.4.27+, or 8.5.12+ on the corresponding stable branch; Composer 2; web root must point to `backend/public/` |
 | Database | SQLite in the local template; verify and preserve the deployed engine before migration |
 | Workers | Supervise queue workers when jobs are used; Reverb only when configured |
 
@@ -30,6 +30,7 @@ Set frontend values **before building**:
 ```dotenv
 NEXT_PUBLIC_SITE_URL=https://wosool.org
 NEXT_PUBLIC_API_URL=https://api.wosool.org
+NEXT_PUBLIC_ENABLE_DEMO_CONTENT=false
 ```
 
 The API value is an origin without `/api`. Browser requests remain same-origin through the Next.js `/api/:path*` rewrite. The Node.js process must be able to reach the configured API origin.
@@ -53,7 +54,7 @@ Keep the existing `APP_KEY`. Set `MAIL_TEAM_ADDRESS` to the inbox that should re
 
 ### Hostinger Web App (wosool.org)
 
-Keep the hosting package manager as **pnpm** and Node.js as **22.x**. Approvals must be inside the directory delivered to the installer: `frontend/pnpm-workspace.yaml` approves only `esbuild` and `unrs-resolver` through `allowBuilds`, and `frontend/pnpm-lock.yaml` locks the standalone frontend install. These files are produced by `pnpm import` and `pnpm approve-builds esbuild unrs-resolver` with pnpm 12.14.0. The repository-root workspace policy and lockfile remain for full-monorepo installs. Do not add a competing `onlyBuiltDependencies` policy or enable all scripts. [Current pnpm approval documentation](https://pnpm.io/cli/approve-builds) writes `allowBuilds` when approving builds; legacy approval keys are ignored by pnpm 11+.
+Keep the hosting package manager as **pnpm** and Node.js as **22.x**. Approvals must be inside the directory delivered to the installer: `frontend/pnpm-workspace.yaml` approves only `esbuild` and `unrs-resolver` through `allowBuilds`, and `frontend/pnpm-lock.yaml` locks the standalone frontend install. Both package manifests pin `pnpm@11.24.0`, matching CI and the reported host. Keep dependency updates and build approvals compatible with that version. The repository-root workspace policy and lockfile remain for full-monorepo installs. Do not add a competing `onlyBuiltDependencies` policy or enable all scripts. [Current pnpm approval documentation](https://pnpm.io/cli/approve-builds) writes `allowBuilds` when approving builds; legacy approval keys are ignored by pnpm 11+.
 
 CI verifies both a root workspace install and a clean frontend-only archive outside the repository, using Node 22 and pnpm 11.24.0 (matching the reported hosting runtime), a fresh store, `pnpm install --frozen-lockfile`, the esbuild TypeScript loader, ESLint's native resolver and the hosting webpack build. A root-only approval cannot protect a hosting build that receives only `frontend/`. Existing npm locks remain for the npm CI jobs. When dependencies change, refresh both pnpm lockfiles from the corresponding npm locks and pass both install checks.
 
@@ -61,13 +62,36 @@ Redeploy the latest merged `main` through the existing Hostinger Web App process
 
 Build `01a162c9-3445-73d3-8205-a59e9d7f7946` successfully installed dependencies at `82a6496` with Node 22 / pnpm 11.24.0, then ran `pnpm run build` and stalled at Turbopack compilation until the hosting timeout. The earlier `build:webpack` alias was not selected by this hosting command. `frontend/package.json` now makes the default `build` run `next build --webpack`, so the reported hosting command uses webpack directly. The existing `build:webpack` alias still works. CI exercises `pnpm run build` on a standalone frontend archive.
 
-Use root directory `frontend`, framework preset Next.js, Node 22.x, package manager pnpm, build command `pnpm run build` and output directory `.next`, with `NEXT_PUBLIC_SITE_URL`, `NEXT_PUBLIC_API_URL` and `NEXT_PUBLIC_ENABLE_DEMO_CONTENT=false` set as build environment variables. A new build should print `Next.js 16.4.0 (webpack)`, complete compilation and generate the route table. If it still prints `(Turbopack)`, verify the checked-out revision and application root before retrying.
+Use root directory `frontend`, framework preset Next.js, Node 22.x, package manager pnpm, build command `pnpm run build` and output directory `.next`, with `NEXT_PUBLIC_SITE_URL`, `NEXT_PUBLIC_API_URL` and `NEXT_PUBLIC_ENABLE_DEMO_CONTENT=false` set as build environment variables. A new build should print `Next.js 16.4.2 (webpack)`, complete compilation and generate the route table. If it still prints `(Turbopack)`, verify the checked-out revision and application root before retrying.
 
 Build `01a162f6-e836-7286-84a0-17766a96850f` checked out source `b7ad796` for a new deployment: installation, webpack compilation (20.7 seconds) and TypeScript passed. It then attempted **63 page-data workers** and aborted with Tokio `OS can't spawn worker thread` / `EAGAIN` / `SIGABRT`. This is resource exhaustion during the build, so no completed release can be inferred from that attempt. The log does not establish the account's exact process/thread quota.
 
 The build now caps `experimental.cpus` at **1** in `next.config.ts`. Both build scripts run `scripts/build.mjs`, which starts the webpack CLI with `TOKIO_WORKER_THREADS=1` and `RAYON_NUM_THREADS=1` before native modules initialize. These documented [Tokio](https://docs.rs/tokio/latest/tokio/runtime/struct.Builder.html#method.worker_threads) and [Rayon](https://docs.rs/rayon/latest/rayon/struct.ThreadPoolBuilder.html#method.num_threads) controls limit their worker pools; they do not claim to limit every Node/OS thread. The environment limits apply only to the build child process. No hosting environment edits or package changes are required.
 
-The standalone CI build sets `CIRCLE_NODE_TOTAL=64` (which would produce Next 16.4.0's 63-worker default) and verifies that both page collection and static generation instead report **1 worker**. It then starts the same frontend-only archive through `pnpm run start` and requires `/health`, `/` and `/eoa` to pass. On the next Hostinger attempt, check that same output, successful route generation, final publish/activation and all production probes. If the one-worker build still gets `EAGAIN`, obtain the account's actual task quota and usage through Hostinger support before increasing resources or concurrency. A local/CI build cannot measure the hosting account's limits.
+The standalone CI build sets `CIRCLE_NODE_TOTAL=64` (which would produce Next 16.4.0's 63-worker default) and verifies that both page collection and static generation instead report **1 worker**. It then starts the same frontend-only archive through `pnpm run start` and requires `/health`, `/` and `/eoa` to pass, with real page content and nonempty JavaScript/CSS assets served with the correct MIME types. On the next Hostinger attempt, check that same output, successful route generation, final publish/activation and all production probes. If the one-worker build still gets `EAGAIN`, obtain the account's actual task quota and usage through Hostinger support before increasing resources or concurrency. A local/CI build cannot measure the hosting account's limits.
+
+## Hostinger release settings — 23 October 2026
+
+| Setting | Value |
+| --- | --- |
+| Repository / branch | `king4arabs/wosool` / `main` |
+| Framework | Next.js |
+| Root directory | `frontend` |
+| Node.js | 22.x, patched by Hostinger; verify the effective patch |
+| Package manager | pnpm 11.24.0 (pinned in `package.json`) |
+| Install | `pnpm install --frozen-lockfile` |
+| Build | `pnpm run build` |
+| Output | `.next` |
+| Start, if configurable | `pnpm run start --hostname 0.0.0.0` (use the host-provided `PORT`) |
+| Site origin | `NEXT_PUBLIC_SITE_URL=https://wosool.org` |
+| API origin | `NEXT_PUBLIC_API_URL=https://api.wosool.org` |
+| Demo content | `NEXT_PUBLIC_ENABLE_DEMO_CONTENT=false` |
+
+Hostinger's [monorepo documentation](https://www.hostinger.com/support/how-to-deploy-monorepos-with-npm-yarn-or-pnpm-on-hostinger/) confirms the app-root setting and `packageManager` version selection. Preserve the Laravel service separately at `api.wosool.org`; do not replace it with the frontend or publish `backend/` as static files.
+
+**Runtime security:** Hostinger reports an October 2026 rollout of Node 22.23.4 / 24.22.1 security patches and application restarts. Verify the effective serving version or provider backport evidence; the major-version selector and a package audit do not prove the runtime is patched. See [Hostinger's rollout notice](https://www.hostinger.com/support/node-js-24-22-1-security-update-on-hostinger-hosting/). The repository does not install or restart the hosting runtime.
+
+For a local production-mode preview, set both origins to separate explicit loopback origins (for example `http://localhost:3000` and `http://localhost:8000`) and run `npm run build:local` inside `frontend/`. This is an explicit development artifact and must not be published. `npm run dev` is unchanged.
 
 ## PHP security update — 22 October 2026
 
