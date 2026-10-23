@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useMemo, useState } from "react"
+import { useEffect, useState } from "react"
 import { useParams } from "next/navigation"
 import { api, ApiError } from "@/lib/api"
 import { Button } from "@/components/ui/button"
@@ -12,6 +12,19 @@ import { Textarea } from "@/components/ui/textarea"
 import { Input } from "@/components/ui/input"
 import { useToast } from "@/components/ui/toast"
 import { useAuth } from "@/lib/auth"
+import { useLocale } from "@/lib/locale"
+import Link from "next/link"
+import {
+  programApplyAction,
+  programDate,
+  programDetailCopy,
+  programFormatLabel,
+  programLanguageLabel,
+  programSessionTypeLabel,
+  programStatusFlowLabel,
+  programTypeLabel,
+} from "@/lib/program-detail"
+import { programDurationLabel } from "@/lib/program-labels"
 
 type ProgramDetails = {
   id: number
@@ -48,40 +61,6 @@ type ProgramDetails = {
 
 type ProgramApplicationStatus = {
   status: string
-}
-
-const statusLabel: Record<string, string> = {
-  draft: "مسودة",
-  pending_review: "بانتظار المراجعة",
-  published: "منشور",
-  applications_open: "التقديم مفتوح",
-  applications_closed: "التقديم مغلق",
-  active: "نشط",
-  completed: "مكتمل",
-  cancelled: "ملغي",
-  archived: "مؤرشف",
-  submitted: "تم الإرسال",
-  pending_review_application: "قيد المراجعة",
-  accepted: "مقبول",
-  rejected: "مرفوض",
-  waitlisted: "قائمة الانتظار",
-  withdrawn: "منسحب",
-  enrolled: "ملتحق",
-}
-
-function ctaFromStatus(program: ProgramDetails | null, applicationStatus: string | null): string {
-  if (applicationStatus === "submitted" || applicationStatus === "pending_review") return "الطلب قيد المراجعة"
-  if (applicationStatus === "accepted") return "تم القبول"
-  if (applicationStatus === "rejected") return "تم الرفض"
-  if (applicationStatus === "waitlisted") return "في قائمة الانتظار"
-  if (applicationStatus === "enrolled") return "أنت ملتحق"
-
-  if (!program) return "تقديم"
-  if (program.visibility === "invite_only") return "طلب دعوة"
-  if (program.status_flow === "applications_closed") return "التقديم مغلق"
-  if (program.status_flow === "completed") return "البرنامج مكتمل"
-
-  return "قدّم الآن"
 }
 
 export default function ProgramDetailPage() {
@@ -122,6 +101,8 @@ function ProgramDetailPageContent() {
 
   const { user, isLoading: authLoading } = useAuth()
   const signedIn = Boolean(user)
+  const { locale } = useLocale()
+  const copy = programDetailCopy[locale]
 
   useEffect(() => {
     if (!slug || authLoading) return
@@ -142,78 +123,91 @@ function ProgramDetailPageContent() {
       .finally(() => setLoading(false))
   }, [slug, toast, authLoading, signedIn])
 
-  const canApply = useMemo(() => {
-    if (!program) return false
-    if (applicationStatus && !["withdrawn", "rejected"].includes(applicationStatus)) return false
-    // Mirrors the API rule: the program must be open and not in a closed lifecycle state.
-    if (program.is_open === false) return false
-    return !["applications_closed", "completed", "cancelled", "archived"].includes(program.status_flow || "")
-  }, [program, applicationStatus])
-
   async function submitApplication() {
     if (!program) return
     setSubmitting(true)
     try {
       const res = await api.post<{ message: string; data: { status: string } }>(`/member/programs/${program.slug}/apply`, form)
-      toast(res.message || "تم إرسال الطلب", "success")
+      toast(locale === "ar" && res.message ? res.message : copy.sent, "success")
       setApplicationStatus(res.data?.status || "pending_review")
       setIsApplyOpen(false)
     } catch (err) {
-      toast(err instanceof ApiError ? err.message : "تعذر إرسال الطلب", "error")
+      toast(err instanceof ApiError && err.message ? err.message : copy.sendFailed, "error")
     } finally {
       setSubmitting(false)
     }
   }
 
-  if (loading) return <div className="py-16 text-center text-slate-500">جارٍ تحميل تفاصيل البرنامج...</div>
-  if (!program) return <div className="py-16 text-center text-rose-600">لم يتم العثور على البرنامج.</div>
+  if (loading) return <div className="py-16 text-center text-slate-500" role="status">{copy.loading}</div>
+  if (!program) {
+    return (
+      <div className="py-16 text-center space-y-3">
+        <h1 className="text-xl font-bold text-slate-900">{copy.notFound}</h1>
+        <Link href="/programs" className="text-sm font-semibold text-blue-700 underline">{copy.backToPrograms}</Link>
+      </div>
+    )
+  }
+
+  const action = programApplyAction(program, applicationStatus, signedIn, locale)
+  const statusFlow = programStatusFlowLabel(program.status_flow, locale)
+  const format = programFormatLabel(program.format, locale)
+  const meta = [
+    program.city_region?.trim() || null,
+    program.duration ? programDurationLabel(program.duration, locale) : null,
+    programLanguageLabel(program.language, locale),
+  ].filter(Boolean)
+  const deadline = programDate(program.application_deadline, locale)
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-8 space-y-6">
+      <Link href="/programs" className="inline-block text-sm font-semibold text-blue-700 hover:underline">{copy.backToPrograms}</Link>
       <Card>
         <CardContent className="p-6 space-y-3">
           <div className="flex flex-wrap items-center gap-2">
-            <Badge variant="outline">{program.program_type || program.category || "برنامج"}</Badge>
-            <Badge variant="secondary">{statusLabel[program.status_flow || ""] || (program.status_flow || "—")}</Badge>
-            {program.format ? <Badge variant="outline">{program.format}</Badge> : null}
+            <Badge variant="outline">{programTypeLabel(program.program_type || program.category, locale)}</Badge>
+            {statusFlow ? <Badge variant="secondary">{statusFlow}</Badge> : null}
+            {format ? <Badge variant="outline">{format}</Badge> : null}
           </div>
-          <h1 className="text-3xl font-black text-slate-900">{program.title || program.name}</h1>
-          <p className="text-slate-600">{program.short_description || program.full_description || ""}</p>
-          <div className="text-xs text-slate-500">
-            {program.city_region || "—"} • {program.duration || "—"} • {program.language === "ar" ? "العربية" : (program.language || "")}
-          </div>
+          <h1 dir="auto" className="text-3xl font-black text-slate-900 break-words">{program.title || program.name}</h1>
+          {program.short_description ? <p dir="auto" className="text-slate-600">{program.short_description}</p> : null}
+          {meta.length > 0 ? <p className="text-xs text-slate-500">{meta.join(" • ")}</p> : null}
         </CardContent>
       </Card>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2 space-y-6">
-          <Card><CardContent className="p-5"><h2 className="font-bold mb-2">نظرة عامة</h2><p className="text-sm text-slate-600 whitespace-pre-wrap">{program.full_description || ""}</p></CardContent></Card>
-          <Card><CardContent className="p-5"><h2 className="font-bold mb-2">لمن هذا البرنامج</h2><p className="text-sm text-slate-600 whitespace-pre-wrap">{program.who_it_is_for || "سيتم إضافة التفاصيل قريبًا."}</p></CardContent></Card>
-          <Card><CardContent className="p-5"><h2 className="font-bold mb-2">المخرجات المتوقعة</h2><p className="text-sm text-slate-600 whitespace-pre-wrap">{program.expected_outcomes || "سيتم إضافة التفاصيل قريبًا."}</p></CardContent></Card>
+          {program.full_description && program.full_description !== program.short_description ? (
+            <Card><CardContent className="p-5"><h2 className="font-bold mb-2">{copy.overview}</h2><p dir="auto" className="text-sm text-slate-600 whitespace-pre-wrap">{program.full_description}</p></CardContent></Card>
+          ) : null}
+          <Card><CardContent className="p-5"><h2 className="font-bold mb-2">{copy.whoFor}</h2><p dir="auto" className="text-sm text-slate-600 whitespace-pre-wrap">{program.who_it_is_for || copy.notAdded}</p></CardContent></Card>
+          <Card><CardContent className="p-5"><h2 className="font-bold mb-2">{copy.outcomes}</h2><p dir="auto" className="text-sm text-slate-600 whitespace-pre-wrap">{program.expected_outcomes || copy.notAdded}</p></CardContent></Card>
 
           <Card>
             <CardContent className="p-5">
-              <h2 className="font-bold mb-3">الجلسات</h2>
+              <h2 className="font-bold mb-3">{copy.sessions}</h2>
               <div className="space-y-3">
-                {(program.sessions || []).length === 0 ? <p className="text-sm text-slate-500">لا توجد جلسات منشورة بعد.</p> : null}
-                {(program.sessions || []).map((session) => (
-                  <div key={session.id} className="rounded-lg border border-slate-200 p-3">
-                    <p className="font-semibold text-sm">{session.title}</p>
-                    <p className="text-xs text-slate-500">{session.session_type || "جلسة"} {session.starts_at ? `• ${new Date(session.starts_at).toLocaleString("ar-SA")}` : ""}</p>
-                    {session.description ? <p className="text-sm text-slate-600 mt-1">{session.description}</p> : null}
-                  </div>
-                ))}
+                {(program.sessions || []).length === 0 ? <p className="text-sm text-slate-500">{copy.noSessions}</p> : null}
+                {(program.sessions || []).map((session) => {
+                  const when = programDate(session.starts_at, locale, true)
+                  return (
+                    <div key={session.id} className="rounded-lg border border-slate-200 p-3">
+                      <p dir="auto" className="font-semibold text-sm">{session.title}</p>
+                      <p className="text-xs text-slate-500">{programSessionTypeLabel(session.session_type, locale)}{when ? ` • ${when}` : ""}</p>
+                      {session.description ? <p dir="auto" className="text-sm text-slate-600 mt-1">{session.description}</p> : null}
+                    </div>
+                  )
+                })}
               </div>
             </CardContent>
           </Card>
 
           <Card>
             <CardContent className="p-5">
-              <h2 className="font-bold mb-3">الموارد</h2>
+              <h2 className="font-bold mb-3">{copy.resources}</h2>
               <div className="space-y-2">
-                {(program.resources || []).length === 0 ? <p className="text-sm text-slate-500">لا توجد موارد بعد.</p> : null}
-                {(program.resources || []).map((resource) => (
-                  <a key={resource.id} href={resource.url || "#"} target="_blank" rel="noreferrer" className="block rounded-lg border border-slate-200 p-3 text-sm hover:bg-slate-50">
+                {(program.resources || []).filter((resource) => resource.url).length === 0 ? <p className="text-sm text-slate-500">{copy.noResources}</p> : null}
+                {(program.resources || []).filter((resource) => resource.url).map((resource) => (
+                  <a key={resource.id} href={resource.url || undefined} target="_blank" rel="noreferrer" dir="auto" className="block rounded-lg border border-slate-200 p-3 text-sm hover:bg-slate-50">
                     {resource.title}
                   </a>
                 ))}
@@ -223,12 +217,17 @@ function ProgramDetailPageContent() {
         </div>
 
         <div className="space-y-4">
-          <Card className="sticky top-24">
+          <Card className="lg:sticky lg:top-24">
             <CardContent className="p-5 space-y-3">
-              <h3 className="font-bold">الانضمام</h3>
-              <p className="text-xs text-slate-500">آخر موعد للتقديم: {program.application_deadline ? new Date(program.application_deadline).toLocaleDateString("ar-SA") : "غير محدد"}</p>
-              <Button className="w-full" disabled={!canApply || submitting} onClick={() => setIsApplyOpen(true)}>{ctaFromStatus(program, applicationStatus)}</Button>
-              {applicationStatus ? <p className="text-xs text-slate-500">حالة طلبك: {statusLabel[applicationStatus] || applicationStatus}</p> : null}
+              <h2 className="font-bold">{copy.join}</h2>
+              <p className="text-xs text-slate-500">{copy.deadline}: {deadline || copy.notSet}</p>
+              {action.kind === "link" ? (
+                <Button asChild className="w-full"><Link href={action.href}>{action.label}</Link></Button>
+              ) : (
+                <Button className="w-full" disabled={action.kind === "disabled" || submitting} onClick={() => setIsApplyOpen(true)}>{action.label}</Button>
+              )}
+              {applicationStatus ? <p className="text-xs text-slate-500">{copy.yourStatus}: {action.label}</p> : null}
+              {action.kind !== "apply" && "hint" in action && action.hint ? <p className="text-xs text-slate-500">{action.hint}</p> : null}
             </CardContent>
           </Card>
         </div>
@@ -237,24 +236,24 @@ function ProgramDetailPageContent() {
       <Dialog open={isApplyOpen} onOpenChange={setIsApplyOpen}>
         <DialogContent className="max-w-2xl">
           <DialogHeader>
-            <DialogTitle>طلب الانضمام للبرنامج</DialogTitle>
+            <DialogTitle>{copy.dialogTitle}</DialogTitle>
           </DialogHeader>
           <div className="space-y-3">
-            <Textarea placeholder="لماذا تريد الانضمام؟" value={form.why_join || form.motivation} onChange={(e) => setForm((p) => ({ ...p, why_join: e.target.value, motivation: e.target.value }))} />
-            <Textarea placeholder="ما هو التحدي الحالي؟" value={form.current_challenge} onChange={(e) => setForm((p) => ({ ...p, current_challenge: e.target.value }))} />
-            <Textarea placeholder="ما النتيجة التي تتوقعها؟" value={form.expected_outcome} onChange={(e) => setForm((p) => ({ ...p, expected_outcome: e.target.value }))} />
+            <Textarea aria-label={copy.whyJoin} placeholder={copy.whyJoin} required minLength={20} value={form.why_join || form.motivation} onChange={(e) => setForm((p) => ({ ...p, why_join: e.target.value, motivation: e.target.value }))} />
+            <Textarea aria-label={copy.challenge} placeholder={copy.challenge} value={form.current_challenge} onChange={(e) => setForm((p) => ({ ...p, current_challenge: e.target.value }))} />
+            <Textarea aria-label={copy.outcome} placeholder={copy.outcome} value={form.expected_outcome} onChange={(e) => setForm((p) => ({ ...p, expected_outcome: e.target.value }))} />
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <Input placeholder="مرحلة الشركة" value={form.company_stage} onChange={(e) => setForm((p) => ({ ...p, company_stage: e.target.value }))} />
-              <Input placeholder="القطاع" value={form.sector} onChange={(e) => setForm((p) => ({ ...p, sector: e.target.value }))} />
-              <Input placeholder="حجم الفريق" value={form.team_size} onChange={(e) => setForm((p) => ({ ...p, team_size: e.target.value }))} />
-              <Input placeholder="حالة التمويل" value={form.fundraising_status} onChange={(e) => setForm((p) => ({ ...p, fundraising_status: e.target.value }))} />
+              <Input aria-label={copy.stage} placeholder={copy.stage} value={form.company_stage} onChange={(e) => setForm((p) => ({ ...p, company_stage: e.target.value }))} />
+              <Input aria-label={copy.sector} placeholder={copy.sector} value={form.sector} onChange={(e) => setForm((p) => ({ ...p, sector: e.target.value }))} />
+              <Input aria-label={copy.teamSize} placeholder={copy.teamSize} value={form.team_size} onChange={(e) => setForm((p) => ({ ...p, team_size: e.target.value }))} />
+              <Input aria-label={copy.fundraising} placeholder={copy.fundraising} value={form.fundraising_status} onChange={(e) => setForm((p) => ({ ...p, fundraising_status: e.target.value }))} />
             </div>
-            <Textarea placeholder="الزخم الحالي / التراكشن" value={form.current_traction} onChange={(e) => setForm((p) => ({ ...p, current_traction: e.target.value }))} />
-            <label className="flex items-center gap-2 text-sm"><input type="checkbox" checked={form.availability_confirmed} onChange={(e) => setForm((p) => ({ ...p, availability_confirmed: e.target.checked }))} /> أؤكد التفرغ الزمني للبرنامج</label>
-            <label className="flex items-center gap-2 text-sm"><input type="checkbox" checked={form.consent_share_profile} onChange={(e) => setForm((p) => ({ ...p, consent_share_profile: e.target.checked }))} /> أوافق على مشاركة ملفي مع فريق البرنامج</label>
+            <Textarea aria-label={copy.traction} placeholder={copy.traction} value={form.current_traction} onChange={(e) => setForm((p) => ({ ...p, current_traction: e.target.value }))} />
+            <label className="flex items-center gap-2 text-sm"><input type="checkbox" checked={form.availability_confirmed} onChange={(e) => setForm((p) => ({ ...p, availability_confirmed: e.target.checked }))} /> {copy.availability}</label>
+            <label className="flex items-center gap-2 text-sm"><input type="checkbox" checked={form.consent_share_profile} onChange={(e) => setForm((p) => ({ ...p, consent_share_profile: e.target.checked }))} /> {copy.consent}</label>
             <div className="flex justify-end gap-2">
-              <Button variant="outline" onClick={() => setIsApplyOpen(false)}>إلغاء</Button>
-              <Button onClick={submitApplication} disabled={submitting}>{submitting ? "جارٍ الإرسال..." : "إرسال الطلب"}</Button>
+              <Button variant="outline" onClick={() => setIsApplyOpen(false)}>{copy.cancel}</Button>
+              <Button onClick={submitApplication} disabled={submitting || (form.why_join || form.motivation).trim().length < 20}>{submitting ? copy.submitting : copy.submit}</Button>
             </div>
           </div>
         </DialogContent>
