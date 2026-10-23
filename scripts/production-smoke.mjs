@@ -21,13 +21,26 @@ export function buildProbes(site, api) {
   ]
 }
 
+const diagnosticHeaders = ["x-hcdn-request-id", "x-hcdn-cache-status"]
+
+export function formatResponseDiagnostics(response) {
+  const values = diagnosticHeaders.flatMap((name) => {
+    const value = response.headers.get(name)
+    if (!value || value.length > 160 || !/^[A-Za-z0-9._: /-]+$/.test(value)) return []
+    return [`${name}=${value}`]
+  })
+  return values.length ? ` [${values.join("; ")}]` : ""
+}
+
 export async function probeEndpoint(spec, fetchImpl = fetch) {
   const response = await fetchImpl(spec.url, {
     method: "GET", redirect: "manual",
     headers: { Accept: spec.kind === "json" ? "application/json" : "text/html" },
     signal: AbortSignal.timeout(12000),
   })
-  if (response.status !== 200) throw new Error("Expected HTTP 200; got HTTP " + response.status)
+  if (response.status !== 200) {
+    throw new Error("Expected HTTP 200; got HTTP " + response.status + formatResponseDiagnostics(response))
+  }
   const contentType = response.headers.get("content-type") || ""
   if (spec.kind === "json") {
     if (!contentType.includes("application/json")) throw new Error("Expected JSON content type")

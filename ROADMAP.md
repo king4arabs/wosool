@@ -1,6 +1,8 @@
 # Roadmap
 
-## Current execution plan — 22 October 2026
+## Current execution plan — 23 October 2026
+
+Frontend runtime incident: hourly production checks now isolate HTTP 500 responses to `/health`, `/` and `/eoa`; direct Laravel liveness/readiness and the frontend API proxy pass. A standalone source gate now verifies the exact pnpm start command after the constrained build, and monitoring records safe Hostinger request identifiers for log correlation. Next: inspect `domains/wosool.org/hbuilds/current/nodejs/stderr.log`, confirm the active source revision/environment in Hostinger, redeploy the latest green `main`, and rerun all six production probes. Do not classify source CI as recovery.
 
 Hosting build follow-up: source `b7ad796` passed pnpm installation, webpack compilation and TypeScript on Hostinger, then exhausted thread resources with 63 page workers. Page collection/generation now uses one worker, with build-only Tokio/Rayon pool limits. CI checks the Node 22 / pnpm 11.24.0 command against a simulated 63-worker default. Next: verify one-worker generation and final publish/activation on Hostinger; the account's exact task quota remains unknown.
 

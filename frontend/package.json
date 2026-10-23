@@ -10,6 +10,7 @@
     "prebuild:webpack": "node scripts/reset-route-cache.mjs",
     "build:webpack": "node scripts/build.mjs",
     "start": "next start",
+    "smoke:hosting": "node scripts/hosting-runtime-smoke.mjs",
     "lint": "eslint",
     "type-check": "tsc --noEmit",
     "validate:entrepreneurs": "node --import tsx scripts/validate-entrepreneurs.ts",
