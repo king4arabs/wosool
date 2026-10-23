@@ -145,7 +145,11 @@ jobs:
           php artisan config:cache
           php artisan route:cache
           php artisan view:cache
-          php artisan optimize:clear
+          # Clear generated files only. This job has no persistent database;
+          # optimize:clear also flushes the database-backed application cache.
+          php artisan config:clear
+          php artisan route:clear
+          php artisan view:clear
       - run: npm ci
       - run: npm audit --audit-level=high
       - run: npm run build
