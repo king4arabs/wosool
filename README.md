@@ -39,6 +39,8 @@ Wosool also provides the dedicated digital gateway for **EO Riyadh Accelerator**
 
 ### Start here
 
+**Hostinger release readiness (23 October 2026):** the default frontend build now rejects missing/unsafe release origins before compilation, loads Next.js production environment files, and pins pnpm 11.24.0. Runtime smoke checks also verify the delivered JavaScript and CSS. Copy the public values from `frontend/.env.production.example` into Hostinger settings; see the [exact deployment settings](DEPLOYMENT.md#hostinger-release-settings--23-october-2026). Local loopback previews use `npm --prefix frontend run build:local`.
+
 **Homepage founder discovery (22 October 2026):** a fresh Saudi-first mix of up to 36 scorecards per visit, an accessible shuffle control and a searchable grid draw from 150 sourced founders across 83 company groups. Six newly researched profiles include bilingual biographies and five authentic portraits. Live public profiles load across all pages and appear separately from the editorial spotlight, with matching slugs removed from the spotlight. [Sources and release checks](docs/research/HOME-FOUNDER-DISCOVERY-2026-10-22.md).
 
 **Default hosting build (23 October 2026):** `pnpm run build` runs webpack through a build-only launcher that limits Tokio and Rayon worker pools to one thread each. Next.js page collection and generation use one worker, avoiding the reported host failure when it attempted 63 workers. The standalone CI gate uses Node 22 / pnpm 11.24.0, simulates the 63-worker default, verifies the build stays at one page worker, then starts that artifact through `pnpm run start` and checks `/health`, `/` and `/eoa`. Hosting publication remains a separate verification step.
@@ -230,7 +232,7 @@ Run commands from the repository root after setup:
 | `npm run test` | Run frontend and backend regression suites |
 | `npm run test:frontend` / `npm run test:backend` | Run one test suite |
 | `npm run validate:entrepreneurs` | Validate the researched entrepreneur dataset |
-| `npm run build` | Build both applications |
+| `npm run build` | Build both applications with validated frontend release environment |
 | `npm run verify` | Run lint, types, tests, data validation, and both builds |
 | `npm run eoa:install` | Repeat the non-destructive EOA installer |
 

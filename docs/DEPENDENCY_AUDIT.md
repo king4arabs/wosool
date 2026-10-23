@@ -1,153 +1,37 @@
-# Dependency Audit
+# Dependency audit
 
-> Wosool dependency inventory, vulnerability status, and audit procedures.
+Last reviewed: **23 October 2026**. Exact package versions are recorded in the committed npm, pnpm and Composer lockfiles; manifest ranges are not an installed-version inventory.
 
-**Last audited:** v0.2.0 (2026-04-08)
+| Scope | Result | Evidence |
+| --- | --- | --- |
+| Frontend production dependencies | No reported vulnerabilities | `npm audit --omit=dev --audit-level=high` passed in PR #93 CI |
+| Frontend including development tools | 5 high-severity dependency entries, all tracing to one advisory | Full `npm audit --json` on 23 October 2026 |
+| Backend PHP dependencies | No reported advisories | `composer audit` passed on PHP 8.3.36, 8.4.27 and 8.5.12 in PR #93 CI |
+| Backend asset-build dependencies | Audit passed | `npm audit --audit-level=high` in PR #93 CI |
 
----
+## Open development-tool advisory
 
-## Summary
+[`GHSA-vfj7-8cjw-p6xm`](https://github.com/advisories/GHSA-vfj7-8cjw-p6xm), CVE-2026-93687, affects `braces` through 3.0.3. Deeply nested brace patterns can exhaust the call stack. The upstream advisory lists **no patched version** as of this review.
 
-| Ecosystem | Package manager | Known vulnerabilities | Last checked |
-|-----------|----------------|----------------------|-------------|
-| Frontend (Node.js) | npm | 0 | 2026-04-08 |
-| Backend (PHP) | Composer | 0 | 2026-04-08 |
+The installed development-only chain is:
 
----
+`eslint-config-next` → `@next/eslint-plugin-next` → `fast-glob` → `micromatch` → `braces`.
 
-## Frontend Dependencies (npm)
+The five npm findings describe that chain, not five distinct vulnerabilities. This dependency is not in the frontend production dependency set. Repository lint settings use checked-in patterns; do not run lint tooling as a public service accepting untrusted patterns. CI runs in isolated workers without production secrets.
 
-### Production
+npm proposes downgrading `eslint-config-next` to 14.2.35, a breaking change from the project's Next.js 16 toolchain. That downgrade has not been applied. No audit ignore or suppression is added. Recheck for a compatible upstream patch and update both frontend lockfiles and the root pnpm lock together when one is available.
 
-| Package | Version | Purpose |
-|---------|---------|---------|
-| next | 16.2.2 | React framework (App Router, Turbopack) |
-| react | 19.2.4 | UI library |
-| react-dom | 19.2.4 | React DOM renderer |
-| @radix-ui/react-avatar | ^1.1.11 | Avatar component primitive |
-| @radix-ui/react-dialog | ^1.1.15 | Dialog/modal primitive |
-| @radix-ui/react-dropdown-menu | ^2.1.16 | Dropdown menu primitive |
-| @radix-ui/react-navigation-menu | ^1.2.14 | Navigation menu primitive |
-| @radix-ui/react-scroll-area | ^1.2.10 | Scroll area primitive |
-| @radix-ui/react-slot | ^1.2.4 | Slot/asChild primitive |
-| @radix-ui/react-tabs | ^1.1.13 | Tabs primitive |
-| class-variance-authority | ^0.7.1 | Component variant utility |
-| clsx | ^2.1.1 | Conditional classnames |
-| lucide-react | ^1.7.0 | Icon library |
-| tailwind-merge | ^3.5.0 | Tailwind class merging |
-
-### Development
-
-| Package | Version | Purpose |
-|---------|---------|---------|
-| tailwindcss | ^4 | Utility-first CSS framework |
-| @tailwindcss/postcss | ^4 | PostCSS plugin for Tailwind |
-| typescript | ^5 | Type checking |
-| eslint | ^9 | Linting |
-| eslint-config-next | 16.2.2 | Next.js ESLint config |
-| @types/node | ^20 | Node.js type definitions |
-| @types/react | ^19 | React type definitions |
-| @types/react-dom | ^19 | React DOM type definitions |
-
-### Audit result
-
-```
-npm audit — 0 vulnerabilities found
-```
-
-> **Note:** The frontend does NOT use `react-scripts`, `jest`, or legacy CRA
-> tooling. Packages like `@tootallnate/once` and `nth-check` are **not** in the
-> dependency tree.
-
----
-
-## Backend Dependencies (Composer)
-
-### Production
-
-| Package | Version | Purpose |
-|---------|---------|---------|
-| laravel/framework | ^13.0 | PHP web framework |
-| laravel/sanctum | ^4.3 | API token authentication |
-| laravel/tinker | ^3.0 | REPL for Laravel |
-| spatie/laravel-permission | ^7.2 | Role-based access control |
-
-### Development
-
-| Package | Version | Purpose |
-|---------|---------|---------|
-| fakerphp/faker | ^1.23 | Test data generation |
-| laravel/pail | ^1.2.5 | Real-time log viewer |
-| laravel/pint | ^1.27 | PHP code style fixer (PSR-12) |
-| mockery/mockery | ^1.6 | Mock objects for testing |
-| nunomaduro/collision | ^8.6 | Better error reporting |
-| phpunit/phpunit | ^12.5.12 | Testing framework |
-
-### Audit result
-
-```
-composer audit — No known vulnerabilities found
-```
-
----
-
-## Audit Procedures
-
-### Running audits locally
+## Release verification
 
 ```bash
-# Frontend
-cd frontend
-npm audit
-
-# Backend
-cd backend
-composer audit
+npm --prefix frontend audit --omit=dev --audit-level=high
+npm --prefix frontend audit
+composer --working-dir=backend audit
+npm --prefix backend audit --audit-level=high
 ```
 
-### Recommended CI integration
+The full frontend audit currently exits nonzero for the development advisory above. A clean production dependency audit does not prove application security, patched hosting runtimes, mail delivery or a successful deployment.
 
-Add these commands to the CI pipeline (`.github/workflows/ci.yml`):
+The application uses Next.js 16.4.2 and React 19.2.4. Hosting installs are pinned to pnpm 11.24.0. Verify the actual Node.js and PHP serving processes separately using [DEPLOYMENT.md](../DEPLOYMENT.md); updating npm packages cannot patch the runtime itself.
 
-```yaml
-- name: npm audit
-  run: cd frontend && npm audit --audit-level=high
-
-- name: composer audit
-  run: cd backend && composer audit
-```
-
-### Automated scanning
-
-| Tool | Scope | Status |
-|------|-------|--------|
-| GitHub Dependabot | Both | ⬜ Recommended — enable in repo settings |
-| npm audit | Frontend | ✅ Manual (run before each release) |
-| composer audit | Backend | ✅ Manual (run before each release) |
-| Snyk / Socket.dev | Supply chain | ⬜ Recommended for production |
-
----
-
-## Update Policy
-
-| Cadence | Action |
-|---------|--------|
-| Weekly | Review Dependabot alerts (once enabled) |
-| Before each release | Run `npm audit` and `composer audit` |
-| Monthly | Run `npm update` and `composer update` with full test suite |
-| On CVE disclosure | Assess impact, patch within SLA (see [Security](../SECURITY.md)) |
-
----
-
-## Known Exceptions
-
-None at this time. All dependencies are at current stable versions with no
-known vulnerabilities.
-
----
-
-## Related Documents
-
-- [Security](../SECURITY.md) — Security policies and dependency scanning strategy
-- [Deployment](../DEPLOYMENT.md) — Build commands and CI/CD pipeline
-- [Operations](../OPERATIONS.md) — Operational runbooks
+[PR #93](https://github.com/king4arabs/wosool/pull/93) adds mandatory release-environment validation, clean standalone pnpm build/start checks, JavaScript/CSS delivery checks, and Laravel deployment-cache compilation. It does not establish that Hostinger has activated the revision.

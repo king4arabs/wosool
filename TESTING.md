@@ -10,7 +10,9 @@ From the repository root after local setup:
 npm run verify
 ```
 
-The command runs ESLint, TypeScript, frontend regression tests, Laravel tests, the entrepreneur dataset validator, and both production builds. CI is defined in `.github/workflows/ci.yml`; workflows nested under `backend/.github/` are not executed by GitHub for this monorepo.
+Set the frontend release environment from `frontend/.env.production.example` before `npm run verify`. For isolated local browser fixtures, build with `npm --prefix frontend run build:local` and two explicit loopback origins.
+
+The command runs deployment/asset guard tests, environment-loader regression tests, ESLint, TypeScript, frontend regression tests, Laravel tests, the entrepreneur dataset validator, and both production builds. CI is defined in `.github/workflows/ci.yml`; workflows nested under `backend/.github/` are not executed by GitHub for this monorepo.
 
 | Coverage | Purpose |
 | --- | --- |
@@ -62,3 +64,7 @@ See [the EOA verification matrix](docs/EOA.md#release-and-validation) for requir
 `ChatReliabilityTest` covers newest-first pagination, inactive/closed-room writes, empty or privileged message types, cross-room references and broadcast failure after a successful save. `AdminMatchWorkflowTest` covers authorization, distinct active founders, duplicate proposals and audit logging. `EoaTracksAndRolesTest` covers administrator-only role management, verified accounts, role allowlisting/revocation, preserved community roles, active/program-scoped acceptance tracks and lead-only track publication. Complete EOA fixtures include a preferred track.
 
 Frontend regressions cover one-time CSRF renewal, no automatic replay of failed writes and chat message deduplication. For browser acceptance, test `/dashboard/eoa` with an EOA-only account (the community dashboard API must not be required), save a preferred track, accept with a track as leadership, inspect the applicant dashboard, and grant/revoke a reviewer role as a platform administrator. Use fixture data or staging accounts, not production applicants.
+
+## Hosting artifact checks
+
+`npm --prefix frontend run test:hosting` verifies invalid release settings are rejected by the actual build entry point, Next.js environment precedence and expansion, and missing/redirected/HTML/empty assets are rejected. `npm --prefix frontend run smoke:hosting` starts the built application through its package start command and checks `/health`, `/`, `/eoa`, and every linked Next.js script/stylesheet. The isolated pnpm CI job runs the same checks using a clean frontend-only archive. The backend matrix also compiles configuration, route and view caches after its test suite.

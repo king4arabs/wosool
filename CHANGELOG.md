@@ -1,5 +1,13 @@
 # Changelog
 
+## Enforce Hostinger release configuration and asset delivery — 2026-10-23
+
+- The default frontend build previously skipped the production preflight, allowing a successful artifact with localhost API rewrites. Release builds now load Next.js production environment files and require separate non-loopback HTTPS origins and explicitly disabled demo data before webpack starts. Local previews use the explicit `build:local` command with separate loopback origins.
+- Pin pnpm 11.24.0 in the root and frontend package manifests, matching the standalone Hostinger CI job. Preserve native build approvals, webpack and one-worker limits.
+- Extend runtime smoke checks beyond HTTP 200: require actual Wosool/Accelerator content and fetch all linked Next.js JavaScript/CSS, rejecting missing, redirected, empty or incorrectly typed assets.
+- Add environment/asset regressions, check the real build entry point fails on missing configuration, and compile Laravel deployment caches in the PHP CI matrix. Update production environment examples, exact hPanel settings and local setup instructions; remove production-ambiguous demo account instructions.
+- Hostinger account tools and local PHP are unavailable in this review session; local npm downloads are denied by network policy. Frontend checks use an existing installation with the identical lockfile; clean installs, backend tests, audits and caches are covered by GitHub CI. Live runtime logs, deployed revision, mail/queue checks and production recovery remain host-side verification steps.
+
 ## Diagnose hosted frontend HTTP 500 responses — 2026-10-23
 
 - Production monitoring confirmed a frontend-only runtime incident: `wosool.org/health`, `/` and `/eoa` return HTTP 500 while direct Laravel liveness/readiness and the same-origin API proxy pass. This does not establish the active frontend revision or the runtime exception.

@@ -6,12 +6,10 @@ The backend is a **Laravel 13** API serving public content, authentication, and 
 
 ```bash
 composer install
-npm install
-cp .env.example .env
-touch database/database.sqlite
-php artisan key:generate
+npm ci
+php ../scripts/prepare-backend.php
 php artisan migrate
-php artisan db:seed
+php artisan eoa:install
 composer run dev
 ```
 
@@ -47,19 +45,13 @@ DB_CONNECTION=sqlite
 
 For MySQL or PostgreSQL, configure `DB_CONNECTION`, `DB_HOST`, `DB_PORT`, `DB_DATABASE`, `DB_USERNAME`, and `DB_PASSWORD` in your own `.env` and create the database before migrating.
 
-## Seeded Accounts
+## Production deployment
 
-After `php artisan db:seed`, use these accounts:
+Use PHP 8.3.36+, 8.4.27+, or 8.5.12+ on the corresponding stable branch. Composer checks the runtime floor before installing. Serve only `public/` through the PHP handler on `api.wosool.org`.
 
-```text
-Admin  : admin@wosool.org / wosool2024!
-Member : sara@example.com / demo123!
-Member : khalid@example.com / demo123!
-Member : nora@example.com / demo123!
-Member : ahmed@example.com / demo123!
-Member : lina@example.com / demo123!
-Member : omar@example.com / demo123!
-```
+Use [`.env.production.example`](.env.production.example) as a reference, preserving the live database, `APP_KEY`, persistent private files and uploads. Deploy additive migrations, compile Laravel caches, and verify `/api/health` and `/api/ready`. Queue supervision, scheduler execution and real SMTP delivery require separate checks. See [DEPLOYMENT.md](../DEPLOYMENT.md) for the complete release and rollback sequence.
+
+The optional `php artisan db:seed` command creates fictional development accounts with known passwords. Run it only in an isolated local database; the demonstration seeder rejects production. Production roles can be initialized separately with `RoleAndPermissionSeeder`; create real users through the approved account workflow.
 
 ## Related Docs
 

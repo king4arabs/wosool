@@ -1,5 +1,6 @@
 import { spawn } from 'node:child_process'
 import { setTimeout as delay } from 'node:timers/promises'
+import { checkPageAssets } from './hosting-assets.mjs'
 
 const port = Number.parseInt(process.env.HOSTING_SMOKE_PORT || '18082', 10)
 if (!Number.isInteger(port) || port < 1024 || port > 65535) {
@@ -31,6 +32,7 @@ for (const stream of [app.stdout, app.stderr]) {
 
 async function request(path, accept) {
   const response = await fetch(origin + path, {
+    redirect: 'manual',
     headers: { Accept: accept },
     signal: AbortSignal.timeout(5000),
   })
@@ -76,12 +78,19 @@ async function stop() {
 try {
   await waitUntilReady()
   const homepage = await request('/', 'text/html')
-  if (!/Wosool|وصول/i.test(await homepage.text())) throw new Error('/ did not contain Wosool content')
+  const homepageHtml = await homepage.text()
+  if (!(homepage.headers.get('content-type') || '').includes('text/html') || !/Wosool|وصول/i.test(homepageHtml)) {
+    throw new Error('/ did not contain Wosool HTML')
+  }
+  const homeAssets = await checkPageAssets(homepageHtml, origin)
   const accelerator = await request('/eoa', 'text/html')
   if (!(accelerator.headers.get('content-type') || '').includes('text/html')) {
     throw new Error('/eoa did not return HTML')
   }
-  console.log('Hosting runtime smoke: /health, / and /eoa passed through the package start command')
+  const acceleratorHtml = await accelerator.text()
+  if (!/Accelerator|مسرّعة|مسرعة/.test(acceleratorHtml)) throw new Error('/eoa did not contain accelerator content')
+  const eoaAssets = await checkPageAssets(acceleratorHtml, origin)
+  console.log(`Hosting runtime smoke: /health, / and /eoa passed; ${homeAssets + eoaAssets} script/stylesheet references served correctly`)
 } catch (error) {
   const message = error instanceof Error ? error.message : 'Runtime smoke failed'
   console.error(message)
