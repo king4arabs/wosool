@@ -8,6 +8,16 @@ const privateHeaders = [
 const nextConfig: NextConfig = {
   poweredByHeader: false,
   reactStrictMode: true,
+  // Hostinger publishes the standalone trace into a separate runtime tree.
+  // Keep these server-critical packages as real traced files so the publish
+  // step cannot drop pnpm's top-level links while retaining only `.pnpm`.
+  outputFileTracingIncludes: {
+    "/*": [
+      "./node_modules/@swc/helpers/**/*",
+      "./node_modules/react/**/*",
+      "./node_modules/react-dom/**/*",
+    ],
+  },
   experimental: {
     // Shared hosts can report many CPUs while enforcing a much smaller process quota.
     cpus: 1,
