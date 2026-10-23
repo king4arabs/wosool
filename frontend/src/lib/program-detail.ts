@@ -167,6 +167,11 @@ export function programDate(value: string | null | undefined, locale: Locale, wi
   return new Intl.DateTimeFormat(locale === "ar" ? "ar-SA-u-ca-gregory-nu-latn" : "en-GB", options).format(date)
 }
 
+/** The member's own application status, in the dashboard's wording. */
+export function programApplicationStatusLabel(status: string, locale: Locale): string {
+  return applicationStatus(status, locale).label
+}
+
 export interface ProgramApplyState {
   slug: string
   is_open?: boolean
@@ -196,6 +201,7 @@ export function programApplyAction(
   const en = locale === "en"
 
   if (program.slug === ACCELERATOR_SLUG) {
+    if (existingStatus) return { kind: "link", label: en ? "Open my accelerator application" : "افتح طلبي في المسرّعة", href: "/dashboard/eoa" }
     return { kind: "link", label: en ? "Apply on the EO Riyadh page" : "قدّم من صفحة EO الرياض", href: "/eoa/apply", hint: copy.acceleratorHint }
   }
   if (existingStatus) {

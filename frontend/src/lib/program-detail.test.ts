@@ -1,6 +1,7 @@
 import { test } from "node:test"
 import assert from "node:assert/strict"
 import {
+  programApplicationStatusLabel,
   programApplyAction,
   programDate,
   programDetailCopy,
@@ -81,4 +82,13 @@ test("the EO Riyadh Accelerator points to its own application journey", () => {
   assert.equal(action.kind, "link")
   assert.equal(action.kind === "link" && action.href, "/eoa/apply")
   assert.match(action.label, arabic)
+})
+
+test("an accelerator applicant is sent to their application and sees its real status", () => {
+  const accelerator = { ...open, slug: "eo-riyadh-accelerator" }
+  const action = programApplyAction(accelerator, "pending_review", true, "en", now)
+  assert.equal(action.kind === "link" && action.href, "/dashboard/eoa")
+  assert.equal(programApplicationStatusLabel("pending_review", "en"), "Under review")
+  assert.equal(programApplicationStatusLabel("pending_review", "ar"), "قيد المراجعة")
+  assert.notEqual(programApplicationStatusLabel("pending_review", "en"), action.label, "status row is not the button text")
 })

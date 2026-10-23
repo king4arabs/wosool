@@ -15,6 +15,7 @@ import { useAuth } from "@/lib/auth"
 import { useLocale } from "@/lib/locale"
 import Link from "next/link"
 import {
+  programApplicationStatusLabel,
   programApplyAction,
   programDate,
   programDetailCopy,
@@ -226,7 +227,7 @@ function ProgramDetailPageContent() {
               ) : (
                 <Button className="w-full" disabled={action.kind === "disabled" || submitting} onClick={() => setIsApplyOpen(true)}>{action.label}</Button>
               )}
-              {applicationStatus ? <p className="text-xs text-slate-500">{copy.yourStatus}: {action.label}</p> : null}
+              {applicationStatus ? <p className="text-xs text-slate-500">{copy.yourStatus}: {programApplicationStatusLabel(applicationStatus, locale)}</p> : null}
               {action.kind !== "apply" && "hint" in action && action.hint ? <p className="text-xs text-slate-500">{action.hint}</p> : null}
             </CardContent>
           </Card>
