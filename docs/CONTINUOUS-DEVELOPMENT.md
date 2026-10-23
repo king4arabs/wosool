@@ -1,6 +1,8 @@
 # Wosool continuous development
 
-Updated: 22 October 2026. Work in bounded, reviewable cycles: inspect → verify sources → implement → test → publish source → verify release → choose the next incomplete outcome. Completion applies to acceptance criteria, not a promise that software or research needs no further maintenance.
+Updated: 23 October 2026. Work in bounded, reviewable cycles: inspect → verify sources → implement → test → publish source → verify release → choose the next incomplete outcome. Completion applies to acceptance criteria, not a promise that software or research needs no further maintenance.
+
+Current production incident: the public frontend `/health`, `/` and `/eoa` return HTTP 500, while direct Laravel liveness/readiness and the same-origin API proxy pass. Source CI was green before the incident, so the remaining evidence is the active Hostinger deployment/runtime rather than a confirmed application-code regression. The standalone hosting gate now boots the generated artifact through its package-manager `start` command and tests all three failing routes. Production smoke failures retain no body or session data but report validated Hostinger CDN request identifiers when present. Hostinger runtime logs and redeploy access are still required for recovery; no live fix is claimed.
 
 Hosting build correction: the latest user-supplied log at `b7ad796` confirms installation, webpack compilation and TypeScript success, followed by a Tokio thread-spawn failure when Next.js launched 63 page workers. The build now uses one Next.js page worker and build-only Tokio/Rayon pool limits. Standalone CI matches Node 22 / pnpm 11.24.0, simulates the 63-worker default and checks one-worker generation. Hostinger publish/activation remains an independent acceptance gate; the account's exact resource quota is not known.
 
@@ -75,7 +77,7 @@ Both commands now include the original 44-founder catalog and the 100-profile ex
 
 ## Next actions
 
-1. Deploy both services from the verified revision; run the reviewed additive imports; apply existing-record corrections through admin; verify the new routes, sitemap, metadata and imported counts live.
+1. Inspect the active frontend deployment and Hostinger runtime stderr, redeploy the latest verified revision, and require all six production probes to pass before continuing content imports or claiming recovery.
 2. Verify actual scheduled draft ingestion and failure reporting on the host; document the deployed revision and backup restore evidence.
 3. Review legacy scorecard-log exposure separately, then verify metadata and OpenAPI 1.4.0 on the deployed frontend, including startup evidence periods and sector facets.
 4. Move newsroom search/filtering to server-side pagination so filters cover the full growing database; review snapshot withdrawal behavior across the remaining founder/company surfaces.

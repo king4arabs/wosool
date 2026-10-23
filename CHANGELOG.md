@@ -1,5 +1,12 @@
 # Changelog
 
+## Diagnose hosted frontend HTTP 500 responses — 2026-10-23
+
+- Production monitoring confirmed a frontend-only runtime incident: `wosool.org/health`, `/` and `/eoa` return HTTP 500 while direct Laravel liveness/readiness and the same-origin API proxy pass. This does not establish the active frontend revision or the runtime exception.
+- The standalone Node 22 / pnpm hosting gate now starts the built archive through its real `pnpm run start` command and requires `/health`, `/` and `/eoa` to respond successfully. This closes the gap between a completed build and a bootable Next.js artifact.
+- Failed public probes now include validated Hostinger CDN request/cache identifiers when supplied, without logging response bodies. These IDs can be matched to provider runtime logs; malformed header values are discarded to prevent log injection.
+- **Checks:** repository content review reports 150 founders, 83 companies and 42 stories, with zero integrity problems and zero reviews due. Live hosting recovery remains blocked on the current deployment's Hostinger runtime log and redeploy controls; no frontend deployment or production import is claimed.
+
 ## Next.js security patch and bilingual program pages — 2026-10-23
 
 - **Security:** `npm audit` reported a critical advisory range for `next` 16.0.0–16.4.0 (GHSA-2464-fhr4-w9xw image-optimizer RCE with SVGs, GHSA-673q-mjm6-r5xr `use cache` RCE, GHSA-p3m5-59mp-jv5r Server Actions DoS). Bumped `next` to the 16.4.2 patch release in `frontend/package.json`, the npm lock and both pnpm locks (pnpm 11.24.0, `--frozen-lockfile` checked for the workspace and a standalone frontend copy). `npm audit --omit=dev` now reports 0 vulnerabilities. No other dependency changed. Production needs a Hostinger rebuild to pick this up.

@@ -82,6 +82,7 @@ jobs:
           pnpm --dir "$standalone_frontend" run build | tee "$standalone_frontend/build.log"
           grep -Fq 'Collecting page data using 1 worker' "$standalone_frontend/build.log"
           grep -Fq 'Generating static pages using 1 worker' "$standalone_frontend/build.log"
+          pnpm --dir "$standalone_frontend" run smoke:hosting
   production-guardrails:
     runs-on: ubuntu-latest
     timeout-minutes: 3
