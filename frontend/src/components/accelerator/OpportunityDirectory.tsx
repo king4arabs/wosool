@@ -1,435 +1,396 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { Search, ExternalLink } from "lucide-react";
+import Image from "next/image";
+import { ArrowLeft, ArrowRight, Search, LockKeyhole } from "lucide-react";
 import { PublicLayout } from "@/components/layout/PublicLayout";
 import { useLocale } from "@/lib/locale";
+import { useAuth } from "@/lib/auth";
+import { safeWebUrl } from "@/lib/gateway";
 import { api } from "@/lib/api";
-import { gatewayError, safeWebUrl } from "@/lib/gateway";
-export type EcosystemRecord = {
-  id: number;
-  slug: string;
-  entity_type: string;
-  name_ar: string;
-  name_en: string;
-  category: string;
-  description_ar: string;
-  description_en: string;
-  website_url: string;
-  application_url?: string;
-  verification_status: string;
-  application_status: string;
-  deadline?: string;
-  verified_at: string;
-  source_urls: string[];
-  updated_at: string;
-  details: {
-    coverage?: string;
-    coverage_ar?: string;
-    delivery_format?: string;
-    stages?: string[];
-    sectors?: string[];
-    support_type?: string[];
-    funding_terms?: string;
-    funding_terms_ar?: string;
-    eligibility_ar?: string;
-    eligibility_en?: string;
-    starts_at?: string;
-    ends_at?: string;
-    contact_email?: string;
-    notes?: string;
-  };
-};
-const categories: Record<string, [string, string]> = {
-  mentorship: ["الإرشاد", "Mentorship"],
-  digital_entrepreneurship: [
-    "ريادة الأعمال الرقمية",
-    "Digital entrepreneurship",
-  ],
-  competition: ["المسابقات", "Competitions"],
-  pre_accelerator: ["ما قبل التسريع", "Pre-accelerator"],
-  funding_guarantee: ["ضمان التمويل", "Financing guarantees"],
-  development_finance: ["التمويل التنموي", "Development finance"],
-  government_support: ["جهات الدعم", "Public support"],
-  incubation: ["الاحتضان", "Incubation"],
-  acceleration: ["التسريع", "Acceleration"],
-  accelerator: ["المسرعات", "Accelerators"],
-  training: ["التدريب", "Training"],
-  venture_capital: ["رأس المال الجريء", "Venture capital"],
-  financing: ["التمويل", "Financing"],
-  innovation_hub: ["مراكز الابتكار", "Innovation hubs"],
-  entrepreneurship_support: ["دعم ريادة الأعمال", "Entrepreneurship support"],
-};
+import type { EcosystemRecord } from "./LegacyOpportunityDetails";
+import { sessionFetch } from "@/lib/session-request";
+import {
+  arrangeOpportunities,
+  opportunityCatalog,
+  type Opportunity,
+} from "@/lib/opportunity-catalog";
+import { LegacyOpportunityDetails } from "./LegacyOpportunityDetails";
+import styles from "./opportunities.module.css";
+export type { EcosystemRecord } from "./LegacyOpportunityDetails";
+
+function Brand({ row }: { row: Opportunity }) {
+  const [failed, setFailed] = useState(false);
+  return (
+    <div className={styles.brand}>
+      {!failed && (
+        <Image
+          unoptimized
+          src={row.logo_url}
+          alt=""
+          width={180}
+          height={96}
+          loading="lazy"
+          referrerPolicy="no-referrer"
+          onError={() => setFailed(true)}
+        />
+      )}
+      <span className={failed ? styles.wordmark : styles.brandName}>
+        {row.brand}
+      </span>
+    </div>
+  );
+}
+
 export function OpportunityDirectory({ slug }: { slug?: string }) {
   const { locale } = useLocale();
+  const { user, isLoading } = useAuth();
   const ar = locale === "ar";
   const t = (a: string, e: string) => (ar ? a : e);
-  const [rows, setRows] = useState<EcosystemRecord[]>([]);
+  const [rows, setRows] = useState(opportunityCatalog);
   const [search, setSearch] = useState("");
-  const [kind, setKind] = useState("");
-  const [status, setStatus] = useState("");
-  const [page, setPage] = useState(1);
-  const [last, setLast] = useState(1);
-  const [busy, setBusy] = useState(true);
-  const [error, setError] = useState("");
-  const [reload, setReload] = useState(0);
+  const [group, setGroup] = useState("");
+  const [notice, setNotice] = useState("");
+  const [connecting, setConnecting] = useState(false);
+  const rail = useRef<HTMLDivElement>(null);
+  const dragging = useRef(false);
+  const holdUntil = useRef(0);
+  const item = opportunityCatalog.find((r) => r.slug === slug);
   useEffect(() => {
     let active = true;
-    const timer = setTimeout(() => {
-      setBusy(true);
-      setError("");
-      api
-        .get<{ data: EcosystemRecord[] | EcosystemRecord; last_page?: number }>(
-          slug ? `/ecosystem/${encodeURIComponent(slug)}` : "/ecosystem",
-          {
-            params: slug
-              ? {}
-              : { search, entity_type: kind, application_status: status, page },
-          },
-        )
-        .then((r) => {
-          if (active) {
-            setRows(Array.isArray(r.data) ? r.data : [r.data]);
-            setLast(r.last_page || 1);
-          }
-        })
-        .catch((e) => {
-          if (active) {
-            setRows([]);
-            setError(gatewayError(e, ar));
-          }
-        })
-        .finally(() => {
-          if (active) setBusy(false);
-        });
-    }, 250);
+    setRows(arrangeOpportunities(opportunityCatalog));
+    async function loadPublished() {
+      const loaded: Opportunity[] = [];
+      let page = 1,
+        last = 1;
+      do {
+        const response = await api.get<{
+          data: EcosystemRecord[];
+          last_page?: number;
+        }>("/ecosystem", { params: { page } });
+        last = response.last_page || 1;
+        for (const record of response.data) {
+          if (
+            opportunityCatalog.some((row) => row.slug === record.slug) ||
+            !safeWebUrl(record.website_url)
+          )
+            continue;
+          loaded.push({
+            slug: record.slug,
+            group:
+              record.category === "venture_capital"
+                ? "vc"
+                : [
+                      "financing",
+                      "development_finance",
+                      "funding_guarantee",
+                    ].includes(record.category)
+                  ? "investment"
+                  : "perks",
+            brand: record.name_en,
+            title_ar: record.name_ar.split(/\s+/).slice(0, 4).join(" "),
+            title_en: record.name_en.split(/\s+/).slice(0, 4).join(" "),
+            description_ar: record.description_ar,
+            description_en: record.description_en,
+            source_url: record.website_url,
+            eligibility_ar:
+              record.details?.eligibility_ar || "تخضع لشروط الجهة.",
+            eligibility_en:
+              record.details?.eligibility_en || "Provider eligibility applies.",
+            logo_url: new URL("/favicon.ico", record.website_url).href,
+            availability: record.application_status,
+            reviewed_at: record.verified_at,
+          });
+        }
+        page++;
+      } while (active && page <= last && page <= 50);
+      if (active)
+        setRows(arrangeOpportunities([...opportunityCatalog, ...loaded]));
+    }
+    loadPublished().catch(() => {
+      /* The bundled catalog remains available during API outages. */
+    });
     return () => {
       active = false;
-      clearTimeout(timer);
     };
-  }, [slug, search, kind, status, page, ar, reload]);
-  function statusText(r: EcosystemRecord) {
-    return r.application_status === "open"
-      ? t("التقديم مفتوح", "Applications open")
-      : r.application_status === "closed"
-        ? t("التقديم مغلق", "Applications closed")
-        : t("موعد التقديم غير معلن", "Intake not announced");
+  }, []);
+  const visible = rows.filter(
+    (r) =>
+      (!group || r.group === group) &&
+      `${r.brand} ${r.title_ar} ${r.title_en} ${r.description_ar} ${r.description_en}`
+        .toLowerCase()
+        .includes(search.toLowerCase().trim()),
+  );
+  useEffect(() => {
+    const element = rail.current;
+    if (
+      !element ||
+      slug ||
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    )
+      return;
+    let frame = 0,
+      previous = 0;
+    const tick = (now: number) => {
+      if (
+        previous &&
+        now > holdUntil.current &&
+        !dragging.current &&
+        !document.hidden &&
+        !element.contains(document.activeElement)
+      ) {
+        const end = element.scrollWidth - element.clientWidth;
+        if (end > 0) {
+          if (element.scrollLeft <= -end + 1) {
+            element.scrollLeft = 0;
+            holdUntil.current = now + 1800;
+          } else element.scrollLeft -= Math.min(now - previous, 50) * 0.035;
+        }
+      }
+      previous = now;
+      frame = requestAnimationFrame(tick);
+    };
+    frame = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(frame);
+  }, [slug, group, search]);
+  const label = (value: string) =>
+    value === "investment"
+      ? t("فرص الاستثمار", "Investment")
+      : value === "vc"
+        ? t("تواصل مع المستثمرين", "VC connections")
+        : t("المزايا والبرامج", "Perks & programs");
+  async function connect(row: Opportunity) {
+    if (!user) {
+      window.location.assign(
+        `/login?redirect=${encodeURIComponent("/opportunities/" + row.slug)}`,
+      );
+      return;
+    }
+    setConnecting(true);
+    setNotice("");
+    try {
+      const response = await sessionFetch(
+        `/api/v1/ecosystem/${encodeURIComponent(row.slug)}/connect`,
+      );
+      if (response.status === 401) {
+        window.location.assign(
+          `/login?redirect=${encodeURIComponent("/opportunities/" + row.slug)}`,
+        );
+        return;
+      }
+      if (response.status === 403 || response.status === 422) {
+        setNotice(
+          t(
+            "أكمل التسجيل وتفعيل عضويتك وبياناتك أولاً، ثم عد لهذه الفرصة.",
+            "Complete registration, activate your membership and finish your profile, then return to this opportunity.",
+          ),
+        );
+        return;
+      }
+      if (!response.ok) throw new Error();
+      const data = await response.json();
+      const destination = new URL(data.url);
+      if (destination.protocol !== "https:") throw new Error();
+      window.location.assign(destination.href);
+    } catch {
+      setNotice(
+        t("تعذر الاتصال. حاول مجدداً.", "Unable to connect. Please try again."),
+      );
+    } finally {
+      setConnecting(false);
+    }
   }
+  if (slug && !item) return <LegacyOpportunityDetails slug={slug} />;
   return (
     <PublicLayout>
-      <section className="gateway-section">
-        <div className="mx-auto max-w-6xl">
+      <section className={styles.section} dir={ar ? "rtl" : "ltr"}>
+        <div className={styles.heading}>
           <p className="gateway-eyebrow">
-            {t(
-              "منظومة ريادة الأعمال السعودية",
-              "SAUDI ENTREPRENEURSHIP ECOSYSTEM",
-            )}
+            {t("فرصتك القادمة", "YOUR NEXT OPPORTUNITY")}
           </p>
           <h1 className="gateway-heading">
-            {slug
-              ? rows[0]?.[ar ? "name_ar" : "name_en"] ||
-                t("تفاصيل الفرصة", "Opportunity details")
-              : t("اعثر على خطوتك المناسبة.", "Find the right next step.")}
+            {item
+              ? ar
+                ? item.title_ar
+                : item.title_en
+              : t("علاقات تفتح لك الأبواب.", "Connections that open doors.")}
           </h1>
           <p className="gateway-lead">
             {t(
-              "جهات وبرامج وفرص موثّقة بمصادرها الرسمية. لكل برنامج شروطه، وتاريخ التحقق ظاهر لتسهيل المراجعة.",
-              "Organizations, programs, and opportunities with official sources and review dates. Each program has its own eligibility and application process.",
+              "استثمار، علاقات، ومزايا تدفع شركتك للأمام.",
+              "Capital, connections and benefits to move your business forward.",
             )}
           </p>
-          {!slug && (
-            <form
-              onSubmit={(e) => e.preventDefault()}
-              className="gateway-card mt-8 grid gap-4 md:grid-cols-[2fr_1fr_1fr]"
+        </div>
+        {item ? (
+          <article className={styles.detail}>
+            <Brand row={item} />
+            <span className="gateway-badge">{label(item.group)}</span>
+            <p>{ar ? item.description_ar : item.description_en}</p>
+            <h2>{t("لمن تناسب؟", "Who is it for?")}</h2>
+            <p>{ar ? item.eligibility_ar : item.eligibility_en}</p>
+            <p className={styles.terms}>
+              {t(
+                "تحدد الجهة شروط القبول وتوافر التقديم والمزايا.",
+                "The provider sets eligibility, intake availability and benefit terms.",
+              )}
+            </p>
+            <button
+              className="gateway-button"
+              disabled={isLoading || connecting}
+              onClick={() => connect(item)}
             >
-              <label className="gateway-label">
-                <span className="flex gap-2">
-                  <Search size={18} />
-                  {t("البحث", "Search")}
-                </span>
-                <input
-                  className="gateway-input"
-                  type="search"
-                  value={search}
-                  onChange={(e) => {
-                    setSearch(e.target.value);
-                    setPage(1);
-                  }}
-                  placeholder={t(
-                    "اسم الجهة أو وصف البرنامج",
-                    "Organization or program description",
+              <LockKeyhole size={17} />
+              {connecting
+                ? t("جارٍ الاتصال…", "Connecting…")
+                : t("تواصل واستفد", "Connect & apply")}
+            </button>
+            {notice && (
+              <div role="alert" className="gateway-error mt-5">
+                <p>{notice}</p>
+                <Link href="/dashboard/profile" className="underline">
+                  {t("إكمال الملف", "Complete profile")}
+                </Link>{" "}
+                ·{" "}
+                <Link href="/apply" className="underline">
+                  {t("طلب العضوية", "Apply for membership")}
+                </Link>
+              </div>
+            )}
+            {!user && (
+              <p className={styles.terms}>
+                <Link href="/apply">
+                  {t(
+                    "سجّل عضويتك وفعّل حسابك للاستفادة من الفرص.",
+                    "Register and activate your membership to access opportunities.",
                   )}
+                </Link>
+              </p>
+            )}
+            <a
+              href={item.source_url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={styles.source}
+            >
+              {t("المصدر الرسمي", "Official source")} ↗
+            </a>
+            <Link href="/opportunities" className={styles.source}>
+              {t("جميع الفرص", "All opportunities")}
+            </Link>
+          </article>
+        ) : (
+          <>
+            <div className={styles.toolbar}>
+              <div
+                className={styles.tabs}
+                role="group"
+                aria-label={t("تصفية الفرص", "Filter opportunities")}
+              >
+                {["", "investment", "vc", "perks"].map((value) => (
+                  <button
+                    key={value}
+                    aria-pressed={group === value}
+                    onClick={() => {
+                      setGroup(value);
+                      rail.current?.scrollTo({ left: 0 });
+                    }}
+                  >
+                    {value ? label(value) : t("الكل", "All")}
+                  </button>
+                ))}
+              </div>
+              <label className={styles.search}>
+                <Search size={18} />
+                <input
+                  aria-label={t("ابحث عن فرصة", "Search opportunities")}
+                  placeholder={t("ابحث عن فرصتك", "Find your opportunity")}
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
                 />
               </label>
-              <label className="gateway-label">
-                {t("نوع السجل", "Record type")}
-                <select
-                  className="gateway-input"
-                  value={kind}
-                  onChange={(e) => {
-                    setKind(e.target.value);
-                    setPage(1);
+            </div>
+            <div className={styles.controls}>
+              <span>
+                {visible.length}{" "}
+                {t("فرصة لاستكشافها", "opportunities to explore")}
+              </span>
+              <div>
+                <button
+                  aria-label={t("تحريك لليسار", "Scroll left")}
+                  onClick={() => {
+                    holdUntil.current = performance.now() + 7000;
+                    rail.current?.scrollBy({ left: -340, behavior: "smooth" });
                   }}
                 >
-                  <option value="">{t("الكل", "All")}</option>
-                  <option value="organization">
-                    {t("الجهات", "Organizations")}
-                  </option>
-                  <option value="program">{t("البرامج", "Programs")}</option>
-                  <option value="opportunity">
-                    {t("فرص محددة", "Specific opportunities")}
-                  </option>
-                </select>
-              </label>
-              <label className="gateway-label">
-                {t("حالة التقديم", "Application status")}
-                <select
-                  className="gateway-input"
-                  value={status}
-                  onChange={(e) => {
-                    setStatus(e.target.value);
-                    setPage(1);
+                  <ArrowLeft size={20} />
+                </button>
+                <button
+                  aria-label={t("تحريك لليمين", "Scroll right")}
+                  onClick={() => {
+                    holdUntil.current = performance.now() + 7000;
+                    rail.current?.scrollBy({ left: 340, behavior: "smooth" });
                   }}
                 >
-                  <option value="">{t("الكل", "All")}</option>
-                  <option value="open">{t("مفتوح", "Open")}</option>
-                  <option value="closed">{t("مغلق", "Closed")}</option>
-                  <option value="not_announced">
-                    {t("غير معلن", "Not announced")}
-                  </option>
-                </select>
-              </label>
-            </form>
-          )}
-          {busy ? (
-            <p role="status" className="mt-10">
-              {t("جارٍ تحميل المصادر…", "Loading sources…")}
-            </p>
-          ) : error ? (
-            <div className="mt-8 gateway-error" role="alert">
-              {error}
-              <button
-                className="gateway-button-secondary mt-3"
-                onClick={() => setReload((n) => n + 1)}
-              >
-                {t("إعادة المحاولة", "Retry")}
-              </button>
+                  <ArrowRight size={20} />
+                </button>
+              </div>
             </div>
-          ) : rows.length === 0 ? (
-            <div className="gateway-card mt-8">
-              <p>
-                {t(
-                  "لم نجد نتائج مطابقة. جرّب إزالة أحد المرشحات.",
-                  "No matching records. Try removing a filter.",
-                )}
-              </p>
-            </div>
-          ) : (
             <div
-              className={`mt-9 grid gap-5 ${slug ? "" : "md:grid-cols-2 lg:grid-cols-3"}`}
+              ref={rail}
+              className={styles.rail}
+              dir="rtl"
+              aria-label={t("الفرص", "Opportunities")}
+              tabIndex={0}
+              onPointerEnter={() => {
+                dragging.current = true;
+              }}
+              onPointerLeave={() => {
+                dragging.current = false;
+              }}
+              onTouchStart={() => {
+                holdUntil.current = performance.now() + 10000;
+              }}
+              onWheel={() => {
+                holdUntil.current = performance.now() + 7000;
+              }}
             >
-              {rows.map((r) => (
-                <article key={r.id} className="gateway-card flex flex-col">
-                  <div className="flex flex-wrap gap-2">
-                    <span className="gateway-badge">
-                      {r.verification_status === "expired"
-                        ? t("منتهية / سجل تاريخي", "Expired / historical")
-                        : t("تم التحقق", "Verified")}
-                    </span>
-                    <span className="text-xs leading-7 text-slate-600">
-                      {categories[r.category]?.[ar ? 0 : 1] ||
-                        r.category.replaceAll("_", " ")}
-                    </span>
-                  </div>
-                  {!slug && (
-                    <h2 className="mt-5 text-xl font-bold leading-8">
-                      <Link href={"/opportunities/" + r.slug}>
-                        {ar ? r.name_ar : r.name_en}
+              {visible.map((row) => (
+                <article
+                  key={row.slug}
+                  className={styles.card}
+                  dir={ar ? "rtl" : "ltr"}
+                >
+                  <Brand row={row} />
+                  <div className={styles.body}>
+                    <span className={styles.category}>{label(row.group)}</span>
+                    <h2>
+                      <Link href={`/opportunities/${row.slug}`}>
+                        {ar ? row.title_ar : row.title_en}
                       </Link>
                     </h2>
-                  )}
-                  <p className="mt-4 text-sm leading-8 text-slate-600">
-                    {ar ? r.description_ar : r.description_en}
-                  </p>
-                  <p className="mt-5 text-sm font-semibold">{statusText(r)}</p>
-                  <dl className="mt-4 space-y-3 text-sm leading-7">
-                    {r.deadline && (
-                      <div>
-                        <dt className="font-semibold">
-                          {t("آخر موعد", "Deadline")}
-                        </dt>
-                        <dd>
-                          {new Date(r.deadline).toLocaleDateString(
-                            ar ? "ar-SA" : "en-GB",
-                            { timeZone: "Asia/Riyadh" },
-                          )}
-                        </dd>
-                      </div>
-                    )}
-                    {slug && (
-                      <>
-                        <div>
-                          <dt className="font-semibold">
-                            {t("شروط الأهلية", "Eligibility")}
-                          </dt>
-                          <dd>
-                            {r.details[
-                              ar ? "eligibility_ar" : "eligibility_en"
-                            ] ||
-                              t(
-                                "راجع المصدر الرسمي",
-                                "See the official source",
-                              )}
-                          </dd>
-                        </div>
-                        <div>
-                          <dt className="font-semibold">
-                            {t(
-                              "التغطية وآلية التقديم",
-                              "Coverage and delivery",
-                            )}
-                          </dt>
-                          <dd>
-                            {(ar
-                              ? r.details.coverage_ar
-                              : r.details.coverage) ||
-                              t("غير معلن", "Not announced")}{" "}
-                            ·{" "}
-                            {(ar
-                              ? (
-                                  {
-                                    hybrid: "حضوري وعن بعد",
-                                    in_person: "حضوري",
-                                    online_self_paced: "تعلم ذاتي عبر الإنترنت",
-                                    online_application: "تقديم إلكتروني",
-                                  } as Record<string, string>
-                                )[r.details.delivery_format || ""]
-                              : r.details.delivery_format) ||
-                              t("غير معلن", "Not announced")}
-                          </dd>
-                        </div>
-                        <div>
-                          <dt className="font-semibold">
-                            {t(
-                              "طبيعة الدعم والتمويل",
-                              "Support and financing terms",
-                            )}
-                          </dt>
-                          <dd>
-                            {(ar
-                              ? r.details.funding_terms_ar
-                              : r.details.funding_terms) ||
-                              t(
-                                "لا توجد شروط مالية مؤكدة في هذا السجل. راجع الجهة.",
-                                "No confirmed financial terms in this record. Check with the provider.",
-                              )}
-                          </dd>
-                        </div>
-                      </>
-                    )}
-                  </dl>
-                  <p className="mt-5 text-xs text-slate-500">
-                    {t("آخر تحقق: ", "Last verified: ")}
-                    {r.verified_at.slice(0, 10)}
-                  </p>
-                  <div className="mt-6 flex flex-wrap items-center gap-3">
-                    {!slug ? (
-                      <Link
-                        className="gateway-button-secondary"
-                        href={"/opportunities/" + r.slug}
-                      >
-                        {t("التفاصيل والمصادر", "Details and sources")}
-                      </Link>
-                    ) : (
-                      <>
-                        <a
-                          className="gateway-button-secondary"
-                          href={r.website_url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          {t("الموقع الرسمي", "Official website")}
-                          <ExternalLink size={15} />
-                        </a>
-                        {r.application_status === "open" &&
-                          safeWebUrl(r.application_url) && (
-                            <a
-                              className="gateway-button"
-                              href={r.application_url}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                            >
-                              {t(
-                                "التقديم لدى الجهة",
-                                "Apply with the provider",
-                              )}
-                            </a>
-                          )}
-                      </>
-                    )}
+                    <p>{ar ? row.description_ar : row.description_en}</p>
+                    <Link
+                      className={styles.more}
+                      href={`/opportunities/${row.slug}`}
+                    >
+                      {t("المزيد…", "More…")}
+                      <span aria-hidden="true">{ar ? "←" : "→"}</span>
+                    </Link>
                   </div>
-                  {slug && (
-                    <div className="mt-8 border-t border-slate-200 pt-5">
-                      <h2 className="font-bold">
-                        {t("المصادر الرسمية", "Official sources")}
-                      </h2>
-                      <ul className="mt-4 space-y-3">
-                        {r.source_urls.map((u) => (
-                          <li key={u}>
-                            <a
-                              className="break-all text-sm text-[#3B52D4] underline"
-                              href={u}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              dir="ltr"
-                            >
-                              {u}
-                            </a>
-                          </li>
-                        ))}
-                      </ul>
-                      <p className="mt-5 text-sm leading-7 text-slate-500">
-                        {t(
-                          "ظهور الجهة في الدليل لا يعني شراكة مع وصول. أكّد الشروط وتوافر التقديم لدى المصدر قبل اتخاذ قرار.",
-                          "A directory listing does not imply a Wosool partnership. Confirm terms and availability with the provider before applying.",
-                        )}
-                      </p>
-                    </div>
-                  )}
                 </article>
               ))}
             </div>
-          )}
-          {!slug && last > 1 && (
-            <div className="mt-8 flex items-center gap-5">
-              <button
-                className="gateway-button-secondary"
-                disabled={page === 1 || busy}
-                onClick={() => setPage((p) => p - 1)}
-              >
-                {t("السابق", "Previous")}
-              </button>
-              <span>
-                {page} / {last}
-              </span>
-              <button
-                className="gateway-button-secondary"
-                disabled={page >= last || busy}
-                onClick={() => setPage((p) => p + 1)}
-              >
-                {t("التالي", "Next")}
-              </button>
-            </div>
-          )}
-          {slug && (
-            <Link
-              className="mt-7 inline-block font-semibold text-[#3B52D4]"
-              href="/opportunities"
-            >
-              {t("العودة إلى جميع الفرص", "Back to all opportunities")}
-            </Link>
-          )}
-        </div>
+            {!visible.length && (
+              <p role="status" className="py-10 text-center">
+                {t(
+                  "لا توجد فرص مطابقة. جرّب بحثاً آخر.",
+                  "No matching opportunities. Try another search.",
+                )}
+              </p>
+            )}
+          </>
+        )}
       </section>
     </PublicLayout>
   );
