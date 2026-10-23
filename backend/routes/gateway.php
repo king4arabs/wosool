@@ -16,6 +16,7 @@ Route::prefix('v1')->group(function () {
     Route::get('ecosystem/{slug}', [EcosystemController::class, 'show']);
     Route::post('auth/applicant-register', RetiredController::class)->middleware('throttle:5,1,gateway-register');
     Route::middleware([PrivateGatewayResponse::class, 'auth:sanctum'])->group(function () {
+        Route::get('ecosystem/{slug}/connect', [EcosystemController::class, 'connect'])->middleware(['verified', 'member', 'throttle:30,1']);
         Route::post('auth/email/resend', [AccountController::class, 'resend'])->middleware('throttle:1,1');
         Route::get('auth/email/verify/{id}/{hash}', [AccountController::class, 'verify'])->middleware(['signed:relative', 'throttle:10,1'])->name('gateway.verification');
         Route::post('applicant/privacy-requests', [AccountController::class, 'privacy'])->middleware('throttle:5,60');

@@ -1,9 +1,10 @@
-import type { MetadataRoute } from "next"
-import { env } from "@/lib/env"
-import { wikiArticles } from "@/lib/wiki"
-import { readSitemapRecords } from "@/lib/public-records"
+import { opportunityCatalog } from "@/lib/opportunity-catalog";
+import type { MetadataRoute } from "next";
+import { env } from "@/lib/env";
+import { wikiArticles } from "@/lib/wiki";
+import { readSitemapRecords } from "@/lib/public-records";
 
-export const dynamic = "force-dynamic"
+export const dynamic = "force-dynamic";
 
 const publicRoutes = [
   "/",
@@ -36,16 +37,27 @@ const publicRoutes = [
   "/contact",
   "/privacy",
   "/terms",
-]
+];
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const [news, founders] = await Promise.all([
-    readSitemapRecords("news", env.apiUrl), readSitemapRecords("founders", env.apiUrl),
-  ])
+    readSitemapRecords("news", env.apiUrl),
+    readSitemapRecords("founders", env.apiUrl),
+  ]);
   return [
-    ...publicRoutes.map(path => ({ url: new URL(path, env.siteUrl).href })),
-    ...wikiArticles.map(article => ({ url: new URL(`/wiki/${article.slug}`, env.siteUrl).href, lastModified: article.updatedAt })),
-    ...news.map(record => ({ url: new URL(`/news/${record.slug}`, env.siteUrl).href })),
-    ...founders.map(record => ({ url: new URL(`/founders/${record.slug}`, env.siteUrl).href })),
-  ]
+    ...publicRoutes.map((path) => ({ url: new URL(path, env.siteUrl).href })),
+    ...opportunityCatalog.map((record) => ({
+      url: new URL(`/opportunities/${record.slug}`, env.siteUrl).href,
+    })),
+    ...wikiArticles.map((article) => ({
+      url: new URL(`/wiki/${article.slug}`, env.siteUrl).href,
+      lastModified: article.updatedAt,
+    })),
+    ...news.map((record) => ({
+      url: new URL(`/news/${record.slug}`, env.siteUrl).href,
+    })),
+    ...founders.map((record) => ({
+      url: new URL(`/founders/${record.slug}`, env.siteUrl).href,
+    })),
+  ];
 }

@@ -41,6 +41,32 @@ class EcosystemController extends Controller
         return response()->json(['data' => $this->present(EcosystemRecord::published()->where('slug', $slug)->firstOrFail())]);
     }
 
+    public function connect(Request $request, string $slug)
+    {
+        // Authentication, verified email and community access are checked on the server.
+        $user = $request->user();
+        $profile = $user->founderProfile()->first();
+        $registered = \App\Models\Application::where('user_id', $user->id)->where('status', 'approved')->exists();
+        $completeProfile = $profile && $profile->communityActive()
+            && filled($profile->bio) && filled($profile->location) && filled($profile->sector);
+        abort_unless($registered || $completeProfile, 422, 'Complete your membership registration and activate your profile first.');
+        abort_if($profile && ! $profile->communityActive(), 403, 'Activate your founder profile first.');
+
+        $catalog = json_decode(file_get_contents(resource_path('data/opportunities.json')), true, flags: JSON_THROW_ON_ERROR);
+        $entry = collect($catalog)->firstWhere('slug', $slug);
+        if ($entry) {
+            $url = $entry['source_url'];
+        } else {
+            $record = EcosystemRecord::published()->where('slug', $slug)->firstOrFail();
+            abort_unless($record->application_status === 'open' && $record->verification_status === 'verified'
+                && (! $record->deadline || $record->deadline->toDateString() >= now('Asia/Riyadh')->toDateString()), 409, 'Applications are unavailable.');
+            $url = $record->application_url;
+        }
+        abort_unless(is_string($url) && filter_var($url, FILTER_VALIDATE_URL) && parse_url($url, PHP_URL_SCHEME) === 'https', 422);
+
+        return response()->json(['url' => $url])->header('Cache-Control', 'private, no-store');
+    }
+
     public function adminIndex()
     {
         return response()->json(['data' => EcosystemRecord::orderBy('name_en')->get()]);
