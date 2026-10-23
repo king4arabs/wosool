@@ -50,7 +50,7 @@ test("curated newsroom has unique, dated, sourced stories with credited images w
     // Stories without a verified publisher image render a branded source tile instead.
     if (item.imageUrl) assert.ok((safeNewsUrl(item.imageUrl) || item.imageUrl.startsWith("/")) && item.imageCredit, item.slug)
     assert.ok(item.sourceName && item.content && item.translations?.ar.body.length)
-    assert.ok(Date.parse(item.publishedAt) <= Date.parse("2026-10-12T23:59:59Z"))
+    assert.ok(Date.parse(item.publishedAt) <= Date.now())
   }
 })
 

@@ -1,5 +1,12 @@
 # Changelog
 
+## Public copy cleanup and verified content refresh — 2026-10-23
+
+- Remove public source-collection, review-process and repeated editorial notes in Arabic and English, including the requested founder/news phrases. Preserve useful company facts, source links, credits and actual membership states. Add the public-copy rule to AGENTS.md.
+- Add INVE founder Abdulrahman Alabdulkarim and theQA co-founders Ahmad Al Ebrahim and Hussain Al-Nashabah, plus bilingual news briefs on INVE, Ziina and theQA published on 21–22 October. Keep frontend/backend catalog parity and update import-contract counts.
+- Expand the existing weekly founder automation to daily news and founder research. Repository data totals: 153 founders, 85 companies, 45 briefs. Hostinger runtime packaging and build configuration remain unchanged.
+- Source evidence and production import requirements: [content refresh](docs/CONTENT-REFRESH-2026-10-23.md).
+
 ## Enforce Hostinger release configuration and asset delivery — 2026-10-23
 
 - The default frontend build previously skipped the production preflight, allowing a successful artifact with localhost API rewrites. Release builds now load Next.js production environment files and require separate non-loopback HTTPS origins and explicitly disabled demo data before webpack starts. Local previews use the explicit `build:local` command with separate loopback origins.

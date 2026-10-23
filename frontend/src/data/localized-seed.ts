@@ -712,7 +712,7 @@ export const sponsorsPageCopy: Record<Locale, {
     title: "ادعم لقاءات المؤسسين في الرياض",
     description: "الرعاة يموّلون عشاءات المؤسسين وجلسات التعلّم وزيارات الشركات، ويلتقون بالمؤسسين وجهاً لوجه بدلاً من إعلان على شاشة.",
     stats: [
-      { value: "السعودية أولاً", label: "مؤسسون في الرياض والخليج" },
+      { value: "الرياض والخليج", label: "مجتمع المؤسسين" },
       { value: "عضوية بمراجعة", label: "يوافق الفريق على كل عضو" },
       { value: "عربي وإنجليزي", label: "فعاليات ومحتوى باللغتين" },
       { value: "مسرّعة EO الرياض", label: "بوابة رسمية لدفعة المسرّعة" },
@@ -770,7 +770,7 @@ export const sponsorsPageCopy: Record<Locale, {
     title: "Back founder gatherings in Riyadh",
     description: "Sponsors fund founder dinners, learning sessions and company visits, and meet the founders in person rather than as a logo on a screen.",
     stats: [
-      { value: "Saudi first", label: "Founders in Riyadh and across the GCC" },
+      { value: "Riyadh & GCC", label: "Founder community" },
       { value: "Reviewed membership", label: "The team approves every member" },
       { value: "Arabic & English", label: "Events and content in both languages" },
       { value: "EO Riyadh Accelerator", label: "Official gateway for the accelerator cohort" },

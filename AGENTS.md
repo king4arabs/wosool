@@ -14,3 +14,7 @@ The owner confirmed on 23 October 2026 that wosool.org is working. For future de
 Do not replace this deployment approach during unrelated feature or design work. Any necessary change to it must explain the reason, validate a clean frontend-only install and packaged runtime, and retain a rollback artifact. Follow the existing CI and deployment verification procedures; test live `/`, `/eoa`, `/health`, and served JavaScript/CSS after an actual release. Use the production smoke script for API readiness and proxy checks. Record the deployed SHA and results; distinguish owner-reported availability from independently verified checks.
 
 Read `DEPLOYMENT.md` before deployment changes. Keep these instructions current when an intentionally validated replacement baseline is adopted.
+
+## Public interface copy
+
+Keep internal editorial, AI-generation, source-collection and review-process notes out of public UI in both Arabic and English. Use concise product copy instead. Do not render internal review dates or review-due badges on public cards. Preserve useful business facts, source links, image credits, accurate membership/verification state, and functional error or eligibility guidance.

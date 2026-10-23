@@ -20,6 +20,5 @@ export function ProfileNews({ companyNames }: { companyNames: string[] }) {
     <div className="mb-5 flex flex-wrap items-center justify-between gap-3"><h2 className="text-xl font-bold text-[var(--text-strong)]">{locale === "ar" ? "في الأخبار" : "In the news"}</h2><Link href="/news" className="inline-flex min-h-11 items-center text-sm font-bold text-[var(--link)]">{locale === "ar" ? "غرفة الأخبار" : "Newsroom"}</Link></div>
     <div className="grid gap-5 sm:grid-cols-2">{items.slice(0, 4).map(item => <NewsCard key={item.slug} item={item} />)}</div>
     {items.length > 4 && <Link href="/news" className="mt-4 inline-flex min-h-11 items-center text-sm font-bold text-[var(--link)]">{locale === "ar" ? "عرض الأخبار الإضافية" : "See more stories"}</Link>}
-    <p className="mt-4 text-xs leading-6 text-[var(--text-muted)]">{locale === "ar" ? "مصادر عامة مستقلة. التغطية ليست تأييداً ولا دليلاً على العضوية." : "Independent public sources. Coverage is not an endorsement or evidence of membership."}</p>
   </section>
 }

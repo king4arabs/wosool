@@ -1,5 +1,128 @@
 [
   {
+    "id": "sourced-inve-pre-seed-outliers-october-2026",
+    "slug": "inve-pre-seed-outliers-october-2026",
+    "title": "INVE secures $300,000 from Outliers VC",
+    "excerpt": "Saudi event platform INVE raised pre-seed funding to expand its team and reach more hosts across the Gulf.",
+    "content": "Saudi event platform INVE raised pre-seed funding to expand its team and reach more hosts across the Gulf.",
+    "category": "Funding",
+    "region": "saudi",
+    "imageUrl": "",
+    "imageCredit": "",
+    "sourceUrl": "https://www.wamda.com/2026/10/inve-raises-300000-outliers-vc-scale-eventtech-platform-gcc",
+    "sourceName": "Wamda",
+    "companies": [
+      "INVE"
+    ],
+    "publishedAt": "2026-10-22",
+    "author": "Wosool news desk",
+    "tags": [
+      "INVE",
+      "Funding"
+    ],
+    "keyFacts": [
+      "$300,000 pre-seed",
+      "Investor: Outliers VC",
+      "Founded in 2024"
+    ],
+    "translations": {
+      "ar": {
+        "title": "إنڤي تجمع 300 ألف دولار من Outliers VC",
+        "excerpt": "جمعت منصة الفعاليات السعودية إنڤي تمويلاً قبل البذرة لتوسيع فريقها والوصول إلى منظمي فعاليات أكثر في الخليج.",
+        "body": [
+          "جمعت منصة الفعاليات السعودية إنڤي تمويلاً قبل البذرة لتوسيع فريقها والوصول إلى منظمي فعاليات أكثر في الخليج."
+        ],
+        "keyFacts": [
+          "300 ألف دولار قبل البذرة",
+          "المستثمر: Outliers VC",
+          "تأسست عام 2024"
+        ]
+      }
+    }
+  },
+  {
+    "id": "sourced-ziina-payment-exchange-approvals-october-2026",
+    "slug": "ziina-payment-exchange-approvals-october-2026",
+    "title": "Ziina adds payment and exchange authorisations",
+    "excerpt": "Ziina announced UAE central bank approvals covering retail payment services and exchange activities alongside its stored-value licence.",
+    "content": "Ziina announced UAE central bank approvals covering retail payment services and exchange activities alongside its stored-value licence.",
+    "category": "Regulation",
+    "region": "gcc",
+    "imageUrl": "",
+    "imageCredit": "",
+    "sourceUrl": "https://www.wamda.com/2026/10/uaes-ziina-secures-central-bank-approvals-retail-payments-exchange-services",
+    "sourceName": "Wamda",
+    "companies": [
+      "Ziina"
+    ],
+    "publishedAt": "2026-10-22",
+    "author": "Wosool news desk",
+    "tags": [
+      "Ziina",
+      "Regulation"
+    ],
+    "keyFacts": [
+      "Retail payments: Category III",
+      "Exchange activities: Category IV",
+      "Stored-value licence retained"
+    ],
+    "translations": {
+      "ar": {
+        "title": "زينة توسّع تراخيص المدفوعات والصرافة",
+        "excerpt": "أعلنت زينة حصولها على موافقات المصرف المركزي الإماراتي لخدمات مدفوعات التجزئة وأنشطة الصرافة إلى جانب ترخيص القيمة المخزنة.",
+        "body": [
+          "أعلنت زينة حصولها على موافقات المصرف المركزي الإماراتي لخدمات مدفوعات التجزئة وأنشطة الصرافة إلى جانب ترخيص القيمة المخزنة."
+        ],
+        "keyFacts": [
+          "مدفوعات التجزئة: الفئة الثالثة",
+          "أنشطة الصرافة: الفئة الرابعة",
+          "استمرار ترخيص القيمة المخزنة"
+        ]
+      }
+    }
+  },
+  {
+    "id": "sourced-theqa-pre-seed-consumer-research-october-2026",
+    "slug": "theqa-pre-seed-consumer-research-october-2026",
+    "title": "theQA raises over $550,000 for Kuwait expansion",
+    "excerpt": "Kuwaiti consumer research platform theQA secured pre-seed backing from a family office and angel investors to develop its tools and expand locally.",
+    "content": "Kuwaiti consumer research platform theQA secured pre-seed backing from a family office and angel investors to develop its tools and expand locally.",
+    "category": "Funding",
+    "region": "gcc",
+    "imageUrl": "",
+    "imageCredit": "",
+    "sourceUrl": "https://www.wamda.com/2026/10/theqa-raises-550000-scale-ai-driven-consumer-research-kuwait",
+    "sourceName": "Wamda",
+    "companies": [
+      "theQA"
+    ],
+    "publishedAt": "2026-10-21",
+    "author": "Wosool news desk",
+    "tags": [
+      "theQA",
+      "Funding"
+    ],
+    "keyFacts": [
+      "More than $550,000 raised",
+      "Pre-seed financing",
+      "Kuwait expansion"
+    ],
+    "translations": {
+      "ar": {
+        "title": "ثقة تجمع أكثر من 550 ألف دولار للتوسع في الكويت",
+        "excerpt": "حصلت منصة أبحاث المستهلكين الكويتية ثقة على تمويل قبل البذرة من مكتب عائلي ومستثمرين ملائكيين لتطوير أدواتها والتوسع محلياً.",
+        "body": [
+          "حصلت منصة أبحاث المستهلكين الكويتية ثقة على تمويل قبل البذرة من مكتب عائلي ومستثمرين ملائكيين لتطوير أدواتها والتوسع محلياً."
+        ],
+        "keyFacts": [
+          "تمويل يتجاوز 550 ألف دولار",
+          "جولة قبل البذرة",
+          "توسع في الكويت"
+        ]
+      }
+    }
+  },
+  {
     "id": "sourced-mena-q3-2026-funding-saudi-leads",
     "slug": "mena-q3-2026-funding-saudi-leads",
     "title": "MENA startups raise $1.65 billion in Q3 2026 as Saudi Arabia takes the lead",
