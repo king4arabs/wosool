@@ -22,6 +22,10 @@ test("middleware 403s are told apart: unverified email, suspended profile, not a
   assert.equal(connectProblem(403, { message: "Your founder profile must be active to access the community." }, verified), "profile_inactive");
   assert.equal(connectProblem(403, { message: "Member access is required." }, verified), "membership");
   assert.equal(connectProblem(403, null, verified), "membership");
+  // The signed-in user may not have loaded yet when the button is pressed.
+  assert.equal(connectProblem(403, { message: "Your email address is not verified." }, null), "verify_email");
+  assert.equal(connectProblem(403, { message: "Member access is required." }, null), "membership");
+  assert.equal(connectProblem(403, { message: "Your founder profile must be active to access the community.", reason: "profile_pending" }, verified), "profile_pending");
 });
 
 test("guidance has Arabic and English copy and only internal links", () => {

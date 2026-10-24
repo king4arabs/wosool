@@ -60,4 +60,17 @@ class OpportunityAccessTest extends TestCase
         $profile->update(['status' => 'active']);
         $this->getJson('/api/v1/ecosystem/aws-activate/connect')->assertOk()->assertJson(['url' => 'https://aws.amazon.com/startups/credits']);
     }
+
+    public function test_pending_directory_profile_is_reported_as_pending_by_member_middleware(): void
+    {
+        $this->seed(RoleAndPermissionSeeder::class);
+        $user = User::factory()->create();
+        $user->assignRole('member');
+        $profile = FounderProfile::create(['user_id' => $user->id, 'slug' => 'opportunity-directory', 'status' => 'pending',
+            'directory_key' => 'opportunity-directory', 'claimed_at' => now()]);
+        $this->actingAs($user)->getJson('/api/v1/ecosystem/aws-activate/connect')->assertForbidden()
+            ->assertJson(['reason' => 'profile_pending', 'message' => 'Your founder profile must be active to access the community.']);
+        $profile->update(['status' => 'suspended']);
+        $this->getJson('/api/v1/ecosystem/aws-activate/connect')->assertForbidden()->assertJson(['reason' => 'profile_inactive']);
+    }
 }

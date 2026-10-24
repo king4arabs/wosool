@@ -22,7 +22,11 @@ class EnsureUserHasMemberAccess
 
         $profile = $user->founderProfile()->first();
         if ($profile && ($profile->status === 'suspended' || ($profile->directory_key && ! $profile->communityActive())) && ! $user->hasRole('admin')) {
-            abort(403, 'Your founder profile must be active to access the community.');
+            // Same refusal as before; `reason` lets pages tell a profile under review from an inactive one.
+            abort(response()->json([
+                'message' => 'Your founder profile must be active to access the community.',
+                'reason' => $profile->status === 'pending' ? 'profile_pending' : 'profile_inactive',
+            ], 403));
         }
 
         $hasMemberRole = method_exists($user, 'hasRole') && ($user->hasRole('member') || $user->hasRole('admin'));

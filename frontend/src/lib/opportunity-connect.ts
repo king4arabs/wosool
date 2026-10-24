@@ -39,7 +39,9 @@ export function connectProblem(
     if (reason === "profile_inactive" || /founder profile must be active/i.test(message))
       return "profile_inactive";
     // Laravel's `verified` middleware answers 403 before the membership check runs.
-    if (user && !user.email_verified_at) return "verify_email";
+    // Match its message too: the user may still be loading when the button is pressed.
+    if (/email address is not verified/i.test(message) || (user && !user.email_verified_at))
+      return "verify_email";
     return "membership";
   }
   return "failed";
