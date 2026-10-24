@@ -49,8 +49,18 @@ class EcosystemController extends Controller
         $registered = \App\Models\Application::where('user_id', $user->id)->where('status', 'approved')->exists();
         $completeProfile = $profile && $profile->communityActive()
             && filled($profile->bio) && filled($profile->location) && filled($profile->sector);
-        abort_unless($registered || $completeProfile, 422, 'Complete your membership registration and activate your profile first.');
-        abort_if($profile && ! $profile->communityActive(), 403, 'Activate your founder profile first.');
+        // `reason` lets the page show the right next step in both languages.
+        if ($profile && ! $profile->communityActive()) {
+            $pending = $profile->status === 'pending';
+
+            return response()->json([
+                'message' => $pending ? 'Your founder profile is still under review.' : 'Activate your founder profile first.',
+                'reason' => $pending ? 'profile_pending' : 'profile_inactive',
+            ], 403);
+        }
+        if (! $registered && ! $completeProfile) {
+            return response()->json(['message' => 'Complete your membership registration and activate your profile first.', 'reason' => 'profile_incomplete'], 422);
+        }
 
         $catalog = json_decode(file_get_contents(resource_path('data/opportunities.json')), true, flags: JSON_THROW_ON_ERROR);
         $entry = collect($catalog)->firstWhere('slug', $slug);

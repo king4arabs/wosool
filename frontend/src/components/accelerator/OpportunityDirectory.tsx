@@ -16,6 +16,11 @@ import {
   type Opportunity,
 } from "@/lib/opportunity-catalog";
 import { LegacyOpportunityDetails } from "./LegacyOpportunityDetails";
+import {
+  connectGuidance,
+  connectProblem,
+  type ConnectProblem,
+} from "@/lib/opportunity-connect";
 import styles from "./opportunities.module.css";
 export type { EcosystemRecord } from "./LegacyOpportunityDetails";
 
@@ -50,7 +55,8 @@ export function OpportunityDirectory({ slug }: { slug?: string }) {
   const [rows, setRows] = useState(opportunityCatalog);
   const [search, setSearch] = useState("");
   const [group, setGroup] = useState("");
-  const [notice, setNotice] = useState("");
+  const [problem, setProblem] = useState<ConnectProblem | null>(null);
+  const notice = problem ? connectGuidance(problem, ar) : null;
   const [connecting, setConnecting] = useState(false);
   const rail = useRef<HTMLDivElement>(null);
   const dragging = useRef(false);
@@ -167,7 +173,7 @@ export function OpportunityDirectory({ slug }: { slug?: string }) {
       return;
     }
     setConnecting(true);
-    setNotice("");
+    setProblem(null);
     try {
       const response = await sessionFetch(
         `/api/v1/ecosystem/${encodeURIComponent(row.slug)}/connect`,
@@ -178,24 +184,17 @@ export function OpportunityDirectory({ slug }: { slug?: string }) {
         );
         return;
       }
-      if (response.status === 403 || response.status === 422) {
-        setNotice(
-          t(
-            "أكمل التسجيل وتفعيل عضويتك وبياناتك أولاً، ثم عد لهذه الفرصة.",
-            "Complete registration, activate your membership and finish your profile, then return to this opportunity.",
-          ),
-        );
+      if (!response.ok) {
+        const body = await response.json().catch(() => null);
+        setProblem(connectProblem(response.status, body, user));
         return;
       }
-      if (!response.ok) throw new Error();
       const data = await response.json();
       const destination = new URL(data.url);
       if (destination.protocol !== "https:") throw new Error();
       window.location.assign(destination.href);
     } catch {
-      setNotice(
-        t("تعذر الاتصال. حاول مجدداً.", "Unable to connect. Please try again."),
-      );
+      setProblem("failed");
     } finally {
       setConnecting(false);
     }
@@ -247,14 +246,12 @@ export function OpportunityDirectory({ slug }: { slug?: string }) {
             </button>
             {notice && (
               <div role="alert" className="gateway-error mt-5">
-                <p>{notice}</p>
-                <Link href="/dashboard/profile" className="underline">
-                  {t("إكمال الملف", "Complete profile")}
-                </Link>{" "}
-                ·{" "}
-                <Link href="/apply" className="underline">
-                  {t("طلب العضوية", "Apply for membership")}
-                </Link>
+                <p>{notice.message}</p>
+                {notice.links.map((link) => (
+                  <Link key={link.href} href={link.href} className="underline">
+                    {link.label}
+                  </Link>
+                ))}
               </div>
             )}
             {!user && (
