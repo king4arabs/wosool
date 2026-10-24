@@ -7,6 +7,12 @@ import { useLocale } from "@/lib/locale";
 import { sessionFetch } from "@/lib/session-request";
 import { api } from "@/lib/api";
 import { gatewayError, safeWebUrl } from "@/lib/gateway";
+import { useAuth } from "@/lib/auth";
+import {
+  connectGuidance,
+  connectProblem,
+  type ConnectProblem,
+} from "@/lib/opportunity-connect";
 export type EcosystemRecord = {
   id: number;
   slug: string;
@@ -73,6 +79,11 @@ export function LegacyOpportunityDetails({ slug }: { slug?: string }) {
   const [last, setLast] = useState(1);
   const [busy, setBusy] = useState(true);
   const [error, setError] = useState("");
+  const { user } = useAuth();
+  // Kept apart from `error`: a refused connection must not hide the record or offer a list reload.
+  const [problem, setProblem] = useState<ConnectProblem | null>(null);
+  const [connecting, setConnecting] = useState(false);
+  const notice = problem ? connectGuidance(problem, ar) : null;
   const [reload, setReload] = useState(0);
   useEffect(() => {
     let active = true;
@@ -110,6 +121,8 @@ export function LegacyOpportunityDetails({ slug }: { slug?: string }) {
     };
   }, [slug, search, kind, status, page, ar, reload]);
   async function connect(record: EcosystemRecord) {
+    setConnecting(true);
+    setProblem(null);
     try {
       const response = await sessionFetch(
         `/api/v1/ecosystem/${encodeURIComponent(record.slug)}/connect`,
@@ -121,21 +134,18 @@ export function LegacyOpportunityDetails({ slug }: { slug?: string }) {
         return;
       }
       if (!response.ok) {
-        setError(
-          t(
-            "أكمل التسجيل وتفعيل عضويتك وملفك أولاً.",
-            "Complete registration and activate your membership and profile first.",
-          ),
-        );
+        const body = await response.json().catch(() => null);
+        setProblem(connectProblem(response.status, body, user));
         return;
       }
       const { url } = await response.json();
       if (safeWebUrl(url) && new URL(url).protocol === "https:")
         window.location.assign(url);
+      else setProblem("unavailable");
     } catch {
-      setError(
-        t("تعذر الاتصال. حاول مجدداً.", "Unable to connect. Please try again."),
-      );
+      setProblem("failed");
+    } finally {
+      setConnecting(false);
     }
   }
   function statusText(r: EcosystemRecord) {
@@ -381,17 +391,34 @@ export function LegacyOpportunityDetails({ slug }: { slug?: string }) {
                           safeWebUrl(r.application_url) && (
                             <button
                               className="gateway-button"
+                              disabled={connecting}
                               onClick={() => connect(r)}
                             >
-                              {t(
-                                "التقديم لدى الجهة",
-                                "Apply with the provider",
-                              )}
+                              {connecting
+                                ? t("جارٍ الاتصال…", "Connecting…")
+                                : t(
+                                    "التقديم لدى الجهة",
+                                    "Apply with the provider",
+                                  )}
                             </button>
                           )}
                       </>
                     )}
                   </div>
+                  {slug && notice && (
+                    <div role="alert" className="gateway-error mt-5">
+                      <p>{notice.message}</p>
+                      {notice.links.map((link) => (
+                        <Link
+                          key={link.href}
+                          href={link.href}
+                          className="underline"
+                        >
+                          {link.label}
+                        </Link>
+                      ))}
+                    </div>
+                  )}
                   {slug && (
                     <div className="mt-8 border-t border-slate-200 pt-5">
                       <h2 className="font-bold">
