@@ -1,5 +1,11 @@
 # Changelog
 
+## Reconcile repository content and production recovery status — 2026-10-24
+
+- Update the current source totals to **159 founder profiles, 89 company groups and 49 news briefs**, matching the synchronized catalogs and content-review output. This is repository content, not a production import or a membership claim.
+- Record that the scheduled production monitor passes all six probes again and that the public homepage and Accelerator page are reachable. Keep the active Hostinger revision and production database imports explicitly unverified; healthy routes do not prove that the latest `main` or catalog is deployed.
+- Replace incident-era next actions with revision-parity, environment and import verification. No application behavior, hosting configuration, moderation flag, account or production record changes in this documentation update.
+
 ## Opportunities: say why "Connect & apply" did not open — 2026-10-24
 
 - **Problem:** on `/opportunities/{slug}`, every refusal from the connect API showed the same text: "Complete registration, activate your membership and finish your profile", with links to the profile and the membership application. A member whose email was not verified was sent to apply for membership again; a member whose profile was still under review was told to complete it; a throttled request (429) and an unknown slug (404) said "Unable to connect. Please try again." On API-directory records (`LegacyOpportunityDetails`), any refusal, including a closed intake (409), replaced the whole record with "Complete registration…" and a "Retry" button that only reloaded the list. A pending profile that already had its bio, sector and location got 422 "complete your profile" instead of being told it was under review.
