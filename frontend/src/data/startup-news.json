@@ -123,6 +123,130 @@
     }
   },
   {
+    "id": "sourced-vrtx-3-6-million-pre-seed-2026",
+    "slug": "vrtx-3-6-million-pre-seed-2026",
+    "title": "Vrtx raises $3.6 million for embedded finance",
+    "excerpt": "Saudi fintech Vrtx secured pre-seed funding to build wallets, payouts and card infrastructure for businesses. Its Saudi EMI approval remains in principle.",
+    "content": "Riyadh-based Vrtx announced a $3.6 million pre-seed round with backing from SC Ventures, Sadu Capital, BYLD and other investors. Founded in 2025, it develops infrastructure for embedded wallets, payouts and card issuance. Vrtx said it has in-principle approval for a Saudi electronic-money licence, not a final operating licence.",
+    "category": "Funding",
+    "region": "saudi",
+    "imageUrl": "",
+    "imageCredit": "",
+    "sourceUrl": "https://www.wamda.com/2026/10/saudi-vrtx-secures-3-6-million-embedded-finance-platform",
+    "sourceName": "Wamda",
+    "companies": [
+      "Vrtx"
+    ],
+    "publishedAt": "2026-10-19",
+    "author": "Wosool news desk",
+    "tags": [
+      "Vrtx",
+      "Funding"
+    ],
+    "keyFacts": [
+      "$3.6M pre-seed round",
+      "SC Ventures among the backers",
+      "Saudi EMI approval in principle"
+    ],
+    "translations": {
+      "ar": {
+        "title": "فيرتكس تجمع 3.6 ملايين دولار",
+        "excerpt": "جمعت فيرتكس السعودية تمويلاً لتطوير بنية للمحافظ والمدفوعات وإصدار البطاقات؛ موافقة الترخيص لا تزال مبدئية.",
+        "body": [
+          "أعلنت فيرتكس، ومقرها الرياض، جمع 3.6 ملايين دولار في جولة ما قبل البذرة بمشاركة SC Ventures وسدو المالية وBYLD ومستثمرين آخرين. تأسست عام 2025 وتطور أدوات للمحافظ الرقمية والتحويلات وإصدار البطاقات. وحصلت على موافقة مبدئية لترخيص النقود الإلكترونية، وليست رخصة تشغيل نهائية."
+        ],
+        "keyFacts": [
+          "3.6 ملايين دولار في جولة ما قبل البذرة",
+          "SC Ventures من المستثمرين",
+          "موافقة ترخيص النقود الإلكترونية مبدئية"
+        ]
+      }
+    }
+  },
+  {
+    "id": "sourced-nabta-health-pvp-second-close-october-2026",
+    "slug": "nabta-health-pvp-second-close-october-2026",
+    "title": "PVP backs Nabta Health's pre-Series A second close",
+    "excerpt": "Phoenix Venture Partners led the second close of Nabta Health's ongoing $3 million pre-Series A round; the amount raised in this close was not disclosed.",
+    "content": "UAE women's healthcare company Nabta Health announced that Phoenix Venture Partners led the second close of its ongoing $3 million pre-Series A financing. The investment includes primary and secondary capital, but the amount raised in the second close was not disclosed. Nabta develops preventive healthcare services combining technology and clinical care.",
+    "category": "Funding",
+    "region": "gcc",
+    "imageUrl": "",
+    "imageCredit": "",
+    "sourceUrl": "https://www.wamda.com/2026/10/nabta-health-advances-3-million-pre-series-backing-pvp",
+    "sourceName": "Wamda",
+    "companies": [
+      "Nabta Health"
+    ],
+    "publishedAt": "2026-10-19",
+    "author": "Wosool news desk",
+    "tags": [
+      "Nabta Health",
+      "Funding"
+    ],
+    "keyFacts": [
+      "$3M is the ongoing round size",
+      "PVP led the second close",
+      "Second-close amount undisclosed"
+    ],
+    "translations": {
+      "ar": {
+        "title": "استثمار جديد في نبتة هيلث",
+        "excerpt": "قادت Phoenix Venture Partners الإغلاق الثاني لجولة نبتة هيلث المستمرة قبل الفئة أ البالغة 3 ملايين دولار؛ قيمة الإغلاق غير معلنة.",
+        "body": [
+          "أعلنت نبتة هيلث الإماراتية أن Phoenix Venture Partners قادت الإغلاق الثاني لجولتها المستمرة قبل الفئة أ، والبالغة 3 ملايين دولار. يشمل الاستثمار رأس مال أولياً وثانوياً، ولم يُعلن مبلغ الإغلاق الثاني. وتقدم الشركة خدمات رعاية وقائية للنساء تجمع التقنية بالخدمات السريرية."
+        ],
+        "keyFacts": [
+          "3 ملايين دولار حجم الجولة المستمرة",
+          "PVP قادت الإغلاق الثاني",
+          "قيمة الإغلاق الثاني غير معلنة"
+        ]
+      }
+    }
+  },
+  {
+    "id": "sourced-foodics-funding-souq-strategic-investment-2026",
+    "slug": "foodics-funding-souq-strategic-investment-2026",
+    "title": "Foodics makes strategic investment in Funding Souq",
+    "excerpt": "Foodics invested in Saudi SME finance marketplace Funding Souq to expand embedded financing for restaurant merchants; the investment amount was not disclosed.",
+    "content": "Saudi SME financing marketplace Funding Souq announced a strategic investment by Foodics on 14 October 2026. The companies plan to provide embedded financing to restaurant and hospitality merchants using transaction and operational data for credit assessment. Neither the investment value nor Foodics' equity stake was disclosed.",
+    "category": "Funding",
+    "region": "saudi",
+    "imageUrl": "",
+    "imageCredit": "",
+    "sourceUrl": "https://www.wamda.com/2026/10/foodics-invests-funding-souq-expand-restaurant-financing-ksa-uae",
+    "sourceName": "Wamda",
+    "companies": [
+      "Funding Souq",
+      "Foodics"
+    ],
+    "publishedAt": "2026-10-14",
+    "author": "Wosool news desk",
+    "tags": [
+      "Funding Souq",
+      "Funding"
+    ],
+    "keyFacts": [
+      "Foodics is a strategic investor",
+      "Financing targets restaurant SMEs",
+      "Investment value not disclosed"
+    ],
+    "translations": {
+      "ar": {
+        "title": "فودكس تستثمر في فندينق سوق",
+        "excerpt": "استثمرت فودكس استراتيجياً في فندينق سوق لتوسيع التمويل المدمج للمطاعم والمنشآت الصغيرة والمتوسطة، دون الإفصاح عن قيمة الصفقة.",
+        "body": [
+          "أعلنت فندينق سوق السعودية في 14 أكتوبر 2026 دخول فودكس مستثمراً استراتيجياً. تعتزم الشركتان توفير تمويل مدمج للمطاعم والضيافة بالاستفادة من بيانات المبيعات والتشغيل في تقييم الائتمان. لم يُعلن حجم الاستثمار أو نسبة الملكية."
+        ],
+        "keyFacts": [
+          "فودكس مستثمر استراتيجي",
+          "التمويل يستهدف منشآت المطاعم",
+          "قيمة الاستثمار غير معلنة"
+        ]
+      }
+    }
+  },
+  {
     "id": "sourced-mena-q3-2026-funding-saudi-leads",
     "slug": "mena-q3-2026-funding-saudi-leads",
     "title": "MENA startups raise $1.65 billion in Q3 2026 as Saudi Arabia takes the lead",
@@ -171,6 +295,47 @@
           "الإمارات: 507 ملايين دولار؛ مصر: 56.4 مليون دولار",
           "التقنية المالية نحو 62% من إجمالي التمويل",
           "الشركات بقيادة نسائية: 12.7 مليون دولار (أقل من 1%)"
+        ]
+      }
+    }
+  },
+  {
+    "id": "sourced-autobia-12-million-series-a-2026",
+    "slug": "autobia-12-million-series-a-2026",
+    "title": "Autobia raises $12 million Series A",
+    "excerpt": "Saudi automotive-parts platform Autobia raised $12 million led by Artal Capital, with Aljazira Capital and Wa'ed Ventures joining the round.",
+    "content": "Autobia announced a $12 million (SAR 45 million) Series A round led by Artal Capital and joined by Aljazira Capital and Wa'ed Ventures. Founded in 2021, the Saudi B2B auto-parts platform plans to strengthen fulfilment, logistics and inventory financing across the Kingdom.",
+    "category": "Funding",
+    "region": "saudi",
+    "imageUrl": "",
+    "imageCredit": "",
+    "sourceUrl": "https://www.wamda.com/2026/10/saudi-autotech-autobia-raises-12-million-series-a-led-artal-capital",
+    "sourceName": "Wamda",
+    "companies": [
+      "Autobia"
+    ],
+    "publishedAt": "2026-10-11",
+    "author": "Wosool news desk",
+    "tags": [
+      "Autobia",
+      "Funding"
+    ],
+    "keyFacts": [
+      "$12M (SAR 45M) Series A",
+      "Lead investor: Artal Capital",
+      "Founded in 2021"
+    ],
+    "translations": {
+      "ar": {
+        "title": "أوتوبيا تجمع 12 مليون دولار",
+        "excerpt": "جمعت أوتوبيا السعودية 12 مليون دولار في جولة من الفئة أ بقيادة أرتال المالية ومشاركة الجزيرة كابيتال وواعد فنتشرز.",
+        "body": [
+          "أعلنت أوتوبيا جمع 12 مليون دولار (45 مليون ريال) في جولة من الفئة أ بقيادة أرتال المالية، وبمشاركة الجزيرة كابيتال وواعد فنتشرز. تأسست المنصة السعودية لتجارة قطع غيار السيارات بين الشركات عام 2021، وتعتزم توسيع التنفيذ والخدمات اللوجستية وتمويل المخزون داخل المملكة."
+        ],
+        "keyFacts": [
+          "12 مليون دولار (45 مليون ريال)",
+          "المستثمر الرئيسي: أرتال المالية",
+          "تأسست عام 2021"
         ]
       }
     }
