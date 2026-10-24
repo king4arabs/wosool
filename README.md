@@ -21,7 +21,7 @@
   <a href="https://github.com/king4arabs/wosool/issues">Report a bug</a>
 </p>
 
-Content refresh (23 October 2026): **153 founder profiles, 85 companies and 45 news briefs** in synchronized repository catalogs. Three founders and three news briefs were added; public editorial/process notes were removed in both languages. See [source review and publication steps](docs/CONTENT-REFRESH-2026-10-23.md). Production database imports and live release verification are recorded separately.
+Content refresh (24 October 2026): **159 founder profiles, 89 companies and 49 news briefs** in synchronized repository catalogs. The latest reviewed addition contains six founders and four news briefs. See [source review and publication boundaries](docs/research/CONTENT-REFRESH-2026-10-24.md). Production database imports and live release verification are recorded separately.
 
 Wosool brings founder profiles, startup and venture discovery, events, learning, reviewed introductions, collaboration, and administration into one Arabic/English platform. This monorepo contains the Next.js frontend, Laravel API, database migrations, tests, operating tools, and production documentation.
 
@@ -31,7 +31,7 @@ Wosool also provides the dedicated digital gateway for **EO Riyadh Accelerator**
 
 > **Release boundary:** GitHub CI validates source, security checks, tests, and production builds. A commit, merge, or green workflow does **not** by itself prove that production hosting has deployed the change. See the [production deployment contract, preflight and health monitoring](DEPLOYMENT.md#production-deployment-contract-october-22-2026).
 
-> **Frontend incident (23 October 2026):** public monitoring reports HTTP 500 from `/health`, `/` and `/eoa`, while the direct Laravel health/readiness endpoints and the same-origin API proxy pass. The source gate now boots a standalone pnpm build through `pnpm run start` and checks those three frontend routes. Recovery still requires the active Hostinger deployment's runtime log and a verified redeploy; repository checks alone cannot identify the hosted exception.
+> **Frontend recovery check (24 October 2026):** the scheduled six-probe production monitor passes again, including `/health`, `/`, `/eoa`, direct Laravel liveness/readiness and the same-origin API proxy. The public homepage and Accelerator page are reachable. The active hosting revision and production database imports remain separate evidence; route recovery does not prove that the latest `main` or the 159-profile catalog is deployed.
 
 > **Knowledge, API and content cycle (16 October 2026):** bilingual `/wiki`, public `/api` reference and OpenAPI, server-rendered news metadata, public-record sitemap, draft-only RSS discovery, and **144 founders / 79 companies / 42 stories** in checked-in source snapshots. See [development phases and next actions](docs/CONTINUOUS-DEVELOPMENT.md) and [source evidence](docs/research/KNOWLEDGE-CONTENT-2026-10-14.md). Production deployment/import remain separate release steps.
 
