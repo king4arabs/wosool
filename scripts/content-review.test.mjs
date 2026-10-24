@@ -152,5 +152,5 @@ test('both CLI modes report full coverage from a different working directory', (
   assert.match(check.stdout, /159 founders, 89 companies, 49 stories/)
   const review = spawnSync(process.execPath, [script.pathname], { cwd: tmpdir(), encoding: 'utf8' })
   assert.equal(review.status, 0, review.stderr)
-  assert.equal(JSON.parse(review.stdout).totals.founders, 153)
+  assert.equal(JSON.parse(review.stdout).totals.founders, 159)
 })
