@@ -21,6 +21,8 @@
   <a href="https://github.com/king4arabs/wosool/issues">Report a bug</a>
 </p>
 
+SEO update (25 October 2026): distinct opportunity and Accelerator snippets, server-rendered public event/program details, expanded public sitemaps, crawler not-found handling, branded social previews and automated SEO checks. See [search visibility setup and release checks](docs/SEO.md), including Google/Bing verification, sitemap submission and next priorities. Repository validation does not establish live publication or rankings.
+
 Content refresh (25 October 2026): **163 founder profiles, 91 companies and 52 news briefs** in synchronized repository catalogs. The latest reviewed addition contains four founders and three news briefs. See [source review and publication boundaries](docs/research/CONTENT-REFRESH-2026-10-25.md). Production database imports and live release verification are recorded separately.
 
 Wosool brings founder profiles, startup and venture discovery, events, learning, reviewed introductions, collaboration, and administration into one Arabic/English platform. This monorepo contains the Next.js frontend, Laravel API, database migrations, tests, operating tools, and production documentation.

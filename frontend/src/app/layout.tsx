@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next"
+import { jsonLd } from "@/lib/seo"
 import { Providers } from "./providers"
 import { SkipLink } from "@/components/layout/SkipLink"
 import "./globals.css"
@@ -26,6 +27,7 @@ export const metadata: Metadata = {
   ],
   verification: {
     google: process.env.GOOGLE_SITE_VERIFICATION || undefined,
+    yandex: process.env.YANDEX_SITE_VERIFICATION || undefined,
     other: {
       ...(process.env.BING_SITE_VERIFICATION ? { "msvalidate.01": process.env.BING_SITE_VERIFICATION } : {}),
       ...(process.env.META_DOMAIN_VERIFICATION ? { "facebook-domain-verification": process.env.META_DOMAIN_VERIFICATION } : {}),
@@ -88,13 +90,13 @@ export default function RootLayout({
   return (
     <html lang="ar" dir="rtl" className="h-full scroll-smooth antialiased">
       <body className="flex min-h-full flex-col font-sans">
-        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd({
           "@context": "https://schema.org",
           "@graph": [
             { "@type": "Organization", "@id": `${siteUrl}/#organization`, name: "Wosool | وصول", url: siteUrl, logo: new URL("/apple-icon.png", siteUrl).href },
             { "@type": "WebSite", "@id": `${siteUrl}/#website`, name: "Wosool | وصول", alternateName: ["Wosool", "وصول"], url: siteUrl, inLanguage: ["ar", "en"], publisher: { "@id": `${siteUrl}/#organization` } },
           ],
-        }).replace(/</g, "\\u003c") }} />
+        }) }} />
         <Providers>
           <SkipLink />
           {children}
