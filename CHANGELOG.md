@@ -1,5 +1,11 @@
 # Changelog
 
+## Verified SDM/CNTXT content and live-count reconciliation — 2026-10-25
+
+- Add four sourced bilingual editorial profiles: Selwa Al-Hazzaa and Naif Al-Obaidallah of SDM, plus Mohammad Abu Sheikh and Hassan Abu Sheikh of CNTXT AI. Stable founder roles are used where current executive-title sources conflict; no membership, patient-outcome, approval or revenue claim is inferred.
+- Add three original bilingual briefs on CNTXT AI's US office, the Saudi industrial-ideas programme and SDM's LBS MENA competition placement. Prize-pool and prospective hiring figures remain qualified. Repository totals are **163 founders, 91 company groups and 52 news briefs**, with matched frontend/backend snapshots.
+- Production monitoring is green, but the public homepage still renders 159 editorial profiles. The active frontend revision, four-profile deployment delta and production database imports remain separate release work; no live import or deployment is claimed here.
+
 ## Arabic dates: Gregorian calendar and Western digits everywhere — 2026-10-25
 
 - **Problem:** Arabic dates were formatted with five different locale tags. More than 20 places used a bare `ar-SA`. Where no calendar option was passed (member events, programs and messages, the admin pages, the accelerator workspaces, founder activation), that leaves the calendar to the browser: Safari and older engines default `ar-SA` to the Umm al-Qura (Hijri) calendar, so the same date could read as Hijri on an iPhone and Gregorian on Chrome. Other places pinned the calendar but printed Arabic-Indic digits, so `/news` showed "24" and "13" stories next to "٢٢ أكتوبر ٢٠٢٦", and `/events` showed "الأسبوع 3 من ٢٦". On the member events page the date badge took its day number from the browser's own time zone and its month from `ar-SA`, so a visitor outside Saudi Arabia (or in Safari) could see a day and month that do not belong together; event and session times there were also shown in the browser's time zone with no label.
