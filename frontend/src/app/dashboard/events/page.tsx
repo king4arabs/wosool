@@ -134,7 +134,7 @@ function EventCard({
 
             <div className="flex flex-wrap items-center gap-3 text-xs text-slate-400 font-medium mb-4">
               <span className="flex items-center gap-1"><CalendarDays className="h-3 w-3" />{formatDate(event.starts_at)}</span>
-              <span className="flex items-center gap-1"><Clock className="h-3 w-3" />{formatTime(event.starts_at)}{event.ends_at && ` – ${formatTime(event.ends_at)}`}</span>
+              <span className="flex items-center gap-1"><Clock className="h-3 w-3" />{formatTime(event.starts_at)}{event.ends_at && ` – ${formatTime(event.ends_at)}`} بتوقيت الرياض</span>
               {!isVirtual && event.location && <span className="flex items-center gap-1"><MapPin className="h-3 w-3" />{event.location}</span>}
               {event.max_attendees && <span className="flex items-center gap-1"><Users className="h-3 w-3" />{event.max_attendees} مشارك كحد أقصى</span>}
               {typeof event.relevance_score === "number" && <span className="text-[#3B52D4] font-bold">{event.relevance_score}% صلة</span>}
