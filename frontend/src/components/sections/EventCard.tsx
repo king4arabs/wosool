@@ -5,6 +5,7 @@ import type { Event } from "@/types"
 import { MapPin, Video, Users, ArrowLeft, ArrowRight } from "lucide-react"
 import { useLocale } from "@/lib/locale"
 import { canRegisterForEvent, isPastEvent } from "@/lib/event-time"
+import { dateLocale } from "@/lib/date-locale"
 
 interface EventCardProps {
   event: Event
@@ -24,7 +25,7 @@ function formatEventDate(dateStr: string, intlLocale: string) {
 
 export function EventCard({ event, now }: EventCardProps) {
   const { locale, direction } = useLocale()
-  const intlLocale = locale === "ar" ? "ar-SA" : "en-US"
+  const intlLocale = dateLocale(locale === "ar", "en-US")
   const d = formatEventDate(event.date, intlLocale)
   const ArrowIcon = direction === "rtl" ? ArrowLeft : ArrowRight
 

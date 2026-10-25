@@ -13,6 +13,7 @@ import {
   connectProblem,
   type ConnectProblem,
 } from "@/lib/opportunity-connect";
+import { dateLocale } from "@/lib/date-locale"
 export type EcosystemRecord = {
   id: number;
   slug: string;
@@ -300,7 +301,7 @@ export function LegacyOpportunityDetails({ slug }: { slug?: string }) {
                         </dt>
                         <dd>
                           {new Date(r.deadline).toLocaleDateString(
-                            ar ? "ar-SA" : "en-GB",
+                            dateLocale(ar, "en-GB"),
                             { timeZone: "Asia/Riyadh" },
                           )}
                         </dd>

@@ -7,6 +7,7 @@ import type { IntroductionRequest, IntroRoutingStatus } from "@/types/platform"
 import { parseIntroductionRequest } from "@/types/platform"
 import type { DashboardLocale } from "@/lib/dashboard-i18n"
 import { dashboardDictionary } from "@/lib/dashboard-i18n"
+import { dateLocale } from "@/lib/date-locale"
 
 interface IntroRouterLedgerProps {
   locale: DashboardLocale
@@ -90,7 +91,7 @@ export default function IntroRouterLedger({ initialInbound, initialOutbound, loc
   }
 
   const dateFormatter = useMemo(
-    () => new Intl.DateTimeFormat(locale === "ar" ? "ar-SA" : "en-GB", { day: "numeric", month: "short" }),
+    () => new Intl.DateTimeFormat(dateLocale(locale === "ar", "en-GB"), { day: "numeric", month: "short" }),
     [locale],
   )
 

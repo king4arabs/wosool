@@ -2,6 +2,7 @@ import type { EoaBoardMember } from './eoa-board'
 import type { EoaEditorial } from './eoa-editorial'
 import type { EoaMentor } from './eoa-mentors'
 import { ApiError } from './api'
+import { eoaDateLocale } from "./date-locale"
 
 export type EoaTrack = { id: number; name_ar: string; name_en: string; description_ar?: string | null; description_en?: string | null; is_active?: boolean }
 export type EoaPartner = {
@@ -64,7 +65,7 @@ export function formatEoaDate(value: string | null | undefined, ar: boolean) {
   if (!value) return '—'
   const date = new Date(value)
   if (!Number.isFinite(date.getTime())) return '—'
-  return new Intl.DateTimeFormat(ar ? 'ar-SA' : 'en-GB', {
+  return new Intl.DateTimeFormat(eoaDateLocale(ar, "en-GB"), {
     calendar: 'gregory',
     timeZone: 'Asia/Riyadh',
     year: 'numeric',

@@ -20,6 +20,7 @@ import {
   type Payload,
   type GatewaySettings,
 } from "@/lib/gateway";
+import { dateLocale } from "@/lib/date-locale"
 
 function AccountForm({
   ar,
@@ -781,7 +782,7 @@ export function ApplicationWorkspace() {
                             </h3>
                             <time className="text-xs text-slate-500">
                               {new Date(e.created_at).toLocaleString(
-                                ar ? "ar-SA" : "en-GB",
+                                dateLocale(ar, "en-GB"),
                                 { timeZone: "Asia/Riyadh" },
                               )}
                             </time>
@@ -861,7 +862,7 @@ export function ApplicationWorkspace() {
                           <p className="mt-1 text-sm text-slate-600">
                             {s.starts_at
                               ? new Date(s.starts_at).toLocaleString(
-                                  ar ? "ar-SA" : "en-GB",
+                                  dateLocale(ar, "en-GB"),
                                   { timeZone: "Asia/Riyadh" },
                                 )
                               : t("لم يُعلن", "Not announced")}{" "}

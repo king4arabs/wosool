@@ -115,7 +115,9 @@ for (const role of roles.filter(role => !ONLY_ROLES || ONLY_ROLES.includes(role.
             const walker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT)
             for (let node = walker.nextNode(); node; node = walker.nextNode()) {
               // Measure each word on its own, so "Saudi Arabia" is checked as "Saudi" and "Arabia".
-              for (const match of node.textContent.matchAll(/\S{2,}/g)) {
+              // Hyphens and slashes are normal line-break points ("two-" / "week" in a headline), so
+              // each part is measured separately; a part split letter by letter is still caught.
+              for (const match of node.textContent.matchAll(/[^\s\-\u2010\u2013\u2014/]{2,}/g)) {
                 const range = document.createRange()
                 range.setStart(node, match.index)
                 range.setEnd(node, match.index + match[0].length)

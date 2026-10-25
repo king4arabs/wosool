@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Progress } from "@/components/ui/progress"
 import { api } from "@/lib/api"
+import { ARABIC_DATE_LOCALE } from "@/lib/date-locale"
 
 type ProgramItem = {
   id?: number
@@ -100,7 +101,7 @@ export default function DashboardProgramsPage() {
                   <div className="flex items-center justify-between text-xs text-slate-500 mb-1"><span>نسبة الإنجاز</span><span>{item.progress || 0}%</span></div>
                   <Progress value={item.progress || 0} />
                 </div>
-                <p className="text-xs text-slate-500">الجلسة القادمة: {item.next_session?.title ? `${item.next_session.title} — ${item.next_session.starts_at ? new Date(item.next_session.starts_at).toLocaleString("ar-SA") : ""}` : "لا توجد جلسة مجدولة"}</p>
+                <p className="text-xs text-slate-500">الجلسة القادمة: {item.next_session?.title ? `${item.next_session.title} — ${item.next_session.starts_at ? new Date(item.next_session.starts_at).toLocaleString(ARABIC_DATE_LOCALE, { timeZone: "Asia/Riyadh", dateStyle: "medium", timeStyle: "short" }) : ""}` : "لا توجد جلسة مجدولة"}</p>
                 <Link href={`/programs/${item.program.slug}`} className="text-sm font-semibold text-[#3B52D4]">عرض البرنامج</Link>
               </CardContent>
             </Card>
@@ -114,7 +115,7 @@ export default function DashboardProgramsPage() {
               <CardContent className="p-4 flex items-center justify-between gap-3">
                 <div>
                   <p className="font-semibold text-slate-900">{item.program.name}</p>
-                  <p className="text-xs text-slate-500">تاريخ التقديم: {item.submitted_at ? new Date(item.submitted_at).toLocaleDateString("ar-SA") : "—"}</p>
+                  <p className="text-xs text-slate-500">تاريخ التقديم: {item.submitted_at ? new Date(item.submitted_at).toLocaleDateString(ARABIC_DATE_LOCALE, { timeZone: "Asia/Riyadh" }) : "—"}</p>
                 </div>
                 <Badge variant="warning">{statusMap[item.status || ""] || item.status || "—"}</Badge>
               </CardContent>

@@ -13,6 +13,7 @@ import {
   type Application,
   type GatewaySettings,
 } from "@/lib/gateway";
+import { dateLocale } from "@/lib/date-locale"
 const transitions: Record<string, string[]> = {
   submitted: ["under_review"],
   under_review: [
@@ -311,7 +312,7 @@ export function ReviewWorkspace() {
                   <li key={e.id} className="text-sm leading-7">
                     <time>
                       {new Date(e.created_at).toLocaleString(
-                        ar ? "ar-SA" : "en-GB",
+                        dateLocale(ar, "en-GB"),
                         { timeZone: "Asia/Riyadh" },
                       )}
                     </time>{" "}

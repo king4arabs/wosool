@@ -13,6 +13,7 @@ import {
   type EoaApplication,
 } from '@/lib/eoa'
 import { Field, Notice, useEoaProgram } from './Shared'
+import { eoaDateLocale } from "@/lib/date-locale"
 
 export function Application() {
   const { user } = useAuth()
@@ -270,7 +271,7 @@ function ApplicationSession() {
                   <span className="eoa-muted">
                     {ar ? 'آخر حفظ' : 'Last saved'}:{' '}
                     {new Date(application.updated_at).toLocaleString(
-                      ar ? 'ar-SA' : 'en-GB',
+                      eoaDateLocale(ar, "en-GB"),
                       { timeZone: 'Asia/Riyadh' },
                     )}
                   </span>

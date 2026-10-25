@@ -14,6 +14,7 @@ import { getInitials } from "@/lib/utils"
 import ScorecardWidget from "@/components/dashboard/ScorecardWidget"
 import NextSteps from "@/components/dashboard/NextSteps"
 import { applicationHref, applicationStatus, homePrograms, homeSchedule, rsvpStatus, type HomeApplication, type HomeEvent, type StatusTone } from "@/lib/dashboard-home"
+import { dateLocale } from "@/lib/date-locale"
 
 interface DashboardData {
   profile_completion?: number
@@ -71,7 +72,7 @@ export default function DashboardPage() {
   const founder = profile ? mapFounder(profile) : null
   const completion = profile ? profileCompletion(profile) : data?.profile_completion
   const name = founder?.name || user?.name || (ar ? 'المؤسس' : 'Founder')
-  const date = (value: string) => Number.isFinite(Date.parse(value)) ? new Date(value).toLocaleString(ar ? 'ar-SA-u-ca-gregory' : 'en-GB', {timeZone:'Asia/Riyadh',month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'}) : '—'
+  const date = (value: string) => Number.isFinite(Date.parse(value)) ? new Date(value).toLocaleString(dateLocale(ar, "en-GB"), {timeZone:'Asia/Riyadh',month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'}) : '—'
   const matches = (data?.recommended_matches ?? []).map(match => {
     const other = String(match.founder_a?.id) === String(profile?.id) ? match.founder_b : match.founder_a
     return other ? mapFounder(other) : null

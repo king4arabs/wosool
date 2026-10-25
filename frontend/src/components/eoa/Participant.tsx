@@ -12,6 +12,7 @@ import {
 } from '@/lib/eoa'
 import { learningSummary, pillars } from '@/lib/eoa-management'
 import { Field, Notice, useEoaProgram } from './Shared'
+import { eoaDateLocale } from "@/lib/date-locale"
 
 export function ParticipantWorkspace({
   participant: p,
@@ -174,7 +175,7 @@ export function ParticipantWorkspace({
                 <article className="eoa-card" key={s.id}>
                   <span className="eoa-eyebrow">
                     {new Date(s.starts_at).toLocaleString(
-                      ar ? 'ar-SA-u-ca-gregory' : 'en-GB',
+                      eoaDateLocale(ar, "en-GB"),
                       { timeZone: 'Asia/Riyadh' },
                     )}{' '}
                     (Riyadh)

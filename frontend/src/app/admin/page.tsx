@@ -23,6 +23,7 @@ import { type AdminDashboardResponse, formatDate } from "@/lib/admin"
 import { useLocale } from "@/lib/locale"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
+import { dateLocale } from "@/lib/date-locale"
 
 const copy = {
   ar: {
@@ -161,7 +162,7 @@ export default function AdminPage() {
           <div className="max-w-3xl">
             <p className="text-xs font-extrabold uppercase tracking-[.18em] text-[var(--brand-light-blue)]">{t.eyebrow}</p>
             <h2 className="mt-3 text-3xl font-extrabold leading-tight sm:text-4xl">{t.title}</h2>
-            <p className="mt-4 text-sm leading-8 text-white/72 sm:text-base">{t.description}</p>{updatedAt && <p className="mt-3 text-xs text-indigo-200">{ar ? "آخر تحديث: " : "Last refreshed: "}{updatedAt.toLocaleTimeString(ar ? "ar-SA" : "en-GB", {hour:"2-digit", minute:"2-digit", timeZone:"Asia/Riyadh"})} · {ar ? "الرياض" : "Riyadh"}</p>}
+            <p className="mt-4 text-sm leading-8 text-white/72 sm:text-base">{t.description}</p>{updatedAt && <p className="mt-3 text-xs text-indigo-200">{ar ? "آخر تحديث: " : "Last refreshed: "}{updatedAt.toLocaleTimeString(dateLocale(ar, "en-GB"), {hour:"2-digit", minute:"2-digit", timeZone:"Asia/Riyadh"})} · {ar ? "الرياض" : "Riyadh"}</p>}
           </div>
           <Button type="button" variant="outline" className="min-h-12 border-white/25 bg-white/10 font-bold text-white hover:bg-white hover:text-[var(--brand-navy)]" disabled={loading} onClick={() => void load()}>
             {loading ? <Clock3 className="h-4 w-4 animate-spin motion-reduce:animate-none" /> : <CheckCircle2 className="h-4 w-4" />}
@@ -195,7 +196,7 @@ export default function AdminPage() {
               <span className="grid h-11 w-11 place-items-center rounded-2xl bg-[var(--surface-soft)] text-[var(--action-bg)]"><Icon className="h-5 w-5" aria-hidden="true" /></span>
               <span className="rounded-full bg-[var(--surface-soft)] px-2.5 py-1 text-[10px] font-bold text-[var(--text-muted)]">{detail}</span>
             </div>
-            <strong className="mt-6 block text-4xl font-extrabold tracking-tight text-[var(--text-strong)]" dir="ltr">{value.toLocaleString(ar ? "ar-SA" : "en-US")}</strong>
+            <strong className="mt-6 block text-4xl font-extrabold tracking-tight text-[var(--text-strong)]" dir="ltr">{value.toLocaleString(dateLocale(ar, "en-US"))}</strong>
             <p className="mt-2 text-sm font-bold text-[var(--text-muted)]">{label}</p>
           </article>
         ))}

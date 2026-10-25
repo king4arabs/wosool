@@ -10,6 +10,7 @@ import { useToast } from "@/components/ui/toast"
 import { api } from "@/lib/api"
 import { type ContactCategory, type InboxMessage, type InboxResponse, type InboxStatus, inboxParams, replyHref } from "@/lib/contact-inbox"
 import { useLocale } from "@/lib/locale"
+import { dateLocale } from "@/lib/date-locale"
 
 const categories: { value: ContactCategory; ar: string; en: string }[] = [
   { value: "general", ar: "سؤال عام", en: "General question" },
@@ -54,7 +55,7 @@ export default function AdminMessagesPage() {
   const [busyId, setBusyId] = useState<number | null>(null)
 
   const date = useCallback((value: string | null) => value
-    ? new Intl.DateTimeFormat(lang === "ar" ? "ar-SA-u-nu-latn-ca-gregory" : "en-GB", { dateStyle: "medium", timeStyle: "short", timeZone: "Asia/Riyadh" }).format(new Date(value))
+    ? new Intl.DateTimeFormat(dateLocale(lang === "ar", "en-GB"), { dateStyle: "medium", timeStyle: "short", timeZone: "Asia/Riyadh" }).format(new Date(value))
     : "—", [lang])
 
   const load = useCallback(async () => {

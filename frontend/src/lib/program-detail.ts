@@ -1,5 +1,6 @@
 import { applicationStatus } from "./dashboard-home"
 import { programCategoryLabel } from "./program-labels"
+import { dateLocale } from "./date-locale"
 
 type Locale = "ar" | "en"
 type Label = { ar: string; en: string }
@@ -164,7 +165,7 @@ export function programDate(value: string | null | undefined, locale: Locale, wi
     ? { dateStyle: "medium", timeStyle: "short", timeZone: "Asia/Riyadh" }
     : { dateStyle: "long", timeZone: "Asia/Riyadh" }
   // Gregorian dates with Western digits, matching the rest of the site.
-  return new Intl.DateTimeFormat(locale === "ar" ? "ar-SA-u-ca-gregory-nu-latn" : "en-GB", options).format(date)
+  return new Intl.DateTimeFormat(dateLocale(locale === "ar", "en-GB"), options).format(date)
 }
 
 /** The member's own application status, in the dashboard's wording. */

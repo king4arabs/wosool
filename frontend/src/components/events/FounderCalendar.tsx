@@ -81,7 +81,7 @@ export function FounderCalendar({ events, now, loading, error, retry }: { events
       <p className="mt-2 text-sm leading-7 text-slate-600">{entry.description[locale]}</p>
       {isPlan && <>
         <div className="mt-4 flex flex-wrap gap-2 text-xs font-semibold text-slate-500">
-          <span>{ar ? `الأسبوع ${entry.week} من ٢٦` : `Week ${entry.week} of 26`}</span><span aria-hidden="true">·</span>
+          <span>{ar ? `الأسبوع ${entry.week} من 26` : `Week ${entry.week} of 26`}</span><span aria-hidden="true">·</span>
           <span>{programTracks[entry.kind as ProgramTrack].audience[locale]}</span>
         </div>
         <dl className="mt-4 grid grid-cols-2 gap-3 rounded-xl bg-slate-50 p-3 text-xs">
@@ -109,14 +109,14 @@ export function FounderCalendar({ events, now, loading, error, retry }: { events
         <div className="max-w-2xl">
           <p className="mb-2 text-xs font-extrabold tracking-wide text-[#3B52D4]">{ar ? "تعلّم. زُر. شارك. انمُ." : "LEARN. EXPLORE. CONNECT. GROW."}</p>
           <h2 id="founder-calendar-title" className="text-2xl font-black text-slate-900 sm:text-3xl">{ar ? "تقويم نمو المؤسسين" : "Your founder growth calendar"}</h2>
-          <p className="mt-3 text-sm leading-7 text-slate-600">{ar ? "٢٦ أسبوعًا للتعلّم بموضوعات مختلفة، مع إجازة رمضان ومحطات رئيسية في مايو." : "26 learning weeks, each with its own focus, a Ramadan break, and key milestones in May."}</p>
+          <p className="mt-3 text-sm leading-7 text-slate-600">{ar ? "26 أسبوعًا للتعلّم بموضوعات مختلفة، مع إجازة رمضان ومحطات رئيسية في مايو." : "26 learning weeks, each with its own focus, a Ramadan break, and key milestones in May."}</p>
         </div>
         <div className="rounded-2xl border border-indigo-100 bg-white px-4 py-3 text-xs leading-6 text-slate-600"><strong className="block text-slate-900">{ar ? "فترة التعلّم المقترحة" : "Proposed learning window"}</strong>{periodText}<span className="block">{ar ? "جميع المواعيد بتوقيت الرياض (UTC+3)" : "All dates in Riyadh time (UTC+3)"}</span></div>
       </div>
 
       <div className="mb-8 grid grid-cols-2 gap-3 lg:grid-cols-4">
         {tracks.map((track) => { const Icon = trackIcons[track]; return <button type="button" key={track} onClick={() => setKind(kind === track ? "all" : track)} aria-pressed={kind === track} className={`rounded-2xl border p-4 text-start transition-shadow sm:p-5 hover:shadow-md focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 ${kind === track ? styles[track].badge : "border-slate-200 bg-white text-slate-800"}`}>
-          <span className="mb-4 flex items-center justify-between gap-3"><Icon size={22} aria-hidden="true" /><span className="text-xs font-semibold">{track === "online" ? (ar ? "١٣ ورشة" : "13 workshops") : (ar ? "٢٦ لقاءً" : "26 sessions")}</span></span>
+          <span className="mb-4 flex items-center justify-between gap-3"><Icon size={22} aria-hidden="true" /><span className="text-xs font-semibold">{track === "online" ? (ar ? "13 ورشة" : "13 workshops") : (ar ? "26 لقاءً" : "26 sessions")}</span></span>
           <span className="block text-sm font-extrabold">{programTracks[track].cadence[locale]}</span>
           <span className="mt-1 block text-sm">{programTracks[track].title[locale]}</span>
           <span className="mt-3 block text-xs leading-5 opacity-80">{programTracks[track].audience[locale]}</span>

@@ -7,6 +7,7 @@ import { api } from "@/lib/api"
 import { Button } from "@/components/ui/button"
 import { useToast } from "@/components/ui/toast"
 import { useLocale } from "@/lib/locale"
+import { dateLocale } from "@/lib/date-locale"
 
 type Registration = {
   user_id: number
@@ -133,7 +134,7 @@ export default function AdminEventManagePage() {
                   <td className="px-4 py-3">{row.attendance_type || "—"}</td>
                   <td className="px-4 py-3">{row.registration_status}</td>
                   <td className="px-4 py-3">{row.relevance_score}%</td>
-                  <td className="px-4 py-3">{row.rsvp_date ? new Date(row.rsvp_date).toLocaleString(ar ? "ar-SA" : "en-GB", { timeZone: "Asia/Riyadh" }) : "—"}</td>
+                  <td className="px-4 py-3">{row.rsvp_date ? new Date(row.rsvp_date).toLocaleString(dateLocale(ar, "en-GB"), { timeZone: "Asia/Riyadh" }) : "—"}</td>
                   <td className="px-4 py-3">{row.checkin_status}</td>
                   <td className="px-4 py-3">
                     <div className="flex flex-wrap gap-1">

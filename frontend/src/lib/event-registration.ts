@@ -1,4 +1,5 @@
 import { parseEventDate } from "./event-time"
+import { dateLocale } from "./date-locale"
 
 export type EventLocale = "ar" | "en"
 
@@ -104,7 +105,7 @@ export function formatEventDateTime(value: string | null | undefined, locale: Ev
 }
 
 function formatDateTimeOnly(instant: number, locale: EventLocale): string {
-  return new Intl.DateTimeFormat(locale === "ar" ? "ar-SA-u-ca-gregory-nu-latn" : "en-GB", {
+  return new Intl.DateTimeFormat(dateLocale(locale === "ar", "en-GB"), {
     timeZone: "Asia/Riyadh",
     weekday: "long",
     day: "numeric",
@@ -123,7 +124,7 @@ function riyadhDay(instant: number): string {
 export function formatEventTime(value: string | null | undefined, locale: EventLocale): string {
   const instant = parseEventDate(value)
   if (!Number.isFinite(instant)) return ""
-  return new Intl.DateTimeFormat(locale === "ar" ? "ar-SA-u-ca-gregory-nu-latn" : "en-GB", {
+  return new Intl.DateTimeFormat(dateLocale(locale === "ar", "en-GB"), {
     timeZone: "Asia/Riyadh",
     hour: "numeric",
     minute: "2-digit",

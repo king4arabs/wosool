@@ -1,13 +1,14 @@
 import type { NewsItem } from "../types"
 import profiles from "../data/founder-spotlight.json"
 import curated from "../data/startup-news.json"
+import { dateLocale } from "./date-locale"
 
 export const curatedNews: NewsItem[] = curated
 
 export function newsDate(value: string, locale: string) {
   const date = new Date(value)
   return Number.isNaN(date.getTime()) ? (locale === "ar" ? "التاريخ غير متاح" : "Date unavailable") :
-    date.toLocaleDateString(locale === "ar" ? "ar-SA-u-ca-gregory" : "en-US", { year: "numeric", month: "short", day: "numeric", timeZone: "UTC" })
+    date.toLocaleDateString(dateLocale(locale === "ar", "en-US"), { year: "numeric", month: "short", day: "numeric", timeZone: "UTC" })
 }
 
 export function mergeNews(items: NewsItem[], snapshot: NewsItem[] = curatedNews) {
