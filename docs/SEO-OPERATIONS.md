@@ -1,5 +1,7 @@
 # Search and sharing operations
 
+See [the extended search visibility guide](SEO.md) for dynamic page indexing, crawler status handling, sitemap visibility filters and the CI regression checks.
+
 ## Release checks
 
 Preserve DEPLOYMENT.md and AGENTS.md. This change does not alter package versions, runtime tracing, hoisted linking or build concurrency. Keep private/admin/auth routes excluded from indexing. Sitemap records come from the live anonymous API; unavailable services must not resurrect withdrawn profiles from snapshots.

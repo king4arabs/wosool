@@ -7,6 +7,15 @@
 - Add public company profile URLs to the live-data sitemap using the same bounded pagination and safe slug checks as founders/news.
 - Support optional Google, Bing and Meta ownership verification tags through build environment settings and document post-release submission/preview checks. Preserve private-route noindex rules and the Hostinger deployment baseline.
 
+## 2026-10-25 — Search visibility
+
+- Give opportunity and EOA detail pages distinct metadata and canonical social URLs; align news metadata with default-language article content.
+- Render anonymous public event/program content before JavaScript, handle missing records, and suppress indexing during API failures or for nonpublic programs.
+- Expand sitemap coverage to companies, public events/programs and ecosystem records; filter publication/visibility state and use source modification dates.
+- Add website/organization/breadcrumb structured data, a branded PNG sharing card, optional webmaster verification tokens and crawlable noindex auth pages.
+- Add regression tests and CI checks against production HTML while preserving Hostinger runtime packaging. See `docs/SEO.md` for verification and release requirements.
+
+
 ## Verified SDM/CNTXT content and live-count reconciliation — 2026-10-25
 
 - Add four sourced bilingual editorial profiles: Selwa Al-Hazzaa and Naif Al-Obaidallah of SDM, plus Mohammad Abu Sheikh and Hassan Abu Sheikh of CNTXT AI. Stable founder roles are used where current executive-title sources conflict; no membership, patient-outcome, approval or revenue claim is inferred.

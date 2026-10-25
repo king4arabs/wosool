@@ -41,6 +41,10 @@ jobs:
           NEXT_PUBLIC_SITE_URL: http://localhost:3000
           NEXT_PUBLIC_API_URL: http://localhost:8000
           NEXT_PUBLIC_ENABLE_DEMO_CONTENT: "false"
+      - name: Verify search metadata in server-rendered HTML
+        run: node scripts/check-seo.mjs
+        env:
+          SEO_CANONICAL_ORIGIN: http://localhost:3000
       - name: Install Chromium for isolated public-collection checks
         run: npx playwright install --with-deps chromium
       - name: Verify public collection fallback in both languages and viewport sizes

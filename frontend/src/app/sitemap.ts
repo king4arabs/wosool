@@ -2,7 +2,7 @@ import { opportunityCatalog } from "@/lib/opportunity-catalog";
 import type { MetadataRoute } from "next";
 import { env } from "@/lib/env";
 import { wikiArticles } from "@/lib/wiki";
-import { readSitemapRecords } from "@/lib/public-records";
+import { readSitemapRecords, type SitemapKind } from "@/lib/public-records";
 
 export const dynamic = "force-dynamic";
 
@@ -20,6 +20,7 @@ const publicRoutes = [
   "/eoa/leadership",
   "/eoa/mentors",
   "/eoa/partners",
+  "/eoa/perks",
   "/eoa/faq",
   "/faq",
   "/eoa/contact",
@@ -40,12 +41,21 @@ const publicRoutes = [
 ];
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const [news, founders, companies] = await Promise.all([
-    readSitemapRecords("news", env.apiUrl),
-    readSitemapRecords("founders", env.apiUrl),
-    readSitemapRecords("companies", env.apiUrl),
-  ]);
-  return [
+  const collections: { kind: SitemapKind; path: string }[] = [
+    { kind: "news", path: "/news" },
+    { kind: "founders", path: "/founders" },
+    { kind: "companies", path: "/founders/companies" },
+    { kind: "events", path: "/events" },
+    { kind: "programs", path: "/programs" },
+    { kind: "ecosystem", path: "/opportunities" },
+  ];
+  const liveEntries = (await Promise.all(collections.map(async ({ kind, path }) =>
+    (await readSitemapRecords(kind, env.apiUrl)).map(record => ({
+      url: new URL(`${path}/${record.slug}`, env.siteUrl).href,
+      ...(record.updated_at ? { lastModified: record.updated_at } : {}),
+    })),
+  ))).flat();
+  const entries: MetadataRoute.Sitemap = [
     ...publicRoutes.map((path) => ({ url: new URL(path, env.siteUrl).href })),
     ...opportunityCatalog.map((record) => ({
       url: new URL(`/opportunities/${record.slug}`, env.siteUrl).href,
@@ -54,14 +64,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       url: new URL(`/wiki/${article.slug}`, env.siteUrl).href,
       lastModified: article.updatedAt,
     })),
-    ...news.map((record) => ({
-      url: new URL(`/news/${record.slug}`, env.siteUrl).href,
-    })),
-    ...companies.map((record) => ({
-      url: new URL(`/founders/companies/${record.slug}`, env.siteUrl).href,
-    })),
-    ...founders.map((record) => ({
-      url: new URL(`/founders/${record.slug}`, env.siteUrl).href,
-    })),
+    ...liveEntries,
   ];
+  return [...new Map(entries.map(entry => [entry.url, entry])).values()];
 }
