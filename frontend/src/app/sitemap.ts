@@ -40,9 +40,10 @@ const publicRoutes = [
 ];
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const [news, founders] = await Promise.all([
+  const [news, founders, companies] = await Promise.all([
     readSitemapRecords("news", env.apiUrl),
     readSitemapRecords("founders", env.apiUrl),
+    readSitemapRecords("companies", env.apiUrl),
   ]);
   return [
     ...publicRoutes.map((path) => ({ url: new URL(path, env.siteUrl).href })),
@@ -55,6 +56,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     })),
     ...news.map((record) => ({
       url: new URL(`/news/${record.slug}`, env.siteUrl).href,
+    })),
+    ...companies.map((record) => ({
+      url: new URL(`/founders/companies/${record.slug}`, env.siteUrl).href,
     })),
     ...founders.map((record) => ({
       url: new URL(`/founders/${record.slug}`, env.siteUrl).href,

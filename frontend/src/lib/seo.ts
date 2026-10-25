@@ -13,13 +13,13 @@ export function pageMetadata(title: string, description: string): Metadata {
       siteName: "Wosool",
       locale: "ar_SA",
       alternateLocale: ["en_US"],
-      images: [{ url: "/wosool-logo-eo.svg", width: 820, height: 180, alt: "Wosool — Founders to Founders" }],
+      images: [{ url: "/opengraph-image", width: 1200, height: 630, type: "image/png", alt: "Wosool — Founders to Founders" }],
     },
     twitter: {
       card: "summary_large_image",
       title: `${title} | Wosool`,
       description,
-      images: ["/wosool-logo-eo.svg"],
+      images: ["/opengraph-image"],
     },
   }
 }

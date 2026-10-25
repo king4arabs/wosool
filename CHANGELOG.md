@@ -1,5 +1,12 @@
 # Changelog
 
+## Search and social metadata — 2026-10-25
+
+- Replace SVG social preview references with a branded 1200×630 PNG generated at build time. Open Graph and X cards share the same crawlable image for Meta, WhatsApp, LinkedIn and other consumers.
+- Add Organization/WebSite JSON-LD with stable identifiers and the existing public brand identity; do not invent reviews, contact data, memberships or partnerships.
+- Add public company profile URLs to the live-data sitemap using the same bounded pagination and safe slug checks as founders/news.
+- Support optional Google, Bing and Meta ownership verification tags through build environment settings and document post-release submission/preview checks. Preserve private-route noindex rules and the Hostinger deployment baseline.
+
 ## Verified SDM/CNTXT content and live-count reconciliation — 2026-10-25
 
 - Add four sourced bilingual editorial profiles: Selwa Al-Hazzaa and Naif Al-Obaidallah of SDM, plus Mohammad Abu Sheikh and Hassan Abu Sheikh of CNTXT AI. Stable founder roles are used where current executive-title sources conflict; no membership, patient-outcome, approval or revenue claim is inferred.
