@@ -24,6 +24,13 @@ export const metadata: Metadata = {
     "Vision 2030",
     "MENA startups",
   ],
+  verification: {
+    google: process.env.GOOGLE_SITE_VERIFICATION || undefined,
+    other: {
+      ...(process.env.BING_SITE_VERIFICATION ? { "msvalidate.01": process.env.BING_SITE_VERIFICATION } : {}),
+      ...(process.env.META_DOMAIN_VERIFICATION ? { "facebook-domain-verification": process.env.META_DOMAIN_VERIFICATION } : {}),
+    },
+  },
   authors: [{ name: "Wosool", url: siteUrl }],
   creator: "Wosool",
   publisher: "Wosool",
@@ -39,12 +46,12 @@ export const metadata: Metadata = {
     siteName: "Wosool",
     locale: "ar_SA",
     alternateLocale: ["en_US"],
-    images: [{ url: "/wosool-logo-eo.svg", width: 820, height: 180, alt: "Wosool — Founders to Founders" }],
+    images: [{ url: "/opengraph-image", width: 1200, height: 630, type: "image/png", alt: "Wosool — Founders to Founders" }],
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    images: ["/wosool-logo-eo.svg"],
+    images: ["/opengraph-image"],
     title: "Wosool — Founders to Founders | وصول — من مؤسس إلى مؤسس",
     description: "شبكة خاصة للمؤسسين في السعودية والخليج.",
     creator: "@AboutWosool",
@@ -81,6 +88,13 @@ export default function RootLayout({
   return (
     <html lang="ar" dir="rtl" className="h-full scroll-smooth antialiased">
       <body className="flex min-h-full flex-col font-sans">
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
+          "@context": "https://schema.org",
+          "@graph": [
+            { "@type": "Organization", "@id": `${siteUrl}/#organization`, name: "Wosool | وصول", url: siteUrl, logo: new URL("/apple-icon.png", siteUrl).href },
+            { "@type": "WebSite", "@id": `${siteUrl}/#website`, name: "Wosool | وصول", alternateName: ["Wosool", "وصول"], url: siteUrl, inLanguage: ["ar", "en"], publisher: { "@id": `${siteUrl}/#organization` } },
+          ],
+        }).replace(/</g, "\\u003c") }} />
         <Providers>
           <SkipLink />
           {children}

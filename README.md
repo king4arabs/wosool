@@ -387,3 +387,7 @@ Report vulnerabilities privately through [SECURITY.md](SECURITY.md), not public 
 ## License
 
 The software repository is licensed under the [MIT License](LICENSE). Third-party artwork and trademarks remain subject to their owners' rights and approval requirements; the software license does not grant partnership, endorsement, or trademark rights.
+
+### Search and social preview operations
+
+See [SEO operations](docs/SEO-OPERATIONS.md) for Google Search Console, Bing Webmaster Tools, Meta domain verification, sitemap submission and post-release preview checks. Verification tokens are optional build environment values; account verification and indexing are separate from repository delivery.

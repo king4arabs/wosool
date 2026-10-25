@@ -19,7 +19,7 @@ export async function readPublicNews(slug: string, apiUrl: string, request: type
 
 type PublicRecord = { slug: string; updated_at?: string }
 /** Bounded pagination. Unreachable APIs contribute no possibly withdrawn snapshot URLs. */
-export async function readSitemapRecords(kind: "news" | "founders", apiUrl: string, request: typeof fetch = fetch): Promise<PublicRecord[]> {
+export async function readSitemapRecords(kind: "news" | "founders" | "companies", apiUrl: string, request: typeof fetch = fetch): Promise<PublicRecord[]> {
   const records: PublicRecord[] = []
   for (let page = 1; page <= 20; page++) {
     try {
