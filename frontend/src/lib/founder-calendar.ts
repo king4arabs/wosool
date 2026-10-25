@@ -1,6 +1,7 @@
 import { bilingual, learningTopics, ONLINE_ANCHOR, onlineTopics, peerTopics, PROGRAM_END, PROGRAM_START, RAMADAN_BREAK_END, RAMADAN_BREAK_START, programTracks, visitTopics, type Bilingual, type CalendarKind, type CalendarLocale, type ProgramTrack } from "../data/founder-calendar"
 import { eventPeriod, parseEventDate } from "./event-time"
 import type { Event } from "../types"
+import { dateLocale } from "./date-locale"
 
 export interface CalendarEntry {
   id: string
@@ -31,7 +32,7 @@ export function riyadhDate(instant: number): string {
 }
 
 export function calendarDateLabel(date: string, locale: CalendarLocale, options: Intl.DateTimeFormatOptions = {}): string {
-  return new Intl.DateTimeFormat(locale === "ar" ? "ar-SA" : "en-GB", { calendar: "gregory", timeZone: "UTC", day: "numeric", month: "long", ...options }).format(dateValue(date))
+  return new Intl.DateTimeFormat(dateLocale(locale === "ar", "en-GB"), { calendar: "gregory", timeZone: "UTC", day: "numeric", month: "long", ...options }).format(dateValue(date))
 }
 
 export function calendarMonthDays(month: string): string[] {

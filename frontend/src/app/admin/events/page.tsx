@@ -15,6 +15,7 @@ import { api } from "@/lib/api"
 import { type AdminCollectionResponse, type AdminEvent, formatDate, fromCsvLines, toCsvLines } from "@/lib/admin"
 import { Search, CalendarDays, MapPin, Users, Pencil, Trash2, Plus } from "lucide-react"
 import Link from "next/link"
+import { ARABIC_DATE_LOCALE } from "@/lib/date-locale"
 
 type EventForm = {
   title: string
@@ -339,7 +340,7 @@ export default function AdminEventsPage() {
                     </td>
                     <td className="px-6 py-4">
                       <p className="text-gray-700">{formatDate(event.starts_at)}</p>
-                      <p className="text-xs text-gray-500">{new Date(event.starts_at).toLocaleTimeString("ar-SA", { hour: "numeric", minute: "2-digit" })}</p>
+                      <p className="text-xs text-gray-500">{new Date(event.starts_at).toLocaleTimeString(ARABIC_DATE_LOCALE, { hour: "numeric", minute: "2-digit" })}</p>
                     </td>
                     <td className="px-6 py-4">
                       <Badge variant={event.format === "virtual" ? "secondary" : "outline"}>{event.format}</Badge>

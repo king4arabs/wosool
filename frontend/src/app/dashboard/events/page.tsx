@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from "react"
 import { CalendarDays, MapPin, Clock, Users, Bookmark, BookmarkCheck, Share2, Video, CheckCircle2, Sparkles } from "lucide-react"
 import { api, ApiError } from "@/lib/api"
 import { useToast } from "@/components/ui/toast"
+import { ARABIC_DATE_LOCALE } from "@/lib/date-locale"
 
 interface ApiEvent {
   id: number
@@ -37,7 +38,8 @@ interface MemberRsvpRecord {
 }
 
 function formatDate(iso: string) {
-  return new Date(iso).toLocaleDateString("ar-SA", {
+  return new Date(iso).toLocaleDateString(ARABIC_DATE_LOCALE, {
+    timeZone: "Asia/Riyadh",
     weekday: "short",
     month: "short",
     day: "numeric",
@@ -45,7 +47,7 @@ function formatDate(iso: string) {
 }
 
 function formatTime(iso: string) {
-  return new Date(iso).toLocaleTimeString("ar-SA", { hour: "numeric", minute: "2-digit" })
+  return new Date(iso).toLocaleTimeString(ARABIC_DATE_LOCALE, { hour: "numeric", minute: "2-digit", timeZone: "Asia/Riyadh" })
 }
 
 const PERIODS = [
@@ -59,8 +61,9 @@ type Period = (typeof PERIODS)[number]["value"]
 
 function DateBlock({ iso }: { iso: string }) {
   const d = new Date(iso)
-  const day = d.getDate()
-  const month = d.toLocaleDateString("ar-SA", { month: "short" })
+  // Day and month both in Riyadh time, so a late-evening event does not show the next day's number.
+  const day = d.toLocaleDateString(ARABIC_DATE_LOCALE, { day: "numeric", timeZone: "Asia/Riyadh" })
+  const month = d.toLocaleDateString(ARABIC_DATE_LOCALE, { month: "short", timeZone: "Asia/Riyadh" })
   return (
     <div className="flex-shrink-0 w-14 h-14 rounded-xl bg-[#EEF1FF] border border-[#E4E7F0] flex flex-col items-center justify-center gap-0.5">
       <span className="text-xs font-extrabold text-[#3B52D4] uppercase leading-none">{month}</span>
@@ -131,7 +134,7 @@ function EventCard({
 
             <div className="flex flex-wrap items-center gap-3 text-xs text-slate-400 font-medium mb-4">
               <span className="flex items-center gap-1"><CalendarDays className="h-3 w-3" />{formatDate(event.starts_at)}</span>
-              <span className="flex items-center gap-1"><Clock className="h-3 w-3" />{formatTime(event.starts_at)}{event.ends_at && ` – ${formatTime(event.ends_at)}`}</span>
+              <span className="flex items-center gap-1"><Clock className="h-3 w-3" />{formatTime(event.starts_at)}{event.ends_at && ` – ${formatTime(event.ends_at)}`} بتوقيت الرياض</span>
               {!isVirtual && event.location && <span className="flex items-center gap-1"><MapPin className="h-3 w-3" />{event.location}</span>}
               {event.max_attendees && <span className="flex items-center gap-1"><Users className="h-3 w-3" />{event.max_attendees} مشارك كحد أقصى</span>}
               {typeof event.relevance_score === "number" && <span className="text-[#3B52D4] font-bold">{event.relevance_score}% صلة</span>}

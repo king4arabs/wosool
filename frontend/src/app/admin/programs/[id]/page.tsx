@@ -12,6 +12,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { api } from "@/lib/api"
 import { useToast } from "@/components/ui/toast"
 import { useLocale } from "@/lib/locale"
+import { dateLocale } from "@/lib/date-locale"
 
 // The Arabic tab name is the panel key ProgramOperationsPanel expects.
 const TABS = [
@@ -216,7 +217,7 @@ export default function AdminProgramManagePage() {
           </div>
           <Textarea placeholder={t("وصف الجلسة", "Session description")} aria-label={t("وصف الجلسة", "Session description")} value={sessionForm.description} onChange={(e) => setSessionForm((p) => ({ ...p, description: e.target.value }))} />
           <Button onClick={createSession}>{t("إضافة جلسة", "Add session")}</Button>
-          <div className="space-y-2">{sessions.map((s) => <div key={s.id} className="border rounded-lg p-3 text-sm">{s.title} • {s.session_type} • {s.starts_at ? new Date(s.starts_at).toLocaleString(ar ? "ar-SA" : "en-GB", { timeZone: "Asia/Riyadh" }) : "—"}</div>)}</div>
+          <div className="space-y-2">{sessions.map((s) => <div key={s.id} className="border rounded-lg p-3 text-sm">{s.title} • {s.session_type} • {s.starts_at ? new Date(s.starts_at).toLocaleString(dateLocale(ar, "en-GB"), { timeZone: "Asia/Riyadh" }) : "—"}</div>)}</div>
         </CardContent></Card>
       )}
 

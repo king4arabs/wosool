@@ -6,6 +6,7 @@ import { api } from "@/lib/api"
 import { useLocale } from "@/lib/locale"
 import { PublicLayout } from "@/components/layout/PublicLayout"
 import { Button } from "@/components/ui/button"
+import { dateLocale } from "@/lib/date-locale"
 
 type Invitation = { name: string; slug: string; email_hint: string; existing_account: boolean; expires_at: string }
 
@@ -55,7 +56,7 @@ export function FounderActivation() {
       {error && <div role="alert" className="mt-5 rounded-xl bg-red-50 p-4 text-sm text-red-700">{error}{!invitation && <Button variant="outline" className="mt-3" onClick={() => setAttempt(n => n + 1)}>{ar ? 'إعادة المحاولة' : 'Try again'}</Button>}</div>}
       {done ? <div className="mt-6 space-y-5"><p className="leading-7 text-slate-600">{ar ? 'يمكنك الآن تسجيل الدخول، مراجعة ملفك وشركتك، والتواصل مع المؤسسين.' : 'Sign in to review your profile and company, then start connecting with founders.'}</p><Button asChild><Link href="/login?redirect=/dashboard/profile">{ar ? 'تسجيل الدخول وإكمال الملف' : 'Sign in and complete your profile'}</Link></Button></div>
         : invitation ? <form onSubmit={activate} className="mt-6 space-y-5">
-          <div className="rounded-2xl bg-indigo-50 p-5"><h2 className="text-xl font-bold">{invitation.name}</h2><p className="mt-2 break-all text-sm text-slate-600" dir="ltr">{invitation.email_hint}</p><p className="mt-2 text-sm">{ar ? 'صلاحية الدعوة حتى: ' : 'Invitation expires: '}{new Date(invitation.expires_at).toLocaleDateString(ar ? 'ar-SA' : 'en-GB')}</p></div>
+          <div className="rounded-2xl bg-indigo-50 p-5"><h2 className="text-xl font-bold">{invitation.name}</h2><p className="mt-2 break-all text-sm text-slate-600" dir="ltr">{invitation.email_hint}</p><p className="mt-2 text-sm">{ar ? 'صلاحية الدعوة حتى: ' : 'Invitation expires: '}{new Date(invitation.expires_at).toLocaleDateString(dateLocale(ar, "en-GB"))}</p></div>
           <p className="text-sm leading-7 text-[var(--text-muted)]">{ar ? 'أدخل رمز التفعيل المكوّن من ٦ أرقام الموجود في رسالة الدعوة.' : 'Enter the 6-digit activation code from your invitation email.'}</p>
           <label className="block text-sm font-semibold">{ar ? 'رمز التفعيل' : 'Activation code'}<input name="code" type="text" inputMode="numeric" autoComplete="one-time-code" pattern="[0-9]{6}" maxLength={6} required dir="ltr" className={input} /></label>
           <p className="text-sm leading-7 text-slate-600">{invitation.existing_account ? ar ? 'أدخل كلمة المرور الحالية لحساب البريد المدعو لربط الملف بحسابك.' : 'Enter the current password for your invited email account to claim this profile.' : ar ? 'أنشئ كلمة مرور من 12 حرفاً على الأقل، تشمل أحرفاً كبيرة وصغيرة وأرقاماً.' : 'Create a password of at least 12 characters with uppercase and lowercase letters and numbers.'}</p>
