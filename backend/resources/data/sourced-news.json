@@ -1,5 +1,131 @@
 [
   {
+    "imageUrl": "",
+    "imageCredit": "",
+    "author": "Wosool news desk",
+    "id": "sourced-cntxt-ai-us-office-october-2026",
+    "slug": "cntxt-ai-us-office-october-2026",
+    "title": "CNTXT AI opens Silicon Valley office to support global AI and robotics work",
+    "excerpt": "Abu Dhabi-based CNTXT AI has opened an office in Milpitas, California, to work more closely with US customers on data, Arabic AI and robotics deployments.",
+    "content": "CNTXT AI, headquartered in Abu Dhabi, opened a US office in Milpitas, California, according to an October 22 interview with co-founder Mohammad Abu Sheikh. The company says the site will support customers and robotics deployment testing. It plans to hire a US commercial team; the expansion does not establish completed hires or earned revenue.",
+    "category": "Ecosystem",
+    "region": "gcc",
+    "sourceUrl": "https://enterpriseam.com/uae/2026/10/22/cntxt-ai-opens-us-office-to-bring-robots-back-to-gulf-eyes-europe-and-china-next/",
+    "sourceName": "EnterpriseAM",
+    "companies": [
+      "CNTXT AI"
+    ],
+    "publishedAt": "2026-10-22",
+    "tags": [
+      "CNTXT AI",
+      "AI infrastructure",
+      "Expansion"
+    ],
+    "keyFacts": [
+      "US office: Milpitas, California",
+      "Focus: AI data and robotics deployment",
+      "US commercial hiring is planned"
+    ],
+    "translations": {
+      "ar": {
+        "title": "CNTXT AI تفتتح مكتباً في وادي السيليكون",
+        "excerpt": "افتتحت شركة CNTXT AI الإماراتية مكتباً في ميلبيتاس بكاليفورنيا للتقارب مع عملائها الأمريكيين في البيانات والذكاء الاصطناعي والروبوتات.",
+        "body": [
+          "افتتحت CNTXT AI، ومقرها أبوظبي، مكتباً في ميلبيتاس بكاليفورنيا، وفق مقابلة نُشرت في 22 أكتوبر مع الشريك المؤسس محمد أبو الشيخ. وتقول الشركة إن الموقع يدعم عملاءها وتجارب نشر الروبوتات، مع خطة لتوظيف فريق تجاري أمريكي؛ ولا تعني الخطة إتمام التوظيف أو تحقيق إيرادات فعلية."
+        ],
+        "keyFacts": [
+          "المكتب الأمريكي: ميلبيتاس في كاليفورنيا",
+          "التركيز: بيانات الذكاء الاصطناعي والروبوتات",
+          "التوظيف التجاري في الولايات المتحدة مخطط له"
+        ]
+      }
+    }
+  },
+  {
+    "imageUrl": "",
+    "imageCredit": "",
+    "author": "Wosool news desk",
+    "id": "sourced-saudi-industrial-ideas-development-program-2026",
+    "slug": "saudi-industrial-ideas-development-program-2026",
+    "title": "Saudi industry ministry launches two-week programme for industrial startup ideas",
+    "excerpt": "A new programme pairs industrial problem identification, market research and feasibility work with expert and facility visits.",
+    "content": "Saudi Arabia's Ministry of Industry and Mineral Resources, working with Imam Mohammad Ibn Saud Islamic University, announced the Industrial Ideas Development Program on October 20. The two-week initiative began October 19 and guides participants through identifying an industrial problem, assessing customer needs and developing a concept. SIDF Academy experts and field visits support the work.",
+    "category": "Ecosystem",
+    "region": "saudi",
+    "sourceUrl": "https://www.spa.gov.sa/en/N2706136",
+    "sourceName": "Saudi Press Agency",
+    "companies": [],
+    "publishedAt": "2026-10-20",
+    "tags": [
+      "Entrepreneurship",
+      "Industry",
+      "Saudi Arabia"
+    ],
+    "keyFacts": [
+      "Announcement: 20 October 2026",
+      "Programme launched: 19 October 2026",
+      "Duration: two weeks"
+    ],
+    "translations": {
+      "ar": {
+        "title": "إطلاق برنامج لتطوير الأفكار الصناعية في السعودية",
+        "excerpt": "برنامج يمتد أسبوعين لتحديد المشكلات الصناعية ودراسة الأسواق والجدوى الأولية بمشاركة خبراء وزيارات ميدانية.",
+        "body": [
+          "أعلنت وزارة الصناعة والثروة المعدنية، بالتعاون مع جامعة الإمام محمد بن سعود الإسلامية، برنامج تطوير الأفكار الصناعية في 20 أكتوبر. بدأ البرنامج في 19 أكتوبر ويستمر أسبوعين، ويشمل تحديد التحديات الصناعية ودراسة العملاء والجدوى الأولية وتطوير الأفكار، بدعم خبراء أكاديمية صندوق التنمية الصناعية وزيارات ميدانية."
+        ],
+        "keyFacts": [
+          "تاريخ الإعلان: 20 أكتوبر 2026",
+          "بداية البرنامج: 19 أكتوبر 2026",
+          "المدة: أسبوعان"
+        ]
+      }
+    }
+  },
+  {
+    "imageUrl": "",
+    "imageCredit": "",
+    "author": "Wosool news desk",
+    "id": "sourced-sdm-lbs-second-place-october-2026",
+    "slug": "sdm-lbs-second-place-october-2026",
+    "title": "Saudi health-AI startup SDM places second in LBS MENA competition",
+    "excerpt": "SDM finished second in London Business School's 2026 MENA Startup Competition, with UAE-based Persium first and Frank AI third.",
+    "content": "London Business School announced the results of its MENA Startup Competition on October 14, 2026. Saudi health-AI startup SDM took second place for its work supporting early detection of chronic diseases. UAE-based Persium won and Frank AI placed third. Ten finalists were selected from nearly 100 applications; the $45,000 non-dilutive prize pool was for the competition as a whole, not a stated payment to SDM.",
+    "category": "Ecosystem",
+    "region": "saudi",
+    "sourceUrl": "https://www.london.edu/news/persium-wins-lbs-mena-startup-competition-2026",
+    "sourceName": "London Business School",
+    "companies": [
+      "SDM",
+      "Persium",
+      "Frank AI"
+    ],
+    "publishedAt": "2026-10-14",
+    "tags": [
+      "SDM",
+      "Health AI",
+      "Startup competition"
+    ],
+    "keyFacts": [
+      "SDM: second place",
+      "Persium (UAE): first place",
+      "Ten finalists from nearly 100 applications"
+    ],
+    "translations": {
+      "ar": {
+        "title": "سدم السعودية تحصد المركز الثاني في مسابقة لندن للأعمال",
+        "excerpt": "حققت سدم السعودية للتقنيات الصحية المركز الثاني في مسابقة الشركات الناشئة للشرق الأوسط وشمال أفريقيا لعام 2026.",
+        "body": [
+          "أعلنت كلية لندن للأعمال في 14 أكتوبر 2026 نتائج مسابقتها الإقليمية للشركات الناشئة. حلت سدم السعودية، المتخصصة في الذكاء الاصطناعي للكشف المبكر عن الأمراض المزمنة، ثانياً؛ وفازت Persium الإماراتية بالمركز الأول وجاءت Frank AI ثالثاً. اختير عشرة متأهلين من قرابة مئة طلب، وكانت الجوائز غير المخففة للملكية بقيمة إجمالية 45 ألف دولار لجميع المتنافسين، وليس مبلغاً أُعلن منحه لسدم."
+        ],
+        "keyFacts": [
+          "سدم: المركز الثاني",
+          "Persium الإماراتية: المركز الأول",
+          "10 متأهلين من قرابة 100 طلب"
+        ]
+      }
+    }
+  },
+  {
     "id": "sourced-inve-pre-seed-outliers-october-2026",
     "slug": "inve-pre-seed-outliers-october-2026",
     "title": "INVE secures $300,000 from Outliers VC",
