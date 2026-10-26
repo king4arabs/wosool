@@ -161,7 +161,7 @@ return [
     'unique' => 'قيمة :attribute مستخدمة من قبل.',
     'uploaded' => 'تعذر رفع :attribute.',
     'uppercase' => 'يجب أن يكون حقل :attribute بأحرف كبيرة.',
-    'url' => 'يجب أن يكون حقل :attribute رابطًا صحيحًا يبدأ بـ http أو https.',
+    'url' => 'يجب أن يكون حقل :attribute رابطًا صحيحًا.',
     'ulid' => 'يجب أن يكون حقل :attribute معرّف ULID صحيحًا.',
     'uuid' => 'يجب أن يكون حقل :attribute معرّف UUID صحيحًا.',
 

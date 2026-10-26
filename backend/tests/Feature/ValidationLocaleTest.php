@@ -70,7 +70,7 @@ class ValidationLocaleTest extends TestCase
         $this->postJson('/api/v1/applications', ['company_website' => 'not a url'], ['X-Locale' => 'ar'])
             ->assertUnprocessable()
             ->assertJsonPath('errors.full_name.0', 'اكتب اسمك الكامل.')
-            ->assertJsonPath('errors.company_website.0', 'يجب أن يكون حقل موقع الشركة رابطًا صحيحًا يبدأ بـ http أو https.');
+            ->assertJsonPath('errors.company_website.0', 'يجب أن يكون حقل موقع الشركة رابطًا صحيحًا.');
     }
 
     public function test_program_application_messages_are_no_longer_arabic_only(): void
