@@ -32,5 +32,35 @@ return [
         'approved' => 'تمت الموافقة على مسار التعريف بنجاح.',
         'declined' => 'تم رفض مسار التعريف بنجاح.',
     ],
+    'validation' => [
+        'application' => [
+            'full_name_required' => 'اكتب اسمك الكامل.',
+            'email_required' => 'اكتب بريدك الإلكتروني.',
+            'email_email' => 'اكتب بريدًا إلكترونيًا صحيحًا.',
+            'phone_required' => 'اكتب رقم جوالك.',
+            'company_name_required' => 'اكتب اسم شركتك.',
+            'sector_required' => 'اختر قطاع شركتك.',
+            'stage_required' => 'اختر مرحلة شركتك.',
+            'location_required' => 'اكتب مدينتك أو موقعك.',
+            'motivation_required' => 'أخبرنا لماذا تريد الانضمام إلى وصول.',
+        ],
+        'contact' => [
+            'name_required' => 'اكتب اسمك.',
+            'email_required' => 'اكتب بريدك الإلكتروني.',
+            'email_email' => 'اكتب بريدًا إلكترونيًا صحيحًا.',
+            'category_required' => 'اختر نوع الرسالة.',
+            'subject_required' => 'اكتب عنوانًا قصيرًا للرسالة.',
+            'message_required' => 'اكتب رسالتك.',
+        ],
+        'program_application' => [
+            'motivation_required' => 'يرجى توضيح سبب رغبتك في الانضمام.',
+            'motivation_min' => 'يرجى كتابة 20 حرفًا على الأقل في حقل الدافع.',
+        ],
+        'introduction' => [
+            'target_required' => 'اختر المؤسس الذي تريد التعرّف عليه.',
+            'target_exists' => 'ملف هذا المؤسس لم يعد موجودًا.',
+            'brief_required' => 'أضف ملاحظة قصيرة عن سبب طلب التعارف.',
+            'brief_min' => 'اكتب 20 حرفًا على الأقل عن سبب طلب التعارف.',
+        ],
+    ],
 ];
-

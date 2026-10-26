@@ -50,10 +50,10 @@ class StoreIntroductionRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'target_founder_id.required' => 'A target founder is required to create an introduction route.',
-            'target_founder_id.exists' => 'The selected target founder does not exist.',
-            'payload_context_brief.required' => 'A context brief is required.',
-            'payload_context_brief.min' => 'The context brief must be at least 20 characters.',
+            'target_founder_id.required' => __('messages.validation.introduction.target_required'),
+            'target_founder_id.exists' => __('messages.validation.introduction.target_exists'),
+            'payload_context_brief.required' => __('messages.validation.introduction.brief_required'),
+            'payload_context_brief.min' => __('messages.validation.introduction.brief_min'),
         ];
     }
 
