@@ -34,8 +34,8 @@ class StoreProgramApplicationRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'motivation.required' => 'يرجى توضيح سبب رغبتك في الانضمام.',
-            'motivation.min' => 'يرجى كتابة 20 حرفًا على الأقل في حقل الدافع.',
+            'motivation.required' => __('messages.validation.program_application.motivation_required'),
+            'motivation.min' => __('messages.validation.program_application.motivation_min'),
         ];
     }
 }

@@ -36,15 +36,15 @@ class StoreApplicationRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'full_name.required' => 'Please enter your full name.',
-            'email.required' => 'Please enter your email address.',
-            'email.email' => 'Please enter a valid email address.',
-            'phone.required' => 'Please enter your phone number.',
-            'company_name.required' => 'Please enter your company name.',
-            'sector.required' => 'Please select your sector.',
-            'stage.required' => 'Please select your company stage.',
-            'location.required' => 'Please enter your location.',
-            'motivation.required' => 'Please tell us why you want to join Wosool.',
+            'full_name.required' => __('messages.validation.application.full_name_required'),
+            'email.required' => __('messages.validation.application.email_required'),
+            'email.email' => __('messages.validation.application.email_email'),
+            'phone.required' => __('messages.validation.application.phone_required'),
+            'company_name.required' => __('messages.validation.application.company_name_required'),
+            'sector.required' => __('messages.validation.application.sector_required'),
+            'stage.required' => __('messages.validation.application.stage_required'),
+            'location.required' => __('messages.validation.application.location_required'),
+            'motivation.required' => __('messages.validation.application.motivation_required'),
         ];
     }
 }

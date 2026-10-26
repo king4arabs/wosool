@@ -1,5 +1,12 @@
 # Changelog
 
+## Arabic API validation messages — 2026-10-26
+
+- **Problem:** the frontend sends `X-Locale: ar` and shows the API's field errors as written (`/apply`, `/contact`, dashboard profile, company and settings, password recovery). The backend had no `lang/ar/validation.php`, so Arabic visitors got Laravel's English defaults, e.g. "The message field must not be greater than 3000 characters." or "The company website field must be a valid URL." next to Arabic labels. The custom messages in the application, contact and introduction requests were hard-coded English, and the program application request was hard-coded Arabic, so English members applying to a program were told "يرجى كتابة 20 حرفًا على الأقل…".
+- **Fix:** add `backend/lang/ar/validation.php` with Arabic messages for every framework rule and Arabic names for the fields used by public, member and account forms ("حقل الرسالة", "حقل موقع الشركة"). Move the four requests' custom messages into `lang/{ar,en}/messages.php` (`messages.validation.*`) so each follows the request language; the introduction messages now read as product copy instead of internal route wording. English generic messages are unchanged.
+- **Tests:** `ValidationLocaleTest` (every English framework rule has an Arabic message; generic and form-specific messages in Arabic and English for contact and membership applications; program application motivation in both languages). All four tests fail on the previous code.
+- No frontend, data, deployment or hosting change.
+
 ## Search and social metadata — 2026-10-25
 
 - Replace SVG social preview references with a branded 1200×630 PNG generated at build time. Open Graph and X cards share the same crawlable image for Meta, WhatsApp, LinkedIn and other consumers.

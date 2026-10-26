@@ -27,12 +27,12 @@ class StoreContactRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'name.required' => 'Please enter your name.',
-            'email.required' => 'Please enter your email address.',
-            'email.email' => 'Please enter a valid email address.',
-            'category.required' => 'Please select a category.',
-            'subject.required' => 'Please enter a subject.',
-            'message.required' => 'Please enter your message.',
+            'name.required' => __('messages.validation.contact.name_required'),
+            'email.required' => __('messages.validation.contact.email_required'),
+            'email.email' => __('messages.validation.contact.email_email'),
+            'category.required' => __('messages.validation.contact.category_required'),
+            'subject.required' => __('messages.validation.contact.subject_required'),
+            'message.required' => __('messages.validation.contact.message_required'),
         ];
     }
 }

@@ -32,5 +32,35 @@ return [
         'approved' => 'Introduction route approved successfully.',
         'declined' => 'Introduction route declined successfully.',
     ],
+    'validation' => [
+        'application' => [
+            'full_name_required' => 'Please enter your full name.',
+            'email_required' => 'Please enter your email address.',
+            'email_email' => 'Please enter a valid email address.',
+            'phone_required' => 'Please enter your phone number.',
+            'company_name_required' => 'Please enter your company name.',
+            'sector_required' => 'Please select your sector.',
+            'stage_required' => 'Please select your company stage.',
+            'location_required' => 'Please enter your location.',
+            'motivation_required' => 'Please tell us why you want to join Wosool.',
+        ],
+        'contact' => [
+            'name_required' => 'Please enter your name.',
+            'email_required' => 'Please enter your email address.',
+            'email_email' => 'Please enter a valid email address.',
+            'category_required' => 'Please select a category.',
+            'subject_required' => 'Please enter a subject.',
+            'message_required' => 'Please enter your message.',
+        ],
+        'program_application' => [
+            'motivation_required' => 'Please tell us why you want to join.',
+            'motivation_min' => 'Write at least 20 characters about why you want to join.',
+        ],
+        'introduction' => [
+            'target_required' => 'Choose the founder you want to be introduced to.',
+            'target_exists' => 'That founder profile no longer exists.',
+            'brief_required' => 'Add a short note on why you want this introduction.',
+            'brief_min' => 'Write at least 20 characters on why you want this introduction.',
+        ],
+    ],
 ];
-
