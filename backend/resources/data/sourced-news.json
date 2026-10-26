@@ -3,6 +3,50 @@
     "imageUrl": "",
     "imageCredit": "",
     "author": "Wosool news desk",
+    "id": "sourced-ghanem-pre-seed-extension-october-2026",
+    "slug": "ghanem-pre-seed-extension-october-2026",
+    "title": "Ghanem adds $1.5m to pre-seed round for fractional property platform",
+    "excerpt": "Saudi property-tech company Ghanem reports an additional $1.5 million, taking its pre-seed round to $8.6 million, and says digital deeds were issued to 580 owners in its first income-generating property opportunity.",
+    "content": "In a company announcement published on 24 October 2026, Saudi proptech Ghanem said it secured a $1.5 million extension to its pre-seed financing, bringing that round to $8.6 million including an earlier $7.1 million. The new extension involved real-estate companies and strategic angel investors. Ghanem said it had issued digital fractional-ownership deeds to 580 individuals in its first income-generating property opportunity and activated its integration with the Saudi Real Estate Registry. It operates its product within the Real Estate General Authority's regulatory sandbox; this is not a claim of unrestricted regulatory approval or guaranteed investment returns.",
+    "category": "Funding",
+    "region": "saudi",
+    "sourceUrl": "https://ghanem.sa/en/blog/ghanem-1-5-million-pre-seed-extension-en",
+    "sourceName": "Ghanem (official company announcement)",
+    "companies": [
+      "Ghanem",
+      "غانم"
+    ],
+    "publishedAt": "2026-10-24",
+    "tags": [
+      "Ghanem",
+      "Saudi Arabia",
+      "Proptech",
+      "Pre-seed"
+    ],
+    "keyFacts": [
+      "$1.5m pre-seed extension; $8.6m total round",
+      "580 ownership deeds: first income-generating property opportunity (company-reported)",
+      "Operating within REGA's regulatory sandbox"
+    ],
+    "translations": {
+      "ar": {
+        "title": "غانم تعلن تمويلاً إضافياً بقيمة 1.5 مليون دولار",
+        "excerpt": "أعلنت غانم السعودية إضافة 1.5 مليون دولار إلى جولة ما قبل البذرة ليبلغ إجماليها 8.6 ملايين دولار، مع إصدار صكوك رقمية لـ580 مالكاً في أول فرصة عقارية مدرّة للدخل.",
+        "body": [
+          "أعلنت شركة غانم للتقنية العقارية في 24 أكتوبر 2026 إغلاق تمويل إضافي بقيمة 1.5 مليون دولار امتداداً لجولة ما قبل البذرة، ليبلغ إجمالي الجولة 8.6 ملايين دولار شاملةً تمويلاً سابقاً بقيمة 7.1 ملايين دولار. وشاركت في التمويل الإضافي شركات عقارية ومستثمرون ملائكيون استراتيجيون. ووفق بيان الشركة، أصدرت غانم صكوك ملكية جزئية رقمية لـ580 شخصاً ضمن أول فرصة عقارية مدرّة للدخل، وفعلت الربط مع السجل العقاري. وتطور المنصة منتجاتها ضمن البيئة التجريبية التنظيمية للهيئة العامة للعقار؛ ولا يُفهم من ذلك اعتماد غير مقيّد للمنتج أو ضمان للعوائد الاستثمارية."
+        ],
+        "keyFacts": [
+          "امتداد تمويلي بقيمة 1.5 مليون دولار؛ إجمالي الجولة 8.6 ملايين",
+          "إصدار 580 صك ملكية في أول فرصة عقارية مدرّة للدخل وفق الشركة",
+          "العمل ضمن البيئة التجريبية للهيئة العامة للعقار"
+        ]
+      }
+    }
+  },
+  {
+    "imageUrl": "",
+    "imageCredit": "",
+    "author": "Wosool news desk",
     "id": "sourced-cntxt-ai-us-office-october-2026",
     "slug": "cntxt-ai-us-office-october-2026",
     "title": "CNTXT AI opens Silicon Valley office to support global AI and robotics work",
