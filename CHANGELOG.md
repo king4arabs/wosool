@@ -1,5 +1,11 @@
 # Changelog
 
+## Verified Ghanem content and live-count reconciliation — 2026-10-26
+
+- Add sourced bilingual editorial profiles for Ghanem co-founders Saleh Waheed Al-Ghamdi and Amr Essam, plus one original bilingual brief on the 24 October pre-seed extension. The company release identifies the founders, the $1.5 million extension and the $8.6 million combined round; funding and company-reported operational metrics are not treated as earned revenue.
+- Repository totals are **165 founders, 92 company groups and 53 news briefs**, with matched frontend/backend snapshots and no changes to startup revenue eligibility, accounts, memberships or moderation state.
+- Independent public checks now show 163 homepage profiles, two fewer than repository source. Production revision parity, backend deployment and founder/news database imports remain separate release work; no live deployment or import is claimed here.
+
 ## Arabic API validation messages — 2026-10-26
 
 - **Problem:** the frontend sends `X-Locale: ar` and shows the API's field errors as written (`/apply`, `/contact`, dashboard profile, company and settings, password recovery). The backend had no `lang/ar/validation.php`, so Arabic visitors got Laravel's English defaults, e.g. "The message field must not be greater than 3000 characters." or "The company website field must be a valid URL." next to Arabic labels. The custom messages in the application, contact and introduction requests were hard-coded English, and the program application request was hard-coded Arabic, so English members applying to a program were told "يرجى كتابة 20 حرفًا على الأقل…".
