@@ -23,7 +23,7 @@
 
 SEO update (25 October 2026): distinct opportunity and Accelerator snippets, server-rendered public event/program details, expanded public sitemaps, crawler not-found handling, branded social previews and automated SEO checks. See [search visibility setup and release checks](docs/SEO.md), including Google/Bing verification, sitemap submission and next priorities. Repository validation does not establish live publication or rankings.
 
-Content refresh (25 October 2026): **163 founder profiles, 91 companies and 52 news briefs** in synchronized repository catalogs. The latest reviewed addition contains four founders and three news briefs. See [source review and publication boundaries](docs/research/CONTENT-REFRESH-2026-10-25.md). Production database imports and live release verification are recorded separately.
+Content refresh (26 October 2026): **165 founder profiles, 92 companies and 53 news briefs** in synchronized repository catalogs. The latest reviewed addition contains Ghanem co-founders Saleh Waheed Al-Ghamdi and Amr Essam plus one bilingual funding brief. See [26 October source evidence and publication boundaries](docs/research/CONTENT-REFRESH-2026-10-26.md). Production database imports and live release verification are recorded separately.
 
 Wosool brings founder profiles, startup and venture discovery, events, learning, reviewed introductions, collaboration, and administration into one Arabic/English platform. This monorepo contains the Next.js frontend, Laravel API, database migrations, tests, operating tools, and production documentation.
 
@@ -33,7 +33,7 @@ Wosool also provides the dedicated digital gateway for **EO Riyadh Accelerator**
 
 > **Release boundary:** GitHub CI validates source, security checks, tests, and production builds. A commit, merge, or green workflow does **not** by itself prove that production hosting has deployed the change. See the [production deployment contract, preflight and health monitoring](DEPLOYMENT.md#production-deployment-contract-october-22-2026).
 
-> **Frontend release check (25 October 2026):** the scheduled six-probe production monitor passes, and the public homepage and Accelerator page are reachable. The live homepage still renders 159 editorial founder profiles while current source contains 163, so the latest content revision is not yet verified on the active frontend. Production database imports remain separate evidence.
+> **Frontend release check (26 October 2026):** the scheduled six-probe production monitor passes, and independent public checks reach the homepage and Accelerator page. The live homepage now renders 163 editorial founder profiles while current source contains 165, so the Ghanem content revision is not yet verified on the active frontend. Production database imports remain separate evidence.
 
 > **Knowledge, API and content cycle (16 October 2026):** bilingual `/wiki`, public `/api` reference and OpenAPI, server-rendered news metadata, public-record sitemap, draft-only RSS discovery, and **144 founders / 79 companies / 42 stories** in checked-in source snapshots. See [development phases and next actions](docs/CONTINUOUS-DEVELOPMENT.md) and [source evidence](docs/research/KNOWLEDGE-CONTENT-2026-10-14.md). Production deployment/import remain separate release steps.
 
@@ -56,6 +56,8 @@ Wosool also provides the dedicated digital gateway for **EO Riyadh Accelerator**
 **Public API contracts (22 October 2026):** OpenAPI document version 1.4.0 covers news, anonymous founders, standalone companies and the revenue-qualified startup collection. Startup schemas type 40 record properties, compact pagination, bilingual sector facets, website verification and attributed revenue evidence while keeping reported figures distinct from financial-statement sources. Laravel tests use the same exported schemas. Legacy scorecard-log internals remain intentionally untyped. [Startup contract scope and verification](docs/API-STARTUP-CONTRACT-2026-10-22.md).
 
 **Arabic date consistency (25 October 2026):** public, member and admin views use Gregorian dates with Western digits in Arabic, and member event/program times are explicitly shown in Riyadh time. EO Riyadh Accelerator pages retain their established Arabic-Indic digits while pinning calendar dates to Gregorian. A source guard prevents bare `ar-SA` date formatting from returning. Production deployment remains a separate verification step.
+
+**Arabic API validation (26 October 2026):** validation errors now follow the request language across public, account and member forms. Arabic requests use complete Arabic rule messages and field labels; request-specific application, contact, introduction and program messages are localized in both Arabic and English. Required Laravel CI passes on PHP 8.3, 8.4 and 8.5. Production deployment remains a separate verification step.
 
 **Content review coverage (17 October 2026):** integrity and 30-day review commands now cover both founder catalogs: **144 founders / 79 company groups / 42 stories**. Catalog-specific diagnostics, cross-catalog duplicate checks and unregistered-file guards prevent silent omissions. These are repository counts, not newly verified people or production imports. [Checks and source-review limits](docs/research/CONTENT-COVERAGE-2026-10-17.md).
 
