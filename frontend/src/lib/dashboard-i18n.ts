@@ -31,6 +31,8 @@ export const dashboardDictionary = {
       dashboardNavigation: "تنقل لوحة التحكم",
       menuNavigation: "قائمة التنقل",
       memberFallback: "عضو",
+      eoa: "مسرّعة EO الرياض",
+      logoAlt: "شعار وصول",
     },
     home: {
       title: "لوحة تحكم المؤسس",
@@ -159,6 +161,8 @@ export const dashboardDictionary = {
       dashboardNavigation: "Dashboard navigation",
       menuNavigation: "Navigation menu",
       memberFallback: "Member",
+      eoa: "EO Riyadh Accelerator",
+      logoAlt: "Wosool logo",
     },
     home: {
       title: "Founder Dashboard",
