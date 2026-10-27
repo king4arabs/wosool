@@ -1,12 +1,14 @@
 # Wosool continuous development
 
-Updated: 26 October 2026. Work in bounded, reviewable cycles: inspect → verify sources → implement → test → publish source → verify release → choose the next incomplete outcome. Completion applies to acceptance criteria, not a promise that software or research needs no further maintenance.
+Updated: 27 October 2026. Work in bounded, reviewable cycles: inspect → verify sources → implement → test → publish source → verify release → choose the next incomplete outcome. Completion applies to acceptance criteria, not a promise that software or research needs no further maintenance.
 
-Current production status: the scheduled six-probe workflow passed on 26 October, covering `/health`, `/`, `/eoa`, direct Laravel liveness/readiness and the same-origin API proxy; independent public checks also reached the homepage and Accelerator page. The live homepage renders 163 editorial founder profiles, while current source contains 165. The active Hostinger revision therefore remains unverified and the 26 October Ghanem content cannot yet be claimed as deployed. The standalone hosting gate continues to boot the generated artifact through its package-manager `start` command, and production imports remain a separate authenticated operation.
+Current production status: the most recent scheduled six-probe workflow passed, covering `/health`, `/`, `/eoa`, direct Laravel liveness/readiness and the same-origin API proxy; independent public checks on 27 October also reached the homepage and Accelerator page. The live homepage renders 165 editorial founder profiles, matching current source. This confirms visible frontend content parity, not the active Hostinger revision or any production database import. The standalone hosting gate continues to boot the generated artifact through its package-manager `start` command, and production imports remain a separate authenticated operation.
 
 Current interface correction: Arabic dates now use a shared Gregorian/Western-digit locale across public, member and admin views. Member event and program times use Riyadh time with a visible label. EO Accelerator pages retain Arabic-Indic digits while explicitly selecting Gregorian dates. Required CI, source guards and the focused crawl pass; live behavior awaits revision-parity verification.
 
 Current form correction: backend validation now follows `X-Locale` for public, account and member forms. The Arabic catalog covers every framework rule and the fields used by these journeys; application, contact, introduction and program-specific messages are localized in both languages. Required CI passes on PHP 8.3, 8.4 and 8.5; production behavior awaits backend revision-parity verification.
+
+Current member-settings correction: `/dashboard/settings` and its API errors now follow the active Arabic or English locale, replace raw preference keys with written labels, restore heading structure and add password guidance, autocomplete hints, RTL-safe spacing and current-page semantics. Dashboard navigation and profile tag removal controls also use localized accessible names. GitHub CI run 282 passed on the merged source. Only `program_updates` currently affects delivery; the other 12 stored preferences remain an explicit implement-or-hide decision and must not be described as enforced behavior. Production behavior awaits frontend/backend revision-parity verification.
 
 Hosting build correction: the latest user-supplied log at `b7ad796` confirms installation, webpack compilation and TypeScript success, followed by a Tokio thread-spawn failure when Next.js launched 63 page workers. The build now uses one Next.js page worker and build-only Tokio/Rayon pool limits. Standalone CI matches Node 22 / pnpm 11.24.0, simulates the 63-worker default and checks one-worker generation. Hostinger publish/activation remains an independent acceptance gate; the account's exact resource quota is not known.
 
@@ -26,7 +28,7 @@ Current bounded correction: Swarm Robotics and Huspy remain in the startup resea
 
 | Phase | Delivered in this cycle | Completion gate / next action |
 | --- | --- | --- |
-| 1. Baseline and reliability | Latest main inspected; preserved concurrent board, founder and news work; new RSS records become private drafts | Required frontend/backend checks pass; production revision and readiness verified |
+| 1. Baseline and reliability | Latest main inspected; preserved concurrent founder/news branches; localized member settings and account errors merged after required CI | Production revision and readiness verified; decide whether to implement or hide the 12 stored-but-unused preferences |
 | 2. Discovery and SEO | `/api`, four bilingual `/wiki` guides, article metadata/JSON-LD, live founder/news sitemap entries, activation-page noindex; founder/company-specific metadata with public-visibility guards | Live canonical/metadata/robots checks; local profile transition checks pass but do not establish deployed behavior |
 | 3. Public API | OpenAPI document 1.4.0 describes nine GET routes; news, 35-field anonymous founders, 24/25-field standalone companies and 40-field startup records have schemas and real Laravel validation | Review legacy scorecard-log exposure separately; verify the download live |
 | 4. Founder and news quality | 165 founders / 92 company groups / 53 stories in matched source snapshots; integrity and 30-day review cover all founder catalogs | Import reviewed additions on the deployed API; apply existing-record corrections through admin; verify resulting live counts |
@@ -81,9 +83,10 @@ Both commands now include the original 44-founder catalog and the 100-profile ex
 
 ## Next actions
 
-1. Record the active Hostinger frontend/backend revision and environment, deploy the latest green `main`, then verify the homepage reaches the 165-profile source total, Arabic validation follows the requested language and all six production probes still pass.
+1. Record the active Hostinger frontend/backend revision and environment, deploy the latest green `main`, then verify the homepage reaches the 165-profile source total, member settings and Arabic validation follow the requested language, and all six production probes still pass.
 2. Verify actual scheduled draft ingestion and failure reporting on the host; document the deployed revision and backup restore evidence.
 3. Review legacy scorecard-log exposure separately, then verify metadata and OpenAPI 1.4.0 on the deployed frontend, including startup evidence periods and sector facets.
 4. Move newsroom search/filtering to server-side pagination so filters cover the full growing database; review snapshot withdrawal behavior across the remaining founder/company surfaces.
-5. Add source-review history and admin review queues for changed existing founder/company facts, with revision checks and protected owner edits.
-6. Add publisher-specific feed sources only after verifying endpoint availability, permitted use and failure behavior; review growth by distinct verified founders and companies, not raw scrape volume.
+5. Implement or hide the 12 member preferences that are stored but not currently enforced; preserve `program_updates`, the only preference with confirmed runtime behavior.
+6. Add source-review history and admin review queues for changed existing founder/company facts, with revision checks and protected owner edits.
+7. Add publisher-specific feed sources only after verifying endpoint availability, permitted use and failure behavior; review growth by distinct verified founders and companies, not raw scrape volume.

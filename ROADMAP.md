@@ -1,12 +1,14 @@
 # Roadmap
 
-## Current execution plan — 26 October 2026
+## Current execution plan — 27 October 2026
 
-Frontend release checkpoint: the scheduled production workflow continues to pass all six probes, and independent public checks reach `/` and `/eoa`. The live homepage currently renders 163 editorial founder profiles, while current source contains 165 after the Ghanem refresh. Next: record the active Hostinger revision and production environment, deploy the latest green `main`, then verify the 165-profile frontend and production imports separately. Do not infer revision parity or a database import from route health alone.
+Frontend release checkpoint: the most recent scheduled production workflow passes all six probes, and independent public checks reach `/` and `/eoa`. On 27 October the live homepage rendered 165 editorial founder profiles, matching current source after the Ghanem refresh. Next: record the active Hostinger revision and production environment, deploy the latest green `main`, then verify member-settings behavior and production imports separately. Do not infer revision parity or a database import from route/content parity alone.
 
 Arabic date checkpoint: source now standardizes Arabic dates on the Gregorian calendar with Western digits across public, member and admin views; member event and program times are fixed to Riyadh and visibly labelled. EO Accelerator pages keep their established Arabic-Indic digits but now pin dates to Gregorian. Required CI, the focused crawl and review threads passed. Next: verify these date and timezone changes after the active frontend revision is known.
 
 Arabic form checkpoint: source now returns generic and request-specific API validation messages in the requested Arabic or English locale across membership, contact, introduction and program journeys. Required Laravel CI passes on PHP 8.3, 8.4 and 8.5. Next: verify the active backend revision and exercise Arabic/English invalid-form responses in production without changing data.
+
+Member settings checkpoint: the account settings journey, dashboard navigation and profile tag-removal controls now follow the active Arabic or English locale, with written preference labels, localized API errors, improved heading structure and accessible mobile/RTL behavior. Required CI passed before merge. Next: verify the active frontend/backend revision in production and separately implement or hide the 12 stored preferences that currently have no runtime effect; `program_updates` is the only confirmed enforced preference.
 
 Hosting build follow-up: source `b7ad796` passed pnpm installation, webpack compilation and TypeScript on Hostinger, then exhausted thread resources with 63 page workers. Page collection/generation now uses one worker, with build-only Tokio/Rayon pool limits. CI checks the Node 22 / pnpm 11.24.0 command against a simulated 63-worker default. Next: verify one-worker generation and final publish/activation on Hostinger; the account's exact task quota remains unknown.
 
