@@ -2,7 +2,7 @@
 
 ## Current execution plan — 27 October 2026
 
-Frontend release checkpoint: the scheduled production workflow continues to pass all six probes, and independent public checks reach `/` and `/eoa`. The live homepage currently renders 163 editorial founder profiles, while current source contains 165 after the Ghanem refresh. Next: record the active Hostinger revision and production environment, deploy the latest green `main`, then verify the 165-profile frontend and production imports separately. Do not infer revision parity or a database import from route health alone.
+Frontend release checkpoint: the most recent scheduled production workflow passes all six probes, and independent public checks reach `/` and `/eoa`. On 27 October the live homepage rendered 165 editorial founder profiles, matching current source after the Ghanem refresh. Next: record the active Hostinger revision and production environment, deploy the latest green `main`, then verify member-settings behavior and production imports separately. Do not infer revision parity or a database import from route/content parity alone.
 
 Arabic date checkpoint: source now standardizes Arabic dates on the Gregorian calendar with Western digits across public, member and admin views; member event and program times are fixed to Riyadh and visibly labelled. EO Accelerator pages keep their established Arabic-Indic digits but now pin dates to Gregorian. Required CI, the focused crawl and review threads passed. Next: verify these date and timezone changes after the active frontend revision is known.
 
