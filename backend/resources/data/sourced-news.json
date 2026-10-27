@@ -3,6 +3,135 @@
     "imageUrl": "",
     "imageCredit": "",
     "author": "Wosool news desk",
+    "id": "sourced-mena-scaleup-capital-stack-october-2026",
+    "slug": "mena-scaleup-capital-stack-october-2026",
+    "title": "Wamda opinion weighs equity and debt for MENA scaleups",
+    "excerpt": "A 26 October analysis examines the use of equity, asset-backed facilities and receivables financing by scaling startups; prior-year deals are not new funding announcements.",
+    "content": "On 26 October 2026, Wamda published an opinion piece examining how growth-stage MENA companies combine venture equity and asset-backed financing. It uses Tamara's funding facility announced in 2025 as an example, not a newly announced October 2026 round. The author's argument is to match financing structures to operating assets, cash flows and capital needs. This is commentary rather than a report of new investment.",
+    "category": "Ecosystem",
+    "region": "mena",
+    "sourceUrl": "https://www.wamda.com/2026/10/mena-scaleups-capital-stack-problem",
+    "sourceName": "Wamda (opinion)",
+    "companies": [],
+    "publishedAt": "2026-10-26",
+    "tags": [
+      "MENA",
+      "Scaleups",
+      "Finance"
+    ],
+    "keyFacts": [
+      "Opinion dated 26 October 2026",
+      "Equity and debt serve different needs",
+      "Historical facilities are not new 2026 deals"
+    ],
+    "translations": {
+      "ar": {
+        "title": "رأي في ومضة يناقش الموازنة بين تمويل الملكية والدين للشركات المتوسعة",
+        "excerpt": "ناقش تحليل نُشر في 26 أكتوبر خيارات تمويل الشركات الناشئة المتوسعة، مع التأكيد أن الصفقات التاريخية ليست تمويلاً جديداً.",
+        "body": [
+          "نشرت ومضة في 26 أكتوبر 2026 مقال رأي يناقش اعتماد الشركات الناشئة المتوسعة في الشرق الأوسط وشمال أفريقيا على رأس المال الجريء وتسهيلات التمويل المدعومة بالأصول والمستحقات. واستخدم الكاتب تسهيلاً تمويلياً أُعلن لتمارا في 2025 مثالاً تاريخياً لا جولة جديدة في أكتوبر 2026. ويركز التحليل على ملاءمة أداة التمويل لاحتياجات التشغيل والتدفقات النقدية، ولا يتضمن إعلان استثمار جديد."
+        ],
+        "keyFacts": [
+          "مقال رأي بتاريخ 26 أكتوبر 2026",
+          "تمويل الملكية والدين لهما استخدامات مختلفة",
+          "أمثلة سابقة وليست صفقات جديدة"
+        ]
+      }
+    }
+  },
+  {
+    "imageUrl": "",
+    "imageCredit": "",
+    "author": "Wosool news desk",
+    "id": "sourced-vitalls-growmore-commitment-october-2026",
+    "slug": "vitalls-growmore-commitment-october-2026",
+    "title": "Vitalls announces $1.5m seed investment commitment",
+    "excerpt": "UAE healthtech Vitalls announces an agreement for EST Growmore to invest $1.5 million, with a separate option for an additional $1 million.",
+    "content": "On 21 October 2026, Vitalls announced an agreement under which EST Growmore committed to invest US$1.5 million in its seed round. A further US$1 million is an investment option, not part of the commitment. Founded in the UAE by Mehdi Bouchenak, Vitalls develops a patient-controlled digital health passport to manage medical records. The agreement is a commitment and does not independently establish full cash disbursement.",
+    "category": "Funding",
+    "region": "gcc",
+    "sourceUrl": "https://vitalls.ai/blog/vitalls-announces-us-1-5m-commitment-from-est-growmore-pte-ltd-during-abu-dhabi",
+    "sourceName": "Vitalls (official announcement)",
+    "companies": [
+      "Vitalls",
+      "فيتالز"
+    ],
+    "publishedAt": "2026-10-21",
+    "tags": [
+      "UAE",
+      "Vitalls",
+      "Seed"
+    ],
+    "keyFacts": [
+      "US$1.5m investment commitment",
+      "Further US$1m is optional",
+      "Founder Mehdi Bouchenak"
+    ],
+    "translations": {
+      "ar": {
+        "title": "فيتالز تعلن التزاماً استثمارياً بقيمة 1.5 مليون دولار",
+        "excerpt": "أعلنت فيتالز اتفاقاً لاستثمار 1.5 مليون دولار في جولتها التأسيسية مع خيار منفصل لمليون دولار إضافي.",
+        "body": [
+          "أعلنت فيتالز الإماراتية في 21 أكتوبر 2026 اتفاقاً تلتزم بموجبه EST Growmore باستثمار 1.5 مليون دولار أمريكي في جولتها التأسيسية. ويتضمن الاتفاق خياراً لاستثمار مليون دولار إضافي لا يدخل ضمن الالتزام الحالي. أسس مهدي بوشناق الشركة لتطوير جواز صحي رقمي يتيح إدارة السجلات الطبية. ولا يثبت الإعلان بذاته صرف كامل المبلغ."
+        ],
+        "keyFacts": [
+          "التزام استثماري بقيمة 1.5 مليون دولار",
+          "مليون دولار إضافي خيار غير مؤكد",
+          "المؤسس مهدي بوشناق"
+        ]
+      }
+    }
+  },
+  {
+    "imageUrl": "",
+    "imageCredit": "",
+    "author": "Wosool news desk",
+    "id": "sourced-snoonu-bitesight-acquisition-october-2026",
+    "slug": "snoonu-bitesight-acquisition-october-2026",
+    "title": "Qatar's Snoonu acquires US startup BiteSight",
+    "excerpt": "Qatar's Snoonu acquired Y Combinator-backed BiteSight to develop video-led food discovery; deal terms were not disclosed.",
+    "content": "On 19 October 2026, acquisition coverage confirmed Snoonu's purchase of US food-discovery startup BiteSight. BiteSight links short-form dish videos with restaurant discovery and ordering. Snoonu's official corporate updates welcomed co-founder Lucious McDaniel IV and colleagues. No purchase price was disclosed; prior funding or app downloads are not the value of this transaction.",
+    "category": "M&A",
+    "region": "gcc",
+    "sourceUrl": "https://dealroom.co/news/163914-qatars-snoonu-buys-yc-backed-bitesight-to-add-video-food-discovery/",
+    "sourceName": "Dealroom",
+    "companies": [
+      "Snoonu",
+      "سنونو",
+      "BiteSight",
+      "بايت سايت"
+    ],
+    "publishedAt": "2026-10-19",
+    "tags": [
+      "Qatar",
+      "Snoonu",
+      "BiteSight",
+      "Acquisition"
+    ],
+    "keyFacts": [
+      "Acquisition reported 19 October 2026",
+      "BiteSight backed by Y Combinator",
+      "Terms undisclosed"
+    ],
+    "translations": {
+      "ar": {
+        "title": "سنونو القطرية تستحوذ على بايت سايت الأمريكية",
+        "excerpt": "استحوذت سنونو على بايت سايت المدعومة من واي كومبينيتور لدعم اكتشاف الطعام عبر الفيديو، دون الكشف عن قيمة الصفقة.",
+        "body": [
+          "تأكد في 19 أكتوبر 2026 استحواذ سنونو القطرية على بايت سايت الأمريكية التي تربط الفيديو القصير باكتشاف المطاعم والطلب الإلكتروني. ورحبت سنونو رسمياً بانضمام الشريك المؤسس لوشيوس ماكدانيال الرابع وزملائه. لم يُعلن سعر الصفقة، ولا تمثل الاستثمارات السابقة أو تنزيلات التطبيق قيمة الاستحواذ."
+        ],
+        "keyFacts": [
+          "خبر الاستحواذ بتاريخ 19 أكتوبر 2026",
+          "بايت سايت مدعومة من واي كومبينيتور",
+          "قيمة الصفقة غير معلنة"
+        ]
+      }
+    }
+  },
+  {
+    "imageUrl": "",
+    "imageCredit": "",
+    "author": "Wosool news desk",
     "id": "sourced-ghanem-pre-seed-extension-october-2026",
     "slug": "ghanem-pre-seed-extension-october-2026",
     "title": "Ghanem adds $1.5m to pre-seed round for fractional property platform",
