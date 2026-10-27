@@ -59,6 +59,8 @@ Wosool also provides the dedicated digital gateway for **EO Riyadh Accelerator**
 
 **Arabic API validation (26 October 2026):** validation errors now follow the request language across public, account and member forms. Arabic requests use complete Arabic rule messages and field labels; request-specific application, contact, introduction and program messages are localized in both Arabic and English. Required Laravel CI passes on PHP 8.3, 8.4 and 8.5. Production deployment remains a separate verification step.
 
+**Member settings localization (27 October 2026):** `/dashboard/settings` now provides complete Arabic and English account copy, preference labels, headings, password guidance and localized validation errors. Dashboard navigation and profile removal controls also use the active language, with improved RTL spacing, current-page semantics and mobile-menu behavior. Required CI passes; production deployment remains unverified. Of the 13 stored preferences, only `program_updates` currently changes delivery behavior, so the other 12 controls still require a separate implement-or-hide decision.
+
 **Content review coverage (17 October 2026):** integrity and 30-day review commands now cover both founder catalogs: **144 founders / 79 company groups / 42 stories**. Catalog-specific diagnostics, cross-catalog duplicate checks and unregistered-file guards prevent silent omissions. These are repository counts, not newly verified people or production imports. [Checks and source-review limits](docs/research/CONTENT-COVERAGE-2026-10-17.md).
 
 | If you want to… | Read |
