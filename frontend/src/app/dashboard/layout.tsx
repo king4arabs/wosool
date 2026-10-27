@@ -114,12 +114,13 @@ function SidebarContent({
 
       {/* Nav */}
       <nav className="flex-1 px-3 py-4 overflow-y-auto space-y-0.5">
-        <Link href="/dashboard/eoa" className="flex min-h-11 items-center gap-3 rounded-xl px-4 py-2.5 text-sm font-bold text-[#3B52D4]"><GraduationCap className="h-4 w-4" />EO Riyadh Accelerator</Link>
+        <Link href="/dashboard/eoa" onClick={onNavClick} aria-current={pathname === "/dashboard/eoa" ? "page" : undefined} className="flex min-h-11 items-center gap-3 rounded-xl px-4 py-2.5 text-sm font-bold text-[#3B52D4]"><GraduationCap className="h-4 w-4 shrink-0" aria-hidden="true" />{copy.layout.eoa}</Link>
         {visibleNavItems.map(({ href, icon: Icon, key }) => (
           <Link
             key={href}
             href={href}
             onClick={onNavClick}
+            aria-current={pathname === href ? "page" : undefined}
             className={cn(
               "flex items-center gap-3 px-4 py-2.5 rounded-xl text-xs font-bold transition-all",
               pathname === href
@@ -183,7 +184,7 @@ function DashboardFullscreenLoader({
           <div className="flex h-16 w-16 items-center justify-center rounded-2xl border border-[#E4E7F0] bg-[#EEF1FF]">
             <Image
               src="/wosool-network-logo.png"
-              alt="Wosool logo"
+              alt={dashboardDictionary[locale].layout.logoAlt}
               width={44}
               height={44}
               className="h-11 w-11 object-contain"
@@ -310,7 +311,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     )
   }
 
-  if (isEoaWorkspace) return <div className="min-h-screen bg-slate-50" dir={activeLocale === 'ar' ? 'rtl' : 'ltr'}><header className="border-b bg-white"><nav className="mx-auto flex max-w-7xl flex-wrap items-center gap-4 px-5 py-4"><Link className="font-bold text-[#3B52D4]" href="/">WOSOOL / وصول</Link><Link className="min-h-11 flex items-center text-sm" href="/eoa">EO Riyadh Accelerator</Link><Link className="min-h-11 flex items-center text-sm" href="/eoa/apply">{locale === 'ar' ? 'طلب الالتحاق' : 'Application'}</Link><button className="ms-auto min-h-11 rounded-lg border px-4" onClick={cycleLocale}>{locale === 'ar' ? 'English' : 'العربية'}</button></nav></header><main id="main-content" className="eoa">{children}</main></div>
+  if (isEoaWorkspace) return <div className="min-h-screen bg-slate-50" dir={activeLocale === 'ar' ? 'rtl' : 'ltr'}><header className="border-b bg-white"><nav className="mx-auto flex max-w-7xl flex-wrap items-center gap-4 px-5 py-4"><Link className="font-bold text-[#3B52D4]" href="/">WOSOOL / وصول</Link><Link className="min-h-11 flex items-center text-sm" href="/eoa">{copy.layout.eoa}</Link><Link className="min-h-11 flex items-center text-sm" href="/eoa/apply">{locale === 'ar' ? 'طلب الالتحاق' : 'Application'}</Link><button className="ms-auto min-h-11 rounded-lg border px-4" onClick={cycleLocale}>{locale === 'ar' ? 'English' : 'العربية'}</button></nav></header><main id="main-content" className="eoa">{children}</main></div>
 
   return (
     <div className="min-h-screen bg-slate-50/60" dir={activeLocale === "ar" ? "rtl" : "ltr"}>
