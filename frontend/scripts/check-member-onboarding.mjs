@@ -36,7 +36,7 @@ try {
     await page.locator('#register-password').fill('Password123');await page.locator('#register-password-confirmation').fill('Password123')
     await page.locator('input[type=checkbox]').check();await page.locator('button[type=submit]').click()
     await page.waitForURL('**/onboarding');await page.locator('#registration-code').fill('000000')
-    await page.locator('form button').first().click();await page.getByRole('alert').waitFor()
+    await page.locator('form button').first().click();await page.getByRole('alert').filter({ hasText: 'Invalid code' }).waitFor()
     await page.locator('#registration-code').fill(locale==='ar'?'١٢٣٤٥٦':'123456');await page.locator('form button').first().click()
     await page.locator('input[name=full_name]').waitFor()
     for(const [key,value] of Object.entries({full_name:'Test Founder',phone:'+966500000000',position:'Founder',company_name:'Test Company',company_website:'https://example.com',sector:'Software',location:'Riyadh',founded_year:'2024',team_size:'5'}))await page.locator(`[name=${key}]`).fill(value)
