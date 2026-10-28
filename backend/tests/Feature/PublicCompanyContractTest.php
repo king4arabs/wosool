@@ -40,6 +40,8 @@ class PublicCompanyContractTest extends TestCase
                     ->assertJsonPath('meta.total', 95)->assertJsonCount($page === 4 ? 23 : 24, 'data');
                 $samples[] = $this->sample($list, '/api/v1/companies');
             }
+            $detail = $this->getJson('/api/v1/companies/unifonic', ['X-Locale' => $locale])->assertOk()
+                ->assertJsonPath('data.is_public', true)->assertJsonPath('data.status', 'active');
             $samples[] = $this->sample($detail, '/api/v1/companies/{slug}');
         }
         $this->assertContracts($samples);
@@ -63,7 +65,7 @@ class PublicCompanyContractTest extends TestCase
             ->assertJsonPath('data.0.founders.0.slug', 'visible-founder')
             ->assertJsonPath('data.0.founders.0.user', null)
             ->assertJsonMissingPath('data.0.founders.0.companies')
-            ->assertJsonMissingPath('data.0.founders.0.scorecard')
+            ->assertJsonPath('data.0.founders.0.scorecard', null)
             ->assertJsonMissingPath('data.0.founders.0.invitation');
         $detail = $this->getJson('/api/v1/companies/visible')->assertOk()->assertJsonCount(1, 'data.founders');
         $this->assertContracts([
