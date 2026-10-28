@@ -1,6 +1,7 @@
 "use client"
 
 import Image from "next/image"
+import { NewsletterSignup } from "./NewsletterSignup"
 import Link from "next/link"
 import { ArrowUp, ArrowUpRight } from "lucide-react"
 import { usePathname } from "next/navigation"
@@ -117,6 +118,7 @@ export function Footer() {
 
   return (
     <footer className={styles.footer} lang={locale} dir={locale === "ar" ? "rtl" : "ltr"} aria-label={locale === "ar" ? "تذييل الموقع" : "Site footer"}>
+      <NewsletterSignup />
       <div className={styles.container}>
         {!isEoa && (
           <div className={styles.invitation}>

@@ -30,7 +30,7 @@ class WosoolMail extends Mailable
     {
         return new Envelope(
             subject: BilingualEmail::subject($this->subjectAr, $this->subjectEn),
-            replyTo: $this->replyToAddress ? [new Address($this->replyToAddress, $this->replyToName)] : [],
+            replyTo: [new Address($this->replyToAddress ?: 'info@wosool.org', $this->replyToName ?: 'Wosool')],
             tags: ['wosool', $this->kind],
         );
     }

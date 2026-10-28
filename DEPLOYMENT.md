@@ -50,7 +50,7 @@ GATEWAY_PRIVACY_READY=false
 GATEWAY_EMAIL_UPDATES=false
 ```
 
-Keep the existing `APP_KEY`. Set `MAIL_TEAM_ADDRESS` to the inbox that should receive contact, sponsorship and membership-application alerts (defaults to `MAIL_FROM_ADDRESS`). Configure database credentials, a real mail transport and sender, and appropriate queue/cache drivers. The default `MAIL_MAILER=log` is local-only and cannot deliver account recovery messages. Public websocket keys may be exposed to the frontend; secrets may not.
+Keep the existing `APP_KEY`. Contact, sponsorship and membership-application alerts are routed to `info@wosool.org` in `config/mail.php`; the old `MAIL_TEAM_ADDRESS` override is no longer used. Configure database credentials, a real mail transport and sender, and appropriate queue/cache drivers. The default `MAIL_MAILER=log` is local-only and cannot deliver account recovery messages. Public websocket keys may be exposed to the frontend; secrets may not.
 
 ### Hostinger Web App (wosool.org)
 
@@ -194,3 +194,11 @@ After migrations, run `php artisan wosool:import-founders` and `php artisan woso
 Run `php artisan migrate --force` before activating this API release; the additive migration initializes existing `eoa_board_members.version` values to 1. Release the API and frontend together. Board PATCH and portrait POST requests now require the `version` returned by the staff board API; a stale version returns 409. Administrators should reload the list after deployment or a conflict. The public board payload remains unchanged. EO community profiles and portraits ship with the frontend and require no database import. Existing mentor appointments and program settings are preserved.
 
 See [14 October founder research update](docs/FOUNDER-RESEARCH-2026-10-14.md) for sources, import expectations and the revenue-evidence policy.
+
+## Newsletter delivery
+
+Deploy the additive newsletter migration before the matching frontend. Keep the authenticated sender and existing `APP_KEY`; replies and site correspondence use `info@wosool.org`. The footer offers confirmed email subscription. Active, email-verified community members are included unless they disabled `weekly_digest` or unsubscribed. Imported unclaimed founders and pending members are excluded.
+
+Run Laravel's scheduler every minute using the hosting account's existing PHP binary and the absolute backend path (`php artisan schedule:run`). `wosool:newsletter --digest` runs hourly: it sends new-member welcomes and retries failed deliveries up to three attempts. Weekly issues roll over Sunday at 09:00 Asia/Riyadh and contain up to five public, published news briefs from the preceding seven days. Empty issues are skipped. The subscriber/campaign delivery key prevents ordinary duplicate runs; the same email is deduplicated across membership and newsletter signups. No queue worker is required for this command.
+
+A real SMTP/API mail transport is required; log/array transports fail closed. Before enabling the production scheduler, verify signup, confirmation, welcome, Arabic/English layout, embedded logo, replies to info@wosool.org, unsubscribe, and member preferences with controlled inboxes. The scheduled command sends to all eligible recipients, so use an isolated staging database for validation. Inspect `newsletter_deliveries` for failed or sending rows. A row left `sending` after a process crash is not automatically resent because SMTP may already have accepted it; reconcile provider logs before retrying. Schedule installation and inbox delivery are not established by CI or a merge.

@@ -119,7 +119,7 @@ return [
     | Team inbox for operational alerts (contact messages, membership applications).
     | Defaults to the sender address so alerts are never silently dropped.
     */
-    'team_address' => env('MAIL_TEAM_ADDRESS', env('MAIL_FROM_ADDRESS', 'hello@example.com')),
+    'team_address' => 'info@wosool.org',
 
     'markdown' => [
         'theme' => env('MAIL_MARKDOWN_THEME', 'wosool'),

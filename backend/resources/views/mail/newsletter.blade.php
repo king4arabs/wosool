@@ -1,0 +1,17 @@
+@php($ar = $locale === 'ar')
+<!doctype html><html lang="{{ $locale }}" dir="{{ $ar ? 'rtl' : 'ltr' }}"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>{{ $ar ? 'نشرة وصول' : 'Wosool updates' }}</title></head>
+<body style="margin:0;padding:24px 12px;background:#f4f5fb;color:#18223c;font-family:Arial,Tahoma,sans-serif;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr><td align="center"><table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:600px;background:#fff;border:1px solid #e5e8f2;border-radius:20px;overflow:hidden;">
+<tr><td align="center" style="padding:28px;background:#111b35;color:white;"><img src="{{ $message->embed(resource_path('mail/wosool-logo.png')) }}" alt="{{ $ar ? 'شعار وصول' : 'Wosool logo' }}" width="52" height="52" style="display:block;border:0;"><p style="margin:12px 0 0;font-size:22px;font-weight:bold;">وصول | Wosool</p></td></tr>
+<tr><td style="padding:28px 24px;line-height:1.9;">
+<h1 style="margin:0 0 12px;font-size:25px;">{{ $kind === 'confirm' ? ($ar ? 'خطوة واحدة للاشتراك' : 'One step to subscribe') : ($kind === 'welcome' ? ($ar ? 'أهلاً بك في مجتمع وصول' : 'Welcome to the Wosool community') : ($ar ? 'مختارات هذا الأسبوع' : 'This week’s highlights')) }}</h1>
+<p style="margin:0 0 24px;color:#59647d;">{{ $kind === 'confirm' ? ($ar ? 'أكّد بريدك لتصلك أخبار ريادة الأعمال ومقتطفات مختارة من وصول. الرابط صالح لمدة 48 ساعة.' : 'Confirm your email for entrepreneurship news and selected Wosool highlights. This link expires in 48 hours.') : ($kind === 'welcome' ? ($ar ? 'يسعدنا انضمامك. ستصلك نشرة أسبوعية بأهم الأخبار والمقتطفات وروابط القراءة.' : 'We’re glad you’re here. Look out for a weekly selection of news, short insights and links to read more.') : ($ar ? 'أخبار ومقتطفات مختارة للمؤسسين، في قراءة سريعة.' : 'A quick selection of news and insights for founders.')) }}</p>
+@foreach ($stories as $story)
+<div style="border-top:1px solid #e5e8f2;padding:22px 0;"><p style="margin:0;color:#66718a;font-size:12px;">{{ $story['date'] }}</p><h2 style="margin:6px 0;font-size:19px;line-height:1.6;">{{ $story['title'] }}</h2><p style="margin:0 0 10px;font-size:15px;color:#59647d;">{{ $story['excerpt'] }}</p><a href="{{ $story['url'] }}" style="color:#4437e5;font-weight:bold;">{{ $ar ? 'اقرأ الخبر' : 'Read the story' }} →</a></div>
+@endforeach
+<p style="margin:24px 0 8px;"><a href="{{ $actionUrl }}" style="display:inline-block;background:#4437e5;color:#fff;padding:12px 24px;text-decoration:none;border-radius:10px;font-weight:bold;">{{ $kind === 'confirm' ? ($ar ? 'تأكيد الاشتراك' : 'Confirm subscription') : ($ar ? 'اكتشف أخبار وصول' : 'Explore Wosool news') }}</a></p>
+</td></tr><tr><td style="padding:20px 24px;background:#f8f9fd;font-size:12px;line-height:1.9;color:#66718a;">
+<p style="margin:0;">{{ $ar ? 'تصلك هذه الرسالة لاشتراكك في النشرة أو لعضويتك المفعّلة في وصول.' : 'You receive these updates as a newsletter subscriber or an active Wosool member.' }}</p>
+@if ($kind === 'confirm')<p>{{ $ar ? 'إذا لم تطلب الاشتراك، تجاهل هذه الرسالة. لن تُضاف إلى النشرة دون تأكيدك.' : 'If you did not subscribe, ignore this email. You will not be added without confirmation.' }}</p>@else<a href="{{ $unsubscribeUrl }}" style="color:#59647d;">{{ $ar ? 'إلغاء الاشتراك' : 'Unsubscribe' }}</a>@endif
+ · <a href="mailto:info@wosool.org" style="color:#59647d;">info@wosool.org</a>
+</td></tr></table></td></tr></table></body></html>

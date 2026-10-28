@@ -53,6 +53,9 @@ Route::get('/health', HealthController::class);
 Route::get('/ready', [HealthController::class, 'ready']);
 
 Route::prefix('v1')->group(function () {
+    Route::post('/newsletter/subscribe', [\App\Http\Controllers\Api\NewsletterController::class, 'subscribe'])->middleware('throttle:5,60,newsletter-subscribe');
+    Route::post('/newsletter/confirm', [\App\Http\Controllers\Api\NewsletterController::class, 'confirm'])->middleware('throttle:10,1,newsletter-confirm');
+    Route::post('/newsletter/unsubscribe', [\App\Http\Controllers\Api\NewsletterController::class, 'unsubscribe'])->middleware('throttle:10,1,newsletter-unsubscribe');
     Route::get('/startup-directory', [\App\Http\Controllers\Api\StartupDirectoryController::class, 'index'])->middleware('throttle:60,1');
     // ── Authentication ──────────────────────────────────────────────
     Route::get('/auth/csrf-cookie', [AuthController::class, 'csrf']);

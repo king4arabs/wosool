@@ -11,7 +11,7 @@ class RegistrationOtpMail extends Mailable
 
     public function envelope(): Envelope
     {
-        return new Envelope(subject: 'رمز التحقق من بريدك | Wosool verification code', tags: ['wosool', 'registration-otp']);
+        return new Envelope(subject: 'رمز التحقق من بريدك | Wosool verification code', replyTo: [new \Illuminate\Mail\Mailables\Address('info@wosool.org', 'Wosool')], tags: ['wosool', 'registration-otp']);
     }
 
     public function content(): Content
