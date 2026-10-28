@@ -52,6 +52,7 @@ class FounderResource extends JsonResource
             'source_urls' => $this->source_urls ?? [],
             'source_reviewed_at' => $this->source_reviewed_at?->toDateString(),
             'claimed_at' => $publicDirectory ? null : $this->claimed_at?->toIso8601String(),
+            'outreach' => $this->when($request->user()?->hasRole('admin') && ! $publicDirectory && $this->relationLoaded('outreach'), fn () => $this->outreach?->adminData()),
             'invitation' => $this->when($request->user()?->hasRole('admin') && $this->relationLoaded('latestInvitation'), function () {
                 $invite = $this->latestInvitation;
                 return $invite ? ['status' => $invite->status === 'sent' && $invite->expires_at->isPast() ? 'expired' : $invite->status, 'email' => $invite->email, 'sent_at' => $invite->sent_at?->toIso8601String(), 'expires_at' => $invite->expires_at->toIso8601String()] : null;
