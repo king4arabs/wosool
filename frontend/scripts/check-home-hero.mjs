@@ -40,7 +40,7 @@ try {
     await panel.getByRole('button').nth(1).click()
     assert.deepEqual(await panel.locator('strong').allTextContents(), ['—', '—', '—', '—'])
     await panel.getByRole('button').first().click()
-    assert.equal(await panel.locator('article a').count(), 2)
+    assert.equal(await panel.locator('article a').count(), 4)
     assert.ok((await video.locator('source').first().getAttribute('src')).endsWith(width < 720 ? 'home-journey-mobile.webm' : 'home-journey.webm'))
     assert.equal(await video.evaluate(v => v.muted && v.loop && v.playsInline), true)
     await hero.getByRole('button', { name: /background video|فيديو الخلفية/ }).click()

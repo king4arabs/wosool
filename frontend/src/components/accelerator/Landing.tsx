@@ -467,8 +467,8 @@ export function Landing({ home = false }: { home?: boolean }) {
           ))}
           <p className="mt-6 text-xs leading-6 text-slate-500">
             {text(
-              "مرجع المعلومات: EO Accelerator — مراجعة 8 أكتوبر 2026. قد تتغير الشروط قبل الالتحاق.",
-              "Source: EO Accelerator — reviewed 8 October 2026. Criteria may change before enrolment.",
+              "مرجع المعلومات: EO Accelerator. قد تتغير الشروط قبل الالتحاق.",
+              "Source: EO Accelerator. Criteria may change before enrolment.",
             )}
           </p>
           <div className="mt-8 flex flex-wrap gap-4">
