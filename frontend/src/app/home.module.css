@@ -1,8 +1,6 @@
 .home { color:var(--text); background:var(--surface); }
 .container { width:min(1200px,calc(100% - 48px)); margin-inline:auto; }
 .hero { position:relative; overflow:hidden; background:var(--brand-navy); color:var(--on-dark); }
-/* One quiet brand accent; the copy carries the hero. */
-.hero::before { content:""; position:absolute; border-radius:50%; pointer-events:none; width:clamp(120px,16vw,220px); aspect-ratio:1; background:var(--brand-pink); opacity:.9; inset-block-start:-90px; inset-inline-end:-60px; }
 .heroGrid { position:relative; z-index:1; display:grid; grid-template-columns:minmax(0,820px); align-items:center; gap:32px; padding-block:clamp(2.5rem,4vw,4rem) var(--section-space); }
 .eyebrow { font-size:12px; font-weight:700; color:var(--action-bg); margin-bottom:16px; }
 .hero .eyebrow { color:var(--on-dark-muted); }
@@ -70,3 +68,6 @@
 @media(max-width:900px) { .heroGrid { grid-template-columns:1fr; gap:32px; padding-block:48px; }.hero .lead { max-width:650px; }.heroPanel { max-width:650px; }.heroPanel h2 { margin-top:20px; }.heroPanel li { padding-block:12px; }.sectionHead { align-items:flex-start; flex-wrap:wrap; } }
 @media(max-width:600px) { .container { width:calc(100% - 32px); }.heroGrid { padding-block:40px; gap:28px; }.heroPanel { padding:22px; }.hero h1 { font-size:clamp(2.5rem,12vw,4rem); }.intro { font-size:18px; margin-top:20px; }.lead { font-size:14px; line-height:1.9; }.actions { gap:10px; margin-top:24px; }.actions>a { flex:1 1 170px; padding-inline:16px; }.note { font-size:11px; }.section,.founders,.events { padding-block:48px; }.home section:not([aria-labelledby="community-partners-title"]) h2 { font-size:clamp(1.5rem,7.5vw,2rem); }.benefits,.steps { gap:16px; margin-top:24px; }.directoryLinks { gap:6px 20px; }.textLink { font-size:13px; }.heroFaces>span:last-child { flex:1 1 100%; margin:12px 0 0; } }
 @media(max-width:360px) { .heroPanel { padding:18px; }.heroPanel li { gap:12px; font-size:13px; }.home section:not([aria-labelledby="community-partners-title"]) h2 { font-size:24px; }.hero h1 { font-size:39px; }.benefits article,.steps li { padding:20px; } }
+
+/* Reserve room for the background playback control at every breakpoint. */
+.hero .heroGrid { padding-bottom:max(var(--section-space),84px); }

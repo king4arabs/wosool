@@ -51,6 +51,8 @@ jobs:
         run: npm run test:collections:browser
       - name: Verify homepage founder discovery and fresh visit mixes
         run: npm run test:founders:browser
+      - name: Verify homepage video playback and accessible fallbacks
+        run: node scripts/check-home-hero.mjs
       - name: Check public pages for serious WCAG 2.1 A/AA violations (axe-core)
         run: npm run test:a11y:browser
   pnpm-install:
