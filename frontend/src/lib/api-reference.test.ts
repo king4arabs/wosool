@@ -27,3 +27,12 @@ test("Arabic rows use Arabic copy; English rows keep the OpenAPI wording; parame
   assert.ok(news(en).parameters.includes("per_page"))
   assert.deepEqual(ar.find(row => row.path === "/api/health")!.parameters, [])
 })
+
+test("Arabic founder and company notes match the protected 24-record API limit", () => {
+  const rows = apiEndpoints("ar")
+  for (const path of ["/api/v1/founders", "/api/v1/companies"]) {
+    const description = rows.find(row => row.path === path)?.description ?? ""
+    assert.match(description, /1 و24/, path)
+    assert.doesNotMatch(description, /1 و100/, path)
+  }
+})

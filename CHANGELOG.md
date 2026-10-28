@@ -1,5 +1,12 @@
 # Changelog
 
+## Protected public-directory contract reconciliation — 2026-10-28
+
+- Correct the company contract regression introduced with the founder-data safeguards: bilingual imported-company checks once again fetch a real detail response, and company-nested founders omit `scorecard` while standalone founder responses retain the documented redacted `scorecard: null` shape.
+- Align the Arabic `/api` founder and company notes with the enforced 24-record page limit; add a regression test so the reference page cannot silently drift back to 100.
+- Reconcile current documentation with the checked-in **169 founders / 95 companies / 56 stories**, OpenAPI 1.5.0, public API throttling/redaction and the remaining Hostinger edge/deployment work. No review dates, moderation flags, accounts or production records changed.
+- CI run 296 passed frontend production/browser/accessibility checks, the standalone Node 22 / pnpm 11.24.0 hosting build, production guardrails and 277 Laravel tests on PHP 8.3, 8.4 and 8.5. This proves the merged source, not a Hostinger deployment or database import.
+
 ## 404, error and loading screens in both languages — 2026-10-28
 
 - **Problem:** the app-wide screens ignored the visitor's language. The 404 page was Arabic-only, so English visitors got "الصفحة غير موجودة" inside an English header and footer, and its icons used `ml-2`, which puts the gap on the wrong side in English. The unexpected-error screen was English-only ("Something went wrong", "Try Again", "Go Home"), had no `lang`/`dir`, used `mr-2` icon spacing in Arabic, and said "Our team has been notified", although no error reporting is wired up. Its "Try Again" button called `reset()`, which in Next.js 16.4 only re-renders the same failed result; `retry()` re-fetches the segment. The loading screen read "Loading…" in Arabic, and the toast region and close button were announced as "Notifications" and "Dismiss notification" to Arabic screen readers.
