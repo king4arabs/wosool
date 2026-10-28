@@ -46,6 +46,7 @@ try {
     await eventually(async () => await directory.locator('article').count() === 3)
     assert.equal(await page.getByText('Founder 4', { exact: true }).count(), 0)
     assert.equal(await page.getByText('Founder 5', { exact: true }).count(), 0)
+    assert.equal(await page.getByText(/بانتظار التفعيل|Awaiting activation/).count(), 0)
     assert.equal(await directory.getByText('88%', { exact: true }).count(), 0)
     assert.equal(await directory.getByText('75%', { exact: true }).count(), 1)
     const countries = page.getByRole('combobox', { name: locale === 'ar' ? 'الدولة' : 'Country', exact: true })

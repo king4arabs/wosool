@@ -61,6 +61,11 @@ class FounderProfile extends Model
         ];
     }
 
+    public function outreach(): HasOne
+    {
+        return $this->hasOne(FounderOutreach::class);
+    }
+
     public function invitations(): HasMany
     {
         return $this->hasMany(FounderInvitation::class);
