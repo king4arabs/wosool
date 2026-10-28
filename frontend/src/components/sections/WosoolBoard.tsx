@@ -19,10 +19,10 @@ type BoardMember = {
 const members: readonly BoardMember[] = [
   { name: "Thamer Aldhafiri", nameAr: "ثامر الظفيري", company: "Cipher", description: "Cipher Company for Cybersecurity", website: "https://cipher.com.sa", linkedIn: "https://www.linkedin.com/in/thameraldhafiri", photo: "/wosool/board/thamer-aldhafiri.webp", photoSize: 460 },
   { name: "Mohammed Alsolami", nameAr: "محمد السلمي", company: "RABEH", description: "Rabeh FinTech", website: "https://rabeh.sa", linkedIn: "https://www.linkedin.com/in/mohammedalsolami", photo: "/wosool/board/mohammed-alsolami.webp", photoSize: 512 },
-  { name: "Anas Alsahali", nameAr: "أنس السهلي", company: "SEQUENCIVE", description: "SEQUENCIVE", website: "https://sequencive.com", linkedIn: null, photo: "/wosool/board/anas-alsahali.webp", photoSize: 160 },
-  { name: "Faisal Almukles", nameAr: "فيصل المخلص", company: "Torood", description: "Torod Logistics", website: "https://torod.co", linkedIn: null, photo: "/wosool/board/faisal-almukles.webp", photoSize: 512 },
-  { name: "Rayan Alzamil", nameAr: "ريان الزامل", company: "Salesfine", description: "SalesFine FinTech", website: "https://salesfine.co", linkedIn: null, photo: "/wosool/board/rayan-alzamil.webp", photoSize: 512 },
-  { name: "Faisal Al-Abdulsalam", nameAr: "فيصل العبدالسلام", company: "Core Vision", description: "", website: null, linkedIn: null, photo: "/wosool/board/faisal-al-abdulsalam.jpeg", photoSize: 1008, photoHeight: 1050 },
+  { name: "Anas Alsahali", nameAr: "أنس السهلي", company: "SEQUENCIVE", description: "SEQUENCIVE", website: "https://sequencive.com", linkedIn: "https://www.linkedin.com/in/anas-alsahli", photo: "/wosool/board/anas-alsahali.webp", photoSize: 160 },
+  { name: "Faisal Almukles", nameAr: "فيصل المخلص", company: "Torood", description: "Torod Logistics", website: "https://torod.co", linkedIn: "https://www.linkedin.com/in/falmaklas", photo: "/wosool/board/faisal-almukles.webp", photoSize: 512 },
+  { name: "Rayan Alzamil", nameAr: "ريان الزامل", company: "Salesfine", description: "SalesFine FinTech", website: "https://salesfine.co", linkedIn: "https://www.linkedin.com/in/rayan-f-alzamil-425b52157", photo: "/wosool/board/rayan-alzamil.webp", photoSize: 512 },
+  { name: "Faisal Al-Abdulsalam", nameAr: "فيصل العبدالسلام", company: "Core Vision", description: "", website: "https://www.corevision.sa", linkedIn: "https://www.linkedin.com/in/faisal-al-abdulsalam", photo: "/wosool/board/faisal-al-abdulsalam.jpeg", photoSize: 1008, photoHeight: 1050 },
 ]
 
 export function WosoolBoard() {
