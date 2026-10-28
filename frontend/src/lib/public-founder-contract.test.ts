@@ -17,13 +17,16 @@ const detail = (data: unknown) => validatePublicResponse('/api/v1/founders/{slug
 test('anonymous founder contract accepts unclaimed, nullable and associative profile fields', () => {
   const result = detail(founder())
   assert.equal(result.valid, true, JSON.stringify(result.errors))
-  assert.equal(detail({ ...founder(), skills: { primary: 'Engineering' }, needs: { first: 'Mentoring' }, user: { id: 2, name: 'Member', email: null }, activation_status: 'active', can_communicate: true }).valid, true)
+  assert.equal(detail({ ...founder(), source_urls: { official: 'https://example.com' }, activation_status: 'active', can_communicate: true }).valid, true)
 })
 
 test('anonymous founder contract rejects drift, hidden status and contact fields without mutation', () => {
   for (const changes of [
     { id: '1' }, { is_public: false }, { status: 'suspended' }, { activation_status: 'suspended' },
     { user: { id: 2, name: 'Member', email: 'private@example.test' } },
+    { user: { id: 2, name: 'Member', email: null } },
+    { needs: ['Private investment request'] }, { linkedin_url: 'https://linkedin.com/in/fixture' },
+    { claimed_at: '2026-10-19T00:00:00Z' },
     { invitation: { email: 'private@example.test' } }, { user_id: 2 },
     { source_reviewed_at: '2026-02-30' }, { claimed_at: 'yesterday' }, { skills: [12] },
   ]) {
@@ -37,29 +40,17 @@ test('anonymous founder contract rejects drift, hidden status and contact fields
   assert.equal(detail(missing).valid, false)
 })
 
-test('founder scorecard contract types computed fields while retaining legacy JSON logs', () => {
-  const scorecard = {
-    id: 1, founder_profile_id: 1, aggregate_score: 60, momentum_score: 60,
-    fundraising_score: 70, growth_score: 65, support_need_score: 20, latest_update_text: null,
-    tracking: { momentum: 60, growth: 65, readiness: 70, support_delta: 20 },
-    trends: { score_direction: 'up', momentum_direction: 'flat', growth_direction: 'up', readiness_direction: 'down', support_delta_direction: 'up' },
-    insights: { dynamic_alerts: [], automated_action_suggestions: [{ key: 'maintain_consistency', label: 'Maintain cadence', priority: 'normal' }] },
-    historical_logs: [], created_at: null, updated_at: null,
-  }
-  for (const historical_logs of [[], [{ aggregate_score: 50, notes: 'Fixture note' }], { previous: { aggregate_score: 50 } }]) {
-    assert.equal(detail({ ...founder(), scorecard: { ...scorecard, historical_logs } }).valid, true)
-  }
-  assert.equal(detail({ ...founder(), scorecard: { ...scorecard, aggregate_score: '60' } }).valid, false)
-  assert.equal(detail({ ...founder(), scorecard: { ...scorecard, invitation_token: 'unexpected' } }).valid, false)
-  assert.equal(detail({ ...founder(), scorecard: { ...scorecard, trends: { ...scorecard.trends, score_direction: 'unknown' } } }).valid, false)
+test('anonymous founder contract excludes member scorecards and historical notes', () => {
+  assert.equal(detail({ ...founder(), scorecard: { historical_logs: [{ notes: 'private' }] } }).valid, false)
+  assert.equal(detail({ ...founder(), scorecard: null }).valid, true)
 })
 
-test('founder pagination supports 100 records and 404s without promising malformed-query 422s', () => {
+test('founder pagination caps each response at 24 records and 404s without promising malformed-query 422s', () => {
   const body = { data: [], links: { first: '/founders?page=1', last: '/founders?page=1', prev: null, next: null }, meta: {
-    current_page: 8, from: null, last_page: 1, links: [], path: '/api/v1/founders', per_page: 100, to: null, total: 0,
+    current_page: 8, from: null, last_page: 1, links: [], path: '/api/v1/founders', per_page: 24, to: null, total: 0,
   } }
   assert.equal(validatePublicResponse('/api/v1/founders', 200, body).valid, true)
-  assert.equal(validatePublicResponse('/api/v1/founders', 200, { ...body, meta: { ...body.meta, per_page: 101 } }).valid, false)
+  assert.equal(validatePublicResponse('/api/v1/founders', 200, { ...body, meta: { ...body.meta, per_page: 25 } }).valid, false)
   assert.equal(validatePublicResponse('/api/v1/founders/{slug}', 404, { message: 'Not found' }).valid, true)
   assert.throws(() => validatePublicResponse('/api/v1/founders', 422, {}), /No JSON response schema/)
 })

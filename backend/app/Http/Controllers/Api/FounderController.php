@@ -41,7 +41,7 @@ class FounderController extends Controller
             ->orderByRaw("CASE WHEN country_code = 'SA' THEN 0 WHEN country_code IN ('AE','BH','KW','OM','QA') THEN 1 WHEN country_code IN ('EG','JO','LB','MA','TN','DZ','IQ','PS','LY','SD','YE','SY') THEN 2 ELSE 3 END")
             ->orderBy('is_featured', 'desc')
             ->orderBy('created_at', 'desc')
-            ->paginate(max(1, min(100, $request->integer('per_page', 12))))
+            ->paginate(max(1, min(24, $request->integer('per_page', 12))))
             ->withQueryString();
 
         return FounderResource::collection($founders)->response();
