@@ -38,7 +38,7 @@ try {
     const panel = hero.locator('aside')
     assert.equal(await panel.locator('article').count(), 4)
     await panel.getByRole('button').nth(1).click()
-    assert.deepEqual(await panel.locator('strong').allTextContents(), ['—', '—', '—', '—'])
+    assert.deepEqual(await panel.locator('strong').allTextContents(), ['2,977', '2,430', '+7.84%', '-33.3%'])
     await panel.getByRole('button').first().click()
     assert.equal(await panel.locator('article a').count(), 4)
     assert.ok((await video.locator('source').first().getAttribute('src')).endsWith(width < 720 ? 'home-journey-mobile.webm' : 'home-journey.webm'))
