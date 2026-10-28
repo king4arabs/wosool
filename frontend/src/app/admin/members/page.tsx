@@ -230,6 +230,14 @@ export default function AdminMembersPage() {
                 <Info label="آخر مراجعة" value={selected.reviewer?.name ? `${selected.reviewer.name} - ${formatDate(selected.reviewed_at)}` : "لم تتم مراجعة بعد"} />
               </div>
 
+              {selected.onboarding_data && <>
+                <Info label="الدور" value={selected.onboarding_data.position} />
+                <Info label="الدولة" value={selected.onboarding_data.country_code} />
+                <Info label="سنة التأسيس" value={String(selected.onboarding_data.founded_year)} />
+                <Info label="حجم الفريق" value={String(selected.onboarding_data.team_size)} />
+                <LongInfo label="نبذة المؤسس" value={selected.onboarding_data.bio} />
+                <LongInfo label="نبذة الشركة" value={selected.onboarding_data.company_description} />
+              </>}
               <LongInfo label="الدافع للانضمام" value={selected.motivation} />
               <LongInfo label="ما الذي سيقدمه" value={selected.what_you_offer} />
               <LongInfo label="ما الذي يحتاجه" value={selected.what_you_need} />

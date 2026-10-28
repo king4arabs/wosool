@@ -14,7 +14,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
 
-#[Fillable(['name', 'email', 'password', 'password_hash', 'role_token', 'email_verified_at', 'is_accelerator_applicant', 'privacy_accepted_at'])]
+#[Fillable(['name', 'email', 'password', 'password_hash', 'role_token', 'email_verified_at', 'is_accelerator_applicant', 'privacy_accepted_at', 'community_registration_started_at'])]
 #[Hidden(['password', 'password_hash', 'remember_token'])]
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -28,6 +28,7 @@ class User extends Authenticatable implements MustVerifyEmail
         return [
             'is_accelerator_applicant' => 'boolean',
             'privacy_accepted_at' => 'datetime',
+            'community_registration_started_at' => 'datetime',
             'password' => 'hashed',
             'password_hash' => 'hashed',
             'email_verified_at' => 'datetime',
