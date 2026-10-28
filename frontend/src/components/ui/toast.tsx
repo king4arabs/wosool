@@ -3,6 +3,8 @@
 import * as React from "react"
 import { X, CheckCircle2, AlertCircle, Info, AlertTriangle } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { useLocale } from "@/lib/locale"
+import { systemScreens } from "@/lib/system-screens"
 
 export type ToastVariant = "success" | "error" | "warning" | "info"
 
@@ -44,9 +46,11 @@ const variantIcons: Record<ToastVariant, React.ElementType> = {
 function ToastItem({
   toast: t,
   onDismiss,
+  dismissLabel,
 }: {
   toast: Toast
   onDismiss: (id: string) => void
+  dismissLabel: string
 }) {
   const Icon = variantIcons[t.variant]
 
@@ -68,9 +72,9 @@ function ToastItem({
       <button
         onClick={() => onDismiss(t.id)}
         className="flex min-h-11 min-w-11 items-center justify-center shrink-0 rounded-[var(--radius-control)] hover:bg-[var(--surface)]/50 focus-visible:outline-2 focus-visible:outline-[var(--focus-ring)] transition-colors"
-        aria-label="Dismiss notification"
+        aria-label={dismissLabel}
       >
-        <X className="h-4 w-4" />
+        <X className="h-4 w-4" aria-hidden="true" />
       </button>
     </div>
   )
@@ -78,6 +82,8 @@ function ToastItem({
 
 export function ToastProvider({ children }: { children: React.ReactNode }) {
   const [toasts, setToasts] = React.useState<Toast[]>([])
+  const { locale } = useLocale()
+  const copy = systemScreens(locale)
 
   const toast = React.useCallback(
     (message: string, variant: ToastVariant = "info", duration = 5000) => {
@@ -98,10 +104,10 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
         className="fixed bottom-4 right-4 z-[200] flex flex-col gap-2"
         role="region"
         aria-live="polite"
-        aria-label="Notifications"
+        aria-label={copy.toastRegion}
       >
         {toasts.map((t) => (
-          <ToastItem key={t.id} toast={t} onDismiss={dismiss} />
+          <ToastItem key={t.id} toast={t} onDismiss={dismiss} dismissLabel={copy.toastDismiss} />
         ))}
       </div>
     </ToastContext>

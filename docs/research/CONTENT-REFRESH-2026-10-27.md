@@ -23,7 +23,7 @@ This record documents private editorial source verification in the repository. I
 ## Data and deployment safeguards
 - Read newest main, AGENTS.md, DEPLOYMENT.md, all four mirrored frontend/backend catalog pairs and the prior 26 October source review before changes.
 - Checked existing 165 founder profiles across three catalogs, 53 briefs, the 14-item startup directory and startup-directory-sources against candidates. Already present INVE and theQA were deliberately not duplicated.
-- Existing editorial records, names, slugs, IDs, copy and sequences are preserved. Target snapshot totals: **169 founders / 94 companies / 56 news briefs**. Updated both affected mirror pairs to identical JSON; adjusted only expected catalog counts in the corresponding frontend test.
+- Existing editorial records, names, slugs, IDs, copy and sequences are preserved. The 27 October snapshot totaled **169 founders / 94 companies / 56 news briefs**; after merging three additional founder profiles and three news briefs from main, the combined catalogs contain **172 founders / 96 companies / 59 news briefs**. Both affected mirror pairs remain identical.
 - Portraits, logos and third-party story photographs omitted because rights to reuse were not established; existing neutral cards remain. Factual sources linked and dates reflect publisher publication dates.
 - No accounts, invitations, live member records, private data, production database writes, or false partnership and revenue claims.
 - Hostinger deployment baseline from a7be83042c315fe436f2e7b13dd4cc11243134c4 is unchanged, including frontend hoisted dependencies, tracing and webpack one-worker controls.

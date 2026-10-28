@@ -12,6 +12,8 @@ import { StartupDirectory } from "@/components/sections/StartupDirectory"
 import { CommunityPartners, FounderShowcase } from "@/components/sections/CommunityShowcase"
 import { EoaOverview } from "@/components/eoa/Overview"
 import { WosoolBoard } from "@/components/sections/WosoolBoard"
+import { RegionalHeroMetrics } from "@/components/sections/RegionalHeroMetrics"
+import { HomeHeroMedia } from "@/components/sections/HomeHeroMedia"
 import { useHomeContent } from "@/lib/use-home-content"
 import { useLocale } from "@/lib/locale"
 import styles from "./home.module.css"
@@ -72,8 +74,9 @@ export default function HomePage() {
   const icons = [Lightbulb, Users, Handshake]
   const spotlights = editorialFounders(getFounderSpotlights(locale), founders)
   return <PublicLayout><div className={styles.home} lang={locale} dir={locale === "ar" ? "rtl" : "ltr"}>
-    <section className={styles.hero} aria-labelledby="home-title"><div className={`${styles.container} ${styles.heroGrid}`}>
+    <section className={styles.hero} aria-labelledby="home-title"><HomeHeroMedia ar={locale === "ar"} /><div className={`${styles.container} ${styles.heroGrid}`}>
       <div><p className={styles.eyebrow}>{copy.eyebrow}</p><h1 id="home-title">{copy.title}<br /><span>{copy.highlight}</span></h1><p className={styles.intro}>{copy.intro}</p><p className={styles.lead}>{copy.description}</p><div className={styles.actions}><Link className={styles.primary} href="/apply">{copy.join}<ArrowUpRight size={18} /></Link><Link className={styles.secondary} href="#founder-community">{copy.explore}</Link></div><p className={styles.note}>{copy.note}</p></div>
+      <RegionalHeroMetrics ar={locale === "ar"} />
     </div></section>
     <CommunityPartners partners={partners} loaded={partnersLoaded} loading={loading} failed={failed.includes("partners")} retry={retry} />
     <section id="founder-community" className={styles.founders} aria-labelledby="founders-title"><div className={styles.container}><div className={styles.sectionHead}><div><p className={styles.eyebrow}>{copy.spotlightLabel}</p><h2 id="founders-title">{locale === 'ar' ? 'تعرّف على المؤسسين' : 'Meet the founders'}</h2><p className={styles.lead}>{copy.spotlightText}</p></div><Link className={styles.textLink} href="/founders">{copy.allFounders}<ArrowUpRight size={18} /></Link></div>

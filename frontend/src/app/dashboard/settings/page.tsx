@@ -9,6 +9,9 @@ import { Separator } from "@/components/ui/separator"
 import { Save, Shield, Bell, Eye } from "lucide-react"
 import { api, ApiError } from "@/lib/api"
 import { useToast } from "@/components/ui/toast"
+import { useLocale } from "@/lib/locale"
+import { resolveDashboardLocale } from "@/lib/dashboard-i18n"
+import { memberSettingKeys, memberSettingLabel, memberSettingsCopy, type MemberSettingGroup } from "@/lib/member-settings"
 
 type MemberSettings = {
   account: {
@@ -61,6 +64,9 @@ const emptyState: MemberSettings = {
 
 export default function SettingsPage() {
   const { toast } = useToast()
+  const { locale } = useLocale()
+  const lang = resolveDashboardLocale(locale)
+  const copy = memberSettingsCopy[lang]
   const [settings, setSettings] = useState<MemberSettings>(emptyState)
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
@@ -71,9 +77,9 @@ export default function SettingsPage() {
   useEffect(() => {
     api.get<{ data: MemberSettings }>("/member/settings")
       .then((res) => setSettings(res.data))
-      .catch((err: Error) => toast(err.message, "error"))
+      .catch((err: Error) => toast(err.message || memberSettingsCopy[lang].loadFailed, "error"))
       .finally(() => setLoading(false))
-  }, [toast])
+  }, [toast, lang])
 
   const save = async () => {
     setSaving(true)
@@ -90,64 +96,92 @@ export default function SettingsPage() {
       setCurrentPassword("")
       setNewPassword("")
       setNewPasswordConfirmation("")
-      toast("Settings saved.", "success")
+      toast(copy.saved, "success")
     } catch (err) {
       if (err instanceof ApiError && err.data && typeof err.data === "object") {
         const data = err.data as { message?: string; errors?: Record<string, string[]> }
         const first = data.errors ? Object.values(data.errors).flat()[0] : null
-        toast((first as string) || data.message || "Could not save settings.", "error")
+        toast((first as string) || data.message || copy.saveFailed, "error")
       } else {
-        toast(err instanceof Error ? err.message : "Could not save settings.", "error")
+        toast(err instanceof Error && err.message ? err.message : copy.saveFailed, "error")
       }
     } finally {
       setSaving(false)
     }
   }
 
+  const toggles = (group: MemberSettingGroup) => {
+    const values = settings[group] as Record<string, boolean>
+    const keys = memberSettingKeys[group].filter((key) => key in values)
+    return keys.map((key, idx) => (
+      <div key={key}>
+        <div className="flex items-center justify-between gap-4">
+          <Label htmlFor={`setting-${key}`} className="font-medium">{memberSettingLabel(lang, key)}</Label>
+          <input
+            id={`setting-${key}`}
+            type="checkbox"
+            checked={values[key]}
+            onChange={(e) => setSettings((prev) => ({
+              ...prev,
+              [group]: { ...prev[group], [key]: e.target.checked },
+            }))}
+            className="h-5 w-5 shrink-0 rounded border-gray-300 text-[#C9A84C] focus:ring-[#C9A84C]"
+          />
+        </div>
+        {idx < keys.length - 1 ? <Separator className="mt-4" /> : null}
+      </div>
+    ))
+  }
+
   if (loading) {
-    return <div className="text-sm text-gray-500">Loading settings...</div>
+    return <div className="text-sm text-gray-500" role="status">{copy.loading}</div>
   }
 
   return (
     <div className="max-w-3xl space-y-8">
+      <h1 className="text-2xl font-bold text-[#0A1628]">{copy.title}</h1>
       <Card>
         <CardHeader>
-          <h3 className="font-semibold text-[#0A1628] flex items-center gap-2">
-            <Shield className="h-4 w-4 text-[#C9A84C]" />
-            Account Settings
-          </h3>
+          <h2 className="font-semibold text-[#0A1628] flex items-center gap-2">
+            <Shield className="h-4 w-4 text-[#C9A84C]" aria-hidden="true" />
+            {copy.account}
+          </h2>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="s-name">Display Name</Label>
+            <Label htmlFor="s-name">{copy.displayName}</Label>
             <Input
               id="s-name"
+              autoComplete="name"
               value={settings.account.name}
               onChange={(e) => setSettings((prev) => ({ ...prev, account: { ...prev.account, name: e.target.value } }))}
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="s-email">Email Address</Label>
+            <Label htmlFor="s-email">{copy.email}</Label>
             <Input
               id="s-email"
               type="email"
+              dir="ltr"
+              autoComplete="email"
               value={settings.account.email}
               onChange={(e) => setSettings((prev) => ({ ...prev, account: { ...prev.account, email: e.target.value } }))}
             />
           </div>
           <Separator />
+          <p id="s-password-hint" className="text-sm text-slate-500">{copy.passwordHint}</p>
           <div className="space-y-2">
-            <Label htmlFor="s-current-password">Current Password</Label>
-            <Input id="s-current-password" type="password" value={currentPassword} onChange={(e) => setCurrentPassword(e.target.value)} />
+            <Label htmlFor="s-current-password">{copy.currentPassword}</Label>
+            <Input id="s-current-password" type="password" autoComplete="current-password" aria-describedby="s-password-hint" value={currentPassword} onChange={(e) => setCurrentPassword(e.target.value)} />
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="s-new-password">New Password</Label>
-              <Input id="s-new-password" type="password" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} />
+              <Label htmlFor="s-new-password">{copy.newPassword}</Label>
+              <Input id="s-new-password" type="password" autoComplete="new-password" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="s-confirm-password">Confirm New Password</Label>
-              <Input id="s-confirm-password" type="password" value={newPasswordConfirmation} onChange={(e) => setNewPasswordConfirmation(e.target.value)} />
+              <Label htmlFor="s-confirm-password">{copy.confirmPassword}</Label>
+              <Input id="s-confirm-password" type="password" autoComplete="new-password" value={newPasswordConfirmation} onChange={(e) => setNewPasswordConfirmation(e.target.value)} />
             </div>
           </div>
         </CardContent>
@@ -155,85 +189,32 @@ export default function SettingsPage() {
 
       <Card>
         <CardHeader>
-          <h3 className="font-semibold text-[#0A1628] flex items-center gap-2">
-            <Bell className="h-4 w-4 text-[#C9A84C]" />
-            Notification Preferences
-          </h3>
+          <h2 className="font-semibold text-[#0A1628] flex items-center gap-2">
+            <Bell className="h-4 w-4 text-[#C9A84C]" aria-hidden="true" />
+            {copy.notifications}
+          </h2>
         </CardHeader>
-        <CardContent className="space-y-4">
-          {Object.entries(settings.notifications).map(([key, value], idx, arr) => (
-            <div key={key}>
-              <div className="flex items-center justify-between gap-4">
-                <Label htmlFor={key} className="font-medium">{key.replaceAll("_", " ")}</Label>
-                <input
-                  id={key}
-                  type="checkbox"
-                  checked={value}
-                  onChange={(e) => setSettings((prev) => ({
-                    ...prev,
-                    notifications: { ...prev.notifications, [key]: e.target.checked },
-                  }))}
-                  className="h-5 w-5 rounded border-gray-300 text-[#C9A84C] focus:ring-[#C9A84C]"
-                />
-              </div>
-              {idx < arr.length - 1 ? <Separator className="mt-4" /> : null}
-            </div>
-          ))}
-        </CardContent>
+        <CardContent className="space-y-4">{toggles("notifications")}</CardContent>
       </Card>
 
       <Card>
         <CardHeader>
-          <h3 className="font-semibold text-[#0A1628] flex items-center gap-2">
-            <Eye className="h-4 w-4 text-[#C9A84C]" />
-            Privacy & Visibility
-          </h3>
+          <h2 className="font-semibold text-[#0A1628] flex items-center gap-2">
+            <Eye className="h-4 w-4 text-[#C9A84C]" aria-hidden="true" />
+            {copy.privacy}
+          </h2>
         </CardHeader>
         <CardContent className="space-y-4">
-          {Object.entries(settings.privacy).map(([key, value], idx, arr) => (
-            <div key={key}>
-              <div className="flex items-center justify-between gap-4">
-                <Label htmlFor={key} className="font-medium">{key.replaceAll("_", " ")}</Label>
-                <input
-                  id={key}
-                  type="checkbox"
-                  checked={value}
-                  onChange={(e) => setSettings((prev) => ({
-                    ...prev,
-                    privacy: { ...prev.privacy, [key]: e.target.checked },
-                  }))}
-                  className="h-5 w-5 rounded border-gray-300 text-[#C9A84C] focus:ring-[#C9A84C]"
-                />
-              </div>
-              {idx < arr.length - 1 ? <Separator className="mt-4" /> : null}
-            </div>
-          ))}
+          {toggles("privacy")}
           <Separator />
-          {Object.entries(settings.visibility).map(([key, value], idx, arr) => (
-            <div key={key}>
-              <div className="flex items-center justify-between gap-4">
-                <Label htmlFor={key} className="font-medium">{key.replaceAll("_", " ")}</Label>
-                <input
-                  id={key}
-                  type="checkbox"
-                  checked={value}
-                  onChange={(e) => setSettings((prev) => ({
-                    ...prev,
-                    visibility: { ...prev.visibility, [key]: e.target.checked },
-                  }))}
-                  className="h-5 w-5 rounded border-gray-300 text-[#C9A84C] focus:ring-[#C9A84C]"
-                />
-              </div>
-              {idx < arr.length - 1 ? <Separator className="mt-4" /> : null}
-            </div>
-          ))}
+          {toggles("visibility")}
         </CardContent>
       </Card>
 
       <div className="flex justify-end">
         <Button size="lg" onClick={save} disabled={saving}>
-          <Save className="h-4 w-4 mr-2" />
-          {saving ? "Saving..." : "Save Settings"}
+          <Save className="h-4 w-4 me-2" aria-hidden="true" />
+          {saving ? copy.saving : copy.save}
         </Button>
       </div>
     </div>

@@ -62,5 +62,14 @@ return [
             'brief_required' => 'Add a short note on why you want this introduction.',
             'brief_min' => 'Write at least 20 characters on why you want this introduction.',
         ],
+        'settings' => [
+            'current_password_incorrect' => 'The current password is incorrect.',
+            'attributes' => [
+                'name' => 'name',
+                'email' => 'email',
+                'current_password' => 'current password',
+                'new_password' => 'new password',
+            ],
+        ],
     ],
 ];
