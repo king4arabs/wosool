@@ -6,7 +6,8 @@ import { BarChart3, Lightbulb, Rocket, Scale } from "lucide-react"
 import { usePublicCollection } from "@/lib/use-public-collection"
 import { CollectionStatus } from "@/components/sections/CollectionStatus"
 import { PublicLayout } from "@/components/layout/PublicLayout"
-import { PartnerCard } from "@/components/sections/PartnerCard"
+import { PartnerLogoMarquee } from "@/components/sections/PartnerLogoMarquee"
+import { PartnerEcosystem } from "@/components/sections/PartnerEcosystem"
 import { Button } from "@/components/ui/button"
 import { localizePartner, partnersPageCopy } from "@/data/localized-seed"
 import { type ApiPartner, mapPartner } from "@/lib/content-api"
@@ -38,11 +39,8 @@ export default function PartnersPage() {
             <h2 className="text-2xl lg:text-3xl font-black text-slate-900 tracking-tight">{copy.sectionTitle}</h2>
           </div>
 
-          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
-            {partnerItems.map((partner) => (
-              <PartnerCard key={partner.id} partner={partner} />
-            ))}
-          </div>
+          <PartnerLogoMarquee partners={partnerItems.filter(partner => partner.status === "Confirmed").map(partner => ({ id: partner.id, name_ar: partner.name, name_en: partner.name, website: partner.website, logo_path: partner.logoUrl }))} label={copy.sectionTitle} />
+          <PartnerEcosystem />
         </div>
       </section>
 
