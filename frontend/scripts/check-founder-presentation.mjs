@@ -27,7 +27,7 @@ try {
     const page = await context.newPage()
     const errors = []
     const countryRequests = []
-    page.on('pageerror', error => errors.push(error.message))
+    page.on('pageerror', error => errors.push(`${page.url()}: ${error.message}`))
     await context.route('**/*', route => {
       const url = new URL(route.request().url())
       if (url.origin !== origin) return route.abort()
@@ -67,6 +67,7 @@ try {
     assert.equal(await directory.locator('[data-country="JP"]').count(), 1)
     await countries.selectOption('BR')
     await eventually(async () => countryRequests.includes('BR') && await directory.locator('article').count() === 0)
+    assert.deepEqual(errors, [], `Directory hydration: ${locale}/${width}`)
     await page.goto(origin)
     const hero = page.getByRole('complementary', { name: locale === 'ar' ? 'مؤشرات المنظومة' : 'Ecosystem indicators' })
     await eventually(async () => await hero.locator('button').count() === 4)

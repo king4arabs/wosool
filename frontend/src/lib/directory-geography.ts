@@ -34,17 +34,16 @@ export function countryRegion(code?: string): DirectoryRegion {
 }
 
 export function countryName(code: string, locale: 'ar' | 'en'): string {
-  return new Intl.DisplayNames([locale], { type: 'region' }).of(code) ?? code
+  return (geography.country_names[locale] as Record<string, string>)[code] ?? code
 }
 
 /** Full coverage, including countries with no published profiles yet. */
 export function directoryCountryGroups(locale: 'ar' | 'en') {
-  const names = new Intl.DisplayNames([locale], { type: 'region' })
   return (['saudi', 'gcc', 'mena', 'other'] as const).map(region => ({
     region,
     label: ({ saudi: ['السعودية', 'Saudi Arabia'], gcc: ['دول الخليج', 'GCC countries'], mena: ['الشرق الأوسط وشمال أفريقيا', 'MENA countries'], other: ['دول العالم', 'World'] } as const)[region][locale === 'ar' ? 0 : 1],
-    countries: geography.country_codes.filter(code => countryRegion(code) === region)
-      .map(code => ({ code, label: names.of(code) ?? code }))
-      .sort((a, b) => a.label.localeCompare(b.label, locale)),
+    // Snapshot labels/order avoid server/browser ICU differences during hydration.
+    countries: geography.country_order[locale].filter(code => countryRegion(code) === region)
+      .map(code => ({ code, label: countryName(code, locale) })),
   }))
 }
