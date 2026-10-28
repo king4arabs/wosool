@@ -19,14 +19,13 @@ export function EoaLeadership({ program, ar }: { program: EoaProgram | null; ar:
     </nav>
     <section className={styles.leader} id="program-lead" aria-labelledby="program-lead-title">
       <div className={styles.leaderPortrait}>
-        <Image src="/eoa/board/mohammed-alsolami.webp" alt={ar ? 'محمد السلمي' : 'Mohammed Alsolami'} width={240} height={240} sizes="(max-width: 600px) 150px, 220px" />
+        <Image src="/wosool/board/mohammed-alsolami.webp" alt={ar ? 'محمد السلمي' : 'Mohammed Alsolami'} width={512} height={512} sizes="(max-width: 600px) 150px, 220px" />
         <span>{ar ? 'بقيادة المؤسسين' : 'FOUNDER LED'}</span>
       </div>
       <div>
         <span className={styles.eyebrow}>{ar ? 'قائد مسرّعة EO الرياض' : 'LEADING EO RIYADH ACCELERATOR'}</span>
         <h2 id="program-lead-title">{ar ? 'محمد السلمي' : 'Mohammed Alsolami'}</h2>
         <p className={styles.chair}>{ar ? 'رئيس العضوية والمسرّعة — EO الرياض' : 'EO Riyadh Membership & Accelerator Chair'}</p>
-        <p>{ar ? 'يقود محمد السلمي مسرّعة EO الرياض لدعم نمو المؤسسين وشركاتهم.' : 'Mohammed Alsolami leads EO Riyadh Accelerator, supporting founders and their companies as they grow.'}</p>
         <div className={styles.actions}>
           <Link href="/eoa/contact">{ar ? 'تواصل مع فريق البرنامج' : 'Connect with the program team'} <ArrowUpRight size={18} aria-hidden="true" /></Link>
           <a href="https://www.linkedin.com/in/mohammedalsolami" target="_blank" rel="noopener noreferrer">LinkedIn <ArrowUpRight size={18} aria-hidden="true" /></a>
