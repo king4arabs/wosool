@@ -65,7 +65,7 @@ class PublicCompanyContractTest extends TestCase
             ->assertJsonPath('data.0.founders.0.slug', 'visible-founder')
             ->assertJsonPath('data.0.founders.0.user', null)
             ->assertJsonMissingPath('data.0.founders.0.companies')
-            ->assertJsonPath('data.0.founders.0.scorecard', null)
+            ->assertJsonMissingPath('data.0.founders.0.scorecard')
             ->assertJsonMissingPath('data.0.founders.0.invitation');
         $detail = $this->getJson('/api/v1/companies/visible')->assertOk()->assertJsonCount(1, 'data.founders');
         $this->assertContracts([

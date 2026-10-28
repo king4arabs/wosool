@@ -16,7 +16,9 @@ class FounderResource extends JsonResource
         $localized = ($this->translations ?? [])[app()->getLocale()] ?? [];
         // Public founder/company directory APIs must not expose private member fields.
         // Member and admin endpoints retain their authorized full resource.
-        $publicDirectory = (bool) preg_match('#^(?:api/)?v1/(?:founders|companies)(?:/|$)#', $request->decodedPath());
+        $publicCompanyDirectory = (bool) preg_match('#^(?:api/)?v1/companies(?:/|$)#', $request->decodedPath());
+        $publicDirectory = $publicCompanyDirectory
+            || (bool) preg_match('#^(?:api/)?v1/founders(?:/|$)#', $request->decodedPath());
         $publicName = $this->display_name ?? $this->user?->name ?? $this->slug;
 
         return [
@@ -60,7 +62,7 @@ class FounderResource extends JsonResource
             ]),
             'primary_company_name' => $primaryCompany?->name,
             'companies' => CompanyResource::collection($this->whenLoaded('companies')),
-            'scorecard' => $publicDirectory ? null : new ScorecardResource($this->whenLoaded('scorecard')),
+            'scorecard' => $this->when(! $publicCompanyDirectory, $publicDirectory ? null : new ScorecardResource($this->whenLoaded('scorecard'))),
             'created_at' => $this->created_at?->toIso8601String(),
             'updated_at' => $this->updated_at?->toIso8601String(),
         ];
