@@ -56,7 +56,7 @@ export default function TermsPage() {
         })}
         <li className="rounded-2xl border border-[var(--border-soft)] bg-[var(--surface)] p-6">
           <h2 className="text-lg font-bold text-[var(--text-strong)]"><span className="me-2 text-[var(--action-bg)]">{clauses.length + 1}.</span>{ar ? "التواصل" : "Contact"}</h2>
-          <p className={body}>{ar ? "لأي استفسار بخصوص هذه الشروط راسلنا على" : "For questions about these terms, email"} <a dir="ltr" href="mailto:legal@wosool.org" className="font-semibold text-[var(--link)] underline">legal@wosool.org</a>.</p>
+          <p className={body}>{ar ? "لأي استفسار بخصوص هذه الشروط راسلنا على" : "For questions about these terms, email"} <a dir="ltr" href="mailto:info@wosool.org" className="font-semibold text-[var(--link)] underline">info@wosool.org</a>.</p>
         </li>
       </ol>
     </article>
