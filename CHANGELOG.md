@@ -6,6 +6,7 @@
 - Align the Arabic `/api` founder and company notes with the enforced 24-record page limit; add a regression test so the reference page cannot silently drift back to 100.
 - Reconcile current documentation with the checked-in **169 founders / 95 companies / 56 stories**, OpenAPI 1.5.0, public API throttling/redaction and the remaining Hostinger edge/deployment work. No review dates, moderation flags, accounts or production records changed.
 - CI run 296 passed frontend production/browser/accessibility checks, the standalone Node 22 / pnpm 11.24.0 hosting build, production guardrails and 277 Laravel tests on PHP 8.3, 8.4 and 8.5. This proves the merged source, not a Hostinger deployment or database import.
+- A post-merge public read reached `/` and `/eoa`; the homepage displayed all 169 editorial profiles. This confirms visible bundled-content parity only, not the active hosting SHA, backend/OpenAPI release or a production database import.
 
 ## 404, error and loading screens in both languages — 2026-10-28
 

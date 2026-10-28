@@ -2,7 +2,7 @@
 
 Updated: 28 October 2026. Work in bounded, reviewable cycles: inspect → verify sources → implement → test → publish source → verify release → choose the next incomplete outcome. Completion applies to acceptance criteria, not a promise that software or research needs no further maintenance.
 
-Current production status: independent public checks on 28 October reached the homepage and Accelerator page. The live homepage renders 165 editorial founder profiles while current repository source contains 169. This confirms route availability and a four-profile content gap, not the active Hostinger revision, backend safeguards or any production database import. The standalone hosting gate continues to boot the generated artifact through its package-manager `start` command, and production imports remain a separate authenticated operation.
+Current production status: independent public checks on 28 October reached the homepage and Accelerator page. The live homepage renders all 169 editorial founder profiles in current repository source. This confirms route availability and visible bundled-content parity, not the active Hostinger revision, backend safeguards, OpenAPI route or any production database import. The standalone hosting gate continues to boot the generated artifact through its package-manager `start` command, and production imports remain a separate authenticated operation.
 
 Current reliability correction: global 404, unexpected-error, loading and toast accessibility copy follows the active Arabic/English locale. The error boundary uses Next.js `retry()`, removes the unsupported claim that the team was notified and shows a server digest only when available. The same merge repairs the protected company-contract regression: nested founders omit scorecards while standalone public founders retain the documented redacted null. CI run 296 passed all frontend/browser/hosting/production gates and Laravel on PHP 8.3, 8.4 and 8.5. Production behavior awaits revision-parity verification.
 
@@ -87,7 +87,7 @@ Both commands now include the original 44-founder catalog and the 100-profile ex
 
 ## Next actions
 
-1. Record the active Hostinger frontend/backend revision and environment, deploy the latest green `main`, then verify the homepage reaches the 169-profile source total, system screens/member settings/validation follow the requested language, and all six production probes still pass.
+1. Record the active Hostinger frontend/backend revision and environment, deploy or confirm the latest green `main`, then verify the observed 169-profile homepage parity persists, system screens/member settings/validation follow the requested language, and all six production probes still pass.
 2. Verify actual scheduled draft ingestion and failure reporting on the host; document the deployed revision and backup restore evidence.
 3. Verify OpenAPI 1.5.0, 24-record caps, cache/robots headers, anonymous redaction and 429 behavior on the deployed API; configure trusted proxies plus monitored Hostinger WAF/bot controls without blocking legitimate shared-network traffic.
 4. Move newsroom search/filtering to server-side pagination so filters cover the full growing database; review snapshot withdrawal behavior across the remaining founder/company surfaces.

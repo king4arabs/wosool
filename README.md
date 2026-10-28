@@ -33,7 +33,7 @@ Wosool also provides the dedicated digital gateway for **EO Riyadh Accelerator**
 
 > **Release boundary:** GitHub CI validates source, security checks, tests, and production builds. A commit, merge, or green workflow does **not** by itself prove that production hosting has deployed the change. See the [production deployment contract, preflight and health monitoring](DEPLOYMENT.md#production-deployment-contract-october-22-2026).
 
-> **Release check (28 October 2026):** independent public fetches reach the homepage and Accelerator page, and the live homepage renders 165 editorial founder profiles. Repository source contains 169, so four reviewed profiles are not yet visible there. This is a content observation only: the active Hostinger revision, backend release and production database imports remain separate, unverified evidence.
+> **Release check (28 October 2026):** independent public fetches reach the homepage and Accelerator page, and the live homepage renders all 169 editorial founder profiles in repository source. This establishes visible bundled-content parity only: the active Hostinger revision, backend safeguards, OpenAPI route and production database imports remain separate, unverified evidence.
 
 > **Knowledge, API and content cycle (16 October 2026):** bilingual `/wiki`, public `/api` reference and OpenAPI, server-rendered news metadata, public-record sitemap, draft-only RSS discovery, and **144 founders / 79 companies / 42 stories** in checked-in source snapshots. See [development phases and next actions](docs/CONTINUOUS-DEVELOPMENT.md) and [source evidence](docs/research/KNOWLEDGE-CONTENT-2026-10-14.md). Production deployment/import remain separate release steps.
 
