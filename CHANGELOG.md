@@ -1,5 +1,13 @@
 # Changelog
 
+## 404, error and loading screens in both languages — 2026-10-28
+
+- **Problem:** the app-wide screens ignored the visitor's language. The 404 page was Arabic-only, so English visitors got "الصفحة غير موجودة" inside an English header and footer, and its icons used `ml-2`, which puts the gap on the wrong side in English. The unexpected-error screen was English-only ("Something went wrong", "Try Again", "Go Home"), had no `lang`/`dir`, used `mr-2` icon spacing in Arabic, and said "Our team has been notified", although no error reporting is wired up. Its "Try Again" button called `reset()`, which in Next.js 16.4 only re-renders the same failed result; `retry()` re-fetches the segment. The loading screen read "Loading…" in Arabic, and the toast region and close button were announced as "Notifications" and "Dismiss notification" to Arabic screen readers.
+- **Fix:** new `lib/system-screens` holds the copy for these screens in Arabic and English. The 404, error and loading screens and the toast labels follow the selected language. The error screen uses `retry()`, sets `lang`/`dir`, uses RTL-safe `me-2` spacing, drops the "team has been notified" claim, adds a contact link, and shows the error ID left-to-right only when the server supplies one.
+- **Tests:** `system-screens` tests (copy parity, Arabic copy in Arabic, no "notified" claim, error ID handling, no fixed English or Arabic text in the four components, `retry()` instead of `reset()`, no physical icon margins). Two of the five fail on the previous code.
+- **Checks:** `npm run verify` green before and after (202 frontend, 275 backend tests). Full QA crawl before the change: 386 visits, 0 problems; after it, with a missing URL added: 390 visits, 0 problems. In a browser at 390px and 1366px the 404 page shows Arabic RTL or English LTR copy to match the selected language, with no horizontal overflow or page errors.
+- No API, data, deployment or hosting change.
+
 ## Member settings in Arabic — 2026-10-27
 
 - **Problem:** `/dashboard/settings` was English-only in both languages: "Account Settings", "Display Name", "Save Settings", and every preference toggle showed its API key with spaces ("new match suggestions", "show email to matches", "discoverable for matching"). The page had no `<h1>`. The API answered a wrong current password with English text in Arabic, and Arabic field errors named the request key ("حقل account.name مطلوب."); in English they read "The account.name field is required.". Elsewhere in the dashboard, the sidebar and the accelerator workspace header showed "EO Riyadh Accelerator" in Arabic, the loader logo alt text was English, and the tag "remove" buttons on the profile page were announced as "Remove …" to Arabic screen readers.
