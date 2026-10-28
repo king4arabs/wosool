@@ -1,7 +1,7 @@
 <?php
 namespace Tests\Feature;
 use App\Mail\NewsletterMail;
-use App\Models\{NewsletterSubscriber, NewsItem, User, UserSetting};
+use App\Models\{Event, FounderProfile, NewsletterSubscriber, NewsItem, User, UserSetting};
 use App\Services\{Mailer, Newsletter};
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\{DB, Mail};
@@ -14,7 +14,7 @@ class NewsletterTest extends TestCase
     {
         parent::setUp(); Mail::fake();
         config(['mail.default' => 'smtp', 'mail.mailers.smtp.transport' => 'smtp', 'mail.from.address' => 'info@wosool.org']);
-        $this->travelTo(now()->setDate(2026, 10, 28)->setTime(12, 0));
+        $this->travelTo(now()->setDate(2026, 11, 1)->setTime(6, 0));
     }
     private function member(string $email): User
     {
@@ -36,7 +36,7 @@ class NewsletterTest extends TestCase
         app(Newsletter::class)->dispatch(false); Mail::assertSentCount(2);
         $this->postJson('/api/v1/newsletter/confirm', ['id' => $s->id, 'token' => $token])->assertUnprocessable();
     }
-    public function test_active_members_receive_welcome_and_weekly_public_news_only_once(): void
+    public function test_active_members_receive_welcome_and_monthly_public_news_only_once(): void
     {
         $this->member('active@example.com'); $muted = $this->member('muted@example.com');
         UserSetting::create(['user_id' => $muted->id, ...UserSetting::defaults(), 'notifications' => ['weekly_digest' => false]]);
@@ -78,6 +78,43 @@ class NewsletterTest extends TestCase
         Mail::assertSent(\App\Mail\WosoolMail::class, function ($mail) use ($body) {
             return $mail->kind === 'team-alert' && $mail->hasTo('info@wosool.org') && $mail->replyToAddress === 'sender@example.com'
                 && collect($mail->data['details'])->contains(fn ($row) => $row['value'] === trim($body));
+        });
+    }
+    public function test_monthly_window_uses_riyadh_time_and_prevents_mid_month_backfill(): void
+    {
+        $this->member('timing@example.com');
+        NewsItem::create(['title' => 'October update', 'slug' => 'october', 'excerpt' => 'Update', 'category' => 'Funding', 'is_public' => true, 'status' => 'published', 'published_at' => '2026-10-20 00:00:00']);
+        $this->travelTo(\Illuminate\Support\Carbon::parse('2026-11-01 05:59:59', 'UTC'));
+        $service = app(Newsletter::class); $service->dispatch(true); Mail::assertSentCount(1);
+        $this->travel(1)->seconds(); $service->dispatch(true); $service->dispatch(true); Mail::assertSentCount(2);
+        $this->assertDatabaseHas('newsletter_deliveries', ['campaign' => 'monthly:2026-11', 'status' => 'sent']);
+        $this->travelTo(\Illuminate\Support\Carbon::parse('2026-11-15 12:00:00', 'UTC'));
+        $this->member('later@example.com'); $service->dispatch(true); Mail::assertSentCount(3);
+        Mail::assertNotSent(NewsletterMail::class, fn ($m) => $m->hasTo('later@example.com') && $m->kind === 'digest');
+        $this->travelTo(\Illuminate\Support\Carbon::parse('2026-12-01 06:00:00', 'UTC'));
+        NewsItem::create(['title' => 'November update', 'slug' => 'november', 'excerpt' => 'Update', 'category' => 'Funding', 'is_public' => true, 'status' => 'published', 'published_at' => '2026-11-20 00:00:00']);
+        $service->dispatch(true); Mail::assertSentCount(5);
+        $this->assertSame(2, DB::table('newsletter_deliveries')->where('campaign','monthly:2026-12')->where('status','sent')->count());
+    }
+    public function test_monthly_welcome_features_only_visible_active_new_members_and_public_events(): void
+    {
+        foreach (['visible','private','hidden-setting','unclaimed','suspended'] as $name) {
+            $user = $this->member($name.'@example.com');
+            $profile = new FounderProfile;
+            $profile->forceFill(['user_id' => $user->id, 'slug' => $name, 'display_name' => $name, 'status' => $name === 'suspended' ? 'suspended' : 'active', 'is_public' => $name !== 'private', 'directory_key' => $name === 'unclaimed' ? 'unclaimed-import' : null, 'created_at' => '2026-10-15 12:00:00'])->save();
+            if ($name === 'hidden-setting') UserSetting::create(['user_id' => $user->id, ...UserSetting::defaults(), 'privacy' => ['appear_in_directory' => false]]);
+        }
+        foreach (['public','private'] as $visibility) Event::create(['title' => $visibility.' event', 'slug' => $visibility.'-event', 'type' => 'wosool', 'format' => 'in-person', 'is_public' => true, 'visibility' => $visibility, 'status' => 'upcoming', 'status_flow' => 'published', 'starts_at' => '2026-11-10 10:00:00']);
+        app(Newsletter::class)->dispatch(true);
+        Mail::assertSent(NewsletterMail::class, function ($mail) {
+            if ($mail->kind !== 'digest' || ! $mail->hasTo('visible@example.com')) return false;
+            $this->assertSame(['visible'], array_column($mail->members, 'name'));
+            $this->assertSame(['public event'], array_column($mail->events, 'title'));
+            $html = $mail->render();
+            $this->assertStringContainsString('أهلاً بالأعضاء الجدد', $html);
+            $this->assertStringNotContainsString('hidden-setting', $html);
+            $this->assertStringNotContainsString('visible@example.com', $html);
+            return true;
         });
     }
     public function test_log_mailer_does_not_pretend_to_send_and_templates_have_branding(): void

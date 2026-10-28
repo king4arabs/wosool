@@ -1,8 +1,9 @@
 <?php
 namespace App\Services;
 use App\Mail\NewsletterMail;
-use App\Models\{Application, FounderProfile, NewsletterSubscriber, NewsItem, User, UserSetting};
+use App\Models\{Application, Event, FounderProfile, NewsletterSubscriber, NewsItem, User, UserSetting};
 use Illuminate\Support\Carbon;
+use App\Support\DirectoryGeography;
 use Illuminate\Support\Facades\{DB, Mail};
 use Illuminate\Support\Str;
 
@@ -21,6 +22,7 @@ final class Newsletter
 
     public function wantsDigest(User $user): bool
     {
+        // Keep the persisted legacy key so existing opt-outs survive the monthly change.
         return (UserSetting::where('user_id', $user->id)->value('notifications')['weekly_digest'] ?? true) === true;
     }
 
@@ -105,31 +107,66 @@ final class Newsletter
     {
         $this->requireMailer();
         $this->syncMembers();
-        $anchor = now('Asia/Riyadh')->startOfWeek(Carbon::SUNDAY)->setTime(9, 0);
-        if ($anchor->isFuture()) $anchor->subWeek();
-        $news = $digest ? NewsItem::where('status', 'published')->where('is_public', true)
-            ->where('published_at', '>', $anchor->copy()->subWeek()->utc())->where('published_at', '<=', $anchor->copy()->utc())
-            ->latest('published_at')->limit(5)->get() : collect();
+        $anchor = now('Asia/Riyadh')->startOfMonth()->setTime(9, 0);
+        // Publish on the first at 09:00 Riyadh; retry for 72 hours, never send old issues mid-month.
+        $due = $digest && now()->gte($anchor) && now()->lt($anchor->copy()->addDays(3));
+        $end = $anchor->copy()->startOfDay()->utc();
+        $start = $anchor->copy()->startOfDay()->subMonthNoOverflow()->utc();
+        $news = $due ? NewsItem::where('status', 'published')->where('is_public', true)
+            ->where('published_at', '>=', $start)->where('published_at', '<', $end)
+            ->orderByDesc('is_featured')->latest('published_at')->limit(5)->get() : collect();
+        $newMembers = $due ? $this->newMembers($start, $end) : collect();
+        $events = $due ? Event::where('is_public', true)
+            ->where(fn ($q) => $q->where('visibility', 'public')->orWhereNull('visibility'))
+            ->where(fn ($q) => $q->whereIn('status_flow', ['published', 'registration_closed', 'live_now'])
+                ->orWhere(fn ($legacy) => $legacy->whereNull('status_flow')->whereIn('status', ['upcoming', 'live'])))
+            ->inPeriod(false)->where('starts_at', '>=', now())->where('starts_at', '<', $anchor->copy()->addMonthNoOverflow()->startOfDay()->utc())
+            ->orderBy('starts_at')->limit(3)->get() : collect();
         $counts = ['sent' => 0, 'failed' => 0];
-        NewsletterSubscriber::where('status', 'active')->chunkById(200, function ($subscribers) use ($news, $anchor, &$counts) {
+        NewsletterSubscriber::where('status', 'active')->chunkById(200, function ($subscribers) use ($news, $newMembers, $events, $due, $anchor, &$counts) {
             foreach ($subscribers as $s) {
                 if (! $this->eligible($s)) continue;
                 $result = $this->deliver($s, 'welcome', 'welcome');
                 if ($result) $counts[$result]++;
-                if ($news->isEmpty()) continue;
+                if (! $due || ($news->isEmpty() && $newMembers->isEmpty() && $events->isEmpty())) continue;
                 $stories = $news->map(function ($item) use ($s) {
                     $translated = $s->locale === 'ar' ? ($item->translations['ar'] ?? []) : [];
                     return ['title' => strip_tags($translated['title'] ?? $item->title), 'excerpt' => Str::limit(strip_tags($translated['excerpt'] ?? $item->excerpt ?? ''), 240),
                         'date' => $item->published_at->format('Y-m-d'), 'url' => rtrim(config('app.frontend_url'), '/').'/news/'.rawurlencode($item->slug)];
                 })->all();
-                $result = $this->deliver($s, 'weekly:'.$anchor->format('Y-m-d'), 'digest', $stories);
+                $members = $newMembers->map(fn ($profile) => [
+                    'name' => strip_tags($s->locale === 'ar' ? ($profile->translations['ar']['name'] ?? $profile->display_name ?? $profile->user->name) : ($profile->display_name ?? $profile->user->name)),
+                    'url' => rtrim(config('app.frontend_url'), '/').'/founders/'.rawurlencode($profile->slug),
+                ])->all();
+                $upcoming = $events->map(fn ($event) => ['title' => strip_tags($event->title),
+                    'date' => $event->starts_at->copy()->timezone('Asia/Riyadh')->format('Y-m-d'),
+                    'url' => rtrim(config('app.frontend_url'), '/').'/events/'.rawurlencode($event->slug)])->all();
+                $period = $anchor->copy()->subMonthNoOverflow()->locale($s->locale)->translatedFormat('F Y');
+                $result = $this->deliver($s, 'monthly:'.$anchor->format('Y-m'), 'digest', $stories, $members, $upcoming, $period);
                 if ($result) $counts[$result]++;
             }
         });
         return $counts;
     }
 
-    private function deliver(NewsletterSubscriber $subscriber, string $campaign, string $kind, array $stories = []): ?string
+    private function newMembers(Carbon $start, Carbon $end)
+    {
+        $profiles = DirectoryGeography::founders(FounderProfile::query())
+            ->with(['user.roles', 'user.founderProfile'])->whereNotNull('user_id')->where('is_public', true)->where('status', 'active')
+            ->where(fn ($q) => $q->whereNull('directory_key')->orWhereNotNull('claimed_at'))
+            ->whereRaw('COALESCE(claimed_at, founder_profiles.created_at) >= ?', [$start])
+            ->whereRaw('COALESCE(claimed_at, founder_profiles.created_at) < ?', [$end])
+            ->whereHas('user', fn ($q) => $q->whereNotNull('email_verified_at'))
+            ->orderByRaw('COALESCE(claimed_at, founder_profiles.created_at) DESC')->get();
+        $privacy = UserSetting::whereIn('user_id', $profiles->pluck('user_id'))->pluck('privacy', 'user_id');
+        return $profiles->filter(function ($profile) use ($privacy) {
+            $settings = $privacy[$profile->user_id] ?? [];
+            return ($settings['profile_visibility'] ?? true) && ($settings['appear_in_directory'] ?? true)
+                && $profile->user && $this->activeMember($profile->user);
+        })->take(6)->values();
+    }
+
+    private function deliver(NewsletterSubscriber $subscriber, string $campaign, string $kind, array $stories = [], array $members = [], array $events = [], string $period = ''): ?string
     {
         $fresh = $subscriber->fresh();
         if (! $fresh || ! $this->eligible($fresh)) return null;
@@ -139,7 +176,7 @@ final class Newsletter
         if (! (clone $row)->whereIn('status', ['pending', 'failed'])->where('attempts', '<', 3)->update(['status' => 'sending', 'attempts' => DB::raw('attempts + 1'), 'updated_at' => now()])) return null;
         try {
             $this->requireMailer();
-            Mail::to($subscriber->email)->send(new NewsletterMail($kind, $subscriber->locale, rtrim(config('app.frontend_url'), '/').'/news', $this->unsubscribeUrl($subscriber), $stories));
+            Mail::to($subscriber->email)->send(new NewsletterMail($kind, $subscriber->locale, rtrim(config('app.frontend_url'), '/').'/founders', $this->unsubscribeUrl($subscriber), $stories, $members, $events, $period));
             $row->update(['status' => 'sent', 'sent_at' => now(), 'updated_at' => now()]);
             return 'sent';
         } catch (\Throwable) {
