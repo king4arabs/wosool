@@ -13,7 +13,7 @@ class MembershipRegistrationTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp(); Mail::fake();
-        config(['mail.default' => 'smtp', 'mail.mailers.smtp.transport' => 'smtp', 'mail.from.address' => 'hello@wosool.org']);
+        config(['sanctum.stateful' => ['localhost'], 'mail.default' => 'smtp', 'mail.mailers.smtp.transport' => 'smtp', 'mail.from.address' => 'hello@wosool.org']);
         $this->withHeaders(['Origin' => 'http://localhost']);
     }
     private function applicant(): User { return User::factory()->unverified()->create(['community_registration_started_at' => now()]); }
@@ -84,6 +84,35 @@ class MembershipRegistrationTest extends TestCase
         $this->assertFalse($profile->fresh()->is_public);
         $this->actingAs($user->fresh())->getJson('/api/v1/member/dashboard')->assertForbidden();
         $this->getJson('/api/v1/founders?community=1')->assertJsonMissing(['slug' => $profile->slug]);
+    }
+    public function test_failed_delivery_does_not_create_an_account(): void
+    {
+        Mail::shouldReceive('to')->once()->andThrow(new \RuntimeException('Transport unavailable'));
+        $this->postJson('/api/v1/auth/register', ['name' => 'New Founder', 'email' => 'new@example.com',
+            'password' => 'Password123', 'password_confirmation' => 'Password123', 'consent' => true])->assertStatus(503);
+        $this->assertDatabaseMissing('users', ['email' => 'new@example.com']);
+        $this->assertDatabaseCount('registration_email_otps', 0);
+    }
+    public function test_approval_requires_completed_verified_application(): void
+    {
+        $user = $this->applicant();
+        $application = Application::create(['user_id' => $user->id, 'full_name' => $user->name, 'email' => $user->email, 'status' => 'submitted']);
+        $admin = User::factory()->create(); $admin->assignRole(Role::findOrCreate('admin', 'web'));
+        $this->actingAs($admin)->patchJson('/api/v1/admin/applications/'.$application->id, ['status' => 'approved'])->assertStatus(409);
+        $user->markEmailAsVerified();
+        $this->patchJson('/api/v1/admin/applications/'.$application->id, ['status' => 'approved'])->assertStatus(409);
+        $this->assertDatabaseCount('founder_profiles', 0);
+    }
+    public function test_uploaded_assets_are_bound_to_the_verified_applicant(): void
+    {
+        \Illuminate\Support\Facades\Storage::fake('public');
+        $user = $this->applicant(); $user->markEmailAsVerified();
+        $image = \Illuminate\Http\UploadedFile::fake()->createWithContent('logo.png', file_get_contents(resource_path('mail/wosool-logo.png')));
+        $response = $this->actingAs($user->fresh())->postJson('/api/v1/registration/image', ['kind' => 'logo', 'image' => $image])->assertOk();
+        $url = $response->json('url');
+        $this->assertStringStartsWith('/storage/registration/'.$user->id.'/', $url);
+        $this->postJson('/api/v1/registration/application', $this->profile() + ['logo_url' => 'https://example.com/forged.png'])->assertCreated();
+        $this->assertSame($url, Application::firstOrFail()->onboarding_data['logo_url']);
     }
     public function test_email_renders_code_and_embedded_logo(): void
     {

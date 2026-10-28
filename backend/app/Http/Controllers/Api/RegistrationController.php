@@ -61,7 +61,8 @@ class RegistrationController extends Controller
     {
         abort_unless($request->hasSession(), 409, 'Sign in again to upload images. سجّل الدخول مجددًا لرفع الصور.');
         $request->validate(['kind' => 'required|in:avatar,logo', 'image' => 'required|file|image|mimes:jpg,jpeg,png,webp|mimetypes:image/jpeg,image/png,image/webp|max:2048|dimensions:min_width=64,min_height=32,max_width=6000,max_height=6000']);
-        abort_if(in_array(MembershipRegistration::state($request->user()), ['review', 'active']), 409, 'استخدم إعدادات الملف بعد الموافقة. Use profile settings after approval.');
+        $application = Application::where('user_id', $request->user()->id)->latest('id')->first();
+        abort_if($application?->onboarding_data && ! in_array($application->status, ['rejected', 'request_more_info']), 409, 'استخدم إعدادات الملف بعد الموافقة. Use profile settings after approval.');
         $kind = $request->input('kind');
         $file = $request->file('image');
         $extension = match ($file->getMimeType()) { 'image/jpeg' => 'jpg', 'image/png' => 'png', 'image/webp' => 'webp' };

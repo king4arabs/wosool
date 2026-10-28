@@ -1,5 +1,6 @@
 "use client"
 
+import Image from "next/image"
 import { useCallback, useEffect, useMemo, useState } from "react"
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -74,10 +75,10 @@ export default function AdminMembersPage() {
 
     setSaving(true)
     try {
-      const response = await api.patch<{ data: AdminApplication }>(`/admin/applications/${selected.id}`, form)
+      const response = await api.patch<{ data: AdminApplication; notification_accepted?: boolean | null }>(`/admin/applications/${selected.id}`, form)
       const updated = response.data
       setSelected(updated)
-      toast("تم تحديث الطلب بنجاح", "success")
+      toast(response.notification_accepted === false ? "تم تحديث الطلب، لكن تعذر إرسال إشعار البريد." : "تم تحديث الطلب بنجاح", response.notification_accepted === false ? "error" : "success")
       await loadApplications()
     } catch (err) {
       toast(err instanceof Error ? err.message : "تعذر تحديث الطلب", "error")
@@ -231,6 +232,10 @@ export default function AdminMembersPage() {
               </div>
 
               {selected.onboarding_data && <>
+                <div className="flex gap-4">
+                  {selected.onboarding_data.avatar_url && <Image src={selected.onboarding_data.avatar_url} alt="صورة المؤسس" width={96} height={96} unoptimized className="h-24 w-24 rounded-2xl object-cover" />}
+                  {selected.onboarding_data.logo_url && <Image src={selected.onboarding_data.logo_url} alt="شعار الشركة" width={160} height={96} unoptimized className="h-24 w-40 rounded-2xl border bg-white p-3 object-contain" />}
+                </div>
                 <Info label="الدور" value={selected.onboarding_data.position} />
                 <Info label="الدولة" value={selected.onboarding_data.country_code} />
                 <Info label="سنة التأسيس" value={String(selected.onboarding_data.founded_year)} />
