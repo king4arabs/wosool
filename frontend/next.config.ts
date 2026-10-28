@@ -102,6 +102,7 @@ const nextConfig: NextConfig = {
       { source: "/broadcasting/auth", destination: `${apiUrl}/broadcasting/auth` },
       { source: "/storage/eoa/board/:path*", destination: `${apiUrl}/storage/eoa/board/:path*` },
       { source: "/storage/eoa/mentors/:path*", destination: `${apiUrl}/storage/eoa/mentors/:path*` },
+      { source: "/storage/registration/:path*", destination: `${apiUrl}/storage/registration/:path*` },
       { source: "/storage/founders/avatars/:path*", destination: `${apiUrl}/storage/founders/avatars/:path*` },
       {
         source: "/api/:path*",

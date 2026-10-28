@@ -237,6 +237,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       return
     }
 
+    if (!isLoading && user?.registration_step && user.registration_step !== "active" && !isEoaWorkspace) { router.replace("/onboarding"); return }
+
     if (!isLoading && isAdminUser(user) && !isEoaWorkspace) {
       window.location.replace('/admin')
     }
@@ -246,6 +248,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     if (isLoading || !user) return
     if (isEoaWorkspace) { setIsCheckingOnboarding(false); setGateError(null); return }
     if (isAdminUser(user)) return
+    if (user.registration_step && user.registration_step !== "active") { setIsCheckingOnboarding(false); return }
 
     let cancelled = false
 
@@ -299,7 +302,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
   if (authError || gateError) return <div className="mx-auto max-w-xl p-6 pt-20" role="alert"><p>{authError || gateError}</p><button className="mt-4 rounded-xl bg-[#3B52D4] px-5 py-3 text-white" onClick={() => authError ? void refresh() : setAttempt(value => value + 1)}>{locale === "ar" ? "إعادة المحاولة" : "Try again"}</button></div>
 
-  if (isLoading || isCheckingOnboarding) {
+  if (isLoading || isCheckingOnboarding || (!isEoaWorkspace && user?.registration_step && user.registration_step !== "active")) {
     return <DashboardFullscreenLoader locale={activeLocale} label={copy.layout.loading} />
   }
 

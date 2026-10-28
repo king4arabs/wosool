@@ -32,6 +32,7 @@ export interface AdminActivity {
 }
 
 export interface AdminApplication {
+  onboarding_data?: { position: string; bio: string; company_description: string; country_code: string; founded_year: number; team_size: number; avatar_url?: string; logo_url?: string } | null
   id: number
   full_name: string
   email: string

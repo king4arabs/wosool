@@ -12,6 +12,7 @@ export function publicJourney(pathname: string) {
 }
 
 export function workspacePath(user: {
+  registration_step?: string | null
   isAdmin?: boolean
   is_admin?: boolean
   role_token?: string
@@ -26,6 +27,8 @@ export function workspacePath(user: {
   ) {
     return '/admin'
   }
+
+  if (user?.registration_step && user.registration_step !== 'active') return '/onboarding'
 
   if (
     user?.is_accelerator_applicant ||

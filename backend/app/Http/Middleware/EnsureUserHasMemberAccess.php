@@ -16,6 +16,10 @@ class EnsureUserHasMemberAccess
             abort(response()->json(['message' => 'Authentication required.'], 401));
         }
 
+        if (! $user->isPlatformAdmin() && $user->community_registration_started_at && \App\Services\MembershipRegistration::state($user) !== 'active') {
+            abort(response()->json(['message' => 'أكمل التحقق وطلب العضوية أولًا. Complete verification and membership approval first.', 'reason' => $user->hasVerifiedEmail() ? 'membership_pending' : 'email_unverified', 'next' => '/onboarding'], 403));
+        }
+
         if (($user->is_accelerator_applicant || $user->hasRole('eoa_applicant')) && ! $user->hasAnyRole(['member', 'admin'])) {
             abort(403, 'Use the EO Accelerator workspace. Wosool membership is separate.');
         }

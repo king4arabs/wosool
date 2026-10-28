@@ -73,3 +73,9 @@ test('all Accelerator accounts return to the canonical workspace without grantin
     '/dashboard/eoa',
   )
 })
+
+
+test('pending community registrations resume onboarding until admin activation', () => {
+  for (const registration_step of ['verify', 'profile', 'review']) assert.equal(workspacePath({ registration_step }), '/onboarding')
+  assert.equal(workspacePath({ registration_step: 'active' }), '/dashboard')
+})

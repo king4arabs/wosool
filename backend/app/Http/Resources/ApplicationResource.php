@@ -13,6 +13,7 @@ class ApplicationResource extends JsonResource
 
         return [
             'id' => $this->id,
+            'onboarding_data' => ($attributes['onboarding_data'] ?? null) ? $this->onboarding_data : null,
             'full_name' => $this->full_name,
             'email' => $attributes['email'] ?? null,
             'phone' => $attributes['phone'] ?? null,

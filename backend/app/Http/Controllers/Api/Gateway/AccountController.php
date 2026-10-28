@@ -44,6 +44,10 @@ class AccountController extends Controller
 
     public function resend(Request $request)
     {
+        if ($request->user()->community_registration_started_at) {
+            app(\App\Services\RegistrationOtp::class)->send($request->user());
+            return response()->json(['message' => 'Verification code sent. تم إرسال رمز التحقق.']);
+        }
         if (! $request->user()->hasVerifiedEmail()) {
             $request->user()->notify(new VerifyApplicantEmail);
         }
@@ -54,6 +58,7 @@ class AccountController extends Controller
     public function verify(Request $request, string $id, string $hash)
     {
         $user = $request->user();
+        abort_if($user->community_registration_started_at, 403, 'Use your email verification code. استخدم رمز التحقق المرسل إلى بريدك.');
         abort_unless((string) $user->id === $id && hash_equals(sha1($user->getEmailForVerification()), $hash), 403);
         if (! $user->hasVerifiedEmail() && $user->markEmailAsVerified()) {
             event(new Verified($user));

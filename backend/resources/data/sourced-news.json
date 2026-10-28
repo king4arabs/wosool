@@ -2317,50 +2317,6 @@
     }
   },
   {
-    "slug": "echelon-ai-investors-october-2026",
-    "title": "Saudi AI operator Echelon announces investor backing for deployments",
-    "excerpt": "Riyadh-based Echelon disclosed a funding round backed by East40, RAED Ventures and Avra, among others, without announcing a round size. The company focuses on AI deployment for Saudi institutions.",
-    "content": "A release dated 7 October 2026 reported that Saudi AI company Echelon secured an undisclosed funding round involving East40, RAED Ventures, Avra and other investors. Founded in 2025, Echelon works with international technology providers to deploy artificial intelligence in Saudi enterprises and government agencies. Its planned engineering arm and training institute were described as future launches, not completed initiatives. Investor RAED Ventures identifies Khalid Bin Bader Al Saud and Omar Saleh as founders.",
-    "category": "Funding",
-    "region": "saudi",
-    "sourceUrl": "https://www.wamda.com/2026/10/saudi-ai-startup-echelon-secures-backing-east40-raed-ventures-avra",
-    "sourceName": "Wamda (company announcement)",
-    "companies": [
-      "Echelon",
-      "إيكيلون"
-    ],
-    "publishedAt": "2026-10-07",
-    "tags": [
-      "Echelon",
-      "Saudi Arabia",
-      "Artificial intelligence",
-      "Investment"
-    ],
-    "keyFacts": [
-      "Funding round amount not disclosed",
-      "Backers include East40, RAED Ventures and Avra",
-      "Engineering and training units were described as planned"
-    ],
-    "imageUrl": "",
-    "imageCredit": "",
-    "author": "Wosool news desk",
-    "id": "sourced-echelon-ai-investors-october-2026",
-    "translations": {
-      "ar": {
-        "title": "إيكيلون السعودية تعلن دعماً استثمارياً لتطبيقات الذكاء الاصطناعي",
-        "excerpt": "أعلنت إيكيلون في الرياض استثماراً بمشاركة East40 ورائد فنتشرز وAvra ومستثمرين آخرين من دون الإفصاح عن قيمة الجولة، لدعم تطبيق الذكاء الاصطناعي لدى المؤسسات.",
-        "body": [
-          "في خبر نُشر يوم 7 أكتوبر 2026 أعلنت إيكيلون السعودية جولة استثمارية بمشاركة East40 ورائد فنتشرز وAvra وجهات أخرى من دون تحديد قيمتها. تعمل الشركة التي تأسست عام 2025 على توطين تقنيات الذكاء الاصطناعي وتطبيقها لدى الشركات والجهات الحكومية في السعودية. ووصفت الشركة ذراعها الهندسية ومعهد تأهيل المواهب بأنهما من الخطط المستقبلية وقت الإعلان. ويعرّف المستثمر رائد فنتشرز خالد بن بدر آل سعود وعمر صالح ضمن المؤسسين."
-        ],
-        "keyFacts": [
-          "قيمة الجولة الاستثمارية غير معلنة",
-          "من المستثمرين East40 ورائد فنتشرز وAvra",
-          "الوحدات الهندسية والتدريبية كانت خططاً مستقبلية"
-        ]
-      }
-    }
-  },
-  {
     "slug": "project-suppliers-preseed-october-2026",
     "title": "Project Suppliers raises $1m pre-seed for Saudi construction procurement",
     "excerpt": "Saudi construction procurement platform Project Suppliers reported a $1 million pre-seed round and plans to develop AI-supported cash-flow tools for contractors and suppliers.",
