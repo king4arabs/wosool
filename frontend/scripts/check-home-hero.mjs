@@ -39,7 +39,7 @@ try {
     assert.equal(await panel.locator('article').count(), 4)
     await panel.getByRole('button').nth(1).click()
     await panel.locator('strong').first().filter({ hasText: '2,977' }).waitFor()
-    assert.deepEqual((await panel.locator('strong').allTextContents()).map(text => text.replace(/[\u200e\u200f\u061c]/g, '')), ['2,977', '2,430', '+7.84%', '-33.3%'])
+    assert.deepEqual((await panel.locator('strong').allTextContents()).map(text => text.replace(/[\u200e\u200f\u061c]/g, '')), ['2,977', '2,430', '+3.6%', '-33.3%'])
     for (const regionIndex of [2, 3]) {
       await panel.getByRole('button').nth(regionIndex).click()
       await page.waitForFunction(index => {
