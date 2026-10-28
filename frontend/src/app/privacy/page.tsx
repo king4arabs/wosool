@@ -19,7 +19,7 @@ export default function Privacy() {
           {[
             [
               t("النشرة البريدية", "Newsletter"),
-              t("نستخدم بريدك لإرسال رسالة ترحيب ونشرة أسبوعية إذا أكّدت اشتراكك أو كانت عضويتك مفعّلة مع تشغيل خيار الملخص الأسبوعي. يمكنك إلغاء الاشتراك من أي نشرة أو إيقاف الملخص من إعدادات حسابك، دون إيقاف رسائل الأمان والحساب الأساسية.", "We use your email for a welcome message and weekly highlights when you confirm a newsletter subscription or have an active membership with weekly digest enabled. Unsubscribe from any newsletter or disable weekly digest in your account settings; essential security and account emails continue."),
+              t("نستخدم بريدك لإرسال رسالة ترحيب ونشرة شهرية إذا أكّدت اشتراكك أو كانت عضويتك مفعّلة مع تشغيل خيار الملخص الشهري. يمكنك إلغاء الاشتراك من أي نشرة أو إيقاف الملخص من إعدادات حسابك، دون إيقاف رسائل الأمان والحساب الأساسية.", "We use your email for a welcome message and monthly highlights when you confirm a newsletter subscription or have an active membership with monthly digest enabled. Unsubscribe from any newsletter or disable monthly digest in your account settings; essential security and account emails continue."),
             ],
             [
               t("البيانات والغرض", "Data and purpose"),
