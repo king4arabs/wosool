@@ -50,7 +50,7 @@ class PublicController extends Controller
                 && abs((float) $settings['sponsor_contribution_usd'] - ProgramService::SPONSOR_SHARE_USD) < 0.01
                 && abs((float) $settings['participant_contribution_usd'] - ProgramService::SPONSOR_SHARE_USD) < 0.01
                 ? array_intersect_key($settings, array_flip(['local_fee_usd', 'sponsor_contribution_usd', 'participant_contribution_usd'])) : null,
-            'contact_email' => $settings['contact_email'], 'public_message_en' => $settings['public_message_en'] ?? null, 'public_message_ar' => $settings['public_message_ar'] ?? null,
+            'contact_email' => \App\Services\Mailer::team(), 'public_message_en' => $settings['public_message_en'] ?? null, 'public_message_ar' => $settings['public_message_ar'] ?? null,
             'participation_terms_en' => $settings['approval_status'] === 'approved' ? $settings['participation_terms_en'] : null, 'participation_terms_ar' => $settings['approval_status'] === 'approved' ? $settings['participation_terms_ar'] : null,
             'tracks' => DB::table('eoa_tracks')->where('program_id', $program->id)->where('is_active', true)->orderBy('id')->get(['id', 'name_ar', 'name_en', 'description_ar', 'description_en']),
             // A rolling frontend/API release remains readable before the additive migration runs.

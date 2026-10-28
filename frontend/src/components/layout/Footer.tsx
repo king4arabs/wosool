@@ -118,8 +118,8 @@ export function Footer() {
 
   return (
     <footer className={styles.footer} lang={locale} dir={locale === "ar" ? "rtl" : "ltr"} aria-label={locale === "ar" ? "تذييل الموقع" : "Site footer"}>
-      <NewsletterSignup />
       <div className={styles.container}>
+        <NewsletterSignup />
         {!isEoa && (
           <div className={styles.invitation}>
             <div>

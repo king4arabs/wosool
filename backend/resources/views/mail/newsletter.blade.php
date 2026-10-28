@@ -1,5 +1,5 @@
-@php($ar = $locale === 'ar')
-<!doctype html><html lang="{{ $locale }}" dir="{{ $ar ? 'rtl' : 'ltr' }}"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>{{ $ar ? 'نشرة وصول' : 'Wosool updates' }}</title></head>
+@php($ar = $language === 'ar')
+<!doctype html><html lang="{{ $language }}" dir="{{ $ar ? 'rtl' : 'ltr' }}"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>{{ $ar ? 'نشرة وصول' : 'Wosool updates' }}</title></head>
 <body style="margin:0;padding:24px 12px;background:#f4f5fb;color:#18223c;font-family:Arial,Tahoma,sans-serif;">
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr><td align="center"><table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:600px;background:#fff;border:1px solid #e5e8f2;border-radius:20px;overflow:hidden;">
 <tr><td align="center" style="padding:28px;background:#111b35;color:white;"><img src="{{ $message->embed(resource_path('mail/wosool-logo.png')) }}" alt="{{ $ar ? 'شعار وصول' : 'Wosool logo' }}" width="52" height="52" style="display:block;border:0;"><p style="margin:12px 0 0;font-size:22px;font-weight:bold;">وصول | Wosool</p></td></tr>
