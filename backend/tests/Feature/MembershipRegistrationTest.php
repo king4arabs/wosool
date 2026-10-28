@@ -89,7 +89,7 @@ class MembershipRegistrationTest extends TestCase
     {
         $html = (new RegistrationOtpMail('123456'))->render();
         $this->assertStringContainsString('123456', $html);
-        $this->assertStringContainsString('cid:', $html);
+        $this->assertStringContainsString('data:image/png;base64,', $html);
         $this->assertStringContainsString('10', $html);
     }
 }

@@ -20,7 +20,7 @@ class User extends Authenticatable implements MustVerifyEmail
 {
     use HasFactory, HasRoles, Notifiable;
 
-    protected $attributes = ['is_accelerator_applicant' => false];
+    protected $attributes = ['is_accelerator_applicant' => false, 'community_registration_started_at' => null];
 
     /** @use HasFactory<UserFactory> */
     protected function casts(): array

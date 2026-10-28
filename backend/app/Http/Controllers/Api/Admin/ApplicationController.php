@@ -98,7 +98,7 @@ class ApplicationController extends Controller
         });
         $notification = null;
         if ($previousStatus !== $application->status && $application->user_id) {
-            $notification = Mailer::safely($application->email, WosoolMail::applicationUpdate(rtrim(config('app.frontend_url'), '/').($application->status === 'approved' ? '/dashboard' : '/onboarding')), ['application_id' => $application->id]);
+            $notification = Mailer::safely($application->email, ($application->status === 'approved' && $application->onboarding_data ? WosoolMail::membershipStatus(true) : WosoolMail::applicationUpdate(rtrim(config('app.frontend_url'), '/').($application->status === 'approved' ? '/dashboard' : '/onboarding'))), ['application_id' => $application->id]);
         }
         return response()->json(['message' => 'Application updated.', 'notification_accepted' => $notification, 'data' => new ApplicationResource($application->load('reviewer:id,name'))]);
     }

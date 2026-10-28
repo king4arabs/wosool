@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Application extends Model
 {
+    protected $attributes = ['onboarding_data' => null];
+
     protected $fillable = [
         'onboarding_data',
         'user_id',

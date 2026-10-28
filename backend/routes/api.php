@@ -64,12 +64,12 @@ Route::prefix('v1')->group(function () {
     Route::middleware('auth:sanctum')->group(function () {
         Route::post('/auth/logout', [AuthController::class, 'logout']);
         Route::get('/auth/me', [AuthController::class, 'me']);
-        Route::post('/auth/registration/verify', [AuthController::class, 'verifyRegistration'])->middleware('throttle:10,1');
-        Route::post('/auth/registration/resend', [AuthController::class, 'resendRegistration'])->middleware('throttle:5,60');
+        Route::post('/auth/registration/verify', [AuthController::class, 'verifyRegistration'])->middleware('throttle:10,1,registration-verify');
+        Route::post('/auth/registration/resend', [AuthController::class, 'resendRegistration'])->middleware('throttle:5,60,registration-resend');
         Route::middleware('verified')->prefix('registration')->group(function () {
             Route::get('/application', [\App\Http\Controllers\Api\RegistrationController::class, 'show']);
-            Route::post('/application', [\App\Http\Controllers\Api\RegistrationController::class, 'submit'])->middleware('throttle:5,60');
-            Route::post('/image', [\App\Http\Controllers\Api\RegistrationController::class, 'upload'])->middleware('throttle:10,1');
+            Route::post('/application', [\App\Http\Controllers\Api\RegistrationController::class, 'submit'])->middleware('throttle:5,60,registration-submit');
+            Route::post('/image', [\App\Http\Controllers\Api\RegistrationController::class, 'upload'])->middleware('throttle:10,1,registration-upload');
         });
     });
 

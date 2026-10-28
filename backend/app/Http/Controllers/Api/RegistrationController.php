@@ -40,7 +40,7 @@ class RegistrationController extends Controller
             abort_if($application?->onboarding_data && in_array($application->status, ['submitted', 'reviewing', 'waitlisted', 'approved']), 409, 'طلبك قيد المراجعة أو معتمد. Your application is under review or approved.');
             $application ??= new Application(['user_id' => $user->id]);
             $preapproved = $application->status === 'approved';
-            $assets = [...collect($application->onboarding_data ?? [])->only(['avatar_url', 'logo_url'])->all(), ...$request->session()->get('registration_assets', [])];
+            $assets = [...collect($application->onboarding_data ?? [])->only(['avatar_url', 'logo_url'])->all(), ...($request->hasSession() ? $request->session()->get('registration_assets', []) : [])];
             $application->fill(collect($data)->only(['full_name', 'phone', 'company_name', 'company_website', 'sector', 'stage', 'location', 'motivation', 'what_you_offer', 'what_you_need', 'linkedin_url'])->all());
             $application->email = $user->email;
             $application->onboarding_data = [...collect($data)->only(['country_code', 'position', 'bio', 'company_description', 'founded_year', 'team_size'])->all(), ...$assets, 'public_profile_consent_at' => now()->toIso8601String()];
@@ -51,14 +51,15 @@ class RegistrationController extends Controller
             if ($preapproved) app(MembershipRegistration::class)->publish($application);
             return $application;
         });
-        $request->session()->forget('registration_assets');
-        Mailer::safely($application->email, WosoolMail::applicationUpdate(rtrim(config('app.frontend_url'), '/').'/onboarding'), ['application_id' => $application->id]);
+        if ($request->hasSession()) $request->session()->forget('registration_assets');
+        Mailer::safely($application->email, WosoolMail::membershipStatus($application->status === 'approved'), ['application_id' => $application->id]);
         Mailer::safely(Mailer::team(), WosoolMail::teamAlert('طلب عضوية جديد', 'New membership application', [['ar' => 'الاسم', 'en' => 'Name', 'value' => $application->full_name], ['ar' => 'الشركة', 'en' => 'Company', 'value' => $application->company_name]], '/admin/members'), ['application_id' => $application->id]);
         return response()->json(['step' => MembershipRegistration::state($request->user()->fresh()), 'status' => $application->status], 201);
     }
 
     public function upload(Request $request)
     {
+        abort_unless($request->hasSession(), 409, 'Sign in again to upload images. سجّل الدخول مجددًا لرفع الصور.');
         $request->validate(['kind' => 'required|in:avatar,logo', 'image' => 'required|file|image|mimes:jpg,jpeg,png,webp|mimetypes:image/jpeg,image/png,image/webp|max:2048|dimensions:min_width=64,min_height=32,max_width=6000,max_height=6000']);
         abort_if(in_array(MembershipRegistration::state($request->user()), ['review', 'active']), 409, 'استخدم إعدادات الملف بعد الموافقة. Use profile settings after approval.');
         $kind = $request->input('kind');
