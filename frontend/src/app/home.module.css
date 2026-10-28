@@ -71,3 +71,5 @@
 
 /* Reserve room for the background playback control at every breakpoint. */
 .hero .heroGrid { padding-bottom:max(var(--section-space),84px); }
+
+@media(min-width:1100px) { .hero .heroGrid { grid-template-columns:minmax(0,1.25fr) minmax(0,1fr); gap:48px; direction:ltr; }.home[dir="rtl"] .heroGrid>div { direction:rtl; }.hero h1 {font-size:clamp(2.75rem,5vw,4.5rem);} }
