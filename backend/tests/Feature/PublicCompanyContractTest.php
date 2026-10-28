@@ -30,14 +30,14 @@ class PublicCompanyContractTest extends TestCase
     public function test_all_imported_companies_match_the_contract_in_both_locales(): void
     {
         $result = app(FounderDirectoryImporter::class)->run();
-        $this->assertSame(95, $result['companies_created']);
-        $this->assertSame(169, $result['founders_created']);
+        $this->assertSame(96, $result['companies_created']);
+        $this->assertSame(172, $result['founders_created']);
         $this->assertSame(0, User::count());
         $samples = [];
         foreach (['en', 'ar'] as $locale) {
             foreach (range(1, 4) as $page) {
                 $list = $this->getJson('/api/v1/companies?per_page=24&page='.$page, ['X-Locale' => $locale])->assertOk()
-                    ->assertJsonPath('meta.total', 95)->assertJsonCount($page === 4 ? 23 : 24, 'data');
+                    ->assertJsonPath('meta.total', 96)->assertJsonCount(24, 'data');
                 $samples[] = $this->sample($list, '/api/v1/companies');
             }
             $detail = $this->getJson('/api/v1/companies/unifonic', ['X-Locale' => $locale])->assertOk()
