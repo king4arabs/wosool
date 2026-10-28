@@ -1,6 +1,6 @@
 import { ApiError } from "./api"
 
-export type CollectionMeta = { current_page?: number; last_page?: number; total?: number; sectors?: { en: string; ar: string }[] }
+export type CollectionMeta = { current_page?: number; last_page?: number; total?: number; sectors?: { en: string; ar: string }[]; stages?: string[] }
 export type Collection<T> = { data: T[]; meta?: CollectionMeta; links?: { next?: string | null } }
 export type CollectionState<T> = {
   key: string; items: T[]; meta: CollectionMeta; loading: boolean; error: string | null

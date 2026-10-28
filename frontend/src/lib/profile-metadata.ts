@@ -1,5 +1,6 @@
 import type { Metadata } from "next"
 import { pageMetadata } from "./seo"
+import { isDirectoryRecordVisible } from './directory-geography'
 
 type ProfileKind = "founder" | "company"
 
@@ -29,7 +30,7 @@ export async function publicProfileMetadata(kind: ProfileKind, slug: string, api
     if (!response.ok) return unavailable
     const body = await response.json()
     const record = body?.data
-    if (!record || record.slug !== slug || record.status !== "active" || record.is_public !== true) return unavailable
+    if (!record || record.slug !== slug || record.status !== "active" || record.is_public !== true || !isDirectoryRecordVisible(record)) return unavailable
     const name = plainText(record.name, 120)
     if (!name) return unavailable
     // Explicit allowlist: never serialize nested user, email, scorecard or membership data.

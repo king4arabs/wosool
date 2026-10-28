@@ -76,6 +76,12 @@
 }
 @media(prefers-reduced-motion:reduce) { .card,.controls button { transition:none; }.card:hover,.controls button:not(:disabled):hover { transform:none; } }
 .signalRow { display:flex; flex-wrap:wrap; gap:7px; }
+.logoArea { position:relative; padding-inline:54px; }
+.countryFlag { position:absolute; inset-block-start:12px; inset-inline-end:12px; display:grid; place-items:center; width:38px; height:31px; border:1px solid var(--border-soft); border-radius:7px; background:var(--surface); box-shadow:var(--shadow-xs); }
+.countryFlag img { display:block; width:28px; height:21px; object-fit:contain; border-radius:2px; }
+.portraitImage { display:block; width:100%; height:100%; object-fit:cover; object-position:50% 30%; }
+.engagement { gap:7px; background:var(--surface-soft); color:var(--text-muted); }
+.engagement strong { font-variant-numeric:tabular-nums; color:var(--text); }
 .businessSignal { display:inline-flex; align-items:center; min-height:30px; border:1px solid var(--border-soft); border-radius:var(--radius-pill); padding:5px 10px; font-size:11px; font-weight:800; line-height:1.45; }
 .businessSignal_neutral { background:var(--surface-soft); color:var(--text-muted); }
 .businessSignal_accent { background:var(--brand-blue-soft); border-color:color-mix(in srgb,var(--brand-blue) 24%,var(--border-soft)); color:var(--brand-dark-blue); }
@@ -87,8 +93,8 @@
 .card .founderBrief { color:var(--text-muted); font-size:13px; line-height:1.8; margin:12px 0 0; display:-webkit-box; -webkit-box-orient:vertical; -webkit-line-clamp:2; overflow:hidden; }
 .person :is(h3,h4) { color:var(--text-strong); font-size:15px; line-height:1.5; font-weight:800; overflow-wrap:anywhere; }
 .founderCard .cardTopline { height:3px; background:var(--brand-blue); }
-.founderCard .logoArea { min-height:88px; padding:16px 22px; gap:10px; }
-.founderCard .logo { height:56px; max-width:180px; }
+.founderCard .logoArea { min-height:96px; padding:18px 54px; gap:10px; }
+.founderCard .logo { width:min(180px,100%); height:56px; max-width:100%; }
 .founderCard .trustSignals:empty { display:none; }
 .founderCard .body { padding:22px; gap:14px; }
 .founderCard .person { padding:0; border:0; background:none; gap:13px; }
@@ -118,3 +124,5 @@
 .traction>span { display:block; color:var(--success-text); font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:.02em; }
 .traction p { margin-top:4px; color:var(--text); font-size:12px; line-height:1.7; font-weight:700; overflow-wrap:anywhere; }
 .traction a { margin-top:4px; min-height:30px; display:inline-flex; align-items:center; gap:4px; color:var(--action-bg); font-size:11px; font-weight:800; }
+
+@media(max-width:660px) { .founderCard .logoArea { padding-inline:54px; } }

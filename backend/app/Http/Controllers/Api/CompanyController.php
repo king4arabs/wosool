@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\CompanyResource;
 use App\Models\CompanyProfile;
+use App\Support\{CommunityEngagement, DirectoryGeography};
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -12,7 +13,7 @@ class CompanyController extends Controller
 {
     public function index(Request $request): JsonResponse
     {
-        $query = CompanyProfile::with(['founders' => fn ($q) => $q->where('is_public', true)->where('status', 'active')->with('user')])
+        $query = DirectoryGeography::visible(CompanyProfile::query())->with(['founders' => fn ($q) => CommunityEngagement::withCounts(DirectoryGeography::founders($q->getQuery()))->where('is_public', true)->where('status', 'active')->with('user')])
             ->where('status', 'active')
             ->where('is_public', true);
 
@@ -46,7 +47,7 @@ class CompanyController extends Controller
         }
 
         $companies = $query
-            ->withCount(['founders' => fn ($q) => $q->where('is_public', true)->where('status', 'active')])
+            ->withCount(['founders' => fn ($q) => DirectoryGeography::founders($q)->where('is_public', true)->where('status', 'active')])
             ->orderByRaw("CASE WHEN country_code = 'SA' THEN 0 WHEN country_code IN ('AE','BH','KW','OM','QA') THEN 1 WHEN country_code IN ('EG','JO','LB','MA','TN','DZ','IQ','PS','LY','SD','YE','SY') THEN 2 ELSE 3 END")
             ->orderBy('is_featured', 'desc')
             ->orderBy('created_at', 'desc')
@@ -58,7 +59,7 @@ class CompanyController extends Controller
 
     public function show(string $slug): JsonResponse
     {
-        $company = CompanyProfile::with(['founders' => fn ($q) => $q->where('is_public', true)->where('status', 'active')->with('user')])
+        $company = DirectoryGeography::visible(CompanyProfile::query())->with(['founders' => fn ($q) => CommunityEngagement::withCounts(DirectoryGeography::founders($q->getQuery()))->where('is_public', true)->where('status', 'active')->with('user')])
             ->where('slug', $slug)
             ->where('status', 'active')
             ->where('is_public', true)

@@ -11,6 +11,7 @@ import { arabicProfileCount, filterFounders, regionOptions, sectorOptions, type 
 import { createFounderMixStore, founderDiscoveryOrder } from "@/lib/founder-discovery"
 import type { Partner } from "@/types"
 import styles from "./community.module.css"
+import { isDirectoryRecordVisible } from '@/lib/directory-geography'
 
 function subscribeMotion(callback: () => void) {
   const query = window.matchMedia('(prefers-reduced-motion: reduce)')
@@ -90,8 +91,10 @@ function FounderRow({ founders, suspended, onShuffle }: { founders: FounderCardP
   </div>
 }
 
-export function FounderShowcase({ founders, showFilters = true, region: controlledRegion, onRegionChange, randomize = false }: {
+export function FounderShowcase({ founders: suppliedFounders, showFilters = true, region: controlledRegion, onRegionChange, randomize = false, allRegions = false, loading = false }: {
   founders: FounderCardProfile[]
+  allRegions?: boolean
+  loading?: boolean
   showFilters?: boolean
   /** Homepage discovery only; directory/grid order remains stable. */
   randomize?: boolean
@@ -101,6 +104,7 @@ export function FounderShowcase({ founders, showFilters = true, region: controll
 }) {
   const { locale } = useLocale()
   const ar = locale === 'ar'
+  const founders = useMemo(() => suppliedFounders.filter(isDirectoryRecordVisible), [suppliedFounders])
   const searchId = useId()
   const gridId = useId()
   const grid = useRef<HTMLElement>(null)
@@ -120,7 +124,7 @@ export function FounderShowcase({ founders, showFilters = true, region: controll
     setPage(1)
   }
   const sectors = sectorOptions(founders, region, locale)
-  const regions = regionOptions(founders, region, locale)
+  const regions = regionOptions(founders, region, locale, allRegions)
   const filtered = useMemo(() => filterFounders(founders, { search, sector, region }, locale), [founders, locale, search, sector, region])
   const [mixStore] = useState(createFounderMixStore)
   const mixSeed = useSyncExternalStore(mixStore.subscribe, mixStore.getSnapshot, mixStore.getServerSnapshot)
@@ -165,12 +169,12 @@ export function FounderShowcase({ founders, showFilters = true, region: controll
       {hasFilters && <button type="button" className={styles.clearFilters} onClick={clearFilters}>{ar ? 'مسح الفلاتر' : 'Clear filters'}</button>}
     </div>}
     {regions.length > 1 && <>
-    <div className="mb-2 flex flex-wrap items-center gap-2" role="group" aria-label={ar ? "تصفية المؤسسين حسب المنطقة" : "Filter founders by region"}>
-      <button type="button" aria-pressed={region === 'all'} className={region === 'all' ? "min-h-9 rounded-full border border-[var(--action-bg)] bg-[var(--surface-soft)] px-3 text-xs font-bold text-[var(--text)]" : "min-h-9 rounded-full border border-[var(--border)] px-3 text-xs font-semibold text-[var(--text-muted)] hover:text-[var(--text)]"} onClick={() => changeRegion('all')}>{ar ? 'الكل' : 'All'} · {founders.length}</button>
-      {regions.map(item => <button type="button" key={item.key} aria-pressed={region === item.key} className={region === item.key ? "min-h-9 rounded-full border border-[var(--action-bg)] bg-[var(--surface-soft)] px-3 text-xs font-bold text-[var(--text)]" : "min-h-9 rounded-full border border-[var(--border)] px-3 text-xs font-semibold text-[var(--text-muted)] hover:text-[var(--text)]"} onClick={() => changeRegion(item.key)}>{item.label} · {item.count}</button>)}
+    <div className={styles.regionFilters} role="group" aria-label={ar ? "تصفية المؤسسين حسب المنطقة" : "Filter founders by region"}>
+      <button type="button" aria-pressed={region === 'all'} onClick={() => changeRegion('all')}>{ar ? 'الكل' : 'All'}{!allRegions && ` · ${founders.length}`}</button>
+      {regions.map(item => <button type="button" key={item.key} aria-pressed={region === item.key} onClick={() => changeRegion(item.key)}>{item.label}{!allRegions && ` · ${item.count}`}</button>)}
     </div>
     </>}
-    <div className={styles.founderResults}><p role="status" aria-live="polite">{filtered.length ? ar ? `${arabicProfileCount(filtered.length)} للاستكشاف` : `${filtered.length} founder ${filtered.length === 1 ? 'profile' : 'profiles'} to explore` : ar ? 'لا توجد ملفات مطابقة. جرّب اسمًا أو قطاعًا أو منطقة أخرى.' : 'No matching profiles. Try another name, sector or region.'}</p></div>
+    {!loading && <div className={styles.founderResults}><p role="status" aria-live="polite">{filtered.length ? ar ? `${arabicProfileCount(filtered.length)} للاستكشاف` : `${filtered.length} founder ${filtered.length === 1 ? 'profile' : 'profiles'} to explore` : ar ? 'لا توجد ملفات مطابقة. جرّب اسمًا أو قطاعًا أو منطقة أخرى.' : 'No matching profiles. Try another name, sector or region.'}</p></div>}
     {!!filtered.length && <>
       <FounderRow key={`${locale}-${search}-${sector}-${region}`} founders={carouselFounders} suspended={gridOpen} onShuffle={randomize ? mixStore.shuffle : undefined} />
       <div className={styles.gridInvitation}><button ref={gridToggle} type="button" className={styles.gridToggle} aria-expanded={gridOpen} aria-controls={gridId} onClick={toggleGrid}><LayoutGrid size={18} aria-hidden="true" />{gridOpen ? ar ? 'إخفاء شبكة المؤسسين' : 'Hide founder grid' : ar ? 'عرض جميع المؤسسين' : 'View all founders'}{gridOpen ? <ChevronUp size={18} aria-hidden="true" /> : <ChevronDown size={18} aria-hidden="true" />}</button><span>{ar ? 'استكشف الملفات في شبكة مرتّبة مع صفحات' : 'Browse the full collection in a paginated grid'}</span></div>

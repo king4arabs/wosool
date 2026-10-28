@@ -65,6 +65,6 @@ test('the founder showcase uses the shared filters and clears the region with th
   assert.match(showcase, /const hasFilters = Boolean\(search \|\| sector \|\| region !== 'all'\)/)
   assert.doesNotMatch(showcase, /ملفات مؤسسين للاستكشاف/)
   const page = readFileSync(new URL('../app/founders/page.tsx', import.meta.url), 'utf8')
-  assert.match(page, /region=\{region\} onRegionChange=\{setRegion\}/)
+  assert.match(page, /region=\{region\} onRegionChange=\{changeRegion\}/)
   assert.match(page, /setLocation\(''\); setRegion\('all'\)/)
 })
