@@ -14,3 +14,7 @@ Founder and unique company totals for all four regions remain unavailable pendin
 A ChatGPT monthly research automation has been enabled for the first day of each month, morning Asia/Riyadh. It checks primary sources, prepares tested GitHub updates and reports gaps. It does not automatically deploy Hostinger. An annual observation should remain annual even when reviewed monthly; never advance a period just to make data look fresh.
 
 Before publication, expand the comparable data coverage or explicitly accept the unavailable states. Prefer licensed deal/company datasets where public sources cannot supply deduplicated totals. Do not expose private platform analytics as regional ecosystem statistics.
+
+## Public-copy revision
+
+Removed public methodology/review prose from the hero and the accelerator editorial review date. Source links, scope labels and reporting periods remain functional product information. Saudi cards now use Crunchbase's Saudi Arabia Startups hub: 781 founders and 705 for-profit companies, from the retrieved October 2026 snapshot. Both are explicitly labeled "Tracked by Crunchbase"; they are database coverage counts, not census estimates. Search snippets showed a different founder count, so the opened source page's count was used. Other regions remain unpopulated rather than borrowing Saudi figures or inventing estimates. No unavailable-data explanation is displayed publicly.
