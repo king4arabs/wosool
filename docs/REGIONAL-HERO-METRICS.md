@@ -24,3 +24,10 @@ Removed public methodology/review prose from the hero and the accelerator editor
 The owner approved a revenue-growth planning estimate only: Saudi SME revenue growth 7% × 1.12 = 7.84%. This is a relative 12% uplift, not 12 percentage points. Public copy says Estimated revenue growth / نمو الإيرادات التقديري; the tooltip states the calculation and that this is not measured GCC growth. Keep this modeled figure distinct from sourced observations during monthly refreshes; do not automatically substitute it for actual GCC revenue statistics.
 
 Other GCC cells use the researched observations: Crunchbase GCC Startups hub, 2,977 founders and 2,430 for-profit companies (retrieved October 2026); Lucidity Insights, 342 funding rounds in 2025 versus 513 in 2024, -33.3%. Lucidity's wider financing coverage includes debt and corporate rounds, so the scope label says Funding rounds. No Saudi uplift was applied to those figures. Formatting now treats founder/company counts as counts and preserves negative growth signs.
+
+
+## MENA and world — 28 October 2026
+
+MENA: Crunchbase opened hub reports 10,307 founders and 7,722 for-profit companies; these are coverage counts. Revenue card uses PwC 2026 Middle East CEO survey's 12% average as an explicitly labeled Middle East benchmark, not a measured MENA startup rate. MAGNiTT FY2025 reports 688 deals and +6% deal growth.
+
+World: GSER 2026 covers 5.5M+ companies (dataset coverage, not active startup census). Approximate founder model: 5.5M × (10,307 / 7,722), rounded to 7.3M. The transfer of a MENA database ratio globally is an unvalidated modeling assumption; this must remain visibly Estimated founders with formula tooltip and both source links. Do not treat it as measured unique people or automatically update it as an observation. AWS 2026 survey reports 65% average annual revenue growth among surveyed startups; BVK/CB Insights reports approximately -17% global VC deal count in 2025. All URLs are stored on the corresponding cards. No monthly interpolation.
