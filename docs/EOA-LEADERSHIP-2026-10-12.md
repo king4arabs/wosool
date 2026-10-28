@@ -28,3 +28,9 @@ The retained transparent white LAMARKA wordmark is displayed on navy. The compan
 ## Verification
 
 Passed TypeScript, targeted ESLint, all 57 frontend tests, and the production webpack build (81 routes). Chromium review covered Arabic/English at 320, 390, 768 and 1440 px; final changes were rechecked at 390 and 1440 px. All 11 portraits load, card widths match, headings/page have no horizontal overflow, in-page navigation works, Arabic grid order starts on the right, and an authoritative empty roster remains empty. Deployment is checked separately from the GitHub commit.
+
+## Portrait refresh — 28 October 2026
+
+Removed the redundant program-lead sentence in both languages. Seven higher-resolution portraits come from the named member cards on https://www.eoriyadh.org/board-member; source URLs are recorded in `frontend/src/data/eoa-board-portraits.json`. Verified delivered dimensions are 750×750 except Yasir (719×719). Mohammed uses the existing owner-supplied 512×512 Wosool portrait, including in the program-lead panel. No generated facial detail or retouching. The external images fall back to the original local poster crops if unavailable; custom editorial portrait paths remain untouched. Current board roles still come from the existing roster, not the older source website.
+
+Mazin Alrukayani, Faisal Alqarni and Abdulaziz Alothaim retain the 130×130 supplied crops pending verified higher-resolution originals. Do not describe these three as upgraded.
