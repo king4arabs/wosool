@@ -11,6 +11,7 @@ try {
   browser=await chromium.launch({executablePath:process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH||undefined})
   for(const locale of ['ar','en'])for(const width of [390,1440]) {
     const context=await browser.newContext({viewport:{width,height:1000}})
+    await context.addCookies([{name:'laravel_session',value:'isolated-test-session',url:origin}])
     await context.addInitScript(l=>localStorage.setItem('wosool-locale',l),locale)
     const requests=[]; const errors=[]; const page=await context.newPage(); page.on('pageerror',e=>errors.push(e.message))
     const record={id:42,slug:'founder',name:'Test Founder',status:'active',activation_status:'unclaimed',is_public:true,companies:[],outreach:{status:'review',email:'founder@example.com',evidence:'Founder: founder@example.com',source_url:'https://example.com/team',attempts:1}}
