@@ -60,7 +60,8 @@ class FounderResource extends JsonResource
             ]),
             'primary_company_name' => $primaryCompany?->name,
             'companies' => CompanyResource::collection($this->whenLoaded('companies')),
-            'scorecard' => $publicDirectory ? null : new ScorecardResource($this->whenLoaded('scorecard')),
+            // Redacted, but keep the old shape: null when loaded (founder APIs), omitted when not (company relationships).
+            'scorecard' => $publicDirectory ? $this->whenLoaded('scorecard', fn () => null) : new ScorecardResource($this->whenLoaded('scorecard')),
             'created_at' => $this->created_at?->toIso8601String(),
             'updated_at' => $this->updated_at?->toIso8601String(),
         ];
