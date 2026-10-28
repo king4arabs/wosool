@@ -22,7 +22,7 @@ class FounderActivationInvitation extends Notification
                 'We added a profile for you and your company to the Wosool founder directory, based on published sources. Activate it to review and edit your details and start talking with other founders.',
                 'Open the link, then enter the code below.',
             ], 'after' => ['The link and code are valid for 7 days and work once. Activation is optional. If this profile is not yours, ignore this email and do not share the code.']],
-            action: \App\Mail\BilingualEmail::action($this->activationUrl, 'تفعيل الملف', 'Activate profile'),
+            action: \App\Mail\BilingualEmail::action($this->activationUrl, 'تفعيل حسابي في وصول', 'Activate my account at Wosool'),
             code: $this->code,
         ));
     }

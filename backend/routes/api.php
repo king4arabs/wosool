@@ -237,6 +237,8 @@ Route::prefix('v1')->group(function () {
         Route::get('/dashboard', AdminDashboardController::class);
         Route::get('/analytics', AdminAnalyticsController::class);
         Route::get('/founders', [AdminFounderController::class, 'index']);
+        Route::post('/founders/outreach', [\App\Http\Controllers\Api\Admin\FounderOutreachController::class, 'bulk'])->middleware('throttle:5,1');
+        Route::put('/founders/{founder}/recipient', [\App\Http\Controllers\Api\Admin\FounderOutreachController::class, 'verify']);
         Route::post('/founders/import', [AdminFounderController::class, 'import'])->middleware('throttle:5,1');
         Route::post('/founders/{founder}/invite', [AdminFounderController::class, 'invite'])->middleware('throttle:10,1');
         Route::delete('/founders/{founder}/invitation', [AdminFounderController::class, 'revoke']);

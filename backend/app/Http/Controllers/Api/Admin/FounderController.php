@@ -13,7 +13,7 @@ class FounderController extends Controller
     public function index(Request $request): JsonResponse
     {
         $query = FounderProfile::query()
-            ->with(['user', 'companies', 'scorecard', 'latestInvitation'])
+            ->with(['user', 'companies', 'scorecard', 'latestInvitation', 'outreach'])
             ->withCount('companies');
 
         if ($request->filled('search')) {
