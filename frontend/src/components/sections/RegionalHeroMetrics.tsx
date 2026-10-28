@@ -15,7 +15,7 @@ export function RegionalHeroMetrics({ ar }: { ar: boolean }) {
     <p className={styles.heading}>{ar ? "نبض المنظومة" : "ECOSYSTEM PULSE"}</p>
     <div className={styles.regions} aria-label={ar ? "المنطقة" : "Region"}>{regions.map((name, i) => <button type="button" key={name} aria-pressed={region === i} onClick={() => setRegion(i)}>{ar ? arabic[i] : name}</button>)}</div>
     <div className={styles.grid} key={region}>{labels.map((label, i) => <article key={label} className={styles.card}>
-      <h2>{label}</h2><strong>{values[i] === null ? "—" : `+${new Intl.NumberFormat(ar ? "ar-SA" : "en").format(values[i]!)}%`}</strong>
+      <h2>{label}</h2><strong>{values[i] === null ? "—" : `+${new Intl.NumberFormat(ar ? "ar-u-nu-latn" : "en").format(values[i]!)}%`}</strong>
       {values[i] === null ? <p>{ar ? "لا تتوفر بيانات موثقة قابلة للمقارنة" : "Comparable verified data unavailable"}</p> : <><p>{i === 2 ? ar ? "المنشآت الصغيرة والمتوسطة · سنوي" : "SMEs · year over year" : ar ? "الاستثمار الجريء · سنوي" : "Venture capital · year over year"}</p><p dir="ltr">{periods[i]}</p><a href={sources[i]} target="_blank" rel="noopener noreferrer">{i === 2 ? ar ? "المصدر: الإحصاء" : "Source: GASTAT" : ar ? "المصدر: منشآت / واس" : "Source: Monsha’at / SPA"} ↗</a></>}
     </article>)}</div>
     <p className={styles.note}>{ar ? "الفترات والتغطية تختلف حسب المصدر. المناطق متداخلة ولا تُجمع. الأرقام ليست إحصاءات أعضاء وصول." : "Periods and coverage vary by source. Regions overlap and must not be added. These are not Wosool member statistics."}</p>
