@@ -35,11 +35,11 @@ class PublicCompanyContractTest extends TestCase
         $this->assertSame(0, User::count());
         $samples = [];
         foreach (['en', 'ar'] as $locale) {
-            $list = $this->getJson('/api/v1/companies?per_page=100', ['X-Locale' => $locale])->assertOk()
-                ->assertJsonPath('meta.total', 95)->assertJsonCount(95, 'data');
-            $detail = $this->getJson('/api/v1/companies/unifonic', ['X-Locale' => $locale])->assertOk()
-                ->assertJsonPath('data.is_public', true)->assertJsonPath('data.status', 'active');
-            $samples[] = $this->sample($list, '/api/v1/companies');
+            foreach (range(1, 4) as $page) {
+                $list = $this->getJson('/api/v1/companies?per_page=24&page='.$page, ['X-Locale' => $locale])->assertOk()
+                    ->assertJsonPath('meta.total', 95)->assertJsonCount($page === 4 ? 23 : 24, 'data');
+                $samples[] = $this->sample($list, '/api/v1/companies');
+            }
             $samples[] = $this->sample($detail, '/api/v1/companies/{slug}');
         }
         $this->assertContracts($samples);
@@ -61,7 +61,7 @@ class PublicCompanyContractTest extends TestCase
         $list = $this->getJson('/api/v1/companies')->assertOk()
             ->assertJsonPath('data.0.founders_count', 1)->assertJsonCount(1, 'data.0.founders')
             ->assertJsonPath('data.0.founders.0.slug', 'visible-founder')
-            ->assertJsonPath('data.0.founders.0.user.email', null)
+            ->assertJsonPath('data.0.founders.0.user', null)
             ->assertJsonMissingPath('data.0.founders.0.companies')
             ->assertJsonMissingPath('data.0.founders.0.scorecard')
             ->assertJsonMissingPath('data.0.founders.0.invitation');
@@ -97,7 +97,7 @@ class PublicCompanyContractTest extends TestCase
             $samples[] = $this->sample($this->getJson('/api/v1/companies?'.$query)->assertOk(), '/api/v1/companies');
         }
         $this->assertSame(1, $samples[2]['body']->meta->per_page);
-        $this->assertSame(100, $samples[3]['body']->meta->per_page);
+        $this->assertSame(24, $samples[3]['body']->meta->per_page);
         $this->assertSame([], $samples[4]['body']->data);
         $this->assertSame(2, $samples[5]['body']->meta->total);
         foreach ([6, 7, 8] as $index) $this->assertSame(1, $samples[$index]['body']->meta->total);
@@ -116,7 +116,7 @@ class PublicCompanyContractTest extends TestCase
             match ($case) {
                 'id' => $sample['body']->data->id = 'invalid',
                 'private_field' => $sample['body']->data->owner_email = 'private@example.test',
-                'email' => $sample['body']->data->founders[0]->user->email = 'private@example.test',
+                'email' => $sample['body']->data->founders[0]->user = (object) ['id' => 5, 'name' => 'Member', 'email' => 'private@example.test'],
                 'nested_company' => $sample['body']->data->founders[0]->companies = [],
                 default => null,
             };

@@ -70,11 +70,11 @@ Route::prefix('v1')->group(function () {
     Route::post('/founder-activation/activate', [\App\Http\Controllers\Api\FounderActivationController::class, 'activate'])->middleware('throttle:5,1');
 
     // ── Public read endpoints ───────────────────────────────────────
-    Route::get('/founders', [FounderController::class, 'index']);
-    Route::get('/founders/{slug}', [FounderController::class, 'show']);
+    Route::get('/founders', [FounderController::class, 'index'])->middleware('throttle:30,1');
+    Route::get('/founders/{slug}', [FounderController::class, 'show'])->middleware('throttle:30,1');
 
-    Route::get('/companies', [CompanyController::class, 'index']);
-    Route::get('/companies/{slug}', [CompanyController::class, 'show']);
+    Route::get('/companies', [CompanyController::class, 'index'])->middleware('throttle:30,1');
+    Route::get('/companies/{slug}', [CompanyController::class, 'show'])->middleware('throttle:30,1');
 
     Route::get('/events', [EventController::class, 'index']);
     Route::get('/events/{slug}', [EventController::class, 'show']);

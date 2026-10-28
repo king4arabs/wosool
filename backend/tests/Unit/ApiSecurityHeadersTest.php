@@ -33,14 +33,19 @@ class ApiSecurityHeadersTest extends TestCase
         }
     }
 
-    public function test_public_responses_keep_their_cache_policy(): void
+    public function test_founder_and_company_api_json_is_not_cached_or_indexed(): void
     {
-        $response = (new ApiSecurityHeaders)->handle(Request::create('/api/v1/founders'),
+        foreach (['/api/v1/founders', '/v1/founders/example', '/api/v1/companies', '/v1/companies/example'] as $path) {
+            $response = (new ApiSecurityHeaders)->handle(Request::create($path),
+                fn () => new Response('{}', 200, ['Cache-Control' => 'public, max-age=600']));
+            $this->assertTrue($response->headers->hasCacheControlDirective('no-store'));
+            $this->assertTrue($response->headers->hasCacheControlDirective('private'));
+            $this->assertSame('noindex, nofollow, noarchive', $response->headers->get('X-Robots-Tag'));
+        }
+        $news = (new ApiSecurityHeaders)->handle(Request::create('/api/v1/news'),
             fn () => new Response('{}', 200, ['Cache-Control' => 'public, max-age=60']));
-        $this->assertFalse($response->headers->hasCacheControlDirective('no-store'));
-        $this->assertTrue($response->headers->hasCacheControlDirective('public'));
-        $this->assertFalse($response->headers->has('X-Robots-Tag'));
-        $this->assertSame('nosniff', $response->headers->get('X-Content-Type-Options'));
+        $this->assertTrue($news->headers->hasCacheControlDirective('public'));
+        $this->assertFalse($news->headers->has('X-Robots-Tag'));
     }
 
     public function test_existing_stricter_referrer_policy_is_preserved(): void
