@@ -48,6 +48,7 @@ final class BilingualEmail
     {
         $message = (new MailMessage)
             ->subject(self::subject($subjectAr, $subjectEn))
+            ->replyTo('info@wosool.org', 'Wosool')
             ->markdown(self::VIEW, $data);
 
         // Mirror the English copy into the standard fields so tests, logs and non-mail

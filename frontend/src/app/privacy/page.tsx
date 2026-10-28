@@ -11,12 +11,16 @@ export default function Privacy() {
       <section className="gateway-section">
         <div className="mx-auto max-w-3xl">
           <p className="gateway-eyebrow">
-            {t("آخر تحديث: 8 أكتوبر 2026", "Updated 8 October 2026")}
+            {t("آخر تحديث: 28 أكتوبر 2026", "Updated 28 October 2026")}
           </p>
           <h1 className="gateway-heading">
             {t("إشعار خصوصية وصول", "Wosool privacy notice")}
           </h1>
           {[
+            [
+              t("النشرة البريدية", "Newsletter"),
+              t("نستخدم بريدك لإرسال رسالة ترحيب ونشرة شهرية إذا أكّدت اشتراكك أو كانت عضويتك مفعّلة مع تشغيل خيار الملخص الشهري. يمكنك إلغاء الاشتراك من أي نشرة أو إيقاف الملخص من إعدادات حسابك، دون إيقاف رسائل الأمان والحساب الأساسية.", "We use your email for a welcome message and monthly highlights when you confirm a newsletter subscription or have an active membership with monthly digest enabled. Unsubscribe from any newsletter or disable monthly digest in your account settings; essential security and account emails continue."),
+            ],
             [
               t("البيانات والغرض", "Data and purpose"),
               t(

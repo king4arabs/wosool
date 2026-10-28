@@ -187,7 +187,7 @@ export default function AboutPage() {
 
       <section className="bg-[var(--surface)] px-4 py-12 text-center">
         <h2 className="text-2xl font-bold text-[var(--text-strong)]">تواصل معنا</h2>
-        <a className="mt-3 inline-block text-lg font-semibold text-[var(--link)] underline underline-offset-4" href="mailto:Info@wosool.org" dir="ltr">Info@wosool.org</a>
+        <a className="mt-3 inline-block text-lg font-semibold text-[var(--link)] underline underline-offset-4" href="mailto:info@wosool.org" dir="ltr">info@wosool.org</a>
       </section>
 
       <section className="bg-[#EEF2FF] px-4 py-20">

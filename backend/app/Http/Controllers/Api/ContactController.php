@@ -30,7 +30,7 @@ class ContactController extends Controller
                 ['ar' => 'البريد', 'en' => 'Email', 'value' => $validated['email']],
                 ['ar' => 'الجهة', 'en' => 'Organisation', 'value' => $validated['company'] ?? null],
                 ['ar' => 'التصنيف', 'en' => 'Category', 'value' => "{$categoryAr} / {$categoryEn}"],
-                ['ar' => 'الرسالة', 'en' => 'Message', 'value' => Str::limit($validated['message'], 1500)],
+                ['ar' => 'الرسالة', 'en' => 'Message', 'value' => $validated['message']],
             ],
             '/admin/messages',
             $validated['email'],

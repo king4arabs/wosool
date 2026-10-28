@@ -12,3 +12,6 @@ Artisan::command('inspire', function () {
 
 Schedule::command(ExpireStalledIntroductions::class)->hourly();
 Schedule::command(SyncNews::class)->daily()->withoutOverlapping();
+
+// Hourly retries and new-member welcomes; each monthly issue is sent only once.
+Schedule::command('wosool:newsletter --digest')->hourly()->withoutOverlapping();

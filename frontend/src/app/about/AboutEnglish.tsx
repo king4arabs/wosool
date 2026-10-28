@@ -89,7 +89,7 @@ export function AboutEnglish() {
 
         <section className="bg-[var(--surface)] px-4 py-16 text-center">
           <h2 className="text-2xl font-bold text-[var(--text-strong)]">Contact us</h2>
-          <a className="mt-3 inline-block text-lg font-semibold text-[var(--link)] underline underline-offset-4" href="mailto:Info@wosool.org">Info@wosool.org</a>
+          <a className="mt-3 inline-block text-lg font-semibold text-[var(--link)] underline underline-offset-4" href="mailto:info@wosool.org">info@wosool.org</a>
         </section>
         <section className="bg-[var(--surface-blue)] px-4 py-20 text-center">
           <h2 className="mb-4 text-3xl font-bold text-[var(--text-strong)]">Ready to be part of the story?</h2>
