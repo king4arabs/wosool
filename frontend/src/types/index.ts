@@ -1,4 +1,5 @@
 export interface Founder {
+  communityEngagementScore?: number | null
   activationStatus?: "active" | "unclaimed" | "suspended"
   canCommunicate?: boolean
   sourceUrls?: string[]
@@ -141,6 +142,7 @@ export interface NewsItem {
 }
 
 export interface User {
+  registration_step?: "verify" | "profile" | "review" | "active" | null
   email_verified_at?: string | null;
   id: string
   email: string

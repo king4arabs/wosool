@@ -7,6 +7,7 @@ import { CardBrowser } from './CardBrowser'
 import { ProfileCard } from './ProfileCard'
 import { ecosystemSourceLabel, revenuePeriod, type StartupEcosystemSource, type StartupRevenueEvidence } from '@/lib/startup-directory'
 import { CollectionStatus } from './CollectionStatus'
+import { isDirectoryRecordVisible } from '@/lib/directory-geography'
 
 export type StartupProfile = {
   asset_credit?: string; id: string; slug: string; region: string; country_code: string; country_en: string; country_ar: string
@@ -50,9 +51,9 @@ export function StartupDirectory({ compact = false }: { compact?: boolean }) {
       </div>
       <p className="mt-4 text-sm text-slate-500">{ar ? 'التصنيف حسب المنتج أو الخدمة الأساسية. تتضمن الأدلة إفصاحات مالية وتصريحات منشورة؛ ليست جميع الأرقام مدققة. بعض الجهات لم تكتمل مراجعة شركاتها بعد.' : 'Categories reflect the primary offering. Evidence includes financial disclosures and published reports; figures are not all audited. Some sources still have businesses awaiting review.'}</p>
     </>}
-    <CardBrowser key={query} items={collection.items.map(p=>({id:p.slug,content:<ProfileCard data={{
+    <CardBrowser key={query} items={collection.items.filter(p => isDirectoryRecordVisible({ country_code: p.country_code, location: p.country_en })).map(p=>({id:p.slug,content:<ProfileCard data={{
       company:p[`company_name_${lang}`],companyBrief:p[`company_brief_${lang}`],founder:p[`founder_name_${lang}`],
-      founderBrief:p[`founder_brief_${lang}`],role:p[`role_${lang}`],sector:p[`sector_${lang}`],location:p[`country_${lang}`],
+      founderBrief:p[`founder_brief_${lang}`],role:p[`role_${lang}`],sector:p[`sector_${lang}`],location:p[`country_${lang}`],countryCode:p.country_code,
       logo:p.logo_url,logoTone:p.logo_tone,portrait:p.portrait_url,website:p.website,companySocials:p.company_socials,
       founderSocials:p.founder_socials,sources:p.sources,reviewedAt:p.reviewed_at,reviewDue:p.review_due,assetCredit:p.asset_credit,
       businessType:typeLabel(p.business_type),focusArea:p[`focus_area_${lang}`],websiteVerifiedAt:p.website_verified_at,

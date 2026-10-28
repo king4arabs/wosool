@@ -11,6 +11,13 @@ class AuthEndpointsTest extends TestCase
 {
     use RefreshDatabase;
 
+    protected function setUp(): void
+    {
+        parent::setUp();
+        \Illuminate\Support\Facades\Mail::fake();
+        config(['mail.default' => 'smtp', 'mail.mailers.smtp.transport' => 'smtp', 'mail.from.address' => 'hello@wosool.org']);
+    }
+
     public function test_user_can_register_with_valid_data(): void
     {
         $application = Application::create([
@@ -30,7 +37,7 @@ class AuthEndpointsTest extends TestCase
             'name' => 'Test User',
             'email' => 'test@example.com',
             'password' => 'Password1',
-            'password_confirmation' => 'Password1',
+            'password_confirmation' => 'Password1', 'consent' => true,
             'invite_token' => 'test-invitation-token',
         ]);
 
@@ -39,9 +46,9 @@ class AuthEndpointsTest extends TestCase
             ->assertJsonStructure(['message', 'user' => ['id', 'name', 'email']]);
 
         $this->assertDatabaseHas('users', ['email' => 'test@example.com']);
-        $this->assertSame($response->json('user.id'), $application->fresh()->user_id);
-        $this->assertNull($application->fresh()->invite_token);
-        $this->assertNotNull(User::where('email', 'test@example.com')->firstOrFail()->email_verified_at);
+        $this->assertNull($application->fresh()->user_id);
+        $this->assertNull(User::where('email', 'test@example.com')->firstOrFail()->email_verified_at);
+        \Illuminate\Support\Facades\Mail::assertSent(\App\Mail\RegistrationOtpMail::class);
     }
 
     public function test_registration_requires_the_invitation_for_the_approved_email(): void
@@ -52,8 +59,7 @@ class AuthEndpointsTest extends TestCase
         ]);
 
         $payload = ['name' => 'Approved User', 'email' => 'approved@example.com',
-            'password' => 'Password1', 'password_confirmation' => 'Password1'];
-        $this->postJson('/api/v1/auth/register', $payload)->assertUnprocessable()->assertJsonValidationErrors('invite_token');
+            'password' => 'Password1', 'password_confirmation' => 'Password1', 'consent' => true];
         $this->postJson('/api/v1/auth/register', $payload + ['invite_token' => 'wrong'])->assertUnprocessable()->assertJsonValidationErrors('invite_token');
         $this->assertDatabaseMissing('users', ['email' => 'approved@example.com']);
     }
@@ -116,7 +122,7 @@ class AuthEndpointsTest extends TestCase
             'name' => 'Another User',
             'email' => 'taken@example.com',
             'password' => 'Password1',
-            'password_confirmation' => 'Password1',
+            'password_confirmation' => 'Password1', 'consent' => true,
         ]);
 
         $response
@@ -124,7 +130,7 @@ class AuthEndpointsTest extends TestCase
             ->assertJsonValidationErrors(['email']);
     }
 
-    public function test_register_requires_approved_application(): void
+    public function test_registration_can_start_before_application_approval(): void
     {
         Application::create([
             'full_name' => 'Pending User',
@@ -142,12 +148,12 @@ class AuthEndpointsTest extends TestCase
             'name' => 'Pending User',
             'email' => 'pending@example.com',
             'password' => 'Password1',
-            'password_confirmation' => 'Password1',
+            'password_confirmation' => 'Password1', 'consent' => true,
         ]);
 
         $response
-            ->assertUnprocessable()
-            ->assertJsonValidationErrors(['email']);
+            ->assertCreated()
+            ->assertJsonPath('user.registration_step', 'verify');
     }
 
     public function test_user_can_login_with_correct_credentials(): void

@@ -165,10 +165,12 @@ function Field({
 function Chip({
   label,
   color,
+  removeLabel,
   onRemove,
 }: {
   label: string
   color: "indigo" | "emerald"
+  removeLabel: string
   onRemove: () => void
 }) {
   const styles =
@@ -184,7 +186,7 @@ function Chip({
         type="button"
         onClick={onRemove}
         className="flex items-center justify-center w-3.5 h-3.5 rounded-full opacity-60 hover:opacity-100 transition-opacity"
-        aria-label={`Remove ${label}`}
+        aria-label={`${removeLabel} ${label}`}
       >
         <X className="w-2.5 h-2.5" />
       </button>
@@ -606,7 +608,7 @@ export default function ProfilePage() {
           {(profile.needs ?? []).length > 0 && (
             <div className="flex flex-wrap gap-2">
               {(profile.needs ?? []).map((need) => (
-                <Chip key={need} label={need} color="indigo" onRemove={() => removeNeed(need)} />
+                <Chip key={need} label={need} color="indigo" removeLabel={copy.remove} onRemove={() => removeNeed(need)} />
               ))}
             </div>
           )}
@@ -641,7 +643,7 @@ export default function ProfilePage() {
           {(profile.offers ?? []).length > 0 && (
             <div className="flex flex-wrap gap-2">
               {(profile.offers ?? []).map((offer) => (
-                <Chip key={offer} label={offer} color="emerald" onRemove={() => removeOffer(offer)} />
+                <Chip key={offer} label={offer} color="emerald" removeLabel={copy.remove} onRemove={() => removeOffer(offer)} />
               ))}
             </div>
           )}

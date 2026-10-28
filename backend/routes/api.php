@@ -64,17 +64,24 @@ Route::prefix('v1')->group(function () {
     Route::middleware('auth:sanctum')->group(function () {
         Route::post('/auth/logout', [AuthController::class, 'logout']);
         Route::get('/auth/me', [AuthController::class, 'me']);
+        Route::post('/auth/registration/verify', [AuthController::class, 'verifyRegistration'])->middleware('throttle:10,1,registration-verify');
+        Route::post('/auth/registration/resend', [AuthController::class, 'resendRegistration'])->middleware('throttle:5,60,registration-resend');
+        Route::middleware('verified')->prefix('registration')->group(function () {
+            Route::get('/application', [\App\Http\Controllers\Api\RegistrationController::class, 'show']);
+            Route::post('/application', [\App\Http\Controllers\Api\RegistrationController::class, 'submit'])->middleware('throttle:5,60,registration-submit');
+            Route::post('/image', [\App\Http\Controllers\Api\RegistrationController::class, 'upload'])->middleware('throttle:10,1,registration-upload');
+        });
     });
 
     Route::post('/founder-activation/preview', [\App\Http\Controllers\Api\FounderActivationController::class, 'preview'])->middleware('throttle:15,1');
     Route::post('/founder-activation/activate', [\App\Http\Controllers\Api\FounderActivationController::class, 'activate'])->middleware('throttle:5,1');
 
     // ── Public read endpoints ───────────────────────────────────────
-    Route::get('/founders', [FounderController::class, 'index']);
-    Route::get('/founders/{slug}', [FounderController::class, 'show']);
+    Route::get('/founders', [FounderController::class, 'index'])->middleware('throttle:30,1');
+    Route::get('/founders/{slug}', [FounderController::class, 'show'])->middleware('throttle:30,1');
 
-    Route::get('/companies', [CompanyController::class, 'index']);
-    Route::get('/companies/{slug}', [CompanyController::class, 'show']);
+    Route::get('/companies', [CompanyController::class, 'index'])->middleware('throttle:30,1');
+    Route::get('/companies/{slug}', [CompanyController::class, 'show'])->middleware('throttle:30,1');
 
     Route::get('/events', [EventController::class, 'index']);
     Route::get('/events/{slug}', [EventController::class, 'show']);

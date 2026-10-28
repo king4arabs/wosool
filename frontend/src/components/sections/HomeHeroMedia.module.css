@@ -1,0 +1,7 @@
+.poster,.video { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:center; pointer-events:none; }
+.scrim { position:absolute; inset:0; pointer-events:none; background:linear-gradient(90deg,rgba(8,20,39,.8),rgba(8,20,39,.6) 58%,rgba(8,20,39,.18)); }
+:global([dir="rtl"]) .scrim { background:linear-gradient(270deg,rgba(8,20,39,.8),rgba(8,20,39,.6) 58%,rgba(8,20,39,.18)); }
+.control { position:absolute; z-index:2; inset-inline-end:24px; bottom:20px; display:inline-flex; align-items:center; gap:8px; min-height:44px; padding:10px 16px; border:1px solid rgba(255,255,255,.55); border-radius:999px; background:rgba(8,20,39,.82); color:#fff; font-size:12px; cursor:pointer; }
+.control:hover { background:#081427; }
+.control:focus-visible { outline:3px solid white; outline-offset:4px; }
+@media(max-width:720px) { .scrim,:global([dir="rtl"]) .scrim { background:rgba(8,20,39,.7); }.control { inset-inline-end:16px; bottom:16px; } }

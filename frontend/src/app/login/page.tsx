@@ -29,6 +29,7 @@ export default function LoginPage() {
       await login(String(f.get("email")), String(f.get("password")));
       const me = await api.get<{
         user: {
+          registration_step?: string | null;
           is_admin?: boolean;
           role_token?: string;
           roles?: string[];
@@ -36,7 +37,7 @@ export default function LoginPage() {
         };
       }>("/auth/me");
       router.replace(
-        params.get("redirect")
+        me.user.registration_step && me.user.registration_step !== "active" ? workspacePath(me.user) : params.get("redirect")
           ? safeRedirect(params.get("redirect"), workspacePath(me.user))
           : workspacePath(me.user),
       );

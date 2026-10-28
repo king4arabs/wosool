@@ -47,14 +47,14 @@ export const FAQS: FaqItem[] = [
       ar: ["المؤسسون والشركاء المؤسسون والمسؤولون التنفيذيون في شركات قائمة أو قيد التأسيس، ممن أتموا 18 عامًا، ويعملون في السعودية أو الخليج أو يخدمون أسواقهما.", "ننظر أيضًا إلى وضوح نموذج العمل والخطة للمرحلة القادمة، وإلى رغبتك في المشاركة ودعم المؤسسين الآخرين."],
       en: ["Founders, co-founders and executives of existing or emerging companies who are 18 or older and operate in, or serve, Saudi Arabia or the Gulf.", "We also look for a clear operating model, a serious plan for your next stage, and a willingness to contribute to other founders."],
     },
-    link: { href: "/apply#eligibility", ar: "معايير العضوية", en: "Membership criteria" },
+    link: { href: "/faq", ar: "معايير العضوية", en: "Membership criteria" },
   },
   {
     id: "how-to-apply", category: "membership",
     q: { ar: "كيف أتقدم بطلب عضوية؟", en: "How do I apply?" },
     a: {
-      ar: ["عبّئ نموذج العضوية في صفحة التقديم. يستغرق عادة بين 10 و15 دقيقة، وتصلك رسالة تأكيد برقم مرجعي يبدأ بـ WOS على بريدك الإلكتروني."],
-      en: ["Fill in the membership form on the apply page. It usually takes 10–15 minutes, and you receive a confirmation email with a reference number starting with WOS."],
+      ar: ["أنشئ حسابك وأكّد بريدك برمز التحقق، ثم أكمل بياناتك وبيانات شركتك وأرسل طلبك للمراجعة."],
+      en: ["Create an account and verify your email with the code, then complete your founder and company details and submit your application."],
     },
     link: { href: "/apply", ar: "قدّم طلبك", en: "Apply now" },
   },
@@ -62,8 +62,8 @@ export const FAQS: FaqItem[] = [
     id: "after-applying", category: "membership",
     q: { ar: "ماذا يحدث بعد إرسال الطلب؟", en: "What happens after I apply?" },
     a: {
-      ar: ["يراجع الفريق كل طلب بنفسه، وعادة نرد خلال 5 إلى 7 أيام عمل. قد نتواصل معك لترتيب مكالمة تعريفية قصيرة قبل القرار.", "عند الموافقة تصلك دعوة بالبريد لإنشاء حسابك وإكمال ملفك وملف شركتك."],
-      en: ["The team reviews every application personally and usually replies within 5–7 business days. We may contact you for a short introductory call before deciding.", "If approved, you receive an email invitation to create your account and complete your founder and company profile."],
+      ar: ["يراجع الفريق كل طلب بنفسه، وعادة نرد خلال 5 إلى 7 أيام عمل. قد نتواصل معك لترتيب مكالمة تعريفية قصيرة قبل القرار.", "عند الموافقة تُفعّل عضويتك وتظهر بطاقتك في دليل المؤسسين والصفحة الرئيسية، ويصلك إشعار بالبريد."],
+      en: ["The team reviews every application personally and usually replies within 5–7 business days. We may contact you for a short introductory call before deciding.", "Approval activates your membership and publishes your card in the founder directory and homepage. You receive an email notification."],
     },
   },
   {

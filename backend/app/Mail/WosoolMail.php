@@ -51,11 +51,11 @@ class WosoolMail extends Mailable
         return new self('application-invitation', 'تم قبول طلبك في وصول', 'Your Wosool application is approved', BilingualEmail::data(
             ar: ['title' => 'أهلاً بك في وصول', 'greeting' => "مرحباً {$name}،", 'lines' => [
                 'راجع الفريق طلبك ووافق على انضمامك إلى مجتمع وصول.',
-                $existingAccount ? 'لديك حساب بهذا البريد، سجّل الدخول وستُفعَّل عضويتك مباشرة.' : 'أنشئ حسابك من الرابط الخاص أدناه، وستُفعَّل عضويتك مباشرة.',
+                $existingAccount ? 'لديك حساب بهذا البريد، سجّل الدخول وستُفعَّل عضويتك مباشرة.' : 'أنشئ حسابك من الرابط أدناه، وأكّد بريدك برمز التحقق ثم أكمل بيانات ملفك.',
             ], 'after' => $existingAccount ? [] : ['الرابط خاص بك، فلا تشاركه.']],
             en: ['title' => 'Welcome to Wosool', 'greeting' => "Hello {$name},", 'lines' => [
                 'The team reviewed your application and approved your membership in the Wosool community.',
-                $existingAccount ? 'You already have an account with this email. Sign in and your membership activates right away.' : 'Create your account from the private link below and your membership activates right away.',
+                $existingAccount ? 'You already have an account with this email. Sign in and your membership activates right away.' : 'Create your account below, verify your email with the code, then complete your profile.',
             ], 'after' => $existingAccount ? [] : ['This link is personal to you, so please do not share it.']],
             action: BilingualEmail::action($url, $existingAccount ? 'تسجيل الدخول' : 'إنشاء الحساب', $existingAccount ? 'Sign in' : 'Create your account'),
         ));
@@ -74,6 +74,15 @@ class WosoolMail extends Mailable
                 'Start with a short note about yourself and what you hope to discuss.',
             ]],
             action: BilingualEmail::action(self::url('/dashboard/messages'), 'فتح المحادثة', 'Open the conversation'),
+        ));
+    }
+
+    public static function membershipStatus(bool $approved): self
+    {
+        return new self('membership-status', $approved ? 'أهلاً بك في مجتمع وصول' : 'استلمنا طلب انضمامك', $approved ? 'Welcome to Wosool' : 'We received your application', BilingualEmail::data(
+            ar: ['title' => $approved ? 'تمت الموافقة على عضويتك' : 'طلبك قيد المراجعة', 'lines' => [$approved ? 'تم تفعيل عضويتك ونشر ملفك في دليل المؤسسين. يمكنك الآن التواصل والاستفادة من خدمات وصول.' : 'استلمنا بياناتك، وسنخبرك بالبريد عند تحديث حالة طلبك.']],
+            en: ['title' => $approved ? 'Your membership is approved' : 'Your application is under review', 'lines' => [$approved ? 'Your membership is active and your profile is published in the founder directory. You can now connect and use Wosool member services.' : 'We received your details and will email you when your application status changes.']],
+            action: BilingualEmail::action(self::url($approved ? '/dashboard' : '/onboarding'), $approved ? 'دخول المنصة' : 'متابعة الطلب', $approved ? 'Open your workspace' : 'Track application'),
         ));
     }
 

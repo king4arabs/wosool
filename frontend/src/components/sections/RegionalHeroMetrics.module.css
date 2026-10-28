@@ -1,0 +1,17 @@
+.panel { min-width:0; color:#fff; container-type:inline-size; }
+.heading { font-size:12px; letter-spacing:.06em; font-weight:700; margin-bottom:12px; }
+.regions { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); grid-auto-rows:1fr; gap:8px; margin-bottom:14px; }
+.regions button { min-width:0; min-height:48px; padding:8px 10px; border:1px solid #ffffff55; border-radius:12px; font-size:11px; line-height:1.6; text-align:center; overflow-wrap:anywhere; background:#10213bcc; cursor:pointer; }
+.regions button:focus-visible { outline:3px solid #fff; outline-offset:3px; }
+@container(min-width:440px) { .regions { grid-template-columns:repeat(4,minmax(0,1fr)); } }
+.regions button[aria-pressed="true"] { background:#fff; color:#14213a; }
+.grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; animation:reveal .45s ease-out; }
+.card { min-width:0; aspect-ratio:1; padding:18px; border:1px solid #ffffff40; border-radius:18px; background:#10213bf0; display:flex; flex-direction:column; justify-content:center; }
+.panel .card h2 { font-size:13px!important; line-height:1.5!important; font-weight:600; }
+.card strong { font-size:clamp(30px,3vw,46px); font-variant-numeric:tabular-nums; line-height:1.4; margin-block:8px; }
+.card p,.card a,.note { font-size:10px; line-height:1.7; color:#dbe5f2; }
+.card a { text-decoration:underline; text-underline-offset:3px; margin-top:8px; }
+.note { margin-top:12px; }
+@keyframes reveal { from { opacity:.35; transform:translateY(5px); } to { opacity:1; transform:none; } }
+@media(prefers-reduced-motion:reduce) { .grid { animation:none; } }
+@media(max-width:420px) { .card { padding:13px; aspect-ratio:auto; min-height:190px; } }

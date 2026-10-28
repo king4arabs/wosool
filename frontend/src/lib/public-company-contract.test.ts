@@ -22,7 +22,7 @@ const detail = (data: unknown) => validatePublicResponse('/api/v1/companies/{slu
 
 test('company detail accepts nullable fields and the standalone founder relationship shape', () => {
   assert.equal(detail(company()).valid, true)
-  const related = { ...founder(), user: { id: 7, name: 'Member', email: null }, activation_status: 'active', can_communicate: true }
+  const related = { ...founder(), activation_status: 'active', can_communicate: true }
   assert.equal(detail({ ...company(), founders: [related] }).valid, true)
   assert.equal(detail({ ...company(), source_urls: { official: 'https://example.com' } }).valid, true)
 })
@@ -57,11 +57,11 @@ test('company list requires a public-founder count, pagination and a typed 404',
   const body = { data: [{ ...company(), founders_count: 0 }], links: {
     first: '/companies?page=1', last: '/companies?page=1', prev: null, next: null,
   }, meta: {
-    current_page: 1, from: 1, last_page: 1, links: [], path: '/api/v1/companies', per_page: 100, to: 1, total: 1,
+    current_page: 1, from: 1, last_page: 1, links: [], path: '/api/v1/companies', per_page: 24, to: 1, total: 1,
   } }
   assert.equal(validatePublicResponse('/api/v1/companies', 200, body).valid, true)
   assert.equal(validatePublicResponse('/api/v1/companies', 200, { ...body, data: [company()] }).valid, false)
-  assert.equal(validatePublicResponse('/api/v1/companies', 200, { ...body, meta: { ...body.meta, per_page: 101 } }).valid, false)
+  assert.equal(validatePublicResponse('/api/v1/companies', 200, { ...body, meta: { ...body.meta, per_page: 25 } }).valid, false)
   assert.equal(validatePublicResponse('/api/v1/companies/{slug}', 404, { message: 'Not found' }).valid, true)
   assert.throws(() => validatePublicResponse('/api/v1/companies', 422, {}), /No JSON response schema/)
 })

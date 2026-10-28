@@ -14,6 +14,8 @@ import {
   UserRound,
 } from "lucide-react"
 import { BrandLogo } from "@/components/ui/BrandLogo"
+import { CountryFlag } from '@/components/ui/CountryFlag'
+import { countryCode } from '@/lib/directory-geography'
 import { brandLogoNeedsDarkSurface } from "@/lib/brand-logos"
 import { publicWebsite } from "@/lib/community-display"
 import { useLocale } from "@/lib/locale"
@@ -31,6 +33,8 @@ export type ProfileCardData = {
   role?: string
   founderBrief?: string
   location?: string
+  countryCode?: string
+  engagement?: number | null
   sector?: string
   stage?: string
   href?: string
@@ -86,8 +90,8 @@ function Portrait({ src, name }: { src?: string; name: string }) {
           alt={name}
           width={160}
           height={160}
-          sizes="80px"
-          className="h-full w-full object-cover"
+          sizes="(max-width: 360px) 58px, (max-width: 660px) 66px, 76px"
+          className={styles.portraitImage}
           unoptimized={!image.startsWith("/")}
           onError={() => setFailed(image)}
         />
@@ -111,6 +115,7 @@ export function ProfileCard({ data, variant = "company" }: { data: ProfileCardDa
   const PersonHeading = founderFirst ? 'h3' : 'h4'
   const website = publicWebsite(data.website)
   const websiteHost = hostLabel(data.website)
+  const flag = countryCode(data.countryCode)
   const hasDetails = Boolean(
     data.revenue ||
       data.ecosystemSources?.length ||
@@ -162,7 +167,8 @@ export function ProfileCard({ data, variant = "company" }: { data: ProfileCardDa
           data.logoTone === "dark" || brandLogoNeedsDarkSurface(data.logo) ? styles.darkLogo : "",
         ].join(" ")}
       >
-        <div className={styles.logo}><BrandLogo src={data.logo} name={data.company} /></div>
+        {flag && <span className={styles.countryFlag} data-country={flag}><CountryFlag code={flag} locale={locale} /></span>}
+        <div className={styles.logo}><BrandLogo src={data.logo} name={data.company} website={data.website} /></div>
 
         <div className={styles.trustSignals}>
           {data.profileVerified && (
@@ -232,12 +238,12 @@ export function ProfileCard({ data, variant = "company" }: { data: ProfileCardDa
           </div>
         )}
 
-        {!!data.signals?.length && (
+        {(!!data.signals?.length || data.engagement !== undefined) && (
           <div role="group"
             className={styles.signalRow}
             aria-label={ar ? "إشارات الشركة" : "Company signals"}
           >
-            {data.signals.map((signal) => (
+            {data.signals?.map((signal) => (
               <span
                 key={signal.label}
                 className={`${styles.businessSignal} ${styles[`businessSignal_${signal.tone ?? "neutral"}`]}`}
@@ -245,6 +251,9 @@ export function ProfileCard({ data, variant = "company" }: { data: ProfileCardDa
                 {signal.label}
               </span>
             ))}
+            {data.engagement !== undefined && <span className={`${styles.businessSignal} ${styles.engagement}`} title={data.engagement === null ? (ar ? 'يظهر المؤشر بعد التفعيل وتوفر بيانات المشاركة.' : 'Available after activation and participation data are available.') : (ar ? '50 نقطة للتفعيل، و5 لكل تعارف معتمد ومساهمة منشورة خلال 90 يومًا، حتى 25 نقطة لكل نوع.' : '50 points for activation; 5 per approved introduction and published post in the last 90 days, up to 25 points each.')}>
+              <span>{ar ? 'التفعيل والتفاعل' : 'Community engagement'}</span><strong dir="ltr">{data.engagement === null ? '—' : `${data.engagement}%`}</strong>
+            </span>}
           </div>
         )}
 

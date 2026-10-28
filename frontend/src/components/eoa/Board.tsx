@@ -5,6 +5,7 @@ import { ArrowLeft, ArrowRight, Globe2, Pause, Play, UserRound } from 'lucide-re
 import { useEffect, useId, useMemo, useRef, useState, useSyncExternalStore, type KeyboardEvent } from 'react'
 import { boardExternalUrl, boardMemberName, boardPortraitUrl, boardScrollOffset, boardText, publishedBoardMembers, type EoaBoardMember } from '@/lib/eoa-board'
 import styles from './Board.module.css'
+import portraitSources from '@/data/eoa-board-portraits.json'
 
 function subscribeMotion(callback: () => void) {
   const query = window.matchMedia('(prefers-reduced-motion: reduce)')
@@ -27,8 +28,10 @@ function SocialIcon({ kind }: { kind: SocialKind }) {
 
 function BoardCard({ member, ar, index, count, slide }: { member: EoaBoardMember; ar: boolean; index: number; count: number; slide: boolean }) {
   const name = boardMemberName(ar, member)
-  const portrait = boardPortraitUrl(member.portrait_path)
+  const originalPortrait = boardPortraitUrl(member.portrait_path)
+  const preferredPortrait = originalPortrait ? (portraitSources as Record<string, string>)[originalPortrait] || originalPortrait : null
   const [failedPortrait, setFailedPortrait] = useState<string | null>(null)
+  const portrait = failedPortrait ? originalPortrait : preferredPortrait
   const companyUrl = boardExternalUrl(member.company_url)
   const company = boardText(ar, member.company_name_ar, member.company_name_en)
   const companyRole = boardText(ar, member.company_role_ar, member.company_role_en)
@@ -42,7 +45,7 @@ function BoardCard({ member, ar, index, count, slide }: { member: EoaBoardMember
   return <article className={styles.card} dir={ar ? 'rtl' : 'ltr'} aria-roledescription={slide ? (ar ? 'بطاقة عضو' : 'slide') : undefined} aria-label={`${name} · ${index + 1} / ${count}`}>
     <div className={styles.portrait}>
       {portrait && failedPortrait !== portrait
-        ? <Image src={portrait} alt={ar && member.slug === 'mohammed-alsolami' && (!member.portrait_alt_ar || member.portrait_alt_ar === member.portrait_alt_en) ? name : boardText(ar, member.portrait_alt_ar, member.portrait_alt_en) || name} width={240} height={240} sizes="144px" unoptimized={!portrait.startsWith('/')} style={{ objectPosition: member.portrait_position || '50% 35%' }} onError={() => setFailedPortrait(portrait)} />
+        ? <Image src={portrait} alt={ar && member.slug === 'mohammed-alsolami' && (!member.portrait_alt_ar || member.portrait_alt_ar === member.portrait_alt_en) ? name : boardText(ar, member.portrait_alt_ar, member.portrait_alt_en) || name} width={750} height={750} sizes="144px" unoptimized={!portrait.startsWith('/')} style={{ objectPosition: member.portrait_position || '50% 35%' }} onError={() => setFailedPortrait(portrait)} />
         : <span className={styles.portraitFallback} aria-hidden="true"><UserRound size={46} strokeWidth={1.3} /></span>}
     </div>
     {member.board_term && <span className={styles.term} dir="ltr">{member.board_term}</span>}

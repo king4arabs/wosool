@@ -18,6 +18,8 @@ use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
 use Throwable;
+use App\Services\{Mailer, MembershipRegistration};
+use Illuminate\Support\Facades\DB;
 
 class ApplicationController extends Controller
 {
@@ -68,41 +70,37 @@ class ApplicationController extends Controller
             'admin_notes' => ['nullable', 'string', 'max:5000'],
         ]);
 
-        $beforeState = $application->only(['status', 'admin_notes', 'reviewed_by', 'reviewed_at']);
-
-        $application->fill($data);
-        $application->reviewed_by = $request->user()->id;
-        $application->reviewed_at = now();
-
-        if ($application->status !== 'approved') {
-            $application->invite_token = null;
-            $application->invite_sent_at = null;
-        }
-
-        $application->save();
-
-        if ($application->status === 'approved' && $application->user?->hasVerifiedEmail() && ! $application->user->hasRole('member')) {
-            try {
-                $application->user->assignRole('member');
-            } catch (Throwable) {
-                // Role seeding might not be initialized in some environments.
+        $previousStatus = $application->status;
+        $application = DB::transaction(function () use ($request, $application, $data) {
+            $application = Application::whereKey($application->id)->lockForUpdate()->firstOrFail();
+            $user = $application->user;
+            if ($data['status'] === 'approved' && $user?->community_registration_started_at) {
+                abort_unless($user->hasVerifiedEmail() && $application->onboarding_data, 409, 'The applicant must verify email and complete registration before approval.');
             }
+            $beforeState = $application->only(['status', 'admin_notes', 'reviewed_by', 'reviewed_at']);
+            $application->fill($data);
+            $application->reviewed_by = $request->user()->id;
+            $application->reviewed_at = now();
+            if ($application->status !== 'approved') { $application->invite_token = null; $application->invite_sent_at = null; }
+            $application->save();
+            if ($application->status === 'approved') {
+                app(MembershipRegistration::class)->publish($application);
+            } elseif ($user?->community_registration_started_at && $application->onboarding_data) {
+                if ($user->hasRole('member')) $user->removeRole('member');
+                $profile = $user->founderProfile;
+                if ($profile) {
+                    $profile->update(['status' => 'pending', 'is_public' => false]);
+                    foreach ($profile->companies as $company) if ($company->founders()->count() === 1) $company->update(['is_public' => false]);
+                }
+            }
+            AdminAction::log(adminId: $request->user()->id, action: 'application.updated', entityType: 'application', entityId: $application->id, notes: "Application moved to {$application->status}", beforeState: $beforeState, afterState: $application->only(['status', 'admin_notes', 'reviewed_by', 'reviewed_at']));
+            return $application;
+        });
+        $notification = null;
+        if ($previousStatus !== $application->status && $application->user_id) {
+            $notification = Mailer::safely($application->email, ($application->status === 'approved' && $application->onboarding_data ? WosoolMail::membershipStatus(true) : WosoolMail::applicationUpdate(rtrim(config('app.frontend_url'), '/').($application->status === 'approved' ? '/dashboard' : '/onboarding'))), ['application_id' => $application->id]);
         }
-
-        AdminAction::log(
-            adminId: $request->user()->id,
-            action: 'application.updated',
-            entityType: 'application',
-            entityId: $application->id,
-            notes: "Application moved to {$application->status}",
-            beforeState: $beforeState,
-            afterState: $application->only(['status', 'admin_notes', 'reviewed_by', 'reviewed_at']),
-        );
-
-        return response()->json([
-            'message' => 'Application updated.',
-            'data' => new ApplicationResource($application->load('reviewer:id,name')),
-        ]);
+        return response()->json(['message' => 'Application updated.', 'notification_accepted' => $notification, 'data' => new ApplicationResource($application->load('reviewer:id,name'))]);
     }
 
     public function sendInvitation(Request $request, Application $application, FounderInvitationService $invitationService): JsonResponse

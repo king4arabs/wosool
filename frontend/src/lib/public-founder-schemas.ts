@@ -9,7 +9,7 @@ const timestamp = { type: ['string', 'null'], format: 'date-time' }
 const day = { type: ['string', 'null'], format: 'date' }
 const ref = (name: string) => ({ $ref: `#/components/schemas/${name}` })
 const nullableRef = (name: string) => ({ anyOf: [ref(name), { type: 'null' }] })
-const object = (properties: Record<string, object>) => ({ type: 'object', properties, required: Object.keys(properties), additionalProperties: false })
+const object = (properties: Record<string, object>) => ({ type: 'object', properties, required: Object.keys(properties).filter(key => key !== 'community_engagement_score'), additionalProperties: false })
 const strings = { type: 'array', items: text }
 const direction = { type: 'string', enum: ['up', 'down', 'flat'] }
 
@@ -91,19 +91,19 @@ export const publicFounderSchemas = {
     slug: text,
     display_name: nullableText,
     legal_name: text,
-    skills_tags: ref('FounderStringCollection'),
-    skills: ref('FounderStringCollection'),
+    skills_tags: { type: 'array', items: text, maxItems: 0, description: 'Sensitive member details are not exposed on anonymous directory endpoints.' },
+    skills: { type: 'array', items: text, maxItems: 0, description: 'Sensitive member details are not exposed on anonymous directory endpoints.' },
     tagline: nullableText,
     bio: nullableText,
     location: nullableText,
     country_code: nullableText,
     sector: nullableText,
     stage: nullableText,
-    linkedin_url: nullableText,
-    twitter_url: nullableText,
+    linkedin_url: { type: 'null' },
+    twitter_url: { type: 'null' },
     website_url: nullableText,
-    needs: ref('FounderStringCollection'),
-    offers: ref('FounderStringCollection'),
+    needs: { type: 'array', items: text, maxItems: 0, description: 'Sensitive member details are not exposed on anonymous directory endpoints.' },
+    offers: { type: 'array', items: text, maxItems: 0, description: 'Sensitive member details are not exposed on anonymous directory endpoints.' },
     is_verified: boolean,
     is_featured: boolean,
     is_public: { type: 'boolean', const: true },
@@ -112,19 +112,20 @@ export const publicFounderSchemas = {
     name: nullableText,
     activation_status: { type: 'string', enum: ['active', 'unclaimed'], description: 'Account activation state; an editorial profile alone is not a claimed account or member.' },
     can_communicate: boolean,
+    community_engagement_score: { type: ['integer', 'null'], minimum: 50, maximum: 100, description: 'Activation and recent community participation indicator. Null for unclaimed profiles or unavailable measurements. Private scorecard metrics remain hidden.' },
     source_urls: ref('FounderStringCollection'),
     source_reviewed_at: day,
-    claimed_at: timestamp,
-    user: nullableRef('FounderPublicUser'),
+    claimed_at: { type: 'null' },
+    user: { type: 'null' },
     primary_company_name: { ...nullableText, description: 'Existing serializer uses the primary company base name; it may differ from the localized company name.' },
     companies: { type: 'array', items: ref('FounderCompany') },
-    scorecard: nullableRef('FounderScorecard'),
+    scorecard: { type: 'null', description: 'Scorecard notes and metrics remain in member/admin APIs.' },
     created_at: timestamp,
     updated_at: timestamp,
   }),
   FounderPaginationMeta: {
     ...publicNewsSchemas.NewsPaginationMeta,
-    properties: { ...publicNewsSchemas.NewsPaginationMeta.properties, per_page: { type: 'integer', minimum: 1, maximum: 100 } },
+    properties: { ...publicNewsSchemas.NewsPaginationMeta.properties, per_page: { type: 'integer', minimum: 1, maximum: 24 } },
   },
   FounderCollection: { ...object({ data: { type: 'array', items: ref('PublicFounder') }, links: ref('PaginationLinks'), meta: ref('FounderPaginationMeta') }), additionalProperties: true },
   FounderDetail: { ...object({ data: ref('PublicFounder') }), additionalProperties: true },

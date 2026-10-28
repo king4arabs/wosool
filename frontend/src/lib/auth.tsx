@@ -118,6 +118,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           password,
           password_confirmation: passwordConfirmation,
           invite_token: inviteToken || undefined,
+          consent: true,
         }),
         signal: timeoutSignal(12000),
       })

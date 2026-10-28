@@ -26,13 +26,13 @@ class PublicFounderContractTest extends TestCase
     public function test_both_imported_catalogs_match_the_contract_in_both_locales(): void
     {
         $result = app(FounderDirectoryImporter::class)->run();
-        $this->assertSame(168, $result['founders_created']);
+        $this->assertSame(174, $result['founders_created']);
         $this->assertSame(0, User::count());
         $samples = [];
         foreach (['en', 'ar'] as $locale) {
-            foreach ([1, 2] as $page) {
-                $response = $this->getJson('/api/v1/founders?per_page=100&page='.$page, ['X-Locale' => $locale])
-                    ->assertOk()->assertJsonPath('meta.total', 168)->assertJsonCount($page === 1 ? 100 : 68, 'data');
+            foreach (range(1, 8) as $page) {
+                $response = $this->getJson('/api/v1/founders?per_page=24&page='.$page, ['X-Locale' => $locale])
+                    ->assertOk()->assertJsonPath('meta.total', 174)->assertJsonCount($page === 8 ? 6 : 24, 'data');
                 $samples[] = $this->sample($response, '/api/v1/founders');
             }
             $detail = $this->getJson('/api/v1/founders/salman-butt', ['X-Locale' => $locale])->assertOk()
@@ -55,7 +55,7 @@ class PublicFounderContractTest extends TestCase
             $response = $this->getJson('/api/v1/founders/'.$founder->slug)->assertOk()
                 ->assertJsonPath('data.activation_status', $kind === 'unclaimed' ? 'unclaimed' : 'active')
                 ->assertJsonPath('data.can_communicate', $kind !== 'unclaimed')
-                ->assertJsonPath('data.user.email', null)->assertJsonMissingPath('data.user.password')
+                ->assertJsonPath('data.user', null)->assertJsonMissingPath('data.user.password')
                 ->assertJsonMissingPath('data.user_id')->assertJsonMissingPath('data.invitation');
             $samples[] = $this->sample($response, '/api/v1/founders/{slug}');
         }
@@ -97,25 +97,20 @@ class PublicFounderContractTest extends TestCase
             $samples[] = $this->sample($this->getJson('/api/v1/founders?'.$query)->assertOk(), '/api/v1/founders');
         }
         $this->assertSame(1, $samples[2]['body']->meta->per_page);
-        $this->assertSame(100, $samples[3]['body']->meta->per_page);
+        $this->assertSame(24, $samples[3]['body']->meta->per_page);
         $this->assertSame([], $samples[4]['body']->data);
         $this->assertContracts($samples);
     }
 
-    public function test_scorecard_computed_fields_and_legacy_log_shapes_match_the_contract(): void
+    public function test_public_scorecards_and_operational_logs_are_never_serialized(): void
     {
         $founder = $this->founder('scorecard');
-        $scorecard = Scorecard::create(['founder_profile_id' => $founder->id, 'aggregate_score' => 30, 'momentum' => 35, 'growth' => 20, 'readiness' => 40, 'support_delta' => 70]);
-        $samples = [];
-        foreach ([[], [['aggregate_score' => 20, 'notes' => 'Fixture update']], ['previous' => ['aggregate_score' => 20]]] as $logs) {
-            $scorecard->update(['historical_logs' => $logs]);
-            $samples[] = $this->sample($this->getJson('/api/v1/founders/scorecard')->assertOk(), '/api/v1/founders/{slug}');
-        }
-        $scorecard->update(['aggregate_score' => 80, 'momentum' => 80, 'readiness' => 80, 'support_delta' => 10]);
-        $response = $this->getJson('/api/v1/founders/scorecard')->assertOk()->assertJsonCount(0, 'data.scorecard.insights.dynamic_alerts')
-            ->assertJsonPath('data.scorecard.insights.automated_action_suggestions.0.priority', 'normal');
-        $samples[] = $this->sample($response, '/api/v1/founders/{slug}');
-        $this->assertContracts($samples);
+        Scorecard::create(['founder_profile_id' => $founder->id, 'aggregate_score' => 30,
+            'momentum' => 35, 'growth' => 20, 'readiness' => 40, 'support_delta' => 70,
+            'historical_logs' => [['notes' => 'Private member progress note']]]);
+        $response = $this->getJson('/api/v1/founders/scorecard')->assertOk()
+            ->assertJsonPath('data.scorecard', null)->assertDontSee('Private member progress note');
+        $this->assertContracts([$this->sample($response, '/api/v1/founders/{slug}')]);
     }
 
     public function test_contract_rejects_drift_missing_fields_and_nested_account_or_company_leaks(): void
@@ -129,7 +124,7 @@ class PublicFounderContractTest extends TestCase
             $sample = unserialize(serialize($original));
             match ($case) {
                 'id' => $sample['body']->data->id = 'invalid',
-                'email' => $sample['body']->data->user->email = 'private@example.test',
+                'email' => $sample['body']->data->user = (object) ['id' => 5, 'name' => 'Member', 'email' => 'private@example.test'],
                 'invitation' => $sample['body']->data->invitation = ['token' => 'fixture'],
                 'company_private' => $sample['body']->data->companies[0]->metrics_summary = ['private' => true],
                 default => null,

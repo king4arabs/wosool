@@ -44,14 +44,21 @@ class SettingsController extends Controller
             'visibility.allow_intro_requests' => ['required', 'boolean'],
             'visibility.show_email_to_matches' => ['required', 'boolean'],
             'visibility.discoverable_for_matching' => ['required', 'boolean'],
+        ], [], [
+            'account.name' => __('messages.validation.settings.attributes.name'),
+            'account.email' => __('messages.validation.settings.attributes.email'),
+            'account.current_password' => __('messages.validation.settings.attributes.current_password'),
+            'account.new_password' => __('messages.validation.settings.attributes.new_password'),
         ]);
 
         if (! empty($data['account']['new_password'])) {
             $current = (string) ($data['account']['current_password'] ?? '');
             if (! Hash::check($current, $user->getAuthPassword())) {
+                $message = __('messages.validation.settings.current_password_incorrect');
+
                 return response()->json([
-                    'message' => 'The current password is incorrect.',
-                    'errors' => ['account.current_password' => ['The current password is incorrect.']],
+                    'message' => $message,
+                    'errors' => ['account.current_password' => [$message]],
                 ], 422);
             }
         }

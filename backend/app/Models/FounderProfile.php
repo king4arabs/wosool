@@ -97,6 +97,11 @@ class FounderProfile extends Model
         return $this->hasMany(IntroductionLedger::class, 'source_founder_id');
     }
 
+    public function societyPosts(): HasMany
+    {
+        return $this->hasMany(SocietyPost::class, 'author_founder_profile_id');
+    }
+
     public function inboundIntros(): HasMany
     {
         return $this->hasMany(IntroductionLedger::class, 'target_founder_id');
