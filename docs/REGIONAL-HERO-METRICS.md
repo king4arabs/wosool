@@ -18,3 +18,9 @@ Before publication, expand the comparable data coverage or explicitly accept the
 ## Public-copy revision
 
 Removed public methodology/review prose from the hero and the accelerator editorial review date. Source links, scope labels and reporting periods remain functional product information. Saudi cards now use Crunchbase's Saudi Arabia Startups hub: 781 founders and 705 for-profit companies, from the retrieved October 2026 snapshot. Both are explicitly labeled "Tracked by Crunchbase"; they are database coverage counts, not census estimates. Search snippets showed a different founder count, so the opened source page's count was used. Other regions remain unpopulated rather than borrowing Saudi figures or inventing estimates. No unavailable-data explanation is displayed publicly.
+
+## Approved GCC model
+
+The owner approved a revenue-growth planning estimate only: Saudi SME revenue growth 7% × 1.12 = 7.84%. This is a relative 12% uplift, not 12 percentage points. Public copy says Estimated revenue growth / نمو الإيرادات التقديري; the tooltip states the calculation and that this is not measured GCC growth. Keep this modeled figure distinct from sourced observations during monthly refreshes; do not automatically substitute it for actual GCC revenue statistics.
+
+Other GCC cells use the researched observations: Crunchbase GCC Startups hub, 2,977 founders and 2,430 for-profit companies (retrieved October 2026); Lucidity Insights, 342 funding rounds in 2025 versus 513 in 2024, -33.3%. Lucidity's wider financing coverage includes debt and corporate rounds, so the scope label says Funding rounds. No Saudi uplift was applied to those figures. Formatting now treats founder/company counts as counts and preserves negative growth signs.
