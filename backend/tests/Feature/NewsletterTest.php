@@ -29,6 +29,7 @@ class NewsletterTest extends TestCase
         $this->assertNotSame($token, $s->confirmation_hash);
         $this->postJson('/api/v1/newsletter/subscribe', ['email' => $s->email, 'locale' => 'ar', 'consent' => true])->assertStatus(202);
         Mail::assertSentCount(1);
+        app(Newsletter::class)->dispatch(true); Mail::assertSentCount(1);
         $this->postJson('/api/v1/newsletter/confirm', ['id' => $s->id, 'token' => str_repeat('x',64)])->assertUnprocessable();
         $this->postJson('/api/v1/newsletter/confirm', ['id' => $s->id, 'token' => $token])->assertOk();
         $this->assertSame('active', $s->fresh()->status); Mail::assertSentCount(2);
@@ -56,6 +57,28 @@ class NewsletterTest extends TestCase
         $service->dispatch(true); Mail::assertSentCount(1);
         $this->assertFalse(UserSetting::where('user_id',$user->id)->first()->notifications['weekly_digest']);
         $this->assertSame('unsubscribed', $s->fresh()->status);
+    }
+    public function test_list_and_member_email_are_deduplicated_and_expired_confirmation_is_rejected(): void
+    {
+        $this->member('same@example.com');
+        NewsletterSubscriber::create(['email' => 'same@example.com', 'locale' => 'en', 'status' => 'active', 'explicit_opt_in' => true, 'confirmed_at' => now()]);
+        app(Newsletter::class)->dispatch(false); app(Newsletter::class)->dispatch(false);
+        Mail::assertSentCount(1); $this->assertDatabaseCount('newsletter_subscribers',1);
+        $this->postJson('/api/v1/newsletter/subscribe', ['email' => 'expired@example.com', 'locale' => 'en', 'consent' => true])->assertStatus(202);
+        $s = NewsletterSubscriber::where('email','expired@example.com')->firstOrFail();
+        parse_str(parse_url(Mail::sent(NewsletterMail::class)->last()->actionUrl, PHP_URL_FRAGMENT), $parts);
+        $this->travel(49)->hours();
+        $this->postJson('/api/v1/newsletter/confirm', ['id' => $s->id, 'token' => $parts['token']])->assertUnprocessable();
+        $this->assertSame('pending',$s->fresh()->status);
+    }
+    public function test_site_correspondence_goes_to_info_with_full_message_and_sender_reply_address(): void
+    {
+        $body = str_repeat('Message ', 210);
+        $this->postJson('/api/v1/contact', ['name' => 'Sender', 'email' => 'sender@example.com', 'category' => 'general', 'subject' => 'Question', 'message' => $body])->assertCreated();
+        Mail::assertSent(\App\Mail\WosoolMail::class, function ($mail) use ($body) {
+            return $mail->kind === 'team-alert' && $mail->hasTo('info@wosool.org') && $mail->replyToAddress === 'sender@example.com'
+                && collect($mail->data['details'])->contains(fn ($row) => $row['value'] === trim($body));
+        });
     }
     public function test_log_mailer_does_not_pretend_to_send_and_templates_have_branding(): void
     {

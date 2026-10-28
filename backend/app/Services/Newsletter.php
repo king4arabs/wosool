@@ -82,7 +82,7 @@ final class Newsletter
 
     public function syncMembers(): void
     {
-        User::whereNotNull('email_verified_at')->chunkById(200, function ($users) {
+        User::with(['founderProfile', 'roles'])->whereNotNull('email_verified_at')->chunkById(200, function ($users) {
             foreach ($users as $user) {
                 if (! $this->activeMember($user) || ! $this->wantsDigest($user)) continue;
                 $s = NewsletterSubscriber::firstOrCreate(['email' => Str::lower(trim($user->email))], ['status' => 'active', 'confirmed_at' => now(), 'user_id' => $user->id]);
@@ -131,7 +131,8 @@ final class Newsletter
 
     private function deliver(NewsletterSubscriber $subscriber, string $campaign, string $kind, array $stories = []): ?string
     {
-        if (! $this->eligible($subscriber->fresh())) return null;
+        $fresh = $subscriber->fresh();
+        if (! $fresh || ! $this->eligible($fresh)) return null;
         DB::table('newsletter_deliveries')->insertOrIgnore(['subscriber_id' => $subscriber->id, 'campaign' => $campaign, 'status' => 'pending', 'attempts' => 0, 'created_at' => now(), 'updated_at' => now()]);
         $row = DB::table('newsletter_deliveries')->where('subscriber_id', $subscriber->id)->where('campaign', $campaign);
         // A sending row is deliberately not reclaimed: a crash after SMTP acceptance is ambiguous.

@@ -23,6 +23,7 @@ try {
       return route.fulfill({json:{data:[],message:'OK'}})
     })
     await page.goto(origin+'/contact')
+    await page.waitForFunction(l=>document.documentElement.lang===l && document.querySelectorAll('#newsletter-email').length===1,locale)
     await page.locator('#newsletter-email').fill('reader@example.com')
     const form=page.locator('form').filter({has:page.locator('#newsletter-email')})
     await form.locator('[name=newsletter_consent]').check();await form.locator('button').click()
