@@ -22,6 +22,13 @@ class ApiSecurityHeaders
             $response->headers->set('X-Robots-Tag', 'noindex, nofollow');
         }
 
+        // Only the HTML profile pages should be indexable; API headers alone
+        // are a crawler deterrent, never an authentication mechanism.
+        if (preg_match('#^(?:api/)?v1/(?:founders|companies)(?:/|$)#', $request->decodedPath())) {
+            $response->headers->set('Cache-Control', 'private, no-store, max-age=0');
+            $response->headers->set('X-Robots-Tag', 'noindex, nofollow, noarchive');
+        }
+
         return $response;
     }
 }
