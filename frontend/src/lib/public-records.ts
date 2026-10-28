@@ -1,6 +1,7 @@
 import type { NewsItem } from "../types"
 import { mapNewsItem, type ApiNewsItem } from "./content-api"
 import { curatedNews } from "./news-feed"
+import { isDirectoryRecordVisible } from './directory-geography'
 
 /** Never restore a snapshot after an authoritative 404/410 or access denial. */
 export async function readPublicNews(slug: string, apiUrl: string, request: typeof fetch = fetch): Promise<{ item: NewsItem | null; unavailable: boolean }> {
@@ -21,6 +22,7 @@ type PublicRecord = { slug: string; updated_at?: string }
 export type SitemapKind = "news" | "founders" | "companies" | "events" | "programs" | "ecosystem"
 
 export function isIndexableRecord(kind: SitemapKind, record: Record<string, unknown>): boolean {
+  if ((kind === 'founders' || kind === 'companies') && !isDirectoryRecordVisible(record)) return false
   if (kind === "ecosystem") return ["verified", "expired"].includes(String(record.verification_status))
   if (kind === "programs") return record.visibility === "public" && ["published", "applications_open", "applications_closed", "active", "completed", "cancelled"].includes(String(record.status_flow))
   if (record.is_public !== true) return false

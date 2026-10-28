@@ -48,6 +48,7 @@ class FounderResource extends JsonResource
             'name' => $localized['name'] ?? $this->display_name ?? $this->user?->name,
             'activation_status' => $this->communityActive() ? 'active' : ($this->status === 'suspended' ? 'suspended' : 'unclaimed'),
             'can_communicate' => $this->communityActive(),
+            'community_engagement_score' => \App\Support\CommunityEngagement::score($this->resource),
             'source_urls' => $this->source_urls ?? [],
             'source_reviewed_at' => $this->source_reviewed_at?->toDateString(),
             'claimed_at' => $publicDirectory ? null : $this->claimed_at?->toIso8601String(),

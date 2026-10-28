@@ -3,11 +3,13 @@
 import type { Company } from "@/types"
 import { useLocale } from "@/lib/locale"
 import { ProfileCard } from "./ProfileCard"
+import { isDirectoryRecordVisible } from '@/lib/directory-geography'
 
 export function CompanyCard({ company, linkToProfile = true }: { company: Company; linkToProfile?: boolean }) {
   const { locale } = useLocale()
   const ar = locale === "ar"
-  const founder = company.founders?.[0]
+  const founder = company.founders?.find(isDirectoryRecordVisible)
+  if (!isDirectoryRecordVisible(company)) return null
 
   const signals = [
     company.isHiring
@@ -34,6 +36,7 @@ export function CompanyCard({ company, linkToProfile = true }: { company: Compan
         companyBrief: company.description,
         website: company.website,
         location: company.location,
+        countryCode: company.countryCode || founder?.countryCode,
         sector: company.sector,
         stage: company.stage,
         foundedYear: company.foundedYear || undefined,

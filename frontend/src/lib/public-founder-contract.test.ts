@@ -45,14 +45,15 @@ test('anonymous founder contract excludes member scorecards and historical notes
   assert.equal(detail({ ...founder(), scorecard: null }).valid, true)
 })
 
-test('founder pagination caps each response at 24 records and 404s without promising malformed-query 422s', () => {
+test('founder pagination caps each response at 24 records and validates filter errors', () => {
   const body = { data: [], links: { first: '/founders?page=1', last: '/founders?page=1', prev: null, next: null }, meta: {
     current_page: 8, from: null, last_page: 1, links: [], path: '/api/v1/founders', per_page: 24, to: null, total: 0,
   } }
   assert.equal(validatePublicResponse('/api/v1/founders', 200, body).valid, true)
   assert.equal(validatePublicResponse('/api/v1/founders', 200, { ...body, meta: { ...body.meta, per_page: 25 } }).valid, false)
   assert.equal(validatePublicResponse('/api/v1/founders/{slug}', 404, { message: 'Not found' }).valid, true)
-  assert.throws(() => validatePublicResponse('/api/v1/founders', 422, {}), /No JSON response schema/)
+  assert.equal(validatePublicResponse('/api/v1/founders', 422, {}).valid, false)
+  assert.equal(validatePublicResponse('/api/v1/founders', 422, { message: 'Invalid filter', errors: { country: ['Use a two-letter country code.'] } }).valid, true)
 })
 
 test('nested company years accept observed database representations without coercing arbitrary strings', () => {

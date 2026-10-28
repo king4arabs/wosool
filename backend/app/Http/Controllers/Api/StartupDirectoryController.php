@@ -20,7 +20,7 @@ class StartupDirectoryController extends Controller
             'sector' => 'sometimes|string|max:100',
             'source' => 'sometimes|string|max:40',
         ]);
-        $query = StartupDirectoryEntry::where('is_published', true)
+        $query = \App\Support\DirectoryGeography::visible(StartupDirectoryEntry::query(), 'profile->country_code', ['profile->country_en', 'profile->country_ar'])->where('is_published', true)
             ->where('website_status', 'active')
             ->whereIn('revenue_status', ['reported', 'financial_statement'])
             // Imported rows are validated, but older/editor-managed records may

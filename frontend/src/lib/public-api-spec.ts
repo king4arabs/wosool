@@ -30,6 +30,7 @@ const founderList = (...args: Parameters<typeof list>) => ({ get: {
   ...list(...args).get,
   responses: {
     '200': { description: 'Anonymous public profiles with private account and scorecard fields redacted', content: json(schemaRef('FounderCollection')) },
+    '422': { description: 'Invalid country, region or search parameters', content: json(schemaRef('PublicValidationError')) },
     '429': newsErrors['429'],
   },
 } })
@@ -51,14 +52,14 @@ const startupList = (...args: Parameters<typeof list>) => ({ get: {
 
 export const publicApiSpec = {
   openapi: "3.1.0",
-  info: { title: "Wosool public read API", version: "1.5.0", description: "Read-only discovery contract for anonymous requests without credentials. News, founder, standalone company and revenue-qualified startup-directory fields are tested against Laravel responses. Public founder details redact member account identifiers, legal identities, social contacts, private matching fields and all scorecards. Founder relationships expose only active public profiles. No API key is required. Authenticated member/admin variants use Sanctum sessions, CSRF and server-side authorization and are outside this specification." },
+  info: { title: "Wosool public read API", version: "1.6.0", description: "Read-only discovery contract for anonymous requests without credentials. News, founder, standalone company and revenue-qualified startup-directory fields are tested against Laravel responses. Public founder details redact member account identifiers, legal identities, social contacts, private matching fields and all scorecards. Founder relationships expose only active public profiles. No API key is required. Authenticated member/admin variants use Sanctum sessions, CSRF and server-side authorization and are outside this specification." },
   servers: [{ url: "/", description: "Same-origin Laravel proxy" }],
   security: [],
   components: { schemas: { ...publicNewsSchemas, ...publicFounderSchemas, ...publicCompanySchemas, ...publicStartupSchemas } },
   paths: {
     "/api/health": { get: { operationId: "getHealth", summary: "Service liveness", responses: { "200": { description: "Process responds; does not prove database readiness", content: json({ type: "object", required: ["status", "version", "timestamp"], properties: { status: { const: "healthy" }, version: string, timestamp: { type: "string", format: "date-time" } } }) } } } },
     "/api/ready": { get: { operationId: "getReadiness", summary: "Database and migration readiness", responses: { "200": { description: "Required checks passed", content: json({ type: "object", properties: { status: { const: "ready" } } }) }, "503": { description: "Database, schema or program setup unavailable", content: json({ type: "object", properties: { status: { const: "unavailable" } } }) } } } },
-    "/api/v1/founders": founderList("listFounders", "Discover public founders", "Anonymous active, public profiles. Editorial profiles do not establish community membership. per_page is clamped to 1–24. Malformed query handling is not yet a validated 422 contract.", [page, query("per_page", { type: "integer", minimum: 1, maximum: 24, default: 12 }, "Page size"), ...["sector", "stage", "search"].map(name => query(name, string, "Optional filter")), query("community", { type: "boolean" }, "Limit to claimed/member profiles"), query("featured", { type: "boolean" }, "Only featured profiles")]),
+    "/api/v1/founders": founderList("listFounders", "Discover public founders", "Anonymous active, public profiles. Editorial profiles do not establish community membership. Country and region filters run before pagination; country falls back to the primary company. The optional engagement indicator measures activation and recent approved participation, independently of private operating scorecards. per_page is clamped to 1–24.", [page, query("per_page", { type: "integer", minimum: 1, maximum: 24, default: 12 }, "Page size"), ...["sector", "stage", "search"].map(name => query(name, string, "Optional filter")), query("country", { type: "string", minLength: 2, maxLength: 2 }, "ISO country code"), query("region", { type: "string", enum: ["saudi", "gcc", "mena", "other"] }, "Region"), query("facets", { type: "boolean" }, "Include full-directory sector and stage options"), query("community", { type: "boolean" }, "Limit to claimed/member profiles"), query("featured", { type: "boolean" }, "Only featured profiles")]),
     "/api/v1/founders/{slug}": { get: { operationId: 'getFounder', summary: 'Read a public founder profile', parameters: [slug], responses: {
       '200': { description: 'Anonymous active public founder with currently public company relationships', content: json(schemaRef('FounderDetail')) },
       '404': { description: 'Missing, private, inactive or deleted profile', content: json(schemaRef('PublicApiError')) },
