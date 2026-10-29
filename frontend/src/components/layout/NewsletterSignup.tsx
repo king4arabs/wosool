@@ -12,9 +12,11 @@ export function NewsletterSignup() {
   const [failed, setFailed] = useState(false)
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault(); if (busy) return
+    const consent = new FormData(event.currentTarget).get('newsletter_consent') === 'on'
+    if (!consent) return
     setBusy(true); setMessage(''); setFailed(false)
     try {
-      await api.post('/newsletter/subscribe', { email: email.trim(), locale, consent: true })
+      await api.post('/newsletter/subscribe', { email: email.trim(), locale, consent })
       setMessage(ar ? 'تحقق من بريدك لتأكيد الاشتراك. إذا كنت مشتركًا بالفعل، ستستمر رسائلك كالمعتاد.' : 'Check your inbox to confirm. Existing subscribers will continue receiving their updates.')
       setEmail('')
     } catch (e) { setFailed(true); setMessage(e instanceof Error ? e.message : ar ? 'تعذر الاشتراك. حاول مجددًا.' : 'Unable to subscribe. Please retry.') }
@@ -26,7 +28,7 @@ export function NewsletterSignup() {
     <form onSubmit={submit} className="mt-5 space-y-3">
       <label className="block text-sm text-white" htmlFor="newsletter-email">{ar ? 'البريد الإلكتروني' : 'Email address'}</label>
       <div className="flex flex-col gap-3 sm:flex-row"><input id="newsletter-email" name="newsletter_email" type="email" autoComplete="email" required maxLength={255} value={email} onChange={e => setEmail(e.target.value)} dir="ltr" placeholder="name@example.com" disabled={busy} className="min-h-12 min-w-0 flex-1 rounded-xl border border-slate-300 bg-white px-4 text-slate-900 outline-offset-4" /><button disabled={busy} className="min-h-12 shrink-0 rounded-xl bg-indigo-600 px-6 font-bold text-white hover:bg-indigo-500 disabled:opacity-60">{busy ? (ar ? 'جارٍ الإرسال…' : 'Sending…') : (ar ? 'اشترك في النشرة' : 'Subscribe')}</button></div>
-      <label className="flex items-start gap-3 text-sm leading-6 text-slate-300"><input name="newsletter_consent" type="checkbox" required className="mt-1 h-4 w-4 shrink-0" /><span>{ar ? 'أوافق على تلقي نشرة وصول، ويمكنني إلغاء الاشتراك في أي وقت.' : 'I agree to receive Wosool updates and can unsubscribe at any time.'}</span></label>
+      <label className="flex items-start gap-3 text-sm leading-6 text-slate-300"><input name="newsletter_consent" type="checkbox" required disabled={busy} className="mt-1 h-4 w-4 shrink-0" /><span>{ar ? 'أوافق على تلقي نشرة وصول، ويمكنني إلغاء الاشتراك في أي وقت.' : 'I agree to receive Wosool updates and can unsubscribe at any time.'}</span></label>
       {message && <p role={failed ? 'alert' : 'status'} className={`text-sm leading-7 ${failed ? 'text-rose-200' : 'text-emerald-200'}`}>{message}</p>}
     </form>
   </section>

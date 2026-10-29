@@ -71,6 +71,16 @@ jobs:
         run: node scripts/check-founder-outreach.mjs
       - name: Verify country filters and responsive founder card presentation
         run: node scripts/check-founder-presentation.mjs
+      - name: Save founder logo and newsletter browser previews
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: founder-newsletter-previews
+          path: |
+            /tmp/founder-logos-*.png
+            /tmp/newsletter-*.png
+          retention-days: 3
+          if-no-files-found: ignore
       - name: Verify directory visit shuffle, bilingual name search and rightward movement
         run: node scripts/check-founder-directory-discovery.mjs
       - name: Verify bilingual global events, source links and invitation filters
@@ -169,6 +179,16 @@ jobs:
       - name: Install shared OpenAPI contract validator
         run: npm --prefix ../frontend ci --ignore-scripts
       - run: composer run test
+        env:
+          NEWSLETTER_PREVIEW_DIR: /tmp/newsletter-mail-previews
+      - name: Save bilingual email template previews
+        if: matrix.php == '8.5.12'
+        uses: actions/upload-artifact@v4
+        with:
+          name: newsletter-email-previews
+          path: /tmp/newsletter-mail-previews/*.html
+          retention-days: 3
+          if-no-files-found: error
       - name: Verify Laravel deployment caches compile
         env:
           APP_ENV: production

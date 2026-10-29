@@ -1,3 +1,4 @@
+import companyLogos from '../data/company-logos.json'
 import { publicWebsite } from './community-display'
 
 // Resolve legacy API records to reviewed, local transparent artwork as well as
@@ -23,7 +24,16 @@ export function brandLogoSource(src?: string) {
   return candidate ? transparentSources[candidate] || candidate : undefined
 }
 
+/** Exact official host matching prevents similarly named companies receiving the wrong logo. */
+export function reviewedCompanyLogo(website?: string) {
+  const safe = publicWebsite(website)
+  if (!safe) return undefined
+  const host = new URL(safe).hostname.toLowerCase().replace(/^www\./, '')
+  return companyLogos.find(logo => new URL(logo.website).hostname.toLowerCase().replace(/^www\./, '') === host)?.src
+}
+
 /** Original white wordmarks need the existing themed dark header for contrast. */
-export function brandLogoNeedsDarkSurface(src?: string) {
-  return ['/startup-directory/rasan-logo.png', '/partners/lamarka.png'].includes(brandLogoSource(src) ?? '')
+export function brandLogoNeedsDarkSurface(src?: string, website?: string) {
+  const source = brandLogoSource(src) || reviewedCompanyLogo(website)
+  return ['/startup-directory/rasan-logo.png', '/partners/lamarka.png'].includes(source ?? '') || companyLogos.some(logo => logo.src === source && logo.tone === 'dark')
 }

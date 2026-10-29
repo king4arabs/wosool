@@ -23,6 +23,7 @@ import { type AdminDashboardResponse, formatDate } from "@/lib/admin"
 import { useLocale } from "@/lib/locale"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
+import { NewsletterStatus } from '@/components/admin/NewsletterStatus'
 import { dateLocale } from "@/lib/date-locale"
 
 const copy = {
@@ -194,6 +195,7 @@ export default function AdminPage() {
         ].map(item=><Link key={item.title} href={item.href} className={`rounded-2xl border p-5 transition hover:border-indigo-400 ${item.tone}`}><div className="flex justify-between gap-3"><strong className="text-3xl font-bold">{item.count}</strong><ArrowUpRight size={18}/></div><h3 className="mt-3 text-sm font-bold">{item.title}</h3><p className="mt-2 text-xs leading-6 opacity-75">{item.body}</p></Link>)}</div>
       </section>
       {dashboard?.operations && <section className="rounded-3xl border border-slate-200 bg-white p-5 sm:p-6" aria-labelledby="follow-ups-title"><div className="flex flex-wrap justify-between gap-3"><h2 id="follow-ups-title" className="text-xl font-bold">{ar ? 'جدول المتابعة المستحقة' : 'Due follow-up schedule'}</h2><p className="text-sm text-slate-500">{dashboard.operations.public_members} {ar ? 'عضو ظاهر في الدليل' : 'members visible in directory'} · {dashboard.operations.upcoming_events} {ar ? 'فعاليات خلال 7 أيام' : 'events in the next 7 days'}</p></div>{dashboard.operations.follow_ups.length ? <ul className="mt-4 divide-y divide-slate-100">{dashboard.operations.follow_ups.map(item => <li key={item.id}><Link href={`/admin/${item.kind}?record=${item.id}`} className="flex flex-wrap items-center justify-between gap-3 rounded-xl py-4 text-sm hover:bg-slate-50"><div><strong className="text-indigo-700">{item.name}</strong><p className="mt-1 text-xs text-slate-500">{item.organization} · {item.owner?.name ?? (ar ? 'دون مسؤول' : 'Unassigned')}</p></div><span className="font-semibold text-slate-600">{item.kind.toUpperCase()} · {item.follow_up_on}</span></Link></li>)}</ul> : <p className="mt-4 text-sm text-slate-500">{ar ? 'لا توجد متابعات مستحقة اليوم.' : 'No follow-ups are due today.'}</p>}</section>}
+      {dashboard?.operations?.newsletter && <NewsletterStatus status={dashboard.operations.newsletter} ar={ar} />}
       <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4" aria-label={ar ? "مؤشرات المنصة" : "Platform metrics"}>
         {stats.map(({ label, value, detail, icon: Icon, accent }) => (
           <article key={label} className="group relative overflow-hidden rounded-[var(--radius-card)] border border-[var(--border-soft)] bg-[var(--surface)] p-5 shadow-[var(--shadow-card)] transition-transform hover:-translate-y-1 motion-reduce:transform-none">

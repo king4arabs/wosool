@@ -6,3 +6,5 @@
 .logo[data-compact] { max-width:144px; margin-inline:auto; }
 .fallback { display:block; max-width:100%; color:inherit; font-size:14px; font-weight:800; line-height:1.5; text-align:center; overflow-wrap:anywhere; }
 @media(max-width:600px) { .logo .eo { width:134px; } }
+
+.darkSurface { background:#111b35; border-radius:8px; }

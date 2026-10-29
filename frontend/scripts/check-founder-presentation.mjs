@@ -15,7 +15,7 @@ async function eventually(check) {
 }
 const record = (id, code, active = false) => ({ id, slug: `founder-${id}`, name: `Founder ${id}`, country_code: code, position: 'Founder', bio: 'Builds useful software.', sector: 'Software', is_public: true, status: 'active', is_verified: false, is_featured: false,
   avatar_url: id === 1 ? '/eoa/board/mazin-alrukayani-original.jpeg' : 'https://example.com/missing-portrait.jpg', activation_status: active ? 'active' : 'unclaimed', community_engagement_score: active ? 75 : 88,
-  companies: [{ id, slug: `company-${id}`, name: `Company ${id}`, country_code: code ?? 'JP', logo_url: id === 1 ? '/startup-directory/salla-logo.png' : 'https://example.com/missing-logo.svg', website: 'https://example.com', location: 'Company location', sector: 'Software', description: 'A company building useful products.', pivot: { is_primary: true } }] })
+  companies: [{ id, slug: `company-${id}`, name: `Company ${id}`, country_code: code ?? 'JP', logo_url: id === 1 ? '/startup-directory/salla-logo.png' : id === 2 ? null : 'https://example.com/missing-logo.svg', website: id === 2 ? 'https://zid.sa/en/' : id === 3 ? 'https://grubtech.com/en' : 'https://example.com', location: 'Company location', sector: 'Software', description: 'A company building useful products.', pivot: { is_primary: true } }] })
 const records = [record(1, 'SA', true), record(2, 'AE'), record(3, null), record(4, 'IR'), record(5, 'IL')]
 let browser
 try {
@@ -64,6 +64,23 @@ try {
     }))
     assert.ok(geometry.every(card => card.flagInside && card.separated && card.portraitFit && card.logoFit), JSON.stringify({ locale, width, geometry }))
     if (process.env.PRESENTATION_SCREENSHOT_DIR && [390, 1440].includes(width)) await directory.screenshot({ path: `${process.env.PRESENTATION_SCREENSHOT_DIR}/founders-${locale}-${width}.png` })
+    await directory.getByRole('button', { name: locale === 'ar' ? 'عرض جميع المؤسسين' : 'View all founders', exact: true }).click()
+    const grid = directory.locator('section[id]')
+    await eventually(async () => await grid.locator('article').count() === 3)
+    for (const src of ['/company-logos/zid.svg', '/company-logos/grubtech.svg']) {
+      const logo = grid.locator(`img[src="${src}"]`)
+      await logo.scrollIntoViewIfNeeded()
+      await eventually(() => logo.evaluate(img => img.complete && img.naturalWidth > 0))
+    }
+    const gridGeometry = await grid.locator('article').evaluateAll(cards => cards.map(card => {
+      const rect = card.getBoundingClientRect(); const logo = card.querySelector('[data-brand-logo]').getBoundingClientRect()
+      return { top: rect.top, height: rect.height, logoHeight: logo.height, inside: logo.left >= rect.left && logo.right <= rect.right }
+    }))
+    assert.ok(gridGeometry.every(card => card.inside && card.logoHeight >= 56), JSON.stringify(gridGeometry))
+    if (width === 1440) assert.ok(gridGeometry.every(card => Math.abs(card.height - gridGeometry[0].height) < 1), 'Grid cards in the same row align')
+    assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth + 1), false)
+    if ([390, 1440].includes(width)) await grid.screenshot({ path: `/tmp/founder-logos-${locale}-${width}.png` })
+    await grid.getByRole('button', { name: locale === 'ar' ? 'إغلاق الشبكة' : 'Close grid', exact: true }).click()
     await countries.selectOption('JP')
     await eventually(async () => countryRequests.includes('JP') && await directory.locator('article').count() === 1)
     assert.equal(await directory.locator('[data-country="JP"]').count(), 1)

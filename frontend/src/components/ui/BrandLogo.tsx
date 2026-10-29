@@ -3,7 +3,7 @@
 import Image from "next/image"
 import { useState } from "react"
 import { EoaLogo } from "@/components/eoa/Logo"
-import { brandLogoSource } from "@/lib/brand-logos"
+import { brandLogoSource, reviewedCompanyLogo, brandLogoNeedsDarkSurface } from "@/lib/brand-logos"
 import { publicWebsite } from '@/lib/community-display'
 import styles from "./BrandLogo.module.css"
 
@@ -22,12 +22,12 @@ export function BrandLogo({ src, name, website, className = "", loading }: { src
   const officialWebsite = publicWebsite(website)
   const favicon = officialWebsite ? new URL('/favicon.ico', officialWebsite).href : undefined
   const primarySource = brandLogoSource(src)
-  const source = [primarySource, favicon].find(candidate => candidate && !failed.includes(candidate))
+  const source = [primarySource, reviewedCompanyLogo(website), favicon].find(candidate => candidate && !failed.includes(candidate))
   const fail = () => { if (source) setFailed(previous => [...previous, source]) }
   const eo = source && ['/partners/eo-riyadh.png', '/partners/eo-riyadh-inverse.png', '/partners/eo-riyadh-supplied.png'].includes(source)
   const frame = source ? frames[source] : undefined
 
-  return <span className={`${styles.logo} ${className}`} data-brand-logo data-compact={source === '/startup-directory/rasan-logo.png' || undefined}>
+  return <span className={`${styles.logo} ${brandLogoNeedsDarkSurface(source) ? styles.darkSurface : ''} ${className}`} data-brand-logo data-compact={source === '/startup-directory/rasan-logo.png' || undefined}>
     {eo ? <EoaLogo inverse={source === '/partners/eo-riyadh-inverse.png'} className={styles.eo} loading={loading} /> : source ? frame ? <svg
       className={styles.framed}
       viewBox={frame.viewBox}

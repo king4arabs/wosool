@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
 import { readFileSync } from 'node:fs'
+import { reviewedCompanyLogo } from './brand-logos'
 import historicalProfiles from '../data/founder-spotlight.json'
 import additionalProfiles from '../data/founder-spotlight-expansion-2026-10-16.json'
 import discoveryProfiles from '../data/founder-spotlight-expansion-2026-10-22.json'
@@ -90,7 +91,7 @@ test('country founder cards have factual provenance and the latest update adds t
     assert.ok(row.source_urls.includes(row.source_url))
     assert.equal(new URL(row.website).protocol, 'https:')
     assert.equal(row.portrait_url, null) // No unlicensed likenesses.
-    assert.equal(row.logo_url, null) // Use existing safe brand fallback.
+    assert.equal(row.logo_url, reviewedCompanyLogo(row.website) ?? null)
     assert.equal(row.traction_en, null) // Do not invent company performance.
     assert.equal(row.traction_ar, null)
     assert.equal(row.traction_source_url, null)
@@ -117,7 +118,7 @@ test('reconciled worldwide source batch adds two founders in 30 new countries wi
     assert.equal(new URL(item.website).protocol, 'https:')
     assert.equal(new URL(item.source_url).protocol, 'https:')
     assert.equal(item.portrait_url, null)
-    assert.equal(item.logo_url, null)
+    assert.equal(item.logo_url, reviewedCompanyLogo(item.website) ?? null)
     assert.equal(item.traction_en, null)
     assert.equal(item.traction_ar, null)
     assert.equal(item.traction_source_url, null)
