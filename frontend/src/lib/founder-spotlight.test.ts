@@ -90,3 +90,28 @@ test('country founder cards have factual provenance and the latest update adds t
     assert.ok(!('isVerified' in row) && !('member' in row) && !('email' in row))
   }
 })
+
+test('worldwide editorial additions keep two source-backed founders per new country without invented membership or performance', () => {
+  const worldwide = discoveryProfiles.slice(62)
+  const expected = ['IQ', 'PS', 'MA', 'TN', 'DZ', 'PK', 'IN', 'BD', 'JP', 'MY', 'PH', 'ID', 'SG', 'NG', 'KE', 'ZA',
+    'GB', 'FR', 'DE', 'NL', 'SE', 'ES', 'DK', 'NO', 'FI', 'IE', 'AT', 'BE', 'GR', 'CH', 'CO', 'CL', 'MX', 'CA', 'AR']
+  assert.equal(worldwide.length, 70)
+  assert.deepEqual([...new Set(worldwide.map(row => row.country_code))].sort(), [...expected].sort())
+  for (const code of expected) assert.equal(worldwide.filter(row => row.country_code === code).length, 2, code)
+  for (const row of worldwide) {
+    assert.equal(row.reviewed_at, '2026-10-29')
+    for (const field of ['founder_name_en', 'founder_name_ar', 'role_en', 'role_ar', 'founder_brief_en',
+      'founder_brief_ar', 'company_name_en', 'company_name_ar', 'company_brief_en', 'company_brief_ar']) {
+      assert.ok(row[field as keyof typeof row], row.slug + ' ' + field)
+    }
+    assert.equal(new URL(row.website).protocol, 'https:')
+    assert.equal(new URL(row.source_url).protocol, 'https:')
+    assert.ok(row.source_urls.includes(row.source_url), row.slug)
+    assert.equal(row.portrait_url, null)
+    assert.equal(row.logo_url, null)
+    assert.equal(row.traction_en, null)
+    assert.equal(row.traction_ar, null)
+    assert.equal(row.traction_source_url, null)
+    assert.ok(!('email' in row) && !('membership' in row) && !('user_id' in row))
+  }
+})
