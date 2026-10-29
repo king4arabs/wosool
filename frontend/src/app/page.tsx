@@ -23,7 +23,7 @@ const content = {
     eyebrow: "وصول · مجتمع المؤسسين", title: "من مؤسس", highlight: "إلى مؤسس",
     intro: "شبكة أعضاء للمؤسسين في السعودية والخليج وخارجها.",
     description: "مجتمع وصول، من مؤسسين إلى مؤسسين، لمشاركة التجارب والخبرات وتقوية العلاقات وتعزيز فرص النمو.",
-    join: "قدّم طلب العضوية", explore: "تصفّح المؤسسين", note: "يراجع الفريق طلبات العضوية. لبرامج النمو مثل مسرّعة EO الرياض طلبات مستقلة.",
+    join: "قدّم طلب العضوية", explore: "تصفّح المؤسسين",
     panelTitle: "أشخاص يفهمون رحلتك.", panelText: "اسأل عن تحدٍّ. شارك درسًا. ابدأ علاقة تستمر.",
     panelItems: ["خبرات من أرض الواقع", "علاقات قبل المعاملات", "تعاون يصنع قيمة للطرفين"],
     why: "ما الذي يجمعنا؟", whyTitle: "شركات مختلفة. تحديات متشابهة.",
@@ -39,7 +39,7 @@ const content = {
       { title: "ابنِ حضورك", text: "بعد الموافقة، أكمل ملفك وعرّف الآخرين بخبراتك واحتياجاتك." },
       { title: "شارك وتواصل", text: "تعرّف على المؤسسين، واستكشف اللقاءات، وقدّم قيمة قبل أن تطلبها." },
     ],
-    events: "لقاءات المجتمع", eventsTitle: "اللقاءات القادمة", eventsText: "المواعيد والأماكن وطريقة التسجيل لكل لقاء.",
+    events: "لقاءات المجتمع", eventsTitle: "اللقاءات القادمة",
     program: "مسار مستقل للنمو", programTitle: "EO Riyadh Accelerator", programText: "برنامج النمو ومعايير الأهلية وخطوات التقديم في بوابته المخصصة. عضوية وصول لا تعني القبول في المسرّعة أو عضوية EO.", programLink: "اكتشف المسرّعة",
     news: "الأخبار", newsTitle: "آخر أخبار الشركات الناشئة", allNews: "جميع الأخبار",
   },
@@ -47,7 +47,7 @@ const content = {
     eyebrow: "WOSOOL · THE FOUNDER COMMUNITY", title: "Founders", highlight: "to Founders",
     intro: "A members' network for founders in Saudi Arabia, the Gulf and beyond.",
     description: "The Wosool community, from founders to founders: sharing experience and expertise, strengthening relationships and opening up growth opportunities.",
-    join: "Apply for membership", explore: "Browse founders", note: "The team reviews membership applications. Growth programs such as EO Riyadh Accelerator have their own application.",
+    join: "Apply for membership", explore: "Browse founders",
     why: "WHAT BRINGS US TOGETHER", whyTitle: "Different companies. Similar problems.",
     benefits: [
       { title: "Learn from experience", text: "Exchange practical lessons in building teams, understanding customers, and developing products with founders navigating similar challenges." },
@@ -61,7 +61,7 @@ const content = {
       { title: "Build your presence", text: "Once approved, complete your profile so others can discover your experience and needs." },
       { title: "Take part", text: "Meet founders, explore gatherings, and offer something useful before asking for something back." },
     ],
-    events: "GATHERINGS", eventsTitle: "Upcoming sessions", eventsText: "Dates, venues and how to register for each session.",
+    events: "GATHERINGS", eventsTitle: "Upcoming sessions",
     program: "A SEPARATE GROWTH PATHWAY", programTitle: "EO Riyadh Accelerator", programText: "The growth program, eligibility and application steps are on its own gateway. Wosool membership does not mean Accelerator admission or EO membership.", programLink: "Explore the Accelerator",
     news: "NEWS", newsTitle: "Latest startup news", allNews: "All news",
   },
@@ -75,7 +75,7 @@ export default function HomePage() {
   const spotlights = editorialFounders(getFounderSpotlights(locale), founders)
   return <PublicLayout><div className={styles.home} lang={locale} dir={locale === "ar" ? "rtl" : "ltr"}>
     <section className={styles.hero} aria-labelledby="home-title"><HomeHeroMedia ar={locale === "ar"} /><div className={`${styles.container} ${styles.heroGrid}`}>
-      <div><p className={styles.eyebrow}>{copy.eyebrow}</p><h1 id="home-title">{copy.title}<br /><span>{copy.highlight}</span></h1><p className={styles.intro}>{copy.intro}</p><p className={styles.lead}>{copy.description}</p><div className={styles.actions}><Link className={styles.primary} href="/apply">{copy.join}<ArrowUpRight size={18} /></Link><Link className={styles.secondary} href="#founder-community">{copy.explore}</Link></div><p className={styles.note}>{copy.note}</p></div>
+      <div><p className={styles.eyebrow}>{copy.eyebrow}</p><h1 id="home-title">{copy.title}<br /><span>{copy.highlight}</span></h1><p className={styles.intro}>{copy.intro}</p><p className={styles.lead}>{copy.description}</p><div className={styles.actions}><Link className={styles.primary} href="/apply">{copy.join}<ArrowUpRight size={18} /></Link><Link className={styles.secondary} href="#founder-community">{copy.explore}</Link></div></div>
       <RegionalHeroMetrics ar={locale === "ar"} />
     </div></section>
     <CommunityPartners partners={partners} loaded={partnersLoaded} loading={loading} failed={failed.includes("partners")} retry={retry} />
@@ -89,7 +89,7 @@ export default function HomePage() {
     </div></section>
     <section className={`${styles.container} ${styles.section}`} aria-labelledby="why-title"><p className={styles.eyebrow}>{copy.why}</p><h2 id="why-title">{copy.whyTitle}</h2><div className={styles.benefits}>{copy.benefits.map((benefit,i) => { const Icon = icons[i]; return <article key={benefit.title}><Icon size={25} aria-hidden="true" /><h3>{benefit.title}</h3><p>{benefit.text}</p></article> })}</div></section>
     <section className={`${styles.container} ${styles.section}`} aria-labelledby="how-title"><p className={styles.eyebrow}>{copy.how}</p><h2 id="how-title">{copy.howTitle}</h2><ol className={styles.steps}>{copy.steps.map((step,i) => <li key={step.title}><span>0{i+1}</span><h3>{step.title}</h3><p>{step.text}</p></li>)}</ol><Link href="/apply" className={styles.primary}>{copy.join}<ArrowUpRight size={18} /></Link></section>
-    <section className={styles.events} aria-labelledby="events-title"><div className={styles.container}><p className={styles.eyebrow}>{copy.events}</p><h2 id="events-title">{copy.eventsTitle}</h2><p className={styles.lead}>{copy.eventsText}</p><div className="mt-8"><UpcomingEvents /></div></div></section>
+    <section className={styles.events} aria-labelledby="events-title"><div className={styles.container}><p className={styles.eyebrow}>{copy.events}</p><h2 id="events-title">{copy.eventsTitle}</h2><div className="mt-8"><UpcomingEvents /></div></div></section>
     <div className={`${styles.container} ${styles.section}`}><StartupDirectory compact />
     <EoaOverview /></div>
     {newsItems.length > 0 && <section className={`${styles.container} ${styles.news}`} aria-labelledby="news-title"><div className={styles.sectionHead}><div><p className={styles.eyebrow}>{copy.news}</p><h2 id="news-title">{copy.newsTitle}</h2></div><Link className={styles.textLink} href="/news">{copy.allNews}</Link></div><div className={styles.benefits}>{newsItems.slice(0,3).map(item => { const story = getLocalizedNewsContent(item, locale); return <article key={item.id}><p className={styles.eyebrow}>{categoryLabel(item.category, locale)}</p><h3><Link href={`/news/${item.slug}`}>{story.title}</Link></h3><p>{story.excerpt}</p></article> })}</div></section>}
