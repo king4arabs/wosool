@@ -116,7 +116,7 @@ test("sourced ecosystem conference calendar spans the requested archive and futu
   assert.equal(entries.length, 61)
   assert.equal(new Set(entries.map(item => item.id)).size, entries.length)
   assert.deepEqual([...new Set(entries.map(item => item.date.slice(0, 4)))].sort(), ["2025", "2026", "2027", "2028", "2029"])
-  const validDay = (date: string) => /^\\d{4}-\\d{2}-\\d{2}$/.test(date)
+  const validDay = (date: string) => /^\d{4}-\d{2}-\d{2}$/.test(date)
     && Number.isFinite(Date.parse(date + "T00:00:00Z"))
     && new Date(date + "T00:00:00Z").toISOString().slice(0, 10) === date
   for (const entry of entries) {
