@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
-import { createFounderMixStore, editorialFounders, founderDiscoveryOrder } from './founder-discovery'
+import { createFounderMixStore, editorialFounders, founderDiscoveryOrder, founderVisitOrder } from './founder-discovery'
 import { getFounderSpotlights } from './founder-spotlight'
 import { founderRegion } from './founder-filters'
 import { loadFounderPages } from './founder-pages'
@@ -19,6 +19,21 @@ test('each founder mix keeps every identity once, varies the preview and preserv
   assert.equal(one[0].countryCode, 'SA')
   assert.ok(one.slice(0, 8).some(item => item.countryCode === 'AE'))
   assert.ok(one.slice(0, 8).some(item => founderRegion(item) === 'other'))
+})
+
+test('directory visit order shuffles all cards and stays stable through locale, filters and additional pages', () => {
+  const profiles = getFounderSpotlights('en')
+  const original = structuredClone(profiles)
+  const one = founderVisitOrder(profiles, 101)
+  const two = founderVisitOrder(profiles, 202)
+  assert.deepEqual(profiles, original)
+  assert.notDeepEqual(one.slice(0, 24), two.slice(0, 24))
+  assert.deepEqual(one.map(item => item.slug).sort(), profiles.map(item => item.slug).sort())
+  assert.deepEqual(one.map(item => item.slug), founderVisitOrder(getFounderSpotlights('ar'), 101).map(item => item.slug))
+  const subset = profiles.slice(0, 24)
+  assert.deepEqual(founderVisitOrder(subset, 101), one.filter(item => subset.some(profile => profile.slug === item.slug)))
+  assert.deepEqual(founderVisitOrder(profiles, 0), profiles)
+  assert.deepEqual(founderVisitOrder([], 101), [])
 })
 
 test('locale and filters preserve visit order; empty and one-region collections terminate', () => {

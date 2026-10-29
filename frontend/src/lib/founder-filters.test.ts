@@ -24,6 +24,24 @@ test('filters combine search, sector and region', () => {
   assert.deepEqual(filterFounders(sample, { search: 'omar', sector: '', region: 'saudi' }, 'en'), [])
 })
 
+test('public names in either language find the same founder regardless of display locale', () => {
+  for (const locale of ['ar', 'en'] as const) {
+    const profiles = getFounderSpotlights(locale)
+    for (const search of ['Ahmed Hamdan', 'ahmed  HAMDAN', 'حمدان أحمد', 'احـمد حمدان', 'Unifonic', 'يونيفونيك', 'Ahmed يونيفونيك']) {
+      const result = filterFounders(profiles, { search, sector: '', region: 'all' }, locale)
+      assert.ok(result.some(item => item.slug === 'unifonic'), `${locale}: ${search}`)
+    }
+    assert.deepEqual(filterFounders(profiles, { search: 'Unifonic', sector: '', region: 'gcc' }, locale), [])
+    assert.deepEqual(filterFounders(profiles, { search: 'no-matching-founder-xyz', sector: '', region: 'all' }, locale), [])
+  }
+})
+
+test('Arabic vocalization and literal wildcard characters are handled as ordinary name searches', () => {
+  const profiles = [{ ...founder('أَحْمَد العَلِيّ', 'SA', 'Software'), companyName: 'شَرِكَة النَّماء' }]
+  assert.equal(filterFounders(profiles, { search: 'احمد شركه النماء', sector: '', region: 'all' }, 'en').length, 1)
+  assert.deepEqual(filterFounders(profiles, { search: '%', sector: '', region: 'all' }, 'ar'), [])
+})
+
 test('sector options only list sectors present in the selected region', () => {
   assert.deepEqual(sectorOptions(sample, 'all', 'en'), ['Education', 'Fintech', 'Health', 'Logistics'])
   assert.deepEqual(sectorOptions(sample, 'gcc', 'en'), ['Logistics'])

@@ -1,9 +1,9 @@
 import type { FaqItem } from "@/data/faq"
 
 /** Folds Arabic diacritics and letter variants so "اسال" finds "أسأل" and "الاعضاء" finds "الأعضاء". */
-export function normalizeSearch(value: string) {
+export function normalizeSearch(value: string, locale?: 'ar' | 'en') {
   return value
-    .toLocaleLowerCase()
+    .toLocaleLowerCase(locale)
     .normalize("NFKD")
     .replace(/[ً-ٰٟـ]/g, "")
     .replace(/[̀-ͯ]/g, "")

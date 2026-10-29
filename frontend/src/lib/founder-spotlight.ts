@@ -23,6 +23,7 @@ export function getFounderSpotlights(locale: 'ar' | 'en'): FounderSpotlight[] {
     id: `spotlight-${profile.slug}`,
     slug: profile.slug,
     name: profile[`founder_name_${locale}`],
+    searchNames: [profile.founder_name_ar, profile.founder_name_en, profile.company_name_ar, profile.company_name_en],
     position: profile[`role_${locale}`],
     tagline: profile[`founder_brief_${locale}`],
     bio: profile[`founder_brief_${locale}`],

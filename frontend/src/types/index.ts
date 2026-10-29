@@ -20,6 +20,8 @@ export interface Founder {
   position?: string
   countryCode?: string
   companyName: string
+  /** Public founder/company names in both languages, for local directory search. */
+  searchNames?: string[]
   primaryCompany?: Company
   joinedAt: string
   score: number

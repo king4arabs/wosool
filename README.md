@@ -109,6 +109,8 @@ Partner strips and partner/founder/company cards share transparent logo fitting,
 
 The Partners page puts ecosystem discovery first, with bilingual name search, category filters, an expandable website directory, member sessions and a partnership contact action. Logo order is randomized per page visit after hydration and remains stable through searches, category changes and language switches. The slider moves physically right without a hover pause; short result sets repeat seamlessly, decorative duplicates are excluded from keyboard navigation, and reduced-motion preferences show each organization once. Confirmed API partners remain separate from potential partnership organizations, with collection retry and pagination beside that section.
 
+The Founders directory shuffles its scorecards and expanded grid on every page visit, keeping the same relative order through filtering, language changes and loading additional pages. Cards advance physically right automatically, with reading/focus pauses, manual controls and reduced-motion support. Public API search matches Arabic and English founder names and every active public linked company, normalizes Arabic letter variants/diacritics, treats SQL wildcard characters literally, and combines multiple terms across names. Server matches are not discarded by a second locale-only filter. Outage snapshots search both public-language name variants; throttling, the 24-record API page cap and private-field redaction remain in place.
+
 ## EO Riyadh Accelerator preview
 
 Local production-build screenshots with the seeded Laravel API (not a claim of live deployment):

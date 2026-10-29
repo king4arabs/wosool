@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\FounderResource;
 use App\Models\FounderProfile;
-use App\Support\{CommunityEngagement, DirectoryGeography};
+use App\Support\{CommunityEngagement, DirectoryGeography, FounderSearch};
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -35,16 +35,7 @@ class FounderController extends Controller
         if ($request->has('stage')) {
             $query->where('stage', $request->stage);
         }
-        if ($request->has('search')) {
-            $search = trim($request->search);
-            $query->where(function ($q) use ($search) {
-                $q->where('display_name', 'like', "%{$search}%")->orWhereHas('user', fn ($u) => $u->where('name', 'like', "%{$search}%"))
-                    ->orWhere('translations->ar->name', 'like', "%{$search}%")
-                    ->orWhere('tagline', 'like', "%{$search}%")
-                    ->orWhere('bio', 'like', "%{$search}%")
-                    ->orWhereHas('companies', fn ($company) => DirectoryGeography::visible($company)->where('is_public', true)->where('status', 'active')->where(fn ($c) => $c->where('name', 'like', "%{$search}%")->orWhere('translations->ar->name', 'like', "%{$search}%")));
-            });
-        }
+        if ($request->filled('search')) FounderSearch::apply($query, $request->string('search')->toString());
         if ($request->boolean('featured')) {
             $query->where('is_featured', true);
         }

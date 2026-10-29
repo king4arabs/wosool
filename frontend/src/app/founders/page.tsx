@@ -1,12 +1,13 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useState, useSyncExternalStore } from "react"
 import { PageHero, heroPrimary, heroSecondary } from "@/components/sections/PageHero"
 import Link from "next/link"
 import { ArrowLeft, ArrowRight, Search } from "lucide-react"
 import { PublicLayout } from "@/components/layout/PublicLayout"
 import { FounderShowcase } from "@/components/sections/CommunityShowcase"
-import type { FounderRegionFilter } from "@/lib/founder-filters"
+import { matchesFounderSearch, type FounderRegionFilter } from "@/lib/founder-filters"
+import { createFounderMixStore } from "@/lib/founder-discovery"
 import { countryRegion, directoryCountryGroups, founderCountry, isDirectoryRecordVisible } from '@/lib/directory-geography'
 import { type FounderCardProfile } from "@/components/sections/FounderCard"
 import { foundersPageCopy } from "@/data/localized-seed"
@@ -18,15 +19,18 @@ import styles from "../home.module.css"
 
 export default function FoundersPage() {
   const { locale } = useLocale()
-  return <FounderDirectory key={locale} />
+  const [visitStore] = useState(createFounderMixStore)
+  const visitSeed = useSyncExternalStore(visitStore.subscribe, visitStore.getSnapshot, visitStore.getServerSnapshot)
+  return <FounderDirectory key={locale} visitSeed={visitSeed} />
 }
 
-function FounderDirectory() {
+function FounderDirectory({ visitSeed }: { visitSeed: number }) {
   const { locale, direction } = useLocale()
   const ar = locale === "ar"
   const copy = foundersPageCopy[locale]
   const [search, setSearch] = useState("")
   const [settledSearch, setSettledSearch] = useState('')
+  const searchPending = search.trim() !== settledSearch
   useEffect(() => { const timer = window.setTimeout(() => setSettledSearch(search.trim()), 250); return () => window.clearTimeout(timer) }, [search])
   const [sector, setSector] = useState("")
   const [stage, setStage] = useState("")
@@ -42,11 +46,11 @@ function FounderDirectory() {
   const Arrow = ar ? ArrowLeft : ArrowRight
   const featured = isSpotlight ? [] : founders.filter(founder => founder.isFeatured)
   const hasFilters = Boolean(search || sector || stage || location || region !== 'all')
-  const filtered = founders.filter(founder => {
-    const query = search.trim().toLocaleLowerCase(locale)
-    const haystack = [founder.name, founder.companyName, founder.tagline, founder.bio, founder.position].filter(Boolean).join(' ').toLocaleLowerCase(locale)
-    return (!query || haystack.includes(query)) && (!sector || founder.sector === sector) && (!stage || founder.stage === stage) && (!location || founderCountry(founder) === location)
-  })
+  // The API searches both languages and every public linked company. Rechecking
+  // only the translated card would incorrectly remove valid server matches.
+  const filtered = searchPending ? [] : isSpotlight ? founders.filter(founder =>
+    matchesFounderSearch(founder, search) && (!sector || founder.sector === sector) && (!stage || founder.stage === stage) && (!location || founderCountry(founder) === location)
+  ) : founders
   const options = (key: 'sector' | 'stage') => [...new Set([
     ...(key === 'sector' ? collection.meta.sectors?.map(item => item[locale]) ?? [] : collection.meta.stages ?? []),
     ...founders.map(founder => founder[key]),
@@ -68,7 +72,7 @@ function FounderDirectory() {
 
     {featured.length > 0 && <section className={`${styles.container} ${styles.section}`} aria-labelledby="featured-founders-title">
       <p className={styles.eyebrow}>{copy.featuredEyebrow}</p><h2 id="featured-founders-title">{copy.featuredTitle}</h2>
-      <FounderShowcase founders={featured} showFilters={false} />
+      <FounderShowcase founders={featured} showFilters={false} visitSeed={visitSeed} />
     </section>}
 
     <section id="founder-directory" className={`${styles.container} ${styles.section}`} aria-labelledby="founder-results-title" style={{ scrollMarginTop: 100 }}>
@@ -82,8 +86,8 @@ function FounderDirectory() {
         </div>
         {hasFilters && <button type="button" className="min-h-11 justify-self-start px-3 text-sm font-bold text-[var(--action-bg)] underline underline-offset-4" onClick={() => { setSearch(''); setSector(''); setStage(''); setLocation(''); setRegion('all') }}>{ar ? 'مسح الفلاتر' : 'Clear filters'}</button>}
       </div>
-      {collection.loading && founders.length === 0 && <p role="status" className="py-8 text-center">{ar ? 'جارٍ تحميل الملفات العامة…' : 'Loading public profiles…'}</p>}
-      <FounderShowcase key={filtersKey} founders={filtered} showFilters={false} region={region} onRegionChange={changeRegion} allRegions loading={collection.loading && !founders.length} />
+      {(searchPending || collection.loading && founders.length === 0) && <p role="status" className="py-8 text-center">{ar ? 'جارٍ تحميل الملفات العامة…' : 'Loading public profiles…'}</p>}
+      <FounderShowcase key={filtersKey} founders={filtered} showFilters={false} region={region} onRegionChange={changeRegion} visitSeed={visitSeed} allRegions loading={searchPending || collection.loading && !founders.length} />
       {!isSpotlight && collection.hasMore && <div className="mt-7 text-center"><button type="button" className={styles.secondary} disabled={collection.loading} onClick={collection.loadMore}>{collection.loading ? ar ? 'جارٍ التحميل…' : 'Loading…' : ar ? 'تحميل المزيد من المؤسسين' : 'Load more founders'}</button></div>}
       {!isSpotlight && <div className="mt-8 flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-[var(--border-soft)] bg-[var(--surface-soft)] p-5"><p className="max-w-xl text-sm leading-relaxed text-[var(--text-muted)]">{ar ? 'بعض الملفات الكاملة متاحة للأعضاء فقط. سجّل دخولك للوصول إلى التفاصيل والتواصل المباشر.' : 'Some full profiles are available to members only. Sign in to access details and direct introductions.'}</p><Link className={styles.secondary} href="/login">{copy.login}<Arrow size={16} aria-hidden="true" /></Link></div>}
     </section>

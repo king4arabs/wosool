@@ -1,8 +1,8 @@
 import { founderRegion } from './founder-filters'
 import type { Founder } from '../types'
 
-/** Stable per visit and across locales/filters; never mutate editorial ranking. */
-export function founderDiscoveryOrder<T extends Pick<Founder, 'slug' | 'countryCode'>>(founders: T[], seed: number): T[] {
+/** Stable random order within a visit; names/locales never affect identity ranking. */
+export function founderVisitOrder<T extends Pick<Founder, 'slug'>>(founders: readonly T[], seed: number): T[] {
   if (!seed) return [...founders]
   function rank(slug: string) {
     let hash = (seed ^ 2166136261) >>> 0
@@ -12,9 +12,14 @@ export function founderDiscoveryOrder<T extends Pick<Founder, 'slug' | 'countryC
     hash ^= hash >>> 13
     return hash >>> 0
   }
+  return [...founders].sort((a, b) => rank(a.slug) - rank(b.slug) || a.slug.localeCompare(b.slug))
+}
+
+/** Homepage discovery retains its regional mix without changing directory order. */
+export function founderDiscoveryOrder<T extends Pick<Founder, 'slug' | 'countryCode'>>(founders: T[], seed: number): T[] {
+  if (!seed) return [...founders]
   const groups = { saudi: [] as T[], gcc: [] as T[], mena: [] as T[], other: [] as T[] }
-  for (const founder of founders) groups[founderRegion(founder)].push(founder)
-  for (const group of Object.values(groups)) group.sort((a, b) => rank(a.slug) - rank(b.slug) || a.slug.localeCompare(b.slug))
+  for (const founder of founderVisitOrder(founders, seed)) groups[founderRegion(founder)].push(founder)
   const mix: T[] = []
   // Saudi-first discovery while giving GCC, MENA and global founders room in every mix.
   const cadence = ['saudi', 'saudi', 'saudi', 'saudi', 'gcc', 'gcc', 'mena', 'other'] as const
