@@ -63,6 +63,8 @@ jobs:
         run: node scripts/check-founder-presentation.mjs
       - name: Verify bilingual global events, source links and invitation filters
         run: node scripts/check-ecosystem-calendar.mjs
+      - name: Verify EO Accelerator value and cohort card layout in both languages
+        run: node scripts/check-eoa-equal-cards.mjs
       - name: Verify homepage video playback and accessible fallbacks
         run: node scripts/check-home-hero.mjs
       - name: Check public pages for serious WCAG 2.1 A/AA violations (axe-core)
