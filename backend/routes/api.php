@@ -236,6 +236,11 @@ Route::prefix('v1')->group(function () {
     Route::middleware(['auth:sanctum', 'admin', \App\Http\Middleware\CanonicalEoaProgram::class])->prefix('admin')->group(function () {
         Route::get('/dashboard', AdminDashboardController::class);
         Route::get('/analytics', AdminAnalyticsController::class);
+        Route::get('/relationships', [\App\Http\Controllers\Api\Admin\RelationshipController::class, 'index']);
+        Route::post('/relationships', [\App\Http\Controllers\Api\Admin\RelationshipController::class, 'store']);
+        Route::get('/relationships/{relationship}', [\App\Http\Controllers\Api\Admin\RelationshipController::class, 'show']);
+        Route::put('/relationships/{relationship}', [\App\Http\Controllers\Api\Admin\RelationshipController::class, 'update']);
+        Route::post('/relationships/{relationship}/activities', [\App\Http\Controllers\Api\Admin\RelationshipController::class, 'activity']);
         Route::get('/founders', [AdminFounderController::class, 'index']);
         Route::post('/founders/outreach', [\App\Http\Controllers\Api\Admin\FounderOutreachController::class, 'bulk'])->middleware('throttle:5,1');
         Route::put('/founders/{founder}/recipient', [\App\Http\Controllers\Api\Admin\FounderOutreachController::class, 'verify']);

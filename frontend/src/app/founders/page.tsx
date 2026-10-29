@@ -64,7 +64,7 @@ function FounderDirectory({ visitSeed }: { visitSeed: number }) {
   return <PublicLayout><div className={styles.home} dir={direction} lang={locale}>
     <PageHero
       eyebrow={isSpotlight ? ar ? 'مؤسسون من السعودية والعالم' : 'Founders from Saudi Arabia and beyond' : copy.badge}
-      title={isSpotlight ? ar ? 'المؤسسون وشركاتهم' : 'Founders and their companies' : copy.title}
+      title={copy.title}
       description={isSpotlight ? ar ? 'اكتشف المؤسسين وشركاتهم وخبراتهم في السعودية والخليج والعالم.' : 'Discover founders, their companies and their experience across Saudi Arabia, the Gulf and beyond.' : copy.description}
       actions={<><a href="#founder-directory" className={heroPrimary}>{ar ? 'تصفّح المؤسسين' : 'Browse founders'}<Arrow size={17} aria-hidden="true" /></a><Link href="/apply" className={heroSecondary}>{ar ? 'قدّم طلب العضوية' : 'Apply for membership'}</Link></>}
     />

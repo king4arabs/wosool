@@ -12,7 +12,7 @@ async function eventually(check) {
   throw new Error(`Directory state did not settle. ${log.slice(-2000)}`)
 }
 const queries = ['Ahmad Ali', 'أحمد العلي', 'Growth Labs', 'شركة النماء', 'Second Venture', 'المشروع الثاني', 'Ahmad النماء']
-const record = (id, locale) => ({ id, slug: `fixture-${id}`, name: id === 1 ? locale === 'ar' ? 'أحمد العلي' : 'Ahmad Ali' : `Founder ${id}`, country_code: id === 24 ? 'AE' : 'SA', position: 'Founder', is_public: true, status: 'active', is_featured: false, is_verified: false,
+const record = (id, locale) => ({ id, slug: `fixture-${id}`, name: id === 1 ? locale === 'ar' ? 'أحمد العلي' : 'Ahmad Ali' : `Founder ${id}`, country_code: id === 24 ? 'AE' : 'SA', position: id === 1 ? 'Co-founder' : 'Founder', activation_status: 'active', scorecard: null, is_public: true, status: 'active', is_featured: false, is_verified: false,
   companies: [{ id, slug: `company-${id}`, name: id === 1 ? locale === 'ar' ? 'شركة النماء' : 'Growth Labs' : `Company ${id}`, country_code: id === 24 ? 'AE' : 'SA', pivot: { is_primary: true } }] })
 let browser
 try {
@@ -44,6 +44,7 @@ try {
       return route.fulfill({ json: { data: [], meta: { last_page: 1 } } })
     })
     await page.goto(origin + '/founders', { waitUntil: 'networkidle' })
+    await page.getByRole('heading', { level: 1, name: locale === 'ar' ? 'تعرف على مجتمع المؤسسين في شبكة وصول' : 'Meet the founder community in the Wosool network', exact: true }).waitFor()
     const directory = page.locator('#founder-directory')
     const rail = directory.locator('[aria-roledescription]')
     const ids = () => rail.locator('h3 a').evaluateAll(links => links.map(link => link.getAttribute('href')))
@@ -58,6 +59,10 @@ try {
       await eventually(async () => requests.length > before && (await ids()).length === 1)
       assert.deepEqual(await ids(), ['/founders/fixture-1'], `${locale}: ${query}`)
     }
+    await directory.getByRole('button', { name: locale === 'ar' ? 'عرض جميع المؤسسين' : 'View all founders', exact: true }).click()
+    const approvedGrid = directory.locator('section[id]')
+    assert.equal(await approvedGrid.locator('h3 a[href="/founders/fixture-1"]').count(), 1, 'An approved co-founder without a featured flag or public score appears in the grid and carousel')
+    await approvedGrid.getByRole('button', { name: locale === 'ar' ? 'إغلاق الشبكة' : 'Close grid', exact: true }).click()
     await search.fill('no-matching-founder')
     await directory.getByText(locale === 'ar' ? 'لا توجد ملفات مطابقة. جرّب اسمًا أو قطاعًا أو منطقة أخرى.' : 'No matching profiles. Try another name, sector or region.').waitFor()
     assert.equal(await rail.count(), 0)

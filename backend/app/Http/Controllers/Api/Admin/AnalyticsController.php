@@ -14,10 +14,17 @@ use Illuminate\Http\JsonResponse;
 
 class AnalyticsController extends Controller
 {
-    public function __invoke(): JsonResponse
+    public function __invoke(\Illuminate\Http\Request $request): JsonResponse
     {
+        $request->validate(['days' => ['nullable', \Illuminate\Validation\Rule::in([7, 30, 90])]]);
+        $days = $request->integer('days', 30);
+        $end = now()->endOfDay();
+        $start = now()->startOfDay()->subDays($days - 1);
+        $previousStart = $start->copy()->subDays($days);
+        $previousEnd = $start->copy()->subMicrosecond();
         $foundersBySector = FounderProfile::query()
             ->selectRaw('sector, COUNT(*) as count')
+            ->where('status', 'active')->whereNotNull('user_id')
             ->whereNotNull('sector')
             ->groupBy('sector')
             ->orderByDesc('count')
@@ -30,9 +37,13 @@ class AnalyticsController extends Controller
 
         return response()->json([
             'data' => [
+                'period' => ['days' => $days, 'start' => $start->toDateString(), 'end' => $end->toDateString(), 'timezone' => config('app.timezone')],
+                'comparison' => ['current' => $this->periodMetrics($start, $end), 'previous' => $this->periodMetrics($previousStart, $previousEnd)],
+                'trend' => $this->trend($start, $end),
+                'operations' => \App\Services\AdminOperations::summary(),
                 'kpis' => [
                     'total_members' => User::role('member')->count(),
-                    'active_founders' => FounderProfile::where('status', 'active')->count(),
+                    'active_founders' => FounderProfile::where('status', 'active')->whereNotNull('user_id')->count(),
                     'companies' => CompanyProfile::where('status', 'active')->count(),
                     'events_hosted' => Event::count(),
                     'applications' => Application::count(),
@@ -41,9 +52,9 @@ class AnalyticsController extends Controller
                     'open_programs' => Program::where('is_open', true)->count(),
                 ],
                 'monthly_signups' => collect(range(5, 0))->map(function (int $monthsAgo) {
-                    $date = now()->subMonths($monthsAgo);
+                    $date = now()->startOfMonth()->subMonths($monthsAgo);
                     return [
-                        'month' => $date->format('M'),
+                        'month' => $date->format('Y-m'),
                         'value' => User::whereBetween('created_at', [$date->copy()->startOfMonth(), $date->copy()->endOfMonth()])->count(),
                     ];
                 })->values(),
@@ -58,4 +69,32 @@ class AnalyticsController extends Controller
             ],
         ]);
     }
+    private function periodMetrics($start, $end): array
+    {
+        $applications = Application::whereBetween('created_at', [$start, $end]);
+        $total = (clone $applications)->count();
+        $approved = (clone $applications)->where('status', 'approved')->count();
+        return [
+            'signups' => User::whereBetween('created_at', [$start, $end])->count(),
+            'applications' => $total,
+            'approved_applications' => $approved,
+            'approval_rate' => $total ? round($approved * 100 / $total, 1) : null,
+            'rsvps' => \DB::table('event_rsvps')->whereBetween('created_at', [$start, $end])->count(),
+            'messages' => \App\Models\ContactMessage::whereBetween('created_at', [$start, $end])->count(),
+            'relationships' => \App\Models\RelationshipRecord::whereBetween('created_at', [$start, $end])->count(),
+        ];
+    }
+
+    private function trend($start, $end): array
+    {
+        $users = User::whereBetween('created_at', [$start, $end])->selectRaw('DATE(created_at) as day, COUNT(*) as total')->groupByRaw('DATE(created_at)')->pluck('total', 'day');
+        $applications = Application::whereBetween('created_at', [$start, $end])->selectRaw('DATE(created_at) as day, COUNT(*) as total')->groupByRaw('DATE(created_at)')->pluck('total', 'day');
+        $rows = [];
+        for ($date = $start->copy(); $date->lte($end); $date->addDay()) {
+            $key = $date->toDateString();
+            $rows[] = ['date' => $key, 'signups' => (int) ($users[$key] ?? 0), 'applications' => (int) ($applications[$key] ?? 0)];
+        }
+        return $rows;
+    }
+
 }

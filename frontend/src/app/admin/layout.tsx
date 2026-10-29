@@ -64,6 +64,8 @@ const labels = {
       "/admin/sponsors": "الرعاة",
       "/admin/news": "الأخبار والمحتوى",
       "/admin/analytics": "التحليلات",
+      "/admin/crm": "إدارة العلاقات CRM",
+      "/admin/pr": "العلاقات العامة والإعلام",
       "/admin/privacy-requests": "طلبات الخصوصية",
       "/admin/settings": "الإعدادات",
     },
@@ -99,6 +101,8 @@ const labels = {
       "/admin/sponsors": "Sponsors",
       "/admin/news": "News & content",
       "/admin/analytics": "Analytics",
+      "/admin/crm": "Relationships CRM",
+      "/admin/pr": "Public relations",
       "/admin/privacy-requests": "Privacy requests",
       "/admin/settings": "Settings",
     },
@@ -138,6 +142,8 @@ const groups: NavigationGroup[] = [
   {
     key: "growth",
     items: [
+      { href: "/admin/crm", icon: Users },
+      { href: "/admin/pr", icon: Newspaper },
       { href: "/admin/opportunities", icon: Compass },
       { href: "/admin/partners", icon: Handshake },
       { href: "/admin/sponsors", icon: BadgeCheck },

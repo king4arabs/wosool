@@ -57,6 +57,16 @@ jobs:
         run: node scripts/check-member-onboarding.mjs
       - name: Verify partner logo sources, filters and continuous rightward motion
         run: node scripts/check-partner-ecosystem.mjs
+      - name: Verify admin CRM, PR, analytics and priorities
+        run: node scripts/check-admin-operations.mjs
+      - name: Save admin browser review images
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: admin-operations-previews
+          path: /tmp/admin-operations-*.png
+          retention-days: 3
+          if-no-files-found: ignore
       - name: Verify admin bulk activation and recipient review
         run: node scripts/check-founder-outreach.mjs
       - name: Verify country filters and responsive founder card presentation

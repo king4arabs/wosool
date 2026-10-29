@@ -15,6 +15,7 @@ export interface AdminStats {
 }
 
 export interface AdminDashboardResponse {
+  operations?: AdminOperations
   stats: AdminStats
   application_pipeline?: Record<string, number>
   recent_applications: AdminApplication[]
@@ -277,12 +278,20 @@ export interface AdminSettingsResponse {
   }
 }
 
+export interface AdminOperations {
+  open_messages: number; crm_due: number; pr_due: number; crm_open: number; pr_open: number; public_members: number; upcoming_events: number
+  follow_ups: Array<{ id: number; kind: 'crm' | 'pr'; name: string; organization?: string | null; priority: string; follow_up_on: string; owner?: { name: string } | null }>
+}
 export interface AdminAnalyticsResponse {
   data: {
     kpis: Record<string, number>
     monthly_signups: Array<{ month: string; value: number }>
     sector_distribution: Array<{ sector: string; count: number }>
     recent_activity: Array<{ metric: string; value: number }>
+    period: { days: number; start: string; end: string; timezone: string }
+    comparison: { current: Record<string, number | null>; previous: Record<string, number | null> }
+    trend: Array<{ date: string; signups: number; applications: number }>
+    operations: AdminOperations
   }
 }
 
