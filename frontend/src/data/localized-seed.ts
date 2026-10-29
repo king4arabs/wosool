@@ -640,6 +640,7 @@ export const partnersPageCopy: Record<Locale, {
   accessTitle: string
   accessBody: string
   accessTopics: string[]
+  accessDescriptions: string[]
   accessHint: string
   accessCta: string
   ctaTitle: string
@@ -648,8 +649,8 @@ export const partnersPageCopy: Record<Locale, {
 }> = {
   ar: {
     badge: "الشركاء والداعمون",
-    title: "الجهات التي تعمل مع وصول",
-    description: "مستثمرون وجامعات ومسرّعات وجهات خدمية تقدم للمؤسسين خبرة أو تمويلاً أو مساحة للعمل.",
+    title: "علاقات توسّع فرصك.",
+    description: "استكشف الجهات، وتعرّف على جلسات الشركاء وفرص التعاون مع وصول.",
     types: ["شريك منظومة", "شريك معرفي", "شريك مجتمع", "دعم استراتيجي"],
     sectionEyebrow: "شركاؤنا",
     sectionTitle: "الجهات التي تقف خلف قيمة المجتمع",
@@ -657,6 +658,7 @@ export const partnersPageCopy: Record<Locale, {
     accessTitle: "وصول مباشر إلى خبرات متخصصة",
     accessBody: "يمكن لأعضاء وصول حجز جلسات نوعية مع بعض الجهات الشريكة للحصول على دعم قانوني أو مالي أو استراتيجي.",
     accessTopics: ["القانون والامتثال", "الاستشارات المالية", "النمو الاستراتيجي"],
+    accessDescriptions: ["ناقش العقود والمتطلبات التنظيمية.", "ناقش التخطيط المالي وخيارات التمويل.", "استكشف فرص التوسع وتطوير الأعمال."],
     accessHint: "تتوفر للأعضاء وفق المواعيد المعلنة",
     accessCta: "سجّل الدخول للحجز",
     ctaTitle: "هل ترغب في الشراكة مع وصول؟",
@@ -665,8 +667,8 @@ export const partnersPageCopy: Record<Locale, {
   },
   en: {
     badge: "Partners & Supporters",
-    title: "Organisations that work with Wosool",
-    description: "Investors, universities, accelerators and service firms that give founders expertise, funding or space to work.",
+    title: "Connections that open doors.",
+    description: "Explore organizations, member sessions and opportunities to collaborate with Wosool.",
     types: ["Ecosystem partner", "Knowledge partner", "Community partner", "Strategic support"],
     sectionEyebrow: "Our partners",
     sectionTitle: "Organizations behind the network's value",
@@ -674,6 +676,7 @@ export const partnersPageCopy: Record<Locale, {
     accessTitle: "Direct access to specialist expertise",
     accessBody: "Wosool members can book focused sessions with selected partners for legal, financial, or strategic support.",
     accessTopics: ["Legal & compliance", "Financial advisory", "Strategic growth"],
+    accessDescriptions: ["Discuss contracts and regulatory requirements.", "Explore financial planning and funding options.", "Consider expansion and business development."],
     accessHint: "Available to members based on announced schedules",
     accessCta: "Sign in to book",
     ctaTitle: "Interested in partnering with Wosool?",

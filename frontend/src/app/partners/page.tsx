@@ -1,118 +1,78 @@
 "use client"
 
+import { useState, useSyncExternalStore } from "react"
 import Link from "next/link"
-import { PageHero } from "@/components/sections/PageHero"
-import { BarChart3, Lightbulb, Rocket, Scale } from "lucide-react"
+import { PageHero, heroPrimary, heroSecondary } from "@/components/sections/PageHero"
+import { ArrowDown, BarChart3, Handshake, Lightbulb, Rocket, Scale } from "lucide-react"
 import { usePublicCollection } from "@/lib/use-public-collection"
 import { CollectionStatus } from "@/components/sections/CollectionStatus"
 import { PublicLayout } from "@/components/layout/PublicLayout"
 import { PartnerLogoMarquee } from "@/components/sections/PartnerLogoMarquee"
 import { PartnerEcosystem } from "@/components/sections/PartnerEcosystem"
-import { Button } from "@/components/ui/button"
 import { localizePartner, partnersPageCopy } from "@/data/localized-seed"
 import { type ApiPartner, mapPartner } from "@/lib/content-api"
+import { createPartnerVisitStore, partnerDiscoveryOrder } from "@/lib/partner-discovery"
 import { useLocale } from "@/lib/locale"
 
 const topicIcons = [Scale, BarChart3, Rocket]
 
 export default function PartnersPage() {
   const { locale } = useLocale()
+  const ar = locale === "ar"
   const copy = partnersPageCopy[locale]
   const collection = usePublicCollection<ApiPartner>("/partners")
-  const partnerItems = collection.items.map(item => localizePartner(mapPartner(item), locale))
-
-
-
+  const [visitStore] = useState(createPartnerVisitStore)
+  const visitSeed = useSyncExternalStore(visitStore.subscribe, visitStore.getSnapshot, visitStore.getServerSnapshot)
+  const confirmedPartners = partnerDiscoveryOrder(collection.items.map(item => localizePartner(mapPartner(item), locale)).filter(partner => partner.status === "Confirmed"), visitSeed)
 
   return (
     <PublicLayout>
-      <PageHero eyebrow={copy.badge} title={copy.title} description={copy.description} />
-      {collection.error && <CollectionStatus {...collection} hasMore={false} empty={false} />}
+      <PageHero eyebrow={copy.badge} title={copy.title} description={copy.description} actions={<>
+        <a href="#partner-ecosystem" className={heroPrimary}>{ar ? "استكشف الجهات" : "Explore organizations"}<ArrowDown className="h-4 w-4" aria-hidden="true" /></a>
+        <a href="#become-partner" className={heroSecondary}>{ar ? "كن شريكًا" : "Become a partner"}</a>
+      </>} />
 
-      {/* ── Partners grid ── */}
-      <section className="py-16 px-4 bg-white">
-        <div className="mx-auto max-w-7xl">
-          <div className="mb-10">
-            <div className="inline-flex items-center gap-2 bg-[#EEF1FF] border border-[#E4E7F0] px-3 py-1 rounded-full text-xs font-bold text-[#3B52D4] mb-3">
-              {copy.sectionEyebrow}
-            </div>
-            <h2 className="text-2xl lg:text-3xl font-black text-slate-900 tracking-tight">{copy.sectionTitle}</h2>
-          </div>
+      <PartnerEcosystem visitSeed={visitSeed} />
 
-          <PartnerLogoMarquee partners={partnerItems.filter(partner => partner.status === "Confirmed").map(partner => ({ id: partner.id, name_ar: partner.name, name_en: partner.name, website: partner.website, logo_path: partner.logoUrl }))} label={copy.sectionTitle} />
-          <PartnerEcosystem />
+      {(confirmedPartners.length > 0 || collection.error || collection.hasMore) && <section aria-labelledby="confirmed-partners" className="border-t border-slate-100 bg-white px-4 py-10 sm:px-6">
+        <div className="mx-auto max-w-6xl">
+          <p className="text-xs font-bold text-indigo-700">{copy.sectionEyebrow}</p>
+          <h2 id="confirmed-partners" className="mt-2 text-2xl font-extrabold text-slate-900">{copy.sectionTitle}</h2>
+          <PartnerLogoMarquee partners={confirmedPartners.map(partner => ({ id: partner.id, name_ar: partner.name, name_en: partner.name, website: partner.website, logo_path: partner.logoUrl }))} label={copy.sectionTitle} />
+          <CollectionStatus {...collection} empty={false} />
         </div>
-      </section>
+      </section>}
 
-      {/* ── Partner Sessions ── */}
-      <section className="py-16 px-4 bg-[#F5F7FF]">
-        <div className="mx-auto max-w-5xl">
-          <div className="text-center mb-12">
-            <div className="inline-flex items-center gap-2 bg-[#EEF1FF] border border-[#E4E7F0] px-3 py-1 rounded-full text-xs font-bold text-[#3B52D4] mb-4">
-              {copy.accessEyebrow}
-            </div>
-            <h2 className="text-2xl lg:text-3xl font-black text-slate-900 tracking-tight mb-3">{copy.accessTitle}</h2>
-            <p className="text-sm text-slate-500 max-w-lg mx-auto leading-relaxed">{copy.accessBody}</p>
+      <section aria-labelledby="partner-sessions" className="border-y border-slate-200/70 bg-[var(--surface-soft)] px-4 py-12 sm:px-6 sm:py-16">
+        <div className="mx-auto grid max-w-6xl gap-8 lg:grid-cols-[1fr_1.2fr] lg:gap-16">
+          <div>
+            <p className="text-xs font-bold text-indigo-700">{copy.accessEyebrow}</p>
+            <h2 id="partner-sessions" className="mt-3 text-2xl font-extrabold tracking-tight text-slate-900 sm:text-3xl">{copy.accessTitle}</h2>
+            <p className="mt-4 text-sm leading-7 text-slate-600 sm:text-base">{copy.accessBody}</p>
+            <p className="mt-3 text-sm leading-7 text-slate-600">{copy.accessHint}</p>
+            <Link href="/login" className={`${heroPrimary} mt-6`}>{copy.accessCta}</Link>
           </div>
-
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-3 mb-8">
+          <div className="grid gap-3">
             {copy.accessTopics.map((topic, i) => {
               const Icon = topicIcons[i] ?? Lightbulb
-              return (
-              <div
-                key={topic}
-                className="bg-white border border-slate-200/80 rounded-2xl p-6 text-center transition-all duration-300 hover:border-[#3B52D4]/30 hover:-translate-y-1"
-                style={{ boxShadow: "0 2px 12px -2px rgba(15,22,40,0.06)" }}
-              >
-                <div className="mx-auto mb-3 grid h-12 w-12 place-items-center rounded-2xl bg-[var(--surface-blue)] text-[var(--brand-blue)]" aria-hidden="true">
-                  <Icon className="h-6 w-6" strokeWidth={1.8} />
-                </div>
-                <h3 className="text-sm font-black text-slate-900 mb-1">{topic}</h3>
-                <p className="text-xs text-slate-400 font-medium">{copy.accessHint}</p>
+              return <div key={topic} className="flex items-center gap-4 rounded-2xl border border-slate-200/80 bg-white p-5">
+                <div className="grid h-12 w-12 shrink-0 place-items-center rounded-xl bg-indigo-50 text-indigo-700" aria-hidden="true"><Icon className="h-6 w-6" strokeWidth={1.8} /></div>
+                <div><h3 className="text-base font-bold text-slate-900">{topic}</h3><p className="mt-1 text-sm leading-6 text-slate-600">{copy.accessDescriptions[i]}</p></div>
               </div>
-              )
             })}
           </div>
-
-          <div className="text-center">
-            <Button
-              asChild
-              className="rounded-xl bg-[#3B52D4] hover:bg-[#2E44C8] text-white font-bold shadow-md shadow-[#3B52D4]/20"
-            >
-              <Link href="/login">{copy.accessCta}</Link>
-            </Button>
-          </div>
         </div>
       </section>
 
-      {/* ── CTA ── */}
-      <section className="py-20 px-4 bg-slate-50/60">
-        <div className="mx-auto max-w-2xl">
-          <div
-            className="bg-white/90 backdrop-blur-sm border border-slate-200/80 rounded-2xl px-8 py-12 text-center relative overflow-hidden"
-            style={{ boxShadow: "0 8px 40px -8px rgba(59,82,212,0.1)" }}
-          >
-            <div className="pointer-events-none absolute inset-0" aria-hidden="true">
-              <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[400px] h-[200px] rounded-full bg-[#3B52D4]/6 blur-[80px]" />
-            </div>
-            <div className="relative">
-              <div className="inline-flex items-center gap-2 bg-[#EEF1FF] border border-[#E4E7F0] px-3 py-1 rounded-full text-xs font-bold text-[#3B52D4] mb-5">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#3B52D4] animate-pulse" />
-                {locale === "ar" ? "انضم للشراكة" : "Partner with us"}
-              </div>
-              <h2 className="text-3xl font-black text-slate-900 tracking-tight mb-3">{copy.ctaTitle}</h2>
-              <p className="text-sm text-slate-500 mb-8 leading-relaxed max-w-md mx-auto">{copy.ctaBody}</p>
-              <Button
-                asChild
-                className="rounded-xl bg-[#3B52D4] hover:bg-[#2E44C8] text-white font-bold shadow-md shadow-[#3B52D4]/20"
-              >
-                <Link href="/contact">{copy.cta}</Link>
-              </Button>
-            </div>
+      <section id="become-partner" aria-labelledby="partner-contact" className="scroll-mt-24 bg-white px-4 py-12 sm:px-6 sm:py-16">
+        <div className="mx-auto flex max-w-6xl flex-col items-start gap-6 rounded-3xl border border-indigo-100 bg-indigo-50/50 p-6 sm:p-9 lg:flex-row lg:items-center lg:justify-between lg:gap-12">
+          <div className="flex max-w-2xl items-start gap-4">
+            <Handshake className="mt-1 hidden h-8 w-8 shrink-0 text-indigo-700 sm:block" aria-hidden="true" />
+            <div><h2 id="partner-contact" className="text-2xl font-extrabold tracking-tight text-slate-900">{copy.ctaTitle}</h2><p className="mt-3 text-sm leading-7 text-slate-600 sm:text-base">{copy.ctaBody}</p></div>
           </div>
+          <Link href="/contact" className={`${heroPrimary} shrink-0`}>{copy.cta}</Link>
         </div>
       </section>
-      {!collection.error && <CollectionStatus {...collection} empty={partnerItems.length === 0} />}
     </PublicLayout>
   )
 }
