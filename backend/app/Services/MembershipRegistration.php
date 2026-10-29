@@ -23,7 +23,7 @@ final class MembershipRegistration
     public function resumeLegacyRegistration(User $user): void
     {
         if ($user->community_registration_started_at || $user->is_accelerator_applicant
-            || filled($user->role_token) || $user->roles()->exists() || $user->founderProfile()->exists()) return;
+            || filled($user->getAttributes()['role_token'] ?? null) || $user->roles()->exists() || $user->founderProfile()->exists()) return;
 
         // Do not infer consent, verification, approval, or membership from having an account.
         $user->forceFill(['community_registration_started_at' => now()])->save();
