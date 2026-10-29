@@ -1,6 +1,7 @@
 import historicalProfiles from '../data/founder-spotlight.json'
 import additionalProfiles from '../data/founder-spotlight-expansion-2026-10-16.json'
 import discoveryProfiles from '../data/founder-spotlight-expansion-2026-10-22.json'
+import countryProfiles from '../data/founder-spotlight-expansion-2026-10-29.json'
 import type { Founder } from '../types'
 import { isDirectoryRecordVisible } from './directory-geography'
 
@@ -11,7 +12,7 @@ export type FounderSpotlight = Founder & {
 
 /** Curated editorial datasets do not establish registered or verified membership. */
 const priority: Record<string, number> = { saudi: 0, gcc: 1, mena: 2, global: 3 }
-const profiles = [...historicalProfiles, ...additionalProfiles, ...discoveryProfiles]
+const profiles = [...historicalProfiles, ...additionalProfiles, ...discoveryProfiles, ...countryProfiles]
   .filter(profile => isDirectoryRecordVisible({ country_code: profile.country_code, location: profile.country_en }))
   .sort((left, right) => (priority[left.region] ?? 4) - (priority[right.region] ?? 4))
 
