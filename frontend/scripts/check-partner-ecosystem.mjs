@@ -32,7 +32,7 @@ try {
     assert.equal(await track.evaluate(el=>getComputedStyle(el).animationPlayState),'running')
     assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth+1),false)
     assert.ok(await strip.locator('img').evaluateAll(images=>images.every(img=>getComputedStyle(img).objectFit==='contain')))
-    await section.getByRole('button',{name:locale==='ar'?'البنوك 12':'Banks 12',exact:true}).click()
+    await section.getByRole('button',{name:locale==='ar'?'البنوك':'Banks',exact:true}).click()
     assert.equal(await strip.locator('img').count(),24)
     await section.locator('summary').click()
     assert.equal(await section.locator('ul a').count(),12)
