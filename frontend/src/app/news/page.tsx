@@ -9,7 +9,7 @@ import { NewsCard } from "@/components/sections/NewsCard"
 import { PageHero } from "@/components/sections/PageHero"
 import { usePublicCollection } from "@/lib/use-public-collection"
 import { mapNewsItem, type ApiNewsItem } from "@/lib/content-api"
-import { NEWS_REGIONS, categoryLabel, mergeNews, curatedNews, newsDate, newsRegion, regionLabel, type NewsRegion } from "@/lib/news-feed"
+import { NEWS_REGIONS, categoryLabel, mergeNews, curatedNews, newsRegion, regionLabel, type NewsRegion } from "@/lib/news-feed"
 import { getLocalizedNewsContent } from "@/lib/news-content"
 import { useLocale } from "@/lib/locale"
 
@@ -43,11 +43,6 @@ function Newsroom({ params }: { params: SearchParamsLike }) {
   }, [params, pathname, router])
 
   const items = useMemo(() => mergeNews(collection.items.map(mapNewsItem), collection.snapshotAllowed ? curatedNews : []), [collection.items, collection.snapshotAllowed])
-  const regionCounts = useMemo(() => {
-    const counts: Record<string, number> = { "": items.length }
-    for (const item of items) counts[newsRegion(item)] = (counts[newsRegion(item)] ?? 0) + 1
-    return counts
-  }, [items])
   const inRegion = useMemo(() => items.filter(item => !region || newsRegion(item) === region), [items, region])
   const categories = useMemo(() => [...new Set(inRegion.map(item => item.category))].sort(), [inRegion])
   const filtered = useMemo(() => {
@@ -66,12 +61,7 @@ function Newsroom({ params }: { params: SearchParamsLike }) {
   const lead = showLead ? filtered[0] : undefined
   const rest = showLead ? filtered.slice(1) : filtered
   const shown = rest.slice(0, visible)
-  const saudiLatest = items.find(item => newsRegion(item) === "saudi")
   const filtersActive = Boolean(query || region || category || sort !== "newest")
-  // Until the first response arrives, show a placeholder rather than "0 stories".
-  const counting = collection.loading && items.length === 0
-  const count = (value: number) => counting ? "—" : value
-
   const chip = (active: boolean) => `inline-flex min-h-11 shrink-0 items-center gap-2 whitespace-nowrap rounded-full border px-4 text-sm font-bold transition-colors ${active ? "border-[var(--action-bg)] bg-[var(--action-bg)] text-[var(--action-fg)]" : "border-[var(--border)] bg-[var(--surface)] text-[var(--text)] hover:border-[var(--action-bg)]"}`
 
   return <div dir={direction} lang={locale} className="min-h-screen bg-[var(--page-bg)]">
@@ -79,20 +69,14 @@ function Newsroom({ params }: { params: SearchParamsLike }) {
       tone="dark"
       eyebrow={ar ? "غرفة أخبار وصول" : "The Wosool newsroom"}
       title={ar ? "أخبار الشركات الناشئة" : "Startup news"}
-    >
-      <dl className="grid max-w-3xl grid-cols-2 gap-3 sm:grid-cols-3">
-        <div className="rounded-2xl border border-white/15 p-4"><dt className="text-xs text-[var(--on-dark-muted)]">{ar ? "الأخبار" : "Stories"}</dt><dd className="mt-1 text-2xl font-extrabold">{count(items.length)}</dd></div>
-        <div className="rounded-2xl border border-white/15 p-4"><dt className="text-xs text-[var(--on-dark-muted)]">{ar ? "من السعودية" : "From Saudi Arabia"}</dt><dd className="mt-1 text-2xl font-extrabold">{count(regionCounts.saudi ?? 0)}</dd></div>
-        <div className="col-span-2 rounded-2xl border border-white/15 p-4 sm:col-span-1"><dt className="text-xs text-[var(--on-dark-muted)]">{ar ? "آخر خبر سعودي" : "Latest Saudi story"}</dt><dd className="mt-1 text-base font-bold">{saudiLatest ? newsDate(saudiLatest.publishedAt, locale) : "—"}</dd></div>
-      </dl>
-    </PageHero>
+    />
 
     <section className="mx-auto max-w-6xl px-4 py-10 sm:px-6" aria-labelledby="stories-title">
       <h2 id="stories-title" className="text-2xl font-bold text-[var(--text-strong)]">{ar ? "اكتشف آخر الأخبار" : "Explore the latest"}</h2>
 
       <div role="group" aria-label={ar ? "المنطقة" : "Region"} className="mt-6 flex gap-2 overflow-x-auto pb-1">
         {(["", ...NEWS_REGIONS] as const).map(value => <button key={value || "all"} type="button" aria-pressed={region === value} onClick={() => setParams({ region: value || null, topic: null })} className={chip(region === value)}>
-          {value ? regionLabel(value, locale) : ar ? "الكل" : "All"}<span className="rounded-full bg-black/10 px-2 text-xs">{count(regionCounts[value] ?? 0)}</span>
+          {value ? regionLabel(value, locale) : ar ? "الكل" : "All"}
         </button>)}
       </div>
 
@@ -106,16 +90,15 @@ function Newsroom({ params }: { params: SearchParamsLike }) {
         {categories.map(value => <button key={value} type="button" aria-pressed={category === value} onClick={() => setParams({ topic: category === value ? null : value })} className={chip(category === value)}>{categoryLabel(value, locale)}</button>)}
       </div>}
 
-      <div className="mb-6 mt-6 flex flex-wrap items-center justify-between gap-3">
-        <p role="status" className="text-sm text-[var(--text-muted)]">{count(filtered.length)} {ar ? "نتيجة" : "results"}</p>
-        {filtersActive && <button type="button" onClick={() => router.replace(pathname, { scroll: false })} className="min-h-11 text-sm font-bold text-[var(--link)]">{ar ? "مسح الفلاتر" : "Clear filters"}</button>}
-      </div>
+      {filtersActive && <div className="mb-6 mt-6 flex justify-end">
+        <button type="button" onClick={() => router.replace(pathname, { scroll: false })} className="min-h-11 text-sm font-bold text-[var(--link)]">{ar ? "مسح الفلاتر" : "Clear filters"}</button>
+      </div>}
 
       {collection.error && <div role="status" className="mb-6 rounded-xl border border-[var(--border-soft)] bg-[var(--surface)] p-4 text-sm text-[var(--text-muted)]"><p>{collection.snapshotAllowed ? ar ? "التحديث المباشر غير متاح. الأخبار المحفوظة تبقى متاحة للقراءة." : "Live updates are temporarily unavailable. Saved, sourced stories remain readable." : ar ? "تعذر تحميل الأخبار. لم تُضف أخبار من النسخة المحفوظة." : "Stories could not be loaded. No saved stories have been added."}</p><button onClick={collection.retry} className="mt-2 min-h-11 font-bold text-[var(--link)]">{ar ? "إعادة المحاولة" : "Retry live updates"}</button></div>}
 
       {lead && <div className="mb-8"><NewsCard item={lead} variant="lead" /></div>}
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">{shown.map(item => <NewsCard key={item.sourceUrl || item.slug} item={item} />)}</div>
-      {rest.length > shown.length && <div className="mt-8 text-center"><button type="button" onClick={() => setParams({ show: String(visible + PAGE_SIZE) })} className="min-h-12 rounded-xl border border-[var(--border)] bg-[var(--surface)] px-6 font-bold text-[var(--text)] hover:border-[var(--action-bg)]">{ar ? `عرض المزيد (${rest.length - shown.length})` : `Show more (${rest.length - shown.length})`}</button></div>}
+      {rest.length > shown.length && <div className="mt-8 text-center"><button type="button" onClick={() => setParams({ show: String(visible + PAGE_SIZE) })} className="min-h-12 rounded-xl border border-[var(--border)] bg-[var(--surface)] px-6 font-bold text-[var(--text)] hover:border-[var(--action-bg)]">{ar ? "عرض المزيد" : "Show more"}</button></div>}
       {!collection.loading && !collection.error && !filtered.length && <div className="rounded-2xl border border-[var(--border-soft)] bg-[var(--surface)] p-10 text-center"><p>{ar ? "لا توجد أخبار مطابقة. جرّب بحثاً آخر." : "No matching stories. Try a different search."}</p><button onClick={() => router.replace(pathname, { scroll: false })} className="mt-4 min-h-11 font-bold text-[var(--link)]">{ar ? "مسح الفلاتر" : "Clear filters"}</button></div>}
       {!collection.error && <CollectionStatus {...collection} empty={false} />}
     </section>
