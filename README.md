@@ -1,417 +1,123 @@
 <p align="center">
-  <img src="frontend/public/wosool-logo-eo.svg" alt="Wosool — Founders to Founders" width="680" />
+  <img src="frontend/public/wosool-logo-eo.svg" alt="Wosool | وصول" width="420" />
 </p>
 
 <h1 align="center">Wosool | وصول</h1>
-
-<p align="center"><strong>Founders to Founders — a Saudi-first community connecting founders across the WORLD.</strong></p>
-
+<p align="center"><strong>Founders to Founders</strong></p>
 <p align="center">
-  <a href="https://github.com/king4arabs/wosool/actions/workflows/ci.yml"><img src="https://github.com/king4arabs/wosool/actions/workflows/ci.yml/badge.svg" alt="CI status" /></a>
-  <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="MIT License" /></a>
-  <a href="package.json"><img src="https://img.shields.io/badge/Node.js-22.12%2B%20or%2024.x-339933?logo=nodedotjs&logoColor=white" alt="Node.js 22.12+ or 24.x" /></a>
-  <a href="backend/composer.json"><img src="https://img.shields.io/badge/PHP-8.3%2B-777BB4?logo=php&logoColor=white" alt="PHP 8.3+" /></a>
-</p>
-
-<p align="center">
-  <a href="https://wosool.org">Community website</a> ·
-  <a href="https://wosool.org/eoa">EO Riyadh Accelerator</a> ·
+  <a href="https://wosool.org">Website</a> ·
   <a href="#quick-start">Quick start</a> ·
   <a href="#documentation">Documentation</a> ·
-  <a href="https://github.com/king4arabs/wosool/issues">Report a bug</a>
+  <a href="https://github.com/king4arabs/wosool/actions/workflows/ci.yml">CI</a>
 </p>
 
-SEO update (25 October 2026): distinct opportunity and Accelerator snippets, server-rendered public event/program details, expanded public sitemaps, crawler not-found handling, branded social previews and automated SEO checks. See [search visibility setup and release checks](docs/SEO.md), including Google/Bing verification, sitemap submission and next priorities. Repository validation does not establish live publication or rankings.
+Wosool is an Arabic/English founders platform connecting Saudi Arabia, the GCC, MENA and the world. It brings founder and company profiles, events, news, introductions and community services together, with a dedicated EO Riyadh Accelerator experience.
 
-Content refresh (29 October 2026): **308 founder profiles, 168 companies and 89 news briefs** in synchronized repository catalogs. The latest append-only reconciliation covers 51 venture ecosystems, keeps public region filters count-free and preserves all earlier profiles and moderation state. Broader founder profiles do not imply Wosool membership or revenue qualification. See [29 October source evidence and publication boundaries](docs/research/FOUNDER-WORLDWIDE-DIVERSITY-2026-10-29.md). Production database imports and live release verification are recorded separately. The newsroom now hides region/topic controls, mixes stories on each visit and frames images without cropping. [Newsroom refresh evidence](docs/research/NEWSROOM-REFRESH-2026-10-29.md).
-
-Wosool brings founder profiles, startup and venture discovery, events, learning, reviewed introductions, collaboration, and administration into one Arabic/English platform. This monorepo contains the Next.js frontend, Laravel API, database migrations, tests, operating tools, and production documentation.
-
-Wosool also provides the dedicated digital gateway for **EO Riyadh Accelerator** at **`/eoa`**: **Riyadh-based Founders. Global Connections. Extraordinary Growth.** Wosool community membership, Accelerator admission, official enrollment, graduation, and EO membership remain separate decisions and workflows.
-
-> **Board and mentor update (14 October 2026):** JOZO correction, 36 EO community profiles on `/eoa` and `/eoa/mentors`, and protected concurrent board editing. [Sources, checks and release steps](docs/BOARD-MENTORS-2026-10-14.md).
-
-> **Release boundary:** GitHub CI validates source, security checks, tests, and production builds. A commit, merge, or green workflow does **not** by itself prove that production hosting has deployed the change. See the [production deployment contract, preflight and health monitoring](DEPLOYMENT.md#production-deployment-contract-october-22-2026).
-
-> **Release check (29 October 2026):** independent public fetches reach the homepage and Accelerator page, and the homepage now renders count-free founder-region controls consistent with current source presentation. This surface check does not establish the active Hostinger revision, availability of every one of the 308 source profiles, backend safeguards, OpenAPI route or any production database import; those remain separate, unverified evidence.
-
-> **Knowledge, API and content cycle (16 October 2026):** bilingual `/wiki`, public `/api` reference and OpenAPI, server-rendered news metadata, public-record sitemap, draft-only RSS discovery, and **144 founders / 79 companies / 42 stories** in checked-in source snapshots. See [development phases and next actions](docs/CONTINUOUS-DEVELOPMENT.md) and [source evidence](docs/research/KNOWLEDGE-CONTENT-2026-10-14.md). Production deployment/import remain separate release steps.
-
-> **Profile SEO (15 October 2026):** founder/company detail pages now generate record-specific titles, descriptions and canonical/share URLs from the anonymous public API. Missing, hidden, invalid or unreachable records are `noindex`, without a metadata snapshot fallback. No membership claims, private fields or new research records are introduced. See [checks and release boundaries](docs/research/PROFILE-SEO-2026-10-15.md).
-
-> **Collection withdrawal safeguards (16 October 2026):** founder/news lists and profile news no longer restore saved records after client errors or while the first request is loading. Denied later pages clear previously loaded records; retries respect earlier authoritative responses. [Scope, source review and release checks](docs/research/COLLECTION-WITHDRAWAL-2026-10-16.md).
-
-### Start here
-
-**Hostinger release readiness (23 October 2026):** the default frontend build now rejects missing/unsafe release origins before compilation, loads Next.js production environment files, and pins pnpm 11.24.0. Runtime smoke checks also verify the delivered JavaScript and CSS. Copy the public values from `frontend/.env.production.example` into Hostinger settings; see the [exact deployment settings](DEPLOYMENT.md#hostinger-release-settings--23-october-2026). Local loopback previews use `npm --prefix frontend run build:local`.
-
-**Homepage founder discovery (22 October 2026):** a fresh Saudi-first mix of up to 36 scorecards per visit, an accessible shuffle control and a searchable grid draw from 150 sourced founders across 83 company groups. Six newly researched profiles include bilingual biographies and five authentic portraits. Live public profiles load across all pages and appear separately from the editorial spotlight, with matching slugs removed from the spotlight. [Sources and release checks](docs/research/HOME-FOUNDER-DISCOVERY-2026-10-22.md).
-
-**Default hosting build (23 October 2026):** `pnpm run build` runs webpack through a build-only launcher that limits Tokio and Rayon worker pools to one thread each. Next.js page collection and generation use one worker, avoiding the reported host failure when it attempted 63 workers. The standalone CI gate uses Node 22 / pnpm 11.24.0, simulates the 63-worker default, verifies the build stays at one page worker, then starts that artifact through `pnpm run start` and checks `/health`, `/` and `/eoa`. Hosting publication remains a separate verification step.
-
-**pnpm hosting install (22 October 2026):** The standalone `frontend/` build includes its own `pnpm-workspace.yaml` approvals for `esbuild` and `unrs-resolver`, plus `pnpm-lock.yaml`. Root workspace installs retain their own policy and lockfile. Node 22 CI checks a frontend-only archive with a fresh store through install, native-tool loading, lint and webpack build. Existing npm locks remain for npm CI. See [hosting release steps](DEPLOYMENT.md#hostinger-web-app-wosoolorg).
-
-**Revenue evidence correction (18 October 2026):** Swarm Robotics and Huspy now remain pending in the revenue-gated startup catalog. Their cited sources do not establish a specific revenue result and reporting period together. The API also excludes missing/null/empty revenue sources or periods before pagination and sector filters. The 14-record catalog now has eight eligible records; broader founder profiles are unchanged. [Evidence, checks and production correction steps](docs/research/REVENUE-ELIGIBILITY-2026-10-18.md).
-
-**Public API contracts (28 October 2026):** OpenAPI document version 1.5.0 covers news, anonymous founders, standalone companies and the revenue-qualified startup collection. Public founder/company reads are limited to 24 records per page and 30 requests per minute, return private no-store/noindex headers and redact account identifiers, legal identities, direct social links, private matching fields and scorecards. Authenticated owner/admin flows retain their authorized data. These controls discourage bulk harvesting but do not make public repository/browser content private. [Implementation and remaining edge controls](docs/FOUNDER-DATA-PROTECTION.md).
-
-**Localized system screens (28 October 2026):** the global 404, unexpected-error, loading and toast accessibility copy now follows Arabic/English selection. Error recovery uses Next.js `retry()` instead of re-render-only `reset()`, removes the unsupported notification claim and preserves server-provided error IDs. CI run 296 passed the production build, browser/accessibility gates, standalone pnpm hosting build and Laravel on PHP 8.3/8.4/8.5. Production deployment remains unverified.
-
-**Event discovery (29 October 2026):** `/events` opens with a compact agenda and optional month grid. Current-month browsing starts today and retains ongoing multi-day events; visitors can show the whole month or browse the archive. Event information expands on demand, conference filters and weekly programme details use disclosures, and community events have separate search and period filters. Event cards always link to their detail page; registration and calendar actions appear before long descriptions on mobile. Arabic/English copy and existing event eligibility rules are preserved. The calendar browser check covers both languages, narrow and wide layouts, disclosure controls and incompatible-filter reset. Production publication requires separate Hostinger verification.
-
-**Arabic date consistency (25 October 2026):** public, member and admin views use Gregorian dates with Western digits in Arabic, and member event/program times are explicitly shown in Riyadh time. EO Riyadh Accelerator pages retain their established Arabic-Indic digits while pinning calendar dates to Gregorian. A source guard prevents bare `ar-SA` date formatting from returning. Production deployment remains a separate verification step.
-
-**Arabic API validation (26 October 2026):** validation errors now follow the request language across public, account and member forms. Arabic requests use complete Arabic rule messages and field labels; request-specific application, contact, introduction and program messages are localized in both Arabic and English. Required Laravel CI passes on PHP 8.3, 8.4 and 8.5. Production deployment remains a separate verification step.
-
-**Member settings localization (27 October 2026):** `/dashboard/settings` now provides complete Arabic and English account copy, preference labels, headings, password guidance and localized validation errors. Dashboard navigation and profile removal controls also use the active language, with improved RTL spacing, current-page semantics and mobile-menu behavior. Required CI passes; production deployment remains unverified. Of the 13 stored preferences, only `program_updates` currently changes delivery behavior, so the other 12 controls still require a separate implement-or-hide decision.
-
-**Content review coverage (17 October 2026):** integrity and 30-day review commands now cover both founder catalogs: **144 founders / 79 company groups / 42 stories**. Catalog-specific diagnostics, cross-catalog duplicate checks and unregistered-file guards prevent silent omissions. These are repository counts, not newly verified people or production imports. [Checks and source-review limits](docs/research/CONTENT-COVERAGE-2026-10-17.md).
-
-| If you want to… | Read |
-| --- | --- |
-| Run the applications locally | [Quick start](#quick-start), then [Development commands](#development-commands) |
-| Understand the services and API | [Architecture](#architecture) and the [API reference](docs/API.md) |
-| Work on the Accelerator | [EOA operations](docs/EOA.md) for workflows, approvals, and release gates |
-| Test or deploy a change | [Testing](TESTING.md) and [Deployment](DEPLOYMENT.md); CI does not deploy |
-| Report a security issue | [Security policy](SECURITY.md) for private reporting |
-
-## Founder directory expansion (16 October 2026)
-
-The directory's checked-in catalogs contain **144 public entrepreneur profiles** (44 existing + 100 newly researched) across **79 company groups**, prioritizing Saudi Arabia, the GCC and MENA. New entries have bilingual summaries and named evidence sources without invented portraits, financial metrics or community memberships.
-
-See [sources, counts, quality policy and production import runbook](docs/FOUNDER-EXPANSION-2026-10-16.md). Production publication requires deploying the same frontend/backend revision, backing up and migrating the database, and running `php artisan wosool:import-founders`; a GitHub code update alone does not change the live database.
-
-## Current platform snapshot — October 14, 2026
-
-The latest product and brand upgrade includes:
-
-- **Approved Wosool identity:** the connected-node W mark, large horizontal website wordmark, white footer version, and standalone favicon/application icon.
-- **Unified product design system:** semantic tokens, Cairo as the primary Arabic and English typeface, responsive spacing, consistent cards, accessible controls, visible focus states, and reduced-motion behavior.
-- **Trusted founder and venture scorecards:** company logo, founder portrait, role, short company/founder summaries, sector, stage, location, official links, verification, review freshness, source evidence, and opportunity signals where data is available.
-- **Founder browsing:** one responsive scorecard row advances physically right every three seconds, with arrows, swipe, pause and reduced-motion support. Expand the grid below for numbered pages, page-size options, search and sector filters in both languages.
-- **Founder spotlight:** 144 public-source editorial profiles across both catalogs keep the homepage and directory useful during API outages, clearly separated from approved member profiles. Source structure checks do not independently verify each person's current role.
-- **Mentors and advisors:** responsive mentor cards on `/eoa` and `/eoa/mentors`, expertise filters, portrait management, audited draft/publish controls and confirmed public appointments.
-- **Bilingual account journeys:** shared registration/application layouts, working invitation email entry, recoverable validation, draft-storage resilience and direct EOA sign-in destinations.
-- **Reviewed founder introductions:** authenticated members can discover approved founders, state the purpose and intended value of a connection, submit through the established introduction API, and track the request.
-- **Administration command center:** API-backed operational metrics and grouped navigation for community, operations, growth/content, EO Riyadh Accelerator, privacy, and system settings.
-- **EO Riyadh Accelerator:** licensed Riyadh skyline video with a static reduced-motion poster, official EO palette, original transparent EO Riyadh logo, nine-stage growth journey, and verified program information.
-- **2026/27 EO Riyadh board:** 11 original poster portraits with researched company/profile links, accessible rightward carousel, and API-backed ordering, terms, publishing and secure portrait management.
-- **Editorial operations:** bilingual operator content and FAQs with draft/published snapshots, stale-save protection, partner details, and audit history.
-- **Startup newsroom:** `/news` provides public photo scorecards, search and category filters, dated independent Arabic/English news briefs, publisher attribution, and links to full source articles. A researched snapshot remains readable when the API is unavailable; company-associated stories also appear on public founder and company profiles. Coverage does not imply Wosool membership or endorsement.
-- **Reliability guardrails:** no fictional metrics, partners, founders, revenue, or affiliations; private contact and financial records remain protected; official EO and EO Riyadh artwork remains separate from Wosool artwork.
-- **Transactional email:** verification, founder activation codes and password recovery use a shared bilingual Wosool header and footer; recovery mail states the configured token expiry. The logo image requires a publicly accessible frontend origin, while the text brand remains visible if images are blocked.
-
-See [CHANGELOG.md](CHANGELOG.md) for release history and verified implementation details.
-
-See [the founder, mentor and responsive journey guide](docs/FOUNDERS-MENTORS-2026-10-11.md) for data sources, publication controls and deployment requirements.
-
-Partner strips and partner/founder/company cards share transparent logo fitting, authentic colors, proportional sizing and readable image-failure fallbacks. EO, Kitopi and Salla retain clear space while their excess empty canvas is framed; Canva, Foodics, Paymob, Rasan and Jahez use verified transparent originals. Swarm's original logo is also served locally. Partner strips retain keyboard/touch controls and optional motion. See [the transparency audit](docs/PARTNER-ASSETS-2026-10-11.md) for original asset sources and optical sizing notes.
-
-The Partners page puts ecosystem discovery first, with bilingual name search, moving linked logos, member sessions and a partnership contact action. Logo order is randomized per page visit after hydration and remains stable through searches and language switches. The slider moves physically right without a hover pause; short result sets repeat seamlessly, decorative duplicates are excluded from keyboard navigation, and reduced-motion preferences show each organization once. Confirmed API partners remain separate from potential partnership organizations, with collection retry and pagination beside that section.
-
-The Founders directory shuffles its scorecards and expanded grid on every page visit, keeping the same relative order through filtering, language changes and loading additional pages. Cards advance physically right automatically, with reading/focus pauses, manual controls and reduced-motion support. Public API search matches Arabic and English founder names and every active public linked company, normalizes Arabic letter variants/diacritics, treats SQL wildcard characters literally, and combines multiple terms across names. Server matches are not discarded by a second locale-only filter. Outage snapshots search both public-language name variants; throttling, the 24-record API page cap and private-field redaction remain in place.
-
-## EO Riyadh Accelerator preview
-
-Local production-build screenshots with the seeded Laravel API (not a claim of live deployment):
-
-![EO Riyadh Accelerator desktop](docs/screenshots/eoa-en-desktop.jpg)
-
-![EO Riyadh Board 2026/27](docs/screenshots/eoa-board-desktop.jpg)
-
-[Arabic desktop](docs/screenshots/eoa-ar-desktop.jpg) · [Arabic mobile](docs/screenshots/eoa-ar-mobile.jpg) · [English mobile](docs/screenshots/eoa-en-mobile.jpg)
-
-## Platform capabilities
-
-- **Founder community:** public and authenticated profiles, company management, directories, reviewed introductions, chat, events, learning, and collaboration.
-- **Startup, scaleup, and venture discovery:** Saudi-first ecosystem records, source provenance, editorial review, business classifications, official links, and scheduled freshness checks.
-- **EO Riyadh Accelerator:** public discovery, eligibility, verified accounts, private server-saved applications, evidence, assigned review, interviews, decisions, onboarding, cohorts, participant services, coaching, and progress.
-- **Administration:** scoped roles, application pipelines, founders, companies, scorecards, introductions, events, programs, partners, sponsors, news, analytics, privacy requests, settings, and EOA operations.
-- **Bilingual experience:** Arabic/English, RTL/LTR, Cairo typography, logical spacing, responsive layouts, and accessible navigation.
-- **Content reliability:** public partner, mentor, founder, revenue, and ecosystem claims require approved records and source evidence.
-
-### Founder activation
-
-Sourced founder/company cards connect to public profiles and an administrator-managed email activation flow. Activated founders can manage their information, access an initially unscored private scorecard, and use private community conversations. Activation does not certify a growth score. See [founder activation and release notes](docs/FOUNDER-ACTIVATION.md) for import, recipient verification, mail setup, and deployment checks.
-
-| Experience | Canonical route | Purpose |
-| --- | --- | --- |
-| Wosool community | `/` | Founder-community discovery and its own membership journey |
-| Founder directory | `/founders` | Approved public founders, with a separately labeled editorial spotlight |
-| Accelerator mentors | `/eoa/mentors` | Published mentor profiles, expertise and professional links |
-| Knowledge hub | `/wiki` | Bilingual founder, company evidence, Accelerator and source guides |
-| Public API reference | `/api` | Read-only endpoints and `/api/openapi.json` contract |
-| Startup directory | `/startups` | Sourced startup, scaleup, and venture discovery |
-| Member workspace | `/dashboard` | Profiles, companies, community, matches, events, programs, and messages |
-| EO Riyadh Accelerator | `/eoa` | Program discovery, eligibility, accounts, applications, and public content |
-| Accelerator workspace | `/dashboard/eoa` | Applicant decisions, tracks, and participant services |
-| Administration | `/admin` | Community and platform operations |
-| EOA operations | `/eoa/admin` | Scoped Accelerator review and operations |
-| Ecosystem directory | `/opportunities` | Sourced ecosystem entities and opportunities, not implied partnerships |
-
-Legacy `/EOA` and `/accelerator` links are redirected to the canonical lowercase `/eoa` experience. The physical Next.js route tree is `frontend/src/app/eoa`.
+Community membership, Accelerator admission and administrator access are separate permissions. Registration requires email verification; community membership requires review and approval.
 
 ## Architecture
 
-| Component | Implementation |
+| Layer | Technology and responsibility |
 | --- | --- |
-| Frontend | Next.js 16.4, React 19, strict TypeScript, Tailwind CSS 4, Cairo Variable, Arabic/English RTL/LTR |
-| Backend | Laravel 13, PHP 8.3+, Sanctum cookie sessions, Spatie roles and permissions |
-| Database | SQLite for local development/tests; verify and preserve the configured production database engine |
-| API | Same-origin browser access through `/api/v1`, server-side authorization, validation, CSRF protection, rate limits, and resources |
-| EOA routes | `frontend/src/app/eoa`, `frontend/src/components/eoa`, `backend/routes/eoa.php` |
-| EOA domain | `backend/app/Services/Eoa`, `backend/app/Http/Controllers/Api/Eoa` |
-| Ecosystem records | `/opportunities`, `ecosystem_records`, and the source ledger under `docs/research` |
-| CI | Frontend lint, types, tests, data validation, dependency audit, build; backend syntax, tests, audits, and build |
-| Deployment | Separate Node and PHP applications; repository CI validates but does not deploy production |
+| Website | Next.js, React, TypeScript and Tailwind CSS; Arabic/English, RTL/LTR and responsive interfaces |
+| API | Laravel, Sanctum cookie sessions and Spatie roles; validation, authorization and application workflows |
+| Database | SQLite for local development and tests; production uses its configured database |
+| Hosting | Separate Next.js frontend and Laravel API; browser requests use the same-origin `/api` proxy |
 
-Browser API requests use the same-origin proxy. Sessions use CSRF protection. Sensitive application fields are encrypted and versioned server-side; supporting documents remain private and authorization-controlled. Do not expose backend storage or rotate the application encryption key without a tested recovery plan.
+| Directory | Contents |
+| --- | --- |
+| [`frontend/`](frontend/) | Public website, member workspace, admin interface and frontend tests |
+| [`backend/`](backend/) | API, domain services, migrations, authorization and backend tests |
+| [`scripts/`](scripts/) | Setup, development, content validation and production checks |
+| [`docs/`](docs/) | Product guides, operating procedures and source evidence |
 
-```text
-.
-├── frontend/       # Next.js app, design system, public/member/admin UI, API clients, frontend tests
-├── backend/        # Laravel API, domain services, models, migrations, policies, jobs, backend tests
-├── docs/           # Product, API, EOA, research, operations, and release documentation
-├── scripts/        # Setup, development, validation, import, and operational commands
-└── package.json    # Monorepo setup, verification, and build entry points
-```
+See [ARCHITECTURE.md](ARCHITECTURE.md) for system details. Dependency manifests and lockfiles define the installed versions.
 
 ## Quick start
 
-### Prerequisites
+### Requirements
 
 - Node.js **22.12+ on 22.x, or 24.x**, with npm.
-- PHP **8.3+** and Composer **2**, compatible with the committed lockfile.
-- Required PHP extensions; CI enables `mbstring`, `dom`, `curl`, `pdo_sqlite`, and `sqlite3`.
-- Git and a Bash-compatible shell for the combined development launcher.
+- PHP **8.3.36+, 8.4.27+, or 8.5.12+** on a branch allowed by [`backend/composer.json`](backend/composer.json), plus Composer 2 and its required PHP extensions.
+- Git and a Bash-compatible shell. The default local database requires SQLite support.
 
-Local setup uses SQLite by default. If using PostgreSQL with a database that lacks the slug-based founder and company schema from the 2024 migrations, the legacy core migration requires `pgvector` and permission to create its `vector` extension (or an administrator must create it first).
-
-### Install and run locally
+### Install and run
 
 ```bash
 git clone https://github.com/king4arabs/wosool.git
 cd wosool
 npm run setup
 
-# Optional: make the documented frontend defaults explicit.
 test -f frontend/.env.local || cp frontend/.env.example frontend/.env.local
-
 npm run dev
 ```
 
-`npm run setup` installs locked frontend/backend dependencies, copies `backend/.env.example` only if `backend/.env` is absent, generates a key only if missing, creates the configured local SQLite file when required, runs migrations, and runs the non-destructive `eoa:install` setup. The default database is file-backed SQLite; existing configuration and keys are preserved. Setup refuses production demonstration setup and does not seed privileged accounts.
+Open **http://localhost:3000**. The backend runs at **http://localhost:8000**.
 
-To use another database, configure `backend/.env` **before** running `npm run setup`; do not run local setup against a production database. A fresh PostgreSQL schema using the legacy core migration needs the `vector` extension available and permission to create it, or an administrator must provision it first.
+Setup installs dependencies, prepares the local backend environment and SQLite database, runs migrations and installs the Accelerator configuration. It preserves existing keys/configuration and does not seed privileged accounts. Use a development database; configure `backend/.env` before setup if using another engine. A fresh legacy PostgreSQL schema may require `pgvector`.
 
-| Service | Local address |
-| --- | --- |
-| Frontend | http://localhost:3000 |
-| API liveness | http://localhost:8000/api/health |
-| API readiness | http://localhost:8000/api/ready |
-
-Run a queue worker in a second terminal:
+For queued jobs, run a separate worker:
 
 ```bash
 php backend/artisan queue:work --tries=5 --timeout=60
 ```
 
-> Local mail defaults to `MAIL_MAILER=log` and does not deliver email. Use a controlled mail sink for verification and recovery tests. Keep EOA data collection and intake closed until the required administrative and privacy approvals are configured.
-
-Transactional messages use the configured `FRONTEND_URL` for links and the Wosool logo. Set it to the public HTTPS website origin before sending production mail; test image loading, both languages, reset/verification links and delivery on real email clients. The founder activation code expires after seven days; verification links expire after 60 minutes and password-reset expiry follows `auth.passwords.users.expire`. Do not send founder invitations without independently confirming the recipient, and do not treat mail-transport acceptance as inbox delivery.
-
-### Optional data imports
-
-```bash
-# Preview and apply the wider ecosystem import.
-php backend/artisan wosool:import-ecosystem
-php backend/artisan wosool:import-ecosystem --apply
-
-# Preview and import the sourced startup/founder directory.
-php backend/artisan directory:import --dry-run
-php backend/artisan directory:import
-```
-
-Production imports require a verified staging run, backups, source review, and publication approval. Never run fictional demonstration seeders in production.
-
-## Development commands
-
-Run commands from the repository root after setup:
-
-| Command | Purpose |
-| --- | --- |
-| `npm run dev` | Start frontend and backend together; stop both with Ctrl+C |
-| `npm run dev:frontend` / `npm run dev:backend` | Start one application independently |
-| `npm run content:check` | Check founder/news source integrity and frontend/backend snapshot parity |
-| `npm run content:test` | Regression tests for full-catalog coverage, parity, validation and review deadlines |
-| `npm run content:review` | Emit 30-day founder review queue; does not verify sources automatically |
-| `npm run lint` | Run frontend ESLint |
-| `npm run type-check` | Check frontend TypeScript |
-| `npm run test` | Run frontend and backend regression suites |
-| `npm run test:frontend` / `npm run test:backend` | Run one test suite |
-| `npm run validate:entrepreneurs` | Validate the researched entrepreneur dataset |
-| `npm run build` | Build both applications with validated frontend release environment |
-| `npm run verify` | Run lint, types, tests, data validation, and both builds |
-| `npm run eoa:install` | Repeat the non-destructive EOA installer |
-
-Reverb is optional and is not started by default. Configure it before using `RUN_REVERB=1 npm run dev`.
-
-<details>
-<summary>Common local issues</summary>
-
-- **SQLite file cannot be created:** verify `DB_DATABASE` and parent-directory permissions.
-- **API requests fail:** ensure the backend is running and `NEXT_PUBLIC_API_URL` points to its origin without `/api`; restart the frontend after environment changes.
-- **Verification or reset email does not arrive:** the default log mailer is not a sending transport; configure a controlled mail sink and run the queue worker.
-- **EOA registration or submission is unavailable:** check privacy notice, intake, and program settings in [EOA operations](docs/EOA.md); do not bypass the gates.
-- **Ports are occupied:** stop conflicting processes or start frontend/backend independently with appropriate ports.
-
-</details>
+**Email:** the default log mailer does not deliver messages. Configure a controlled SMTP inbox for registration and recovery testing. Registration OTP delivery is synchronous and rejects log/array mailers. See [registration QA](docs/REGISTRATION-QA.md) for the complete verification flow.
 
 ## Configuration
 
-Use [`frontend/.env.example`](frontend/.env.example) and [`backend/.env.example`](backend/.env.example) as references. Frontend overrides belong in `frontend/.env.local`; backend values belong in `backend/.env`. `NEXT_PUBLIC_*` values are public browser configuration and must never contain secrets.
-
-| Variable | Purpose |
+| File | Purpose |
 | --- | --- |
-| `NEXT_PUBLIC_SITE_URL` | Canonical frontend origin; production `https://wosool.org` |
-| `NEXT_PUBLIC_API_URL` | Actual backend origin without `/api`; rebuild frontend after changes |
-| `NEXT_PUBLIC_EOA_HERO_VIDEO_WEBM` | Optional approved WebM hero footage for `/eoa` |
-| `NEXT_PUBLIC_EOA_HERO_VIDEO_MP4` | Optional approved MP4 hero footage for `/eoa` |
-| `NEXT_PUBLIC_EOA_HERO_POSTER` | Optional approved poster/fallback image for `/eoa` |
-| `APP_ENV`, `APP_DEBUG` | Production environment and `false` debug setting |
-| `APP_KEY` | Stable protected encryption key retained with recovery materials |
-| `APP_URL`, `FRONTEND_URL` | Backend/frontend origins, including verification and recovery links |
-| `SANCTUM_STATEFUL_DOMAINS`, `SESSION_DOMAIN` | Correct origins and cookie scope for the deployed topology |
-| `SESSION_SECURE_COOKIE`, `SESSION_ENCRYPT` | Must be enabled in production |
-| `DB_*`, `CACHE_STORE`, `QUEUE_CONNECTION` | Durable database, shared cache, and supervised queue configuration |
-| `MAIL_*` | Real delivery transport, verified sender, and delivery testing |
-| `NEXT_PUBLIC_ENABLE_DEMO_CONTENT` | Development fixtures only; ignored in production |
-| `REVERB_*` | Optional realtime community integration |
+| [`frontend/.env.example`](frontend/.env.example) | Local frontend defaults; copy to `.env.local` |
+| [`frontend/.env.production.example`](frontend/.env.production.example) | Public build-time production values |
+| [`backend/.env.example`](backend/.env.example) | Database, sessions, mail, queue and backend configuration |
 
-Never commit secrets, private applicant documents, tokens, or backups. Rebuild Laravel configuration caches after environment changes. Legacy gateway flags do not authorize EOA collection or intake; approvals belong to EOA administrative settings.
+`NEXT_PUBLIC_API_URL` is the backend origin **without `/api`**. All `NEXT_PUBLIC_*` values are public; never put secrets in them. Keep backend credentials outside source control and preserve the production `APP_KEY`. See [deployment configuration](DEPLOYMENT.md) for session domains, HTTPS and mail settings.
 
-## Roles and workflows
+## Development and testing
 
-- `eoa_applicant`: own verified account, draft application, evidence, decisions, and notifications.
-- Participants: enrollment-derived access to their own checklist, calendar, registrations, resources, accountability group/coach, goals, attendance, feedback, and announcements.
-- `eoa_reviewer`: assigned applications only; no final decisions or financial approval.
-- `eoa_coach`: assigned participant development and attendance; no application-finance access.
-- `eoa_staff`: review coordination and program operations.
-- `eoa_lead` and existing platform administrators: approved local settings, final admission decisions, partner confirmations, and official/financial enrollment checks.
-- Community member roles remain separate from Accelerator admission and EOA permissions.
+Run these commands from the repository root:
 
-Provision privileged users through the audited procedure in [EOA operations](docs/EOA.md). No privileged account is seeded. Applicants can submit data-rights requests through their EOA account; authorized administrators manage requests under `/admin/privacy-requests` according to retention and legal requirements.
-
-## Content, directory, and partnership trust
-
-- Public records must identify their source, last review date, publication state, and relationship status where applicable.
-- A logo, event listing, research record, or ecosystem mention does not establish a partnership.
-- Founder photos, logos, websites, roles, revenue evidence, and social links must come from approved or publicly verifiable sources.
-- Private founder contact information, application finances, applicant documents, and confidential peer discussions never belong in public responses or frontend bundles.
-- Automated ranking may support discovery; human reviewers retain publication, relationship, and admission decisions.
-- Meeting minimum EOA eligibility does not guarantee admission, program completion does not guarantee growth, and graduation does not grant automatic EO membership.
-
-[EOA research](docs/EOA-RESEARCH.md) records official program facts separately from proposed Riyadh delivery decisions. Local dates, fees, sponsorship allocations, partner claims, privacy notices, and commercial terms remain draft until formally approved.
-
-## Brand system
-
-The shared design tokens live in [`frontend/src/app/brand.css`](frontend/src/app/brand.css), consumed by global CSS, Tailwind utilities, public pages, member workspaces, administration, and EOA components.
-
-### Wosool identity assets
-
-| Asset | Use |
+| Command | Purpose |
 | --- | --- |
-| [`frontend/public/wosool-logo-eo.svg`](frontend/public/wosool-logo-eo.svg) | Primary connected-node horizontal website logo |
-| [`frontend/public/wosool-logo-white.svg`](frontend/public/wosool-logo-white.svg) | White footer/dark-background logo |
-| [`frontend/public/wosool-w-favicon.svg`](frontend/public/wosool-w-favicon.svg) | Favicon and compact application icon |
-| [`frontend/public/wosool-network-logo.png`](frontend/public/wosool-network-logo.png) | Legacy raster compatibility and selected touch-image use |
+| `npm run dev` | Run frontend and backend |
+| `npm run lint` | Check frontend code quality |
+| `npm run type-check` | Validate TypeScript |
+| `npm test` | Run frontend and backend tests |
+| `npm run content:check` | Validate source catalogs and snapshot consistency |
+| `npm run verify` | Run the complete verification pipeline, including builds |
+| `npm run smoke:production` | Check live website/API health and critical route availability |
 
-The approved Wosool mark follows the connected-node geometry supplied by the project owner and uses the Wosool/EO-inspired palette. It is the Wosool parent-platform identity, not a replacement or recreation of official EO or EO Riyadh logos.
+Before `npm run verify`, configure the frontend release values described in [TESTING.md](TESTING.md). For a local preview build, use `npm --prefix frontend run build:local` with the local example environment. CI additionally checks browser flows, accessibility, dependency security and the standalone hosting build.
 
-### Interface principles
+## Deployment
 
-- Base navy `#0C0C31`, white `#FFFFFF`, action blue `#3D46F2`.
-- Supporting pink `#FF346E`, orange `#FA653C`, yellow `#EFB82E`, green `#1EA691`, and gray `#5E617D`.
-- Use semantic tokens instead of new literal palettes.
-- Cairo Variable is the primary product typeface for Arabic and English.
-- Use responsive `clamp()` sizing, logical spacing, normal Arabic letter spacing, visible focus states, and controls at least 44px tall.
-- Honor `prefers-reduced-motion` and never make animation the only way to access content.
-- Preserve official EO/EO Riyadh artwork, aspect ratios, clear space, provenance, and approval rules documented in [the partner asset register](docs/research/PARTNER-ASSETS.md).
+Follow [DEPLOYMENT.md](DEPLOYMENT.md) for release order, backups, migrations, mail, monitoring and rollback.
 
-## Verification and release
+The established Hostinger frontend configuration is **`frontend` root · Node 22 · pnpm 11.24.0 · `pnpm run build` · `.next` output**. Preserve the webpack build wrapper, one-worker limits and traced runtime dependencies. Deploy Laravel separately at `api.wosool.org`.
 
-```bash
-npm run verify
-cd backend
-php artisan wosool:check-readiness
-
-# Only on a configured release after required approvals:
-php artisan wosool:check-readiness --production
-```
-
-CI currently covers:
-
-- Frontend dependency installation, ESLint, TypeScript, automated tests, entrepreneur-data validation, production dependency audit, and Next.js production build.
-- Backend Composer installation, application/migration PHP syntax, Composer audit, Laravel tests, Node dependency audit, and backend asset build.
-
-`/api/health` is liveness. `/api/ready` checks database access, applied migrations, and required EOA schema/program records. Neither endpoint proves delivered email, supervised workers, backups, browser acceptance, privacy compliance, or production deployment.
-
-Follow [DEPLOYMENT.md](DEPLOYMENT.md) and [EOA operations](docs/EOA.md) for deployment, backups, restore rehearsal, migrations, queues, mail, rollback, and smoke tests. Keep EOA intake closed until approvals and live checks pass.
-
-Remaining external dependencies include configured hosting/deployment access, production database validation, persistent private storage, real email, supervised workers, approved partner/program decisions, deployed browser acceptance, and backup recovery tests. No payment gateway, EO enrollment API, or production deployment is simulated.
+**A successful build or merge is not a deployment.** Verify both releases, critical routes, real email delivery and authenticated account flows before declaring production ready. General health checks alone do not establish registration or OTP availability.
 
 ## Documentation
 
-| Guide | Contents |
+| Guide | Use it for |
 | --- | --- |
-| [Continuous development](docs/CONTINUOUS-DEVELOPMENT.md) | Phases, acceptance gates, scheduled content review and next actions |
-| [Architecture](ARCHITECTURE.md) | System structure and engineering context |
-| [API reference](docs/API.md) | Backend interfaces |
-| [Community homepage](docs/COMMUNITY-HOMEPAGE.md) | Main Wosool community experience |
-| [Founder activation](docs/FOUNDER-ACTIVATION.md) | Sourced profile import, verified invitations, and release checks |
-| [Founder calendar](docs/FOUNDER-CALENDAR-2026-10-12.md) | Founder learning calendar, Ramadan off days, international holidays and May 2027 milestones |
-| [EOA operations](docs/EOA.md) | Authoritative Accelerator workflows, access, and approvals |
-| [Startup directory](docs/STARTUP-DIRECTORY.md) | Sourcing, imports, review, and publication controls |
-| [Testing](TESTING.md) | Automated coverage and manual acceptance gates |
-| [Deployment](DEPLOYMENT.md) | Hosting, release, backup, and rollback procedures |
-| [Security policy](SECURITY.md) | Private reporting and operating controls |
-| [EOA research](docs/EOA-RESEARCH.md) | Official program facts and source notes |
-| [EOA board release](docs/EOA-BOARD-RELEASE-2026-10-11.md) | Board management, editorial workflow, local checks and deployment status |
-| [Board research](docs/research/EO-RIYADH-BOARD-2026-27.md) | Portrait mapping, professional sources and unresolved entries |
-| [EOA media and sources](docs/research/EOA-SOURCES-2026-10-11.md) | Skyline license, original logos and current official program facts |
-| [Partner assets](docs/research/PARTNER-ASSETS.md) | Artwork provenance and approval constraints |
-| [Reliability release notes](docs/WOSOOL-RELIABILITY-EOA-2026-10-09.md) | October 9 reliability, tracks, and role changes |
-| [Integration release notes](docs/EOA-INTEGRATION-2026-10-09.md) | Canonical EOA migration and legacy compatibility |
-| [Changelog](CHANGELOG.md) | Release history and current implementation changes |
-| [Roadmap](ROADMAP.md) | Planned direction |
+| [Architecture](ARCHITECTURE.md) · [API](docs/API.md) | System structure and interfaces |
+| [Registration QA](docs/REGISTRATION-QA.md) | Signup, OTP, account recovery and verified admin provisioning |
+| [Founder activation](docs/FOUNDER-ACTIVATION.md) | Invitations and profile activation |
+| [EOA operations](docs/EOA.md) | Accelerator applications, roles and program operations |
+| [Administration](docs/ADMIN-OPERATIONS.md) | CRM, PR, analytics and community approval workflows |
+| [Startup directory](docs/STARTUP-DIRECTORY.md) · [Research](docs/research/) | Source review, imports and publication evidence |
+| [Testing](TESTING.md) · [Deployment](DEPLOYMENT.md) | Validation, releases and operational checks |
+| [SEO operations](docs/SEO-OPERATIONS.md) | Search verification, sitemaps and social previews |
+| [Changelog](CHANGELOG.md) · [Roadmap](ROADMAP.md) | Release history and planned work |
 
-## Contributing
+## Contributing and security
 
-1. Start from the latest `main` and preserve unrelated concurrent work.
-2. Keep changes focused; preserve records, authorization boundaries, approval gates, and bilingual behavior.
-3. Add regression coverage for behavior changes and review Arabic/English, RTL/LTR, mobile, keyboard, reduced-motion, and error states.
-4. Update README, CHANGELOG, configuration examples, and affected guides in the same changeset when architecture, routes, dependencies, security, testing, deployment, or product behavior changes.
-5. Run `npm run verify` and relevant readiness/security checks before requesting merge.
-6. Document manual checks, external dependencies, and limitations; never represent CI as production deployment.
+Start from current `main`, read [AGENTS.md](AGENTS.md), and keep changes focused. Preserve authorization boundaries, existing records and Arabic/English behavior. Add relevant regression coverage, run the appropriate checks, and update the affected documentation. Shared visual tokens are in [`brand.css`](frontend/src/app/brand.css).
 
-## Security
-
-Report vulnerabilities privately through [SECURITY.md](SECURITY.md), not public issues. Never commit credentials, tokens, private applicant documents, confidential financial records, or backups. Keep production debug disabled, protect private storage, apply least privilege, and retain the application encryption key with tested recovery materials.
+Report vulnerabilities privately using [SECURITY.md](SECURITY.md). Do not publish credentials, OTPs, applicant documents or private contact data in code, logs or issues. Source records and third-party logos do not by themselves establish membership, partnership or endorsement.
 
 ## License
 
-The software repository is licensed under the [MIT License](LICENSE). Third-party artwork and trademarks remain subject to their owners' rights and approval requirements; the software license does not grant partnership, endorsement, or trademark rights.
-
-### Search and social preview operations
-
-See [SEO operations](docs/SEO-OPERATIONS.md) for Google Search Console, Bing Webmaster Tools, Meta domain verification, sitemap submission and post-release preview checks. Verification tokens are optional build environment values; account verification and indexing are separate from repository delivery.
-
-### Community directory and administration operations
-
-- The partner ecosystem shows bilingual search and the per-visit randomized rightward logo strip; category controls and the duplicate website directory are removed. Logos remain links to the organizations.
-- The founders hero reads “تعرف على مجتمع المؤسسين في شبكة وصول”. Verified registration plus admin approval publishes both founder and co-founder profiles and creates their initial scorecard, regardless of featured status or score. Public card and grid views share the same paginated API collection; email, phone and private scores remain excluded. Repeated approval is idempotent; revoked approval removes public visibility.
-- `/admin/crm` manages contacts, organizations, an assigned administrator, priority, follow-up date, campaign, relationship stage and private notes. `/admin/pr` adds the media pipeline and a published coverage URL. Activity notes persist with an author and timestamp. Existing messages, partners and content remain linked from these workspaces. These tools record work; saving does not send outreach.
-- Relationship edits use a version check to reject conflicting saves. Admin-only API routes are under `/api/v1/admin/relationships`, with capped pagination and a bounded activity history. Audit entries contain workflow changes rather than duplicating contact details or note bodies.
-- The main admin dashboard starts with overdue applications, unanswered messages, CRM/PR follow-ups and an actionable follow-up schedule. Analytics offers 7/30/90-day comparisons, daily account/application trends, current operational totals and CSV export. Approval rate means the share of applications created in the selected period whose current status is approved; it is not a historical decision conversion rate. Empty cohorts display no rate. Date windows use the API application timezone; follow-up dates use Riyadh.
-- Deploy the additive `2026_10_29_120000_create_relationship_records` migration before serving the updated admin API. It adds relationship and activity tables and does not modify existing members or companies. Use the normal backed-up `php artisan migrate --force` release process in `DEPLOYMENT.md`; never reset or reseed production. Deploy frontend and API revisions together. Rolling back code can leave these additive tables in place to retain entered records.
-- Regression checks include founder/co-founder approvals in Arabic and English, admin-only CRM/PR workflows, safe links and ownership validation, concurrent saves, dashboard totals, analytics window boundaries, and responsive browser flows for saving/reopening records, notes, CSV exports and accessibility.
+[MIT](LICENSE) for repository software. Third-party artwork and trademarks retain their owners’ rights.

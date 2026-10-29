@@ -1,5 +1,13 @@
 # Changelog
 
+## Registration QA and privileged account safeguards — 2026-10-30
+
+- Fix the admin dashboard crashing before the first member role exists; display zero members on a new installation.
+- Require verified email for platform admin API access; public registration ignores privilege and verification fields.
+- Add private/no-store and noindex protection for onboarding pages and registration API responses.
+- Add a server-only admin inspection/grant command that refuses missing or unverified accounts, requires an explicit change reference, preserves credentials and records committed grants.
+- Reorganize README around setup, account lifecycle, operations and documentation; add the live registration QA runbook and unresolved hosting/mailbox gates. No production account creation, OTP verification or administrator grant is claimed.
+
 ## Founder starting engagement, more events and newsletter recovery — 2026-10-29
 
 - Give founder cards a stable seeded starting percentage between 65% and 92%, replaced by a valid live participation score after activation. Remove the explanatory tooltip; membership and verification remain unchanged.

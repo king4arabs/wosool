@@ -37,7 +37,7 @@ try {
     assert.doesNotMatch(meta(html, 'robots') || '', /noindex/, `Public indexing: ${path}`)
     for (const script of html.matchAll(/<script type="application\/ld\+json">(.*?)<\/script>/gs)) JSON.parse(script[1])
   }
-  for (const path of ['/login', '/register', '/forgot-password', '/verify-email', '/eoa/account']) {
+  for (const path of ['/login', '/register', '/onboarding', '/forgot-password', '/verify-email', '/eoa/account']) {
     const { html } = await read(path)
     assert.match(meta(html, 'robots') || '', /noindex/, `Private indexing: ${path}`)
   }
@@ -79,7 +79,7 @@ try {
   assert.match(asset.headers.get('content-type') || '', /image\/png/)
   const bytes = new Uint8Array(await asset.arrayBuffer())
   assert.deepEqual([...bytes.slice(0, 8)], [137, 80, 78, 71, 13, 10, 26, 10])
-  console.log(`SEO smoke passed: ${titles.size} distinct pages, 5 noindex routes, ${urls.length} sitemap URLs, structured data, PNG preview and dynamic-detail fixtures.`)
+  console.log(`SEO smoke passed: ${titles.size} distinct pages, 6 noindex routes, ${urls.length} sitemap URLs, structured data, PNG preview and dynamic-detail fixtures.`)
 } finally {
   if (server && server.exitCode === null) {
     server.kill('SIGTERM')

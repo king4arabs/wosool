@@ -61,7 +61,7 @@ const nextConfig: NextConfig = {
         headers: privateHeaders,
       },
       {
-        source: "/:path(admin|dashboard|review|verify-email|activate-founder|login|register|forgot-password|reset-password)/:rest*",
+        source: "/:path(admin|dashboard|review|verify-email|activate-founder|login|register|onboarding|forgot-password|reset-password)/:rest*",
         headers: privateHeaders,
       },
       {

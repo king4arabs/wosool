@@ -11,6 +11,7 @@ return [
         'logout_success' => 'Logged out successfully.',
     ],
     'registration' => [
+        'admin_verification_required' => 'Verify your email before accessing administration.',
         'email_taken' => 'This email is already registered. Sign in instead, or reset your password.',
         'code_sent' => 'We sent a verification code to your email.',
         'code_resent' => 'We sent a new verification code to your email.',
