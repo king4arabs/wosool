@@ -4,9 +4,10 @@ import { readFileSync } from 'node:fs'
 import historicalProfiles from '../data/founder-spotlight.json'
 import additionalProfiles from '../data/founder-spotlight-expansion-2026-10-16.json'
 import discoveryProfiles from '../data/founder-spotlight-expansion-2026-10-22.json'
+import countryProfiles from '../data/founder-spotlight-expansion-2026-10-29.json'
 
 const rank: Record<string, number> = { saudi: 0, gcc: 1, mena: 2, global: 3 }
-const sourceProfiles = [...historicalProfiles, ...additionalProfiles, ...discoveryProfiles]
+const sourceProfiles = [...historicalProfiles, ...additionalProfiles, ...discoveryProfiles, ...countryProfiles]
   .sort((left, right) => (rank[left.region] ?? 4) - (rank[right.region] ?? 4))
 import { getFounderSpotlights } from './founder-spotlight'
 
@@ -38,7 +39,13 @@ test('frontend source snapshots and database import share the same reviewed reco
   const databaseDiscovery = JSON.parse(readFileSync(new URL('../../../backend/resources/data/founder-directory-expansion-2026-10-22.json', import.meta.url), 'utf8'))
   assert.deepEqual(databaseDiscovery, discoveryProfiles)
   assert.equal(discoveryProfiles.length, 62)
-  assert.equal(new Set(sourceProfiles.map(profile => profile.company_key)).size, 114)
+  const databaseCountry = JSON.parse(readFileSync(new URL('../../../backend/resources/data/founder-directory-expansion-2026-10-29.json', import.meta.url), 'utf8'))
+  assert.deepEqual(databaseCountry, countryProfiles)
+  assert.equal(countryProfiles.length, 42)
+  assert.equal(new Set(countryProfiles.map(profile => profile.country_code)).size, 21)
+  for (const code of new Set(countryProfiles.map(profile => profile.country_code))) assert.equal(countryProfiles.filter(profile => profile.country_code === code).length, 2, code)
+  assert.equal(new Set(sourceProfiles.map(profile => profile.company_key)).size, 136)
+  assert.equal(sourceProfiles.length, 248)
   assert.equal(new Set(sourceProfiles.map(profile => profile.founder_name_en.toLowerCase())).size, sourceProfiles.length)
   assert.equal(new Set(sourceProfiles.map(profile => profile.slug)).size, sourceProfiles.length)
   assert.ok(sourceProfiles.every(profile => profile.source_urls.length > 0 && profile.reviewed_at))
@@ -71,7 +78,7 @@ test('every traction claim is bilingual and cites an https source listed on the 
 test('country founder cards have factual provenance and the latest update adds two profiles per country', () => {
   const countryCounts = new Map<string, number>()
   for (const row of sourceProfiles) countryCounts.set(row.country_code, (countryCounts.get(row.country_code) ?? 0) + 1)
-  assert.equal(countryCounts.size, 12)
+  assert.equal(countryCounts.size, 21)
   assert.ok([...countryCounts.values()].every(count => count >= 2))
   const latest = discoveryProfiles.slice(-24)
   const expected = ['SA', 'AE', 'BH', 'KW', 'OM', 'QA', 'EG', 'JO', 'LB', 'US', 'AU', 'BR']
