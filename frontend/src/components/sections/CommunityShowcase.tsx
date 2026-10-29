@@ -8,7 +8,7 @@ import { communityPartnerLogos, partnersToDisplay } from "@/lib/partner-logos"
 import { useLocale } from "@/lib/locale"
 import { FounderCard, type FounderCardProfile } from "./FounderCard"
 import { filterFounders, regionOptions, sectorOptions, type FounderRegionFilter } from "@/lib/founder-filters"
-import { createFounderMixStore, founderDiscoveryOrder } from "@/lib/founder-discovery"
+import { createFounderMixStore, founderDiscoveryOrder, founderVisitOrder } from "@/lib/founder-discovery"
 import type { Partner } from "@/types"
 import styles from "./community.module.css"
 import { isDirectoryRecordVisible } from '@/lib/directory-geography'
@@ -28,6 +28,7 @@ function FounderRow({ founders, suspended, onShuffle }: { founders: FounderCardP
   const reducedMotion = useSyncExternalStore(subscribeMotion, motionSnapshot, () => true)
   const [paused, setPaused] = useState(false)
   const [hovered, setHovered] = useState(false)
+  const [focused, setFocused] = useState(false)
   const [overflow, setOverflow] = useState(false)
   const [inView, setInView] = useState(false)
   const collectionKey = JSON.stringify(founders.map(founder => founder.id))
@@ -61,10 +62,10 @@ function FounderRow({ founders, suspended, onShuffle }: { founders: FounderCardP
   }, [reducedMotion])
 
   useEffect(() => {
-    if (!overflow || !inView || paused || hovered || suspended || reducedMotion) return
+    if (!overflow || !inView || paused || hovered || focused || suspended || reducedMotion) return
     const timer = window.setInterval(() => { if (!document.hidden) move('right') }, 3000)
     return () => window.clearInterval(timer)
-  }, [overflow, inView, paused, hovered, suspended, reducedMotion, move])
+  }, [overflow, inView, paused, hovered, focused, suspended, reducedMotion, move])
 
   function manualMove(towards: 'left' | 'right') { setPaused(true); move(towards) }
   function keyboard(event: KeyboardEvent<HTMLDivElement>) {
@@ -85,19 +86,21 @@ function FounderRow({ founders, suspended, onShuffle }: { founders: FounderCardP
         <button type="button" aria-controls={id} aria-label={ar ? 'تحريك بطاقات المؤسسين إلى اليمين' : 'Move founder cards right'} disabled={!overflow} onClick={() => manualMove('right')}><ArrowRight size={19} aria-hidden="true" /></button>
       </div>
     </div>
-    <div id={id} ref={rail} className={styles.founderRail} dir="ltr" role="region" aria-roledescription={ar ? 'عارض بطاقات' : 'carousel'} tabIndex={overflow ? 0 : undefined} onKeyDown={keyboard} aria-label={ar ? 'صف بطاقات المؤسسين. استخدم الأسهم للتنقل.' : 'Founder card row. Use arrow keys to browse.'} onPointerEnter={event => { if (event.pointerType !== 'touch') setHovered(true) }} onPointerLeave={() => setHovered(false)} onPointerDown={() => setPaused(true)} onWheel={() => setPaused(true)} onFocusCapture={() => setPaused(true)}>
+    <div id={id} ref={rail} className={styles.founderRail} dir="ltr" role="region" aria-roledescription={ar ? 'عارض بطاقات' : 'carousel'} tabIndex={overflow ? 0 : undefined} onKeyDown={keyboard} aria-label={ar ? 'صف بطاقات المؤسسين. استخدم الأسهم للتنقل.' : 'Founder card row. Use arrow keys to browse.'} onPointerEnter={event => { if (event.pointerType !== 'touch') setHovered(true) }} onPointerLeave={() => setHovered(false)} onPointerDown={event => { if (event.pointerType === 'touch') setPaused(true) }} onWheel={() => setPaused(true)} onFocusCapture={() => setFocused(true)} onBlurCapture={event => { if (!event.currentTarget.contains(event.relatedTarget)) setFocused(false) }}>
       <ul className={styles.founderTrack}>{founders.map(founder => <li key={founder.id} dir={direction}><FounderCard founder={founder} /></li>)}</ul>
     </div>
   </div>
 }
 
-export function FounderShowcase({ founders: suppliedFounders, showFilters = true, region: controlledRegion, onRegionChange, randomize = false, allRegions = false, loading = false }: {
+export function FounderShowcase({ founders: suppliedFounders, showFilters = true, region: controlledRegion, onRegionChange, randomize = false, visitSeed, allRegions = false, loading = false }: {
   founders: FounderCardProfile[]
   allRegions?: boolean
   loading?: boolean
   showFilters?: boolean
   /** Homepage discovery only; directory/grid order remains stable. */
   randomize?: boolean
+  /** Page-owned seed keeps carousel and grid stable through filter remounts. */
+  visitSeed?: number
   /** Lets a parent keep the region selection when it remounts this showcase for its own filters. */
   region?: FounderRegionFilter
   onRegionChange?: (region: FounderRegionFilter) => void
@@ -128,7 +131,8 @@ export function FounderShowcase({ founders: suppliedFounders, showFilters = true
   const filtered = useMemo(() => filterFounders(founders, { search, sector, region }, locale), [founders, locale, search, sector, region])
   const [mixStore] = useState(createFounderMixStore)
   const mixSeed = useSyncExternalStore(mixStore.subscribe, mixStore.getSnapshot, mixStore.getServerSnapshot)
-  const carouselFounders = useMemo(() => randomize ? founderDiscoveryOrder(filtered, mixSeed).slice(0, 36) : filtered.slice(0, 18), [filtered, randomize, mixSeed])
+  const ordered = useMemo(() => visitSeed === undefined ? filtered : founderVisitOrder(filtered, visitSeed), [filtered, visitSeed])
+  const carouselFounders = useMemo(() => randomize ? founderDiscoveryOrder(filtered, mixSeed).slice(0, 36) : ordered.slice(0, visitSeed === undefined ? 18 : 36), [filtered, ordered, randomize, mixSeed, visitSeed])
   const hasFilters = Boolean(search || sector || region !== 'all')
   function changeRegion(value: FounderRegionFilter) {
     setOwnRegion(value)
@@ -144,7 +148,7 @@ export function FounderShowcase({ founders: suppliedFounders, showFilters = true
   }
   const pages = Math.max(1, Math.ceil(filtered.length / pageSize))
   const current = Math.min(page, pages)
-  const visible = filtered.slice((current - 1) * pageSize, current * pageSize)
+  const visible = ordered.slice((current - 1) * pageSize, current * pageSize)
   const pageNumbers = [...new Set([1, current - 1, current, current + 1, pages])].filter(value => value >= 1 && value <= pages).sort((a, b) => a - b)
 
   function revealGrid() {
@@ -160,7 +164,7 @@ export function FounderShowcase({ founders: suppliedFounders, showFilters = true
   }
   function changePage(value: number) { setPage(value); revealGrid() }
 
-  return <div className={styles.showcase}>
+  return <div className={styles.showcase} data-visit-ready={visitSeed === undefined ? undefined : Boolean(visitSeed)}>
     {showFilters && <div className={styles.founderFilters}>
       <label className={styles.search} htmlFor={searchId}><span>{ar ? 'ابحث عن مؤسس أو شركة' : 'Find a founder or company'}</span><div><Search size={18} aria-hidden="true" /><input id={searchId} type="search" value={search} onChange={event => { setSearch(event.target.value); setPage(1) }} placeholder={ar ? 'الاسم، الشركة أو الخبرة' : 'Name, company or expertise'} /></div></label>
       <label className={styles.sectorFilter}><span>{ar ? 'القطاع' : 'Sector'}</span><select value={sector} onChange={event => { setSector(event.target.value); setPage(1) }}><option value="">{ar ? 'جميع القطاعات' : 'All sectors'}</option>{sectors.map(value => <option key={value} value={value}>{value}</option>)}</select></label>

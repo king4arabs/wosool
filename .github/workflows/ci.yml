@@ -61,6 +61,8 @@ jobs:
         run: node scripts/check-founder-outreach.mjs
       - name: Verify country filters and responsive founder card presentation
         run: node scripts/check-founder-presentation.mjs
+      - name: Verify directory visit shuffle, bilingual name search and rightward movement
+        run: node scripts/check-founder-directory-discovery.mjs
       - name: Verify bilingual global events, source links and invitation filters
         run: node scripts/check-ecosystem-calendar.mjs
       - name: Verify EO Accelerator value and cohort card layout in both languages

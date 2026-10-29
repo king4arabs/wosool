@@ -1,9 +1,10 @@
 import type { Founder } from '../types'
 import { countryRegion, founderCountry, isDirectoryRecordVisible } from './directory-geography'
+import { normalizeSearch } from './faq-search'
 
 export type FounderRegion = 'saudi' | 'gcc' | 'mena' | 'other'
 export type FounderRegionFilter = FounderRegion | 'all'
-type FilterableFounder = Pick<Founder, 'name' | 'companyName' | 'position' | 'bio' | 'location' | 'sector' | 'countryCode'> & {
+type FilterableFounder = Pick<Founder, 'name' | 'companyName' | 'searchNames' | 'position' | 'bio' | 'location' | 'sector' | 'countryCode'> & {
   primaryCompany?: Pick<NonNullable<Founder['primaryCompany']>, 'name' | 'sector' | 'countryCode' | 'location'>
 }
 
@@ -38,16 +39,19 @@ export function sectorOptions(founders: FilterableFounder[], region: FounderRegi
     .sort((a, b) => a.localeCompare(b, locale))
 }
 
+export function matchesFounderSearch(founder: FilterableFounder, query: string, locale?: 'ar' | 'en') {
+  const terms = normalizeSearch(query, locale).split(' ').filter(Boolean)
+  const company = founder.primaryCompany
+  const text = normalizeSearch([founder.name, founder.companyName, ...(founder.searchNames ?? []), company?.name, founder.position, founder.bio, founder.location, founder.sector, company?.sector].filter(Boolean).join(' '), locale)
+  return terms.every(term => text.includes(term))
+}
+
 export function filterFounders<T extends FilterableFounder>(founders: T[], filters: { search: string; sector: string; region: FounderRegionFilter }, locale: 'ar' | 'en') {
-  const query = filters.search.trim().toLocaleLowerCase(locale)
   return founders.filter(founder => {
     if (!isDirectoryRecordVisible(founder)) return false
     if (filters.sector && founderSector(founder) !== filters.sector) return false
     if (filters.region !== 'all' && founderRegion(founder) !== filters.region) return false
-    if (!query) return true
-    const company = founder.primaryCompany
-    return [founder.name, founder.companyName, company?.name, founder.position, founder.bio, founder.location, founder.sector, company?.sector]
-      .filter(Boolean).join(' ').toLocaleLowerCase(locale).includes(query)
+    return matchesFounderSearch(founder, filters.search, locale)
   })
 }
 
