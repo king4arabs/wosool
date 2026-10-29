@@ -93,6 +93,8 @@ const quickActions = [
   { icon: Sparkles, ar: "اقتراح توافق", en: "Create match", href: "/admin/matches" },
   { icon: Handshake, ar: "إدارة التعارف", en: "Route introductions", href: "/admin/intros" },
   { icon: Star, ar: "عمليات EOA", en: "EOA operations", href: "/eoa/admin" },
+  { icon: Users, ar: "إدارة العلاقات CRM", en: "Relationships CRM", href: "/admin/crm" },
+  { icon: FileText, ar: "العلاقات العامة والإعلام", en: "Public relations", href: "/admin/pr" },
   { icon: BarChart3, ar: "التحليلات", en: "Analytics", href: "/admin/analytics" },
   { icon: Settings, ar: "الإعدادات", en: "Settings", href: "/admin/settings" },
 ] as const
@@ -156,12 +158,12 @@ export default function AdminPage() {
 
   return (
     <div className="space-y-7">
-      <header className="relative overflow-hidden rounded-[var(--radius-hero)] bg-[var(--brand-navy)] px-6 py-8 text-white shadow-[var(--shadow-raised)] sm:px-8 lg:px-10">
+      <header className="relative overflow-hidden rounded-[var(--radius-hero)] bg-[var(--brand-navy)] px-6 py-5 text-white shadow-[var(--shadow-raised)] sm:px-8 lg:px-10">
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_80%_0%,rgba(61,70,242,.58),transparent_36%),radial-gradient(circle_at_0%_100%,rgba(255,52,110,.20),transparent_30%)]" aria-hidden="true" />
         <div className="relative flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
           <div className="max-w-3xl">
             <p className="text-xs font-extrabold uppercase tracking-[.18em] text-[var(--brand-light-blue)]">{t.eyebrow}</p>
-            <h2 className="mt-3 text-3xl font-extrabold leading-tight sm:text-4xl">{t.title}</h2>
+            <h2 className="mt-3 text-2xl font-extrabold leading-tight sm:text-3xl">{t.title}</h2>
             <p className="mt-4 text-sm leading-8 text-white/72 sm:text-base">{t.description}</p>{updatedAt && <p className="mt-3 text-xs text-indigo-200">{ar ? "آخر تحديث: " : "Last refreshed: "}{updatedAt.toLocaleTimeString(dateLocale(ar, "en-GB"), {hour:"2-digit", minute:"2-digit", timeZone:"Asia/Riyadh"})} · {ar ? "الرياض" : "Riyadh"}</p>}
           </div>
           <Button type="button" variant="outline" className="min-h-12 border-white/25 bg-white/10 font-bold text-white hover:bg-white hover:text-[var(--brand-navy)]" disabled={loading} onClick={() => void load()}>
@@ -181,13 +183,17 @@ export default function AdminPage() {
       )}
 
       <section aria-labelledby="admin-priorities" className="rounded-3xl border border-slate-200 bg-white p-5 sm:p-6">
-        <div className="flex flex-wrap items-center justify-between gap-3"><div><p className="text-xs font-bold tracking-widest text-indigo-600">{ar ? 'الخطوة التالية' : 'NEXT TO ACTION'}</p><h2 id="admin-priorities" className="mt-2 text-xl font-bold text-slate-950">{ar ? 'ما يحتاج انتباهك' : 'Needs your attention'}</h2></div><p className="text-xs leading-6 text-slate-500">{ar ? 'ابدأ بالطلبات الأقدم، ثم تابع تفعيل المؤسسين.' : 'Start with older applications, then follow up on founder activation.'}</p></div>
+        <div className="flex flex-wrap items-center justify-between gap-3"><div><p className="text-xs font-bold tracking-widest text-indigo-600">{ar ? 'الخطوة التالية' : 'NEXT TO ACTION'}</p><h2 id="admin-priorities" className="mt-2 text-xl font-bold text-slate-950">{ar ? 'ما يحتاج انتباهك' : 'Needs your attention'}</h2></div><p className="text-xs leading-6 text-slate-500">{ar ? 'ابدأ بالطلبات المتأخرة والرسائل والمتابعات المستحقة.' : 'Start with older applications, unanswered messages and follow-ups due.'}</p></div>
         <div className="mt-5 grid gap-3 md:grid-cols-3">{[
           {href:'/admin/members',count:dashboard ? summary.overdue : '—',title:ar?'طلبات تجاوزت 14 يوماً':'Applications older than 14 days',body:ar?'طلبات جديدة أو قيد المراجعة تحتاج متابعة.':'Submitted or reviewing applications needing follow-up.',tone:'bg-amber-50 text-amber-950 border-amber-100'},
+          {href:'/admin/messages',count:dashboard?.operations?.open_messages ?? '—',title:ar?'رسائل دون رد':'Unanswered messages',body:ar?'راجع الاستفسارات الواردة وأغلق ما تم التعامل معه.':'Review incoming inquiries and mark handled messages.',tone:'bg-sky-50 text-sky-950 border-sky-100'},
+          {href:'/admin/crm?due=1',count:dashboard?.operations?.crm_due ?? '—',title:ar?'متابعات علاقات مستحقة':'CRM follow-ups due',body:ar?'مواعيد اليوم والمتابعات المتأخرة للعلاقات المفتوحة.':'Today’s and overdue follow-ups for open relationships.',tone:'bg-rose-50 text-rose-950 border-rose-100'},
+          {href:'/admin/pr?due=1',count:dashboard?.operations?.pr_due ?? '—',title:ar?'متابعات إعلامية مستحقة':'PR follow-ups due',body:ar?'تابع العروض والفرص الإعلامية المفتوحة.':'Follow up on open pitches and media opportunities.',tone:'bg-violet-50 text-violet-950 border-violet-100'},
           {href:'/admin/founders',count:dashboard?.stats.unclaimed_founders ?? '—',title:ar?'ملفات بانتظار التفعيل':'Profiles awaiting activation',body:ar?'تحقق من المستلم وأرسل دعوة شخصية.':'Verify the recipient and send a personal invitation.',tone:'bg-indigo-50 text-indigo-950 border-indigo-100'},
           {href:'/admin/founders',count:dashboard?.stats.pending_founder_invitations ?? '—',title:ar?'دعوات سارية':'Open founder invitations',body:ar?'راجع الدعوات التي لم تنته صلاحيتها بعد.':'Review invitations that have not yet expired.',tone:'bg-emerald-50 text-emerald-950 border-emerald-100'},
         ].map(item=><Link key={item.title} href={item.href} className={`rounded-2xl border p-5 transition hover:border-indigo-400 ${item.tone}`}><div className="flex justify-between gap-3"><strong className="text-3xl font-bold">{item.count}</strong><ArrowUpRight size={18}/></div><h3 className="mt-3 text-sm font-bold">{item.title}</h3><p className="mt-2 text-xs leading-6 opacity-75">{item.body}</p></Link>)}</div>
       </section>
+      {dashboard?.operations && <section className="rounded-3xl border border-slate-200 bg-white p-5 sm:p-6" aria-labelledby="follow-ups-title"><div className="flex flex-wrap justify-between gap-3"><h2 id="follow-ups-title" className="text-xl font-bold">{ar ? 'جدول المتابعة المستحقة' : 'Due follow-up schedule'}</h2><p className="text-sm text-slate-500">{dashboard.operations.public_members} {ar ? 'عضو ظاهر في الدليل' : 'members visible in directory'} · {dashboard.operations.upcoming_events} {ar ? 'فعاليات خلال 7 أيام' : 'events in the next 7 days'}</p></div>{dashboard.operations.follow_ups.length ? <ul className="mt-4 divide-y divide-slate-100">{dashboard.operations.follow_ups.map(item => <li key={item.id}><Link href={`/admin/${item.kind}?record=${item.id}`} className="flex flex-wrap items-center justify-between gap-3 rounded-xl py-4 text-sm hover:bg-slate-50"><div><strong className="text-indigo-700">{item.name}</strong><p className="mt-1 text-xs text-slate-500">{item.organization} · {item.owner?.name ?? (ar ? 'دون مسؤول' : 'Unassigned')}</p></div><span className="font-semibold text-slate-600">{item.kind.toUpperCase()} · {item.follow_up_on}</span></Link></li>)}</ul> : <p className="mt-4 text-sm text-slate-500">{ar ? 'لا توجد متابعات مستحقة اليوم.' : 'No follow-ups are due today.'}</p>}</section>}
       <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4" aria-label={ar ? "مؤشرات المنصة" : "Platform metrics"}>
         {stats.map(({ label, value, detail, icon: Icon, accent }) => (
           <article key={label} className="group relative overflow-hidden rounded-[var(--radius-card)] border border-[var(--border-soft)] bg-[var(--surface)] p-5 shadow-[var(--shadow-card)] transition-transform hover:-translate-y-1 motion-reduce:transform-none">

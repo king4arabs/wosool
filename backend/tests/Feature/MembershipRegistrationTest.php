@@ -85,6 +85,33 @@ class MembershipRegistrationTest extends TestCase
         $this->actingAs($user->fresh())->getJson('/api/v1/member/dashboard')->assertForbidden();
         $this->getJson('/api/v1/founders?community=1')->assertJsonMissing(['slug' => $profile->slug]);
     }
+    #[\PHPUnit\Framework\Attributes\TestWith(['Founder'])]
+    #[\PHPUnit\Framework\Attributes\TestWith(['Co-founder'])]
+    #[\PHPUnit\Framework\Attributes\TestWith(['مؤسس'])]
+    #[\PHPUnit\Framework\Attributes\TestWith(['شريك مؤسس'])]
+    public function test_approved_founder_roles_appear_in_both_public_directory_views(string $position): void
+    {
+        $user = $this->applicant(); $user->markEmailAsVerified();
+        $data = array_replace($this->profile(), ['position' => $position]);
+        $this->actingAs($user->fresh())->postJson('/api/v1/registration/application', $data)->assertCreated();
+        $application = Application::firstOrFail();
+        $this->getJson('/api/v1/founders')->assertJsonCount(0, 'data');
+        $admin = User::factory()->create(); $admin->assignRole(Role::findOrCreate('admin', 'web'));
+        $this->actingAs($admin)->patchJson('/api/v1/admin/applications/'.$application->id, ['status' => 'approved'])->assertOk();
+        $profile = FounderProfile::firstOrFail();
+        $this->assertDatabaseHas('scorecards', ['founder_profile_id' => $profile->id]);
+        foreach (['ar', 'en'] as $locale) {
+            // The carousel and grid share this public collection. No featured flag or score is required.
+            $this->withHeader('X-Locale', $locale)->getJson('/api/v1/founders?search=Test&per_page=24')->assertOk()
+                ->assertJsonPath('data.0.slug', $profile->slug)->assertJsonPath('data.0.position', $position)
+                ->assertJsonPath('data.0.activation_status', 'active')->assertJsonPath('data.0.scorecard', null)
+                ->assertDontSee($user->email)->assertDontSee($data['phone']);
+        }
+        $this->getJson('/api/v1/founders?community=1')->assertOk()->assertJsonFragment(['slug' => $profile->slug]);
+        $this->patchJson('/api/v1/admin/applications/'.$application->id, ['status' => 'approved'])->assertOk();
+        $this->assertDatabaseCount('founder_profiles', 1);
+        $this->assertDatabaseCount('scorecards', 1);
+    }
     public function test_failed_delivery_does_not_create_an_account(): void
     {
         Mail::shouldReceive('to')->once()->andThrow(new \RuntimeException('Transport unavailable'));

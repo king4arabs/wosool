@@ -36,22 +36,7 @@ try {
     assert.ok(after > before, 'Artwork keeps moving physically right on hover in both languages')
     assert.equal(await track.evaluate(el => getComputedStyle(el).animationPlayState), 'running')
     assert.ok(await strip.locator('img').evaluateAll(images => images.every(img => getComputedStyle(img).objectFit === 'contain')))
-    assert.equal(await section.locator('[role="group"] button').evaluateAll(buttons => buttons.some(button => /[0-9٠-٩]/.test(button.textContent || ''))), false, 'Category names should not show counts')
-    const choose = async value => {
-      if (width < 768) await section.getByRole('combobox', { name: ar ? 'الفئة' : 'Category', exact: true }).selectOption(value)
-      else await section.getByRole('button', { name: value === 'bank' ? ar ? 'البنوك' : 'Banks' : ar ? 'جميع الجهات' : 'All organizations', exact: true }).click()
-    }
-    await choose('bank')
-    const banks = await ids()
-    assert.equal(banks.length, 12)
-    assert.deepEqual(banks, original.filter(id => banks.includes(id)), 'Filtering retains this visit’s relative order')
-    await section.locator('summary').click()
-    assert.equal(await section.locator('ul a').count(), 12)
-    await section.getByRole('searchbox').fill('NEOM')
-    await section.getByRole('status').waitFor()
-    assert.equal(await strip.count(), 0, 'Search and category combine without unrelated logos')
-    await section.getByRole('button', { name: ar ? 'مسح البحث والتصفية' : 'Clear search and filters' }).click()
-    assert.deepEqual(await ids(), original, 'Clearing filters preserves the visit’s order')
+    assert.equal(await section.locator('#partner-category, [role="group"], details, summary').count(), 0, 'Category and duplicate website directory are removed')
     await section.getByRole('searchbox').fill('NEOM')
     assert.deepEqual(await ids(), ['neom'], 'English names work in both languages')
     assert.equal(await track.evaluate(el => el.getBoundingClientRect().width >= el.parentElement.clientWidth * 2), true, 'Short results still fill both loop copies')
@@ -82,7 +67,7 @@ try {
     await section.locator('[data-visit-ready="true"]').waitFor()
     assert.notDeepEqual(await ids(), reloaded, 'Returning through client navigation creates a fresh order')
     assert.deepEqual(errors, [])
-    console.log(`PASS ${locale}/${width}: 80 logos, fresh visit order, stable filters and language, search, rightward motion, seamless short results, responsive layout, reduced motion`)
+    console.log(`PASS ${locale}/${width}: 80 logos, fresh visit order, stable search and language, search, rightward motion, seamless short results, responsive layout, reduced motion`)
     await context.close()
   }
 } finally { await browser?.close(); app.kill('SIGTERM') }

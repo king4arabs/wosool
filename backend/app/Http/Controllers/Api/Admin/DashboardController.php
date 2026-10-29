@@ -38,6 +38,7 @@ class DashboardController extends Controller
             ->get();
 
         return response()->json([
+            'operations' => \App\Services\AdminOperations::summary(),
             'stats' => [
                 'total_members' => User::role('member')->count(),
                 'active_founders' => FounderProfile::where('status', 'active')->whereNotNull('user_id')->count(),
