@@ -1,7 +1,19 @@
 import { bilingual, learningTopics, ONLINE_ANCHOR, onlineTopics, peerTopics, PROGRAM_END, PROGRAM_START, RAMADAN_BREAK_END, RAMADAN_BREAK_START, programTracks, visitTopics, type Bilingual, type CalendarKind, type CalendarLocale, type ProgramTrack } from "../data/founder-calendar"
+import ecosystemSource from "../data/ecosystem-events.json"
 import { eventPeriod, parseEventDate } from "./event-time"
 import type { Event } from "../types"
 import { dateLocale } from "./date-locale"
+
+export type EcosystemRegion = "riyadh" | "saudi" | "gcc" | "mena" | "global"
+export type EcosystemAccess = "registration" | "invitation" | "application" | "trade"
+export type EcosystemFocus = "startups" | "tech" | "investment" | "fintech" | "commerce" | "cyber"
+
+export interface EcosystemEventInfo {
+  region: EcosystemRegion
+  access: EcosystemAccess
+  focus: EcosystemFocus
+  organizer: string
+}
 
 export interface CalendarEntry {
   id: string
@@ -15,6 +27,7 @@ export interface CalendarEntry {
   event?: Event
   source?: string
   location?: Bilingual
+  ecosystem?: EcosystemEventInfo
 }
 
 const DAY = 86_400_000
@@ -97,6 +110,27 @@ export function publishedCalendarEntries(events: Event[], now: number): Calendar
     // End instants are exclusive, so midnight does not occupy the following day.
     endDate: riyadhDate(Math.max(parseEventDate(event.date), parseEventDate(event.endDate || event.date) - 1)),
     kind: "published", status: "published", title: bilingual(event.title, event.title), description: bilingual(event.description, event.description), event,
+  }))
+}
+
+/** Public third-party conference discovery, kept independent from Wosool event/RSVP records. */
+export function ecosystemCalendarEntries(): CalendarEntry[] {
+  return ecosystemSource.map((item): CalendarEntry => ({
+    id: `ecosystem-${item.id}`,
+    date: item.date,
+    endDate: item.endDate,
+    kind: "ecosystem",
+    status: "published",
+    title: bilingual(item.title_en, item.title_ar),
+    description: bilingual(item.description_en, item.description_ar),
+    source: item.source_url,
+    location: bilingual(item.city_en, item.city_ar),
+    ecosystem: {
+      region: item.region as EcosystemRegion,
+      access: item.access as EcosystemAccess,
+      focus: item.focus as EcosystemFocus,
+      organizer: item.organizer,
+    },
   }))
 }
 
