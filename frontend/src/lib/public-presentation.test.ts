@@ -35,6 +35,8 @@ test('newsroom keeps news and region filtering but hides decorative numeric tota
   assert.doesNotMatch(page, /\$\{rest.length - shown.length\}/)
   assert.match(page, /<NewsCard/)
   assert.match(page, /collection.error/)
+  assert.match(page, /role="status" aria-live="polite" aria-atomic="true" className="sr-only"/)
+  assert.match(page, /No matching stories\. Try a different search\./)
 })
 
 test('EO value and cohort cards retain the separately validated equal-height layout', () => {
