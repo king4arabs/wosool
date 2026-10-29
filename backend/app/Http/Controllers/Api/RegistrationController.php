@@ -37,7 +37,7 @@ class RegistrationController extends Controller
         $application = DB::transaction(function () use ($request, $data) {
             $user = User::whereKey($request->user()->id)->lockForUpdate()->firstOrFail();
             $application = Application::where('user_id', $user->id)->latest('id')->lockForUpdate()->first();
-            abort_if($application?->onboarding_data && in_array($application->status, ['submitted', 'reviewing', 'waitlisted', 'approved']), 409, 'طلبك قيد المراجعة أو معتمد. Your application is under review or approved.');
+            abort_if($application?->onboarding_data && in_array($application->status, ['submitted', 'reviewing', 'waitlisted', 'approved']), 409, __('messages.registration.application_locked'));
             $application ??= new Application(['user_id' => $user->id]);
             $preapproved = $application->status === 'approved';
             $assets = [...collect($application->onboarding_data ?? [])->only(['avatar_url', 'logo_url'])->all(), ...($request->hasSession() ? $request->session()->get('registration_assets', []) : [])];
@@ -59,15 +59,15 @@ class RegistrationController extends Controller
 
     public function upload(Request $request)
     {
-        abort_unless($request->hasSession(), 409, 'Sign in again to upload images. سجّل الدخول مجددًا لرفع الصور.');
+        abort_unless($request->hasSession(), 409, __('messages.registration.upload_session'));
         $request->validate(['kind' => 'required|in:avatar,logo', 'image' => 'required|file|image|mimes:jpg,jpeg,png,webp|mimetypes:image/jpeg,image/png,image/webp|max:2048|dimensions:min_width=64,min_height=32,max_width=6000,max_height=6000']);
         $application = Application::where('user_id', $request->user()->id)->latest('id')->first();
-        abort_if($application?->onboarding_data && ! in_array($application->status, ['rejected', 'request_more_info']), 409, 'استخدم إعدادات الملف بعد الموافقة. Use profile settings after approval.');
+        abort_if($application?->onboarding_data && ! in_array($application->status, ['rejected', 'request_more_info']), 409, __('messages.registration.upload_locked'));
         $kind = $request->input('kind');
         $file = $request->file('image');
         $extension = match ($file->getMimeType()) { 'image/jpeg' => 'jpg', 'image/png' => 'png', 'image/webp' => 'webp' };
         $path = Storage::disk('public')->putFileAs('registration/'.$request->user()->id, $file, Str::uuid().'.'.$extension);
-        abort_unless($path, 503, 'تعذر حفظ الصورة. Unable to save image.');
+        abort_unless($path, 503, __('messages.registration.upload_failed'));
         $key = $kind === 'avatar' ? 'avatar_url' : 'logo_url';
         $previous = $request->session()->get('registration_assets.'.$key);
         $url = '/storage/'.$path;

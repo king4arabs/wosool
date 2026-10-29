@@ -1,5 +1,13 @@
 # Changelog
 
+## Sign-up and newsletter messages in one language; /newsletter heading before JavaScript — 2026-10-29
+
+- **Problem:** the email-code sign-up and newsletter endpoints answered every visitor with one sentence in both languages, and the onboarding page, the newsletter page and the footer signup box show that text as written. An Arabic visitor who typed a wrong code read "الرمز غير صحيح أو انتهت صلاحيته. Invalid or expired code."; an English visitor read the Arabic first. The same applied to "wait a minute before resending", "email already verified", "mail unavailable", the registration and image-upload refusals on `/onboarding`, and invalid newsletter confirm/unsubscribe links. Two messages put English first and Arabic second, and one ("Use profile settings after approval") did not say why the upload was refused.
+- **Fix:** 18 messages move to `lang/{ar,en}/messages.php` (`messages.registration.*`, `messages.newsletter.*`) and follow `X-Locale`, like the validation messages fixed on 26 October. The copy now says what to do next ("Request a new code and try again", "Sign in instead, or reset your password"). Status codes, rate limits, OTP rules and email content are unchanged; the EO Accelerator notices and the member-access middleware are not touched.
+- **Tests:** `RegistrationMessageLocaleTest` (Arabic/English key parity with no mixed-language copy, a guard against Arabic+English strings in the five changed files, sign-up, wrong code, resend wait, email verified, newsletter subscribe and invalid-link replies in both languages). All six fail on the previous code.
+- **`/newsletter` server HTML:** the nightly QA crawl found that the page sent no layout and no `<h1>` before JavaScript, only "…". The whole page sat inside the `Suspense` boundary that `useSearchParams()` needs, so Next.js prerendered only its fallback. The header, footer, heading and explanation now render on the server; only the confirm/unsubscribe button waits for the link's query string, with a "Loading…" fallback in the visitor's language. The `newsletter-page` tests fail on the previous code.
+- No data, deployment or hosting change.
+
 ## Protected public-directory contract reconciliation — 2026-10-28
 
 - Correct the company contract regression introduced with the founder-data safeguards: bilingual imported-company checks once again fetch a real detail response, and company-nested founders omit `scorecard` while standalone founder responses retain the documented redacted `scorecard: null` shape.
