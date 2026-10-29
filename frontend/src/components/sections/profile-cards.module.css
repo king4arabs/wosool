@@ -132,6 +132,7 @@
 .gridCard.founderCard .darkLogo { background:var(--brand-navy); }
 .gridCard.founderCard .logo { width:min(208px,100%); height:64px; color:#18223c; }
 .gridCard.founderCard .body { padding:20px; gap:12px; }
+.gridCard.founderCard .darkLogo .logo { color:#fff; }
 .gridCard .person { min-height:80px; }
 .gridCard .personCopy { flex:1; }
 .gridCard .founderBrief { min-height:3.6em; }
