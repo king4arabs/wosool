@@ -85,7 +85,9 @@ try {
     const nextLocale = locale === 'ar' ? 'en' : 'ar'
     if (width < 1024) await page.getByRole('button', { name: locale === 'ar' ? 'فتح قائمة التنقل' : 'Open navigation menu', exact: true }).click()
     await page.locator('header select:visible').selectOption(nextLocale)
-    if (width < 1024) await page.getByRole('button', { name: nextLocale === 'ar' ? 'إغلاق قائمة التنقل' : 'Close navigation menu', exact: true }).click()
+    // The directory resets translated filters by remounting its layout, which
+    // also closes the mobile menu. Verify the resulting state before continuing.
+    if (width < 1024) await page.getByRole('button', { name: nextLocale === 'ar' ? 'فتح قائمة التنقل' : 'Open navigation menu', exact: true }).waitFor()
     await eventually(async () => (await ids()).length === 24)
     assert.deepEqual(await ids(), original, 'Changing language preserves the visit order')
     assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth + 1), false)
