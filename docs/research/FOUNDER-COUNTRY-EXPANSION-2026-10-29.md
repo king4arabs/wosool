@@ -35,8 +35,8 @@
 | Lebanon (LB) | Abbas Kabalan | Co-founder & Chief Legal Officer | HAQQ Legal AI | https://www.haqq.ai/ | https://www.haqq.ai/ |
 | Iraq (IQ) | Yadgar Merani | Co-founder | Lezzoo | https://www.lezzoo.com/ | https://www.ycombinator.com/companies/lezzoo |
 | Iraq (IQ) | Rekar Botany | Co-founder & CTO | Lezzoo | https://www.lezzoo.com/ | https://www.ycombinator.com/companies/lezzoo |
-| Palestine (PS) | Sondos Mleitat | Co-founder & CEO | Hakini | https://hakini.io/ | https://zeytoon.vc/portfolio/hakini |
-| Palestine (PS) | Majd Manadre | Co-founder & COO | Hakini | https://hakini.io/ | https://zeytoon.vc/portfolio/hakini |
+| Palestine (PS) | Sondos Mleitat | Co-founder & CEO | Hakini | https://hakini.io/ | https://buildpalestine.com/awsm_team_member/hakini/ |
+| Palestine (PS) | Majd Manadre | Co-founder & COO | Hakini | https://hakini.io/ | https://buildpalestine.com/awsm_team_member/hakini/ |
 | Syria (SY) | Abdel Malek Al-Mouzayen | Co-founder | BeeOrder | https://www.beeorder.com/ | https://www.nbt.holdings/insights/fall-semester-begins-syrian-startup-ecosystem-101 |
 | Syria (SY) | Hadi Nahas | Co-founder | BeeOrder | https://www.beeorder.com/ | https://www.nbt.holdings/insights/fall-semester-begins-syrian-startup-ecosystem-101 |
 | Yemen (YE) | Osama Al-Wajeeh | Founder & CEO | ORTECH SOLUTIONS | https://ortech.tech/en/ | https://ortech.tech/en/company |
