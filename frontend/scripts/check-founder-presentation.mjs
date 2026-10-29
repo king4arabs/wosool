@@ -78,7 +78,17 @@ try {
     await hero.locator('button').last().click()
     assert.equal(await hero.locator('button').last().getAttribute('aria-pressed'), 'true')
     assert.deepEqual(errors, [])
-    console.log(`PASS ${locale} ${width}px: country filters, coverage, flags, images, score and equal region boxes`)
+    if ([390, 1440].includes(width)) {
+      await page.goto(origin + '/news')
+      const regions = page.getByRole('group', { name: locale === 'ar' ? 'المنطقة' : 'Region', exact: true })
+      await eventually(async () => await regions.locator('button').count() === 5)
+      assert.equal(await regions.locator('button').evaluateAll(buttons => buttons.some(button => /[0-9٠-٩]/.test(button.textContent || ''))), false, 'News regions must not show totals')
+      assert.equal(await page.getByRole('heading', { name: locale === 'ar' ? 'أخبار الشركات الناشئة' : 'Startup news' }).count(), 1)
+      assert.equal(await page.locator('header dl').count(), 0, 'Newsroom hero must not display statistics')
+      assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth + 1), false, 'Newsroom must not overflow mobile or desktop viewport')
+      assert.deepEqual(errors, [], 'Newsroom client errors')
+    }
+    console.log(`PASS ${locale} ${width}px: country filters, coverage, flags, images and count-free news regions`)
     await context.close()
   }
 } finally {
