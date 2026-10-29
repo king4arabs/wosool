@@ -85,7 +85,7 @@ export function FounderCalendar({ events, now, loading, error, retry }: { events
     return <article key={entry.id} className="rounded-2xl border border-slate-200 bg-white p-5 text-start shadow-sm" data-calendar-entry={entry.id}>
       <div className="mb-3 flex flex-wrap items-center gap-2 text-xs font-bold">
         <span className={`rounded-lg border px-2.5 py-1 ${styles[entry.kind].badge}`}>{label(entry.kind)}</span>
-        <span className="text-slate-500">{isPlan ? (ar ? "مخطط · التفاصيل لاحقًا" : "Planned · details TBD") : entry.status === "tentative" ? (ar ? "تاريخ تقديري" : "Tentative date") : entry.status === "fixed" ? (ar ? "تاريخ ثابت" : "Fixed date") : entry.status === "scheduled" ? (ar ? "مجدول · التفاصيل لاحقًا" : "Scheduled · details TBA") : (ar ? "منشورة" : "Published")}</span>
+        <span className="text-slate-500">{isPlan ? (ar ? "مخطط · التفاصيل لاحقًا" : "Planned · details TBD") : entry.status === "tentative" ? (ar ? "تاريخ تقديري" : "Tentative date") : entry.status === "fixed" ? (ar ? "تاريخ ثابت" : "Fixed date") : entry.status === "scheduled" ? (ar ? "مجدول · التفاصيل لاحقًا" : "Scheduled · details TBA") : entry.kind === "ecosystem" ? (ar ? "موعد معلن من المنظم" : "Organizer-announced date") : (ar ? "منشورة" : "Published")}</span>
       </div>
       <time dateTime={entry.date} className="text-xs font-semibold text-slate-500">{dateLabel(entry.date)}{entry.endDate && entry.endDate !== entry.date ? ` – ${dateLabel(entry.endDate)}` : ""}</time>
       <h4 className="mt-2 text-base font-extrabold leading-relaxed text-slate-900">{entry.title[locale]}</h4>
@@ -110,6 +110,21 @@ export function FounderCalendar({ events, now, loading, error, retry }: { events
         <div><dt className="text-slate-500">{ar ? "التسجيل والبرنامج" : "Registration & agenda"}</dt><dd className="mt-1 font-bold text-slate-800">{ar ? "يُعلن لاحقًا (TBA)" : "TBA"}</dd></div>
       </dl>}
       {isHoliday && entry.source && <a href={entry.source} target="_blank" rel="noreferrer noopener" className="mt-4 inline-flex min-h-11 items-center gap-2 text-xs font-bold text-[#3B52D4] underline underline-offset-4">{ar ? "مرجع التاريخ" : "Date reference"}<Globe2 size={14} aria-hidden="true" /></a>}
+      {entry.ecosystem && <div className="mt-4 border-t border-slate-100 pt-3" data-external-event={entry.id}>
+        <p className="flex flex-wrap items-center gap-1.5 text-xs font-semibold leading-6 text-slate-600"><MapPin size={14} aria-hidden="true" />{entry.location?.[locale]} <span aria-hidden="true">·</span> {entry.ecosystem.organizer}</p>
+        <p className="mt-2 text-xs font-semibold leading-6 text-slate-700">
+          {entry.ecosystem.access === "invitation"
+            ? ar ? "بالدعوة فقط · حسب اعتماد الجهة المنظمة" : "Invitation only · organizer approval required"
+            : entry.ecosystem.access === "application"
+              ? ar ? "يتطلب طلب مشاركة وموافقة المنظم" : "Participation requires organizer approval"
+              : entry.ecosystem.access === "trade"
+                ? ar ? "دخول الزوار المهنيين وفق شروط المنظم" : "Trade visitor access subject to organizer terms"
+                : ar ? "التسجيل عبر الجهة المنظمة" : "Register with the organizer"}
+        </p>
+        <a href={entry.source} target="_blank" rel="noopener noreferrer" className="mt-3 inline-flex min-h-11 items-center gap-2 text-sm font-bold text-[#3B52D4] underline underline-offset-4">
+          {ar ? "الموقع الرسمي والتفاصيل" : "Official website & details"}<Globe2 size={15} aria-hidden="true" />
+        </a>
+      </div>}
       {entry.event && <Link href={`/events/${encodeURIComponent(entry.event.slug)}`} className="mt-4 inline-flex min-h-11 items-center gap-2 text-sm font-bold text-[#3B52D4]">{ar ? "تفاصيل الفعالية" : "Event details"}{ar ? <ArrowLeft size={16} /> : <ArrowRight size={16} />}</Link>}
     </article>
   }
