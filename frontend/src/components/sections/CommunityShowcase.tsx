@@ -172,7 +172,7 @@ export function FounderShowcase({ founders: suppliedFounders, showFilters = true
       {regions.map(item => <button type="button" key={item.key} aria-pressed={region === item.key} onClick={() => changeRegion(item.key)}>{item.label}</button>)}
     </div>
     </>}
-    {!loading && !filtered.length && <div className={styles.founderResults}><p role="status" aria-live="polite">{ar ? 'لا توجد ملفات مطابقة. جرّب اسمًا أو قطاعًا أو منطقة أخرى.' : 'No matching profiles. Try another name, sector or region.'}</p></div>}
+    <div className={!loading && !filtered.length ? styles.founderResults : 'sr-only'}><p role="status" aria-live="polite">{!loading && !filtered.length ? ar ? 'لا توجد ملفات مطابقة. جرّب اسمًا أو قطاعًا أو منطقة أخرى.' : 'No matching profiles. Try another name, sector or region.' : ''}</p></div>
     {!!filtered.length && <>
       <FounderRow key={`${locale}-${search}-${sector}-${region}`} founders={carouselFounders} suspended={gridOpen} onShuffle={randomize ? mixStore.shuffle : undefined} />
       <div className={styles.gridInvitation}><button ref={gridToggle} type="button" className={styles.gridToggle} aria-expanded={gridOpen} aria-controls={gridId} onClick={toggleGrid}><LayoutGrid size={18} aria-hidden="true" />{gridOpen ? ar ? 'إخفاء شبكة المؤسسين' : 'Hide founder grid' : ar ? 'عرض جميع المؤسسين' : 'View all founders'}{gridOpen ? <ChevronUp size={18} aria-hidden="true" /> : <ChevronDown size={18} aria-hidden="true" />}</button><span>{ar ? 'استكشف الملفات في شبكة مرتّبة مع صفحات' : 'Browse the full collection in a paginated grid'}</span></div>
