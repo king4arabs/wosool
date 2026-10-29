@@ -24,6 +24,13 @@ const styles: Record<CalendarKind, { badge: string; dot: string }> = {
 }
 const planned = plannedFounderSessions()
 const externalEvents = ecosystemCalendarEntries()
+const organizerCalendars = [
+  { en: "Monsha'at SME events", ar: "فعاليات منشآت لدعم رواد الأعمال", url: "https://www.monshaat.gov.sa/en/node/435054" },
+  { en: "LEAP conferences", ar: "مؤتمرات ليب", url: "https://onegiantleap.com/" },
+  { en: "Web Summit events", ar: "فعاليات ويب سامت", url: "https://websummit.com/" },
+  { en: "Tech Week city calendars", ar: "تقويمات أسبوع التقنية العالمية", url: "https://www.tech-week.com/calendar" },
+  { en: "FII Institute conferences", ar: "مؤتمرات معهد مبادرة مستقبل الاستثمار", url: "https://fii-institute.org/" },
+] as const
 const subscribeToday = (callback: () => void) => {
   const interval = window.setInterval(callback, 60_000)
   window.addEventListener("focus", callback)
@@ -250,6 +257,11 @@ export function FounderCalendar({ events, now, loading, error, retry }: { events
           {loading && <p role="status">{ar ? "جارٍ تحميل فعاليات المجتمع…" : "Loading community events…"}</p>}
           {error && <p role="status">{ar ? "تعذر تحميل بعض فعاليات المجتمع؛ خطة البرنامج والإجازات متاحة." : "Some community events could not be loaded; the program plan and holidays remain available."} <button type="button" onClick={retry} className="min-h-11 px-2 font-bold text-[#3B52D4] underline">{ar ? "إعادة المحاولة" : "Retry"}</button></p>}
         </div>}
+      </div>
+      <div className="mt-6 rounded-2xl border border-slate-200 bg-white p-5 sm:p-6">
+        <h3 className="text-base font-extrabold text-slate-900">{ar ? "استكشف تقاويم المنظمين" : "Explore organizers' calendars"}</h3>
+        <p className="mt-2 text-sm leading-6 text-slate-600">{ar ? "تجد هنا مصادر رسمية للفعاليات واللقاءات التي قد تُعلن تفاصيلها لاحقًا. تتولى الجهات المنظمة التسجيل والدعوات." : "Find more event calendars and upcoming announcements from organizers. Registration and invitations are handled by the individual hosts."}</p>
+        <div className="mt-4 flex flex-wrap gap-2">{organizerCalendars.map((item) => <a key={item.url} href={item.url} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-11 items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 px-4 py-2 text-xs font-bold text-[#3B52D4] hover:border-indigo-300 hover:bg-indigo-50">{item[locale]}<Globe2 size={14} aria-hidden="true" /></a>)}</div>
       </div>
     </div>
   </section>
