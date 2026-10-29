@@ -32,6 +32,8 @@ try {
       const url = new URL(route.request().url())
       if (url.origin !== origin) return route.abort()
       if (!url.pathname.startsWith('/api/')) return route.continue()
+      // EOA expects a structured program. Simulate an outage instead of supplying a malformed empty array.
+      if (url.pathname === '/api/v1/eoa/program') return route.fulfill({ status: 503, json: { message: 'Unavailable in isolated browser test' } })
       if (url.pathname === '/api/v1/founders') {
         const country = url.searchParams.get('country')
         if (country) countryRequests.push(country)
