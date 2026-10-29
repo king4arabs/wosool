@@ -12,28 +12,42 @@ try {
   for(const locale of ['ar','en'])for(const width of [390,1440]) {
     const ctx=await browser.newContext({viewport:{width,height:1000}})
     await ctx.addInitScript(l=>localStorage.setItem('wosool-locale',l),locale)
-    const page=await ctx.newPage();const errors=[];const requests=[];let failSignup=true
+    const page=await ctx.newPage();const errors=[];const requests=[];let failSignup=404
     page.on('pageerror',e=>errors.push(e.message))
     await ctx.route('**/*',route=>{
       const url=new URL(route.request().url())
       if(url.origin!==origin)return route.abort()
       if(!url.pathname.startsWith('/api/'))return route.continue()
       if(url.pathname.includes('/newsletter/'))requests.push({path:url.pathname,body:route.request().postDataJSON()})
-      if(url.pathname.endsWith('/newsletter/subscribe') && failSignup) return route.fulfill({status:503,json:{message:locale==='ar'?'تعذر الإرسال. حاول مجددًا.':'Sending failed. Please retry.'}})
+      if(url.pathname.endsWith('/newsletter/subscribe') && failSignup) return route.fulfill({status:failSignup,json:{message:'The route v1/newsletter/subscribe could not be found.'}})
       if(url.pathname.endsWith('/auth/me'))return route.fulfill({status:401,json:{message:'Unauthenticated'}})
       return route.fulfill({json:{data:[],message:'OK'}})
     })
-    await page.goto(origin+'/contact',{waitUntil:'networkidle'})
-    await page.waitForFunction(l=>document.documentElement.lang===l && document.querySelectorAll('#newsletter-email').length===1,locale)
-    await page.locator('#newsletter-email:visible').fill('reader@example.com')
-    const form=page.locator('form').filter({has:page.locator('#newsletter-email:visible')})
-    await form.locator('[name=newsletter_consent]').check();await form.locator('button').click()
-    await form.getByRole('alert').waitFor()
-    assert.equal(await form.locator('input[type=email]').inputValue(),'reader@example.com')
-    failSignup=false;requests.length=0
-    await form.locator('button').click()
-    await form.getByRole('status').waitFor()
-    assert.equal(requests[0].body.email,'reader@example.com');assert.equal(requests[0].body.consent,true)
+    for (const path of ['/contact', '/founders', '/events', '/news', '/']) {
+      failSignup=404;requests.length=0
+      await page.goto(origin+path,{waitUntil:'networkidle'})
+      await page.waitForFunction(l=>document.documentElement.lang===l && document.querySelectorAll('#newsletter-email').length===1,locale)
+      await page.locator('#newsletter-email:visible').fill('reader@example.com')
+      const form=page.locator('form').filter({has:page.locator('#newsletter-email:visible')})
+      await form.locator('[name=newsletter_consent]').check();await form.locator('button').click()
+      await form.getByRole('alert').waitFor()
+      assert.doesNotMatch(await form.getByRole('alert').innerText(), /v1\/newsletter|route/)
+      assert.match(await form.getByRole('alert').innerText(), /info@wosool.org/)
+      assert.equal(await form.getByRole('status').count(),0)
+      assert.equal(await form.locator('input[type=email]').inputValue(),'reader@example.com')
+      failSignup=503
+      await form.locator('button').click()
+      await page.waitForFunction(()=>!document.querySelector('#newsletter-email').disabled)
+      assert.equal(await form.getByRole('status').count(),0)
+      failSignup=false;requests.length=0
+      await form.locator('button').click()
+      await form.getByRole('status').waitFor()
+      assert.equal(requests.length,1)
+      assert.equal(requests[0].path,'/api/v1/newsletter/subscribe')
+      assert.equal(requests[0].body.email,'reader@example.com');assert.equal(requests[0].body.consent,true)
+      assert.equal(requests[0].body.locale,locale)
+      assert.equal(await form.locator('input[type=email]').inputValue(),'')
+    }
     const token='a'.repeat(64)
     await page.goto(origin+`/newsletter?confirm=1#token=${token}`,{waitUntil:'networkidle'})
     assert.equal(requests.length,1,'No automatic mutation by email-link scanners')

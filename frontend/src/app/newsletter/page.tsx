@@ -4,6 +4,7 @@ import { useSearchParams } from 'next/navigation'
 import { PublicLayout } from '@/components/layout/PublicLayout'
 import { useLocale } from '@/lib/locale'
 import { api } from '@/lib/api'
+import { newsletterError } from '@/lib/newsletter-error'
 
 function NewsletterAction() {
   const params = useSearchParams()
@@ -21,7 +22,7 @@ function NewsletterAction() {
       await api.post(`/newsletter/${kind}`, { id, token })
       window.history.replaceState(null, '', '/newsletter')
       setDone(true); setMessage(kind === 'confirm' ? (ar ? 'تم تأكيد اشتراكك. أهلاً بك في نشرة وصول.' : 'Subscription confirmed. Welcome to Wosool updates.') : (ar ? 'تم إلغاء الاشتراك في النشرة. لن تتأثر رسائل حسابك الأساسية.' : 'You have unsubscribed from the newsletter. Essential account emails are unaffected.'))
-    } catch (e) { setMessage(e instanceof Error ? e.message : ar ? 'تعذر تنفيذ الطلب.' : 'Unable to complete the request.') }
+    } catch (e) { setMessage(newsletterError(e, locale)) }
     finally { setBusy(false) }
   }
   return <>

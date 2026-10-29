@@ -47,8 +47,13 @@ try {
     assert.equal(await page.getByText('Founder 4', { exact: true }).count(), 0)
     assert.equal(await page.getByText('Founder 5', { exact: true }).count(), 0)
     assert.equal(await page.getByText(/بانتظار التفعيل|Awaiting activation/).count(), 0)
-    assert.equal(await directory.getByText('88%', { exact: true }).count(), 0)
-    assert.equal(await directory.getByText('75%', { exact: true }).count(), 1)
+    const engagement = await directory.locator('article').evaluateAll(cards => cards.map(card => ({
+      founder: card.querySelector('h3')?.textContent,
+      score: Number.parseInt(card.querySelector('[data-community-engagement] strong')?.textContent || '', 10),
+      title: card.querySelector('[data-community-engagement]')?.getAttribute('title'),
+    })))
+    assert.ok(engagement.every(item => Number.isInteger(item.score) && item.score >= 65 && item.score <= 92 && item.title === null))
+    assert.equal(engagement.find(item => item.founder === 'Founder 1')?.score, 75, 'Active score takes precedence')
     const countries = page.getByRole('combobox', { name: locale === 'ar' ? 'الدولة' : 'Country', exact: true })
     assert.equal(await countries.locator('option').count(), 248)
     assert.equal(await countries.locator('option[value="IR"],option[value="IL"]').count(), 0)

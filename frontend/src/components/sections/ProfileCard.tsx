@@ -251,7 +251,7 @@ export function ProfileCard({ data, variant = "company", layout = "carousel" }: 
                 {signal.label}
               </span>
             ))}
-            {data.engagement !== undefined && <span className={`${styles.businessSignal} ${styles.engagement}`} title={data.engagement === null ? (ar ? 'يظهر المؤشر بعد التفعيل وتوفر بيانات المشاركة.' : 'Available after activation and participation data are available.') : (ar ? '50 نقطة للتفعيل، و5 لكل تعارف معتمد ومساهمة منشورة خلال 90 يومًا، حتى 25 نقطة لكل نوع.' : '50 points for activation; 5 per approved introduction and published post in the last 90 days, up to 25 points each.')}>
+            {data.engagement !== undefined && <span className={`${styles.businessSignal} ${styles.engagement}`} data-community-engagement>
               <span>{ar ? 'التفعيل والتفاعل' : 'Community engagement'}</span><strong dir="ltr">{data.engagement === null ? '—' : `${data.engagement}%`}</strong>
             </span>}
           </div>

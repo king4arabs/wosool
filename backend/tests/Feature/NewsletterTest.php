@@ -20,6 +20,29 @@ class NewsletterTest extends TestCase
     {
         $user = User::factory()->create(['email' => $email]); $user->assignRole(Role::findOrCreate('member', 'web')); return $user;
     }
+    public function test_canonical_and_hostinger_mounted_routes_validate_before_any_mail_or_subscription(): void
+    {
+        foreach (['/api/v1', '/v1'] as $prefix) {
+            $this->postJson($prefix.'/newsletter/subscribe', [])->assertUnprocessable()->assertJsonValidationErrors(['email', 'locale', 'consent']);
+            foreach (['confirm', 'unsubscribe'] as $action) {
+                $this->postJson($prefix.'/newsletter/'.$action, [])->assertUnprocessable()->assertJsonValidationErrors(['id', 'token']);
+            }
+        }
+        Mail::assertNothingSent();
+        $this->assertDatabaseCount('newsletter_subscribers', 0);
+    }
+
+    public function test_hostinger_mounted_subscription_confirmation_and_unsubscribe_work_end_to_end(): void
+    {
+        $this->postJson('/v1/newsletter/subscribe', ['email' => 'mounted@example.com', 'locale' => 'en', 'consent' => true])->assertStatus(202);
+        $subscriber = NewsletterSubscriber::firstOrFail();
+        parse_str(parse_url(Mail::sent(NewsletterMail::class)->first()->actionUrl, PHP_URL_FRAGMENT), $parts);
+        $this->postJson('/v1/newsletter/confirm', ['id' => $subscriber->id, 'token' => $parts['token']])->assertOk();
+        $this->assertSame('active', $subscriber->fresh()->status);
+        $this->postJson('/v1/newsletter/unsubscribe', ['id' => $subscriber->id, 'token' => app(Newsletter::class)->unsubscribeToken($subscriber)])->assertOk();
+        $this->assertSame('unsubscribed', $subscriber->fresh()->status);
+        Mail::assertSentCount(2);
+    }
     public function test_public_subscription_requires_email_confirmation_and_welcomes_once(): void
     {
         $this->postJson('/api/v1/newsletter/subscribe', ['email' => ' Reader@Example.com ', 'locale' => 'ar', 'consent' => true])->assertStatus(202);

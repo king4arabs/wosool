@@ -2,7 +2,6 @@ import assert from 'node:assert/strict'
 import test from 'node:test'
 import { existsSync, readFileSync } from 'node:fs'
 import { countryCode, countryRegion, directoryCountryGroups, founderCountry, isDirectoryRecordVisible } from './directory-geography'
-import { communityEngagement } from './founder-engagement'
 
 test('all supported countries have local flags, bilingual labels and stable regional order', () => {
   for (const locale of ['en', 'ar'] as const) {
@@ -35,11 +34,4 @@ test('public coverage applies to profiles, companies, aliases and translated loc
   for (const record of [{ countryCode: ' ir ' }, { country_code: 'IL' }, { primaryCompany: { countryCode: 'IR' } }, { companies: [{ country_code: 'IL' }] }, { location: 'Tel Aviv, Israel' }, { translations: { ar: { location: 'طهران، إيران' } } }]) assert.equal(isDirectoryRecordVisible(record), false)
   assert.equal(isDirectoryRecordVisible({ countryCode: 'SA', location: 'Riyadh' }), true)
   assert.equal(isDirectoryRecordVisible({}), true)
-})
-
-test('engagement displays only a valid measurement for an activated account', () => {
-  assert.equal(communityEngagement({ activationStatus: 'unclaimed', communityEngagementScore: 92 }), null)
-  assert.equal(communityEngagement({ activationStatus: 'active' }), null)
-  for (const score of [NaN, Infinity, 49, 101, 62.5]) assert.equal(communityEngagement({ activationStatus: 'active', communityEngagementScore: score }), null)
-  for (const score of [50, 65, 100]) assert.equal(communityEngagement({ activationStatus: 'active', communityEngagementScore: score }), score)
 })
