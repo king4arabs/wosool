@@ -37,7 +37,7 @@ try {
     assert.doesNotMatch(meta(html, 'robots') || '', /noindex/, `Public indexing: ${path}`)
     for (const script of html.matchAll(/<script type="application\/ld\+json">(.*?)<\/script>/gs)) JSON.parse(script[1])
   }
-  for (const path of ['/login', '/register', '/forgot-password', '/verify-email', '/eoa/account']) {
+  for (const path of ['/login', '/register', '/onboarding', '/forgot-password', '/verify-email', '/eoa/account']) {
     const { html } = await read(path)
     assert.match(meta(html, 'robots') || '', /noindex/, `Private indexing: ${path}`)
   }

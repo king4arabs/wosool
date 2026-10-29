@@ -17,7 +17,7 @@ class ApiSecurityHeaders
         }
 
         // Cover canonical and Hostinger-mounted routes, including auth errors.
-        if (preg_match('#^(?:api/)?v1/(?:auth|member|admin|chat|help-requests)(?:/|$)#', $request->decodedPath())) {
+        if (preg_match('#^(?:api/)?v1/(?:auth|registration|member|admin|chat|help-requests)(?:/|$)#', $request->decodedPath())) {
             $response->headers->set('Cache-Control', 'private, no-store, max-age=0');
             $response->headers->set('X-Robots-Tag', 'noindex, nofollow');
         }

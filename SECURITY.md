@@ -43,3 +43,14 @@ Production intake defaults closed until the approved privacy notice, controller/
 - Regression tests cover private/public caching and patched PHP version boundaries.
 
 Review scope: runtime floors, locked PHP dependency advisories, API response headers and session-cookie defaults. This is not a full penetration test or a guarantee that no security issues remain. The 124 locked Composer packages had no matching advisories in the Packagist advisory feed checked on 22 October; Composer's native audit remains required in CI. PHP/Composer were unavailable in the editing workspace, so PHPUnit execution must be confirmed in CI. See DEPLOYMENT.md for the observed live runtime and hosting steps still required.
+
+
+## Registration and privileged access
+
+Registration OTPs are HMAC-hashed, bound to the account and email, expire after ten minutes, allow five wrong attempts and are consumed on success. Resend rotates the challenge after a one-minute cooldown. Public registration ignores submitted roles, admin flags and verification timestamps. Registration responses, onboarding API data and the onboarding page have private/no-store and noindex protections; these complement authorization, not replace it.
+
+Admin API access requires both an admin role (or supported legacy admin role token) and verified email. Before rolling this change out, audit existing administrator verification state through protected hosting access; unverified administrators must complete genuine email verification. Do not populate verification timestamps to avoid the check.
+
+`php artisan wosool:admin EMAIL` is read-only inspection. An explicit `--grant --reason=CHANGE_REFERENCE` requires exactly one existing, verified account and adds only the admin role, preserving other roles and credentials. It neither creates accounts nor verifies email. Grants record the user ID and non-sensitive change reference in the configured application log after commit. Restrict shell access and protect/retain those logs with hosting audit records. The command does not revoke existing sessions or implement MFA; require a private unique password and use a fresh sign-in to verify the approved grant. Never reuse a password disclosed in a chat as a long-term administrator credential.
+
+See [registration QA and operational gates](docs/REGISTRATION-QA.md). Hosted WAF, MFA, SMTP delivery and production deployment require separate operational verification; this change does not claim they are enabled.

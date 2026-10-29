@@ -12,12 +12,14 @@ class EnsureUserIsAdmin
     {
         $user = $request->user();
 
-        $isRoleAdmin = method_exists($user, 'hasRole') && $user->hasRole('admin');
-        $isTokenAdmin = (string) ($user?->role_token ?? '') === 'admin';
-
-        if (! $user || (! $isRoleAdmin && ! $isTokenAdmin)) {
+        if (! $user || ! $user->isPlatformAdmin()) {
+            abort(response()->json(['message' => 'Admin access is required.'], 403));
+        }
+        if (! $user->hasVerifiedEmail()) {
             abort(response()->json([
-                'message' => 'Admin access is required.',
+                'message' => __('messages.registration.admin_verification_required'),
+                'reason' => 'email_unverified',
+                'next' => '/onboarding',
             ], 403));
         }
 
