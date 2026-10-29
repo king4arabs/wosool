@@ -4,9 +4,10 @@ import { readFileSync } from 'node:fs'
 import historicalProfiles from '../data/founder-spotlight.json'
 import additionalProfiles from '../data/founder-spotlight-expansion-2026-10-16.json'
 import discoveryProfiles from '../data/founder-spotlight-expansion-2026-10-22.json'
+import countryProfiles from '../data/founder-spotlight-expansion-2026-10-29.json'
 
 const rank: Record<string, number> = { saudi: 0, gcc: 1, mena: 2, global: 3 }
-const sourceProfiles = [...historicalProfiles, ...additionalProfiles, ...discoveryProfiles]
+const sourceProfiles = [...historicalProfiles, ...additionalProfiles, ...discoveryProfiles, ...countryProfiles]
   .sort((left, right) => (rank[left.region] ?? 4) - (rank[right.region] ?? 4))
 import { getFounderSpotlights } from './founder-spotlight'
 
@@ -38,10 +39,19 @@ test('frontend source snapshots and database import share the same reviewed reco
   const databaseDiscovery = JSON.parse(readFileSync(new URL('../../../backend/resources/data/founder-directory-expansion-2026-10-22.json', import.meta.url), 'utf8'))
   assert.deepEqual(databaseDiscovery, discoveryProfiles)
   assert.equal(discoveryProfiles.length, 38)
-  assert.equal(new Set(sourceProfiles.map(profile => profile.company_key)).size, 102)
+  const databaseCountry = JSON.parse(readFileSync(new URL('../../../backend/resources/data/founder-directory-expansion-2026-10-29.json', import.meta.url), 'utf8'))
+  assert.deepEqual(databaseCountry, countryProfiles)
+  assert.equal(countryProfiles.length, 36)
+  assert.equal(new Set(countryProfiles.map(profile => profile.country_code)).size, 18)
+  for (const code of new Set(countryProfiles.map(profile => profile.country_code))) {
+    assert.equal(countryProfiles.filter(profile => profile.country_code === code).length, 2, code)
+  }
+  assert.equal(new Set(sourceProfiles.map(profile => profile.company_key)).size, 121)
   assert.equal(new Set(sourceProfiles.map(profile => profile.founder_name_en.toLowerCase())).size, sourceProfiles.length)
   assert.equal(new Set(sourceProfiles.map(profile => profile.slug)).size, sourceProfiles.length)
   assert.ok(sourceProfiles.every(profile => profile.source_urls.length > 0 && profile.reviewed_at))
+  assert.equal(sourceProfiles.length, 218)
+  assert.ok(countryProfiles.every(profile => profile.source_urls.includes(profile.source_url)))
 })
 
 test('directory is ordered Saudi first, then GCC, MENA and global', () => {
