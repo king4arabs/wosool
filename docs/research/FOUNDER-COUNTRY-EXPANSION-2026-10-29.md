@@ -2,9 +2,9 @@
 
 ## Source record and publication safeguards
 
-- Starting `main` source SHA: `38d2fe7ea643c79ef7a24d24f049ef0340117668`. Merges on `main` that occur during this branch's preparation must be reconciled before publication.
+- Starting editorial source SHA: `38d2fe7ea643c79ef7a24d24f049ef0340117668`. Reconciled with the October 29 `main` merge of PR #136 before publication.
 - **42 new sourced public editorial founder profiles**: exactly 2 for each of 21 countries, including Saudi Arabia, other GCC, wider MENA and AU/BR/US.
-- The source set contains **22 new company keys**, separate from all 102 companies in the starting catalogs. Expected totals against the starting baseline: **224 founders / 124 companies / 65 news**.
+- The source set contains **22 new company keys** in addition to the previous catalogs and PR #136. PR #136 merged 24 other profiles and 12 companies first. Expected combined totals: **248 founders / 136 companies / 65 news**.
 - Only public founder identity, company, role and published company-site and source links are recorded. Country reflects company founding market/origin, not founder citizenship. Roles may evolve; citations document original review.
 - Bilingual original founder and company briefs are public; internal methodology, evidence tracking, AI/review details and review dates belong only in private docs.
 - No copied company logos, third-party portraits, fabricated LinkedIn URLs, email addresses, revenue, traction or fundraising figures. Blank image URLs intentionally trigger the existing neutral scorecard fallback.
@@ -63,5 +63,5 @@
 - New source catalogs: `backend/resources/data/founder-directory-expansion-2026-10-29.json` and `frontend/src/data/founder-spotlight-expansion-2026-10-29.json`; exact mirrors.
 - Registered the fourth founder catalog in `FounderDirectoryImporter.php`, `founder-spotlight.ts` and `scripts/lib/content-review.mjs`; updated integrity and contract tests.
 - All prior catalog records remain byte-for-byte unchanged. No private data, account, invitation or editorial delete action was executed.
-- PR #136 was also open concurrently while this work was prepared. The eight proposed identities overlapping that open PR were replaced with different evidence-backed founders (HAQQ, Atlassian, QuintoAndar, Mercury). **Check main and PR merge ordering before merging either**, and recalculate hard-coded counts if upstream has changed.
+- PR #136 merged first into `main` at `eec0cf2e965d674fadae44b15cb3c16ce0c5b8cf`. Eight initially overlapping suggestions were replaced with different evidence-backed founders (HAQQ, Atlassian, QuintoAndar, Mercury). The importer and integrity tests have been reconciled for the combined 248-founder, 136-company catalogs.
 - The source import is an **optional separately authorized production DB action**, not performed by GitHub merge. Do not assume Hostinger has deployed; verify serving commit and API readiness separately.
