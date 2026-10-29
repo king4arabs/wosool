@@ -174,7 +174,8 @@ jobs:
       - run: composer validate --strict
       - run: composer install --no-interaction --prefer-dist --no-progress
       - name: Check PHP syntax across application and migrations
-        run: rg --files app bootstrap config database routes tests -g '*.php' -0 | xargs -0 -n1 php -l
+        shell: bash
+        run: find app bootstrap config database routes tests -type f -name '*.php' -print0 | xargs -0 -r -n1 php -l
       - run: composer audit
       - name: Install shared OpenAPI contract validator
         run: npm --prefix ../frontend ci --ignore-scripts

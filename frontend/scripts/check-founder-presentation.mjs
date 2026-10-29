@@ -67,9 +67,17 @@ try {
     await directory.getByRole('button', { name: locale === 'ar' ? 'عرض جميع المؤسسين' : 'View all founders', exact: true }).click()
     const grid = directory.locator('section[id]')
     await eventually(async () => await grid.locator('article').count() === 3)
-    for (const src of ['/company-logos/zid.svg', '/company-logos/grubtech.svg']) {
-      const logo = grid.locator(`img[src="${src}"]`)
-      await logo.scrollIntoViewIfNeeded()
+    for (const [founderName, src] of [['Founder 2', '/company-logos/zid.svg'], ['Founder 3', '/company-logos/grubtech.svg']]) {
+      // A broken primary image is lazy-loaded too. Reveal its card before
+      // waiting for the reviewed fallback source to replace it.
+      const card = grid.locator('article').filter({ has: page.getByRole('heading', { name: founderName, exact: true }) })
+      await card.scrollIntoViewIfNeeded()
+      const logo = card.locator(`img[src="${src}"]`)
+      await eventually(async () => {
+        if (await logo.count()) return true
+        log = `Missing ${src}: ${await card.innerHTML()}`
+        return false
+      })
       await eventually(() => logo.evaluate(img => img.complete && img.naturalWidth > 0))
     }
     const gridGeometry = await grid.locator('article').evaluateAll(cards => cards.map(card => {
