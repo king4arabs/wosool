@@ -4,7 +4,7 @@ import { useMemo, useState, useSyncExternalStore } from "react"
 import Link from "next/link"
 import { ArrowLeft, ArrowRight, BookOpen, CalendarDays, ChevronLeft, ChevronRight, Globe2, List, MapPin, Search, Users, Video } from "lucide-react"
 import { PROGRAM_END, PROGRAM_START, programTracks, type CalendarKind, type ProgramTrack } from "@/data/founder-calendar"
-import { acceleratorBreak, cohortMilestones, ecosystemCalendarEntries, internationalCalendarHolidays, isAcceleratorOff, calendarDateLabel, calendarMonthDays, entriesOnDate, plannedFounderSessions, publishedCalendarEntries, riyadhDate, saudiCalendarHolidays, shiftCalendarMonth, type CalendarEntry, type EcosystemRegion } from "@/lib/founder-calendar"
+import { acceleratorBreak, addCalendarDays, cohortMilestones, ecosystemCalendarEntries, internationalCalendarHolidays, isAcceleratorOff, calendarDateLabel, calendarMonthDays, entriesOnDate, plannedFounderSessions, publishedCalendarEntries, riyadhDate, saudiCalendarHolidays, shiftCalendarMonth, type CalendarEntry, type EcosystemRegion } from "@/lib/founder-calendar"
 import { useLocale } from "@/lib/locale"
 import type { Event } from "@/types"
 
@@ -86,6 +86,12 @@ export function FounderCalendar({ events, now, loading, error, retry }: { events
     if (next < "2025-10" || next > "2029-10") return
     setChosenMonth(next)
     setChosenDate(next === today.slice(0, 7) ? today : `${next}-01`)
+  }
+  function navigateDay(delta: number) {
+    const next = addCalendarDays(selectedDate, delta)
+    if (next < "2025-10-29" || next > "2029-10-29") return
+    setChosenDate(next)
+    setChosenMonth(next.slice(0, 7))
   }
 
   function entryCard(entry: CalendarEntry) {
@@ -248,7 +254,13 @@ export function FounderCalendar({ events, now, loading, error, retry }: { events
           </div>
           <aside aria-label={ar ? "تفاصيل اليوم المحدد" : "Selected day details"} className="min-w-0 border-t border-slate-200 bg-slate-50/70 p-4 sm:p-5 xl:border-s xl:border-t-0" aria-live="polite">
             <p className="text-xs font-bold text-[#3B52D4]">{ar ? "يومك في وصول" : "YOUR DAY AT WOSOOL"}</p>
-            <h3 className="mt-2 mb-5 text-lg font-extrabold text-slate-900">{dateLabel(selectedDate)}</h3>
+            <div className="mt-2 mb-5 flex flex-wrap items-center justify-between gap-3">
+              <h3 className="text-lg font-extrabold text-slate-900">{dateLabel(selectedDate)}</h3>
+              <div className="flex gap-2">
+                <button type="button" disabled={selectedDate <= "2025-10-29"} onClick={() => navigateDay(-1)} aria-label={ar ? "اليوم السابق" : "Previous day"} className="flex size-11 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-700 hover:border-indigo-300 disabled:opacity-40">{ar ? <ChevronRight size={18} /> : <ChevronLeft size={18} />}</button>
+                <button type="button" disabled={selectedDate >= "2029-10-29"} onClick={() => navigateDay(1)} aria-label={ar ? "اليوم التالي" : "Next day"} className="flex size-11 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-700 hover:border-indigo-300 disabled:opacity-40">{ar ? <ChevronLeft size={18} /> : <ChevronRight size={18} />}</button>
+              </div>
+            </div>
             <div className="space-y-4">{selectedEntries.length ? selectedEntries.map(entryCard) : <div className="rounded-2xl border border-dashed border-slate-200 bg-white p-6 text-sm leading-7 text-slate-500"><CalendarDays className="mb-4 text-slate-400" aria-hidden="true" />{ar ? "لا توجد أنشطة معروضة لهذا اليوم ضمن التصفية الحالية." : "No activities shown for this day with the current filters."}{nextSession && <button type="button" onClick={() => { setChosenMonth(nextSession.date.slice(0, 7)); setChosenDate(nextSession.date); setKind("all"); setQuery("") }} className="mt-4 block min-h-11 text-start font-bold text-[#3B52D4]">{ar ? "عرض اللقاء المخطط القادم" : "View next planned session"}</button>}</div>}</div>
           </aside>
         </div> : <div className="p-4 sm:p-6"><p role="status" className="mb-5 text-sm text-slate-600">{ar ? `${monthEntries.length} نشاط في ${monthLabel}` : `${monthEntries.length} activities in ${monthLabel}`}</p>{monthEntries.length ? <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">{monthEntries.map(entryCard)}</div> : <p className="rounded-xl bg-slate-50 p-8 text-center text-sm text-slate-500">{ar ? "لا توجد أنشطة مطابقة في هذا الشهر." : "No matching activities this month."}</p>}</div>}
