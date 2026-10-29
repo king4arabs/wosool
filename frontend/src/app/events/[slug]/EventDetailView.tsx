@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react"
 import Link from "next/link"
+import { ArrowLeft, ArrowRight, CalendarDays, MapPin, Video } from "lucide-react"
 import { useParams } from "next/navigation"
 import { api, ApiError } from "@/lib/api"
 import { Button } from "@/components/ui/button"
@@ -259,43 +260,95 @@ function EventDetailPageContent({ initialRecord }: { initialRecord?: EventDetail
   const showRegistration = Boolean(event.requires_rsvp || event.rsvp_required)
 
   return (
-    <div className="mx-auto max-w-5xl px-4 py-8 space-y-6">
+    <div className="mx-auto max-w-6xl space-y-6 px-4 py-6 sm:px-6 sm:py-10">
+      <nav aria-label={t("مسار التنقل", "Breadcrumb")}><Link href="/events#community-events" className="inline-flex min-h-11 items-center gap-2 text-sm font-bold text-[#3B52D4]">{ar ? <ArrowRight size={17} aria-hidden="true" /> : <ArrowLeft size={17} aria-hidden="true" />}{t("كل الفعاليات", "All events")}</Link></nav>
       <Card>
-        <CardContent className="p-6 space-y-3">
+        <CardContent className="space-y-5 p-5 sm:p-8">
           <div className="flex flex-wrap gap-2">
             <Badge variant="outline">{typeLabel}</Badge>
             {formatLabel ? <Badge variant="secondary">{formatLabel}</Badge> : null}
             {event.category ? <Badge variant="secondary">{event.category}</Badge> : null}
           </div>
-          <h1 dir="auto" className="text-2xl font-bold text-slate-900">{event.title}</h1>
-          {summary ? <p dir="auto" className="text-slate-600">{summary}</p> : null}
-          <dl className="grid gap-1 text-sm text-slate-600 sm:grid-cols-[auto_1fr] sm:gap-x-3">
-            <dt className="font-semibold text-slate-900">{t("الموعد", "When")}</dt>
-            <dd>{when}</dd>
-            {place ? (
-              <>
-                <dt className="font-semibold text-slate-900">{t("المكان", "Where")}</dt>
-                <dd>{place}</dd>
-              </>
-            ) : null}
+          <h1 dir="auto" className="max-w-4xl text-balance text-3xl font-extrabold leading-snug text-slate-900 sm:text-4xl">{event.title}</h1>
+          {summary ? <p dir="auto" className="max-w-3xl text-base leading-8 text-slate-600">{summary}</p> : null}
+          <dl className="grid gap-4 border-t border-slate-100 pt-5 sm:grid-cols-2">
+            <div>
+              <dt className="flex items-center gap-2 text-xs font-bold text-slate-500"><CalendarDays size={18} className="shrink-0 text-[#3B52D4]" aria-hidden="true" />{t("الموعد · توقيت الرياض", "When · Riyadh time")}</dt>
+              <dd className="mt-2 text-sm font-semibold leading-7 text-slate-900">{when}</dd>
+            </div>
+            <div>
+              <dt className="flex items-center gap-2 text-xs font-bold text-slate-500">{["online", "virtual"].includes(formatKey) ? <Video size={18} className="shrink-0 text-[#3B52D4]" aria-hidden="true" /> : <MapPin size={18} className="shrink-0 text-[#3B52D4]" aria-hidden="true" />}{t("المكان", "Where")}</dt>
+              <dd className="mt-2 text-sm font-semibold leading-7 text-slate-900">{place || formatLabel || t("يُعلن قريبًا", "To be announced")}</dd>
+            </div>
           </dl>
         </CardContent>
       </Card>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2 space-y-6">
+        <aside aria-label={t("التسجيل وأدوات الفعالية", "Registration and event tools")} className="min-w-0 lg:col-start-3 lg:row-start-1">
+          <Card className="border-indigo-100 bg-[#F5F7FF] lg:sticky lg:top-28">
+            <CardContent className="p-5 space-y-3">
+              <h2 className="font-semibold">{t("التسجيل", "Registration")}</h2>
+              {!showRegistration && (
+                <p className="text-xs text-slate-500">{t("لا تحتاج هذه الفعالية إلى تسجيل.", "This event does not need registration.")}</p>
+              )}
+              {showRegistration && !isMember && !authLoading ? (
+                registrationOpen ? (
+                  <>
+                    {!signedIn ? (
+                      <Button asChild className="h-auto min-h-11 w-full whitespace-normal py-3">
+                        <Link href={eventSignInHref(event.slug)}>{t("سجّل الدخول للتسجيل", "Sign in to register")}</Link>
+                      </Button>
+                    ) : null}
+                    <p className="text-xs text-slate-500">
+                      {signedIn
+                        ? t("التسجيل متاح لأعضاء وصول. حسابك ليس عضوية في وصول بعد.", "Registration is for Wosool members. Your account is not a Wosool membership yet.")
+                        : t("التسجيل متاح لأعضاء وصول. ليس لديك حساب؟", "Registration is for Wosool members. No account yet?")}{" "}
+                      <Link href="/apply" className="font-semibold text-[var(--link)] underline-offset-4 hover:underline">{t("قدّم على العضوية", "Apply to join")}</Link>
+                    </p>
+                  </>
+                ) : (
+                  <Button className="h-auto min-h-11 w-full whitespace-normal py-3" disabled>{registrationCtaLabel("registration_closed", locale)}</Button>
+                )
+              ) : null}
+              {showRegistration && isMember ? (
+                <>
+                  <Button className="h-auto min-h-11 w-full whitespace-normal py-3" onClick={() => (canOpenRsvp(effectiveRegistrationState) ? setIsModalOpen(true) : undefined)} disabled={busyAction === "rsvp" || !canOpenRsvp(effectiveRegistrationState)}>
+                    {busyAction === "rsvp" ? t("جارٍ التسجيل...", "Registering...") : registrationCtaLabel(effectiveRegistrationState, locale)}
+                  </Button>
+                  {holdsRegistration(registrationState) ? (
+                    <Button variant="outline" className="h-auto min-h-11 w-full whitespace-normal py-3" onClick={handleCancel} disabled={busyAction === "rsvp"}>
+                      {t("إلغاء التسجيل", "Cancel registration")}
+                    </Button>
+                  ) : null}
+                </>
+              ) : null}
+              {isMember ? (
+                <Button variant="outline" className="h-auto min-h-11 w-full whitespace-normal py-3" onClick={handleSave} disabled={busyAction === "save"} aria-pressed={isSaved}>
+                  {busyAction === "save" ? t("جارٍ الحفظ...", "Saving...") : isSaved ? t("إزالة من المحفوظات", "Remove from saved") : t("احفظ الفعالية", "Save event")}
+                </Button>
+              ) : null}
+              <Button variant="outline" className="h-auto min-h-11 w-full whitespace-normal py-3" onClick={handleShare} disabled={busyAction === "share"}>
+                {busyAction === "share" ? t("جارٍ النسخ...", "Copying...") : t("انسخ رابط الفعالية", "Copy event link")}
+              </Button>
+              <Button asChild variant="outline" className="h-auto min-h-11 w-full whitespace-normal py-3">
+                <a href={`/api/v1/events/${event.slug}/calendar.ics`} download>{t("أضف إلى التقويم (ICS)", "Add to calendar (.ics)")}</a>
+              </Button>
+            </CardContent>
+          </Card>
+        </aside>
+        <div className="min-w-0 space-y-6 lg:col-span-2 lg:col-start-1 lg:row-start-1">
           <Card>
             <CardContent className="p-5">
               <h2 className="font-semibold mb-3">{t("عن الفعالية", "About this event")}</h2>
-              <p dir="auto" className="text-sm text-slate-600 whitespace-pre-wrap">{description || t("لم يُنشر وصف بعد.", "No description has been published yet.")}</p>
+              <p dir="auto" className="whitespace-pre-wrap text-base leading-8 text-slate-600">{description || t("لم يُنشر وصف بعد.", "No description has been published yet.")}</p>
             </CardContent>
           </Card>
 
-          <Card>
+          {(event.agenda || []).length > 0 && <Card>
             <CardContent className="p-5">
               <h2 className="font-semibold mb-3">{t("البرنامج", "Agenda")}</h2>
               <div className="space-y-3">
-                {(event.agenda || []).length === 0 ? <p className="text-sm text-slate-500">{t("سيُنشر البرنامج قبل الفعالية.", "The agenda will be published before the event.")}</p> : null}
                 {(event.agenda || []).map((item) => (
                   <div key={item.id} className="rounded-lg border border-slate-200 p-3">
                     <p dir="auto" className="text-sm font-semibold text-slate-900">{item.title}</p>
@@ -309,13 +362,12 @@ function EventDetailPageContent({ initialRecord }: { initialRecord?: EventDetail
                 ))}
               </div>
             </CardContent>
-          </Card>
+          </Card>}
 
-          <Card>
+          {(event.speakers || []).length > 0 && <Card>
             <CardContent className="p-5">
               <h2 className="font-semibold mb-3">{t("المتحدثون", "Speakers")}</h2>
               <div className="space-y-3">
-                {(event.speakers || []).length === 0 ? <p className="text-sm text-slate-500">{t("سيُعلن عن المتحدثين قبل الفعالية.", "Speakers will be announced before the event.")}</p> : null}
                 {(event.speakers || []).map((speaker) => (
                   <div key={speaker.id} className="rounded-lg border border-slate-200 p-3">
                     <p className="text-sm font-semibold text-slate-900">{speaker.name}</p>
@@ -327,7 +379,7 @@ function EventDetailPageContent({ initialRecord }: { initialRecord?: EventDetail
                 ))}
               </div>
             </CardContent>
-          </Card>
+          </Card>}
 
           {(event.resources || []).length > 0 ? (
             <Card>
@@ -354,61 +406,6 @@ function EventDetailPageContent({ initialRecord }: { initialRecord?: EventDetail
               </CardContent>
             </Card>
           ) : null}
-        </div>
-
-        <div className="space-y-4">
-          <Card className="lg:sticky lg:top-24">
-            <CardContent className="p-5 space-y-3">
-              <h2 className="font-semibold">{t("التسجيل", "Registration")}</h2>
-              {showRegistration ? (
-                <p className="text-xs text-slate-500">{t(`عدد المسجلين: ${event.rsvp_count || 0}`, `Registered so far: ${event.rsvp_count || 0}`)}</p>
-              ) : (
-                <p className="text-xs text-slate-500">{t("لا تحتاج هذه الفعالية إلى تسجيل.", "This event does not need registration.")}</p>
-              )}
-              {showRegistration && !isMember && !authLoading ? (
-                registrationOpen ? (
-                  <>
-                    {!signedIn ? (
-                      <Button asChild className="w-full">
-                        <Link href={eventSignInHref(event.slug)}>{t("سجّل الدخول للتسجيل", "Sign in to register")}</Link>
-                      </Button>
-                    ) : null}
-                    <p className="text-xs text-slate-500">
-                      {signedIn
-                        ? t("التسجيل متاح لأعضاء وصول. حسابك ليس عضوية في وصول بعد.", "Registration is for Wosool members. Your account is not a Wosool membership yet.")
-                        : t("التسجيل متاح لأعضاء وصول. ليس لديك حساب؟", "Registration is for Wosool members. No account yet?")}{" "}
-                      <Link href="/apply" className="font-semibold text-[var(--link)] underline-offset-4 hover:underline">{t("قدّم على العضوية", "Apply to join")}</Link>
-                    </p>
-                  </>
-                ) : (
-                  <Button className="w-full" disabled>{registrationCtaLabel("registration_closed", locale)}</Button>
-                )
-              ) : null}
-              {showRegistration && isMember ? (
-                <>
-                  <Button className="w-full" onClick={() => (canOpenRsvp(effectiveRegistrationState) ? setIsModalOpen(true) : undefined)} disabled={busyAction === "rsvp" || !canOpenRsvp(effectiveRegistrationState)}>
-                    {busyAction === "rsvp" ? t("جارٍ التسجيل...", "Registering...") : registrationCtaLabel(effectiveRegistrationState, locale)}
-                  </Button>
-                  {holdsRegistration(registrationState) ? (
-                    <Button variant="outline" className="w-full" onClick={handleCancel} disabled={busyAction === "rsvp"}>
-                      {t("إلغاء التسجيل", "Cancel registration")}
-                    </Button>
-                  ) : null}
-                </>
-              ) : null}
-              {isMember ? (
-                <Button variant="outline" className="w-full" onClick={handleSave} disabled={busyAction === "save"} aria-pressed={isSaved}>
-                  {busyAction === "save" ? t("جارٍ الحفظ...", "Saving...") : isSaved ? t("إزالة من المحفوظات", "Remove from saved") : t("احفظ الفعالية", "Save event")}
-                </Button>
-              ) : null}
-              <Button variant="outline" className="w-full" onClick={handleShare} disabled={busyAction === "share"}>
-                {busyAction === "share" ? t("جارٍ النسخ...", "Copying...") : t("انسخ رابط الفعالية", "Copy event link")}
-              </Button>
-              <Button asChild variant="outline" className="w-full">
-                <a href={`/api/v1/events/${event.slug}/calendar.ics`} download>{t("أضف إلى التقويم (ICS)", "Add to calendar (.ics)")}</a>
-              </Button>
-            </CardContent>
-          </Card>
         </div>
       </div>
       <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>

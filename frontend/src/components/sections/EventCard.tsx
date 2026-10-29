@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import type { Event } from "@/types"
-import { MapPin, Video, Users, ArrowLeft, ArrowRight } from "lucide-react"
+import { MapPin, Video, ArrowLeft, ArrowRight } from "lucide-react"
 import { useLocale } from "@/lib/locale"
 import { canRegisterForEvent, isPastEvent } from "@/lib/event-time"
 import { dateLocale } from "@/lib/date-locale"
@@ -42,20 +42,7 @@ export function EventCard({ event, now }: EventCardProps) {
   const isOpen = canRegisterForEvent(event, now) && !!event.registrationUrl && /^https?:\/\//.test(event.registrationUrl)
 
   return (
-    <div
-      className="group flex flex-col h-full bg-white border border-slate-200/80 rounded-2xl overflow-hidden transition-all duration-300 hover:-translate-y-1"
-      style={{ boxShadow: "0 2px 12px -2px rgba(15,22,40,0.06)" }}
-      onMouseEnter={(e) => {
-        const el = e.currentTarget as HTMLDivElement
-        el.style.boxShadow = "0 8px 32px -4px rgba(59,82,212,0.12), 0 2px 8px -2px rgba(15,22,40,0.04)"
-        el.style.borderColor = "rgba(59,82,212,0.22)"
-      }}
-      onMouseLeave={(e) => {
-        const el = e.currentTarget as HTMLDivElement
-        el.style.boxShadow = "0 2px 12px -2px rgba(15,22,40,0.06)"
-        el.style.borderColor = "rgba(226,232,240,0.8)"
-      }}
-    >
+    <article className="group flex h-full min-w-0 flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition-shadow hover:border-indigo-200 hover:shadow-md">
       {/* Top accent */}
       <div className="h-0.5 w-full bg-gradient-to-r from-[#3B52D4]/60 to-transparent" />
 
@@ -72,13 +59,13 @@ export function EventCard({ event, now }: EventCardProps) {
           </div>
 
           <div className="flex-1 min-w-0">
-            <h3 className="text-sm font-black text-slate-900 line-clamp-2 leading-snug mb-1">{event.title}</h3>
+            <h3 className="mb-2 text-base font-extrabold leading-7 text-slate-900"><Link href={`/events/${encodeURIComponent(event.slug)}`} className="hover:text-[#3B52D4]">{event.title}</Link></h3>
             <time dateTime={event.date} className="text-xs text-slate-600 font-medium">{d.year} · {d.time}</time>
           </div>
         </div>
 
         {/* Description */}
-        <p className="text-xs text-slate-500 leading-relaxed line-clamp-2 flex-1">{event.description}</p>
+        <p className="text-sm leading-7 text-slate-600 line-clamp-3 flex-1">{event.description}</p>
 
         {/* Tags row */}
         <div className="flex flex-wrap gap-1.5">
@@ -104,47 +91,25 @@ export function EventCard({ event, now }: EventCardProps) {
             </span>
           )}
 
-          {event.maxAttendees && (
-            <span className="inline-flex items-center gap-1 text-xs font-bold px-2.5 py-1 rounded-full bg-slate-50 text-slate-500 border border-slate-200">
-              <Users className="h-2.5 w-2.5" />
-              {copy.limited}
-            </span>
-          )}
+
         </div>
 
         {/* Location */}
-        <div className="flex items-center gap-1.5 text-xs text-slate-400 font-medium">
+        <div className="flex items-start gap-2 text-sm leading-6 text-slate-600">
           {event.isVirtual
-            ? <Video className="h-3 w-3 shrink-0" />
-            : <MapPin className="h-3 w-3 shrink-0" />
+            ? <Video className="mt-1 h-4 w-4 shrink-0" />
+            : <MapPin className="mt-1 h-4 w-4 shrink-0" />
           }
-          <span className="truncate">{event.location}</span>
+          <span className="break-words">{event.location}</span>
         </div>
       </div>
 
-      {/* CTA */}
-      <div className="px-5 pb-5">
-        {isOpen ? (
-          <a
-            href={event.registrationUrl!}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center justify-between w-full px-4 py-2.5 rounded-xl text-xs font-bold text-white transition-all"
-            style={{ background: "#3B52D4", boxShadow: "0 4px 12px -2px rgba(59,82,212,0.3)" }}
-          >
-            {copy.rsvp}
-            <ArrowIcon className="h-3.5 w-3.5" />
-          </a>
-        ) : (
-          <Link
-            href={`/events/${event.slug}`}
-            className="flex items-center justify-between w-full px-4 py-2.5 rounded-xl border border-slate-200 text-xs font-bold text-slate-600 bg-white transition-all hover:border-[#3B52D4]/40 hover:text-[#3B52D4] hover:bg-[#EEF1FF]/40"
-          >
-            {copy.details}
-            <ArrowIcon className="h-3.5 w-3.5" />
-          </Link>
-        )}
+      <div className="mt-auto flex flex-wrap gap-2 px-5 pb-5">
+        <Link href={`/events/${encodeURIComponent(event.slug)}`} className="flex min-h-12 flex-1 items-center justify-between gap-3 rounded-xl border border-slate-200 px-4 py-3 text-sm font-bold text-[#3B52D4] transition-colors hover:border-indigo-300 hover:bg-indigo-50">
+          {copy.details}<span className="sr-only">: {event.title}</span><ArrowIcon className="h-4 w-4 shrink-0" aria-hidden="true" />
+        </Link>
+        {isOpen && <a href={event.registrationUrl!} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-12 items-center justify-center rounded-xl bg-[#3B52D4] px-4 py-3 text-sm font-bold text-white hover:bg-[#2E44C8]">{copy.rsvp}<span className="sr-only">: {event.title}</span></a>}
       </div>
-    </div>
+    </article>
   )
 }
