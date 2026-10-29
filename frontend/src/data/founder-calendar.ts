@@ -7,7 +7,7 @@ export const ONLINE_ANCHOR = "2026-10-16"
 
 export type CalendarLocale = "ar" | "en"
 export type ProgramTrack = "learning" | "visit" | "peer" | "online"
-export type CalendarKind = ProgramTrack | "holiday" | "international" | "break" | "milestone" | "published"
+export type CalendarKind = ProgramTrack | "holiday" | "international" | "break" | "milestone" | "published" | "ecosystem"
 export type Bilingual = Record<CalendarLocale, string>
 export const bilingual = (en: string, ar: string): Bilingual => ({ en, ar })
 
