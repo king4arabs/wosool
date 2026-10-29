@@ -1,5 +1,11 @@
 # Changelog
 
+## Reconcile 29 October founder catalogs and release evidence — 2026-10-29
+
+- Reconcile README, roadmap and continuous-development status with the four registered founder catalogs: **308 founders / 168 companies / 65 stories**. `content:check`, `content:review` and `content:test` pass; no review date, source record, account, membership, moderation flag or revenue-eligibility decision changed in this documentation cycle.
+- Record the current release delta instead of carrying forward the superseded 169-profile parity claim. Public checks reach `/` and `/eoa`, but the live homepage still reports 174 profiles and shows numeric founder-region labels; current source intentionally removes those public counts.
+- Keep repository publication, Hostinger activation and production founder/news imports as separate acceptance gates. No production database write or hosting change is claimed.
+
 ## Sign-up and newsletter messages in one language; /newsletter heading before JavaScript — 2026-10-29
 
 - **Problem:** the email-code sign-up and newsletter endpoints answered every visitor with one sentence in both languages, and the onboarding page, the newsletter page and the footer signup box show that text as written. An Arabic visitor who typed a wrong code read "الرمز غير صحيح أو انتهت صلاحيته. Invalid or expired code."; an English visitor read the Arabic first. The same applied to "wait a minute before resending", "email already verified", "mail unavailable", the registration and image-upload refusals on `/onboarding`, and invalid newsletter confirm/unsubscribe links. Two messages put English first and Arabic second, and one ("Use profile settings after approval") did not say why the upload was refused.
