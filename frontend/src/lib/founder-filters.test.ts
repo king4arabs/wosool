@@ -68,3 +68,13 @@ test('the founder showcase uses the shared filters and clears the region with th
   assert.match(page, /region=\{region\} onRegionChange=\{changeRegion\}/)
   assert.match(page, /setLocation\(''\); setRegion\('all'\)/)
 })
+
+test('public founder and organization filters show labels without numeric database totals', () => {
+  const showcase = readFileSync(new URL('../components/sections/CommunityShowcase.tsx', import.meta.url), 'utf8')
+  const partnerSection = readFileSync(new URL('../components/sections/PartnerEcosystem.tsx', import.meta.url), 'utf8')
+  assert.match(showcase, /item\.label\}\<\/button\>/)
+  assert.doesNotMatch(showcase, /\$\{item\.count\}|\$\{founders\.length\}|arabicProfileCount/)
+  assert.doesNotMatch(showcase, /profiles? to explore|\$\{filtered\.length\} founder/)
+  assert.doesNotMatch(partnerSection, /roster\.length/)
+  assert.doesNotMatch(partnerSection, /selected\.length|category === key\)\.length/)
+})
