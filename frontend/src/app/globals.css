@@ -502,10 +502,42 @@ input, select, textarea {
 .eoa-two-grid,.eoa-three-grid,.eoa-four-grid { display:grid; gap:28px; align-items:start; }
 .eoa-two-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
 .eoa-three-grid { grid-template-columns:repeat(3,minmax(0,1fr)); }
-.eoa-four-grid { grid-template-columns:repeat(4,minmax(0,1fr)); gap:18px; }
+.eoa-four-grid { grid-template-columns:repeat(4,minmax(0,1fr)); gap:18px; align-items:stretch; grid-auto-rows:1fr; }
 .eoa-pillar { border:1px solid var(--eoa-border); padding:30px 24px; background:var(--surface); min-height:220px; border-radius:var(--radius-card); }
 .eoa-pillar>span { color:var(--link); font-size:13px; display:block; margin-bottom:35px; }
 .eoa-pillar p { font-size:14px; margin-bottom:0; }
+/* Keep EO value and cohort cards the same shape without fixed-height text clipping. */
+.eoa-four-grid > .eoa-pillar {
+  box-sizing:border-box;
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+  min-width:0;
+  height:100%;
+  padding:clamp(22px,2.2vw,30px);
+}
+.eoa-four-grid > .eoa-pillar > :is(svg,span:first-child) {
+  flex:0 0 auto;
+  min-height:28px;
+  margin:0;
+  align-self:flex-start;
+}
+.eoa-four-grid > .eoa-pillar > svg {
+  width:26px;
+  height:26px;
+}
+.eoa-four-grid > .eoa-pillar > :is(h2,h3) {
+  font-size:clamp(18px,1.6vw,22px);
+  line-height:1.45;
+  min-height:2.9em;
+  margin:0;
+  overflow-wrap:anywhere;
+}
+.eoa-four-grid > .eoa-pillar > p {
+  font-size:clamp(14px,1.15vw,16px);
+  line-height:1.8;
+  margin:0;
+}
 .eoa-light { background:var(--surface-soft); }
 .eoa-card { background:var(--surface); border:1px solid var(--eoa-border); border-radius:var(--radius-card); padding:30px; min-width:0; box-shadow:var(--shadow-card); }
 .eoa-role-row { display:flex; gap:20px; padding-block:20px; border-bottom:1px solid var(--eoa-border); }
@@ -579,6 +611,16 @@ input, select, textarea {
 @media (min-width:1600px) { .eoa-hero-grid { padding-block:110px; } }
 @media (max-width:1000px) { .eoa-hero-grid { gap:32px; padding-block:64px; }.eoa-four-grid {grid-template-columns:repeat(2,minmax(0,1fr));}.eoa-three-grid {grid-template-columns:repeat(2,minmax(0,1fr));}.eoa-admin-grid {grid-template-columns:280px minmax(0,1fr);}.eoa-path-card {padding:24px;}.eoa-statbar strong {font-size:23px;}.eoa-section {padding-block:54px;} }
 @media (max-width:720px) { .eoa-container {width:calc(100% - 36px);}.eoa-hero-grid,.eoa-two-grid,.eoa-three-grid,.eoa-admin-grid {grid-template-columns:minmax(0,1fr);}.eoa-hero-grid {padding-block:50px;gap:35px;}.eoa-hero h1 {font-size:42px;}.eoa-statbar>.eoa-container {grid-template-columns:repeat(2,minmax(0,1fr));gap:24px;}.eoa-statbar .eoa-container>div {padding:0;border:0;}.eoa-card {padding:22px;}.eoa-section-head {display:block;}.eoa-four-grid {gap:12px;}.eoa-pillar {padding:24px 18px;}.eoa-pillar h3 {font-size:20px;}.eoa-actions {gap:10px;}.eoa-stepper {gap:8px;}.eoa-stepper li {font-size:13px;}.eoa-subnav>div {gap:23px;}.eoa-review>div {grid-template-columns:1fr;gap:5px;}.eoa-page-heading {margin-bottom:25px;} }
+/* Text-heavy EO cards use one readable column on phones; tablet rows remain equal-height pairs. */
+@media (max-width:720px) {
+  .eoa-four-grid > .eoa-pillar { padding:22px 20px; gap:12px; }
+  .eoa-four-grid > .eoa-pillar > :is(h2,h3) { font-size:clamp(17px,3vw,20px); }
+}
+@media (max-width:560px) {
+  .eoa-four-grid { grid-template-columns:minmax(0,1fr); gap:14px; }
+  .eoa-four-grid > .eoa-pillar { min-height:200px; padding:22px 24px; }
+  .eoa-four-grid > .eoa-pillar > :is(h2,h3) { min-height:0; font-size:20px; }
+}
 @media (prefers-reduced-motion:reduce) { .eoa-partner-track {animation:none;transform:none;}.eoa-partner-window {overflow-x:auto;} }
 
 /* Shared bilingual reading and focus rhythm. */
