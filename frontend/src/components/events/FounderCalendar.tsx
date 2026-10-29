@@ -4,7 +4,7 @@ import { useMemo, useState, useSyncExternalStore } from "react"
 import Link from "next/link"
 import { ArrowLeft, ArrowRight, BookOpen, CalendarDays, ChevronLeft, ChevronRight, Globe2, List, MapPin, Search, Users, Video } from "lucide-react"
 import { PROGRAM_END, PROGRAM_START, programTracks, type CalendarKind, type ProgramTrack } from "@/data/founder-calendar"
-import { acceleratorBreak, cohortMilestones, internationalCalendarHolidays, isAcceleratorOff, calendarDateLabel, calendarMonthDays, entriesOnDate, plannedFounderSessions, publishedCalendarEntries, riyadhDate, saudiCalendarHolidays, shiftCalendarMonth, type CalendarEntry } from "@/lib/founder-calendar"
+import { acceleratorBreak, cohortMilestones, ecosystemCalendarEntries, internationalCalendarHolidays, isAcceleratorOff, calendarDateLabel, calendarMonthDays, entriesOnDate, plannedFounderSessions, publishedCalendarEntries, riyadhDate, saudiCalendarHolidays, shiftCalendarMonth, type CalendarEntry, type EcosystemRegion } from "@/lib/founder-calendar"
 import { useLocale } from "@/lib/locale"
 import type { Event } from "@/types"
 
@@ -20,8 +20,17 @@ const styles: Record<CalendarKind, { badge: string; dot: string }> = {
   break: { badge: "bg-amber-100 text-amber-950 border-amber-300", dot: "bg-amber-700" },
   milestone: { badge: "bg-violet-100 text-violet-900 border-violet-300", dot: "bg-violet-700" },
   published: { badge: "bg-slate-100 text-slate-800 border-slate-300", dot: "bg-slate-600" },
+  ecosystem: { badge: "bg-emerald-50 text-emerald-900 border-emerald-300", dot: "bg-emerald-600" },
 }
 const planned = plannedFounderSessions()
+const externalEvents = ecosystemCalendarEntries()
+const organizerCalendars = [
+  { en: "Monsha'at SME events", ar: "فعاليات منشآت لدعم رواد الأعمال", url: "https://www.monshaat.gov.sa/en/node/435054" },
+  { en: "LEAP conferences", ar: "مؤتمرات ليب", url: "https://onegiantleap.com/" },
+  { en: "Web Summit events", ar: "فعاليات ويب سامت", url: "https://websummit.com/" },
+  { en: "Tech Week city calendars", ar: "تقويمات أسبوع التقنية العالمية", url: "https://www.tech-week.com/calendar" },
+  { en: "FII Institute conferences", ar: "مؤتمرات معهد مبادرة مستقبل الاستثمار", url: "https://fii-institute.org/" },
+] as const
 const subscribeToday = (callback: () => void) => {
   const interval = window.setInterval(callback, 60_000)
   window.addEventListener("focus", callback)
@@ -38,23 +47,33 @@ export function FounderCalendar({ events, now, loading, error, retry }: { events
   const [chosenDate, setChosenDate] = useState<string | null>(null)
   const [view, setView] = useState<"calendar" | "agenda">("calendar")
   const [kind, setKind] = useState<CalendarKind | "all">("all")
+  const [region, setRegion] = useState<EcosystemRegion | "all">("all")
+  const [focus, setFocus] = useState<"all" | "startups" | "tech" | "investment" | "fintech" | "commerce" | "cyber">("all")
+  const [specialAccess, setSpecialAccess] = useState(false)
   const [query, setQuery] = useState("")
   const month = chosenMonth || today.slice(0, 7)
   const selectedDate = chosenDate || today
   const year = Number(month.slice(0, 4))
-  const allEntries = useMemo(() => [...planned, acceleratorBreak, ...cohortMilestones, ...saudiCalendarHolidays(year), ...internationalCalendarHolidays(year), ...publishedCalendarEntries(events, now)], [events, now, year])
-  const visible = allEntries.filter((entry) => (kind === "all" || kind === entry.kind) && `${entry.title.ar} ${entry.title.en} ${entry.kind === "published" ? entry.event?.location || "" : ""}`.toLocaleLowerCase().includes(query.trim().toLocaleLowerCase()))
+  const allEntries = useMemo(() => [...planned, acceleratorBreak, ...cohortMilestones, ...saudiCalendarHolidays(year), ...internationalCalendarHolidays(year), ...publishedCalendarEntries(events, now), ...externalEvents], [events, now, year])
+  const visible = allEntries.filter((entry) =>
+    (kind === "all" || kind === entry.kind)
+    && (region === "all" || entry.ecosystem?.region === region)
+    && (focus === "all" || entry.ecosystem?.focus === focus)
+    && (!specialAccess || entry.ecosystem?.access === "invitation" || entry.ecosystem?.access === "application")
+    && [entry.title.ar, entry.title.en, entry.description.ar, entry.description.en, entry.location?.ar, entry.location?.en, entry.ecosystem?.organizer, entry.kind === "published" ? entry.event?.location : ""]
+      .filter(Boolean).join(" ").toLocaleLowerCase().includes(query.trim().toLocaleLowerCase()))
   const days = calendarMonthDays(month)
   const monthEnd = days.filter((date) => date.startsWith(month)).at(-1)!
   const monthEntries = visible.filter((entry) => entry.date <= monthEnd && (entry.endDate || entry.date) >= `${month}-01`).sort((a, b) => a.date.localeCompare(b.date) || a.id.localeCompare(b.id))
   const selectedEntries = entriesOnDate(visible, selectedDate)
-  const nextSession = planned.find((entry) => entry.date >= today)
+  const nextSession = planned.find((entry) => entry.date >= (selectedDate > today ? selectedDate : today))
   const label = (value: CalendarKind) => {
     if (value === "holiday") return ar ? "المناسبات السعودية" : "Saudi holidays"
     if (value === "international") return ar ? "مناسبات دولية" : "International occasions"
     if (value === "break") return ar ? "إجازات المسرّعة" : "Accelerator off days"
     if (value === "milestone") return ar ? "محطات البرنامج" : "Program milestones"
     if (value === "published") return ar ? "فعاليات المجتمع" : "Community events"
+    if (value === "ecosystem") return ar ? "مؤتمرات وفرص عالمية" : "Global conferences & opportunities"
     return programTracks[value].title[locale]
   }
   const dateLabel = (date: string) => calendarDateLabel(date, locale, { weekday: "long", year: "numeric" })
@@ -64,6 +83,7 @@ export function FounderCalendar({ events, now, loading, error, retry }: { events
 
   function navigateMonth(delta: number) {
     const next = shiftCalendarMonth(month, delta)
+    if (next < "2025-10" || next > "2029-10") return
     setChosenMonth(next)
     setChosenDate(next === today.slice(0, 7) ? today : `${next}-01`)
   }
@@ -74,7 +94,7 @@ export function FounderCalendar({ events, now, loading, error, retry }: { events
     return <article key={entry.id} className="rounded-2xl border border-slate-200 bg-white p-5 text-start shadow-sm" data-calendar-entry={entry.id}>
       <div className="mb-3 flex flex-wrap items-center gap-2 text-xs font-bold">
         <span className={`rounded-lg border px-2.5 py-1 ${styles[entry.kind].badge}`}>{label(entry.kind)}</span>
-        <span className="text-slate-500">{isPlan ? (ar ? "مخطط · التفاصيل لاحقًا" : "Planned · details TBD") : entry.status === "tentative" ? (ar ? "تاريخ تقديري" : "Tentative date") : entry.status === "fixed" ? (ar ? "تاريخ ثابت" : "Fixed date") : entry.status === "scheduled" ? (ar ? "مجدول · التفاصيل لاحقًا" : "Scheduled · details TBA") : (ar ? "منشورة" : "Published")}</span>
+        <span className="text-slate-500">{isPlan ? (ar ? "مخطط · التفاصيل لاحقًا" : "Planned · details TBD") : entry.status === "tentative" ? (ar ? "تاريخ تقديري" : "Tentative date") : entry.status === "fixed" ? (ar ? "تاريخ ثابت" : "Fixed date") : entry.status === "scheduled" ? (ar ? "مجدول · التفاصيل لاحقًا" : "Scheduled · details TBA") : entry.kind === "ecosystem" ? (ar ? "موعد معلن من المنظم" : "Organizer-announced date") : (ar ? "منشورة" : "Published")}</span>
       </div>
       <time dateTime={entry.date} className="text-xs font-semibold text-slate-500">{dateLabel(entry.date)}{entry.endDate && entry.endDate !== entry.date ? ` – ${dateLabel(entry.endDate)}` : ""}</time>
       <h4 className="mt-2 text-base font-extrabold leading-relaxed text-slate-900">{entry.title[locale]}</h4>
@@ -99,6 +119,21 @@ export function FounderCalendar({ events, now, loading, error, retry }: { events
         <div><dt className="text-slate-500">{ar ? "التسجيل والبرنامج" : "Registration & agenda"}</dt><dd className="mt-1 font-bold text-slate-800">{ar ? "يُعلن لاحقًا (TBA)" : "TBA"}</dd></div>
       </dl>}
       {isHoliday && entry.source && <a href={entry.source} target="_blank" rel="noreferrer noopener" className="mt-4 inline-flex min-h-11 items-center gap-2 text-xs font-bold text-[#3B52D4] underline underline-offset-4">{ar ? "مرجع التاريخ" : "Date reference"}<Globe2 size={14} aria-hidden="true" /></a>}
+      {entry.ecosystem && <div className="mt-4 border-t border-slate-100 pt-3" data-external-event={entry.id}>
+        <p className="flex flex-wrap items-center gap-1.5 text-xs font-semibold leading-6 text-slate-600"><MapPin size={14} aria-hidden="true" />{entry.location?.[locale]} <span aria-hidden="true">·</span> {entry.ecosystem.organizer}</p>
+        <p className="mt-2 text-xs font-semibold leading-6 text-slate-700">
+          {entry.ecosystem.access === "invitation"
+            ? ar ? "بالدعوة فقط · حسب اعتماد الجهة المنظمة" : "Invitation only · organizer approval required"
+            : entry.ecosystem.access === "application"
+              ? ar ? "يتطلب طلب مشاركة وموافقة المنظم" : "Participation requires organizer approval"
+              : entry.ecosystem.access === "trade"
+                ? ar ? "دخول الزوار المهنيين وفق شروط المنظم" : "Trade visitor access subject to organizer terms"
+                : ar ? "التسجيل عبر الجهة المنظمة" : "Register with the organizer"}
+        </p>
+        <a href={entry.source} target="_blank" rel="noopener noreferrer" className="mt-3 inline-flex min-h-11 items-center gap-2 text-sm font-bold text-[#3B52D4] underline underline-offset-4">
+          {ar ? "الموقع الرسمي والتفاصيل" : "Official website & details"}<Globe2 size={15} aria-hidden="true" />
+        </a>
+      </div>}
       {entry.event && <Link href={`/events/${encodeURIComponent(entry.event.slug)}`} className="mt-4 inline-flex min-h-11 items-center gap-2 text-sm font-bold text-[#3B52D4]">{ar ? "تفاصيل الفعالية" : "Event details"}{ar ? <ArrowLeft size={16} /> : <ArrowRight size={16} />}</Link>}
     </article>
   }
@@ -109,9 +144,9 @@ export function FounderCalendar({ events, now, loading, error, retry }: { events
         <div className="max-w-2xl">
           <p className="mb-2 text-xs font-extrabold tracking-wide text-[#3B52D4]">{ar ? "تعلّم. زُر. شارك. انمُ." : "LEARN. EXPLORE. CONNECT. GROW."}</p>
           <h2 id="founder-calendar-title" className="text-2xl font-black text-slate-900 sm:text-3xl">{ar ? "تقويم نمو المؤسسين" : "Your founder growth calendar"}</h2>
-          <p className="mt-3 text-sm leading-7 text-slate-600">{ar ? "26 أسبوعًا للتعلّم بموضوعات مختلفة، مع إجازة رمضان ومحطات رئيسية في مايو." : "26 learning weeks, each with its own focus, a Ramadan break, and key milestones in May."}</p>
+          <p className="mt-3 text-sm leading-7 text-slate-600">{ar ? "مواعيد مؤتمرات ومعارض ولقاءات للمؤسسين في الرياض والسعودية والخليج والعالم، إلى جانب مسارات التعلّم ومحطات البرنامج." : "Founder conferences, exhibitions and special meetings across Riyadh, Saudi Arabia, the Gulf and beyond, alongside cohort sessions and milestones."}</p>
         </div>
-        <div className="rounded-2xl border border-indigo-100 bg-white px-4 py-3 text-xs leading-6 text-slate-600"><strong className="block text-slate-900">{ar ? "فترة التعلّم المقترحة" : "Proposed learning window"}</strong>{periodText}<span className="block">{ar ? "جميع المواعيد بتوقيت الرياض (UTC+3)" : "All dates in Riyadh time (UTC+3)"}</span></div>
+        <div className="rounded-2xl border border-indigo-100 bg-white px-4 py-3 text-xs leading-6 text-slate-600"><strong className="block text-slate-900">{ar ? "التقويم الدولي · 2025–2029" : "Worldwide calendar · 2025–2029"}</strong>{ar ? "أنشطة ومؤتمرات معلنة من الجهات المنظمة" : "Organizer-announced events and conferences"}<span className="block">{ar ? "فترة تعلّم الدفعة: " : "Cohort learning: "}{periodText}</span></div>
       </div>
 
       <div className="mb-8 grid grid-cols-2 gap-3 lg:grid-cols-4">
@@ -123,8 +158,17 @@ export function FounderCalendar({ events, now, loading, error, retry }: { events
         </button> })}
       </div>
 
+      <div className="mb-7 flex flex-wrap items-center gap-3 rounded-2xl border border-emerald-200 bg-white p-4 shadow-sm">
+        <Globe2 size={22} className="shrink-0 text-emerald-700" aria-hidden="true" />
+        <div className="min-w-0 flex-1">
+          <strong className="text-sm font-extrabold text-slate-900">{ar ? "مؤتمرات العالم وفرص التواصل" : "Global founder events & networking"}</strong>
+          <p className="mt-1 text-xs leading-6 text-slate-600">{ar ? "تصفّح الفعاليات الخارجية ومواعيدها المعلنة، واللقاءات التي تتطلب دعوات أو قبولًا من المنظّم." : "Discover published conferences and selectively hosted meetings; access and invitations are managed by each organizer."}</p>
+        </div>
+        <button type="button" onClick={() => { setKind("ecosystem"); setRegion("all"); setSpecialAccess(false); setQuery(""); setView("agenda"); document.getElementById("calendar-month-panel")?.scrollIntoView({ block: "start" }) }} className="min-h-11 rounded-xl border border-emerald-600 bg-emerald-50 px-4 text-xs font-bold text-emerald-800 hover:bg-emerald-100">{ar ? "استكشف المؤتمرات" : "Explore conferences"}</button>
+      </div>
+
       <div role="group" className="mb-8 grid gap-3 lg:grid-cols-3" aria-label={ar ? "الإجازات والمحطات الرئيسية" : "Breaks and key milestones"}>
-        {[acceleratorBreak, ...cohortMilestones].map((entry) => <button type="button" key={entry.id} onClick={() => { setChosenMonth(entry.date.slice(0, 7)); setChosenDate(entry.date); setKind("all"); setQuery(""); setView("calendar"); document.getElementById("calendar-month-panel")?.scrollIntoView({ block: "start" }) }} className={`rounded-2xl border p-5 text-start ${styles[entry.kind].badge}`}>
+        {[acceleratorBreak, ...cohortMilestones].map((entry) => <button type="button" key={entry.id} onClick={() => { setChosenMonth(entry.date.slice(0, 7)); setChosenDate(entry.date); setKind("all"); setQuery(""); setRegion("all"); setFocus("all"); setSpecialAccess(false); setView("calendar"); document.getElementById("calendar-month-panel")?.scrollIntoView({ block: "start" }) }} className={`rounded-2xl border p-5 text-start ${styles[entry.kind].badge}`}>
           <span className="block text-xs font-bold">{calendarDateLabel(entry.date, locale, { year: "numeric" })}{entry.endDate ? ` – ${calendarDateLabel(entry.endDate, locale, { year: "numeric" })}` : ""}</span>
           <span className="mt-2 block text-base font-extrabold leading-7">{entry.title[locale]}</span>
           <span className="mt-2 block text-xs leading-6">{entry.kind === "break" ? (ar ? "لا أنشطة للمسرّعة" : "No accelerator activities") : entry.location?.[locale]}</span>
@@ -135,9 +179,9 @@ export function FounderCalendar({ events, now, loading, error, retry }: { events
         <div className="border-b border-slate-200 p-4 sm:p-6">
           <div className="flex flex-wrap items-center justify-between gap-4">
             <div className="flex items-center gap-2">
-              <button type="button" onClick={() => navigateMonth(-1)} aria-label={ar ? "الشهر السابق" : "Previous month"} className="flex size-11 items-center justify-center rounded-xl border border-slate-200 hover:bg-slate-50">{ar ? <ChevronRight size={18} /> : <ChevronLeft size={18} />}</button>
+              <button type="button" disabled={month <= "2025-10"} onClick={() => navigateMonth(-1)} aria-label={ar ? "الشهر السابق" : "Previous month"} className="flex size-11 items-center justify-center rounded-xl border border-slate-200 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40">{ar ? <ChevronRight size={18} /> : <ChevronLeft size={18} />}</button>
               <h3 aria-live="polite" className="min-w-32 text-center text-lg font-extrabold text-slate-900 sm:min-w-44">{monthLabel}</h3>
-              <button type="button" onClick={() => navigateMonth(1)} aria-label={ar ? "الشهر التالي" : "Next month"} className="flex size-11 items-center justify-center rounded-xl border border-slate-200 hover:bg-slate-50">{ar ? <ChevronLeft size={18} /> : <ChevronRight size={18} />}</button>
+              <button type="button" disabled={month >= "2029-10"} onClick={() => navigateMonth(1)} aria-label={ar ? "الشهر التالي" : "Next month"} className="flex size-11 items-center justify-center rounded-xl border border-slate-200 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40">{ar ? <ChevronLeft size={18} /> : <ChevronRight size={18} />}</button>
             </div>
             <div className="flex flex-wrap items-center gap-2">
               <button type="button" onClick={() => { setChosenMonth(null); setChosenDate(null) }} className="min-h-11 rounded-xl border border-slate-200 px-4 text-xs font-bold text-slate-700">{ar ? "اليوم" : "Today"}</button>
@@ -146,12 +190,45 @@ export function FounderCalendar({ events, now, loading, error, retry }: { events
               </div>
             </div>
           </div>
+          <div className="mt-4 flex flex-wrap items-center gap-2" role="group" aria-label={ar ? "انتقال سريع حسب السنة" : "Jump to calendar year"}>
+            <span className="text-xs font-semibold text-slate-600">{ar ? "استكشف السنة" : "Browse year"}</span>
+            {["2025", "2026", "2027", "2028", "2029"].map((value) => <button type="button" key={value} aria-pressed={String(year) === value} onClick={() => {
+              const next = value === "2025" ? "2025-11" : value === "2026" ? "2026-11" : `${value}-01`
+              setChosenMonth(next)
+              setChosenDate(`${next}-01`)
+              setView("calendar")
+            }} className={`min-h-10 rounded-lg border px-3 text-xs font-bold ${String(year) === value ? "border-indigo-500 bg-indigo-50 text-indigo-800" : "border-slate-200 bg-white text-slate-600"}`}>{value}</button>)}
+          </div>
           <div className="mt-5 flex flex-wrap items-end gap-3">
             <label className="w-full min-w-0 text-xs font-bold text-slate-600 sm:flex-1">{ar ? "ابحث في هذا الشهر" : "Search this month"}<span className="mt-2 flex min-h-11 items-center gap-2 rounded-xl border border-slate-200 px-3"><Search size={16} aria-hidden="true" /><input type="search" value={query} onChange={(event) => setQuery(event.target.value)} placeholder={ar ? "موضوع أو فعالية…" : "Topic or event…"} className="w-full min-w-0 bg-transparent py-3 text-sm font-normal text-slate-900 outline-none focus-visible:ring-2 focus-visible:ring-indigo-500" /></span></label>
-            <label className="w-full text-xs font-bold text-slate-600 sm:w-auto">{ar ? "نوع النشاط" : "Activity type"}<select value={kind} onChange={(event) => setKind(event.target.value as CalendarKind | "all")} className="mt-2 block min-h-11 w-full max-w-full rounded-xl border border-slate-200 bg-white px-3 text-sm font-normal text-slate-900"><option value="all">{ar ? "كل الأنشطة" : "All activities"}</option>{([...tracks, "break", "milestone", "holiday", "international", "published"] as CalendarKind[]).map((value) => <option key={value} value={value}>{label(value)}</option>)}</select></label>
-            {(query || kind !== "all") && <button type="button" className="min-h-11 px-2 text-xs font-bold text-[#3B52D4] underline" onClick={() => { setQuery(""); setKind("all") }}>{ar ? "مسح التصفية" : "Clear filters"}</button>}
+            <label className="w-full text-xs font-bold text-slate-600 sm:w-auto">{ar ? "نوع النشاط" : "Activity type"}<select value={kind} onChange={(event) => setKind(event.target.value as CalendarKind | "all")} className="mt-2 block min-h-11 w-full max-w-full rounded-xl border border-slate-200 bg-white px-3 text-sm font-normal text-slate-900"><option value="all">{ar ? "كل الأنشطة" : "All activities"}</option>{([...tracks, "break", "milestone", "holiday", "international", "published", "ecosystem"] as CalendarKind[]).map((value) => <option key={value} value={value}>{label(value)}</option>)}</select></label>
+            <label className="w-full text-xs font-bold text-slate-600 sm:w-auto">{ar ? "المنطقة" : "Location"}
+              <select value={region} onChange={(event) => { const value = event.target.value as EcosystemRegion | "all"; setRegion(value); if (value !== "all") setKind("ecosystem") }} aria-label={ar ? "اختر منطقة المؤتمرات" : "Conference region"} className="mt-2 block min-h-11 w-full rounded-xl border border-slate-200 bg-white px-3 text-sm font-normal text-slate-900">
+                <option value="all">{ar ? "كل المناطق" : "All locations"}</option>
+                <option value="riyadh">{ar ? "الرياض" : "Riyadh"}</option>
+                <option value="saudi">{ar ? "بقية السعودية" : "Rest of Saudi Arabia"}</option>
+                <option value="gcc">{ar ? "الخليج" : "GCC"}</option>
+                <option value="mena">{ar ? "الشرق الأوسط وشمال أفريقيا" : "MENA"}</option>
+                <option value="global">{ar ? "العالم" : "Worldwide"}</option>
+              </select>
+            </label>
+            <label className="w-full text-xs font-bold text-slate-600 sm:w-auto">{ar ? "المجال" : "Focus"}
+              <select value={focus} onChange={(event) => { const value = event.target.value as typeof focus; setFocus(value); if (value !== "all") setKind("ecosystem") }} aria-label={ar ? "اختر مجال المؤتمرات" : "Conference focus"} className="mt-2 block min-h-11 w-full rounded-xl border border-slate-200 bg-white px-3 text-sm font-normal text-slate-900">
+                <option value="all">{ar ? "كل المجالات" : "All sectors"}</option>
+                <option value="startups">{ar ? "الشركات الناشئة" : "Startups"}</option>
+                <option value="investment">{ar ? "الاستثمار" : "Investment"}</option>
+                <option value="fintech">{ar ? "التقنية المالية" : "Fintech"}</option>
+                <option value="tech">{ar ? "التقنية والذكاء الاصطناعي" : "Technology & AI"}</option>
+                <option value="commerce">{ar ? "التجارة والتوسع" : "Commerce & growth"}</option>
+                <option value="cyber">{ar ? "الأمن السيبراني" : "Cybersecurity"}</option>
+              </select>
+            </label>
+            <button type="button" aria-pressed={specialAccess} onClick={() => { const next = !specialAccess; setSpecialAccess(next); if (next) setKind("ecosystem") }} className={`min-h-11 self-end rounded-xl border px-4 py-2 text-xs font-bold ${specialAccess ? "border-amber-500 bg-amber-50 text-amber-900" : "border-slate-200 bg-white text-slate-700 hover:border-amber-400"}`}>
+              {ar ? "الدعوات الخاصة واللقاءات المنتقاة" : "Invitations & curated meetings"}
+            </button>
+            {(query || kind !== "all" || region !== "all" || focus !== "all" || specialAccess) && <button type="button" className="min-h-11 px-2 text-xs font-bold text-[#3B52D4] underline" onClick={() => { setQuery(""); setKind("all"); setRegion("all"); setFocus("all"); setSpecialAccess(false) }}>{ar ? "مسح التصفية" : "Clear filters"}</button>}
           </div>
-          <div className="mt-4 flex flex-wrap gap-x-4 gap-y-2 text-[11px] font-semibold text-slate-600">{([...tracks, "break", "milestone", "holiday", "international", "published"] as CalendarKind[]).map((value) => <span key={value} className="inline-flex items-center gap-1.5"><span aria-hidden="true" className={`size-2 rounded-full ${styles[value].dot}`} />{label(value)}</span>)}</div>
+          <div className="mt-4 flex flex-wrap gap-x-4 gap-y-2 text-[11px] font-semibold text-slate-600">{([...tracks, "break", "milestone", "holiday", "international", "published", "ecosystem"] as CalendarKind[]).map((value) => <span key={value} className="inline-flex items-center gap-1.5"><span aria-hidden="true" className={`size-2 rounded-full ${styles[value].dot}`} />{label(value)}</span>)}</div>
         </div>
 
         {view === "calendar" ? <div className="grid xl:grid-cols-[minmax(0,1.8fr)_minmax(0,1fr)]">
@@ -180,6 +257,11 @@ export function FounderCalendar({ events, now, loading, error, retry }: { events
           {loading && <p role="status">{ar ? "جارٍ تحميل فعاليات المجتمع…" : "Loading community events…"}</p>}
           {error && <p role="status">{ar ? "تعذر تحميل بعض فعاليات المجتمع؛ خطة البرنامج والإجازات متاحة." : "Some community events could not be loaded; the program plan and holidays remain available."} <button type="button" onClick={retry} className="min-h-11 px-2 font-bold text-[#3B52D4] underline">{ar ? "إعادة المحاولة" : "Retry"}</button></p>}
         </div>}
+      </div>
+      <div className="mt-6 rounded-2xl border border-slate-200 bg-white p-5 sm:p-6">
+        <h3 className="text-base font-extrabold text-slate-900">{ar ? "استكشف تقاويم المنظمين" : "Explore organizers' calendars"}</h3>
+        <p className="mt-2 text-sm leading-6 text-slate-600">{ar ? "تجد هنا مصادر رسمية للفعاليات واللقاءات التي قد تُعلن تفاصيلها لاحقًا. تتولى الجهات المنظمة التسجيل والدعوات." : "Find more event calendars and upcoming announcements from organizers. Registration and invitations are handled by the individual hosts."}</p>
+        <div className="mt-4 flex flex-wrap gap-2">{organizerCalendars.map((item) => <a key={item.url} href={item.url} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-11 items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 px-4 py-2 text-xs font-bold text-[#3B52D4] hover:border-indigo-300 hover:bg-indigo-50">{item[locale]}<Globe2 size={14} aria-hidden="true" /></a>)}</div>
       </div>
     </div>
   </section>
