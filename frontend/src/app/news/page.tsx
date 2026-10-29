@@ -90,6 +90,9 @@ function Newsroom({ params }: { params: SearchParamsLike }) {
         {categories.map(value => <button key={value} type="button" aria-pressed={category === value} onClick={() => setParams({ topic: category === value ? null : value })} className={chip(category === value)}>{categoryLabel(value, locale)}</button>)}
       </div>}
 
+      <p role="status" aria-live="polite" aria-atomic="true" className="sr-only">
+        {collection.loading ? "" : filtered.length ? (ar ? "تتوفر أخبار مطابقة للبحث." : "Matching news stories are available.") : (ar ? "لا توجد أخبار مطابقة. جرّب بحثًا آخر." : "No matching stories. Try a different search.")}
+      </p>
       {filtersActive && <div className="mb-6 mt-6 flex justify-end">
         <button type="button" onClick={() => router.replace(pathname, { scroll: false })} className="min-h-11 text-sm font-bold text-[var(--link)]">{ar ? "مسح الفلاتر" : "Clear filters"}</button>
       </div>}
