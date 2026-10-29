@@ -53,6 +53,7 @@ try {
     assert.equal(await countries.locator('option').count(), 248)
     assert.equal(await countries.locator('option[value="IR"],option[value="IL"]').count(), 0)
     const regionGroup = page.getByRole('group', { name: locale === 'ar' ? 'تصفية المؤسسين حسب المنطقة' : 'Filter founders by region' })
+    assert.equal(await regionGroup.locator('button').evaluateAll(buttons => buttons.some(button => /[0-9٠-٩]/.test(button.textContent || ''))), false, 'Region labels never show founder counts')
     const sizes = await regionGroup.locator('button').evaluateAll(buttons => buttons.slice(1).map(button => { const r = button.getBoundingClientRect(); return [r.width, r.height] }))
     assert.ok(sizes.every(([w, h]) => Math.abs(w - sizes[0][0]) < 1 && Math.abs(h - sizes[0][1]) < 1), `${locale}/${width}: region sizes`)
     assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth + 1), false, `${locale}/${width}: overflow`)

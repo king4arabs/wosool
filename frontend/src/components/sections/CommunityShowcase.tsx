@@ -7,7 +7,7 @@ import { PartnerCarousel } from "@/components/eoa/PartnerCarousel"
 import { communityPartnerLogos, partnersToDisplay } from "@/lib/partner-logos"
 import { useLocale } from "@/lib/locale"
 import { FounderCard, type FounderCardProfile } from "./FounderCard"
-import { arabicProfileCount, filterFounders, regionOptions, sectorOptions, type FounderRegionFilter } from "@/lib/founder-filters"
+import { filterFounders, regionOptions, sectorOptions, type FounderRegionFilter } from "@/lib/founder-filters"
 import { createFounderMixStore, founderDiscoveryOrder } from "@/lib/founder-discovery"
 import type { Partner } from "@/types"
 import styles from "./community.module.css"
@@ -145,8 +145,6 @@ export function FounderShowcase({ founders: suppliedFounders, showFilters = true
   const pages = Math.max(1, Math.ceil(filtered.length / pageSize))
   const current = Math.min(page, pages)
   const visible = filtered.slice((current - 1) * pageSize, current * pageSize)
-  const from = filtered.length ? (current - 1) * pageSize + 1 : 0
-  const to = Math.min(current * pageSize, filtered.length)
   const pageNumbers = [...new Set([1, current - 1, current, current + 1, pages])].filter(value => value >= 1 && value <= pages).sort((a, b) => a - b)
 
   function revealGrid() {
@@ -170,17 +168,17 @@ export function FounderShowcase({ founders: suppliedFounders, showFilters = true
     </div>}
     {regions.length > 1 && <>
     <div className={styles.regionFilters} role="group" aria-label={ar ? "تصفية المؤسسين حسب المنطقة" : "Filter founders by region"}>
-      <button type="button" aria-pressed={region === 'all'} onClick={() => changeRegion('all')}>{ar ? 'الكل' : 'All'}{!allRegions && ` · ${founders.length}`}</button>
-      {regions.map(item => <button type="button" key={item.key} aria-pressed={region === item.key} onClick={() => changeRegion(item.key)}>{item.label}{!allRegions && ` · ${item.count}`}</button>)}
+      <button type="button" aria-pressed={region === 'all'} onClick={() => changeRegion('all')}>{ar ? 'الكل' : 'All'}</button>
+      {regions.map(item => <button type="button" key={item.key} aria-pressed={region === item.key} onClick={() => changeRegion(item.key)}>{item.label}</button>)}
     </div>
     </>}
-    {!loading && <div className={styles.founderResults}><p role="status" aria-live="polite">{filtered.length ? ar ? `${arabicProfileCount(filtered.length)} للاستكشاف` : `${filtered.length} founder ${filtered.length === 1 ? 'profile' : 'profiles'} to explore` : ar ? 'لا توجد ملفات مطابقة. جرّب اسمًا أو قطاعًا أو منطقة أخرى.' : 'No matching profiles. Try another name, sector or region.'}</p></div>}
+    <div className={!loading && !filtered.length ? styles.founderResults : 'sr-only'}><p role="status" aria-live="polite">{!loading && !filtered.length ? ar ? 'لا توجد ملفات مطابقة. جرّب اسمًا أو قطاعًا أو منطقة أخرى.' : 'No matching profiles. Try another name, sector or region.' : ''}</p></div>
     {!!filtered.length && <>
       <FounderRow key={`${locale}-${search}-${sector}-${region}`} founders={carouselFounders} suspended={gridOpen} onShuffle={randomize ? mixStore.shuffle : undefined} />
       <div className={styles.gridInvitation}><button ref={gridToggle} type="button" className={styles.gridToggle} aria-expanded={gridOpen} aria-controls={gridId} onClick={toggleGrid}><LayoutGrid size={18} aria-hidden="true" />{gridOpen ? ar ? 'إخفاء شبكة المؤسسين' : 'Hide founder grid' : ar ? 'عرض جميع المؤسسين' : 'View all founders'}{gridOpen ? <ChevronUp size={18} aria-hidden="true" /> : <ChevronDown size={18} aria-hidden="true" />}</button><span>{ar ? 'استكشف الملفات في شبكة مرتّبة مع صفحات' : 'Browse the full collection in a paginated grid'}</span></div>
     </>}
     <section ref={grid} id={gridId} className={styles.founderGridSection} hidden={!gridOpen || !filtered.length} tabIndex={-1} aria-labelledby={`${gridId}-title`}>
-      <div className={styles.gridHead}><div><h3 id={`${gridId}-title`}>{ar ? 'جميع ملفات المؤسسين' : 'All founder profiles'}</h3><p role="status" aria-live="polite">{ar ? `عرض ${from}–${to} من ${arabicProfileCount(filtered.length, { genitive: true })}` : `Showing ${from}–${to} of ${filtered.length} ${filtered.length === 1 ? 'profile' : 'profiles'}`}</p></div><button type="button" className={styles.clearFilters} onClick={toggleGrid}>{ar ? 'إغلاق الشبكة' : 'Close grid'}<ChevronUp size={16} aria-hidden="true" /></button></div>
+      <div className={styles.gridHead}><div><h3 id={`${gridId}-title`}>{ar ? 'جميع ملفات المؤسسين' : 'All founder profiles'}</h3><p>{ar ? 'تصفّح المؤسسين حسب الصفحة' : 'Browse founders by page'}</p></div><button type="button" className={styles.clearFilters} onClick={toggleGrid}>{ar ? 'إغلاق الشبكة' : 'Close grid'}<ChevronUp size={16} aria-hidden="true" /></button></div>
       {gridOpen && <ul className={styles.founderGrid}>{visible.map(founder => <li key={founder.id}><FounderCard founder={founder} /></li>)}</ul>}
       <div className={styles.founderPagination}>
         <label>{ar ? 'ملفات في الصفحة' : 'Profiles per page'}<select value={pageSize} onChange={event => { setPageSize(Number(event.target.value)); setPage(1); revealGrid() }}>{[6, 12, 24].map(value => <option value={value} key={value}>{value}</option>)}</select></label>

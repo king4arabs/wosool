@@ -2,6 +2,7 @@ import assert from 'node:assert/strict'
 import test from 'node:test'
 import { createFounderMixStore, editorialFounders, founderDiscoveryOrder } from './founder-discovery'
 import { getFounderSpotlights } from './founder-spotlight'
+import { founderRegion } from './founder-filters'
 import { loadFounderPages } from './founder-pages'
 import type { ApiFounder } from './content-api'
 
@@ -17,7 +18,7 @@ test('each founder mix keeps every identity once, varies the preview and preserv
   assert.deepEqual(one, founderDiscoveryOrder(founders, 101))
   assert.equal(one[0].countryCode, 'SA')
   assert.ok(one.slice(0, 8).some(item => item.countryCode === 'AE'))
-  assert.ok(one.slice(0, 8).some(item => item.countryCode === 'US' || item.countryCode === 'AU' || item.countryCode === 'BR'))
+  assert.ok(one.slice(0, 8).some(item => founderRegion(item) === 'other'))
 })
 
 test('locale and filters preserve visit order; empty and one-region collections terminate', () => {

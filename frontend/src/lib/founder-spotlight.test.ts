@@ -41,11 +41,11 @@ test('frontend source snapshots and database import share the same reviewed reco
   assert.equal(discoveryProfiles.length, 62)
   const databaseCountry = JSON.parse(readFileSync(new URL('../../../backend/resources/data/founder-directory-expansion-2026-10-29.json', import.meta.url), 'utf8'))
   assert.deepEqual(databaseCountry, countryProfiles)
-  assert.equal(countryProfiles.length, 42)
-  assert.equal(new Set(countryProfiles.map(profile => profile.country_code)).size, 21)
+  assert.equal(countryProfiles.length, 102)
+  assert.equal(new Set(countryProfiles.map(profile => profile.country_code)).size, 51)
   for (const code of new Set(countryProfiles.map(profile => profile.country_code))) assert.equal(countryProfiles.filter(profile => profile.country_code === code).length, 2, code)
-  assert.equal(new Set(sourceProfiles.map(profile => profile.company_key)).size, 136)
-  assert.equal(sourceProfiles.length, 248)
+  assert.equal(new Set(sourceProfiles.map(profile => profile.company_key)).size, 168)
+  assert.equal(sourceProfiles.length, 308)
   assert.equal(new Set(sourceProfiles.map(profile => profile.founder_name_en.toLowerCase())).size, sourceProfiles.length)
   assert.equal(new Set(sourceProfiles.map(profile => profile.slug)).size, sourceProfiles.length)
   assert.ok(sourceProfiles.every(profile => profile.source_urls.length > 0 && profile.reviewed_at))
@@ -78,7 +78,7 @@ test('every traction claim is bilingual and cites an https source listed on the 
 test('country founder cards have factual provenance and the latest update adds two profiles per country', () => {
   const countryCounts = new Map<string, number>()
   for (const row of sourceProfiles) countryCounts.set(row.country_code, (countryCounts.get(row.country_code) ?? 0) + 1)
-  assert.equal(countryCounts.size, 21)
+  assert.equal(countryCounts.size, 51)
   assert.ok([...countryCounts.values()].every(count => count >= 2))
   const latest = discoveryProfiles.slice(-24)
   const expected = ['SA', 'AE', 'BH', 'KW', 'OM', 'QA', 'EG', 'JO', 'LB', 'US', 'AU', 'BR']
@@ -95,5 +95,32 @@ test('country founder cards have factual provenance and the latest update adds t
     assert.equal(row.traction_ar, null)
     assert.equal(row.traction_source_url, null)
     assert.ok(!('isVerified' in row) && !('member' in row) && !('email' in row))
+  }
+})
+
+test('reconciled worldwide source batch adds two founders in 30 new countries without duplicates or membership claims', () => {
+  const additional = countryProfiles.slice(42)
+  const expected = ['PK','IN','BD','JP','MY','PH','ID','SG','NG','KE','ZA',
+    'GB','FR','DE','NL','SE','ES','DK','NO','FI','IE','AT','BE','GR','CH','CO','CL','MX','CA','AR']
+  assert.equal(additional.length, 60)
+  assert.deepEqual([...new Set(additional.map(item => item.country_code))].sort(), [...expected].sort())
+  for (const code of expected) assert.equal(additional.filter(row => row.country_code === code).length, 2, code)
+  const profileNames = sourceProfiles.map(row => row.founder_name_en.toLocaleLowerCase('en'))
+  assert.equal(new Set(profileNames).size, profileNames.length)
+  for (const item of additional) {
+    assert.equal(item.reviewed_at, '2026-10-29')
+    for (const field of ['founder_name_en','founder_name_ar','role_en','role_ar','founder_brief_en',
+      'founder_brief_ar','company_name_en','company_name_ar','company_brief_en','company_brief_ar'] as const) {
+      assert.ok(item[field], item.slug + ' ' + field)
+    }
+    assert.ok(item.source_urls.includes(item.source_url))
+    assert.equal(new URL(item.website).protocol, 'https:')
+    assert.equal(new URL(item.source_url).protocol, 'https:')
+    assert.equal(item.portrait_url, null)
+    assert.equal(item.logo_url, null)
+    assert.equal(item.traction_en, null)
+    assert.equal(item.traction_ar, null)
+    assert.equal(item.traction_source_url, null)
+    assert.ok(!('member' in item) && !('email' in item) && !('user_id' in item))
   }
 })
