@@ -24,11 +24,17 @@ function NewsletterAction() {
     } catch (e) { setMessage(e instanceof Error ? e.message : ar ? 'تعذر تنفيذ الطلب.' : 'Unable to complete the request.') }
     finally { setBusy(false) }
   }
-  return <PublicLayout><section className="gateway-section"><div className="mx-auto max-w-lg"><p className="gateway-eyebrow">WOSOOL</p><h1 className="gateway-heading">{ar ? 'اشتراك نشرة وصول' : 'Wosool newsletter subscription'}</h1><div className="gateway-card mt-6 space-y-5">
-    <p className="text-sm leading-7 text-slate-600">{ar ? 'اختر تأكيد الاشتراك أو إلغاءه باستخدام الرابط المرسل إلى بريدك.' : 'Use the link from your email to confirm or cancel your subscription.'}</p>
+  return <>
     {message && <p role={done ? 'status' : 'alert'} className="rounded-xl bg-slate-100 p-4 text-sm leading-7">{message}</p>}
     {!done && <button disabled={busy} onClick={() => void action(kind)} className="gateway-button w-full">{kind === 'confirm' ? (ar ? 'تأكيد الاشتراك' : 'Confirm subscription') : (ar ? 'إلغاء الاشتراك' : 'Unsubscribe')}</button>}
-  </div></div></section></PublicLayout>
+  </>
 }
 
-export default function NewsletterPage() { return <Suspense fallback={<p role="status">…</p>}><NewsletterAction /></Suspense> }
+// The heading and explanation render on the server; only the button reads the link's query string.
+export default function NewsletterPage() {
+  const { locale } = useLocale(); const ar = locale === 'ar'
+  return <PublicLayout><section className="gateway-section"><div className="mx-auto max-w-lg"><p className="gateway-eyebrow">WOSOOL</p><h1 className="gateway-heading">{ar ? 'اشتراك نشرة وصول' : 'Wosool newsletter subscription'}</h1><div className="gateway-card mt-6 space-y-5">
+    <p className="text-sm leading-7 text-slate-600">{ar ? 'اختر تأكيد الاشتراك أو إلغاءه باستخدام الرابط المرسل إلى بريدك.' : 'Use the link from your email to confirm or cancel your subscription.'}</p>
+    <Suspense fallback={<p role="status" className="text-sm text-slate-600">{ar ? 'جارٍ التحميل…' : 'Loading…'}</p>}><NewsletterAction /></Suspense>
+  </div></div></section></PublicLayout>
+}
