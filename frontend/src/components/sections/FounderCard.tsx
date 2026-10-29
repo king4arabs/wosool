@@ -13,9 +13,11 @@ export type FounderCardProfile = Founder & { externalProfileOnly?: boolean; sour
 export function FounderCard({
   founder,
   actions,
+  layout = "carousel",
 }: {
   founder: FounderCardProfile
   actions?: ReactNode
+  layout?: "grid" | "carousel"
 }) {
   const company = founder.primaryCompany
   const { locale } = useLocale()
@@ -26,6 +28,7 @@ export function FounderCard({
   return (
     <ProfileCard
       variant="founder"
+      layout={layout}
       data={{
         company: company?.name || founder.companyName,
         logo: company?.logoUrl,

@@ -120,6 +120,9 @@ class FounderDirectoryImporter
     private function enrich(CompanyProfile $company, array $row): bool
     {
         $changes = [];
+        if (blank($company->logo_url) && filled($row['logo_url'] ?? null)) {
+            $changes['logo_url'] = $row['logo_url'];
+        }
         if (! $company->founded_year && ! empty($row['founded_year'])) {
             $changes['founded_year'] = $row['founded_year'];
         }

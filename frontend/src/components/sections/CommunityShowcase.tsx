@@ -183,7 +183,7 @@ export function FounderShowcase({ founders: suppliedFounders, showFilters = true
     </>}
     <section ref={grid} id={gridId} className={styles.founderGridSection} hidden={!gridOpen || !filtered.length} tabIndex={-1} aria-labelledby={`${gridId}-title`}>
       <div className={styles.gridHead}><div><h3 id={`${gridId}-title`}>{ar ? 'جميع ملفات المؤسسين' : 'All founder profiles'}</h3><p>{ar ? 'تصفّح المؤسسين حسب الصفحة' : 'Browse founders by page'}</p></div><button type="button" className={styles.clearFilters} onClick={toggleGrid}>{ar ? 'إغلاق الشبكة' : 'Close grid'}<ChevronUp size={16} aria-hidden="true" /></button></div>
-      {gridOpen && <ul className={styles.founderGrid}>{visible.map(founder => <li key={founder.id}><FounderCard founder={founder} /></li>)}</ul>}
+      {gridOpen && <ul className={styles.founderGrid}>{visible.map(founder => <li key={founder.id}><FounderCard founder={founder} layout="grid" /></li>)}</ul>}
       <div className={styles.founderPagination}>
         <label>{ar ? 'ملفات في الصفحة' : 'Profiles per page'}<select value={pageSize} onChange={event => { setPageSize(Number(event.target.value)); setPage(1); revealGrid() }}>{[6, 12, 24].map(value => <option value={value} key={value}>{value}</option>)}</select></label>
         <nav aria-label={ar ? 'صفحات شبكة المؤسسين' : 'Founder grid pages'}>

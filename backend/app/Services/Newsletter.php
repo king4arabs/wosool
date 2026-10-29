@@ -4,7 +4,7 @@ use App\Mail\NewsletterMail;
 use App\Models\{Application, Event, FounderProfile, NewsletterSubscriber, NewsItem, User, UserSetting};
 use Illuminate\Support\Carbon;
 use App\Support\DirectoryGeography;
-use Illuminate\Support\Facades\{DB, Mail};
+use Illuminate\Support\Facades\{Cache, DB, Mail};
 use Illuminate\Support\Str;
 
 final class Newsletter
@@ -43,9 +43,9 @@ final class Newsletter
             NewsletterSubscriber::firstOrCreate(['email' => $email], ['locale' => $locale]);
             $subscriber = NewsletterSubscriber::where('email', $email)->lockForUpdate()->firstOrFail();
             // Public responses never disclose membership or subscription status.
-            if ($subscriber->status === 'active' || $subscriber->confirmation_sent_at?->gt(now()->subHour())) return;
+            if (($subscriber->status === 'active' && $this->eligible($subscriber)) || $subscriber->confirmation_sent_at?->gt(now()->subHour())) return;
             $token = Str::random(64);
-            $subscriber->fill(['locale' => $locale, 'confirmation_hash' => hash('sha256', $token), 'confirmation_expires_at' => now()->addHours(48), 'confirmation_sent_at' => now()])->save();
+            $subscriber->fill(['status' => 'pending', 'locale' => $locale, 'confirmation_hash' => hash('sha256', $token), 'confirmation_expires_at' => now()->addHours(48), 'confirmation_sent_at' => now()])->save();
             $url = rtrim(config('app.frontend_url'), '/').'/newsletter?confirm='.$subscriber->id.'#token='.$token;
             try { Mail::to($email)->send(new NewsletterMail('confirm', $locale, $url, '')); }
             catch (\Throwable) { abort(503, __('messages.newsletter.mail_unavailable')); }
@@ -73,7 +73,7 @@ final class Newsletter
         DB::transaction(function () use ($id, $token) {
             $s = NewsletterSubscriber::whereKey($id)->lockForUpdate()->first();
             abort_unless($s && hash_equals($this->unsubscribeToken($s), $token), 422, __('messages.newsletter.invalid_link'));
-            $s->update(['status' => 'unsubscribed', 'unsubscribed_at' => now(), 'confirmation_hash' => null, 'confirmation_expires_at' => null]);
+            $s->update(['status' => 'unsubscribed', 'unsubscribed_at' => now(), 'confirmation_sent_at' => null, 'confirmation_hash' => null, 'confirmation_expires_at' => null]);
             $user = User::whereRaw('LOWER(email) = ?', [$s->email])->first();
             if ($user) {
                 $settings = UserSetting::firstOrCreate(['user_id' => $user->id], UserSetting::defaults());
@@ -136,6 +136,7 @@ final class Newsletter
                 })->all();
                 $members = $newMembers->map(fn ($profile) => [
                     'name' => strip_tags($s->locale === 'ar' ? ($profile->translations['ar']['name'] ?? $profile->display_name ?? $profile->user->name) : ($profile->display_name ?? $profile->user->name)),
+                    'company' => strip_tags((string) ($s->locale === 'ar' ? ($profile->companies->first()?->translations['ar']['name'] ?? $profile->companies->first()?->name) : $profile->companies->first()?->name)),
                     'url' => rtrim(config('app.frontend_url'), '/').'/founders/'.rawurlencode($profile->slug),
                 ])->all();
                 $upcoming = $events->map(fn ($event) => ['title' => strip_tags($event->title),
@@ -152,7 +153,7 @@ final class Newsletter
     private function newMembers(Carbon $start, Carbon $end)
     {
         $profiles = DirectoryGeography::founders(FounderProfile::query())
-            ->with(['user.roles', 'user.founderProfile'])->whereNotNull('user_id')->where('is_public', true)->where('status', 'active')
+            ->with(['user.roles', 'user.founderProfile', 'companies' => fn ($q) => $q->where('is_public', true)->where('status', 'active')->orderByPivot('is_primary', 'desc')])->whereNotNull('user_id')->where('is_public', true)->where('status', 'active')
             ->where(fn ($q) => $q->whereNull('directory_key')->orWhereNotNull('claimed_at'))
             ->whereRaw('COALESCE(claimed_at, founder_profiles.created_at) >= ?', [$start])
             ->whereRaw('COALESCE(claimed_at, founder_profiles.created_at) < ?', [$end])
@@ -176,13 +177,32 @@ final class Newsletter
         if (! (clone $row)->whereIn('status', ['pending', 'failed'])->where('attempts', '<', 3)->update(['status' => 'sending', 'attempts' => DB::raw('attempts + 1'), 'updated_at' => now()])) return null;
         try {
             $this->requireMailer();
-            Mail::to($subscriber->email)->send(new NewsletterMail($kind, $subscriber->locale, rtrim(config('app.frontend_url'), '/').'/founders', $this->unsubscribeUrl($subscriber), $stories, $members, $events, $period));
+            Mail::to($subscriber->email)->send(new NewsletterMail($kind, $subscriber->locale, rtrim(config('app.frontend_url'), '/').'/founders', $this->unsubscribeUrl($subscriber), $stories, $members, $events, $period, rtrim(config('app.url'), '/').'/api/v1/newsletter/one-click/'.$subscriber->id.'/'.$this->unsubscribeToken($subscriber)));
             $row->update(['status' => 'sent', 'sent_at' => now(), 'updated_at' => now()]);
             return 'sent';
         } catch (\Throwable) {
             $row->update(['status' => 'failed', 'updated_at' => now()]);
             return 'failed';
         }
+    }
+
+    public function status(): array
+    {
+        $last = Cache::get('newsletter:last_run');
+        $next = now('Asia/Riyadh')->startOfMonth()->setTime(9, 0);
+        if (now()->gte($next)) $next->addMonthNoOverflow();
+        return [
+            'transport_configured' => app(FounderInvitationService::class)->realMailer((string) config('mail.default')) && filter_var(config('mail.from.address'), FILTER_VALIDATE_EMAIL) !== false,
+            'active' => NewsletterSubscriber::where('status', 'active')->count(),
+            'pending' => NewsletterSubscriber::where('status', 'pending')->count(),
+            'unsubscribed' => NewsletterSubscriber::where('status', 'unsubscribed')->count(),
+            'sent_30_days' => DB::table('newsletter_deliveries')->where('status', 'sent')->where('sent_at', '>=', now()->subDays(30))->count(),
+            'failed' => DB::table('newsletter_deliveries')->where('status', 'failed')->count(),
+            'unresolved' => DB::table('newsletter_deliveries')->where('status', 'sending')->where('updated_at', '<', now()->subHours(2))->count(),
+            'last_run' => $last,
+            'scheduler_recent' => $last && isset($last['finished_at']) && Carbon::parse($last['finished_at'])->gt(now()->subHours(2)),
+            'next_issue_at' => $next->toIso8601String(),
+        ];
     }
 
     private function requireMailer(): void

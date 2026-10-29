@@ -10,6 +10,7 @@ final class AdminOperations
     public static function summary(): array
     {
         return [
+            'newsletter' => app(Newsletter::class)->status(),
             'open_messages' => ContactMessage::whereNull('responded_at')->count(),
             'crm_due' => RelationshipRecord::where('kind', 'crm')->due()->count(),
             'pr_due' => RelationshipRecord::where('kind', 'pr')->due()->count(),

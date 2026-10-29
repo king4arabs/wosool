@@ -106,7 +106,7 @@ function TrustSignal({ icon, children }: { icon: ReactNode; children: ReactNode 
   return <span className={styles.signal}>{icon}{children}</span>
 }
 
-export function ProfileCard({ data, variant = "company" }: { data: ProfileCardData; variant?: "company" | "founder" }) {
+export function ProfileCard({ data, variant = "company", layout = "carousel" }: { data: ProfileCardData; variant?: "company" | "founder"; layout?: "grid" | "carousel" }) {
   const { locale } = useLocale()
   const ar = locale === "ar"
   const id = useId()
@@ -159,12 +159,12 @@ export function ProfileCard({ data, variant = "company" }: { data: ProfileCardDa
   }
 
   return (
-    <article className={`${styles.card} ${founderFirst ? styles.founderCard : ''}`} aria-labelledby={id}>
+    <article className={`${styles.card} ${founderFirst ? styles.founderCard : ''} ${layout === 'grid' ? styles.gridCard : ''}`} aria-labelledby={id}>
       <div className={styles.cardTopline} aria-hidden="true" />
       <header
         className={[
           styles.logoArea,
-          data.logoTone === "dark" || brandLogoNeedsDarkSurface(data.logo) ? styles.darkLogo : "",
+          data.logoTone === "dark" || brandLogoNeedsDarkSurface(data.logo, data.website) ? styles.darkLogo : "",
         ].join(" ")}
       >
         {flag && <span className={styles.countryFlag} data-country={flag}><CountryFlag code={flag} locale={locale} /></span>}

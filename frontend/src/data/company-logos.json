@@ -1,0 +1,932 @@
+[
+  {
+    "company_key": "wakecap",
+    "website": "https://www.wakecap.com/",
+    "src": "/company-logos/wakecap.png",
+    "tone": "light"
+  },
+  {
+    "company_key": "huspy",
+    "website": "https://www.huspy.com/ae",
+    "src": "/startup-directory/huspy-logo.svg",
+    "tone": "light"
+  },
+  {
+    "company_key": "grubtech",
+    "website": "https://grubtech.com/en",
+    "src": "/company-logos/grubtech.svg",
+    "tone": "light"
+  },
+  {
+    "company_key": "airbnb",
+    "website": "https://www.airbnb.com/",
+    "src": "/company-logos/airbnb.png",
+    "tone": "light"
+  },
+  {
+    "company_key": "inve",
+    "website": "https://inve.sa/",
+    "src": "/company-logos/inve.svg",
+    "tone": "light"
+  },
+  {
+    "company_key": "autobia",
+    "website": "https://autobia.sa/en/",
+    "src": "/company-logos/autobia.svg",
+    "tone": "light"
+  },
+  {
+    "company_key": "vrtx",
+    "website": "https://www.vrtx.sa/",
+    "src": "/company-logos/vrtx.png",
+    "tone": "light"
+  },
+  {
+    "company_key": "funding-souq",
+    "website": "https://fundingsouq.com/",
+    "src": "/company-logos/funding-souq.webp",
+    "tone": "light"
+  },
+  {
+    "company_key": "nabta-health",
+    "website": "https://nabtahealth.com/",
+    "src": "/company-logos/nabta-health.png",
+    "tone": "light"
+  },
+  {
+    "company_key": "sdm",
+    "website": "https://sdm.sa/",
+    "src": "/company-logos/sdm.svg",
+    "tone": "light"
+  },
+  {
+    "company_key": "cntxt-ai",
+    "website": "https://www.cntxt.tech/",
+    "src": "/company-logos/cntxt-ai.svg",
+    "tone": "dark"
+  },
+  {
+    "company_key": "ghanem",
+    "website": "https://ghanem.sa/en",
+    "src": "/company-logos/ghanem.png",
+    "tone": "dark"
+  },
+  {
+    "company_key": "snoonu",
+    "website": "https://snoonu.com/",
+    "src": "/company-logos/snoonu.svg",
+    "tone": "light"
+  },
+  {
+    "company_key": "bitesight",
+    "website": "https://www.bitesight.com/",
+    "src": "/company-logos/bitesight.svg",
+    "tone": "light"
+  },
+  {
+    "company_key": "echelon",
+    "website": "https://www.echelon.inc/",
+    "src": "/company-logos/echelon.svg",
+    "tone": "light"
+  },
+  {
+    "company_key": "capquest",
+    "website": "https://capquest.io/",
+    "src": "/company-logos/capquest.ico",
+    "tone": "light"
+  },
+  {
+    "company_key": "vitalls",
+    "website": "https://vitalls.ai/",
+    "src": "/company-logos/vitalls.png",
+    "tone": "light"
+  },
+  {
+    "company_key": "gaia-ai",
+    "website": "https://gaia.sa/",
+    "src": "/company-logos/gaia-ai.png",
+    "tone": "dark"
+  },
+  {
+    "company_key": "hatchio-ai",
+    "website": "https://www.hatchioai.com/",
+    "src": "/company-logos/hatchio-ai.png",
+    "tone": "light"
+  },
+  {
+    "company_key": "phaze-ventures",
+    "website": "https://phazeventures.com/",
+    "src": "/company-logos/phaze-ventures.svg",
+    "tone": "light"
+  },
+  {
+    "company_key": "noornation",
+    "website": "https://www.noornation.com/",
+    "src": "/company-logos/noornation.png",
+    "tone": "light"
+  },
+  {
+    "company_key": "sirdab",
+    "website": "https://sirdab.co/en/",
+    "src": "/company-logos/sirdab.svg",
+    "tone": "light"
+  },
+  {
+    "company_key": "magnitt",
+    "website": "https://magnitt.com/",
+    "src": "/company-logos/magnitt.png",
+    "tone": "light"
+  },
+  {
+    "company_key": "calo",
+    "website": "https://calo.app/en-bh",
+    "src": "/company-logos/calo.svg",
+    "tone": "light"
+  },
+  {
+    "company_key": "emushrif",
+    "website": "https://www.emushrif.com/",
+    "src": "/company-logos/emushrif.png",
+    "tone": "light"
+  },
+  {
+    "company_key": "skipcash",
+    "website": "https://skipcash.app/",
+    "src": "/company-logos/skipcash.svg",
+    "tone": "dark"
+  },
+  {
+    "company_key": "dibsy",
+    "website": "https://www.dibsy.one/",
+    "src": "/company-logos/dibsy.svg",
+    "tone": "light"
+  },
+  {
+    "company_key": "luciq",
+    "website": "https://www.luciq.ai/",
+    "src": "/company-logos/luciq.svg",
+    "tone": "light"
+  },
+  {
+    "company_key": "liwwa",
+    "website": "https://liwwa.com/",
+    "src": "/company-logos/liwwa.svg",
+    "tone": "light"
+  },
+  {
+    "company_key": "anghami",
+    "website": "https://www.anghami.com/",
+    "src": "/company-logos/anghami.png",
+    "tone": "light"
+  },
+  {
+    "company_key": "stripe",
+    "website": "https://stripe.com/",
+    "src": "/company-logos/stripe.svg",
+    "tone": "light"
+  },
+  {
+    "company_key": "canva",
+    "website": "https://www.canva.com/",
+    "src": "/startup-directory/canva-logo.svg",
+    "tone": "light"
+  },
+  {
+    "company_key": "nubank",
+    "website": "https://nubank.com.br/",
+    "src": "/company-logos/nubank.ico",
+    "tone": "light"
+  },
+  {
+    "company_key": "erad",
+    "website": "https://erad.co/",
+    "src": "/company-logos/erad.png",
+    "tone": "light"
+  },
+  {
+    "company_key": "stake",
+    "website": "https://getstake.com/",
+    "src": "/company-logos/stake.png",
+    "tone": "light"
+  },
+  {
+    "company_key": "rain-financial",
+    "website": "https://www.rain.com/",
+    "src": "/company-logos/rain-financial.png",
+    "tone": "light"
+  },
+  {
+    "company_key": "playbook-kuwait",
+    "website": "https://playbook-kw.com/",
+    "src": "/company-logos/playbook-kuwait.png",
+    "tone": "light"
+  },
+  {
+    "company_key": "mamun",
+    "website": "https://www.mamun.om/",
+    "src": "/company-logos/mamun.png",
+    "tone": "light"
+  },
+  {
+    "company_key": "sports-vector",
+    "website": "https://sportsvector.co/",
+    "src": "/company-logos/sports-vector.png",
+    "tone": "light"
+  },
+  {
+    "company_key": "breadfast",
+    "website": "https://www.breadfast.com/",
+    "src": "/company-logos/breadfast.svg",
+    "tone": "light"
+  },
+  {
+    "company_key": "mawdoo3",
+    "website": "https://mawdoo3.com/",
+    "src": "/company-logos/mawdoo3.png",
+    "tone": "light"
+  },
+  {
+    "company_key": "haqq-legal-ai",
+    "website": "https://www.haqq.ai/",
+    "src": "/company-logos/haqq-legal-ai.webp",
+    "tone": "dark"
+  },
+  {
+    "company_key": "lezzoo",
+    "website": "https://www.lezzoo.com/",
+    "src": "/company-logos/lezzoo.png",
+    "tone": "light"
+  },
+  {
+    "company_key": "hakini",
+    "website": "https://hakini.io/",
+    "src": "/company-logos/hakini.png",
+    "tone": "light"
+  },
+  {
+    "company_key": "beeorder",
+    "website": "https://www.beeorder.com/",
+    "src": "/company-logos/beeorder.svg",
+    "tone": "dark"
+  },
+  {
+    "company_key": "ortech-solutions",
+    "website": "https://ortech.tech/en/",
+    "src": "/company-logos/ortech-solutions.jpg",
+    "tone": "light"
+  },
+  {
+    "company_key": "chari",
+    "website": "https://chari.group/",
+    "src": "/company-logos/chari.png",
+    "tone": "light"
+  },
+  {
+    "company_key": "yassir",
+    "website": "https://yassir.com/",
+    "src": "/company-logos/yassir.svg",
+    "tone": "light"
+  },
+  {
+    "company_key": "instadeep",
+    "website": "https://instadeep.com/",
+    "src": "/company-logos/instadeep.svg",
+    "tone": "light"
+  },
+  {
+    "company_key": "tawajah",
+    "website": "https://landing.tawajah.ly/",
+    "src": "/company-logos/tawajah.svg",
+    "tone": "light"
+  },
+  {
+    "company_key": "alsoug",
+    "website": "https://www.alsoug.com/",
+    "src": "/company-logos/alsoug.svg",
+    "tone": "light"
+  },
+  {
+    "company_key": "atlassian",
+    "website": "https://www.atlassian.com/",
+    "src": "/company-logos/atlassian.svg",
+    "tone": "light"
+  },
+  {
+    "company_key": "quintoandar",
+    "website": "https://www.quintoandar.com.br/",
+    "src": "/company-logos/quintoandar.svg",
+    "tone": "light"
+  },
+  {
+    "company_key": "mercury",
+    "website": "https://mercury.com/",
+    "src": "/company-logos/mercury.svg",
+    "tone": "light"
+  },
+  {
+    "company_key": "bazaar-pk",
+    "website": "https://www.bazaartech.com/",
+    "src": "/company-logos/bazaar-pk.svg",
+    "tone": "light"
+  },
+  {
+    "company_key": "razorpay",
+    "website": "https://razorpay.com/",
+    "src": "/company-logos/razorpay.png",
+    "tone": "light"
+  },
+  {
+    "company_key": "shopup",
+    "website": "https://shopup.org/",
+    "src": "/company-logos/shopup.svg",
+    "tone": "light"
+  },
+  {
+    "company_key": "smartnews",
+    "website": "https://about.smartnews.com/",
+    "src": "/company-logos/smartnews.png",
+    "tone": "light"
+  },
+  {
+    "company_key": "carsome",
+    "website": "https://www.carsome.my/",
+    "src": "/company-logos/carsome.ico",
+    "tone": "light"
+  },
+  {
+    "company_key": "kumu",
+    "website": "https://kumu.ph/",
+    "src": "/company-logos/kumu.png",
+    "tone": "light"
+  },
+  {
+    "company_key": "xendit",
+    "website": "https://www.xendit.co/",
+    "src": "/company-logos/xendit.svg",
+    "tone": "light"
+  },
+  {
+    "company_key": "carousell",
+    "website": "https://www.carousell.sg/",
+    "src": "/company-logos/carousell.svg",
+    "tone": "light"
+  },
+  {
+    "company_key": "flutterwave",
+    "website": "https://flutterwave.com/",
+    "src": "/company-logos/flutterwave.png",
+    "tone": "light"
+  },
+  {
+    "company_key": "m-kopa",
+    "website": "https://www.m-kopa.com/",
+    "src": "/company-logos/m-kopa.svg",
+    "tone": "light"
+  },
+  {
+    "company_key": "yoco",
+    "website": "https://www.yoco.com/za/",
+    "src": "/company-logos/yoco.png",
+    "tone": "light"
+  },
+  {
+    "company_key": "revolut",
+    "website": "https://www.revolut.com/",
+    "src": "/company-logos/revolut.png",
+    "tone": "light"
+  },
+  {
+    "company_key": "alan",
+    "website": "https://alan.com/",
+    "src": "/company-logos/alan.png",
+    "tone": "light"
+  },
+  {
+    "company_key": "n26",
+    "website": "https://n26.com/",
+    "src": "/company-logos/n26.png",
+    "tone": "light"
+  },
+  {
+    "company_key": "adyen",
+    "website": "https://www.adyen.com/",
+    "src": "/company-logos/adyen.svg",
+    "tone": "light"
+  },
+  {
+    "company_key": "klarna",
+    "website": "https://www.klarna.com/",
+    "src": "/company-logos/klarna.png",
+    "tone": "light"
+  },
+  {
+    "company_key": "glovo",
+    "website": "https://glovoapp.com/",
+    "src": "/company-logos/glovo.png",
+    "tone": "light"
+  },
+  {
+    "company_key": "pleo",
+    "website": "https://www.pleo.io/",
+    "src": "/company-logos/pleo.svg",
+    "tone": "light"
+  },
+  {
+    "company_key": "kahoot",
+    "website": "https://kahoot.com/",
+    "src": "/company-logos/kahoot.svg",
+    "tone": "dark"
+  },
+  {
+    "company_key": "supercell",
+    "website": "https://supercell.com/",
+    "src": "/company-logos/supercell.png",
+    "tone": "dark"
+  },
+  {
+    "company_key": "intercom",
+    "website": "https://www.intercom.com/",
+    "src": "/company-logos/intercom.ico",
+    "tone": "light"
+  },
+  {
+    "company_key": "bitpanda",
+    "website": "https://www.bitpanda.com/",
+    "src": "/company-logos/bitpanda.svg",
+    "tone": "dark"
+  },
+  {
+    "company_key": "collibra",
+    "website": "https://www.collibra.com/",
+    "src": "/company-logos/collibra.svg",
+    "tone": "light"
+  },
+  {
+    "company_key": "viva-com",
+    "website": "https://www.viva.com/",
+    "src": "/company-logos/viva-com.ico",
+    "tone": "light"
+  },
+  {
+    "company_key": "on-running",
+    "website": "https://www.on.com/",
+    "src": "/company-logos/on-running.png",
+    "tone": "light"
+  },
+  {
+    "company_key": "rappi",
+    "website": "https://www.rappi.com.co/",
+    "src": "/company-logos/rappi.png",
+    "tone": "light"
+  },
+  {
+    "company_key": "notco",
+    "website": "https://www.notco.ai/",
+    "src": "/company-logos/notco.svg",
+    "tone": "light"
+  },
+  {
+    "company_key": "clip-mexico",
+    "website": "https://www.payclip.com/",
+    "src": "/company-logos/clip-mexico.svg",
+    "tone": "light"
+  },
+  {
+    "company_key": "kavak-mexico",
+    "website": "https://www.kavak.com/",
+    "src": "/company-logos/kavak-mexico.svg",
+    "tone": "light"
+  },
+  {
+    "company_key": "clio",
+    "website": "https://www.clio.com/",
+    "src": "/company-logos/clio.png",
+    "tone": "light"
+  },
+  {
+    "company_key": "uala",
+    "website": "https://www.uala.com.ar/",
+    "src": "/company-logos/uala.webp",
+    "tone": "light"
+  },
+  {
+    "company_key": "mrsool",
+    "website": "https://mrsool.co/",
+    "src": "/company-logos/mrsool.png",
+    "tone": "light"
+  },
+  {
+    "company_key": "shawarmer",
+    "website": "https://www.shawarmer.com/",
+    "src": "/company-logos/shawarmer.svg",
+    "tone": "light"
+  },
+  {
+    "company_key": "alhatab-bakery",
+    "website": "https://alhatab.com.sa/",
+    "src": "/company-logos/alhatab-bakery.png",
+    "tone": "light"
+  },
+  {
+    "company_key": "aleena",
+    "website": "https://shopaleena.com/",
+    "src": "/company-logos/aleena.png",
+    "tone": "light"
+  },
+  {
+    "company_key": "classera",
+    "website": "https://classera.com/",
+    "src": "/company-logos/classera.svg",
+    "tone": "light"
+  },
+  {
+    "company_key": "ejari",
+    "website": "https://ejari.sa/",
+    "src": "/company-logos/ejari.svg",
+    "tone": "light"
+  },
+  {
+    "company_key": "ekuep",
+    "website": "https://www.ekuep.com/",
+    "src": "/company-logos/ekuep.svg",
+    "tone": "light"
+  },
+  {
+    "company_key": "etree",
+    "website": "https://etree.com.sa/",
+    "src": "/company-logos/etree.png",
+    "tone": "light"
+  },
+  {
+    "company_key": "floward",
+    "website": "https://floward.com/",
+    "src": "/company-logos/floward.png",
+    "tone": "light"
+  },
+  {
+    "company_key": "gathern",
+    "website": "https://gathern.co/",
+    "src": "/company-logos/gathern.webp",
+    "tone": "light"
+  },
+  {
+    "company_key": "hala-fintech",
+    "website": "https://www.hala.com/",
+    "src": "/company-logos/hala-fintech.svg",
+    "tone": "light"
+  },
+  {
+    "company_key": "jisr",
+    "website": "https://www.jisr.net/",
+    "src": "/company-logos/jisr.svg",
+    "tone": "light"
+  },
+  {
+    "company_key": "lendo",
+    "website": "https://lendo.sa/",
+    "src": "/company-logos/lendo.png",
+    "tone": "light"
+  },
+  {
+    "company_key": "rize",
+    "website": "https://rize.sa/",
+    "src": "/company-logos/rize.svg",
+    "tone": "light"
+  },
+  {
+    "company_key": "ninja",
+    "website": "https://ananinja.com/",
+    "src": "/company-logos/ninja.png",
+    "tone": "light"
+  },
+  {
+    "company_key": "oto",
+    "website": "https://www.tryoto.com/",
+    "src": "/company-logos/oto.png",
+    "tone": "light"
+  },
+  {
+    "company_key": "nybl",
+    "website": "https://www.nybl.ai/",
+    "src": "/company-logos/nybl.png",
+    "tone": "dark"
+  },
+  {
+    "company_key": "swarm-robotics",
+    "website": "https://swarmrobotics.io/",
+    "src": "/startup-directory/swarm-logo.svg",
+    "tone": "light"
+  },
+  {
+    "company_key": "nitx",
+    "website": "https://nitx.io/",
+    "src": "/company-logos/nitx.svg",
+    "tone": "dark"
+  },
+  {
+    "company_key": "sary",
+    "website": "https://sary.com/",
+    "src": "/company-logos/sary.svg",
+    "tone": "light"
+  },
+  {
+    "company_key": "zid",
+    "website": "https://zid.sa/en/",
+    "src": "/company-logos/zid.svg",
+    "tone": "dark"
+  },
+  {
+    "company_key": "geidea",
+    "website": "https://www.geidea.net/ksa/en/",
+    "src": "/company-logos/geidea.svg",
+    "tone": "light"
+  },
+  {
+    "company_key": "nice-one",
+    "website": "https://www.niceonesa.com/",
+    "src": "/company-logos/nice-one.svg",
+    "tone": "light"
+  },
+  {
+    "company_key": "hyperpay",
+    "website": "https://www.hyperpay.com/",
+    "src": "/company-logos/hyperpay.svg",
+    "tone": "light"
+  },
+  {
+    "company_key": "bayt",
+    "website": "https://www.bayt.com/",
+    "src": "/company-logos/bayt.svg",
+    "tone": "light"
+  },
+  {
+    "company_key": "careem",
+    "website": "https://www.careem.com/",
+    "src": "/company-logos/careem.png",
+    "tone": "light"
+  },
+  {
+    "company_key": "instashop",
+    "website": "https://www.instashop.com/",
+    "src": "/company-logos/instashop.ico",
+    "tone": "light"
+  },
+  {
+    "company_key": "kitopi",
+    "website": "https://www.kitopi.com/",
+    "src": "/startup-directory/kitopi-logo.png",
+    "tone": "light"
+  },
+  {
+    "company_key": "ziina",
+    "website": "https://ziina.com/",
+    "src": "/company-logos/ziina.png",
+    "tone": "light"
+  },
+  {
+    "company_key": "pure-harvest",
+    "website": "https://pureharvestfarms.com/",
+    "src": "/company-logos/pure-harvest.svg",
+    "tone": "light"
+  },
+  {
+    "company_key": "sarwa",
+    "website": "https://www.sarwa.co/",
+    "src": "/company-logos/sarwa.svg",
+    "tone": "light"
+  },
+  {
+    "company_key": "baraka-invest",
+    "website": "https://www.getbaraka.com/",
+    "src": "/company-logos/baraka-invest.svg",
+    "tone": "light"
+  },
+  {
+    "company_key": "qlub",
+    "website": "https://www.qlub.io/",
+    "src": "/company-logos/qlub.svg",
+    "tone": "light"
+  },
+  {
+    "company_key": "immensa",
+    "website": "https://immensa.io/",
+    "src": "/company-logos/immensa.svg",
+    "tone": "light"
+  },
+  {
+    "company_key": "tabby",
+    "website": "https://tabby.ai/",
+    "src": "/company-logos/tabby.png",
+    "tone": "light"
+  },
+  {
+    "company_key": "eyewa",
+    "website": "https://eyewa.com/",
+    "src": "/company-logos/eyewa.svg",
+    "tone": "light"
+  },
+  {
+    "company_key": "property-finder",
+    "website": "https://www.propertyfinder.ae/",
+    "src": "/company-logos/property-finder.svg",
+    "tone": "light"
+  },
+  {
+    "company_key": "bayzat",
+    "website": "https://www.bayzat.com/",
+    "src": "/company-logos/bayzat.svg",
+    "tone": "light"
+  },
+  {
+    "company_key": "jo-academy",
+    "website": "https://www.joacademy.com/",
+    "src": "/company-logos/jo-academy.svg",
+    "tone": "dark"
+  },
+  {
+    "company_key": "tarjama",
+    "website": "https://tarjama.com/",
+    "src": "/company-logos/tarjama.svg",
+    "tone": "light"
+  },
+  {
+    "company_key": "qahwa-blk",
+    "website": "https://blk.jo/",
+    "src": "/company-logos/qahwa-blk.webp",
+    "tone": "light"
+  },
+  {
+    "company_key": "maqsam",
+    "website": "https://maqsam.com/",
+    "src": "/company-logos/maqsam.png",
+    "tone": "light"
+  },
+  {
+    "company_key": "zenhr",
+    "website": "https://www.zenhr.com/",
+    "src": "/company-logos/zenhr.svg",
+    "tone": "light"
+  },
+  {
+    "company_key": "tamatem",
+    "website": "https://tamatem.co/",
+    "src": "/company-logos/tamatem.png",
+    "tone": "light"
+  },
+  {
+    "company_key": "opensooq",
+    "website": "https://www.opensooq.com/",
+    "src": "/company-logos/opensooq.svg",
+    "tone": "light"
+  },
+  {
+    "company_key": "mosaic-marble",
+    "website": "https://www.mosaicmarble.com/",
+    "src": "/company-logos/mosaic-marble.png",
+    "tone": "light"
+  },
+  {
+    "company_key": "eastline-digital",
+    "website": "https://www.eastlinemarketing.com/",
+    "src": "/company-logos/eastline-digital.png",
+    "tone": "light"
+  },
+  {
+    "company_key": "e24-energy",
+    "website": "https://www.e24solutions.com/",
+    "src": "/company-logos/e24-energy.png",
+    "tone": "light"
+  },
+  {
+    "company_key": "toters",
+    "website": "https://www.totersapp.com/",
+    "src": "/company-logos/toters.png",
+    "tone": "light"
+  },
+  {
+    "company_key": "unifonic",
+    "website": "https://www.unifonic.com/",
+    "src": "/startup-directory/unifonic-logo.png",
+    "tone": "light"
+  },
+  {
+    "company_key": "jahez",
+    "website": "https://jahezgroup.com/",
+    "src": "/startup-directory/jahez-logo.webp",
+    "tone": "light"
+  },
+  {
+    "company_key": "foodics",
+    "website": "https://www.foodics.com/",
+    "src": "/startup-directory/foodics-logo.svg",
+    "tone": "light"
+  },
+  {
+    "company_key": "salla",
+    "website": "https://salla.com/",
+    "src": "/startup-directory/salla-logo.png",
+    "tone": "light"
+  },
+  {
+    "company_key": "tamara",
+    "website": "https://tamara.co/en-sa",
+    "src": "/startup-directory/tamara-logo.svg",
+    "tone": "light"
+  },
+  {
+    "company_key": "rasan",
+    "website": "https://rasan.sa/en",
+    "src": "/startup-directory/rasan-logo.png",
+    "tone": "dark"
+  },
+  {
+    "company_key": "lean-technologies",
+    "website": "https://www.leantech.me/",
+    "src": "/company-logos/lean-technologies.png",
+    "tone": "light"
+  },
+  {
+    "company_key": "lucidya",
+    "website": "https://lucidya.com/",
+    "src": "/company-logos/lucidya.svg",
+    "tone": "light"
+  },
+  {
+    "company_key": "mozn",
+    "website": "https://mozn.sa/",
+    "src": "/company-logos/mozn.svg",
+    "tone": "dark"
+  },
+  {
+    "company_key": "gameit",
+    "website": "https://gameit.ai/",
+    "src": "/company-logos/gameit.ico",
+    "tone": "light"
+  },
+  {
+    "company_key": "nugttah",
+    "website": "https://www.nugttah.com/",
+    "src": "/startup-directory/nugttah-logo.webp",
+    "tone": "light"
+  },
+  {
+    "company_key": "lahint",
+    "website": "https://lahint.sa/",
+    "src": "/startup-directory/lahint-logo.webp",
+    "tone": "light"
+  },
+  {
+    "company_key": "rewaa",
+    "website": "https://rewaa.com/",
+    "src": "/startup-directory/rewaa-logo.webp",
+    "tone": "light"
+  },
+  {
+    "company_key": "sifi",
+    "website": "https://www.sifi.app/",
+    "src": "/startup-directory/sifi-logo.webp",
+    "tone": "light"
+  },
+  {
+    "company_key": "qawafel",
+    "website": "https://qawafel.sa/",
+    "src": "/startup-directory/qawafel-logo.webp",
+    "tone": "light"
+  },
+  {
+    "company_key": "edfapay",
+    "website": "https://edfapay.com/",
+    "src": "/startup-directory/edfapay-logo.webp",
+    "tone": "light"
+  },
+  {
+    "company_key": "soum",
+    "website": "https://soum.sa/",
+    "src": "/company-logos/soum.png",
+    "tone": "light"
+  },
+  {
+    "company_key": "penny",
+    "website": "https://penny.co/",
+    "src": "/startup-directory/penny-logo.webp",
+    "tone": "light"
+  },
+  {
+    "company_key": "ynmo",
+    "website": "https://ynmodata.com/",
+    "src": "/company-logos/ynmo.svg",
+    "tone": "light"
+  },
+  {
+    "company_key": "syarah",
+    "website": "https://syarah.com/",
+    "src": "/startup-directory/syarah-logo.webp",
+    "tone": "light"
+  },
+  {
+    "company_key": "paymob",
+    "website": "https://paymob.com/",
+    "src": "/startup-directory/paymob-logo.svg",
+    "tone": "light"
+  }
+]

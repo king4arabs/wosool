@@ -20,7 +20,7 @@ try {
     const page = await context.newPage(); const errors = []; page.on('pageerror', error => errors.push(error.message))
     const records = []; const analyticsRequests = []
     let nextId = 1; let failSave = false
-    const operations = { open_messages: 4, crm_due: 2, pr_due: 1, crm_open: 5, pr_open: 2, public_members: 12, upcoming_events: 3, follow_ups: [] }
+    const operations = { newsletter: { transport_configured: true, active: 84, pending: 7, unsubscribed: 3, sent_30_days: 84, failed: 2, unresolved: 1, scheduler_recent: true, next_issue_at: '2026-11-01T09:00:00+03:00', last_run: { started_at: '2026-10-29T08:00:00Z', finished_at: '2026-10-29T08:00:12Z', status: 'failed' } }, open_messages: 4, crm_due: 2, pr_due: 1, crm_open: 5, pr_open: 2, public_members: 12, upcoming_events: 3, follow_ups: [] }
     await context.route('**/*', route => {
       const url = new URL(route.request().url()); const method = route.request().method()
       if (url.origin !== origin) return route.abort()
@@ -53,6 +53,10 @@ try {
       return json({ data: [] })
     })
     async function audit(label) {
+      // Saves refresh the list asynchronously. Audit the settled page rather
+      // than a refresh button switching between disabled and hover states.
+      await page.waitForLoadState('networkidle')
+      await page.mouse.move(0, 0)
       assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth + 1), false, `${label}: no horizontal overflow`)
       await page.addScriptTag({ content: axe })
       const violations = await page.evaluate(async () => (await window.axe.run(document, { runOnly: { type: 'tag', values: ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'] } })).violations.filter(item => ['critical', 'serious'].includes(item.impact)).map(item => ({ id: item.id, nodes: item.nodes.map(node => node.target) })))

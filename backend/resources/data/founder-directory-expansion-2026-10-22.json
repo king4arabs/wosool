@@ -1,7 +1,7 @@
 [
   {
     "portrait_url": "https://res.cloudinary.com/sosv-development/image/upload/v1522909794/agegncyf3oglrfxf1jyf.jpg",
-    "logo_url": null,
+    "logo_url": "/company-logos/wakecap.png",
     "founder_socials": [],
     "founded_year": null,
     "traction_en": null,
@@ -43,7 +43,7 @@
   },
   {
     "portrait_url": null,
-    "logo_url": null,
+    "logo_url": "/startup-directory/huspy-logo.svg",
     "founder_socials": [],
     "founded_year": null,
     "traction_en": null,
@@ -77,7 +77,7 @@
   },
   {
     "portrait_url": "https://grubtech.com/_astro/mohamed-al-fayed.BdGjba-P_YT6oJ.webp",
-    "logo_url": null,
+    "logo_url": "/company-logos/grubtech.svg",
     "founder_socials": [],
     "founded_year": 2019,
     "traction_en": null,
@@ -118,7 +118,7 @@
   },
   {
     "portrait_url": "https://news-assets.withairbnb.com/wp-content/uploads/sites/21/2016/10/Brian-Chesky-Headshot-IR-Crop-Airbnb-2.jpg",
-    "logo_url": null,
+    "logo_url": "/company-logos/airbnb.png",
     "founder_socials": [],
     "founded_year": null,
     "traction_en": null,
@@ -159,7 +159,7 @@
   },
   {
     "portrait_url": "https://news-assets.withairbnb.com/wp-content/uploads/sites/21/2023/10/Nate-Blecharczyk-Headshot-Crop-Airbnb-2.jpg",
-    "logo_url": null,
+    "logo_url": "/company-logos/airbnb.png",
     "founder_socials": [],
     "founded_year": null,
     "traction_en": null,
@@ -200,7 +200,7 @@
   },
   {
     "portrait_url": "https://news-assets.withairbnb.com/wp-content/uploads/sites/21/2016/10/Airbnb_Joe_Square.jpg",
-    "logo_url": null,
+    "logo_url": "/company-logos/airbnb.png",
     "founder_socials": [],
     "founded_year": null,
     "traction_en": null,
@@ -258,7 +258,7 @@
     "sector_ar": "تقنيات الفعاليات",
     "website": "https://inve.sa/",
     "portrait_url": null,
-    "logo_url": null,
+    "logo_url": "/company-logos/inve.svg",
     "founder_socials": [],
     "source_url": "https://www.wamda.com/2026/10/inve-raises-300000-outliers-vc-scale-eventtech-platform-gcc",
     "reviewed_at": "2026-10-27",
@@ -346,7 +346,7 @@
   },
   {
     "portrait_url": null,
-    "logo_url": null,
+    "logo_url": "/company-logos/autobia.svg",
     "founder_socials": [],
     "founded_year": 2021,
     "traction_en": "Autobia reports more than 5 million parts sold and service across over 100 Saudi cities.",
@@ -381,7 +381,7 @@
   },
   {
     "portrait_url": null,
-    "logo_url": null,
+    "logo_url": "/company-logos/autobia.svg",
     "founder_socials": [],
     "founded_year": 2021,
     "traction_en": "Autobia reports more than 5 million parts sold and service across over 100 Saudi cities.",
@@ -416,7 +416,7 @@
   },
   {
     "portrait_url": null,
-    "logo_url": null,
+    "logo_url": "/company-logos/vrtx.png",
     "founder_socials": [],
     "founded_year": 2025,
     "traction_en": null,
@@ -450,7 +450,7 @@
   },
   {
     "portrait_url": null,
-    "logo_url": null,
+    "logo_url": "/company-logos/vrtx.png",
     "founder_socials": [],
     "founded_year": 2025,
     "traction_en": null,
@@ -484,7 +484,7 @@
   },
   {
     "portrait_url": null,
-    "logo_url": null,
+    "logo_url": "/company-logos/funding-souq.webp",
     "founder_socials": [],
     "founded_year": 2020,
     "traction_en": "Funding Souq reported a network of over 10,000 investors in October 2026.",
@@ -518,7 +518,7 @@
   },
   {
     "portrait_url": null,
-    "logo_url": null,
+    "logo_url": "/company-logos/nabta-health.png",
     "founder_socials": [],
     "founded_year": 2017,
     "traction_en": null,
@@ -553,7 +553,7 @@
   },
   {
     "portrait_url": null,
-    "logo_url": null,
+    "logo_url": "/company-logos/sdm.svg",
     "founder_socials": [],
     "founded_year": null,
     "traction_en": null,
@@ -588,7 +588,7 @@
   },
   {
     "portrait_url": null,
-    "logo_url": null,
+    "logo_url": "/company-logos/sdm.svg",
     "founder_socials": [],
     "founded_year": null,
     "traction_en": null,
@@ -624,7 +624,7 @@
   },
   {
     "portrait_url": null,
-    "logo_url": null,
+    "logo_url": "/company-logos/cntxt-ai.svg",
     "founder_socials": [],
     "founded_year": 2024,
     "traction_en": null,
@@ -659,7 +659,7 @@
   },
   {
     "portrait_url": null,
-    "logo_url": null,
+    "logo_url": "/company-logos/cntxt-ai.svg",
     "founder_socials": [],
     "founded_year": 2024,
     "traction_en": null,
@@ -693,7 +693,7 @@
   },
   {
     "portrait_url": null,
-    "logo_url": null,
+    "logo_url": "/company-logos/ghanem.png",
     "founder_socials": [],
     "founded_year": 2025,
     "traction_en": null,
@@ -730,7 +730,7 @@
   },
   {
     "portrait_url": null,
-    "logo_url": null,
+    "logo_url": "/company-logos/ghanem.png",
     "founder_socials": [],
     "founded_year": 2025,
     "traction_en": null,
@@ -766,7 +766,7 @@
   },
   {
     "portrait_url": null,
-    "logo_url": null,
+    "logo_url": "/company-logos/snoonu.svg",
     "founder_socials": [],
     "founded_year": 2019,
     "traction_en": null,
@@ -802,7 +802,7 @@
   },
   {
     "portrait_url": null,
-    "logo_url": null,
+    "logo_url": "/company-logos/bitesight.svg",
     "founder_socials": [],
     "founded_year": null,
     "traction_en": null,
@@ -838,7 +838,7 @@
   },
   {
     "portrait_url": null,
-    "logo_url": null,
+    "logo_url": "/company-logos/echelon.svg",
     "founder_socials": [],
     "traction_en": null,
     "traction_ar": null,
@@ -873,7 +873,7 @@
   },
   {
     "portrait_url": null,
-    "logo_url": null,
+    "logo_url": "/company-logos/echelon.svg",
     "founder_socials": [],
     "founded_year": 2025,
     "traction_en": null,
@@ -942,7 +942,7 @@
   },
   {
     "portrait_url": null,
-    "logo_url": null,
+    "logo_url": "/company-logos/capquest.ico",
     "founder_socials": [],
     "traction_en": null,
     "traction_ar": null,
@@ -977,7 +977,7 @@
   },
   {
     "portrait_url": null,
-    "logo_url": null,
+    "logo_url": "/company-logos/capquest.ico",
     "founder_socials": [],
     "traction_en": null,
     "traction_ar": null,
@@ -1012,7 +1012,7 @@
   },
   {
     "portrait_url": null,
-    "logo_url": null,
+    "logo_url": "/company-logos/capquest.ico",
     "founder_socials": [],
     "traction_en": null,
     "traction_ar": null,
@@ -1047,7 +1047,7 @@
   },
   {
     "portrait_url": null,
-    "logo_url": null,
+    "logo_url": "/company-logos/vitalls.png",
     "founder_socials": [],
     "founded_year": 2023,
     "traction_en": null,
@@ -1101,7 +1101,7 @@
     "sector_ar": "الذكاء الاصطناعي المؤسسي",
     "website": "https://gaia.sa/",
     "portrait_url": null,
-    "logo_url": null,
+    "logo_url": "/company-logos/gaia-ai.png",
     "founder_socials": [],
     "source_url": "https://www.wamda.com/en/2026/09/saudi-ai-startup-gaia-secures-1-5-million-scale-enterprise-platform",
     "reviewed_at": "2026-10-29",
@@ -1135,7 +1135,7 @@
     "sector_ar": "الذكاء الاصطناعي المؤسسي",
     "website": "https://gaia.sa/",
     "portrait_url": null,
-    "logo_url": null,
+    "logo_url": "/company-logos/gaia-ai.png",
     "founder_socials": [],
     "source_url": "https://www.wamda.com/en/2026/09/saudi-ai-startup-gaia-secures-1-5-million-scale-enterprise-platform",
     "reviewed_at": "2026-10-29",
@@ -1169,7 +1169,7 @@
     "sector_ar": "برمجيات ريادة الأعمال بالذكاء الاصطناعي",
     "website": "https://www.hatchioai.com/",
     "portrait_url": null,
-    "logo_url": null,
+    "logo_url": "/company-logos/hatchio-ai.png",
     "founder_socials": [],
     "source_url": "https://www.hatchioai.com/investors",
     "reviewed_at": "2026-10-29",
@@ -1203,7 +1203,7 @@
     "sector_ar": "رأس المال الجريء · الذكاء الاصطناعي والتقنيات العميقة",
     "website": "https://phazeventures.com/",
     "portrait_url": null,
-    "logo_url": null,
+    "logo_url": "/company-logos/phaze-ventures.svg",
     "founder_socials": [],
     "source_url": "https://phazeventures.com/team",
     "reviewed_at": "2026-10-29",
@@ -1237,7 +1237,7 @@
     "sector_ar": "رأس المال الجريء · الذكاء الاصطناعي والتقنيات العميقة",
     "website": "https://phazeventures.com/",
     "portrait_url": null,
-    "logo_url": null,
+    "logo_url": "/company-logos/phaze-ventures.svg",
     "founder_socials": [],
     "source_url": "https://phazeventures.com/team",
     "reviewed_at": "2026-10-29",
@@ -1271,7 +1271,7 @@
     "sector_ar": "رأس المال الجريء · الذكاء الاصطناعي والتقنيات العميقة",
     "website": "https://phazeventures.com/",
     "portrait_url": null,
-    "logo_url": null,
+    "logo_url": "/company-logos/phaze-ventures.svg",
     "founder_socials": [],
     "source_url": "https://phazeventures.com/team",
     "reviewed_at": "2026-10-29",
@@ -1305,7 +1305,7 @@
     "sector_ar": "التقنية المناخية · الطاقة الشمسية والمياه",
     "website": "https://www.noornation.com/",
     "portrait_url": null,
-    "logo_url": null,
+    "logo_url": "/company-logos/noornation.png",
     "founder_socials": [],
     "source_url": "https://www.noornation.com/about",
     "reviewed_at": "2026-10-29",
@@ -1339,7 +1339,7 @@
     "sector_ar": "التقنية المناخية · الطاقة الشمسية والمياه",
     "website": "https://www.noornation.com/",
     "portrait_url": null,
-    "logo_url": null,
+    "logo_url": "/company-logos/noornation.png",
     "founder_socials": [],
     "source_url": "https://www.noornation.com/about",
     "reviewed_at": "2026-10-29",
@@ -1373,7 +1373,7 @@
     "sector_ar": "تقنيات الخدمات اللوجستية",
     "website": "https://sirdab.co/en/",
     "portrait_url": null,
-    "logo_url": null,
+    "logo_url": "/company-logos/sirdab.svg",
     "founder_socials": [],
     "source_url": "https://www.ycombinator.com/companies/sirdab",
     "source_urls": [
@@ -1407,7 +1407,7 @@
     "sector_ar": "تقنيات الخدمات اللوجستية",
     "website": "https://sirdab.co/en/",
     "portrait_url": null,
-    "logo_url": null,
+    "logo_url": "/company-logos/sirdab.svg",
     "founder_socials": [],
     "source_url": "https://www.ycombinator.com/companies/sirdab",
     "source_urls": [
@@ -1441,7 +1441,7 @@
     "sector_ar": "بيانات وتحليلات الاستثمار الجريء",
     "website": "https://magnitt.com/",
     "portrait_url": null,
-    "logo_url": null,
+    "logo_url": "/company-logos/magnitt.png",
     "founder_socials": [],
     "source_url": "https://svc.com.sa/wp-content/uploads/2024/05/10Years_SaudiArabia_Founders_Report_EN.pdf",
     "source_urls": [
@@ -1509,7 +1509,7 @@
     "sector_ar": "تقنيات الغذاء",
     "website": "https://calo.app/en-bh",
     "portrait_url": null,
-    "logo_url": null,
+    "logo_url": "/company-logos/calo.svg",
     "founder_socials": [],
     "source_url": "https://www.khwarizmivc.com/calo",
     "source_urls": [
@@ -1543,7 +1543,7 @@
     "sector_ar": "تقنيات الغذاء",
     "website": "https://calo.app/en-bh",
     "portrait_url": null,
-    "logo_url": null,
+    "logo_url": "/company-logos/calo.svg",
     "founder_socials": [],
     "source_url": "https://www.khwarizmivc.com/calo",
     "source_urls": [
@@ -1645,7 +1645,7 @@
     "sector_ar": "إنترنت الأشياء في النقل",
     "website": "https://www.emushrif.com/",
     "portrait_url": null,
-    "logo_url": null,
+    "logo_url": "/company-logos/emushrif.png",
     "founder_socials": [],
     "source_url": "https://www.emushrif.com/en/about-us",
     "source_urls": [
@@ -1679,7 +1679,7 @@
     "sector_ar": "إنترنت الأشياء في النقل",
     "website": "https://www.emushrif.com/",
     "portrait_url": null,
-    "logo_url": null,
+    "logo_url": "/company-logos/emushrif.png",
     "founder_socials": [],
     "source_url": "https://www.emushrif.com/en/about-us",
     "source_urls": [
@@ -1713,7 +1713,7 @@
     "sector_ar": "التقنية المالية · المدفوعات",
     "website": "https://skipcash.app/",
     "portrait_url": null,
-    "logo_url": null,
+    "logo_url": "/company-logos/skipcash.svg",
     "founder_socials": [],
     "source_url": "https://skipcash.app/team",
     "source_urls": [
@@ -1747,7 +1747,7 @@
     "sector_ar": "التقنية المالية · المدفوعات",
     "website": "https://www.dibsy.one/",
     "portrait_url": null,
-    "logo_url": null,
+    "logo_url": "/company-logos/dibsy.svg",
     "founder_socials": [],
     "source_url": "https://www.forbesmiddleeast.com/lists/the-middle-easts-fintech-50-2026/dibsy-2/",
     "source_urls": [
@@ -1782,7 +1782,7 @@
     "sector_ar": "أدوات المطورين",
     "website": "https://www.luciq.ai/",
     "portrait_url": null,
-    "logo_url": null,
+    "logo_url": "/company-logos/luciq.svg",
     "founder_socials": [],
     "source_url": "https://www.ycombinator.com/companies/luciq",
     "source_urls": [
@@ -1816,7 +1816,7 @@
     "sector_ar": "أدوات المطورين",
     "website": "https://www.luciq.ai/",
     "portrait_url": null,
-    "logo_url": null,
+    "logo_url": "/company-logos/luciq.svg",
     "founder_socials": [],
     "source_url": "https://www.ycombinator.com/companies/luciq",
     "source_urls": [
@@ -1850,7 +1850,7 @@
     "sector_ar": "تمويل المنشآت الصغيرة والمتوسطة",
     "website": "https://liwwa.com/",
     "portrait_url": null,
-    "logo_url": null,
+    "logo_url": "/company-logos/liwwa.svg",
     "founder_socials": [],
     "source_url": "https://liwwa.com/about/our-story",
     "source_urls": [
@@ -1884,7 +1884,7 @@
     "sector_ar": "تمويل المنشآت الصغيرة والمتوسطة",
     "website": "https://liwwa.com/",
     "portrait_url": null,
-    "logo_url": null,
+    "logo_url": "/company-logos/liwwa.svg",
     "founder_socials": [],
     "source_url": "https://liwwa.com/about/our-story",
     "source_urls": [
@@ -1918,7 +1918,7 @@
     "sector_ar": "الإعلام الرقمي والموسيقى",
     "website": "https://www.anghami.com/",
     "portrait_url": null,
-    "logo_url": null,
+    "logo_url": "/company-logos/anghami.png",
     "founder_socials": [],
     "source_url": "https://www.anghami.com/about",
     "source_urls": [
@@ -1952,7 +1952,7 @@
     "sector_ar": "الإعلام الرقمي والموسيقى",
     "website": "https://www.anghami.com/",
     "portrait_url": null,
-    "logo_url": null,
+    "logo_url": "/company-logos/anghami.png",
     "founder_socials": [],
     "source_url": "https://www.anghami.com/about",
     "source_urls": [
@@ -1986,7 +1986,7 @@
     "sector_ar": "التقنية المالية · المدفوعات",
     "website": "https://stripe.com/",
     "portrait_url": null,
-    "logo_url": null,
+    "logo_url": "/company-logos/stripe.svg",
     "founder_socials": [],
     "source_url": "https://stripe.com/newsroom/information",
     "source_urls": [
@@ -2053,7 +2053,7 @@
     "sector_ar": "برمجيات التصميم",
     "website": "https://www.canva.com/",
     "portrait_url": null,
-    "logo_url": null,
+    "logo_url": "/startup-directory/canva-logo.svg",
     "founder_socials": [],
     "source_url": "https://www.canva.com/canva-create/watch-sessions/",
     "source_urls": [
@@ -2087,7 +2087,7 @@
     "sector_ar": "برمجيات التصميم",
     "website": "https://www.canva.com/",
     "portrait_url": null,
-    "logo_url": null,
+    "logo_url": "/startup-directory/canva-logo.svg",
     "founder_socials": [],
     "source_url": "https://www.canva.com/canva-create/watch-sessions/",
     "source_urls": [
@@ -2121,7 +2121,7 @@
     "sector_ar": "التقنية المالية · المصرفية الرقمية",
     "website": "https://nubank.com.br/",
     "portrait_url": null,
-    "logo_url": null,
+    "logo_url": "/company-logos/nubank.ico",
     "founder_socials": [],
     "source_url": "https://international.nubank.com.br/company/nubank-10-years-by-david-velez/",
     "source_urls": [
@@ -2155,7 +2155,7 @@
     "sector_ar": "التقنية المالية · المصرفية الرقمية",
     "website": "https://nubank.com.br/",
     "portrait_url": null,
-    "logo_url": null,
+    "logo_url": "/company-logos/nubank.ico",
     "founder_socials": [],
     "source_url": "https://international.nubank.com.br/company/nubank-10-years-by-david-velez/",
     "source_urls": [

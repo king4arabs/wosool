@@ -18,6 +18,12 @@ class NewsletterController extends Controller
         $newsletter->confirm($data['id'], $data['token']);
         return response()->json(['message' => __('messages.newsletter.confirmed')]);
     }
+    public function oneClick(Request $request, Newsletter $newsletter, int $id, string $token)
+    {
+        $request->validate(['List-Unsubscribe' => 'required|in:One-Click']);
+        $newsletter->unsubscribe($id, $token);
+        return response()->noContent()->header('Cache-Control', 'no-store');
+    }
     public function unsubscribe(Request $request, Newsletter $newsletter)
     {
         $data = $request->validate(['id' => 'required|integer|min:1', 'token' => 'required|string|size:64']);

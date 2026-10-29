@@ -278,7 +278,13 @@ export interface AdminSettingsResponse {
   }
 }
 
+export interface NewsletterStatus {
+  transport_configured: boolean; active: number; pending: number; unsubscribed: number
+  sent_30_days: number; failed: number; unresolved: number; scheduler_recent: boolean; next_issue_at: string
+  last_run: { started_at: string; finished_at: string | null; status: string; sent?: number; failed?: number } | null
+}
 export interface AdminOperations {
+  newsletter?: NewsletterStatus
   open_messages: number; crm_due: number; pr_due: number; crm_open: number; pr_open: number; public_members: number; upcoming_events: number
   follow_ups: Array<{ id: number; kind: 'crm' | 'pr'; name: string; organization?: string | null; priority: string; follow_up_on: string; owner?: { name: string } | null }>
 }

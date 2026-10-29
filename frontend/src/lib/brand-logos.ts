@@ -1,4 +1,8 @@
+import companyLogos from '../data/company-logos.json'
 import { publicWebsite } from './community-display'
+
+const companyLogosByHost = new Map(companyLogos.map(logo => [new URL(logo.website).hostname.toLowerCase().replace(/^www\./, ''), logo.src]))
+const darkCompanyLogos = new Set(companyLogos.filter(logo => logo.tone === 'dark').map(logo => logo.src))
 
 // Resolve legacy API records to reviewed, local transparent artwork as well as
 // updating the editorial snapshots. This requires no production data migration.
@@ -23,7 +27,16 @@ export function brandLogoSource(src?: string) {
   return candidate ? transparentSources[candidate] || candidate : undefined
 }
 
+/** Exact official host matching prevents similarly named companies receiving the wrong logo. */
+export function reviewedCompanyLogo(website?: string) {
+  const safe = publicWebsite(website)
+  if (!safe) return undefined
+  const host = new URL(safe).hostname.toLowerCase().replace(/^www\./, '')
+  return companyLogosByHost.get(host)
+}
+
 /** Original white wordmarks need the existing themed dark header for contrast. */
-export function brandLogoNeedsDarkSurface(src?: string) {
-  return ['/startup-directory/rasan-logo.png', '/partners/lamarka.png'].includes(brandLogoSource(src) ?? '')
+export function brandLogoNeedsDarkSurface(src?: string, website?: string) {
+  const source = brandLogoSource(src) || reviewedCompanyLogo(website)
+  return ['/startup-directory/rasan-logo.png', '/partners/lamarka.png'].includes(source ?? '') || darkCompanyLogos.has(source ?? '')
 }

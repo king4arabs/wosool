@@ -10,7 +10,7 @@
 @if (count($members))
 {{ $language === 'ar' ? 'أهلاً بالأعضاء الجدد' : 'Welcome our new members' }}
 @foreach ($members as $member)
-{{ $member['name'] }} — {{ $member['url'] }}
+{{ $member['name'] }}@if (!empty($member['company'])) · {{ $member['company'] }}@endif — {{ $member['url'] }}
 @endforeach
 @endif
 @if (count($events))
@@ -21,6 +21,10 @@
 @endforeach
 @endif
 {{ $actionUrl }}
+@if ($kind !== 'confirm')
+{{ $language === 'ar' ? 'جميع الأخبار:' : 'All news:' }} {{ rtrim(config('app.frontend_url'), '/') }}/news
+{{ $language === 'ar' ? 'الفعاليات القادمة:' : 'Upcoming events:' }} {{ rtrim(config('app.frontend_url'), '/') }}/events
+@endif
 @if ($kind !== 'confirm')
 {{ $language === 'ar' ? 'إلغاء الاشتراك:' : 'Unsubscribe:' }} {{ $unsubscribeUrl }}
 @else

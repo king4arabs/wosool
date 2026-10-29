@@ -85,4 +85,18 @@ class FounderCopyRefreshTest extends TestCase
         $this->assertSame($ownedSnapshot, $owned->fresh()->getAttributes());
         $this->assertSame($claimedSnapshot, $claimed->fresh()->getAttributes());
     }
+
+    public function test_import_backfills_missing_company_logos_without_overwriting_member_artwork(): void
+    {
+        app(FounderDirectoryImporter::class)->run();
+        $company = \App\Models\CompanyProfile::where('directory_key', 'zid')->firstOrFail();
+        $expected = $company->logo_url;
+        $this->assertNotEmpty($expected);
+        $company->update(['logo_url' => null]);
+        app(FounderDirectoryImporter::class)->run();
+        $this->assertSame($expected, $company->fresh()->logo_url);
+        $company->update(['logo_url' => '/storage/member-upload.png']);
+        app(FounderDirectoryImporter::class)->run();
+        $this->assertSame('/storage/member-upload.png', $company->fresh()->logo_url);
+    }
 }

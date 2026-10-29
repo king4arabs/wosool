@@ -126,3 +126,19 @@
 .traction a { margin-top:4px; min-height:30px; display:inline-flex; align-items:center; gap:4px; color:var(--action-bg); font-size:11px; font-weight:800; }
 
 @media(max-width:660px) { .founderCard .logoArea { padding-inline:54px; } }
+
+/* Directory grid: stable brand panel, aligned identity blocks and actions. */
+.gridCard.founderCard .logoArea { min-height:112px; padding-block:22px; background:#fff; }
+.gridCard.founderCard .darkLogo { background:var(--brand-navy); }
+.gridCard.founderCard .logo { width:min(208px,100%); height:64px; color:#18223c; }
+.gridCard.founderCard .body { padding:20px; gap:12px; }
+.gridCard.founderCard .darkLogo .logo { color:#fff; }
+.gridCard .person { min-height:80px; }
+.gridCard .personCopy { flex:1; }
+.gridCard .founderBrief { min-height:3.6em; }
+.gridCard .companyHeading { min-height:62px; padding-top:12px; }
+.gridCard .factGrid { margin-bottom:2px; }
+.gridCard .links { margin-top:auto; }
+.gridCard .actions { margin-top:0; }
+@media(max-width:660px) { .gridCard.founderCard .body { padding:18px; }.gridCard .person { min-height:72px; } }
+@media(max-width:360px) { .gridCard.founderCard .body { padding:15px; } }
