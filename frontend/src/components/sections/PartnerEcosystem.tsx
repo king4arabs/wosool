@@ -20,7 +20,7 @@ export function PartnerEcosystem() {
   const partners = selected.map(item => ({ ...item, name_ar: ar ? item.name_ar : item.name_en }))
   return <section aria-labelledby="partnership-opportunities" className="mt-10 border-t border-slate-200 pt-8">
     <div className="flex flex-wrap items-end justify-between gap-3">
-      <div><h3 id="partnership-opportunities" className="text-xl font-bold text-slate-900">{ar ? 'فرص الشراكة' : 'Partnership opportunities'}</h3><p className="mt-2 text-sm leading-7 text-slate-500">{ar ? 'جهات نتطلع للتعاون معها لخدمة المؤسسين.' : 'Organizations we aspire to collaborate with in support of founders.'}</p></div>
+      <div><h3 id="partnership-opportunities" className="text-xl font-bold text-slate-900">{ar ? 'فرص الشراكة' : 'Partnership opportunities'}</h3><p className="mt-2 text-sm leading-7 text-slate-500">{ar ? 'نفخر بشركاء يتعامل معهم المؤسسين وتتوسع بهم تطلعات العلاقات والأعمال' : 'We are proud of the partners founders work with, broadening their connections and business opportunities.'}</p></div>
     </div>
     <div role="group" aria-label={ar ? 'تصفية الجهات حسب الفئة' : 'Filter organizations by category'} className="mt-6 flex flex-wrap gap-2">
       {categories.map(([key, arabic, english]) => <button key={key} type="button" aria-pressed={category === key} onClick={() => setCategory(key)} className={`min-h-11 rounded-full border px-4 py-2 text-xs font-semibold transition-colors ${category === key ? 'border-indigo-700 bg-indigo-700 text-white' : 'border-slate-200 bg-white text-slate-600 hover:border-indigo-300'}`}>{ar ? arabic : english}</button>)}
