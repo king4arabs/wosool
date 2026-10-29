@@ -48,7 +48,7 @@ final class Newsletter
             $subscriber->fill(['locale' => $locale, 'confirmation_hash' => hash('sha256', $token), 'confirmation_expires_at' => now()->addHours(48), 'confirmation_sent_at' => now()])->save();
             $url = rtrim(config('app.frontend_url'), '/').'/newsletter?confirm='.$subscriber->id.'#token='.$token;
             try { Mail::to($email)->send(new NewsletterMail('confirm', $locale, $url, '')); }
-            catch (\Throwable) { abort(503, 'تعذر إرسال رسالة التأكيد. حاول لاحقًا. Confirmation email is temporarily unavailable.'); }
+            catch (\Throwable) { abort(503, __('messages.newsletter.mail_unavailable')); }
         });
     }
 
@@ -56,7 +56,7 @@ final class Newsletter
     {
         $subscriber = DB::transaction(function () use ($id, $token) {
             $s = NewsletterSubscriber::whereKey($id)->lockForUpdate()->first();
-            abort_unless($s && $s->confirmation_hash && $s->confirmation_expires_at?->isFuture() && hash_equals($s->confirmation_hash, hash('sha256', $token)), 422, 'الرابط غير صالح أو انتهت صلاحيته. Invalid or expired link.');
+            abort_unless($s && $s->confirmation_hash && $s->confirmation_expires_at?->isFuture() && hash_equals($s->confirmation_hash, hash('sha256', $token)), 422, __('messages.newsletter.invalid_link'));
             $s->fill(['status' => 'active', 'explicit_opt_in' => true, 'confirmed_at' => now(), 'unsubscribed_at' => null, 'confirmation_hash' => null, 'confirmation_expires_at' => null])->save();
             $user = User::whereRaw('LOWER(email) = ?', [$s->email])->first();
             if ($user) {
@@ -72,7 +72,7 @@ final class Newsletter
     {
         DB::transaction(function () use ($id, $token) {
             $s = NewsletterSubscriber::whereKey($id)->lockForUpdate()->first();
-            abort_unless($s && hash_equals($this->unsubscribeToken($s), $token), 422, 'الرابط غير صالح. Invalid link.');
+            abort_unless($s && hash_equals($this->unsubscribeToken($s), $token), 422, __('messages.newsletter.invalid_link'));
             $s->update(['status' => 'unsubscribed', 'unsubscribed_at' => now(), 'confirmation_hash' => null, 'confirmation_expires_at' => null]);
             $user = User::whereRaw('LOWER(email) = ?', [$s->email])->first();
             if ($user) {
@@ -187,6 +187,6 @@ final class Newsletter
 
     private function requireMailer(): void
     {
-        abort_unless(app(FounderInvitationService::class)->realMailer((string) config('mail.default')) && filled(config('mail.from.address')), 503, 'A delivery mailer is required. خدمة البريد غير متاحة حاليًا.');
+        abort_unless(app(FounderInvitationService::class)->realMailer((string) config('mail.default')) && filled(config('mail.from.address')), 503, __('messages.newsletter.mail_unavailable'));
     }
 }
