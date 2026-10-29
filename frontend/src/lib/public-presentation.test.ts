@@ -39,7 +39,7 @@ test('newsroom keeps news and region filtering but hides decorative numeric tota
 
 test('EO value and cohort cards retain the separately validated equal-height layout', () => {
   const css = read('../app/globals.css')
-  const browser = read('../scripts/check-eoa-equal-cards.mjs')
+  const browser = read('../../scripts/check-eoa-equal-cards.mjs')
   assert.match(css, /\.eoa-four-grid \{[^}]*grid-auto-rows:1fr;/)
   assert.match(css, /\.eoa-four-grid > \.eoa-pillar \{/)
   assert.match(browser, /EO value\/cohort card balance/)
