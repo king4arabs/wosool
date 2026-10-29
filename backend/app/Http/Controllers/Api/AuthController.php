@@ -70,7 +70,7 @@ class AuthController extends Controller
             'password' => ['required', 'confirmed', Password::min(8)->mixedCase()->numbers()],
             'invite_token' => 'nullable|string|max:150', 'consent' => 'accepted',
         ]);
-        if (User::whereRaw('LOWER(email) = ?', [$data['email']])->exists()) throw ValidationException::withMessages(['email' => ['هذا البريد مسجل مسبقًا. Email is already registered.']]);
+        if (User::whereRaw('LOWER(email) = ?', [$data['email']])->exists()) throw ValidationException::withMessages(['email' => [__('messages.registration.email_taken')]]);
         if (! empty($data['invite_token'])) {
             $application = Application::whereRaw('LOWER(email) = ?', [$data['email']])->where('status', 'approved')->latest('id')->first();
             if (! $application?->invite_token || ! hash_equals($application->invite_token, $data['invite_token'])) throw ValidationException::withMessages(['invite_token' => [__('messages.auth.invalid_invite_token')]]);
@@ -84,7 +84,7 @@ class AuthController extends Controller
         });
         Auth::login($user);
         if ($request->hasSession()) $request->session()->regenerate();
-        return response()->json(['message' => 'أرسلنا رمز التحقق إلى بريدك. Verification code sent.', 'user' => $this->formatUser($user)], 201);
+        return response()->json(['message' => __('messages.registration.code_sent'), 'user' => $this->formatUser($user)], 201);
     }
 
     public function verifyRegistration(Request $request): JsonResponse
@@ -94,13 +94,13 @@ class AuthController extends Controller
         $user = $request->user()->fresh();
         app(MembershipRegistration::class)->linkVerifiedApplications($user);
         if ($request->hasSession()) $request->session()->regenerate();
-        return response()->json(['message' => 'تم تأكيد بريدك. Email verified.', 'user' => $this->formatUser($user)]);
+        return response()->json(['message' => __('messages.registration.email_verified'), 'user' => $this->formatUser($user)]);
     }
 
     public function resendRegistration(Request $request): JsonResponse
     {
         app(RegistrationOtp::class)->send($request->user());
-        return response()->json(['message' => 'أرسلنا رمزًا جديدًا. A new verification code was sent.']);
+        return response()->json(['message' => __('messages.registration.code_resent')]);
     }
 
     /**
