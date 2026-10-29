@@ -72,13 +72,15 @@ try {
       // waiting for the reviewed fallback source to replace it.
       const card = grid.locator('article').filter({ has: page.getByRole('heading', { name: founderName, exact: true }) })
       await card.scrollIntoViewIfNeeded()
-      const logo = card.locator(`img[src="${src}"]`)
+      // Next Image may normalize src to an absolute same-origin URL on hydration.
+      const logo = card.locator(`img[src$="${src}"]`)
       await eventually(async () => {
         if (await logo.count()) return true
         log = `Missing ${src}: ${await card.innerHTML()}`
         return false
       })
       await eventually(() => logo.evaluate(img => img.complete && img.naturalWidth > 0))
+      assert.equal(await logo.evaluate(img => new URL(img.src).origin), origin)
     }
     const gridGeometry = await grid.locator('article').evaluateAll(cards => cards.map(card => {
       const rect = card.getBoundingClientRect(); const logo = card.querySelector('[data-brand-logo]').getBoundingClientRect()
