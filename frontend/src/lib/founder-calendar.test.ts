@@ -1,7 +1,7 @@
 import assert from "node:assert/strict"
 import test from "node:test"
 import { ONLINE_ANCHOR, PROGRAM_END, PROGRAM_START, RAMADAN_BREAK_END, RAMADAN_BREAK_START } from "../data/founder-calendar"
-import { acceleratorBreak, cohortMilestones, internationalCalendarHolidays, isAcceleratorOff, addCalendarDays, calendarDateLabel, calendarMonthDays, entriesOnDate, plannedFounderSessions, publishedCalendarEntries, riyadhDate, saudiCalendarHolidays, shiftCalendarMonth } from "./founder-calendar"
+import { acceleratorBreak, cohortMilestones, ecosystemCalendarEntries, internationalCalendarHolidays, isAcceleratorOff, addCalendarDays, calendarDateLabel, calendarMonthDays, entriesOnDate, plannedFounderSessions, publishedCalendarEntries, riyadhDate, saudiCalendarHolidays, shiftCalendarMonth } from "./founder-calendar"
 import type { Event } from "../types"
 
 const sessions = plannedFounderSessions()
@@ -109,4 +109,45 @@ test("international holidays are sourced, distinctly categorized and do not canc
   assert.equal(holidays.find((entry) => entry.id === "easter-2027")?.date, "2027-03-28")
   assert.equal(entriesOnDate([...sessions, ...holidays], "2027-03-28").length, 2, "Easter is not an accelerator off day")
   assert.equal(isAcceleratorOff("2027-01-01"), false)
+})
+
+test("sourced ecosystem conference calendar spans the requested archive and future years without fabricated daily dates", () => {
+  const entries = ecosystemCalendarEntries()
+  assert.equal(entries.length, 61)
+  assert.equal(new Set(entries.map(item => item.id)).size, entries.length)
+  assert.deepEqual([...new Set(entries.map(item => item.date.slice(0, 4)))].sort(), ["2025", "2026", "2027", "2028", "2029"])
+  const validDay = (date: string) => /^\\d{4}-\\d{2}-\\d{2}$/.test(date)
+    && Number.isFinite(Date.parse(date + "T00:00:00Z"))
+    && new Date(date + "T00:00:00Z").toISOString().slice(0, 10) === date
+  for (const entry of entries) {
+    assert.equal(entry.kind, "ecosystem")
+    assert.equal(entry.status, "published")
+    assert.ok(validDay(entry.date), entry.id)
+    assert.ok(validDay(entry.endDate!), entry.id)
+    assert.ok(entry.date <= entry.endDate!, entry.id)
+    assert.ok(entry.date <= "2029-10-29" && entry.endDate! >= "2025-10-29", entry.id)
+    assert.ok(entry.title.en && entry.title.ar && entry.description.en && entry.description.ar)
+    assert.ok(entry.source?.startsWith("https://"))
+    assert.ok(entry.location?.en && entry.location?.ar)
+    assert.ok(["riyadh", "saudi", "gcc", "mena", "global"].includes(entry.ecosystem!.region))
+    assert.ok(["registration", "application", "invitation", "trade"].includes(entry.ecosystem!.access))
+    assert.ok(entry.ecosystem!.organizer)
+    assert.equal(entry.event, undefined, "external event must not impersonate a Wosool registration")
+  }
+})
+
+test("multi-day conferences appear on their actual calendar dates and organizer-only meetings are identified", () => {
+  const entries = ecosystemCalendarEntries()
+  const leap = entries.find(entry => entry.id === "ecosystem-leap-2027")!
+  assert.equal(leap.date, "2027-04-12")
+  assert.equal(leap.endDate, "2027-04-15")
+  for (const date of ["2027-04-12", "2027-04-13", "2027-04-14", "2027-04-15"]) {
+    assert(entriesOnDate(entries, date).some(row => row.id === leap.id))
+  }
+  assert.equal(entriesOnDate(entries, "2027-04-16").some(row => row.id === leap.id), false)
+  const closed = entries.find(row => row.id === "ecosystem-superreturn-lp-boardroom-2027")!
+  assert.equal(closed.ecosystem?.access, "invitation")
+  assert.equal(closed.ecosystem?.region, "riyadh")
+  assert.ok(entries.some(row => row.date.startsWith("2029") && row.endDate?.startsWith("2029")))
+  assert.equal(plannedFounderSessions().length, 91, "existing cohort activity categories remain unchanged")
 })
