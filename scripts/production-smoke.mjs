@@ -18,6 +18,10 @@ export function buildProbes(site, api) {
     { name: "Laravel liveness", url: api + "/api/health", kind: "json", status: "healthy" },
     { name: "Laravel readiness", url: api + "/api/ready", kind: "json", status: "ready" },
     { name: "Same-origin API proxy", url: site + "/api/health", kind: "json", status: "healthy" },
+    // Empty JSON must fail validation before persistence or mail delivery.
+    ...[["Direct newsletter route", api], ["Same-origin newsletter route", site]].map(([name, origin]) => ({
+      name, url: origin + "/api/v1/newsletter/subscribe", kind: "validation", method: "POST", expectedStatus: 422,
+    })),
   ]
 }
 
@@ -34,15 +38,23 @@ export function formatResponseDiagnostics(response) {
 
 export async function probeEndpoint(spec, fetchImpl = fetch) {
   const response = await fetchImpl(spec.url, {
-    method: "GET", redirect: "manual",
-    headers: { Accept: spec.kind === "json" ? "application/json" : "text/html" },
+    method: spec.method || "GET", redirect: "manual",
+    headers: { Accept: spec.kind === "html" ? "text/html" : "application/json", ...(spec.kind === "validation" ? { "Content-Type": "application/json" } : {}) },
+    ...(spec.kind === "validation" ? { body: "{}" } : {}),
     signal: AbortSignal.timeout(12000),
   })
-  if (response.status !== 200) {
-    throw new Error("Expected HTTP 200; got HTTP " + response.status + formatResponseDiagnostics(response))
+  const expectedStatus = spec.expectedStatus || 200
+  if (response.status !== expectedStatus) {
+    throw new Error("Expected HTTP " + expectedStatus + "; got HTTP " + response.status + formatResponseDiagnostics(response))
   }
   const contentType = response.headers.get("content-type") || ""
-  if (spec.kind === "json") {
+  if (spec.kind === "validation") {
+    if (!contentType.includes("application/json")) throw new Error("Expected JSON content type")
+    const data = await response.json()
+    if (!["email", "locale", "consent"].every(field => Array.isArray(data?.errors?.[field]) && data.errors[field].length > 0)) {
+      throw new Error("Expected newsletter validation errors")
+    }
+  } else if (spec.kind === "json") {
     if (!contentType.includes("application/json")) throw new Error("Expected JSON content type")
     const data = await response.json()
     if (data?.status !== spec.status || (spec.service && data?.service !== spec.service)) {

@@ -2,6 +2,7 @@
 import { useState, type FormEvent } from 'react'
 import { api } from '@/lib/api'
 import { useLocale } from '@/lib/locale'
+import { newsletterError } from '@/lib/newsletter-error'
 
 export function NewsletterSignup() {
   const { locale } = useLocale()
@@ -19,7 +20,7 @@ export function NewsletterSignup() {
       await api.post('/newsletter/subscribe', { email: email.trim(), locale, consent })
       setMessage(ar ? 'تحقق من بريدك لتأكيد الاشتراك. إذا كنت مشتركًا بالفعل، ستستمر رسائلك كالمعتاد.' : 'Check your inbox to confirm. Existing subscribers will continue receiving their updates.')
       setEmail('')
-    } catch (e) { setFailed(true); setMessage(e instanceof Error ? e.message : ar ? 'تعذر الاشتراك. حاول مجددًا.' : 'Unable to subscribe. Please retry.') }
+    } catch (e) { setFailed(true); setMessage(newsletterError(e, locale)) }
     finally { setBusy(false) }
   }
   return <section className="mx-auto mb-12 max-w-5xl rounded-2xl border border-white/20 bg-white/5 p-6" aria-labelledby="newsletter-title">

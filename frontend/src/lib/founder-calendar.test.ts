@@ -113,7 +113,7 @@ test("international holidays are sourced, distinctly categorized and do not canc
 
 test("sourced ecosystem conference calendar spans the requested archive and future years without fabricated daily dates", () => {
   const entries = ecosystemCalendarEntries()
-  assert.equal(entries.length, 61)
+  assert.equal(entries.length, 96)
   assert.equal(new Set(entries.map(item => item.id)).size, entries.length)
   assert.deepEqual([...new Set(entries.map(item => item.date.slice(0, 4)))].sort(), ["2025", "2026", "2027", "2028", "2029"])
   const validDay = (date: string) => /^\d{4}-\d{2}-\d{2}$/.test(date)
@@ -134,6 +134,23 @@ test("sourced ecosystem conference calendar spans the requested archive and futu
     assert.ok(entry.ecosystem!.organizer)
     assert.equal(entry.event, undefined, "external event must not impersonate a Wosool registration")
   }
+})
+
+test("new regional and international dates are discoverable and postponed FII dates are withdrawn", () => {
+  const entries = ecosystemCalendarEntries()
+  for (const [id, start, end] of [
+    ['saif-riyadh-2026', '2026-11-24', '2026-11-26'],
+    ['mwc-doha-2026', '2026-11-08', '2026-11-10'],
+    ['aspa-kaust-2026', '2026-11-29', '2026-12-02'],
+    ['comex-oman-2027', '2027-02-01', '2027-02-04'],
+    ['south-summit-madrid-2027', '2027-06-02', '2027-06-04'],
+  ]) {
+    const entry = entries.find(item => item.id === `ecosystem-${id}`)
+    assert.equal(entry?.date, start)
+    assert.equal(entry?.endDate, end)
+    assert.ok(entriesOnDate(entries, end).includes(entry!))
+  }
+  assert.equal(entries.some(entry => /fii10/.test(entry.id)), false, 'The organizer has postponed FII10 without replacement dates')
 })
 
 test("multi-day conferences appear on their actual calendar dates and organizer-only meetings are identified", () => {

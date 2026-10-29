@@ -1,5 +1,12 @@
 # Changelog
 
+## Founder starting engagement, more events and newsletter recovery — 2026-10-29
+
+- Give founder cards a stable seeded starting percentage between 65% and 92%, replaced by a valid live participation score after activation. Remove the explanatory tooltip; membership and verification remain unchanged.
+- Add 37 bilingual organizer-sourced calendar entries and withdraw two obsolete FII10 entries after its postponement: 96 dated external entries in total.
+- Keep newsletter validation guidance while replacing raw route/server errors with localized retry guidance on every footer and confirmation page. Preserve failed input and never display success for a failed request.
+- Add canonical/mounted Laravel newsletter regression tests and no-delivery production route probes. Document the required backend release and route-cache repair separately from the frontend change.
+
 ## Shuffled newsroom and expanded illustrated coverage — 2026-10-29
 
 - Remove public region/topic filter rows and the chronological selector from `/news`; search remains available in both languages and older filter URLs no longer silently restrict results.

@@ -4,9 +4,25 @@ import { buildProbes, formatResponseDiagnostics, probeEndpoint, validateOrigin }
 
 test("covers website, direct Laravel endpoints, and the frontend proxy", () => {
   const probes = buildProbes("https://wosool.org", "https://api.wosool.org")
-  assert.equal(probes.length, 6)
+  assert.equal(probes.length, 8)
   assert.ok(probes.some((p) => p.url === "https://wosool.org/api/health"))
   assert.ok(probes.some((p) => p.url === "https://api.wosool.org/api/ready"))
+})
+
+test("newsletter probes detect stale routes without submitting an address or consent", async () => {
+  const probes = buildProbes("https://wosool.org", "https://api.wosool.org").filter(probe => probe.kind === "validation")
+  assert.equal(probes.length, 2)
+  for (const spec of probes) {
+    await probeEndpoint(spec, async (_url, options) => {
+      assert.equal(options.method, "POST")
+      assert.equal(options.body, "{}")
+      assert.equal(options.redirect, "manual")
+      return Response.json({ errors: { email: ["Required"], locale: ["Required"], consent: ["Required"] } }, { status: 422 })
+    })
+    await assert.rejects(() => probeEndpoint(spec, async () => Response.json({ message: "Route not found" }, { status: 404 })), /Expected HTTP 422; got HTTP 404/)
+    await assert.rejects(() => probeEndpoint(spec, async () => Response.json({ message: "Wrong validator" }, { status: 422 })), /newsletter validation/)
+    await assert.rejects(() => probeEndpoint(spec, async () => Response.json({ message: "Accepted" }, { status: 202 })), /got HTTP 202/)
+  }
 })
 
 test("requires safe origins", () => {

@@ -10,7 +10,7 @@ Keep the **single GitHub monorepo** but deploy two independent services. The Nex
 
 **Safe release order:** backup the live database and record both deployed source SHAs; validate staging with its own restricted domain and separate database; deploy compatible Laravel code and additive migrations; verify direct API readiness, authorization, queues and real SMTP; deploy the matching Next.js revision; verify the website and the same-origin proxy; record the result. Preserve `APP_KEY`, private media, uploads, and data. No automatic destructive migrations or demonstration seeders. Revert to the previous host artifact if verification fails, and never blindly restore a pre-release database over live user writes.
 
-**Post-release smoke check:** run `node scripts/production-smoke.mjs` from the repository root. This requests the homepage, `/eoa`, frontend `/health`, Laravel `/api/health` and `/api/ready`, and the frontend proxy `/api/health`. The hourly [production health workflow](.github/workflows/production-health.yml) and manual GitHub Actions run detect regressions; configure failed-workflow notifications plus independent uptime/paging because Actions is not an instant alerting service. For non-200 responses the check records validated `x-hcdn-request-id` and `x-hcdn-cache-status` values when Hostinger supplies them, but never logs a response body. Use the request ID to correlate a failed request with provider runtime logs. A green build or merged PR does not establish successful Hostinger publication.
+**Post-release smoke check:** run `node scripts/production-smoke.mjs` from the repository root. This requests the homepage, `/eoa`, frontend `/health`, Laravel `/api/health` and `/api/ready`, and the frontend proxy `/api/health`. It also posts empty JSON to `/api/v1/newsletter/subscribe` through both origins and requires HTTP 422 with email, locale and consent validation errors. These two probes never submit an address or consent and cannot create a subscription or send mail. The hourly [production health workflow](.github/workflows/production-health.yml) and manual GitHub Actions run detect regressions; configure failed-workflow notifications plus independent uptime/paging because Actions is not an instant alerting service. For non-200 responses the check records validated `x-hcdn-request-id` and `x-hcdn-cache-status` values when Hostinger supplies them, but never logs a response body. Use the request ID to correlate a failed request with provider runtime logs. A green build or merged PR does not establish successful Hostinger publication.
 
 **Diagnosing HTTP 500:** check Hostinger's Deployments page for the active source SHA and build status, the web-app root, effective Node/pnpm versions, generated `.next`, startup logs and resource limits. Check Runtime logs and `domains/wosool.org/hbuilds/current/nodejs/stderr.log` for the current deployment, correlating any `x-hcdn-request-id` emitted by the smoke check. Check whether `api.wosool.org` has a healthy PHP handler/database independently. Never publish debug output or secrets to browser responses. Restore the previous successful web-app release if safe, then fix the cause and redeploy both compatible revisions.
 
@@ -222,3 +222,23 @@ Monthly/welcome mail now carries RFC 8058 unsubscribe headers when `APP_URL` is 
 Official references: https://www.rfc-editor.org/rfc/rfc8058.html and https://support.google.com/mail/answer/81126.
 
 Company logos are reviewed local assets for 155 of 168 companies, covering 285 of 308 sourced founder records. See `docs/COMPANY-LOGO-AUDIT-2026-10-29.json` for all companies, source URLs and unresolved artwork. The frontend resolves missing/broken legacy logos by exact official website host, then falls back to the website icon or company name. Existing uploaded member artwork takes priority. `wosool:import-founders` can safely backfill empty company logo fields without overwriting existing artwork. No accounts, visibility settings or founder identities change. Confirm grid rendering in Arabic and English at 320/390/768/1440px after release.
+
+### Repair a missing newsletter route — 29 October 2026
+
+A live empty-body check returned HTTP 404 for both `https://wosool.org/api/v1/newsletter/subscribe` (Laravel reports `v1/newsletter/subscribe`) and `https://api.wosool.org/api/v1/newsletter/subscribe` (Laravel reports `api/v1/newsletter/subscribe`). Current source registers both through `backend/bootstrap/app.php`. This is consistent with an old backend release or stale route cache; a frontend rebuild alone cannot restore the backend route. Read the actual serving revision and document root before changing hosting.
+
+After the normal backup and staging checks, deploy the matching `backend/` release to the existing API service. Preserve the existing `.env`, `APP_KEY`, database and storage. From the actual backend root, using the hosting PHP binary:
+
+```sh
+composer install --no-dev --prefer-dist --optimize-autoloader --no-interaction
+php artisan migrate --force
+php artisan route:clear
+php artisan config:cache
+php artisan route:cache
+php artisan route:list --path=newsletter
+php artisan wosool:newsletter --check
+```
+
+The route list must contain POST `api/v1/newsletter/subscribe`, `confirm`, `unsubscribe` and their mounted `v1/` equivalents. Do not flush the application cache or change the frontend rewrite to work around a missing backend release. If the CLI route list is correct but HTTP still returns 404, verify the web document root/release symlink and reload PHP through the hosting controls to replace stale OPcache workers.
+
+Run the eight production probes after the API release and again after the frontend release. Route validation establishes routing, not SMTP delivery; verify confirmation, welcome and unsubscribe using a controlled inbox before treating subscriptions as operational. Do not run the newsletter dispatch command as a test against live recipients. The browser keeps a failed address for retry and never reports success on 404/503. The current frontend change improves the error message but is not a substitute for this backend repair.
