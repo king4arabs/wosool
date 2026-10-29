@@ -4,7 +4,7 @@ import { useMemo, useState, useSyncExternalStore } from "react"
 import Link from "next/link"
 import { ArrowLeft, ArrowRight, BookOpen, CalendarDays, ChevronLeft, ChevronRight, Globe2, List, MapPin, Search, Users, Video } from "lucide-react"
 import { PROGRAM_END, PROGRAM_START, programTracks, type CalendarKind, type ProgramTrack } from "@/data/founder-calendar"
-import { acceleratorBreak, cohortMilestones, internationalCalendarHolidays, isAcceleratorOff, calendarDateLabel, calendarMonthDays, entriesOnDate, plannedFounderSessions, publishedCalendarEntries, riyadhDate, saudiCalendarHolidays, shiftCalendarMonth, type CalendarEntry } from "@/lib/founder-calendar"
+import { acceleratorBreak, cohortMilestones, ecosystemCalendarEntries, internationalCalendarHolidays, isAcceleratorOff, calendarDateLabel, calendarMonthDays, entriesOnDate, plannedFounderSessions, publishedCalendarEntries, riyadhDate, saudiCalendarHolidays, shiftCalendarMonth, type CalendarEntry, type EcosystemRegion } from "@/lib/founder-calendar"
 import { useLocale } from "@/lib/locale"
 import type { Event } from "@/types"
 
@@ -20,8 +20,10 @@ const styles: Record<CalendarKind, { badge: string; dot: string }> = {
   break: { badge: "bg-amber-100 text-amber-950 border-amber-300", dot: "bg-amber-700" },
   milestone: { badge: "bg-violet-100 text-violet-900 border-violet-300", dot: "bg-violet-700" },
   published: { badge: "bg-slate-100 text-slate-800 border-slate-300", dot: "bg-slate-600" },
+  ecosystem: { badge: "bg-emerald-50 text-emerald-900 border-emerald-300", dot: "bg-emerald-600" },
 }
 const planned = plannedFounderSessions()
+const externalEvents = ecosystemCalendarEntries()
 const subscribeToday = (callback: () => void) => {
   const interval = window.setInterval(callback, 60_000)
   window.addEventListener("focus", callback)
@@ -38,12 +40,19 @@ export function FounderCalendar({ events, now, loading, error, retry }: { events
   const [chosenDate, setChosenDate] = useState<string | null>(null)
   const [view, setView] = useState<"calendar" | "agenda">("calendar")
   const [kind, setKind] = useState<CalendarKind | "all">("all")
+  const [region, setRegion] = useState<EcosystemRegion | "all">("all")
+  const [specialAccess, setSpecialAccess] = useState(false)
   const [query, setQuery] = useState("")
   const month = chosenMonth || today.slice(0, 7)
   const selectedDate = chosenDate || today
   const year = Number(month.slice(0, 4))
-  const allEntries = useMemo(() => [...planned, acceleratorBreak, ...cohortMilestones, ...saudiCalendarHolidays(year), ...internationalCalendarHolidays(year), ...publishedCalendarEntries(events, now)], [events, now, year])
-  const visible = allEntries.filter((entry) => (kind === "all" || kind === entry.kind) && `${entry.title.ar} ${entry.title.en} ${entry.kind === "published" ? entry.event?.location || "" : ""}`.toLocaleLowerCase().includes(query.trim().toLocaleLowerCase()))
+  const allEntries = useMemo(() => [...planned, acceleratorBreak, ...cohortMilestones, ...saudiCalendarHolidays(year), ...internationalCalendarHolidays(year), ...publishedCalendarEntries(events, now), ...externalEvents], [events, now, year])
+  const visible = allEntries.filter((entry) =>
+    (kind === "all" || kind === entry.kind)
+    && (region === "all" || entry.ecosystem?.region === region)
+    && (!specialAccess || entry.ecosystem?.access === "invitation" || entry.ecosystem?.access === "application")
+    && [entry.title.ar, entry.title.en, entry.description.ar, entry.description.en, entry.location?.ar, entry.location?.en, entry.ecosystem?.organizer, entry.kind === "published" ? entry.event?.location : ""]
+      .filter(Boolean).join(" ").toLocaleLowerCase().includes(query.trim().toLocaleLowerCase()))
   const days = calendarMonthDays(month)
   const monthEnd = days.filter((date) => date.startsWith(month)).at(-1)!
   const monthEntries = visible.filter((entry) => entry.date <= monthEnd && (entry.endDate || entry.date) >= `${month}-01`).sort((a, b) => a.date.localeCompare(b.date) || a.id.localeCompare(b.id))
@@ -55,6 +64,7 @@ export function FounderCalendar({ events, now, loading, error, retry }: { events
     if (value === "break") return ar ? "إجازات المسرّعة" : "Accelerator off days"
     if (value === "milestone") return ar ? "محطات البرنامج" : "Program milestones"
     if (value === "published") return ar ? "فعاليات المجتمع" : "Community events"
+    if (value === "ecosystem") return ar ? "مؤتمرات وفرص عالمية" : "Global conferences & opportunities"
     return programTracks[value].title[locale]
   }
   const dateLabel = (date: string) => calendarDateLabel(date, locale, { weekday: "long", year: "numeric" })
@@ -64,6 +74,7 @@ export function FounderCalendar({ events, now, loading, error, retry }: { events
 
   function navigateMonth(delta: number) {
     const next = shiftCalendarMonth(month, delta)
+    if (next < "2025-10" || next > "2029-10") return
     setChosenMonth(next)
     setChosenDate(next === today.slice(0, 7) ? today : `${next}-01`)
   }
