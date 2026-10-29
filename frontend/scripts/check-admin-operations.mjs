@@ -53,6 +53,10 @@ try {
       return json({ data: [] })
     })
     async function audit(label) {
+      // Saves refresh the list asynchronously. Audit the settled page rather
+      // than a refresh button switching between disabled and hover states.
+      await page.waitForLoadState('networkidle')
+      await page.mouse.move(0, 0)
       assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth + 1), false, `${label}: no horizontal overflow`)
       await page.addScriptTag({ content: axe })
       const violations = await page.evaluate(async () => (await window.axe.run(document, { runOnly: { type: 'tag', values: ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'] } })).violations.filter(item => ['critical', 'serious'].includes(item.impact)).map(item => ({ id: item.id, nodes: item.nodes.map(node => node.target) })))
