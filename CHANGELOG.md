@@ -3,7 +3,7 @@
 ## Reconcile 29 October founder catalogs and release evidence — 2026-10-29
 
 - Reconcile README, roadmap and continuous-development status with the four registered founder catalogs: **308 founders / 168 companies / 65 stories**. `content:check`, `content:review` and `content:test` pass; no review date, source record, account, membership, moderation flag or revenue-eligibility decision changed in this documentation cycle.
-- Record the current release delta instead of carrying forward the superseded 169-profile parity claim. Public checks reach `/` and `/eoa`, but the live homepage still reports 174 profiles and shows numeric founder-region labels; current source intentionally removes those public counts.
+- Replace the superseded 169-profile parity claim with time-bounded public evidence. An initial 29 October check still showed 174 profiles and numeric region labels; a later same-day fetch shows count-free founder-region controls consistent with current source. Neither observation identifies the active hosting SHA or proves the complete catalog or a production import.
 - Keep repository publication, Hostinger activation and production founder/news imports as separate acceptance gates. No production database write or hosting change is claimed.
 
 ## Sign-up and newsletter messages in one language; /newsletter heading before JavaScript — 2026-10-29
