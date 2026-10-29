@@ -24,7 +24,7 @@ export function PartnerEcosystem() {
       <span className="rounded-full bg-indigo-50 px-4 py-2 text-sm font-bold text-indigo-700">{roster.length} {ar ? 'جهة' : 'organizations'}</span>
     </div>
     <div role="group" aria-label={ar ? 'تصفية الجهات حسب الفئة' : 'Filter organizations by category'} className="mt-6 flex flex-wrap gap-2">
-      {categories.map(([key, arabic, english]) => <button key={key} type="button" aria-pressed={category === key} onClick={() => setCategory(key)} className={`min-h-11 rounded-full border px-4 py-2 text-xs font-semibold transition-colors ${category === key ? 'border-indigo-700 bg-indigo-700 text-white' : 'border-slate-200 bg-white text-slate-600 hover:border-indigo-300'}`}>{ar ? arabic : english} <span className="ms-1 opacity-75">{key === 'all' ? roster.length : roster.filter(item => item.category === key).length}</span></button>)}
+      {categories.map(([key, arabic, english]) => <button key={key} type="button" aria-pressed={category === key} onClick={() => setCategory(key)} className={`min-h-11 rounded-full border px-4 py-2 text-xs font-semibold transition-colors ${category === key ? 'border-indigo-700 bg-indigo-700 text-white' : 'border-slate-200 bg-white text-slate-600 hover:border-indigo-300'}`}>{ar ? arabic : english} <span className="ms-1">{key === 'all' ? roster.length : roster.filter(item => item.category === key).length}</span></button>)}
     </div>
     <PartnerLogoMarquee key={category} partners={partners} label={ar ? 'جهات فرص الشراكة' : 'Organizations for potential partnerships'} />
     <details className="mt-3 rounded-xl border border-slate-200 px-4 py-3">
