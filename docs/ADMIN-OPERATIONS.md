@@ -1,0 +1,14 @@
+# Community administration
+
+For administrator account provisioning and email-verification requirements, see [registration QA](REGISTRATION-QA.md). For Accelerator-specific roles and decisions, see [EOA operations](EOA.md).
+
+
+- The partner ecosystem shows bilingual search and the per-visit randomized rightward logo strip; category controls and the duplicate website directory are removed. Logos remain links to the organizations.
+- The founders hero reads “تعرف على مجتمع المؤسسين في شبكة وصول”. Verified registration plus admin approval publishes both founder and co-founder profiles and creates their initial scorecard, regardless of featured status or score. Public card and grid views share the same paginated API collection; email, phone and private scores remain excluded. Repeated approval is idempotent; revoked approval removes public visibility.
+- `/admin/crm` manages contacts, organizations, an assigned administrator, priority, follow-up date, campaign, relationship stage and private notes. `/admin/pr` adds the media pipeline and a published coverage URL. Activity notes persist with an author and timestamp. Existing messages, partners and content remain linked from these workspaces. These tools record work; saving does not send outreach.
+- Relationship edits use a version check to reject conflicting saves. Admin-only API routes are under `/api/v1/admin/relationships`, with capped pagination and a bounded activity history. Audit entries contain workflow changes rather than duplicating contact details or note bodies.
+- The main admin dashboard starts with overdue applications, unanswered messages, CRM/PR follow-ups and an actionable follow-up schedule. Analytics offers 7/30/90-day comparisons, daily account/application trends, current operational totals and CSV export. Approval rate means the share of applications created in the selected period whose current status is approved; it is not a historical decision conversion rate. Empty cohorts display no rate. Date windows use the API application timezone; follow-up dates use Riyadh.
+- Deploy the additive `2026_10_29_120000_create_relationship_records` migration before serving the updated admin API. It adds relationship and activity tables and does not modify existing members or companies. Use the normal backed-up `php artisan migrate --force` release process in `DEPLOYMENT.md`; never reset or reseed production. Deploy frontend and API revisions together. Rolling back code can leave these additive tables in place to retain entered records.
+- Regression checks include founder/co-founder approvals in Arabic and English, admin-only CRM/PR workflows, safe links and ownership validation, concurrent saves, dashboard totals, analytics window boundaries, and responsive browser flows for saving/reopening records, notes, CSV exports and accessibility.
+
+See [DEPLOYMENT.md](../DEPLOYMENT.md) for release and rollback procedures.
