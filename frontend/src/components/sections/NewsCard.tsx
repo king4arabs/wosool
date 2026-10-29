@@ -19,12 +19,12 @@ export function NewsCard({ item, variant = "default" }: { item: NewsItem; varian
   const lead = variant === "lead"
   const facts = story.keyFacts.slice(0, lead ? 3 : 1)
   return <article className={`grid h-full min-w-0 overflow-hidden rounded-[var(--radius-card)] border border-[var(--border-soft)] bg-[var(--surface)] shadow-[var(--shadow-card)] ${lead ? "lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)]" : "grid-rows-[auto_1fr]"}`}>
-    <Link href={href} tabIndex={-1} aria-hidden="true" className="block">
+    <Link href={href} tabIndex={-1} aria-hidden="true" className="block min-w-0">
       <NewsImage src={item.imageUrl} alt="" label={item.sourceName} aspect={lead ? "aspect-[16/10] lg:aspect-auto lg:h-full" : "aspect-[16/10]"} eager={lead} />
     </Link>
     <div className={`flex min-w-0 flex-col ${lead ? "p-6 sm:p-8" : "p-5 sm:p-6"}`}>
       <div className="flex flex-wrap items-center gap-2 text-xs text-[var(--text-muted)]">
-        {lead && <span className="rounded-full bg-[var(--surface-inverse)] px-3 py-1 font-bold text-[var(--on-dark)]">{locale === "ar" ? "أبرز خبر" : "Top story"}</span>}
+        {lead && <span className="rounded-full bg-[var(--surface-inverse)] px-3 py-1 font-bold text-[var(--on-dark)]">{locale === "ar" ? "خبر مختار" : "Featured story"}</span>}
         <span className="rounded-full bg-[var(--info-bg)] px-3 py-1 font-bold text-[var(--info-text)]">{categoryLabel(item.category, locale)}</span>
         <span className="inline-flex items-center gap-1 rounded-full border border-[var(--border-soft)] px-3 py-1 font-semibold"><MapPin size={12} aria-hidden="true" />{regionLabel(region, locale)}</span>
         <time dateTime={item.publishedAt || undefined}>{newsDate(item.publishedAt, locale)}</time>

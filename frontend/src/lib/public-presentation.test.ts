@@ -24,11 +24,10 @@ test('home and founder discovery omit nonessential public instructions in both l
   assert.match(home, /<UpcomingEvents/)
 })
 
-test('newsroom keeps news and region filtering but hides decorative numeric totals', () => {
+test('newsroom keeps search while hiding category controls and decorative numeric totals', () => {
   const page = read('../app/news/page.tsx')
-  assert.match(page, /NEWS_REGIONS/)
-  assert.match(page, /regionLabel\(value, locale\)/)
-  assert.match(page, /categoryLabel\(value, locale\)/)
+  assert.doesNotMatch(page, /NEWS_REGIONS|categoryLabel|regionLabel|All topics/)
+  assert.match(page, /type="search"/)
   assert.match(page, /const filtered = useMemo/)
   assert.doesNotMatch(page, /regionCounts|saudiLatest|count\(filtered.length\)/)
   assert.doesNotMatch(page, /\{count\(items.length\)\}|\{count\(regionCounts/)

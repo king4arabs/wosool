@@ -1,5 +1,13 @@
 # Changelog
 
+## Shuffled newsroom and expanded illustrated coverage — 2026-10-29
+
+- Remove public region/topic filter rows and the chronological selector from `/news`; search remains available in both languages and older filter URLs no longer silently restrict results.
+- Generate a fresh browser-side discovery order per visit, stable across search, locale updates and pagination. Label the mixed lead card as a featured story.
+- Center full artwork in consistent card frames without cropping logos, text or faces. Add 24 sourced bilingual briefs and 17 missing images to existing stories: 89 briefs, 74 with artwork.
+- Extend the additive news importer to fill missing images and compatible credits while preserving editor-selected artwork and deleted records. Include regression coverage for import safety and newsroom browsing.
+- Preserve the established Hostinger packaging configuration. Source publication, deployment and the production `wosool:import-news` operation remain separately verified release steps.
+
 ## Reconcile 29 October founder catalogs and release evidence — 2026-10-29
 
 - Reconcile README, roadmap and continuous-development status with the four registered founder catalogs: **308 founders / 168 companies / 65 stories**. `content:check`, `content:review` and `content:test` pass; no review date, source record, account, membership, moderation flag or revenue-eligibility decision changed in this documentation cycle.

@@ -15,7 +15,7 @@ export function NewsImage({ src, alt, eager = false, label, aspect = "aspect-[16
     {image && failed !== image ?
       // Publisher images are external; no server-side image proxy.
       // eslint-disable-next-line @next/next/no-img-element
-      <img src={image} alt={alt} width={960} height={600} loading={eager ? "eager" : "lazy"} decoding="async" referrerPolicy="no-referrer" className="h-full w-full object-cover" onError={() => setFailed(image)} /> :
+      <img src={image} alt={alt} width={960} height={600} loading={eager ? "eager" : "lazy"} decoding="async" referrerPolicy="no-referrer" className="absolute inset-0 h-full w-full object-contain object-center p-3 sm:p-4" onError={() => setFailed(image)} /> :
       <div role="img" aria-label={alt} className="flex h-full w-full flex-col items-start justify-end gap-2 bg-[linear-gradient(135deg,var(--surface-inverse),color-mix(in_srgb,var(--surface-inverse)_70%,var(--brand-blue,#3B52D4)))] p-5 text-[var(--on-dark)]">
         <Newspaper size={28} aria-hidden="true" className="opacity-70" />
         {label && <span className="text-lg font-extrabold leading-tight">{label}</span>}
