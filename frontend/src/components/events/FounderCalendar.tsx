@@ -41,6 +41,7 @@ export function FounderCalendar({ events, now, loading, error, retry }: { events
   const [view, setView] = useState<"calendar" | "agenda">("calendar")
   const [kind, setKind] = useState<CalendarKind | "all">("all")
   const [region, setRegion] = useState<EcosystemRegion | "all">("all")
+  const [focus, setFocus] = useState<"all" | "startups" | "tech" | "investment" | "fintech" | "commerce" | "cyber">("all")
   const [specialAccess, setSpecialAccess] = useState(false)
   const [query, setQuery] = useState("")
   const month = chosenMonth || today.slice(0, 7)
@@ -50,6 +51,7 @@ export function FounderCalendar({ events, now, loading, error, retry }: { events
   const visible = allEntries.filter((entry) =>
     (kind === "all" || kind === entry.kind)
     && (region === "all" || entry.ecosystem?.region === region)
+    && (focus === "all" || entry.ecosystem?.focus === focus)
     && (!specialAccess || entry.ecosystem?.access === "invitation" || entry.ecosystem?.access === "application")
     && [entry.title.ar, entry.title.en, entry.description.ar, entry.description.en, entry.location?.ar, entry.location?.en, entry.ecosystem?.organizer, entry.kind === "published" ? entry.event?.location : ""]
       .filter(Boolean).join(" ").toLocaleLowerCase().includes(query.trim().toLocaleLowerCase()))
@@ -57,7 +59,7 @@ export function FounderCalendar({ events, now, loading, error, retry }: { events
   const monthEnd = days.filter((date) => date.startsWith(month)).at(-1)!
   const monthEntries = visible.filter((entry) => entry.date <= monthEnd && (entry.endDate || entry.date) >= `${month}-01`).sort((a, b) => a.date.localeCompare(b.date) || a.id.localeCompare(b.id))
   const selectedEntries = entriesOnDate(visible, selectedDate)
-  const nextSession = planned.find((entry) => entry.date >= today)
+  const nextSession = planned.find((entry) => entry.date >= (selectedDate > today ? selectedDate : today))
   const label = (value: CalendarKind) => {
     if (value === "holiday") return ar ? "المناسبات السعودية" : "Saudi holidays"
     if (value === "international") return ar ? "مناسبات دولية" : "International occasions"
@@ -159,7 +161,7 @@ export function FounderCalendar({ events, now, loading, error, retry }: { events
       </div>
 
       <div role="group" className="mb-8 grid gap-3 lg:grid-cols-3" aria-label={ar ? "الإجازات والمحطات الرئيسية" : "Breaks and key milestones"}>
-        {[acceleratorBreak, ...cohortMilestones].map((entry) => <button type="button" key={entry.id} onClick={() => { setChosenMonth(entry.date.slice(0, 7)); setChosenDate(entry.date); setKind("all"); setQuery(""); setRegion("all"); setSpecialAccess(false); setView("calendar"); document.getElementById("calendar-month-panel")?.scrollIntoView({ block: "start" }) }} className={`rounded-2xl border p-5 text-start ${styles[entry.kind].badge}`}>
+        {[acceleratorBreak, ...cohortMilestones].map((entry) => <button type="button" key={entry.id} onClick={() => { setChosenMonth(entry.date.slice(0, 7)); setChosenDate(entry.date); setKind("all"); setQuery(""); setRegion("all"); setFocus("all"); setSpecialAccess(false); setView("calendar"); document.getElementById("calendar-month-panel")?.scrollIntoView({ block: "start" }) }} className={`rounded-2xl border p-5 text-start ${styles[entry.kind].badge}`}>
           <span className="block text-xs font-bold">{calendarDateLabel(entry.date, locale, { year: "numeric" })}{entry.endDate ? ` – ${calendarDateLabel(entry.endDate, locale, { year: "numeric" })}` : ""}</span>
           <span className="mt-2 block text-base font-extrabold leading-7">{entry.title[locale]}</span>
           <span className="mt-2 block text-xs leading-6">{entry.kind === "break" ? (ar ? "لا أنشطة للمسرّعة" : "No accelerator activities") : entry.location?.[locale]}</span>
@@ -193,7 +195,31 @@ export function FounderCalendar({ events, now, loading, error, retry }: { events
           <div className="mt-5 flex flex-wrap items-end gap-3">
             <label className="w-full min-w-0 text-xs font-bold text-slate-600 sm:flex-1">{ar ? "ابحث في هذا الشهر" : "Search this month"}<span className="mt-2 flex min-h-11 items-center gap-2 rounded-xl border border-slate-200 px-3"><Search size={16} aria-hidden="true" /><input type="search" value={query} onChange={(event) => setQuery(event.target.value)} placeholder={ar ? "موضوع أو فعالية…" : "Topic or event…"} className="w-full min-w-0 bg-transparent py-3 text-sm font-normal text-slate-900 outline-none focus-visible:ring-2 focus-visible:ring-indigo-500" /></span></label>
             <label className="w-full text-xs font-bold text-slate-600 sm:w-auto">{ar ? "نوع النشاط" : "Activity type"}<select value={kind} onChange={(event) => setKind(event.target.value as CalendarKind | "all")} className="mt-2 block min-h-11 w-full max-w-full rounded-xl border border-slate-200 bg-white px-3 text-sm font-normal text-slate-900"><option value="all">{ar ? "كل الأنشطة" : "All activities"}</option>{([...tracks, "break", "milestone", "holiday", "international", "published", "ecosystem"] as CalendarKind[]).map((value) => <option key={value} value={value}>{label(value)}</option>)}</select></label>
-            {(query || kind !== "all" || region !== "all" || specialAccess) && <button type="button" className="min-h-11 px-2 text-xs font-bold text-[#3B52D4] underline" onClick={() => { setQuery(""); setKind("all"); setRegion("all"); setSpecialAccess(false) }}>{ar ? "مسح التصفية" : "Clear filters"}</button>}
+            <label className="w-full text-xs font-bold text-slate-600 sm:w-auto">{ar ? "المنطقة" : "Location"}
+              <select value={region} onChange={(event) => { const value = event.target.value as EcosystemRegion | "all"; setRegion(value); if (value !== "all") setKind("ecosystem") }} aria-label={ar ? "اختر منطقة المؤتمرات" : "Conference region"} className="mt-2 block min-h-11 w-full rounded-xl border border-slate-200 bg-white px-3 text-sm font-normal text-slate-900">
+                <option value="all">{ar ? "كل المناطق" : "All locations"}</option>
+                <option value="riyadh">{ar ? "الرياض" : "Riyadh"}</option>
+                <option value="saudi">{ar ? "بقية السعودية" : "Rest of Saudi Arabia"}</option>
+                <option value="gcc">{ar ? "الخليج" : "GCC"}</option>
+                <option value="mena">{ar ? "الشرق الأوسط وشمال أفريقيا" : "MENA"}</option>
+                <option value="global">{ar ? "العالم" : "Worldwide"}</option>
+              </select>
+            </label>
+            <label className="w-full text-xs font-bold text-slate-600 sm:w-auto">{ar ? "المجال" : "Focus"}
+              <select value={focus} onChange={(event) => { const value = event.target.value as typeof focus; setFocus(value); if (value !== "all") setKind("ecosystem") }} aria-label={ar ? "اختر مجال المؤتمرات" : "Conference focus"} className="mt-2 block min-h-11 w-full rounded-xl border border-slate-200 bg-white px-3 text-sm font-normal text-slate-900">
+                <option value="all">{ar ? "كل المجالات" : "All sectors"}</option>
+                <option value="startups">{ar ? "الشركات الناشئة" : "Startups"}</option>
+                <option value="investment">{ar ? "الاستثمار" : "Investment"}</option>
+                <option value="fintech">{ar ? "التقنية المالية" : "Fintech"}</option>
+                <option value="tech">{ar ? "التقنية والذكاء الاصطناعي" : "Technology & AI"}</option>
+                <option value="commerce">{ar ? "التجارة والتوسع" : "Commerce & growth"}</option>
+                <option value="cyber">{ar ? "الأمن السيبراني" : "Cybersecurity"}</option>
+              </select>
+            </label>
+            <button type="button" aria-pressed={specialAccess} onClick={() => { const next = !specialAccess; setSpecialAccess(next); if (next) setKind("ecosystem") }} className={`min-h-11 self-end rounded-xl border px-4 py-2 text-xs font-bold ${specialAccess ? "border-amber-500 bg-amber-50 text-amber-900" : "border-slate-200 bg-white text-slate-700 hover:border-amber-400"}`}>
+              {ar ? "الدعوات الخاصة واللقاءات المنتقاة" : "Invitations & curated meetings"}
+            </button>
+            {(query || kind !== "all" || region !== "all" || focus !== "all" || specialAccess) && <button type="button" className="min-h-11 px-2 text-xs font-bold text-[#3B52D4] underline" onClick={() => { setQuery(""); setKind("all"); setRegion("all"); setFocus("all"); setSpecialAccess(false) }}>{ar ? "مسح التصفية" : "Clear filters"}</button>}
           </div>
           <div className="mt-4 flex flex-wrap gap-x-4 gap-y-2 text-[11px] font-semibold text-slate-600">{([...tracks, "break", "milestone", "holiday", "international", "published", "ecosystem"] as CalendarKind[]).map((value) => <span key={value} className="inline-flex items-center gap-1.5"><span aria-hidden="true" className={`size-2 rounded-full ${styles[value].dot}`} />{label(value)}</span>)}</div>
         </div>
