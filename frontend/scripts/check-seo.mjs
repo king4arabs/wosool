@@ -79,7 +79,7 @@ try {
   assert.match(asset.headers.get('content-type') || '', /image\/png/)
   const bytes = new Uint8Array(await asset.arrayBuffer())
   assert.deepEqual([...bytes.slice(0, 8)], [137, 80, 78, 71, 13, 10, 26, 10])
-  console.log(`SEO smoke passed: ${titles.size} distinct pages, 5 noindex routes, ${urls.length} sitemap URLs, structured data, PNG preview and dynamic-detail fixtures.`)
+  console.log(`SEO smoke passed: ${titles.size} distinct pages, 6 noindex routes, ${urls.length} sitemap URLs, structured data, PNG preview and dynamic-detail fixtures.`)
 } finally {
   if (server && server.exitCode === null) {
     server.kill('SIGTERM')

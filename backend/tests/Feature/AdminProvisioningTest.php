@@ -69,6 +69,6 @@ class AdminProvisioningTest extends TestCase
             ->assertHeader('Cache-Control', 'max-age=0, no-store, private')
             ->assertHeader('X-Robots-Tag', 'noindex, nofollow');
         $user->markEmailAsVerified();
-        $this->actingAs($user->fresh())->getJson($prefix.'/admin/dashboard')->assertOk();
+        $this->actingAs($user->fresh())->getJson($prefix.'/admin/dashboard')->assertOk()->assertJsonPath('stats.total_members', 0);
     }
 }

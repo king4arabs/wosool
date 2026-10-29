@@ -2,6 +2,7 @@
 
 ## Registration QA and privileged account safeguards — 2026-10-30
 
+- Fix the admin dashboard crashing before the first member role exists; display zero members on a new installation.
 - Require verified email for platform admin API access; public registration ignores privilege and verification fields.
 - Add private/no-store and noindex protection for onboarding pages and registration API responses.
 - Add a server-only admin inspection/grant command that refuses missing or unverified accounts, requires an explicit change reference, preserves credentials and records committed grants.
