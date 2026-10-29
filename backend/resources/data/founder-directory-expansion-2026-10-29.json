@@ -702,12 +702,13 @@
     "portrait_url": "",
     "logo_url": "",
     "founder_socials": [],
-    "source_url": "https://zeytoon.vc/portfolio/hakini",
+    "source_url": "https://buildpalestine.com/awsm_team_member/hakini/",
     "reviewed_at": "2026-10-29",
     "company_key": "hakini",
     "source_urls": [
-      "https://zeytoon.vc/portfolio/hakini",
-      "https://buildpalestine.com/awsm_team_member/hakini/"
+      "https://buildpalestine.com/awsm_team_member/hakini/",
+      "https://hakini.io/en/about/",
+      "https://www.thenationalnews.com/business/2021/11/25/generation-start-up-how-hakini-is-boosting-access-to-therapy-in-palestine-and-beyond/"
     ],
     "region": "mena",
     "founded_year": 2020,
@@ -736,12 +737,13 @@
     "portrait_url": "",
     "logo_url": "",
     "founder_socials": [],
-    "source_url": "https://zeytoon.vc/portfolio/hakini",
+    "source_url": "https://buildpalestine.com/awsm_team_member/hakini/",
     "reviewed_at": "2026-10-29",
     "company_key": "hakini",
     "source_urls": [
-      "https://zeytoon.vc/portfolio/hakini",
-      "https://buildpalestine.com/awsm_team_member/hakini/"
+      "https://buildpalestine.com/awsm_team_member/hakini/",
+      "https://hakini.io/en/about/",
+      "https://www.thenationalnews.com/business/2021/11/25/generation-start-up-how-hakini-is-boosting-access-to-therapy-in-palestine-and-beyond/"
     ],
     "region": "mena",
     "founded_year": 2020,
@@ -1049,7 +1051,7 @@
       "https://instadeep.com/about-us/"
     ],
     "region": "mena",
-    "founded_year": null,
+    "founded_year": 2014,
     "traction_en": null,
     "traction_ar": null,
     "traction_source_url": null
@@ -1082,7 +1084,7 @@
       "https://instadeep.com/about-us/"
     ],
     "region": "mena",
-    "founded_year": null,
+    "founded_year": 2014,
     "traction_en": null,
     "traction_ar": null,
     "traction_source_url": null
