@@ -29,6 +29,34 @@ class SourcedContentImportTest extends TestCase
         $this->assertSoftDeleted($deleted);
     }
 
+    public function test_news_import_fills_missing_images_and_preserves_editor_artwork(): void
+    {
+        $rows = collect(json_decode(file_get_contents(resource_path('data/sourced-news.json')), true));
+        $source = $rows->firstWhere('slug', 'barq-329-million-series-a-unicorn');
+        $this->artisan('wosool:import-news')->assertSuccessful();
+        $story = NewsItem::where('slug', $source['slug'])->firstOrFail();
+        $story->update(['image_url' => null, 'image_credit' => null]);
+
+        $this->artisan('wosool:import-news', ['--dry-run' => true])->assertSuccessful();
+        $this->assertNull($story->fresh()->image_url);
+        $this->artisan('wosool:import-news')->assertSuccessful();
+        $this->assertSame($source['imageUrl'], $story->fresh()->image_url);
+        $this->assertSame($source['imageCredit'], $story->fresh()->image_credit);
+
+        $story->update(['image_url' => 'https://example.com/editor-image.jpg', 'image_credit' => null]);
+        $this->artisan('wosool:import-news')->assertSuccessful();
+        $this->assertSame('https://example.com/editor-image.jpg', $story->fresh()->image_url);
+        $this->assertNull($story->fresh()->image_credit);
+
+        $story->update(['image_credit' => 'Editor photograph']);
+        $this->artisan('wosool:import-news')->assertSuccessful();
+        $this->assertSame('Editor photograph', $story->fresh()->image_credit);
+
+        $story->update(['image_url' => $source['imageUrl'], 'image_credit' => null]);
+        $this->artisan('wosool:import-news')->assertSuccessful();
+        $this->assertSame($source['imageCredit'], $story->fresh()->image_credit);
+    }
+
     public function test_public_news_filters_by_region_and_exposes_key_facts_and_translation(): void
     {
         $this->artisan('wosool:import-news')->assertSuccessful();

@@ -52,6 +52,10 @@ class ImportSourcedNews extends Command
                     'source_url' => $item->source_url ? null : $row['sourceUrl'],
                     'source_name' => $item->source_name ? null : $row['sourceName'],
                     'companies' => $item->companies ? null : ($row['companies'] ?? null),
+                    // Fill missing artwork without replacing an editor's selected image or credit.
+                    'image_url' => $item->image_url ? null : (($row['imageUrl'] ?? '') ?: null),
+                    'image_credit' => ! $item->image_credit && (! $item->image_url || $item->image_url === ($row['imageUrl'] ?? null))
+                        ? (($row['imageCredit'] ?? '') ?: null) : null,
                 ], fn ($value) => $value !== null && $value !== []);
 
                 if ($fill === []) {
