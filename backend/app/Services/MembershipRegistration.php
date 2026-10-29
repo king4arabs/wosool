@@ -19,6 +19,16 @@ final class MembershipRegistration
         return 'review';
     }
 
+    /** Recover accounts created by the older registration flow after password authentication. */
+    public function resumeLegacyRegistration(User $user): void
+    {
+        if ($user->community_registration_started_at || $user->is_accelerator_applicant
+            || filled($user->role_token) || $user->roles()->exists() || $user->founderProfile()->exists()) return;
+
+        // Do not infer consent, verification, approval, or membership from having an account.
+        $user->forceFill(['community_registration_started_at' => now()])->save();
+    }
+
     /** Called within the application's approval transaction, and safe to repeat. */
     public function publish(Application $application): void
     {

@@ -35,6 +35,7 @@ class AuthController extends Controller
      */
     public function login(Request $request): JsonResponse
     {
+        $request->merge(['email' => mb_strtolower(trim((string) $request->input('email')))]);
         $request->validate([
             'email' => 'required|email',
             'password' => 'required|string',
@@ -52,6 +53,7 @@ class AuthController extends Controller
 
         $user = Auth::guard('web')->user();
         app(MembershipRegistration::class)->linkVerifiedApplications($user);
+        app(MembershipRegistration::class)->resumeLegacyRegistration($user);
 
         return response()->json([
             'message' => __('messages.auth.login_success'),

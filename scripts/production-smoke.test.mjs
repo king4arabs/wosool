@@ -4,13 +4,13 @@ import { buildProbes, formatResponseDiagnostics, probeEndpoint, validateOrigin }
 
 test("covers website, direct Laravel endpoints, and the frontend proxy", () => {
   const probes = buildProbes("https://wosool.org", "https://api.wosool.org")
-  assert.equal(probes.length, 8)
+  assert.equal(probes.length, 16)
   assert.ok(probes.some((p) => p.url === "https://wosool.org/api/health"))
   assert.ok(probes.some((p) => p.url === "https://api.wosool.org/api/ready"))
 })
 
 test("newsletter probes detect stale routes without submitting an address or consent", async () => {
-  const probes = buildProbes("https://wosool.org", "https://api.wosool.org").filter(probe => probe.kind === "validation")
+  const probes = buildProbes("https://wosool.org", "https://api.wosool.org").filter(probe => probe.kind === "validation" && !probe.fields)
   assert.equal(probes.length, 2)
   for (const spec of probes) {
     await probeEndpoint(spec, async (_url, options) => {
@@ -72,4 +72,23 @@ test("rejects an empty or placeholder homepage", async () => {
   const spec = { url: "https://wosool.org/", kind: "html", contains: /Wosool|وصول/i }
   await assert.rejects(() => probeEndpoint(spec, async () => new Response("Maintenance", { headers: { "content-type": "text/html" } })), /homepage/)
   await assert.doesNotReject(() => probeEndpoint(spec, async () => new Response("<title>Wosool</title>", { headers: { "content-type": "text/html" } })))
+})
+
+ test("registration monitoring rejects missing OTP routes and pre-OTP registration versions", async () => {
+  const probes = buildProbes("https://wosool.org", "https://api.wosool.org")
+  for (const spec of probes.filter(p => p.kind === "protected")) {
+    await probeEndpoint(spec, async (_url, options) => {
+      assert.equal(options.headers.Cookie, undefined)
+      assert.equal(options.headers.Origin, undefined)
+      return Response.json({ message: "Unauthenticated." }, { status: 401 })
+    })
+    await assert.rejects(probeEndpoint(spec, async () => Response.json({ message: "Not found" }, { status: 404 })), /got HTTP 404/)
+  }
+  for (const spec of probes.filter(p => p.fields)) {
+    await assert.rejects(probeEndpoint(spec, async () => Response.json({ errors: { name: ["Required"], email: ["Required"], password: ["Required"] } }, { status: 422 })), /current registration/)
+    await probeEndpoint(spec, async (_url, options) => {
+      assert.equal(options.body, "{}")
+      return Response.json({ errors: Object.fromEntries(spec.fields.map(field => [field, ["Required"]])) }, { status: 422 })
+    })
+  }
 })

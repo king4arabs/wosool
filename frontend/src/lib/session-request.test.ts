@@ -71,3 +71,20 @@ test("a stale CSRF cookie is refreshed once and failed writes are not blindly re
     if (documentDescriptor) Object.defineProperty(globalThis, "document", documentDescriptor); else Reflect.deleteProperty(globalThis, "document")
   }
 })
+
+ test("OTP mail writes allow SMTP delivery time while ordinary requests retain their deadline", async () => {
+  const originalTimeout = AbortSignal.timeout
+  const originalFetch = globalThis.fetch
+  const deadlines: number[] = []
+  AbortSignal.timeout = (ms: number) => { deadlines.push(ms); return new AbortController().signal }
+  globalThis.fetch = async () => Response.json({})
+  try {
+    await sessionFetch("/api/v1/auth/register", { method: "POST" })
+    await sessionFetch("/api/v1/auth/registration/resend", { method: "POST" })
+    await sessionFetch("/api/v1/auth/registration/verify", { method: "POST" })
+    assert.deepEqual(deadlines, [45000, 45000, 15000])
+  } finally {
+    AbortSignal.timeout = originalTimeout
+    globalThis.fetch = originalFetch
+  }
+})

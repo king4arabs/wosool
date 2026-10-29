@@ -37,7 +37,11 @@ export async function sessionFetch(input: string, init: RequestInit = {}): Promi
   if (!headers.has("X-Locale")) headers.set("X-Locale", currentLocale())
   const isSameOrigin = typeof window !== "undefined" && new URL(input, window.location.origin).origin === window.location.origin
   const isWrite = !["GET", "HEAD", "OPTIONS"].includes((init.method || "GET").toUpperCase())
-  const deadline = AbortSignal.timeout(15000)
+  // OTP delivery is synchronous; allow the configured 30-second SMTP timeout
+  // plus session/database overhead without replaying an uncertain write.
+  const path = new URL(input, "https://wosool.org").pathname
+  const mailWrite = isWrite && ["/api/v1/auth/register", "/api/v1/auth/registration/resend"].includes(path)
+  const deadline = AbortSignal.timeout(mailWrite ? 45000 : 15000)
   const signal = init.signal ? AbortSignal.any([init.signal, deadline]) : deadline
   signal.throwIfAborted()
 
