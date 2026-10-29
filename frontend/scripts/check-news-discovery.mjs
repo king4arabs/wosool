@@ -18,7 +18,7 @@ const records = Array.from({ length: 36 }, (_, id) => ({
   id, slug: `fixture-news-${id}`, title: `Story ${id}`, excerpt: 'A company announcement.', content: 'Company news.',
   category: 'Funding', region: id % 2 ? 'saudi' : 'global', published_at: '2026-10-20',
   source_url: `https://publisher.example/story-${id}`, source_name: 'Fixture publisher',
-  companies: ['Fixture'], tags: [], image_url: `${origin}/fixture-news-image.svg`,
+  companies: ['Fixture'], tags: [], image_url: "/fixture-news-image.svg",
   status: 'published', is_public: true,
   translations: { ar: { title: `خبر ${id}`, excerpt: 'إعلان شركة.', body: ['أخبار الشركة.'] } },
 }))
