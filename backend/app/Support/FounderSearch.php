@@ -26,14 +26,29 @@ final class FounderSearch
         $grammar = $query->getQuery()->getGrammar();
         foreach ($fields as $field) {
             // Grammar wrapping handles JSON names for both SQLite and MySQL.
-            $expression = 'LOWER(COALESCE('.$grammar->wrap($query->getModel()->qualifyColumn($field)).", ''))";
-            foreach (self::folds() as $from => $to) $expression = "REPLACE($expression, '$from', '$to')";
+            $column = $grammar->wrap($query->getModel()->qualifyColumn($field));
+            if ($query->getConnection()->getDriverName() === 'sqlite') {
+                $expression = "wosool_founder_search(COALESCE($column, ''))";
+            } else {
+                $expression = "LOWER(COALESCE($column, ''))";
+                foreach (self::folds() as $from => $to) $expression = "REPLACE($expression, '$from', '$to')";
+            }
             $query->orWhereRaw("$expression LIKE ? ESCAPE '!'", [$pattern]);
         }
     }
 
     public static function apply(Builder $query, string $search): void
     {
+        // SQLite's parser has a small nesting limit. The connection-local SQL
+        // function applies the same folds without fetching records into PHP.
+        if ($query->getConnection()->getDriverName() === 'sqlite') {
+            $pdo = $query->getConnection()->getPdo();
+            if ($pdo instanceof \Pdo\Sqlite) {
+                $pdo->createFunction('wosool_founder_search', self::normalize(...), 1, \Pdo\Sqlite::DETERMINISTIC);
+            } else {
+                $pdo->sqliteCreateFunction('wosool_founder_search', self::normalize(...), 1, \PDO::SQLITE_DETERMINISTIC);
+            }
+        }
         $terms = array_unique(array_filter(explode(' ', self::normalize($search)), fn ($term) => $term !== ''));
         foreach ($terms as $term) {
             $pattern = '%'.str_replace(['!', '%', '_'], ['!!', '!%', '!_'], $term).'%';
