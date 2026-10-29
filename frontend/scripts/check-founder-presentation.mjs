@@ -78,7 +78,33 @@ try {
     await hero.locator('button').last().click()
     assert.equal(await hero.locator('button').last().getAttribute('aria-pressed'), 'true')
     assert.deepEqual(errors, [])
-    console.log(`PASS ${locale} ${width}px: country filters, coverage, flags, images, score and equal region boxes`)
+    if ([390, 1440].includes(width)) {
+      await page.goto(origin + '/eoa')
+      const cohort = page.locator('section.eoa-space[aria-label="' + (locale === 'ar' ? 'رحلة الدفعة والخريجين' : 'Cohort and alumni journey') + '"] .eoa-four-grid')
+      const grids = [page.locator('#overview .eoa-four-grid'), cohort]
+      for (const [index, section] of grids.entries()) {
+        await eventually(async () => await section.locator('.eoa-pillar').count() === 4)
+        const geometry = await section.locator('.eoa-pillar').evaluateAll(cards => cards.map(card => {
+          const rect = card.getBoundingClientRect()
+          return { height: rect.height, width: rect.width, left: rect.left, right: rect.right, overflow: card.scrollHeight > card.clientHeight + 1 }
+        }))
+        const heights = geometry.map(card => card.height)
+        const widths = geometry.map(card => card.width)
+        assert.ok(Math.max(...heights) - Math.min(...heights) < 2, JSON.stringify({ locale, width, index, heights }))
+        assert.ok(Math.max(...widths) - Math.min(...widths) < 2, JSON.stringify({ locale, width, index, widths }))
+        assert.ok(geometry.every(card => !card.overflow && card.left >= -1 && card.right <= width + 1), JSON.stringify({ locale, width, index, geometry }))
+      }
+      assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth + 1), false, 'EO cards must not overflow the viewport')
+      await page.goto(origin + '/news')
+      const newsRegions = page.getByRole('group', { name: locale === 'ar' ? 'المنطقة' : 'Region', exact: true })
+      await eventually(async () => await newsRegions.locator('button').count() === 5)
+      assert.equal(await newsRegions.locator('button').evaluateAll(buttons => buttons.some(button => /[0-9٠-٩]/.test(button.textContent || ''))), false, 'News region filters must not show numeric counts')
+      assert.equal(await page.getByRole('heading', { name: locale === 'ar' ? 'أخبار الشركات الناشئة' : 'Startup news' }).count(), 1)
+      assert.equal(await page.locator('header dl').count(), 0, 'News hero does not need statistics cards')
+      assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth + 1), false, 'News regions must not overflow the viewport')
+      assert.deepEqual(errors, [], 'EO and news browser runtime errors')
+    }
+    console.log(`PASS ${locale} ${width}px: country filters, flags, equal EO cards, minimal news metrics and responsive layouts`)
     await context.close()
   }
 } finally {
