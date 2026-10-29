@@ -131,12 +131,13 @@ class NewsletterTest extends TestCase
 
     public function test_failed_confirmation_send_rolls_back_and_allows_immediate_retry(): void
     {
+        $mailFake = Mail::getFacadeRoot();
         $pending = \Mockery::mock(\Illuminate\Mail\PendingMail::class);
         Mail::shouldReceive('to')->once()->with('retry@example.com')->andReturn($pending);
         $pending->shouldReceive('send')->once()->andThrow(new \RuntimeException('Transport unavailable'));
         $this->postJson('/api/v1/newsletter/subscribe', ['email' => 'retry@example.com', 'locale' => 'en', 'consent' => true])->assertStatus(503);
         $this->assertDatabaseCount('newsletter_subscribers', 0);
-        Mail::fake();
+        Mail::swap($mailFake);
         $this->postJson('/api/v1/newsletter/subscribe', ['email' => 'retry@example.com', 'locale' => 'en', 'consent' => true])->assertStatus(202);
         Mail::assertSentCount(1);
     }
@@ -172,13 +173,14 @@ class NewsletterTest extends TestCase
     public function test_delivery_failure_retries_then_sends_only_once(): void
     {
         $s = NewsletterSubscriber::create(['email' => 'failed@example.com', 'locale' => 'ar', 'status' => 'active', 'explicit_opt_in' => true]);
+        $mailFake = Mail::getFacadeRoot();
         $pending = \Mockery::mock(\Illuminate\Mail\PendingMail::class);
         Mail::shouldReceive('to')->once()->with($s->email)->andReturn($pending);
         $pending->shouldReceive('send')->once()->andThrow(new \RuntimeException('Temporary failure'));
         $service = app(Newsletter::class);
         $this->assertSame(['sent' => 0, 'failed' => 1], $service->dispatch(false));
         $this->assertDatabaseHas('newsletter_deliveries', ['subscriber_id' => $s->id, 'status' => 'failed', 'attempts' => 1]);
-        Mail::fake(); $service->dispatch(false); $service->dispatch(false);
+        Mail::swap($mailFake); $service->dispatch(false); $service->dispatch(false);
         Mail::assertSentCount(1);
         $this->assertDatabaseHas('newsletter_deliveries', ['subscriber_id' => $s->id, 'status' => 'sent', 'attempts' => 2]);
     }
