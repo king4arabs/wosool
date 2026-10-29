@@ -33,11 +33,12 @@ try {
     const page = await context.newPage()
     const errors = []
     page.on('pageerror', error => errors.push(error.message))
-    await page.clock.install({ time: new Date("2026-01-15T09:00:00Z") })
+    await page.clock.setFixedTime(new Date("2026-01-15T09:00:00Z"))
     await page.goto(origin + '/events')
     const calendar = page.locator('#founder-calendar')
     await calendar.getByRole('heading', { name: ar ? 'اختر ما يلهم خطوتك القادمة' : 'Make room for what’s next' }).waitFor()
     assert.equal(await calendar.getByRole('button', { name: ar ? 'الأجندة' : 'Agenda', exact: true }).getAttribute('aria-pressed'), 'true')
+    await eventually(async () => await calendar.locator('#programme-overview > summary').count() === 1)
     await calendar.locator('#programme-overview > summary').click()
     for (const name of (ar ? ['مختبر نمو المؤسسين', 'من داخل الأعمال', 'EOA: من مؤسس إلى مؤسس', 'التعلّم الرقمي للدفعة'] : ['Founder growth lab', 'Inside the business', 'EOA peer-to-peer', 'Cohort online learning'])) {
       assert.ok(await calendar.getByText(name, { exact: true }).count() >= 1, 'Original category missing: ' + name)
