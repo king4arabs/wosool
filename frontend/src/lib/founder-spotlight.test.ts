@@ -37,8 +37,8 @@ test('frontend source snapshots and database import share the same reviewed reco
   assert.deepEqual(databaseExpansion, additionalProfiles)
   const databaseDiscovery = JSON.parse(readFileSync(new URL('../../../backend/resources/data/founder-directory-expansion-2026-10-22.json', import.meta.url), 'utf8'))
   assert.deepEqual(databaseDiscovery, discoveryProfiles)
-  assert.equal(discoveryProfiles.length, 38)
-  assert.equal(new Set(sourceProfiles.map(profile => profile.company_key)).size, 102)
+  assert.equal(discoveryProfiles.length, 62)
+  assert.equal(new Set(sourceProfiles.map(profile => profile.company_key)).size, 114)
   assert.equal(new Set(sourceProfiles.map(profile => profile.founder_name_en.toLowerCase())).size, sourceProfiles.length)
   assert.equal(new Set(sourceProfiles.map(profile => profile.slug)).size, sourceProfiles.length)
   assert.ok(sourceProfiles.every(profile => profile.source_urls.length > 0 && profile.reviewed_at))
@@ -66,4 +66,27 @@ test('every traction claim is bilingual and cites an https source listed on the 
   const spotlight = getFounderSpotlights('en').find(profile => profile.slug === 'hosam-arab')!
   assert.match(spotlight.primaryCompany!.traction!.text, /25M\+ users/)
   assert.equal(spotlight.primaryCompany!.foundedYear, 2019)
+})
+
+test('country founder cards have factual provenance and the latest update adds two profiles per country', () => {
+  const countryCounts = new Map<string, number>()
+  for (const row of sourceProfiles) countryCounts.set(row.country_code, (countryCounts.get(row.country_code) ?? 0) + 1)
+  assert.equal(countryCounts.size, 12)
+  assert.ok([...countryCounts.values()].every(count => count >= 2))
+  const latest = discoveryProfiles.slice(-24)
+  const expected = ['SA', 'AE', 'BH', 'KW', 'OM', 'QA', 'EG', 'JO', 'LB', 'US', 'AU', 'BR']
+  for (const code of expected) assert.equal(latest.filter(row => row.country_code === code).length, 2, code)
+  for (const row of latest) {
+    assert.equal(row.reviewed_at, '2026-10-29')
+    assert.ok(row.founder_name_en && row.founder_name_ar && row.company_name_en && row.company_name_ar)
+    assert.ok(row.founder_brief_en && row.founder_brief_ar && row.role_en && row.role_ar)
+    assert.ok(row.source_urls.includes(row.source_url))
+    assert.equal(new URL(row.website).protocol, 'https:')
+    assert.equal(row.portrait_url, null) // No unlicensed likenesses.
+    assert.equal(row.logo_url, null) // Use existing safe brand fallback.
+    assert.equal(row.traction_en, null) // Do not invent company performance.
+    assert.equal(row.traction_ar, null)
+    assert.equal(row.traction_source_url, null)
+    assert.ok(!('isVerified' in row) && !('member' in row) && !('email' in row))
+  }
 })
