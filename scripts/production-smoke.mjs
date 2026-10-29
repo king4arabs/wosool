@@ -18,6 +18,15 @@ export function buildProbes(site, api) {
     { name: "Laravel liveness", url: api + "/api/health", kind: "json", status: "healthy" },
     { name: "Laravel readiness", url: api + "/api/ready", kind: "json", status: "ready" },
     { name: "Same-origin API proxy", url: site + "/api/health", kind: "json", status: "healthy" },
+    ...[["Direct", api], ["Same-origin", site]].flatMap(([label, origin]) => [
+      ...["verify", "resend"].map(action => ({
+        name: `${label} registration ${action}`, url: origin + "/api/v1/auth/registration/" + action,
+        kind: "protected", method: "POST", expectedStatus: 401,
+      })),
+      { name: `${label} registration application`, url: origin + "/api/v1/registration/application", kind: "protected", expectedStatus: 401 },
+      { name: `${label} registration validation`, url: origin + "/api/v1/auth/register", kind: "validation", method: "POST", expectedStatus: 422,
+        fields: ["name", "email", "password", "consent"] },
+    ]),
     // Empty JSON must fail validation before persistence or mail delivery.
     ...[["Direct newsletter route", api], ["Same-origin newsletter route", site]].map(([name, origin]) => ({
       name, url: origin + "/api/v1/newsletter/subscribe", kind: "validation", method: "POST", expectedStatus: 422,
@@ -51,9 +60,13 @@ export async function probeEndpoint(spec, fetchImpl = fetch) {
   if (spec.kind === "validation") {
     if (!contentType.includes("application/json")) throw new Error("Expected JSON content type")
     const data = await response.json()
-    if (!["email", "locale", "consent"].every(field => Array.isArray(data?.errors?.[field]) && data.errors[field].length > 0)) {
-      throw new Error("Expected newsletter validation errors")
+    if (!(spec.fields || ["email", "locale", "consent"]).every(field => Array.isArray(data?.errors?.[field]) && data.errors[field].length > 0)) {
+      throw new Error(spec.fields ? "Expected current registration validation errors" : "Expected newsletter validation errors")
     }
+  } else if (spec.kind === "protected") {
+    if (!contentType.includes("application/json")) throw new Error("Expected JSON authentication response")
+    const data = await response.json()
+    if (typeof data?.message !== "string" || data.user) throw new Error("Expected unauthenticated response")
   } else if (spec.kind === "json") {
     if (!contentType.includes("application/json")) throw new Error("Expected JSON content type")
     const data = await response.json()

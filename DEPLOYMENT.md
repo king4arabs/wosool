@@ -242,3 +242,24 @@ php artisan wosool:newsletter --check
 The route list must contain POST `api/v1/newsletter/subscribe`, `confirm`, `unsubscribe` and their mounted `v1/` equivalents. Do not flush the application cache or change the frontend rewrite to work around a missing backend release. If the CLI route list is correct but HTTP still returns 404, verify the web document root/release symlink and reload PHP through the hosting controls to replace stale OPcache workers.
 
 Run the eight production probes after the API release and again after the frontend release. Route validation establishes routing, not SMTP delivery; verify confirmation, welcome and unsubscribe using a controlled inbox before treating subscriptions as operational. Do not run the newsletter dispatch command as a test against live recipients. The browser keeps a failed address for retry and never reports success on 404/503. The current frontend change improves the error message but is not a substitute for this backend repair.
+
+
+## Registration / OTP recovery — 30 October 2026
+
+Production diagnosis: CSRF initialization and cookie-authenticated empty registration returned 200/422, but both `/api/v1/auth/registration/verify` and `/api/v1/auth/registration/resend`, and `/api/v1/registration/application`, returned 404 through the website. Direct canonical OTP verification also returned 404. `/api/ready` returned 200 despite this older release. The live registration validator lacked the current consent requirement. These observations identify a backend version/route mismatch; they do not establish SMTP credentials or inbox delivery.
+
+Release the matching **backend**, not just the Next.js frontend. Follow the safe release order above, preserve the existing database, `APP_KEY`, mail credentials and uploads, and run from the deployed backend directory:
+
+```sh
+php artisan migrate --force
+php artisan route:clear
+php artisan config:cache
+php artisan route:cache
+php artisan route:list --path=registration
+```
+
+Confirm both canonical `/api/v1/` and mounted `/v1/` registration routes are listed. Run `node scripts/production-smoke.mjs` from the repository; the 16 probes now require guest OTP/application requests to return 401 (not 404), and empty registration to validate consent. Probes do not submit addresses, create accounts, or send mail. A passing readiness endpoint alone is insufficient.
+
+Use a controlled inbox to register, receive the six-digit code, test resend after one minute, activate, reload, sign out/in and submit the profile. Confirm approved membership grants dashboard access while pending accounts retain onboarding access. Existing accounts from the old registration flow can sign in with their password and request an OTP from onboarding; existing member/founder/admin and Accelerator journeys remain separate. Do not bypass email verification or application approval to repair registration. Record the active backend/frontend SHAs and delivery evidence before declaring the incident resolved.
+
+The browser allows 45 seconds for registration/resend to accommodate the default 30-second SMTP timeout. Failed or timed-out writes are never automatically replayed; CSRF rejections alone may be retried once. Review SMTP duration if the configured mail timeout exceeds this budget.

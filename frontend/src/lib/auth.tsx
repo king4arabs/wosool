@@ -120,7 +120,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           invite_token: inviteToken || undefined,
           consent: true,
         }),
-        signal: timeoutSignal(12000),
+
       })
 
       if (!res.ok) {

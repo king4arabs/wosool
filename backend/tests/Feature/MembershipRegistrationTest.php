@@ -27,6 +27,57 @@ class MembershipRegistrationTest extends TestCase
             'company_description' => 'Software that helps growing businesses collaborate.', 'founded_year' => 2024,
             'team_size' => 5, 'public_profile_consent' => true];
     }
+    #[\PHPUnit\Framework\Attributes\TestWith(['/api/v1'])]
+    #[\PHPUnit\Framework\Attributes\TestWith(['/v1'])]
+    public function test_registration_login_activation_and_session_resume_on_both_mounts(string $prefix): void
+    {
+        $credentials = ['email' => 'new-founder@example.com', 'password' => 'Password123'];
+        $this->postJson($prefix.'/auth/register', $credentials + ['name' => 'New Founder',
+            'password_confirmation' => 'Password123', 'consent' => true])
+            ->assertCreated()->assertJsonPath('user.registration_step', 'verify');
+        $code = Mail::sent(RegistrationOtpMail::class)->last()->code;
+        $this->getJson($prefix.'/auth/me')->assertOk()->assertJsonPath('user.registration_step', 'verify');
+        $this->postJson($prefix.'/auth/logout')->assertOk();
+        $this->app['auth']->forgetGuards();
+        $this->postJson($prefix.'/auth/login', array_replace($credentials, ['email' => ' NEW-FOUNDER@example.com ']))
+            ->assertOk()->assertJsonPath('user.registration_step', 'verify');
+        $this->postJson($prefix.'/auth/registration/verify', ['code' => $code])->assertOk()
+            ->assertJsonPath('user.registration_step', 'profile');
+        $this->app['auth']->forgetGuards();
+        $this->postJson($prefix.'/registration/application', $this->profile())->assertCreated()
+            ->assertJsonPath('step', 'review');
+        $this->postJson($prefix.'/auth/logout')->assertOk();
+        $this->app['auth']->forgetGuards();
+        $this->postJson($prefix.'/auth/login', $credentials)->assertOk()->assertJsonPath('user.registration_step', 'review');
+        $this->getJson($prefix.'/registration/application')->assertOk()->assertJsonPath('step', 'review');
+        $this->getJson($prefix.'/member/dashboard')->assertForbidden();
+    }
+
+    public function test_legacy_account_can_resume_verification_after_password_login_without_granting_access(): void
+    {
+        $user = User::factory()->unverified()->create(['email' => 'legacy@example.com', 'password' => 'Password123']);
+        $this->postJson('/api/v1/auth/login', ['email' => 'legacy@example.com', 'password' => 'wrong'])->assertUnprocessable();
+        $this->assertNull($user->fresh()->community_registration_started_at);
+        $this->postJson('/api/v1/auth/login', ['email' => ' LEGACY@example.com ', 'password' => 'Password123'])
+            ->assertOk()->assertJsonPath('user.registration_step', 'verify');
+        $this->assertNull($user->fresh()->privacy_accepted_at);
+        $this->postJson('/api/v1/auth/registration/resend')->assertOk();
+        $code = Mail::sent(RegistrationOtpMail::class)->last()->code;
+        $this->postJson('/api/v1/auth/registration/verify', ['code' => $code])->assertOk()
+            ->assertJsonPath('user.registration_step', 'profile');
+        $this->getJson('/api/v1/member/dashboard')->assertForbidden();
+    }
+
+    public function test_legacy_recovery_preserves_accelerator_and_existing_member_journeys(): void
+    {
+        $accelerator = User::factory()->create(['is_accelerator_applicant' => true]);
+        $member = User::factory()->create(); $member->assignRole(Role::findOrCreate('member', 'web'));
+        foreach ([$accelerator, $member] as $user) {
+            app(\App\Services\MembershipRegistration::class)->resumeLegacyRegistration($user);
+            $this->assertNull($user->fresh()->community_registration_started_at);
+        }
+    }
+
     public function test_verification_is_required_and_code_is_single_use(): void
     {
         $user = $this->applicant(); $code = $this->code($user);
