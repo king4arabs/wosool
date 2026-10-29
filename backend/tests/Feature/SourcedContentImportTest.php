@@ -35,7 +35,7 @@ class SourcedContentImportTest extends TestCase
         $source = $rows->firstWhere('slug', 'barq-329-million-series-a-unicorn');
         $this->artisan('wosool:import-news')->assertSuccessful();
         $story = NewsItem::where('slug', $source['slug'])->firstOrFail();
-        $story->update(['image_url' => null, 'image_credit' => null]);
+        $story->refresh()->update(['image_url' => null, 'image_credit' => null]);
 
         $this->artisan('wosool:import-news', ['--dry-run' => true])->assertSuccessful();
         $this->assertNull($story->fresh()->image_url);
@@ -43,16 +43,16 @@ class SourcedContentImportTest extends TestCase
         $this->assertSame($source['imageUrl'], $story->fresh()->image_url);
         $this->assertSame($source['imageCredit'], $story->fresh()->image_credit);
 
-        $story->update(['image_url' => 'https://example.com/editor-image.jpg', 'image_credit' => null]);
+        $story->refresh()->update(['image_url' => 'https://example.com/editor-image.jpg', 'image_credit' => null]);
         $this->artisan('wosool:import-news')->assertSuccessful();
         $this->assertSame('https://example.com/editor-image.jpg', $story->fresh()->image_url);
         $this->assertNull($story->fresh()->image_credit);
 
-        $story->update(['image_credit' => 'Editor photograph']);
+        $story->refresh()->update(['image_credit' => 'Editor photograph']);
         $this->artisan('wosool:import-news')->assertSuccessful();
         $this->assertSame('Editor photograph', $story->fresh()->image_credit);
 
-        $story->update(['image_url' => $source['imageUrl'], 'image_credit' => null]);
+        $story->refresh()->update(['image_url' => $source['imageUrl'], 'image_credit' => null]);
         $this->artisan('wosool:import-news')->assertSuccessful();
         $this->assertSame($source['imageCredit'], $story->fresh()->image_credit);
     }
