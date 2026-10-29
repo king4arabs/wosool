@@ -135,9 +135,9 @@ export function FounderCalendar({ events, now, loading, error, retry }: { events
         <div className="max-w-2xl">
           <p className="mb-2 text-xs font-extrabold tracking-wide text-[#3B52D4]">{ar ? "تعلّم. زُر. شارك. انمُ." : "LEARN. EXPLORE. CONNECT. GROW."}</p>
           <h2 id="founder-calendar-title" className="text-2xl font-black text-slate-900 sm:text-3xl">{ar ? "تقويم نمو المؤسسين" : "Your founder growth calendar"}</h2>
-          <p className="mt-3 text-sm leading-7 text-slate-600">{ar ? "26 أسبوعًا للتعلّم بموضوعات مختلفة، مع إجازة رمضان ومحطات رئيسية في مايو." : "26 learning weeks, each with its own focus, a Ramadan break, and key milestones in May."}</p>
+          <p className="mt-3 text-sm leading-7 text-slate-600">{ar ? "مواعيد مؤتمرات ومعارض ولقاءات للمؤسسين في الرياض والسعودية والخليج والعالم، إلى جانب مسارات التعلّم ومحطات البرنامج." : "Founder conferences, exhibitions and special meetings across Riyadh, Saudi Arabia, the Gulf and beyond, alongside cohort sessions and milestones."}</p>
         </div>
-        <div className="rounded-2xl border border-indigo-100 bg-white px-4 py-3 text-xs leading-6 text-slate-600"><strong className="block text-slate-900">{ar ? "فترة التعلّم المقترحة" : "Proposed learning window"}</strong>{periodText}<span className="block">{ar ? "جميع المواعيد بتوقيت الرياض (UTC+3)" : "All dates in Riyadh time (UTC+3)"}</span></div>
+        <div className="rounded-2xl border border-indigo-100 bg-white px-4 py-3 text-xs leading-6 text-slate-600"><strong className="block text-slate-900">{ar ? "التقويم الدولي · 2025–2029" : "Worldwide calendar · 2025–2029"}</strong>{ar ? "أنشطة ومؤتمرات معلنة من الجهات المنظمة" : "Organizer-announced events and conferences"}<span className="block">{ar ? "فترة تعلّم الدفعة: " : "Cohort learning: "}{periodText}</span></div>
       </div>
 
       <div className="mb-8 grid grid-cols-2 gap-3 lg:grid-cols-4">
@@ -149,8 +149,17 @@ export function FounderCalendar({ events, now, loading, error, retry }: { events
         </button> })}
       </div>
 
+      <div className="mb-7 flex flex-wrap items-center gap-3 rounded-2xl border border-emerald-200 bg-white p-4 shadow-sm">
+        <Globe2 size={22} className="shrink-0 text-emerald-700" aria-hidden="true" />
+        <div className="min-w-0 flex-1">
+          <strong className="text-sm font-extrabold text-slate-900">{ar ? "مؤتمرات العالم وفرص التواصل" : "Global founder events & networking"}</strong>
+          <p className="mt-1 text-xs leading-6 text-slate-600">{ar ? "تصفّح الفعاليات الخارجية ومواعيدها المعلنة، واللقاءات التي تتطلب دعوات أو قبولًا من المنظّم." : "Discover published conferences and selectively hosted meetings; access and invitations are managed by each organizer."}</p>
+        </div>
+        <button type="button" onClick={() => { setKind("ecosystem"); setRegion("all"); setSpecialAccess(false); setQuery(""); setView("agenda"); document.getElementById("calendar-month-panel")?.scrollIntoView({ block: "start" }) }} className="min-h-11 rounded-xl border border-emerald-600 bg-emerald-50 px-4 text-xs font-bold text-emerald-800 hover:bg-emerald-100">{ar ? "استكشف المؤتمرات" : "Explore conferences"}</button>
+      </div>
+
       <div role="group" className="mb-8 grid gap-3 lg:grid-cols-3" aria-label={ar ? "الإجازات والمحطات الرئيسية" : "Breaks and key milestones"}>
-        {[acceleratorBreak, ...cohortMilestones].map((entry) => <button type="button" key={entry.id} onClick={() => { setChosenMonth(entry.date.slice(0, 7)); setChosenDate(entry.date); setKind("all"); setQuery(""); setView("calendar"); document.getElementById("calendar-month-panel")?.scrollIntoView({ block: "start" }) }} className={`rounded-2xl border p-5 text-start ${styles[entry.kind].badge}`}>
+        {[acceleratorBreak, ...cohortMilestones].map((entry) => <button type="button" key={entry.id} onClick={() => { setChosenMonth(entry.date.slice(0, 7)); setChosenDate(entry.date); setKind("all"); setQuery(""); setRegion("all"); setSpecialAccess(false); setView("calendar"); document.getElementById("calendar-month-panel")?.scrollIntoView({ block: "start" }) }} className={`rounded-2xl border p-5 text-start ${styles[entry.kind].badge}`}>
           <span className="block text-xs font-bold">{calendarDateLabel(entry.date, locale, { year: "numeric" })}{entry.endDate ? ` – ${calendarDateLabel(entry.endDate, locale, { year: "numeric" })}` : ""}</span>
           <span className="mt-2 block text-base font-extrabold leading-7">{entry.title[locale]}</span>
           <span className="mt-2 block text-xs leading-6">{entry.kind === "break" ? (ar ? "لا أنشطة للمسرّعة" : "No accelerator activities") : entry.location?.[locale]}</span>
@@ -161,9 +170,9 @@ export function FounderCalendar({ events, now, loading, error, retry }: { events
         <div className="border-b border-slate-200 p-4 sm:p-6">
           <div className="flex flex-wrap items-center justify-between gap-4">
             <div className="flex items-center gap-2">
-              <button type="button" onClick={() => navigateMonth(-1)} aria-label={ar ? "الشهر السابق" : "Previous month"} className="flex size-11 items-center justify-center rounded-xl border border-slate-200 hover:bg-slate-50">{ar ? <ChevronRight size={18} /> : <ChevronLeft size={18} />}</button>
+              <button type="button" disabled={month <= "2025-10"} onClick={() => navigateMonth(-1)} aria-label={ar ? "الشهر السابق" : "Previous month"} className="flex size-11 items-center justify-center rounded-xl border border-slate-200 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40">{ar ? <ChevronRight size={18} /> : <ChevronLeft size={18} />}</button>
               <h3 aria-live="polite" className="min-w-32 text-center text-lg font-extrabold text-slate-900 sm:min-w-44">{monthLabel}</h3>
-              <button type="button" onClick={() => navigateMonth(1)} aria-label={ar ? "الشهر التالي" : "Next month"} className="flex size-11 items-center justify-center rounded-xl border border-slate-200 hover:bg-slate-50">{ar ? <ChevronLeft size={18} /> : <ChevronRight size={18} />}</button>
+              <button type="button" disabled={month >= "2029-10"} onClick={() => navigateMonth(1)} aria-label={ar ? "الشهر التالي" : "Next month"} className="flex size-11 items-center justify-center rounded-xl border border-slate-200 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40">{ar ? <ChevronLeft size={18} /> : <ChevronRight size={18} />}</button>
             </div>
             <div className="flex flex-wrap items-center gap-2">
               <button type="button" onClick={() => { setChosenMonth(null); setChosenDate(null) }} className="min-h-11 rounded-xl border border-slate-200 px-4 text-xs font-bold text-slate-700">{ar ? "اليوم" : "Today"}</button>
@@ -172,12 +181,21 @@ export function FounderCalendar({ events, now, loading, error, retry }: { events
               </div>
             </div>
           </div>
-          <div className="mt-5 flex flex-wrap items-end gap-3">
-            <label className="w-full min-w-0 text-xs font-bold text-slate-600 sm:flex-1">{ar ? "ابحث في هذا الشهر" : "Search this month"}<span className="mt-2 flex min-h-11 items-center gap-2 rounded-xl border border-slate-200 px-3"><Search size={16} aria-hidden="true" /><input type="search" value={query} onChange={(event) => setQuery(event.target.value)} placeholder={ar ? "موضوع أو فعالية…" : "Topic or event…"} className="w-full min-w-0 bg-transparent py-3 text-sm font-normal text-slate-900 outline-none focus-visible:ring-2 focus-visible:ring-indigo-500" /></span></label>
-            <label className="w-full text-xs font-bold text-slate-600 sm:w-auto">{ar ? "نوع النشاط" : "Activity type"}<select value={kind} onChange={(event) => setKind(event.target.value as CalendarKind | "all")} className="mt-2 block min-h-11 w-full max-w-full rounded-xl border border-slate-200 bg-white px-3 text-sm font-normal text-slate-900"><option value="all">{ar ? "كل الأنشطة" : "All activities"}</option>{([...tracks, "break", "milestone", "holiday", "international", "published"] as CalendarKind[]).map((value) => <option key={value} value={value}>{label(value)}</option>)}</select></label>
-            {(query || kind !== "all") && <button type="button" className="min-h-11 px-2 text-xs font-bold text-[#3B52D4] underline" onClick={() => { setQuery(""); setKind("all") }}>{ar ? "مسح التصفية" : "Clear filters"}</button>}
+          <div className="mt-4 flex flex-wrap items-center gap-2" role="group" aria-label={ar ? "انتقال سريع حسب السنة" : "Jump to calendar year"}>
+            <span className="text-xs font-semibold text-slate-600">{ar ? "استكشف السنة" : "Browse year"}</span>
+            {["2025", "2026", "2027", "2028", "2029"].map((value) => <button type="button" key={value} aria-pressed={String(year) === value} onClick={() => {
+              const next = value === "2025" ? "2025-11" : value === "2026" ? "2026-11" : `${value}-01`
+              setChosenMonth(next)
+              setChosenDate(`${next}-01`)
+              setView("calendar")
+            }} className={`min-h-10 rounded-lg border px-3 text-xs font-bold ${String(year) === value ? "border-indigo-500 bg-indigo-50 text-indigo-800" : "border-slate-200 bg-white text-slate-600"}`}>{value}</button>)}
           </div>
-          <div className="mt-4 flex flex-wrap gap-x-4 gap-y-2 text-[11px] font-semibold text-slate-600">{([...tracks, "break", "milestone", "holiday", "international", "published"] as CalendarKind[]).map((value) => <span key={value} className="inline-flex items-center gap-1.5"><span aria-hidden="true" className={`size-2 rounded-full ${styles[value].dot}`} />{label(value)}</span>)}</div>
+          <div className="mt-5 flex flex-wrap items-end gap-3>
+            <label className="w-full min-w-0 text-xs font-bold text-slate-600 sm:flex-1">{ar ? "ابحث في هذا الشهر" : "Search this month"}<span className="mt-2 flex min-h-11 items-center gap-2 rounded-xl border border-slate-200 px-3"><Search size={16} aria-hidden="true" /><input type="search" value={query} onChange={(event) => setQuery(event.target.value)} placeholder={ar ? "موضوع أو فعالية…" : "Topic or event…"} className="w-full min-w-0 bg-transparent py-3 text-sm font-normal text-slate-900 outline-none focus-visible:ring-2 focus-visible:ring-indigo-500" /></span></label>
+            <label className="w-full text-xs font-bold text-slate-600 sm:w-auto">{ar ? "نوع النشاط" : "Activity type"}<select value={kind} onChange={(event) => setKind(event.target.value as CalendarKind | "all")} className="mt-2 block min-h-11 w-full max-w-full rounded-xl border border-slate-200 bg-white px-3 text-sm font-normal text-slate-900"><option value="all">{ar ? "كل الأنشطة" : "All activities"}</option>{([...tracks, "break", "milestone", "holiday", "international", "published", "ecosystem"] as CalendarKind[]).map((value) => <option key={value} value={value}>{label(value)}</option>)}</select></label>
+            {(query || kind !== "all" || region !== "all" || specialAccess) && <button type="button" className="min-h-11 px-2 text-xs font-bold text-[#3B52D4] underline" onClick={() => { setQuery(""); setKind("all"); setRegion("all"); setSpecialAccess(false) }}>{ar ? "مسح التصفية" : "Clear filters"}</button>}
+          </div>
+          <div className="mt-4 flex flex-wrap gap-x-4 gap-y-2 text-[11px] font-semibold text-slate-600">{([...tracks, "break", "milestone", "holiday", "international", "published", "ecosystem"] as CalendarKind[]).map((value) => <span key={value} className="inline-flex items-center gap-1.5"><span aria-hidden="true" className={`size-2 rounded-full ${styles[value].dot}`} />{label(value)}</span>)}</div>
         </div>
 
         {view === "calendar" ? <div className="grid xl:grid-cols-[minmax(0,1.8fr)_minmax(0,1fr)]">
