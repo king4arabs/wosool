@@ -42,10 +42,10 @@ class FounderActivationTest extends TestCase
     public function test_import_is_repeatable_preserves_edits_and_never_creates_accounts_or_sends_mail(): void
     {
         $count = User::count(); $first = app(FounderDirectoryImporter::class)->run();
-        $this->assertSame(182, $first['founders_created']); $this->assertSame(102, $first['companies_created']); $this->assertSame($count, User::count());
+        $this->assertSame(224, $first['founders_created']); $this->assertSame(124, $first['companies_created']); $this->assertSame($count, User::count());
         $profile = FounderProfile::first(); $profile->update(['bio' => 'Owner edited biography']);
         $second = app(FounderDirectoryImporter::class)->run();
-        $this->assertSame(0, $second['founders_created']); $this->assertSame(182, $second['preserved']); $this->assertSame('Owner edited biography', $profile->fresh()->bio);
+        $this->assertSame(0, $second['founders_created']); $this->assertSame(224, $second['preserved']); $this->assertSame('Owner edited biography', $profile->fresh()->bio);
         Notification::assertNothingSent();
         $this->getJson('/api/v1/founders/salman-butt', ['X-Locale' => 'ar'])->assertOk()->assertJsonPath('data.name', 'سلمان بت')->assertJsonPath('data.activation_status', 'unclaimed')->assertJsonPath('data.can_communicate', false)->assertJsonPath('data.companies.0.name', 'سلة');
         $this->getJson('/api/v1/founders?community=1')->assertOk()->assertJsonCount(0, 'data');
