@@ -21,6 +21,7 @@ try {
     await page.goto(origin+'/partners',{waitUntil:'networkidle'})
     const section=page.locator('section[aria-labelledby="partnership-opportunities"]')
     await section.getByRole('heading',{name:locale==='ar'?'فرص الشراكة':'Partnership opportunities'}).waitFor()
+    assert.equal(await section.getByRole('group',{name:locale==='ar'?'تصفية الجهات حسب الفئة':'Filter organizations by category'}).locator('button').evaluateAll(buttons=>buttons.some(button=>/[0-9٠-٩]/.test(button.textContent||''))),false,'Category names should not show counts')
     const strip=section.locator('[data-partner-marquee]')
     assert.equal(await strip.locator('img').count(),160)
     const failed=await strip.locator('img').evaluateAll(images=>images.filter(img=>!img.complete||!img.naturalWidth).map(img=>img.getAttribute('src')))
