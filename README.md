@@ -107,6 +107,8 @@ See [the founder, mentor and responsive journey guide](docs/FOUNDERS-MENTORS-202
 
 Partner strips and partner/founder/company cards share transparent logo fitting, authentic colors, proportional sizing and readable image-failure fallbacks. EO, Kitopi and Salla retain clear space while their excess empty canvas is framed; Canva, Foodics, Paymob, Rasan and Jahez use verified transparent originals. Swarm's original logo is also served locally. Partner strips retain keyboard/touch controls and optional motion. See [the transparency audit](docs/PARTNER-ASSETS-2026-10-11.md) for original asset sources and optical sizing notes.
 
+The Partners page puts ecosystem discovery first, with bilingual name search, category filters, an expandable website directory, member sessions and a partnership contact action. Logo order is randomized per page visit after hydration and remains stable through searches, category changes and language switches. The slider moves physically right without a hover pause; short result sets repeat seamlessly, decorative duplicates are excluded from keyboard navigation, and reduced-motion preferences show each organization once. Confirmed API partners remain separate from potential partnership organizations, with collection retry and pagination beside that section.
+
 ## EO Riyadh Accelerator preview
 
 Local production-build screenshots with the seeded Laravel API (not a claim of live deployment):
