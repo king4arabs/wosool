@@ -1,6 +1,7 @@
 "use client"
 
 import { useSyncExternalStore } from "react"
+import { linkedFounderSlug } from "./founder-card-links"
 
 function subscribe(listener: () => void): () => void {
   window.addEventListener("popstate", listener)
@@ -12,8 +13,7 @@ function subscribe(listener: () => void): () => void {
 }
 
 function currentFounderSlug(): string {
-  const value = new URLSearchParams(window.location.search).get("founder")?.trim() ?? ""
-  return value.length <= 255 ? value : ""
+  return linkedFounderSlug(window.location.search)
 }
 
 /** Hydration-safe account-to-public-card deep link, no effect-driven state updates. */

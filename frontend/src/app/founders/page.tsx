@@ -16,6 +16,7 @@ import { getFounderSpotlights } from "@/lib/founder-spotlight"
 import { useLocale } from "@/lib/locale"
 import { usePublicCollection } from "@/lib/use-public-collection"
 import { useLinkedFounderSlug } from "@/lib/use-linked-founder-slug"
+import { exactLinkedFounderCards } from "@/lib/founder-card-links"
 import styles from "../home.module.css"
 
 export default function FoundersPage() {
@@ -54,7 +55,7 @@ function FounderDirectory({ visitSeed }: { visitSeed: number }) {
   // Guard the deep link on the client as well: older API releases may ignore
   // the new slug parameter, but must never present an unrelated founder card.
   const filtered = searchPending ? [] : linkedSlug
-    ? founders.filter(founder => founder.slug === linkedSlug)
+    ? exactLinkedFounderCards(founders, linkedSlug)
     : isSpotlight ? founders.filter(founder =>
       matchesFounderSearch(founder, search) && (!sector || founder.sector === sector) && (!stage || founder.stage === stage) && (!location || founderCountry(founder) === location)
     ) : founders
