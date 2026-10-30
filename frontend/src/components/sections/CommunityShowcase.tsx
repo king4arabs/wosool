@@ -92,10 +92,11 @@ function FounderRow({ founders, suspended, onShuffle }: { founders: FounderCardP
   </div>
 }
 
-export function FounderShowcase({ founders: suppliedFounders, showFilters = true, region: controlledRegion, onRegionChange, randomize = false, visitSeed, allRegions = false, loading = false }: {
+export function FounderShowcase({ founders: suppliedFounders, showFilters = true, region: controlledRegion, onRegionChange, randomize = false, visitSeed, allRegions = false, loading = false, focusLinkedFounder = true }: {
   founders: FounderCardProfile[]
   allRegions?: boolean
   loading?: boolean
+  focusLinkedFounder?: boolean
   showFilters?: boolean
   /** Homepage discovery only; directory/grid order remains stable. */
   randomize?: boolean
@@ -119,6 +120,12 @@ export function FounderShowcase({ founders: suppliedFounders, showFilters = true
   const [gridOpen, setGridOpen] = useState(false)
   const [pageSize, setPageSize] = useState(6)
   const [page, setPage] = useState(1)
+  const [focusedSlug, setFocusedSlug] = useState<string | null>(null)
+  useEffect(() => {
+    if (!focusLinkedFounder) return
+    const slug = new URLSearchParams(window.location.search).get('founder')?.trim()
+    if (slug && slug.length <= 255) setFocusedSlug(slug)
+  }, [focusLinkedFounder])
   const [filterLocale, setFilterLocale] = useState(locale)
   // Sector values are translated strings; reset them without remounting the visit's mix store.
   if (filterLocale !== locale) {
@@ -150,6 +157,22 @@ export function FounderShowcase({ founders: suppliedFounders, showFilters = true
   const current = Math.min(page, pages)
   const visible = ordered.slice((current - 1) * pageSize, current * pageSize)
   const pageNumbers = [...new Set([1, current - 1, current, current + 1, pages])].filter(value => value >= 1 && value <= pages).sort((a, b) => a - b)
+  const focusedIndex = focusedSlug ? ordered.findIndex(founder => founder.slug === focusedSlug) : -1
+  useEffect(() => {
+    if (focusedIndex < 0) return
+    setGridOpen(true)
+    setPage(Math.floor(focusedIndex / pageSize) + 1)
+  }, [focusedIndex, pageSize])
+  useEffect(() => {
+    if (!gridOpen || focusedIndex < 0) return
+    const frame = window.requestAnimationFrame(() => {
+      const element = grid.current?.querySelector<HTMLLIElement>('[data-founder-focus="true"]')
+      if (!element) return
+      element.focus({ preventScroll: true })
+      element.scrollIntoView({ behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth', block: 'center' })
+    })
+    return () => window.cancelAnimationFrame(frame)
+  }, [gridOpen, focusedIndex, current])
 
   function revealGrid() {
     requestAnimationFrame(() => {
@@ -183,7 +206,7 @@ export function FounderShowcase({ founders: suppliedFounders, showFilters = true
     </>}
     <section ref={grid} id={gridId} className={styles.founderGridSection} hidden={!gridOpen || !filtered.length} tabIndex={-1} aria-labelledby={`${gridId}-title`}>
       <div className={styles.gridHead}><div><h3 id={`${gridId}-title`}>{ar ? 'جميع ملفات المؤسسين' : 'All founder profiles'}</h3><p>{ar ? 'تصفّح المؤسسين حسب الصفحة' : 'Browse founders by page'}</p></div><button type="button" className={styles.clearFilters} onClick={toggleGrid}>{ar ? 'إغلاق الشبكة' : 'Close grid'}<ChevronUp size={16} aria-hidden="true" /></button></div>
-      {gridOpen && <ul className={styles.founderGrid}>{visible.map(founder => <li key={founder.id}><FounderCard founder={founder} layout="grid" /></li>)}</ul>}
+      {gridOpen && <ul className={styles.founderGrid}>{visible.map(founder => <li key={founder.id} data-founder-focus={founder.slug === focusedSlug ? 'true' : undefined} tabIndex={founder.slug === focusedSlug ? -1 : undefined} className={founder.slug === focusedSlug ? 'rounded-xl ring-2 ring-indigo-500 ring-offset-2' : undefined}><FounderCard founder={founder} layout="grid" /></li>)}</ul>}
       <div className={styles.founderPagination}>
         <label>{ar ? 'ملفات في الصفحة' : 'Profiles per page'}<select value={pageSize} onChange={event => { setPageSize(Number(event.target.value)); setPage(1); revealGrid() }}>{[6, 12, 24].map(value => <option value={value} key={value}>{value}</option>)}</select></label>
         <nav aria-label={ar ? 'صفحات شبكة المؤسسين' : 'Founder grid pages'}>

@@ -90,6 +90,8 @@ export interface ApiFounder {
   offers?: string[] | null
   is_verified: boolean
   is_featured: boolean
+  is_public?: boolean
+  status?: string | null
   user?: ApiUser | null
   companies?: ApiCompany[] | null
   scorecard?: ApiScorecard | null

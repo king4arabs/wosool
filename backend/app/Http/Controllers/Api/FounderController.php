@@ -13,7 +13,7 @@ class FounderController extends Controller
 {
     public function index(Request $request): JsonResponse
     {
-        $request->validate(['country' => 'sometimes|string|size:2', 'region' => 'sometimes|in:saudi,gcc,mena,other', 'search' => 'sometimes|string|max:120']);
+        $request->validate(['country' => 'sometimes|string|size:2', 'region' => 'sometimes|in:saudi,gcc,mena,other', 'search' => 'sometimes|string|max:120', 'slug' => 'sometimes|string|max:255']);
         $query = FounderProfile::with(['user', 'companies' => fn ($q) => DirectoryGeography::visible($q->getQuery())->where('is_public', true)->where('status', 'active'), 'scorecard'])
             ->where('status', 'active')
             ->where('is_public', true);
@@ -26,6 +26,8 @@ class FounderController extends Controller
             'sectors' => (clone $query)->setEagerLoads([])->select(['sector', 'translations'])->get()->map(fn ($p) => ['en' => $p->sector, 'ar' => data_get($p->translations, 'ar.sector', $p->sector)])->filter(fn ($s) => filled($s['en']))->unique('en')->values(),
             'stages' => (clone $query)->whereNotNull('stage')->where('stage', '<>', '')->distinct()->pluck('stage'),
         ] : [];
+        // Exact public-card lookup for member dashboard deep links. Publication and geography rules apply first.
+        if ($request->filled('slug')) $query->where('slug', $request->string('slug')->toString());
         if ($request->filled('country')) DirectoryGeography::filterCountry($query, strtoupper(trim($request->country)));
         if ($request->filled('region')) DirectoryGeography::filterRegion($query, $request->region);
 
