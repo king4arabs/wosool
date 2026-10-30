@@ -107,6 +107,32 @@ class FounderIdentityIntegrityTest extends TestCase
         $this->assertDatabaseCount('scorecards', 0);
     }
 
+    public function test_admin_cannot_approve_a_suspended_founder_without_resolving_moderation(): void
+    {
+        $this->seed(RoleAndPermissionSeeder::class);
+        $owner = User::factory()->create();
+        $owner->assignRole('member');
+        $profile = FounderProfile::create([
+            'user_id' => $owner->id, 'slug' => 'review-blocked', 'status' => 'suspended',
+            'is_public' => false,
+        ]);
+        $application = Application::create([
+            'user_id' => $owner->id, 'email' => $owner->email, 'full_name' => 'Review Blocked',
+            'company_name' => 'Example Co', 'company_website' => 'https://example.org',
+            'sector' => 'Software', 'stage' => 'Seed', 'location' => 'Riyadh',
+            'onboarding_data' => ['position' => 'Founder', 'country_code' => 'SA'],
+            'status' => 'submitted',
+        ]);
+        $admin = User::factory()->create();
+        $admin->assignRole('admin');
+        $this->actingAs($admin)->patchJson('/api/v1/admin/applications/'.$application->id, [
+            'status' => 'approved',
+        ])->assertStatus(409);
+        $this->assertSame('submitted', $application->fresh()->status);
+        $this->assertSame('suspended', $profile->fresh()->status);
+        $this->assertFalse($profile->fresh()->is_public);
+    }
+
     public function test_founder_uid_cannot_be_reassigned_even_by_model_force_fill(): void
     {
         $profile = FounderProfile::create(['slug' => 'immutable', 'display_name' => 'Founder']);
