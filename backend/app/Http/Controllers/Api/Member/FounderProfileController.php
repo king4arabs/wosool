@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\UpdateFounderProfileRequest;
 use App\Http\Resources\FounderResource;
 use App\Models\FounderProfile;
+use App\Models\Scorecard;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -54,6 +55,11 @@ class FounderProfileController extends Controller
             if ($profile->directory_key && $data) { $profile->translations = null; }
             $profile->fill($data);
             $profile->save();
+            // The member receives a private, initially unscored card only after a
+            // founder profile is created; researched unclaimed founders get none.
+            if ($created) {
+                Scorecard::firstOrCreate(['founder_profile_id' => $profile->id], ['historical_logs' => []]);
+            }
             $profile->load(['user', 'companies', 'scorecard']);
 
             return response()->json([
