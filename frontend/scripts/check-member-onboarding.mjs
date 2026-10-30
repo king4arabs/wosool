@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict'
 import { spawn } from 'node:child_process'
+import { existsSync } from 'node:fs'
 import { chromium } from 'playwright'
 const origin = 'http://127.0.0.1:18085'
 const app = spawn(process.execPath, ['node_modules/next/dist/bin/next', 'start', '-H', '127.0.0.1', '-p', '18085'], { stdio: ['ignore', 'pipe', 'pipe'] })
@@ -8,7 +9,9 @@ let browser
 try {
   for (let i=0; i<150 && !log.includes('Ready'); i++) await new Promise(r=>setTimeout(r,100))
   assert.ok(log.includes('Ready'), log)
-  browser = await chromium.launch({ executablePath: process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH || undefined })
+  const systemChrome = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
+  const executablePath = process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH || (existsSync(systemChrome) ? systemChrome : undefined)
+  browser = await chromium.launch({ executablePath })
   for (const locale of ['ar','en']) for (const width of [390,1440]) {
     const context=await browser.newContext({viewport:{width,height:950}})
     await context.addInitScript(l=>localStorage.setItem('wosool-locale',l),locale)
