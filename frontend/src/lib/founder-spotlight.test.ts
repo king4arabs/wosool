@@ -44,13 +44,13 @@ test('frontend source snapshots and database import share the same reviewed reco
   assert.equal(discoveryProfiles.length, 62)
   const databaseCountry = JSON.parse(readFileSync(new URL('../../../backend/resources/data/founder-directory-expansion-2026-10-29.json', import.meta.url), 'utf8'))
   assert.deepEqual(databaseCountry, countryProfiles)
-  assert.equal(countryProfiles.length, 105)
+  assert.equal(countryProfiles.length, 110)
   assert.equal(originalCountryCohort.length, 102)
-  assert.equal(october30Additions.length, 3)
+  assert.equal(october30Additions.length, 8)
   assert.equal(new Set(originalCountryCohort.map(profile => profile.country_code)).size, 51)
   for (const code of new Set(originalCountryCohort.map(profile => profile.country_code))) assert.equal(originalCountryCohort.filter(profile => profile.country_code === code).length, 2, code)
-  assert.equal(new Set(sourceProfiles.map(profile => profile.company_key)).size, 170)
-  assert.equal(sourceProfiles.length, 311)
+  assert.equal(new Set(sourceProfiles.map(profile => profile.company_key)).size, 173)
+  assert.equal(sourceProfiles.length, 316)
   assert.equal(new Set(sourceProfiles.map(profile => profile.founder_name_en.toLowerCase())).size, sourceProfiles.length)
   assert.equal(new Set(sourceProfiles.map(profile => profile.slug)).size, sourceProfiles.length)
   assert.ok(sourceProfiles.every(profile => profile.source_urls.length > 0 && profile.reviewed_at))
@@ -130,13 +130,15 @@ test('reconciled worldwide source batch adds two founders in 30 new countries wi
   }
 })
 
-test('30 October Saudi founder discoveries have primary evidence and retain unclaimed public-only status', () => {
+test('30 October sourced founder discoveries have primary evidence and retain unclaimed public-only status', () => {
   assert.deepEqual(october30Additions.map(item => item.slug).sort(), [
-    'ahmed-alsharif-think-ai', 'ammar-enaya-think-ai', 'mohamed-oueida-stitch',
+    'abdulaziz-almuhaydib-velents', 'ahmed-alsharif-think-ai', 'amiram-shachar-upwind',
+    'ammar-enaya-think-ai', 'mithil-ajmera-sav', 'mohamed-gaber-velents',
+    'mohamed-oueida-stitch', 'purvi-munot-sav',
   ])
   for (const row of october30Additions) {
-    assert.equal(row.country_code, 'SA')
-    assert.equal(row.region, 'saudi')
+    const expectedRegions: Record<string, string> = { SA: 'saudi', AE: 'gcc', US: 'global' }
+    assert.equal(row.region, expectedRegions[row.country_code])
     assert.ok(row.source_urls.includes(row.source_url))
     assert.equal(row.portrait_url, null) // Never invent a likeness.
     assert.equal(row.logo_url, null) // Unlicensed image reuse is not permitted.
