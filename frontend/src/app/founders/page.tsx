@@ -88,7 +88,7 @@ function FounderDirectory({ visitSeed }: { visitSeed: number }) {
       {linkedSlug && <div className="mt-5 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-indigo-200 bg-indigo-50 p-4 text-sm text-indigo-950"><p role="status">{collection.loading
         ? ar ? 'جارٍ البحث عن بطاقة المؤسس…' : 'Finding the founder card…'
         : filtered.length
-        ? ar ? 'بطاقة المؤسس المرتبطة بحسابه' : 'Founder card linked to the account'
+        ? ar ? 'ملف المؤسس' : 'Founder profile'
         : ar ? 'هذا الملف غير متاح في الدليل العام حالياً.' : 'This profile is not currently available in the public directory.'}</p><Link href="/founders#founder-directory" className="inline-flex min-h-11 items-center font-bold underline">{ar ? 'عرض جميع المؤسسين' : 'Browse all founders'}</Link></div>}
       <div className="mt-7 grid min-w-0 gap-4 rounded-2xl border border-[var(--border-soft)] bg-[var(--surface-soft)] p-4 sm:p-5 lg:grid-cols-2">
         <label className={label}><span>{copy.searchAria}</span><span className="relative flex min-w-0 items-center"><Search size={17} aria-hidden="true" className="pointer-events-none absolute start-3 text-[var(--text-muted)]" /><input type="search" maxLength={120} value={search} onChange={event => setSearch(event.target.value)} placeholder={copy.searchPlaceholder} className={`${control} ps-10`} /></span></label>
