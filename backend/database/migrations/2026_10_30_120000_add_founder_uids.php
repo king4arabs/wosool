@@ -23,15 +23,16 @@ return new class extends Migration
         }
 
         // Include soft-deleted profiles: IDs must never be recycled or reassigned.
-        // Only fill gaps. Never regenerate an ID or touch editorial/update timestamps.
+        // Only fill NULL gaps; comparing UUID columns to an empty string breaks PostgreSQL.
+        // Never regenerate an ID or touch editorial/update timestamps.
         DB::table('founder_profiles')
             ->select(['id', 'founder_uid'])
-            ->where(fn ($q) => $q->whereNull('founder_uid')->orWhere('founder_uid', ''))
+            ->whereNull('founder_uid')
             ->orderBy('id')
             ->chunkById(100, function ($rows): void {
                 foreach ($rows as $row) {
                     DB::table('founder_profiles')->where('id', $row->id)
-                        ->where(fn ($q) => $q->whereNull('founder_uid')->orWhere('founder_uid', ''))
+                        ->whereNull('founder_uid')
                         ->update(['founder_uid' => (string) Str::uuid()]);
                 }
             });
