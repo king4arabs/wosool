@@ -15,6 +15,8 @@ Wosool is an Arabic/English founders platform connecting Saudi Arabia, the GCC, 
 
 Community membership, Accelerator admission and administrator access are separate permissions. Registration requires email verification; community membership requires review and approval.
 
+**Founder integrity checkpoint (30 October 2026):** founder profiles use immutable public identities and one private scorecard per profile. Approving a community application cannot reactivate a suspended founder profile; an administrator must resolve that moderation state separately before approval. These source safeguards require the matching Laravel release and production verification before they can be treated as live behavior.
+
 ## Architecture
 
 | Layer | Technology and responsibility |
