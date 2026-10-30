@@ -13,6 +13,7 @@ const object = (properties: Record<string, object>) => ({ type: 'object', proper
 
 const companyFounderProperties = {
   id: integer,
+  founder_uid: publicFounderSchemas.PublicFounder.properties.founder_uid,
   position: nullableText,
   slug: text,
   display_name: nullableText,

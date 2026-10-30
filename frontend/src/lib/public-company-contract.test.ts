@@ -3,7 +3,7 @@ import test from 'node:test'
 import { validatePublicResponse } from '../../scripts/lib/public-contract'
 
 const founder = () => ({
-  id: 1, position: null, slug: 'founder', display_name: null, legal_name: 'founder',
+  id: 1, founder_uid: '59df6880-6b85-4f9d-a40a-a94c62b0342b', position: null, slug: 'founder', display_name: null, legal_name: 'founder',
   skills_tags: [], skills: [], tagline: null, bio: null, location: null, country_code: null,
   sector: null, stage: null, linkedin_url: null, twitter_url: null, website_url: null,
   needs: [], offers: [], is_verified: false, is_featured: false, is_public: true,
@@ -30,6 +30,8 @@ test('company detail accepts nullable fields and the standalone founder relation
 test('company contract rejects hidden state, relationship drift and anonymous contact leaks', () => {
   for (const changes of [
     { id: '1' }, { is_public: false }, { status: 'inactive' }, { founders_count: 1 },
+    { founders: [{ ...founder(), founder_uid: null }] },
+    { founders: [{ ...founder(), founder_uid: '123' }] },
     { founders: [{ ...founder(), companies: [] }] },
     { founders: [{ ...founder(), scorecard: null }] },
     { founders: [{ ...founder(), user: { id: 2, name: 'Member', email: 'private@example.test' } }] },
