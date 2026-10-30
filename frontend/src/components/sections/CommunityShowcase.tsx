@@ -9,6 +9,7 @@ import { useLocale } from "@/lib/locale"
 import { FounderCard, type FounderCardProfile } from "./FounderCard"
 import { filterFounders, regionOptions, sectorOptions, type FounderRegionFilter } from "@/lib/founder-filters"
 import { createFounderMixStore, founderDiscoveryOrder, founderVisitOrder } from "@/lib/founder-discovery"
+import { useLinkedFounderSlug } from "@/lib/use-linked-founder-slug"
 import type { Partner } from "@/types"
 import styles from "./community.module.css"
 import { isDirectoryRecordVisible } from '@/lib/directory-geography'
@@ -92,10 +93,11 @@ function FounderRow({ founders, suspended, onShuffle }: { founders: FounderCardP
   </div>
 }
 
-export function FounderShowcase({ founders: suppliedFounders, showFilters = true, region: controlledRegion, onRegionChange, randomize = false, visitSeed, allRegions = false, loading = false }: {
+export function FounderShowcase({ founders: suppliedFounders, showFilters = true, region: controlledRegion, onRegionChange, randomize = false, visitSeed, allRegions = false, loading = false, focusLinkedFounder = true }: {
   founders: FounderCardProfile[]
   allRegions?: boolean
   loading?: boolean
+  focusLinkedFounder?: boolean
   showFilters?: boolean
   /** Homepage discovery only; directory/grid order remains stable. */
   randomize?: boolean
@@ -116,15 +118,17 @@ export function FounderShowcase({ founders: suppliedFounders, showFilters = true
   const [sector, setSector] = useState('')
   const [ownRegion, setOwnRegion] = useState<FounderRegionFilter>('all')
   const region = controlledRegion ?? ownRegion
-  const [gridOpen, setGridOpen] = useState(false)
+  const [gridOverride, setGridOverride] = useState<boolean | null>(null)
   const [pageSize, setPageSize] = useState(6)
-  const [page, setPage] = useState(1)
+  const [requestedPage, setRequestedPage] = useState<number | null>(null)
+  const linkedSlug = useLinkedFounderSlug()
+  const focusedSlug = focusLinkedFounder ? linkedSlug : ''
   const [filterLocale, setFilterLocale] = useState(locale)
   // Sector values are translated strings; reset them without remounting the visit's mix store.
   if (filterLocale !== locale) {
     setFilterLocale(locale)
     setSector('')
-    setPage(1)
+    setRequestedPage(1)
   }
   const sectors = sectorOptions(founders, region, locale)
   const regions = regionOptions(founders, region, locale, allRegions)
@@ -139,17 +143,31 @@ export function FounderShowcase({ founders: suppliedFounders, showFilters = true
     onRegionChange?.(value)
     // A sector that does not exist in the new region would leave an empty list with no visible reason.
     if (sector && !sectorOptions(founders, value, locale).includes(sector)) setSector('')
-    setPage(1)
+    setRequestedPage(1)
   }
   function clearFilters() {
     setSearch('')
     setSector('')
     changeRegion('all')
   }
+  const focusedIndex = focusedSlug ? ordered.findIndex(founder => founder.slug === focusedSlug) : -1
+  // Derive the open state and default page rather than synchronously setting state
+  // in effects. Manual grid/pagination controls still work after a deep link.
+  const gridOpen = gridOverride ?? (focusedIndex >= 0)
   const pages = Math.max(1, Math.ceil(filtered.length / pageSize))
-  const current = Math.min(page, pages)
+  const current = Math.min(requestedPage ?? (focusedIndex >= 0 ? Math.floor(focusedIndex / pageSize) + 1 : 1), pages)
   const visible = ordered.slice((current - 1) * pageSize, current * pageSize)
   const pageNumbers = [...new Set([1, current - 1, current, current + 1, pages])].filter(value => value >= 1 && value <= pages).sort((a, b) => a - b)
+  useEffect(() => {
+    if (!gridOpen || focusedIndex < 0) return
+    const frame = window.requestAnimationFrame(() => {
+      const element = grid.current?.querySelector<HTMLLIElement>('[data-founder-focus="true"]')
+      if (!element) return
+      element.focus({ preventScroll: true })
+      element.scrollIntoView({ behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth', block: 'center' })
+    })
+    return () => window.cancelAnimationFrame(frame)
+  }, [gridOpen, focusedIndex, current])
 
   function revealGrid() {
     requestAnimationFrame(() => {
@@ -158,16 +176,16 @@ export function FounderShowcase({ founders: suppliedFounders, showFilters = true
     })
   }
   function toggleGrid() {
-    setGridOpen(value => !value)
+    setGridOverride(!gridOpen)
     if (!gridOpen) revealGrid()
     else gridToggle.current?.focus({ preventScroll: true })
   }
-  function changePage(value: number) { setPage(value); revealGrid() }
+  function changePage(value: number) { setRequestedPage(value); revealGrid() }
 
   return <div className={styles.showcase} data-visit-ready={visitSeed === undefined ? undefined : Boolean(visitSeed)}>
     {showFilters && <div className={styles.founderFilters}>
-      <label className={styles.search} htmlFor={searchId}><span>{ar ? 'ابحث عن مؤسس أو شركة' : 'Find a founder or company'}</span><div><Search size={18} aria-hidden="true" /><input id={searchId} type="search" value={search} onChange={event => { setSearch(event.target.value); setPage(1) }} placeholder={ar ? 'الاسم، الشركة أو الخبرة' : 'Name, company or expertise'} /></div></label>
-      <label className={styles.sectorFilter}><span>{ar ? 'القطاع' : 'Sector'}</span><select value={sector} onChange={event => { setSector(event.target.value); setPage(1) }}><option value="">{ar ? 'جميع القطاعات' : 'All sectors'}</option>{sectors.map(value => <option key={value} value={value}>{value}</option>)}</select></label>
+      <label className={styles.search} htmlFor={searchId}><span>{ar ? 'ابحث عن مؤسس أو شركة' : 'Find a founder or company'}</span><div><Search size={18} aria-hidden="true" /><input id={searchId} type="search" value={search} onChange={event => { setSearch(event.target.value); setRequestedPage(1) }} placeholder={ar ? 'الاسم، الشركة أو الخبرة' : 'Name, company or expertise'} /></div></label>
+      <label className={styles.sectorFilter}><span>{ar ? 'القطاع' : 'Sector'}</span><select value={sector} onChange={event => { setSector(event.target.value); setRequestedPage(1) }}><option value="">{ar ? 'جميع القطاعات' : 'All sectors'}</option>{sectors.map(value => <option key={value} value={value}>{value}</option>)}</select></label>
       {hasFilters && <button type="button" className={styles.clearFilters} onClick={clearFilters}>{ar ? 'مسح الفلاتر' : 'Clear filters'}</button>}
     </div>}
     {regions.length > 1 && <>
@@ -183,9 +201,9 @@ export function FounderShowcase({ founders: suppliedFounders, showFilters = true
     </>}
     <section ref={grid} id={gridId} className={styles.founderGridSection} hidden={!gridOpen || !filtered.length} tabIndex={-1} aria-labelledby={`${gridId}-title`}>
       <div className={styles.gridHead}><div><h3 id={`${gridId}-title`}>{ar ? 'جميع ملفات المؤسسين' : 'All founder profiles'}</h3><p>{ar ? 'تصفّح المؤسسين حسب الصفحة' : 'Browse founders by page'}</p></div><button type="button" className={styles.clearFilters} onClick={toggleGrid}>{ar ? 'إغلاق الشبكة' : 'Close grid'}<ChevronUp size={16} aria-hidden="true" /></button></div>
-      {gridOpen && <ul className={styles.founderGrid}>{visible.map(founder => <li key={founder.id}><FounderCard founder={founder} layout="grid" /></li>)}</ul>}
+      {gridOpen && <ul className={styles.founderGrid}>{visible.map(founder => <li key={founder.id} data-founder-focus={founder.slug === focusedSlug ? 'true' : undefined} tabIndex={founder.slug === focusedSlug ? -1 : undefined} className={founder.slug === focusedSlug ? 'rounded-xl ring-2 ring-indigo-500 ring-offset-2' : undefined}><FounderCard founder={founder} layout="grid" /></li>)}</ul>}
       <div className={styles.founderPagination}>
-        <label>{ar ? 'ملفات في الصفحة' : 'Profiles per page'}<select value={pageSize} onChange={event => { setPageSize(Number(event.target.value)); setPage(1); revealGrid() }}>{[6, 12, 24].map(value => <option value={value} key={value}>{value}</option>)}</select></label>
+        <label>{ar ? 'ملفات في الصفحة' : 'Profiles per page'}<select value={pageSize} onChange={event => { setPageSize(Number(event.target.value)); setRequestedPage(1); revealGrid() }}>{[6, 12, 24].map(value => <option value={value} key={value}>{value}</option>)}</select></label>
         <nav aria-label={ar ? 'صفحات شبكة المؤسسين' : 'Founder grid pages'}>
           <button type="button" disabled={current === 1} onClick={() => changePage(current - 1)}>{ar ? 'السابق' : 'Previous'}</button>
           {pageNumbers.map((value, index) => <span className={styles.pageNumber} key={value}>{index > 0 && value - pageNumbers[index - 1] > 1 && <span aria-hidden="true">…</span>}<button type="button" aria-label={ar ? `الصفحة ${value}` : `Page ${value}`} aria-current={current === value ? 'page' : undefined} onClick={() => changePage(value)}>{value}</button></span>)}

@@ -4,6 +4,7 @@ import { publicNewsSchemas } from './public-news-schemas'
 const text = { type: 'string' }
 const nullableText = { type: ['string', 'null'] }
 const integer = { type: 'integer' }
+const founderUid = { type: 'string', format: 'uuid', description: 'Stable random founder reference, not an account ID or authentication credential.' }
 const boolean = { type: 'boolean' }
 const timestamp = { type: ['string', 'null'], format: 'date-time' }
 const day = { type: ['string', 'null'], format: 'date' }
@@ -64,6 +65,7 @@ export const publicFounderSchemas = {
     ...object({
       id: integer,
       founder_profile_id: integer,
+      founder_uid: founderUid,
       aggregate_score: integer,
       momentum_score: integer,
       fundraising_score: integer,
@@ -87,6 +89,7 @@ export const publicFounderSchemas = {
   },
   PublicFounder: object({
     id: integer,
+    founder_uid: founderUid,
     position: nullableText,
     slug: text,
     display_name: nullableText,

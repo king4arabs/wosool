@@ -1,5 +1,12 @@
 <?php
 
+$configuredMailScheme = strtolower(trim((string) env('MAIL_SCHEME', '')));
+$smtpScheme = match ($configuredMailScheme) {
+    'smtp', 'tls', 'starttls' => 'smtp',
+    'smtps', 'ssl' => 'smtps',
+    default => null,
+};
+
 return [
 
     /*
@@ -39,7 +46,9 @@ return [
 
         'smtp' => [
             'transport' => 'smtp',
-            'scheme' => env('MAIL_SCHEME'),
+            // Symfony accepts smtp/smtps schemes; providers often expose the
+            // equivalent encryption labels tls/ssl in their control panels.
+            'scheme' => $smtpScheme,
             'url' => env('MAIL_URL'),
             'host' => env('MAIL_HOST', '127.0.0.1'),
             'port' => env('MAIL_PORT', 2525),

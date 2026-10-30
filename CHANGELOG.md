@@ -7,6 +7,13 @@
 - **Tests:** `profile-form-errors` (frontend) and `FounderProfileValidationLocaleTest` (Laravel). Both fail on the previous code. A browser check at 390px (Arabic) and 1366px (English) as a seeded member showed focus on the first invalid field, each message linked to its input, and no horizontal overflow.
 - No data, deployment or hosting change. The open production issue is unchanged: the hourly production smoke check still gets 404 from the registration and newsletter API routes, so the Laravel release and route-cache repair are still needed (see 29 October entry).
 
+## Founder suspension remains authoritative during membership approval — 2026-10-30
+
+- Reject an administrator's membership approval with HTTP 409 when the linked founder profile is suspended. The check runs inside the locked application transaction before status changes, publication, audit logging or approval email handling.
+- Preserve the founder's immutable identity, account ownership, nonpublic state and existing private scorecard. Moderation must be resolved independently; approval never silently lifts a suspension.
+- Add a database-backed regression test. Required CI run 458 passed the frontend/browser/accessibility suite, production guardrails, standalone Node 22 / pnpm 11.24 hosting build and Laravel on PHP 8.3, 8.4 and 8.5.
+- Repository snapshots contain **316 founders / 173 companies / 95 stories** with zero integrity problems and zero founder reviews due. No source record, review date, account, moderation decision, production database or hosting configuration changed in this cycle.
+
 ## Registration QA and privileged account safeguards — 2026-10-30
 
 - Fix the admin dashboard crashing before the first member role exists; display zero members on a new installation.

@@ -77,6 +77,11 @@ class ApplicationController extends Controller
             if ($data['status'] === 'approved' && $user?->community_registration_started_at) {
                 abort_unless($user->hasVerifiedEmail() && $application->onboarding_data, 409, 'The applicant must verify email and complete registration before approval.');
             }
+            // Do not accept an approval that would remain blocked by an explicit
+            // founder suspension. Staff must review and lift that separately.
+            if ($data['status'] === 'approved' && $user?->founderProfile?->status === 'suspended') {
+                abort(409, 'Resolve this founder profile suspension through moderation before approving the application.');
+            }
             $beforeState = $application->only(['status', 'admin_notes', 'reviewed_by', 'reviewed_at']);
             $application->fill($data);
             $application->reviewed_by = $request->user()->id;

@@ -3,7 +3,7 @@ import test from 'node:test'
 import { validatePublicResponse } from '../../scripts/lib/public-contract'
 
 const founder = () => ({
-  id: 1, position: null, slug: 'fixture', display_name: null, legal_name: 'fixture',
+  id: 1, founder_uid: '5edb056c-753b-4c3d-aeb1-407851fd447d', position: null, slug: 'fixture', display_name: null, legal_name: 'fixture',
   skills_tags: [], skills: [], tagline: null, bio: null, location: null, country_code: null,
   sector: null, stage: null, linkedin_url: null, twitter_url: null, website_url: null,
   needs: [], offers: [], is_verified: false, is_featured: false, is_public: true,
@@ -22,7 +22,7 @@ test('anonymous founder contract accepts unclaimed, nullable and associative pro
 
 test('anonymous founder contract rejects drift, hidden status and contact fields without mutation', () => {
   for (const changes of [
-    { id: '1' }, { is_public: false }, { status: 'suspended' }, { activation_status: 'suspended' },
+    { id: '1' }, { founder_uid: 42 }, { founder_uid: 'sequential-1' }, { founder_uid: null }, { is_public: false }, { status: 'suspended' }, { activation_status: 'suspended' },
     { user: { id: 2, name: 'Member', email: 'private@example.test' } },
     { user: { id: 2, name: 'Member', email: null } },
     { needs: ['Private investment request'] }, { linkedin_url: 'https://linkedin.com/in/fixture' },
@@ -38,6 +38,9 @@ test('anonymous founder contract rejects drift, hidden status and contact fields
   const missing: Partial<ReturnType<typeof founder>> = founder()
   delete missing.companies
   assert.equal(detail(missing).valid, false)
+  const noUid: Partial<ReturnType<typeof founder>> = founder()
+  delete noUid.founder_uid
+  assert.equal(detail(noUid).valid, false)
 })
 
 test('anonymous founder contract excludes member scorecards and historical notes', () => {

@@ -40,9 +40,12 @@ final class MembershipRegistration
             return;
         }
         $profile = FounderProfile::where('user_id', $user->id)->lockForUpdate()->first();
+        // A previously suspended founder must be explicitly resumed by an administrator.
+        // Re-approving an application cannot silently undo profile moderation.
+        if ($profile?->status === 'suspended') return;
         if (! $profile) $profile = new FounderProfile(['user_id' => $user->id, 'slug' => $this->slug(FounderProfile::class, $application->full_name)]);
         // Publish the reviewed application once; repeated approvals preserve subsequent owner edits.
-        if (! $profile->exists || $profile->status !== 'active') {
+        if (! $profile->exists || $profile->status === 'pending') {
             $profile->fill(['display_name' => $application->full_name, 'position' => $data['position'],
                 'tagline' => $data['position'].' · '.$application->company_name, 'bio' => $data['bio'],
                 'location' => $application->location, 'country_code' => $data['country_code'],

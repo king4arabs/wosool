@@ -8,6 +8,7 @@ import { ScoreInsightPanel } from "@/components/dashboard/ScoreInsightPanel"
 
 type ScorecardPayload = {
   id: number
+  founder_uid?: string | null
   aggregate_score: number
   latest_update_text?: string | null
   momentum_score?: number | null
@@ -137,6 +138,7 @@ export default function ScorecardPage() {
             <span className="text-xs font-bold uppercase tracking-wider text-amber-800">{isAr ? "لوحة التحكم الإستراتيجية" : "Strategic Control Panel"}</span>
             <h1 className="mt-1 text-2xl font-bold text-slate-900 md:text-3xl">{isAr ? "بطاقة أداء شركتي الناشئة (Scorecard)" : "My Startup Performance Card (Scorecard)"}</h1>
             <p className="mt-1 text-sm text-slate-500">{isAr ? "تحليل ديناميكي فوري يعكس مؤشرات الزخم والجهوزية بناءً على آخر تحديثاتك التشغيلية." : "Live dynamic analysis of momentum and readiness based on your latest operational updates."}</p>
+            {scorecard.founder_uid && <p className="mt-2 break-all text-xs text-slate-500">{isAr ? "معرّف المؤسس:" : "Founder ID:"} <code dir="ltr">{scorecard.founder_uid}</code></p>}
           </div>
         </div>
 
