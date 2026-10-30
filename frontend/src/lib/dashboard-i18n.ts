@@ -21,6 +21,7 @@ export const dashboardDictionary = {
     layout: {
       networkAdmin: "لوحة إدارة الشبكة",
       logout: "تسجيل الخروج",
+      loggingOut: "جارٍ تسجيل الخروج…",
       loading: "جاري التحميل…",
       redirecting: "جارٍ تحويلك إلى تسجيل الدخول...",
       openMenu: "فتح القائمة",
@@ -151,6 +152,7 @@ export const dashboardDictionary = {
     layout: {
       networkAdmin: "Network Control Panel",
       logout: "Log out",
+      loggingOut: "Logging out…",
       loading: "Loading...",
       redirecting: "Redirecting to login...",
       openMenu: "Open menu",

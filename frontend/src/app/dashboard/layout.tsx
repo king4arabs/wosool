@@ -73,6 +73,7 @@ function SidebarContent({
   email,
   locale,
   onboardingRequired,
+  isLoggingOut,
   onLogout,
   onNavClick,
 }: {
@@ -81,6 +82,7 @@ function SidebarContent({
   email?: string
   locale: "ar" | "en"
   onboardingRequired: boolean
+  isLoggingOut: boolean
   onLogout: () => void
   onNavClick?: () => void
 }) {
@@ -152,10 +154,12 @@ function SidebarContent({
         </div>
         <button
           onClick={onLogout}
-          className="flex items-center gap-3 w-full px-4 py-2 rounded-xl text-xs font-bold text-slate-500 hover:bg-rose-50 hover:text-rose-600 transition-colors border border-slate-200 hover:border-rose-200"
+          disabled={isLoggingOut}
+          aria-label={copy.layout.logout}
+          className="flex min-h-11 items-center gap-3 w-full px-4 py-2 rounded-xl text-xs font-bold text-slate-500 hover:bg-rose-50 hover:text-rose-600 transition-colors border border-slate-200 hover:border-rose-200 disabled:cursor-wait disabled:opacity-60"
         >
           <LogOut className="h-4 w-4 shrink-0" aria-hidden="true" />
-          {copy.layout.logout}
+          {isLoggingOut ? copy.layout.loggingOut : copy.layout.logout}
         </button>
       </div>
     </div>
@@ -221,6 +225,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const [attempt, setAttempt] = useState(0)
   const [pendingIntros, setPendingIntros] = useState(0)
   const [mobileOpen, setMobileOpen] = useState(false)
+  const [isLoggingOut, setIsLoggingOut] = useState(false)
   const [isCheckingOnboarding, setIsCheckingOnboarding] = useState(true)
   const [onboardingRequired, setOnboardingRequired] = useState(true)
   const hasOnboardingQuery = searchParams.get("onboarding") === "1"
@@ -292,12 +297,17 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const initials = getInitials(displayName)
 
   const handleLogout = async () => {
+    if (isLoggingOut) return
+    setIsLoggingOut(true)
     try {
       await logout()
       setMobileOpen(false)
       router.replace("/login")
       router.refresh()
-    } catch (error) { toast(error instanceof Error ? error.message : "Unable to sign out", "error") }
+    } catch (error) {
+      toast(error instanceof Error ? error.message : "Unable to sign out", "error")
+      setIsLoggingOut(false)
+    }
   }
 
   if (authError || gateError) return <div className="mx-auto max-w-xl p-6 pt-20" role="alert"><p>{authError || gateError}</p><button className="mt-4 rounded-xl bg-[#3B52D4] px-5 py-3 text-white" onClick={() => authError ? void refresh() : setAttempt(value => value + 1)}>{locale === "ar" ? "إعادة المحاولة" : "Try again"}</button></div>
@@ -314,7 +324,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     )
   }
 
-  if (isEoaWorkspace) return <div className="min-h-screen bg-slate-50" dir={activeLocale === 'ar' ? 'rtl' : 'ltr'}><header className="border-b bg-white"><nav className="mx-auto flex max-w-7xl flex-wrap items-center gap-4 px-5 py-4"><Link className="font-bold text-[#3B52D4]" href="/">WOSOOL / وصول</Link><Link className="min-h-11 flex items-center text-sm" href="/eoa">{copy.layout.eoa}</Link><Link className="min-h-11 flex items-center text-sm" href="/eoa/apply">{locale === 'ar' ? 'طلب الالتحاق' : 'Application'}</Link><button className="ms-auto min-h-11 rounded-lg border px-4" onClick={cycleLocale}>{locale === 'ar' ? 'English' : 'العربية'}</button></nav></header><main id="main-content" className="eoa">{children}</main></div>
+  if (isEoaWorkspace) return <div className="min-h-screen bg-slate-50" dir={activeLocale === 'ar' ? 'rtl' : 'ltr'}><header className="border-b bg-white"><nav className="mx-auto flex max-w-7xl flex-wrap items-center gap-4 px-5 py-4"><Link className="font-bold text-[#3B52D4]" href="/">WOSOOL / وصول</Link><Link className="min-h-11 flex items-center text-sm" href="/eoa">{copy.layout.eoa}</Link><Link className="min-h-11 flex items-center text-sm" href="/eoa/apply">{locale === 'ar' ? 'طلب الالتحاق' : 'Application'}</Link><button className="ms-auto min-h-11 rounded-lg border px-4" onClick={cycleLocale}>{locale === 'ar' ? 'English' : 'العربية'}</button><button type="button" onClick={handleLogout} disabled={isLoggingOut} className="flex min-h-11 items-center gap-2 rounded-lg border border-slate-200 px-4 text-sm font-bold text-slate-600 hover:border-rose-200 hover:bg-rose-50 hover:text-rose-600 disabled:cursor-wait disabled:opacity-60"><LogOut className="h-4 w-4" aria-hidden="true" />{isLoggingOut ? copy.layout.loggingOut : copy.layout.logout}</button></nav></header><main id="main-content" className="eoa">{children}</main></div>
 
   return (
     <div className="min-h-screen bg-slate-50/60" dir={activeLocale === "ar" ? "rtl" : "ltr"}>
@@ -339,6 +349,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           email={user?.email}
           locale={activeLocale}
           onboardingRequired={onboardingRequired}
+          isLoggingOut={isLoggingOut}
           onLogout={handleLogout}
         />
       </aside>
@@ -347,7 +358,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       <Dialog open={mobileOpen} onOpenChange={setMobileOpen}>
         <DialogContent className="start-0 end-auto top-0 bottom-0 translate-x-0 translate-y-0 h-dvh max-h-dvh w-[min(20rem,calc(100%-2rem))] rounded-none p-3 pt-14">
           <DialogTitle className="sr-only">{copy.layout.menuNavigation}</DialogTitle>
-          <SidebarContent pathname={pathname} displayName={displayName} email={user?.email} locale={activeLocale} onboardingRequired={onboardingRequired} onLogout={handleLogout} onNavClick={() => setMobileOpen(false)} />
+          <SidebarContent pathname={pathname} displayName={displayName} email={user?.email} locale={activeLocale} onboardingRequired={onboardingRequired} isLoggingOut={isLoggingOut} onLogout={handleLogout} onNavClick={() => setMobileOpen(false)} />
         </DialogContent>
       </Dialog>
 
@@ -409,6 +420,20 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                   {initials}
                 </AvatarFallback>
               </Avatar>
+
+              <button
+                type="button"
+                onClick={handleLogout}
+                disabled={isLoggingOut}
+                aria-label={copy.layout.logout}
+                title={copy.layout.logout}
+                className="flex min-h-11 min-w-11 items-center justify-center gap-2 rounded-xl border border-slate-200 px-3 text-slate-600 transition-colors hover:border-rose-200 hover:bg-rose-50 hover:text-rose-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#3B52D4] disabled:cursor-wait disabled:opacity-60"
+              >
+                <LogOut className="h-4 w-4 shrink-0" aria-hidden="true" />
+                <span className="hidden text-xs font-bold sm:inline">
+                  {isLoggingOut ? copy.layout.loggingOut : copy.layout.logout}
+                </span>
+              </button>
             </div>
 
             {/* Spacer */}
