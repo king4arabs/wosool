@@ -25,6 +25,7 @@ class ScorecardController extends Controller
             'data' => collect($scorecards->items())->map(fn (Scorecard $scorecard) => [
                 'id' => $scorecard->id,
                 'founder_profile_id' => $scorecard->founder_profile_id,
+                'founder_uid' => $scorecard->founderProfile?->founder_uid,
                 'founder_name' => $scorecard->founderProfile?->legal_name ?? $scorecard->founderProfile?->user?->name,
                 'founder_slug' => $scorecard->founderProfile?->slug,
                 'founder_status' => $scorecard->founderProfile?->status,

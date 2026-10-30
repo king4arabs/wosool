@@ -17,14 +17,20 @@ class FounderDirectoryImporter
         $countryProfiles = json_decode(file_get_contents(resource_path('data/founder-directory-expansion-2026-10-29.json')), true, 512, JSON_THROW_ON_ERROR);
         $records = [...$base, ...$expansion, ...$discovery, ...$countryProfiles];
         $this->validateRecords($records);
-        $counts = ['founders_created' => 0, 'companies_created' => 0, 'preserved' => 0, 'companies_enriched' => 0];
+        $counts = ['founders_created' => 0, 'companies_created' => 0, 'preserved' => 0, 'companies_enriched' => 0, 'deleted_skipped' => 0];
         DB::transaction(function () use ($records, &$counts) {
             foreach ($records as $row) {
-                $company = CompanyProfile::where('directory_key', $row['company_key'])->first();
+                $company = CompanyProfile::withTrashed()->where('directory_key', $row['company_key'])->first();
                 if (! $company) {
                     // Preserve an existing company with the same canonical site rather than creating duplicates.
                     $host = strtolower(preg_replace('/^www\./', '', parse_url($row['website'], PHP_URL_HOST)));
-                    $company = CompanyProfile::all()->first(fn ($item) => $item->website && strtolower(preg_replace('/^www\./', '', (string) parse_url($item->website, PHP_URL_HOST))) === $host);
+                    $company = CompanyProfile::withTrashed()->get()->first(fn ($item) => $item->website && strtolower(preg_replace('/^www\./', '', (string) parse_url($item->website, PHP_URL_HOST))) === $host);
+                }
+                // Editor deletions are permanent tombstones for an import, not an invitation
+                // to re-create a company or every associated founder on the next run.
+                if ($company?->trashed()) {
+                    $counts['deleted_skipped']++;
+                    continue;
                 }
                 if (! $company) {
                     $company = CompanyProfile::create([
@@ -42,13 +48,13 @@ class FounderDirectoryImporter
                 } elseif ($this->enrich($company, $row)) {
                     $counts['companies_enriched']++;
                 }
-                $founder = FounderProfile::where('directory_key', $row['slug'])->first();
+                $founder = FounderProfile::withTrashed()->where('directory_key', $row['slug'])->first();
                 if (! $founder) {
-                    $founder = FounderProfile::where(function ($q) use ($row) {
+                    $founder = FounderProfile::withTrashed()->where(function ($q) use ($row) {
                         $q->where('display_name', $row['founder_name_en'])->orWhereHas('user', fn ($u) => $u->where('name', $row['founder_name_en']));
                     })->whereHas('companies', fn ($q) => $q->where('company_profiles.id', $company->id))->first();
                 }
-                if ($founder) { $counts['preserved']++; continue; }
+                if ($founder) { $counts['preserved']++; if ($founder->trashed()) $counts['deleted_skipped']++; continue; }
                 $founder = FounderProfile::create([
                     'directory_key' => $row['slug'], 'slug' => $this->slug(FounderProfile::class, $row['slug']),
                     'display_name' => $row['founder_name_en'], 'position' => $row['role_en'],

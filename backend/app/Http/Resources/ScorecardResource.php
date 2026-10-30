@@ -16,6 +16,7 @@ class ScorecardResource extends JsonResource
         return [
             'id' => $this->id,
             'founder_profile_id' => $this->founder_profile_id,
+            'founder_uid' => $this->founderProfile?->founder_uid,
             'aggregate_score' => (int) ($this->aggregate_score ?? 0),
             // Flat aliases used by dashboard clients that bind metrics directly.
             'momentum_score' => (int) ($this->momentum ?? 0),

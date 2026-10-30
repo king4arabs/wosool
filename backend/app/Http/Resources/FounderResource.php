@@ -23,6 +23,7 @@ class FounderResource extends JsonResource
 
         return [
             'id' => $this->id,
+            'founder_uid' => $this->founder_uid,
             'position' => $localized['position'] ?? $this->position ?? (isset($this->pivot) ? $this->pivot->role : null),
             'slug' => $this->slug,
             'display_name' => $this->display_name ?? $this->user?->name,

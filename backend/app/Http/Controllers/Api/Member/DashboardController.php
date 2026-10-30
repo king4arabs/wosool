@@ -147,6 +147,7 @@ class DashboardController extends Controller
                 'account_approved' => $accountApproved,
                 'profile' => $profile ? [
                     'id' => $profile->id,
+                    'founder_uid' => $profile->founder_uid,
                     'name' => $user->name,
                     'tagline' => $profile->tagline,
                     'profile_completeness' => $this->profileCompleteness($profile),

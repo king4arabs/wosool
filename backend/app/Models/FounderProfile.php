@@ -8,10 +8,26 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Str;
 
 class FounderProfile extends Model
 {
     use SoftDeletes;
+
+    /** Opaque, immutable reference shared by sourced profiles and approved member profiles. */
+    protected static function booted(): void
+    {
+        static::creating(function (self $founder): void {
+            // Never accept a client/import-provided identifier; prevent identity takeover.
+            $founder->founder_uid = (string) Str::uuid();
+        });
+
+        static::updating(function (self $founder): void {
+            if ($founder->isDirty('founder_uid')) {
+                throw new \LogicException('A founder identifier cannot be changed.');
+            }
+        });
+    }
 
     protected $fillable = [
         'directory_key', 'display_name', 'position', 'translations', 'source_urls', 'source_reviewed_at', 'claimed_at',
