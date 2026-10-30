@@ -15,6 +15,7 @@ import { type ApiFounder, mapFounder } from "@/lib/content-api"
 import { getFounderSpotlights } from "@/lib/founder-spotlight"
 import { useLocale } from "@/lib/locale"
 import { usePublicCollection } from "@/lib/use-public-collection"
+import { useLinkedFounderSlug } from "@/lib/use-linked-founder-slug"
 import styles from "../home.module.css"
 
 export default function FoundersPage() {
@@ -35,11 +36,7 @@ function FounderDirectory({ visitSeed }: { visitSeed: number }) {
   const [sector, setSector] = useState("")
   const [stage, setStage] = useState("")
   const [location, setLocation] = useState("")
-  const [linkedSlug, setLinkedSlug] = useState("")
-  useEffect(() => {
-    const founder = new URLSearchParams(window.location.search).get('founder')?.trim() ?? ''
-    if (founder.length <= 255) setLinkedSlug(founder)
-  }, [])
+  const linkedSlug = useLinkedFounderSlug()
   // Kept here because the showcase below is remounted whenever the search or dropdowns change.
   const [region, setRegion] = useState<FounderRegionFilter>("all")
   const params = new URLSearchParams({ facets: '1' })

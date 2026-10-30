@@ -58,8 +58,6 @@ export default function DashboardPage() {
   useEffect(() => {
     const controller = new AbortController()
     const options = {signal: controller.signal, headers: {'X-Locale': locale}}
-    setPublicProfile(null)
-    setCardState('checking')
     Promise.allSettled([
       api.get<{data: DashboardData}>('/member/dashboard', options),
       api.get<{data: ApiFounder}>('/member/founder-profile', options),
@@ -99,7 +97,7 @@ export default function DashboardPage() {
     })
     return () => controller.abort()
   }, [locale, attempt])
-  const refresh = () => { setLoading(true); setError(false); setAttempt(n => n + 1) }
+  const refresh = () => { setLoading(true); setError(false); setPublicProfile(null); setCardState('checking'); setAttempt(n => n + 1) }
   const founder = profile ? mapFounder(profile) : null
   const completion = profile ? profileCompletion(profile) : data?.profile_completion
   const name = founder?.name || user?.name || (ar ? 'المؤسس' : 'Founder')
