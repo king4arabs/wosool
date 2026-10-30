@@ -1,5 +1,12 @@
 # Changelog
 
+## Founder profile form shows every validation error — 2026-10-30
+
+- **Problem:** on `/dashboard/profile`, a skill longer than 100 characters, or a need or offer longer than 255, was rejected by the API as `skills.1` / `needs.0` / `offers.0`. The page only looked up `errors.skills`, so the member saw "Please correct the highlighted fields." with nothing highlighted and could not tell what to change. The API text itself read "The skills.1 field must not be greater than 100 characters." (Arabic: "حقل skills.1"). The photo-link error was English only in both languages. Display name, position, photo link, country code, skills, location, sector, stage, needs and offers never set `aria-invalid`, so they showed no red border. No error message was linked to its input, focus stayed on the save button, and the small error text used `red-500` (below 4.5:1 contrast).
+- **Fix:** new `lib/profile-form-errors` puts list-item errors on their field and gives each message an id. Every validated field sets `aria-invalid` and `aria-describedby`. After a rejected save, focus moves to the first invalid field. Needs and offers show their errors, have real labels, and cap input at the API's 255 characters. Error text uses `red-600`. The API now words list-item and photo-link errors in the request language ("Keep each skill to 100 characters or fewer." / "اجعل كل مهارة في حدود 100 حرفًا أو أقل.").
+- **Tests:** `profile-form-errors` (frontend) and `FounderProfileValidationLocaleTest` (Laravel). Both fail on the previous code. A browser check at 390px (Arabic) and 1366px (English) as a seeded member showed focus on the first invalid field, each message linked to its input, and no horizontal overflow.
+- No data, deployment or hosting change. The open production issue is unchanged: the hourly production smoke check still gets 404 from the registration and newsletter API routes, so the Laravel release and route-cache repair are still needed (see 29 October entry).
+
 ## Registration QA and privileged account safeguards — 2026-10-30
 
 - Fix the admin dashboard crashing before the first member role exists; display zero members on a new installation.

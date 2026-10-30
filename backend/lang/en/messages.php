@@ -85,6 +85,13 @@ return [
             'brief_required' => 'Add a short note on why you want this introduction.',
             'brief_min' => 'Write at least 20 characters on why you want this introduction.',
         ],
+        'founder_profile' => [
+            'avatar_url_format' => 'Enter an image link that starts with http:// or https://, or upload a photo instead.',
+            'skill_max' => 'Keep each skill to :max characters or fewer.',
+            'need_max' => 'Keep each need to :max characters or fewer.',
+            'offer_max' => 'Keep each offer to :max characters or fewer.',
+            'item_text' => 'Each entry must be plain text.',
+        ],
         'settings' => [
             'current_password_incorrect' => 'The current password is incorrect.',
             'attributes' => [

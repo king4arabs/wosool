@@ -35,8 +35,23 @@ class UpdateFounderProfileRequest extends FormRequest
             'avatar_url' => ['nullable', 'string', 'max:500', function ($attribute, $value, $fail) {
                 $local = preg_match('~^/startup-directory/[a-zA-Z0-9_.-]+$~', $value) || preg_match('~^/storage/founders/avatars/[a-f0-9-]+\.(?:jpg|png|webp)$~', $value);
                 $web = filter_var($value, FILTER_VALIDATE_URL) && in_array(parse_url($value, PHP_URL_SCHEME), ['http', 'https'], true);
-                if (! $local && ! $web) { $fail('Use an HTTP(S) image URL or an existing directory portrait.'); }
+                if (! $local && ! $web) { $fail(__('messages.validation.founder_profile.avatar_url_format')); }
             }],
+        ];
+    }
+
+    /**
+     * List items are reported as "skills.1"; name the item in words instead of the request key.
+     */
+    public function messages(): array
+    {
+        return [
+            'skills.*.max' => __('messages.validation.founder_profile.skill_max'),
+            'needs.*.max' => __('messages.validation.founder_profile.need_max'),
+            'offers.*.max' => __('messages.validation.founder_profile.offer_max'),
+            'skills.*.string' => __('messages.validation.founder_profile.item_text'),
+            'needs.*.string' => __('messages.validation.founder_profile.item_text'),
+            'offers.*.string' => __('messages.validation.founder_profile.item_text'),
         ];
     }
 }

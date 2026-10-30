@@ -5,6 +5,7 @@ import Link from "next/link"
 import { useRouter, useSearchParams } from "next/navigation"
 import { Save, MapPin, Link2, User, Briefcase, ArrowLeft, ArrowRight, CheckCircle2, Sparkles, X, Plus } from "lucide-react"
 import { profileCompletion } from "@/lib/profile-completion"
+import { profileErrorId, profileFieldErrors, profileInvalidProps } from "@/lib/profile-form-errors"
 import { api, ApiError } from "@/lib/api"
 import { useToast } from "@/components/ui/toast"
 import { useLocale } from "@/lib/locale"
@@ -94,7 +95,7 @@ const inputClass =
   "flex h-10 w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-800 placeholder:text-slate-400 focus:outline-none focus:border-[#3B52D4] focus:ring-1 focus:ring-[#3B52D4] transition-colors disabled:opacity-50 aria-invalid:border-red-400"
 
 const selectClass =
-  "flex h-10 w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-800 focus:outline-none focus:border-[#3B52D4] focus:ring-1 focus:ring-[#3B52D4] transition-colors"
+  "flex h-10 w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-800 focus:outline-none focus:border-[#3B52D4] focus:ring-1 focus:ring-[#3B52D4] transition-colors aria-invalid:border-red-400"
 
 const textareaClass =
   "flex w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-sm text-slate-800 placeholder:text-slate-400 focus:outline-none focus:border-[#3B52D4] focus:ring-1 focus:ring-[#3B52D4] transition-colors resize-none disabled:opacity-50 aria-invalid:border-red-400"
@@ -147,17 +148,20 @@ function FieldGroup({ children }: { children: React.ReactNode }) {
 
 function Field({
   label,
+  name,
   error,
   children,
 }: {
   label: string
+  /** Form field key; gives the error message the id that the input's aria-describedby uses. */
+  name?: string
   error?: string
   children: React.ReactNode
 }) {
   return (
     <div className="space-y-1.5">
       <label className="block text-xs font-bold text-slate-600">{label}<span className="mt-2 block">{children}</span></label>
-      {error && <p className="text-xs text-red-500 font-medium">{error}</p>}
+      {error && <p id={name ? profileErrorId(name) : undefined} className="text-xs text-red-600 font-medium">{error}</p>}
     </div>
   )
 }
@@ -222,6 +226,25 @@ export default function ProfilePage() {
   const [loadError, setLoadError] = useState(false)
   const [loadAttempt, setLoadAttempt] = useState(0)
   const [errors, setErrors] = useState<Record<string, string>>({})
+  // Bumped after a rejected save so focus moves to the first field the API flagged.
+  const [errorFocusRequest, setErrorFocusRequest] = useState(0)
+
+  useEffect(() => {
+    if (!errorFocusRequest) return
+    const first = document.querySelector<HTMLElement>('[data-profile-form] [aria-invalid="true"]')
+    if (!first) return
+    first.focus({ preventScroll: true })
+    first.scrollIntoView({ block: "center", behavior: "smooth" })
+  }, [errorFocusRequest])
+
+  const clearError = useCallback((field: string) => {
+    setErrors((prev) => {
+      if (!prev[field]) return prev
+      const next = { ...prev }
+      delete next[field]
+      return next
+    })
+  }, [])
 
   useEffect(() => {
     if (!dirty) return
@@ -257,14 +280,9 @@ export default function ProfilePage() {
     <K extends keyof FounderProfile>(field: K, value: FounderProfile[K]) => {
       setDirty(true)
       setProfile((prev) => ({ ...prev, [field]: value }))
-      setErrors((prev) => {
-        if (!prev[field as string]) return prev
-        const next = { ...prev }
-        delete next[field as string]
-        return next
-      })
+      clearError(field as string)
     },
-    []
+    [clearError]
   )
 
   const addNeed = useCallback(() => {
@@ -273,12 +291,14 @@ export default function ProfilePage() {
     setDirty(true)
     setProfile((p) => ({ ...p, needs: [...(p.needs ?? []), v] }))
     setNeedInput("")
-  }, [needInput])
+    clearError("needs")
+  }, [clearError, needInput])
 
   const removeNeed = useCallback((value: string) => {
     setDirty(true)
     setProfile((p) => ({ ...p, needs: (p.needs ?? []).filter((n) => n !== value) }))
-  }, [])
+    clearError("needs")
+  }, [clearError])
 
   const addOffer = useCallback(() => {
     const v = offerInput.trim()
@@ -286,12 +306,14 @@ export default function ProfilePage() {
     setDirty(true)
     setProfile((p) => ({ ...p, offers: [...(p.offers ?? []), v] }))
     setOfferInput("")
-  }, [offerInput])
+    clearError("offers")
+  }, [clearError, offerInput])
 
   const removeOffer = useCallback((value: string) => {
     setDirty(true)
     setProfile((p) => ({ ...p, offers: (p.offers ?? []).filter((o) => o !== value) }))
-  }, [])
+    clearError("offers")
+  }, [clearError])
 
   const onSave = useCallback(async (): Promise<boolean> => {
     setIsSaving(true)
@@ -326,11 +348,8 @@ export default function ProfilePage() {
       if (err instanceof ApiError && err.status === 422) {
         const data = err.data as { errors?: Record<string, string[]> } | null
         if (data?.errors) {
-          const flat: Record<string, string> = {}
-          for (const [k, v] of Object.entries(data.errors)) {
-            flat[k] = v[0] ?? copy.invalidValue
-          }
-          setErrors(flat)
+          setErrors(profileFieldErrors(data.errors, copy.invalidValue))
+          setErrorFocusRequest((n) => n + 1)
         }
         toast(copy.saveValidation, "error")
       } else {
@@ -360,7 +379,7 @@ export default function ProfilePage() {
   if (loadError) return <section role="alert" className="rounded-2xl border border-amber-200 bg-amber-50 p-6"><h1 className="text-xl font-bold">{locale === 'ar' ? 'تعذر تحميل ملفك' : 'Your profile could not be loaded'}</h1><p className="mt-3 text-sm leading-7">{locale === 'ar' ? 'أعد المحاولة لتحميل بياناتك الحالية قبل إجراء أي تعديل.' : 'Try again to load your current information before making changes.'}</p><button onClick={()=>setLoadAttempt(n=>n+1)} className="mt-4 min-h-11 rounded-xl bg-indigo-600 px-5 text-sm font-bold text-white">{locale === 'ar' ? 'إعادة المحاولة' : 'Try again'}</button></section>
 
   return (
-    <div className="max-w-3xl mx-auto space-y-6">
+    <div data-profile-form className="max-w-3xl mx-auto space-y-6">
       <section className="rounded-2xl border border-indigo-100 bg-indigo-50 p-5 sm:p-7">
         <div className="flex flex-wrap items-start justify-between gap-4"><div><p className="text-xs font-bold text-indigo-600">{locale === 'ar' ? 'مساحتك في وصول' : 'YOUR WOSOOL PROFILE'}</p><h1 className="mt-2 text-2xl font-bold text-slate-950">{profile.display_name || (locale === 'ar' ? 'ملفي الشخصي' : 'My founder profile')}</h1><p className="mt-2 text-sm leading-7 text-slate-600">{locale === 'ar' ? 'راجع بياناتك، عرّف المجتمع بخبراتك، وحدد ما تبحث عنه وما يمكنك تقديمه.' : 'Review your information, share your expertise, and tell the community what you need and can offer.'}</p></div>{profile.slug && <Link className="inline-flex min-h-11 items-center rounded-xl border border-indigo-200 bg-white px-4 text-sm font-semibold text-indigo-700" href={`/founders/${profile.slug}`}>{locale === 'ar' ? 'عرض الملف العام' : 'View public profile'}</Link>}</div>
         <div className="mt-5"><div className="flex justify-between text-xs font-semibold text-indigo-900"><span>{locale === 'ar' ? 'اكتمال الملف' : 'Profile completeness'}</span><span>{profileCompletion(profile)}%</span></div><progress aria-label={locale === 'ar' ? 'اكتمال الملف' : 'Profile completeness'} max={100} value={profileCompletion(profile)} className="mt-2 h-2 w-full accent-indigo-600" /></div>
@@ -368,10 +387,10 @@ export default function ProfilePage() {
       </section>
       <nav aria-label={locale === 'ar' ? 'أقسام تعديل الملف' : 'Profile editing sections'} className="flex flex-wrap gap-2">{[['identity',locale === 'ar' ? 'الهوية والظهور' : 'Identity & visibility'],['personal',locale === 'ar' ? 'المعلومات والروابط' : 'Information & links'],['background',locale === 'ar' ? 'الخبرات' : 'Background'],['matching',locale === 'ar' ? 'التعاون' : 'Collaboration']].map(([id,label])=><a key={id} href={`#edit-${id}`} className="inline-flex min-h-11 items-center rounded-xl border border-slate-200 bg-white px-4 text-xs font-bold text-slate-600 hover:border-indigo-400">{label}</a>)}</nav>
       <SectionCard id="edit-identity" icon={User} badge={locale === 'ar' ? 'الهوية والظهور' : 'Identity & visibility'} title={locale === 'ar' ? 'كيف يراك المجتمع' : 'How the community sees you'}>
-        <FieldGroup><Field label={locale === 'ar' ? 'الاسم المعروض' : 'Display name'} error={errors.display_name}><input maxLength={255} value={profile.display_name ?? ''} onChange={e => updateField('display_name', e.target.value)} className={inputClass} /></Field><Field label={locale === 'ar' ? 'المنصب' : 'Position'} error={errors.position}><input maxLength={255} value={profile.position ?? ''} onChange={e => updateField('position', e.target.value)} className={inputClass} /></Field></FieldGroup>
+        <FieldGroup><Field label={locale === 'ar' ? 'الاسم المعروض' : 'Display name'} name="display_name" error={errors.display_name}><input maxLength={255} value={profile.display_name ?? ''} {...profileInvalidProps(errors, 'display_name')} onChange={e => updateField('display_name', e.target.value)} className={inputClass} /></Field><Field label={locale === 'ar' ? 'المنصب' : 'Position'} name="position" error={errors.position}><input maxLength={255} value={profile.position ?? ''} {...profileInvalidProps(errors, 'position')} onChange={e => updateField('position', e.target.value)} className={inputClass} /></Field></FieldGroup>
         <AvatarUploader locale={locale === 'ar' ? 'ar' : 'en'} avatarUrl={profile.avatar_url} displayName={profile.display_name} profileSaved={Boolean(profile.slug)} onChange={url => setProfile(current => ({ ...current, avatar_url: url }))} onError={message => toast(message, 'error')} onSuccess={message => toast(message, 'success')} />
-        <Field label={locale === 'ar' ? 'أو رابط صورة الملف' : 'Or profile photo URL'} error={errors.avatar_url}><input type="text" dir="ltr" inputMode="url" maxLength={500} placeholder="https://" value={profile.avatar_url ?? ''} onChange={e => updateField('avatar_url', e.target.value)} className={inputClass} /></Field>
-        <FieldGroup><Field label={locale === 'ar' ? 'رمز الدولة' : 'Country code'} error={errors.country_code}><input maxLength={2} placeholder="SA" value={profile.country_code ?? ''} onChange={e => updateField('country_code', e.target.value.toUpperCase())} className={inputClass} /></Field><Field label={locale === 'ar' ? 'المهارات — افصل بينها بفاصلة' : 'Skills — separated by commas'} error={errors.skills}><input value={(profile.skills ?? []).join(', ')} onChange={e => updateField('skills', e.target.value.split(/[,،]/).map(x => x.trim()))} className={inputClass} /></Field></FieldGroup>
+        <Field label={locale === 'ar' ? 'أو رابط صورة الملف' : 'Or profile photo URL'} name="avatar_url" error={errors.avatar_url}><input type="text" dir="ltr" inputMode="url" maxLength={500} placeholder="https://" value={profile.avatar_url ?? ''} {...profileInvalidProps(errors, 'avatar_url')} onChange={e => updateField('avatar_url', e.target.value)} className={inputClass} /></Field>
+        <FieldGroup><Field label={locale === 'ar' ? 'رمز الدولة' : 'Country code'} name="country_code" error={errors.country_code}><input maxLength={2} placeholder="SA" value={profile.country_code ?? ''} {...profileInvalidProps(errors, 'country_code')} onChange={e => updateField('country_code', e.target.value.toUpperCase())} className={inputClass} /></Field><Field label={locale === 'ar' ? 'المهارات — افصل بينها بفاصلة' : 'Skills — separated by commas'} name="skills" error={errors.skills}><input value={(profile.skills ?? []).join(', ')} {...profileInvalidProps(errors, 'skills')} onChange={e => updateField('skills', e.target.value.split(/[,،]/).map(x => x.trim()))} className={inputClass} /></Field></FieldGroup>
         <label className="flex items-start gap-3 text-sm leading-7 text-slate-700"><input type="checkbox" checked={profile.is_public ?? true} onChange={e => updateField('is_public', e.target.checked)} className="mt-1 h-5 w-5 shrink-0" /><span>{locale === 'ar' ? 'إظهار ملفي في الدليل العام. بإلغاء الخيار سيبقى حسابي متاحاً لي وستُخفى صفحة الملف العامة.' : 'Show my profile in the public directory. Turning this off keeps my account available and hides my public profile.'}</span></label>
       </SectionCard>
 
@@ -471,20 +490,20 @@ export default function ProfilePage() {
         badge={locale === "ar" ? "الخطوة 1" : "Step 1"}
         title={copy.personalInfo}
       >
-        <Field label={copy.tagline} error={errors.tagline}>
+        <Field label={copy.tagline} name="tagline" error={errors.tagline}>
           <input
             id="p-tagline"
             type="text"
             placeholder={locale === "ar" ? "مثال: مؤسس شركة تقنية ناشئة في الرياض" : "e.g. Fintech founder scaling across MENA"}
             value={profile.tagline ?? ""}
             onChange={(e) => updateField("tagline", e.target.value)}
-            aria-invalid={Boolean(errors.tagline)}
+            {...profileInvalidProps(errors, "tagline")}
             className={inputClass}
           />
         </Field>
 
         <FieldGroup>
-          <Field label={copy.location}>
+          <Field label={copy.location} name="location" error={errors.location}>
             <div className="relative">
               <MapPin className="absolute top-1/2 -translate-y-1/2 start-3 h-3.5 w-3.5 text-slate-400 pointer-events-none" />
               <input
@@ -493,11 +512,12 @@ export default function ProfilePage() {
                 placeholder={locale === "ar" ? "الرياض، المملكة العربية السعودية" : "Riyadh, Saudi Arabia"}
                 value={profile.location ?? ""}
                 onChange={(e) => updateField("location", e.target.value)}
+                {...profileInvalidProps(errors, "location")}
                 className={inputClass + " ps-9"}
               />
             </div>
           </Field>
-          <Field label={copy.linkedin} error={errors.linkedin_url}>
+          <Field label={copy.linkedin} name="linkedin_url" error={errors.linkedin_url}>
             <div className="relative">
               <Link2 className="absolute top-1/2 -translate-y-1/2 start-3 h-3.5 w-3.5 text-slate-400 pointer-events-none" />
               <input
@@ -506,7 +526,7 @@ export default function ProfilePage() {
                 placeholder="linkedin.com/in/username"
                 value={profile.linkedin_url ?? ""}
                 onChange={(e) => updateField("linkedin_url", e.target.value)}
-                aria-invalid={Boolean(errors.linkedin_url)}
+                {...profileInvalidProps(errors, "linkedin_url")}
                 className={inputClass + " ps-9"}
               />
             </div>
@@ -514,25 +534,25 @@ export default function ProfilePage() {
         </FieldGroup>
 
         <FieldGroup>
-          <Field label={copy.twitter} error={errors.twitter_url}>
+          <Field label={copy.twitter} name="twitter_url" error={errors.twitter_url}>
             <input
               id="p-twitter"
               type="url"
               placeholder="x.com/username"
               value={profile.twitter_url ?? ""}
               onChange={(e) => updateField("twitter_url", e.target.value)}
-              aria-invalid={Boolean(errors.twitter_url)}
+              {...profileInvalidProps(errors, "twitter_url")}
               className={inputClass}
             />
           </Field>
-          <Field label={copy.website} error={errors.website_url}>
+          <Field label={copy.website} name="website_url" error={errors.website_url}>
             <input
               id="p-website"
               type="url"
               placeholder="https://yourwebsite.com"
               value={profile.website_url ?? ""}
               onChange={(e) => updateField("website_url", e.target.value)}
-              aria-invalid={Boolean(errors.website_url)}
+              {...profileInvalidProps(errors, "website_url")}
               className={inputClass}
             />
           </Field>
@@ -546,7 +566,7 @@ export default function ProfilePage() {
         badge={locale === "ar" ? "الخلفية المهنية" : "Background"}
         title={copy.professionalBackground}
       >
-        <Field label={copy.bio} error={errors.bio}>
+        <Field label={copy.bio} name="bio" error={errors.bio}>
           <textarea
             id="p-bio"
             rows={5}
@@ -557,17 +577,18 @@ export default function ProfilePage() {
             }
             value={profile.bio ?? ""}
             onChange={(e) => updateField("bio", e.target.value)}
-            aria-invalid={Boolean(errors.bio)}
+            {...profileInvalidProps(errors, "bio")}
             className={textareaClass}
           />
         </Field>
 
         <FieldGroup>
-          <Field label={copy.sector}>
+          <Field label={copy.sector} name="sector" error={errors.sector}>
             <select
               id="p-sector"
               value={profile.sector ?? ""}
               onChange={(e) => updateField("sector", e.target.value)}
+              {...profileInvalidProps(errors, "sector")}
               className={selectClass}
             >
               <option value="">{copy.selectSector}</option>
@@ -577,11 +598,12 @@ export default function ProfilePage() {
               ))}
             </select>
           </Field>
-          <Field label={copy.stage}>
+          <Field label={copy.stage} name="stage" error={errors.stage}>
             <select
               id="p-stage"
               value={profile.stage ?? ""}
               onChange={(e) => updateField("stage", e.target.value)}
+              {...profileInvalidProps(errors, "stage")}
               className={selectClass}
             >
               <option value="">{copy.selectStage}</option>
@@ -604,7 +626,7 @@ export default function ProfilePage() {
       >
         {/* Needs */}
         <div className="space-y-3">
-          <label className="text-xs font-bold text-slate-600">{copy.whatINeed}</label>
+          <label htmlFor="p-need-input" className="text-xs font-bold text-slate-600">{copy.whatINeed}</label>
           {(profile.needs ?? []).length > 0 && (
             <div className="flex flex-wrap gap-2">
               {(profile.needs ?? []).map((need) => (
@@ -614,8 +636,11 @@ export default function ProfilePage() {
           )}
           <div className="flex gap-2">
             <input
+              id="p-need-input"
               type="text"
+              maxLength={255}
               placeholder={copy.addNeed}
+              {...profileInvalidProps(errors, "needs")}
               value={needInput}
               onChange={(e) => setNeedInput(e.target.value)}
               onKeyDown={(e) => {
@@ -632,6 +657,7 @@ export default function ProfilePage() {
               {copy.add}
             </button>
           </div>
+          {errors.needs && <p id={profileErrorId("needs")} className="text-xs text-red-600 font-medium">{errors.needs}</p>}
         </div>
 
         {/* Divider */}
@@ -639,7 +665,7 @@ export default function ProfilePage() {
 
         {/* Offers */}
         <div className="space-y-3">
-          <label className="text-xs font-bold text-slate-600">{copy.whatIOffer}</label>
+          <label htmlFor="p-offer-input" className="text-xs font-bold text-slate-600">{copy.whatIOffer}</label>
           {(profile.offers ?? []).length > 0 && (
             <div className="flex flex-wrap gap-2">
               {(profile.offers ?? []).map((offer) => (
@@ -649,8 +675,11 @@ export default function ProfilePage() {
           )}
           <div className="flex gap-2">
             <input
+              id="p-offer-input"
               type="text"
+              maxLength={255}
               placeholder={copy.addOffer}
+              {...profileInvalidProps(errors, "offers")}
               value={offerInput}
               onChange={(e) => setOfferInput(e.target.value)}
               onKeyDown={(e) => {
@@ -667,6 +696,7 @@ export default function ProfilePage() {
               {copy.add}
             </button>
           </div>
+          {errors.offers && <p id={profileErrorId("offers")} className="text-xs text-red-600 font-medium">{errors.offers}</p>}
         </div>
       </SectionCard>
 
