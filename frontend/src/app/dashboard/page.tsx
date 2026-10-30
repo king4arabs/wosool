@@ -13,7 +13,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { getInitials } from "@/lib/utils"
 import ScorecardWidget from "@/components/dashboard/ScorecardWidget"
 import { MyFounderCard, type FounderCardState } from "@/components/dashboard/MyFounderCard"
-import { isFounderProfileEligibleForPublicCard } from "@/lib/founder-card-links"
+import { isFounderProfileEligibleForPublicCard, isSameFounderIdentity } from "@/lib/founder-card-links"
 import NextSteps from "@/components/dashboard/NextSteps"
 import { applicationHref, applicationStatus, homePrograms, homeSchedule, rsvpStatus, type HomeApplication, type HomeEvent, type StatusTone } from "@/lib/dashboard-home"
 import { dateLocale } from "@/lib/date-locale"
@@ -82,7 +82,7 @@ export default function DashboardPage() {
             .then(response => {
               if (controller.signal.aborted) return
               const published = response.data
-              if (published.id === ownedProfile.id && published.is_public === true && published.status === 'active') {
+              if (isSameFounderIdentity(ownedProfile, published) && published.is_public === true && published.status === 'active') {
                 setCardSnapshot({key: requestKey, profile: published, state: 'published'})
               } else {
                 setCardSnapshot({key: requestKey, profile: null, state: 'hidden'})
