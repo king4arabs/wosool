@@ -27,3 +27,13 @@ export function linkedFounderSlug(search: string): string {
 export function exactLinkedFounderCards<T extends { slug: string }>(founders: readonly T[], slug: string): T[] {
   return slug ? founders.filter(founder => founder.slug === slug) : [...founders]
 }
+
+// Public lookups are identifiers, not ownership proof. Match the immutable UID
+// and legacy database PK before connecting a private account to its public card.
+export function isSameFounderIdentity(
+  owned: Pick<ApiFounder, "id" | "founder_uid"> | null | undefined,
+  published: Pick<ApiFounder, "id" | "founder_uid"> | null | undefined,
+): boolean {
+  return Boolean(owned?.founder_uid && published?.founder_uid &&
+    owned.id === published.id && owned.founder_uid === published.founder_uid)
+}

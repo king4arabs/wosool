@@ -1,6 +1,6 @@
 import assert from "node:assert/strict"
 import { test } from "node:test"
-import { exactLinkedFounderCards, founderCardLinks, isFounderProfileEligibleForPublicCard, linkedFounderSlug } from "./founder-card-links"
+import { exactLinkedFounderCards, founderCardLinks, isFounderProfileEligibleForPublicCard, isSameFounderIdentity, linkedFounderSlug } from "./founder-card-links"
 
 test("a founder card deep link uses the same slug on home, directory and detail pages", () => {
   assert.deepEqual(founderCardLinks("founder-one"), {
@@ -33,4 +33,13 @@ test("an older API response cannot substitute an unrelated founder for a deep li
   assert.deepEqual(exactLinkedFounderCards(items, "two"), [{slug: "two"}])
   assert.deepEqual(exactLinkedFounderCards(items, "missing"), [])
   assert.deepEqual(exactLinkedFounderCards(items, ""), items)
+})
+
+test("member links only to the same immutable founder UID and original database row", () => {
+  const mine = { id: 22, founder_uid: "1c900a71-8c53-49a7-8769-aea315b1ddde" }
+  assert.equal(isSameFounderIdentity(mine, {...mine}), true)
+  assert.equal(isSameFounderIdentity(mine, {...mine, id: 23}), false)
+  assert.equal(isSameFounderIdentity(mine, {...mine, founder_uid: "6b72bba5-20cd-4d42-a87b-ea3d07b01925"}), false)
+  assert.equal(isSameFounderIdentity(mine, {id: 22}), false)
+  assert.equal(isSameFounderIdentity(mine, null), false)
 })

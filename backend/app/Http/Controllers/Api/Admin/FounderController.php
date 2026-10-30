@@ -7,11 +7,13 @@ use App\Http\Resources\FounderResource;
 use App\Models\FounderProfile;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class FounderController extends Controller
 {
     public function index(Request $request): JsonResponse
     {
+        $request->validate(['search' => ['sometimes', 'nullable', 'string', 'max:120']]);
         $query = FounderProfile::query()
             ->with(['user', 'companies', 'scorecard', 'latestInvitation', 'outreach'])
             ->withCount('companies');
@@ -21,6 +23,7 @@ class FounderController extends Controller
             $query->where(function ($builder) use ($search) {
                 $builder
                     ->where('display_name', 'like', "%{$search}%")
+                    ->orWhere('founder_uid', $search)
                     ->orWhere('slug', 'like', "%{$search}%")
                     ->orWhere('translations->ar->name', 'like', "%{$search}%")
                     ->orWhere('tagline', 'like', "%{$search}%")

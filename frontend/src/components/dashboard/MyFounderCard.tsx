@@ -58,6 +58,7 @@ export function MyFounderCard({
               {profile?.position && <p className="mt-1 text-xs leading-5 text-slate-500">{profile.position}</p>}
             </div>
           </div>
+          {profile?.founder_uid && <p className="mt-4 flex flex-wrap items-center gap-2 text-xs text-slate-600"><span>{ar ? "معرّف المؤسس" : "Founder ID"}</span><code dir="ltr" className="break-all rounded-lg bg-white px-2 py-1 text-[11px] text-slate-800">{profile.founder_uid}</code></p>}
           <p className="mt-5 text-sm leading-7 text-slate-600">{state === "missing"
             ? (ar ? "أكمل ملفك لتجهيز بطاقتك في المجتمع." : "Complete your profile to prepare your founder card.")
             : state === "hidden"

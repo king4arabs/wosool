@@ -6,8 +6,11 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\UpdateFounderProfileRequest;
 use App\Http\Resources\FounderResource;
 use App\Models\FounderProfile;
+use App\Models\Scorecard;
+use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
@@ -33,28 +36,37 @@ class FounderProfileController extends Controller
      */
     public function update(UpdateFounderProfileRequest $request): JsonResponse
     {
-        $user = $request->user();
-        $profile = FounderProfile::firstOrNew(['user_id' => $user->id]);
+        return DB::transaction(function () use ($request): JsonResponse {
+            // Serialise profile creation with other writes for this account. The UUID
+            // never comes from request fields and the owner relationship is preserved.
+            $user = User::whereKey($request->user()->id)->lockForUpdate()->firstOrFail();
+            $profile = FounderProfile::where('user_id', $user->id)->lockForUpdate()->first()
+                ?? new FounderProfile(['user_id' => $user->id]);
 
-        $data = $request->validated();
-        $created = ! $profile->exists;
+            $data = $request->validated();
+            $created = ! $profile->exists;
+            if ($created) {
+                $profile->slug = $this->uniqueSlug($user->name);
+                $profile->status = 'active';
+                $profile->is_public = $data['is_public'] ?? true;
+            }
 
-        if ($created) {
-            $profile->slug = $this->uniqueSlug($user->name);
-            $profile->status = 'active';
-            $profile->is_public = $data['is_public'] ?? true;
-        }
+            // Member edits supersede imported translations; stale editorial text must not hide owner changes.
+            if ($profile->directory_key && $data) { $profile->translations = null; }
+            $profile->fill($data);
+            $profile->save();
+            // The member receives a private, initially unscored card only after a
+            // founder profile is created; researched unclaimed founders get none.
+            if ($created) {
+                Scorecard::firstOrCreate(['founder_profile_id' => $profile->id], ['historical_logs' => []]);
+            }
+            $profile->load(['user', 'companies', 'scorecard']);
 
-        // Member edits supersede imported translations; stale editorial text must not hide owner changes.
-        if ($profile->directory_key && $data) { $profile->translations = null; }
-        $profile->fill($data);
-        $profile->save();
-        $profile->load(['user', 'companies', 'scorecard']);
-
-        return response()->json([
-            'message' => $created ? __('messages.founder.profile_created') : __('messages.founder.profile_updated'),
-            'data' => new FounderResource($profile),
-        ], $created ? 201 : 200);
+            return response()->json([
+                'message' => $created ? __('messages.founder.profile_created') : __('messages.founder.profile_updated'),
+                'data' => new FounderResource($profile),
+            ], $created ? 201 : 200);
+        });
     }
 
     private function uniqueSlug(string $name): string

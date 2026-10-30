@@ -11,6 +11,7 @@ type AdminScorecard = {
   id: number
   founder_name?: string | null
   founder_profile_id: number
+  founder_uid?: string | null
   founder_slug?: string | null
   founder_status?: string | null
   founder_is_public: boolean
@@ -139,6 +140,7 @@ export default function AdminScorecardsPage() {
               <div key={item.id} className="rounded-lg border border-gray-200 p-3">
                 <button type="button" onClick={() => choose(item)} className="w-full text-left hover:underline">
                   <span className="text-sm font-semibold text-gray-900">{item.founder_name || `Founder #${item.founder_profile_id}`}</span>
+                  {item.founder_uid && <code dir="ltr" className="mt-1 block break-all text-[11px] text-slate-500">{item.founder_uid}</code>}
                   <span className="block text-xs text-gray-500">Aggregate: {item.aggregate_score} · Momentum: {item.momentum} · Growth: {item.growth}</span>
                 </button>
                 {item.founder_slug ? <Link className="text-sm underline" href={item.founder_is_public && item.founder_status === "active" ? `/founders/${item.founder_slug}` : `/admin/founders?search=${encodeURIComponent(item.founder_slug)}`}>View profile</Link> : null}
@@ -158,6 +160,7 @@ export default function AdminScorecardsPage() {
             {selected ? (
               <>
                 <p className="text-sm text-gray-600">Selected: <span className="font-semibold text-gray-900">{selected.founder_name || `Founder #${selected.id}`}</span></p>
+                {selected.founder_uid && <p className="break-all text-xs text-slate-600">Founder ID: <code dir="ltr">{selected.founder_uid}</code></p>}
                 {selected.founder_slug ? <Link className="inline-block text-sm underline" href={selected.founder_is_public && selected.founder_status === "active" ? `/founders/${selected.founder_slug}` : `/admin/founders?search=${encodeURIComponent(selected.founder_slug)}`}>View founder profile</Link> : null}
                 {selected.user_email ? (
                   <div className="space-y-2 border-t pt-3">

@@ -263,3 +263,9 @@ Confirm both canonical `/api/v1/` and mounted `/v1/` registration routes are lis
 Use a controlled inbox to register, receive the six-digit code, test resend after one minute, activate, reload, sign out/in and submit the profile. Confirm approved membership grants dashboard access while pending accounts retain onboarding access. Existing accounts from the old registration flow can sign in with their password and request an OTP from onboarding; existing member/founder/admin and Accelerator journeys remain separate. Do not bypass email verification or application approval to repair registration. Record the active backend/frontend SHAs and delivery evidence before declaring the incident resolved.
 
 The browser allows 45 seconds for registration/resend to accommodate the default 30-second SMTP timeout. Failed or timed-out writes are never automatically replayed; CSRF rejections alone may be retried once. Review SMTP duration if the configured mail timeout exceeds this budget.
+
+## Founder identities and scorecard ownership — 30 October 2026
+
+After a verified database backup and staging rehearsal, apply the two new additive founder identity migrations before releasing the matching backend/frontend. The first adds stable random founder UUIDs to existing, imported, registered and soft-deleted profiles. The second enforces at most one private scorecard per founder and **refuses to delete or merge historic duplicates**. Existing numeric foreign keys and registration/activation checks remain unchanged. Read the [founder identity guide](docs/FOUNDER-IDENTITY-2026-10-30.md) before running migrations.
+
+Run `php artisan wosool:check-founder-identity --json` after migration. This read-only command reports aggregate identity and relationship integrity and never changes membership, scores or accounts. A green commit/CI or Cloudflare preview does not prove Hostinger deployment or production database migration.

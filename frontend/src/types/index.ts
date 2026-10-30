@@ -1,4 +1,5 @@
 export interface Founder {
+  founderUid?: string
   communityEngagementScore?: number | null
   activationStatus?: "active" | "unclaimed" | "suspended"
   canCommunicate?: boolean

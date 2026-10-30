@@ -2,6 +2,7 @@ export type IntroRoutingStatus = "INTRO_PENDING" | "INTRO_APPROVED" | "ROUTE_EXP
 
 export interface FounderProfile {
   id: number
+  founder_uid?: string | null
   user_id?: number
   legal_name: string
   title: string
@@ -30,6 +31,7 @@ export interface CompanyProfile {
 
 export interface Scorecard {
   id: number
+  founder_uid?: string | null
   founder_profile_id: number
   aggregate_score: number
   tracking: {
@@ -101,6 +103,7 @@ export function parseFounderProfile(input: unknown): FounderProfile | null {
 
   return {
     id: toNumber(input.id),
+    founder_uid: typeof input.founder_uid === "string" ? input.founder_uid : null,
     user_id: typeof input.user_id === "number" ? input.user_id : undefined,
     legal_name: toString(input.legal_name),
     title: toString(input.title),
@@ -141,6 +144,7 @@ export function parseScorecard(input: unknown): Scorecard | null {
 
   return {
     id: toNumber(input.id),
+    founder_uid: typeof input.founder_uid === "string" ? input.founder_uid : null,
     founder_profile_id: toNumber(input.founder_profile_id),
     aggregate_score: toNumber(input.aggregate_score),
     tracking: {
