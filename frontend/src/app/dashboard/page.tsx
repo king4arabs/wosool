@@ -12,6 +12,8 @@ import { parseScorecard, type Scorecard } from "@/types/platform"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { getInitials } from "@/lib/utils"
 import ScorecardWidget from "@/components/dashboard/ScorecardWidget"
+import { MyFounderCard, type FounderCardState } from "@/components/dashboard/MyFounderCard"
+import { isFounderProfileEligibleForPublicCard } from "@/lib/founder-card-links"
 import NextSteps from "@/components/dashboard/NextSteps"
 import { applicationHref, applicationStatus, homePrograms, homeSchedule, rsvpStatus, type HomeApplication, type HomeEvent, type StatusTone } from "@/lib/dashboard-home"
 import { dateLocale } from "@/lib/date-locale"
@@ -46,6 +48,8 @@ export default function DashboardPage() {
   const ar = locale === "ar"
   const [data, setData] = useState<DashboardData | null>(null)
   const [profile, setProfile] = useState<ApiFounder | null>(null)
+  const [publicProfile, setPublicProfile] = useState<ApiFounder | null>(null)
+  const [cardState, setCardState] = useState<FounderCardState>('checking')
   const [score, setScore] = useState<Scorecard | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(false)
@@ -54,6 +58,8 @@ export default function DashboardPage() {
   useEffect(() => {
     const controller = new AbortController()
     const options = {signal: controller.signal, headers: {'X-Locale': locale}}
+    setPublicProfile(null)
+    setCardState('checking')
     Promise.allSettled([
       api.get<{data: DashboardData}>('/member/dashboard', options),
       api.get<{data: ApiFounder}>('/member/founder-profile', options),
@@ -61,7 +67,32 @@ export default function DashboardPage() {
     ]).then(([overview, founder, scorecard]) => {
       if (controller.signal.aborted) return
       if (overview.status === 'fulfilled') { setData(overview.value.data); setUpdated(new Date()) }
-      if (founder.status === 'fulfilled') setProfile(founder.value.data)
+      if (founder.status === 'fulfilled') {
+        const ownedProfile = founder.value.data
+        setProfile(ownedProfile)
+        if (!isFounderProfileEligibleForPublicCard(ownedProfile)) {
+          setCardState('hidden')
+        } else {
+          // Confirm the published record has the same database identity as this member's
+          // profile before enabling links to either public grid; never trust a slug alone.
+          void api.get<{data: ApiFounder}>('/founders/' + encodeURIComponent(ownedProfile.slug), options)
+            .then(response => {
+              if (controller.signal.aborted) return
+              const published = response.data
+              if (published.id === ownedProfile.id && published.is_public === true && published.status === 'active') {
+                setPublicProfile(published)
+                setCardState('published')
+              } else {
+                setCardState('hidden')
+              }
+            })
+            .catch(error => {
+              if (!controller.signal.aborted) setCardState(error instanceof ApiError && error.status === 404 ? 'hidden' : 'unavailable')
+            })
+        }
+      } else {
+        setCardState(founder.reason instanceof ApiError && founder.reason.status === 404 ? 'missing' : 'unavailable')
+      }
       if (scorecard.status === 'fulfilled') setScore(parseScorecard(scorecard.value.data))
       setError([overview, founder, scorecard].some(result => result.status === 'rejected' && !(result.reason instanceof ApiError && result.reason.status === 404)))
       setLoading(false)
@@ -87,7 +118,7 @@ export default function DashboardPage() {
         <div className="flex min-w-0 items-center gap-4"><Avatar className="h-16 w-16 shrink-0 border-2 border-white/25"><AvatarImage src={founder?.avatarUrl} alt={name} /><AvatarFallback className="bg-indigo-600 text-white">{getInitials(name)}</AvatarFallback></Avatar><div className="min-w-0"><p className="text-xs font-bold tracking-widest text-indigo-200">{ar ? 'مساحتك في وصول' : 'YOUR FOUNDER WORKSPACE'}</p><h1 className="mt-2 break-words text-2xl font-extrabold sm:text-3xl">{ar ? `أهلاً، ${name}` : `Welcome, ${name}`}</h1><p className="mt-2 text-sm leading-6 text-indigo-100">{founder?.position || (ar ? 'علاقات مفيدة، وخطوة تالية واضحة.' : 'Meaningful connections. A clear next step.')}</p></div></div>
         <button type="button" onClick={refresh} disabled={loading} className="inline-flex min-h-11 items-center gap-2 rounded-xl border border-white/25 px-4 text-sm font-semibold hover:bg-white/10 disabled:opacity-50"><RefreshCw className={`h-4 w-4 ${loading ? 'animate-spin motion-reduce:animate-none' : ''}`} />{ar ? 'تحديث' : 'Refresh'}</button>
       </div>
-      <div className="relative mt-6 flex flex-wrap items-center gap-3 border-t border-white/15 pt-5"><Link href="/dashboard/directory" className="inline-flex min-h-11 items-center gap-2 rounded-xl bg-white px-4 text-sm font-bold text-indigo-950"><Users size={17}/>{ar ? 'اكتشف المؤسسين' : 'Discover founders'}</Link><Link href="/dashboard/messages" className="inline-flex min-h-11 items-center gap-2 rounded-xl border border-white/25 px-4 text-sm font-semibold"><MessageCircle size={17}/>{ar ? 'محادثاتي' : 'My conversations'}</Link>{founder?.slug && <Link href={`/founders/${founder.slug}`} className="inline-flex min-h-11 items-center px-2 text-sm text-indigo-100 underline">{ar ? 'ملفي العام' : 'My public profile'}</Link>}</div>
+      <div className="relative mt-6 flex flex-wrap items-center gap-3 border-t border-white/15 pt-5"><Link href="/dashboard/directory" className="inline-flex min-h-11 items-center gap-2 rounded-xl bg-white px-4 text-sm font-bold text-indigo-950"><Users size={17}/>{ar ? 'اكتشف المؤسسين' : 'Discover founders'}</Link><Link href="/dashboard/messages" className="inline-flex min-h-11 items-center gap-2 rounded-xl border border-white/25 px-4 text-sm font-semibold"><MessageCircle size={17}/>{ar ? 'محادثاتي' : 'My conversations'}</Link>{publicProfile?.slug && <Link href={'/founders/' + encodeURIComponent(publicProfile.slug)} className="inline-flex min-h-11 items-center px-2 text-sm text-indigo-100 underline">{ar ? 'ملفي العام' : 'My public profile'}</Link>}</div>
     </header>
     {error && <div role="alert" className="rounded-2xl border border-amber-200 bg-amber-50 p-4 text-sm leading-7 text-amber-900">{ar ? 'تعذر تحديث بعض المعلومات. قد تكون البيانات المعروضة أقدم من آخر تغييراتك.' : 'Some information could not be refreshed. Displayed information may be out of date.'}<button className="ms-3 inline-flex min-h-11 items-center font-bold underline" disabled={loading} onClick={refresh}>{ar ? 'إعادة المحاولة' : 'Try again'}</button></div>}
     {loading && !data && <p role="status" className="text-sm text-slate-500">{ar ? 'جارٍ تحميل مساحة عملك…' : 'Loading your workspace…'}</p>}
@@ -98,6 +129,7 @@ export default function DashboardPage() {
       {label:ar?'تعارف مقترح':'Suggested connections',value:data?.recommended_matches?.length ?? '—',href:'/dashboard/matches',icon:Users},
     ].map(({label,value,href,icon:Icon})=><Link key={href+label} href={href} className={`${panel} group transition-colors hover:border-indigo-400`}><Icon className="h-5 w-5 text-indigo-600"/><strong className="mt-4 block text-3xl font-bold text-slate-950">{value}</strong><span className="mt-2 flex items-center justify-between gap-2 text-xs font-semibold leading-5 text-slate-500">{label}<ArrowUpRight className="h-4 w-4 shrink-0"/></span></Link>)}</section>
     <NextSteps ar={ar} profileCompletion={completion} companyCompletion={data?.company_completion} pendingIntros={data?.intro_requests?.pending_count}/>
+    <MyFounderCard profile={profile} publicProfile={publicProfile} state={cardState} locale={ar ? 'ar' : 'en'} />
     <div className="grid gap-6 xl:grid-cols-[minmax(0,1.25fr)_minmax(0,1fr)]">
       <section className={panel}><div className="flex flex-wrap items-center justify-between gap-3"><h2 className="text-xl font-bold text-slate-950">{ar?'علاقات تستحق البداية':'People worth connecting with'}</h2><Link className="inline-flex min-h-11 items-center text-sm font-semibold text-indigo-600" href="/dashboard/matches">{ar?'كل المقترحات':'All suggestions'}<ArrowUpRight size={16}/></Link></div><p className="text-sm leading-7 text-slate-500">{ar?'راجع الملفات قبل طلب التعارف، ووضح ما ترغب في تحقيقه.':'Explore their profiles and make your introduction purposeful.'}</p><div className="mt-5 space-y-3">{matches.map(person=><Link key={person.id} href={`/founders/${person.slug}`} className="flex items-center gap-3 rounded-2xl border border-slate-200 p-4 hover:border-indigo-300"><Avatar className="h-12 w-12 shrink-0"><AvatarImage src={person.avatarUrl} alt={person.name}/><AvatarFallback>{getInitials(person.name)}</AvatarFallback></Avatar><div className="min-w-0 flex-1"><h3 className="font-bold text-slate-900">{person.name}</h3><p className="mt-1 text-xs leading-5 text-slate-500">{person.position || person.tagline}</p></div><ArrowUpRight size={17} className="shrink-0 text-indigo-600"/></Link>)}{data && !matches.length && <div className="rounded-2xl bg-indigo-50 p-5"><p className="text-sm leading-7 text-indigo-950">{ar?'لا توجد مقترحات حالياً. ابحث في المجتمع عن خبرة تكمل خبرتك.':'No suggestions yet. Explore the community to find experience that complements yours.'}</p><Link href="/dashboard/directory" className="mt-3 inline-flex min-h-11 items-center text-sm font-bold text-indigo-700 underline">{ar?'تصفح المجتمع':'Browse the community'}</Link></div>}</div></section>
       <ScorecardWidget key={`${locale}-${updated?.getTime()}`} initialScorecard={score} locale={locale}/>

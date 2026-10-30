@@ -35,17 +35,23 @@ function FounderDirectory({ visitSeed }: { visitSeed: number }) {
   const [sector, setSector] = useState("")
   const [stage, setStage] = useState("")
   const [location, setLocation] = useState("")
+  const [linkedSlug, setLinkedSlug] = useState("")
+  useEffect(() => {
+    const founder = new URLSearchParams(window.location.search).get('founder')?.trim() ?? ''
+    if (founder.length <= 255) setLinkedSlug(founder)
+  }, [])
   // Kept here because the showcase below is remounted whenever the search or dropdowns change.
   const [region, setRegion] = useState<FounderRegionFilter>("all")
   const params = new URLSearchParams({ facets: '1' })
   for (const [key, value] of Object.entries({ search: settledSearch, sector, stage, country: location, region: region === 'all' ? '' : region })) if (value) params.set(key, value)
+  if (linkedSlug) params.set('slug', linkedSlug)
   const collection = usePublicCollection<ApiFounder>(`/founders?${params}`, 24)
-  const isSpotlight = collection.snapshotAllowed
+  const isSpotlight = collection.snapshotAllowed && !linkedSlug
   const founders: FounderCardProfile[] = (isSpotlight ? getFounderSpotlights(locale) : collection.items.map(mapFounder)).filter(isDirectoryRecordVisible)
   const countries = directoryCountryGroups(locale)
   const Arrow = ar ? ArrowLeft : ArrowRight
   const featured = isSpotlight ? [] : founders.filter(founder => founder.isFeatured)
-  const hasFilters = Boolean(search || sector || stage || location || region !== 'all')
+  const hasFilters = Boolean(linkedSlug || search || sector || stage || location || region !== 'all')
   // The API searches both languages and every public linked company. Rechecking
   // only the translated card would incorrectly remove valid server matches.
   const filtered = searchPending ? [] : isSpotlight ? founders.filter(founder =>
@@ -72,11 +78,12 @@ function FounderDirectory({ visitSeed }: { visitSeed: number }) {
 
     {featured.length > 0 && <section className={`${styles.container} ${styles.section}`} aria-labelledby="featured-founders-title">
       <p className={styles.eyebrow}>{copy.featuredEyebrow}</p><h2 id="featured-founders-title">{copy.featuredTitle}</h2>
-      <FounderShowcase founders={featured} showFilters={false} visitSeed={visitSeed} />
+      <FounderShowcase founders={featured} showFilters={false} visitSeed={visitSeed} focusLinkedFounder={false} />
     </section>}
 
     <section id="founder-directory" className={`${styles.container} ${styles.section}`} aria-labelledby="founder-results-title" style={{ scrollMarginTop: 100 }}>
       <div className={styles.sectionHead}><div><p className={styles.eyebrow}>{isSpotlight ? ar ? 'أعمال وخبرات من المنطقة' : 'BUSINESSES AND EXPERIENCE FROM THE REGION' : copy.directoryEyebrow}</p><h2 id="founder-results-title">{isSpotlight ? ar ? 'استكشف ملفات المؤسسين' : 'Explore founder profiles' : copy.directoryTitle}</h2></div><Link className={styles.textLink} href="/startups">{ar ? 'دليل الشركات الناشئة' : 'Startup directory'}<Arrow size={17} aria-hidden="true" /></Link></div>
+      {linkedSlug && <div className="mt-5 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-indigo-200 bg-indigo-50 p-4 text-sm text-indigo-950"><p>{ar ? 'عرض بطاقة المؤسس المرتبطة بحسابه' : 'Viewing the founder card linked to its account'}</p><Link href="/founders#founder-directory" className="inline-flex min-h-11 items-center font-bold underline">{ar ? 'عرض جميع المؤسسين' : 'Browse all founders'}</Link></div>}
       <div className="mt-7 grid min-w-0 gap-4 rounded-2xl border border-[var(--border-soft)] bg-[var(--surface-soft)] p-4 sm:p-5 lg:grid-cols-2">
         <label className={label}><span>{copy.searchAria}</span><span className="relative flex min-w-0 items-center"><Search size={17} aria-hidden="true" className="pointer-events-none absolute start-3 text-[var(--text-muted)]" /><input type="search" maxLength={120} value={search} onChange={event => setSearch(event.target.value)} placeholder={copy.searchPlaceholder} className={`${control} ps-10`} /></span></label>
         <div className="grid min-w-0 gap-3 sm:grid-cols-2">
@@ -84,7 +91,7 @@ function FounderDirectory({ visitSeed }: { visitSeed: number }) {
           <label className={label}><span>{ar ? 'الدولة' : 'Country'}</span><select value={location} onChange={event => { const value = event.target.value; setLocation(value); setRegion(value ? countryRegion(value) : 'all') }} className={control}><option value="">{ar ? 'جميع الدول' : 'All countries'}</option>{countries.map(group => <optgroup label={group.label} key={group.region}>{group.countries.map(country => <option value={country.code} key={country.code}>{country.label}</option>)}</optgroup>)}</select></label>
           {options('stage').length > 0 && <label className={label}><span>{ar ? 'المرحلة' : 'Stage'}</span><select value={stage} onChange={event => setStage(event.target.value)} className={control}><option value="">{copy.stages[0]}</option>{options('stage').map(value => <option value={value} key={value}>{value}</option>)}</select></label>}
         </div>
-        {hasFilters && <button type="button" className="min-h-11 justify-self-start px-3 text-sm font-bold text-[var(--action-bg)] underline underline-offset-4" onClick={() => { setSearch(''); setSector(''); setStage(''); setLocation(''); setRegion('all') }}>{ar ? 'مسح الفلاتر' : 'Clear filters'}</button>}
+        {linkedSlug ? <Link href="/founders#founder-directory" className="min-h-11 justify-self-start px-3 text-sm font-bold text-[var(--action-bg)] underline underline-offset-4">{ar ? 'العودة إلى الدليل' : 'Back to directory'}</Link> : hasFilters && <button type="button" className="min-h-11 justify-self-start px-3 text-sm font-bold text-[var(--action-bg)] underline underline-offset-4" onClick={() => { setSearch(''); setSector(''); setStage(''); setLocation(''); setRegion('all') }}>{ar ? 'مسح الفلاتر' : 'Clear filters'}</button>}
       </div>
       {(searchPending || collection.loading && founders.length === 0) && <p role="status" className="py-8 text-center">{ar ? 'جارٍ تحميل الملفات العامة…' : 'Loading public profiles…'}</p>}
       <FounderShowcase key={filtersKey} founders={filtered} showFilters={false} region={region} onRegionChange={changeRegion} visitSeed={visitSeed} allRegions loading={searchPending || collection.loading && !founders.length} />
