@@ -127,9 +127,13 @@ class MembershipRegistrationTest extends TestCase
         $this->assertDatabaseCount('founder_profiles', 1); $this->assertDatabaseCount('company_profiles', 1); $this->assertDatabaseCount('scorecards', 1);
         $this->assertTrue($user->fresh()->hasRole('member')); $profile = FounderProfile::firstOrFail();
         $this->assertTrue($profile->is_public); $this->assertTrue($profile->communityActive());
+        $uid = $profile->founder_uid;
+        $this->assertTrue(\Illuminate\Support\Str::isUuid($uid));
         $this->getJson('/api/v1/founders?community=1')->assertOk()->assertJsonFragment(['slug' => $profile->slug])->assertDontSee($user->email);
         $this->actingAs($user->fresh());
         foreach (['dashboard', 'founder-profile', 'companies', 'events/catalog', 'events/rsvps', 'program-applications', 'scorecard', 'matches', 'threads', 'chat/rooms'] as $path) $this->getJson('/api/v1/member/'.$path)->assertOk();
+        $this->getJson('/api/v1/member/scorecard')->assertJsonPath('data.founder_uid', $uid);
+        $this->getJson('/api/v1/member/founder-profile')->assertJsonPath('data.founder_uid', $uid);
         $this->getJson('/api/v1/admin/applications')->assertForbidden();
         $this->actingAs($admin)->patchJson('/api/v1/admin/applications/'.$application->id, ['status' => 'rejected'])->assertOk();
         $this->assertFalse($profile->fresh()->is_public);

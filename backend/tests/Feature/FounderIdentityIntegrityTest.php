@@ -2,8 +2,8 @@
 
 namespace Tests\Feature;
 
-use App\Models\{FounderProfile, Scorecard, User};
-use App\Services\FounderDirectoryImporter;
+use App\Models\{Application, FounderProfile, Scorecard, User};
+use App\Services\{FounderDirectoryImporter, MembershipRegistration};
 use Database\Seeders\RoleAndPermissionSeeder;
 use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -75,9 +75,36 @@ class FounderIdentityIntegrityTest extends TestCase
         $this->putJson('/api/v1/member/founder-profile', ['bio' => 'New information'])
             ->assertOk()->assertJsonPath('data.founder_uid', $uid)->assertJsonPath('data.id', $profileId);
         $this->actingAs($second)->putJson('/api/v1/member/founder-profile', ['bio' => 'Other member'])
-            ->assertCreated()->assertJsonPath('data.id', $profileId + 1);
+            ->assertCreated();
+        $this->assertNotSame($profileId, $second->founderProfile()->firstOrFail()->id);
         $this->assertNotSame($uid, $second->founderProfile()->firstOrFail()->founder_uid);
         $this->assertDatabaseCount('scorecards', 2);
+    }
+
+    public function test_reapproving_an_application_does_not_override_suspended_founder_identity(): void
+    {
+        $user = User::factory()->create();
+        $founder = FounderProfile::create([
+            'user_id' => $user->id, 'slug' => 'suspended-owner',
+            'status' => 'suspended', 'is_public' => false,
+        ]);
+        $original = $founder->founder_uid;
+        $application = Application::create([
+            'user_id' => $user->id, 'email' => $user->email,
+            'full_name' => 'Suspended Owner', 'company_name' => 'Company',
+            'company_website' => 'https://example.org', 'sector' => 'Software',
+            'stage' => 'Seed', 'location' => 'Riyadh', 'status' => 'approved',
+            'onboarding_data' => ['position' => 'Founder', 'bio' => 'Experience',
+                'country_code' => 'SA', 'company_description' => 'Software business',
+                'founded_year' => 2024, 'team_size' => 2],
+        ]);
+
+        app(MembershipRegistration::class)->publish($application);
+        $this->assertSame('suspended', $founder->fresh()->status);
+        $this->assertFalse($founder->fresh()->is_public);
+        $this->assertSame($original, $founder->fresh()->founder_uid);
+        $this->assertDatabaseCount('company_profiles', 0);
+        $this->assertDatabaseCount('scorecards', 0);
     }
 
     public function test_founder_uid_cannot_be_reassigned_even_by_model_force_fill(): void
