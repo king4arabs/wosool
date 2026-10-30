@@ -47,6 +47,7 @@ export default function DashboardPage() {
   const { user } = useAuth()
   const ar = locale === "ar"
   const [data, setData] = useState<DashboardData | null>(null)
+  const [attempt, setAttempt] = useState(0)
   // Key the owner/public snapshots to the signed-in account and request. A locale
   // change or refresh must not briefly show someone else's previously loaded card.
   const requestKey = `${user?.id ?? 'guest'}:${locale}:${attempt}`
@@ -58,7 +59,6 @@ export default function DashboardPage() {
   const [score, setScore] = useState<Scorecard | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(false)
-  const [attempt, setAttempt] = useState(0)
   const [updated, setUpdated] = useState<Date | null>(null)
   useEffect(() => {
     const controller = new AbortController()
@@ -101,7 +101,7 @@ export default function DashboardPage() {
       setLoading(false)
     })
     return () => controller.abort()
-  }, [locale, attempt, user?.id, requestKey])
+  }, [locale, requestKey])
   const refresh = () => { setLoading(true); setError(false); setAttempt(n => n + 1) }
   const founder = profile ? mapFounder(profile) : null
   const completion = profile ? profileCompletion(profile) : data?.profile_completion
