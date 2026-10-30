@@ -47,9 +47,14 @@ export default function DashboardPage() {
   const { user } = useAuth()
   const ar = locale === "ar"
   const [data, setData] = useState<DashboardData | null>(null)
-  const [profile, setProfile] = useState<ApiFounder | null>(null)
-  const [publicProfile, setPublicProfile] = useState<ApiFounder | null>(null)
-  const [cardState, setCardState] = useState<FounderCardState>('checking')
+  // Key the owner/public snapshots to the signed-in account and request. A locale
+  // change or refresh must not briefly show someone else's previously loaded card.
+  const requestKey = `${user?.id ?? 'guest'}:${locale}:${attempt}`
+  const [ownedSnapshot, setOwnedSnapshot] = useState<{key: string; profile: ApiFounder | null}>({key: '', profile: null})
+  const [cardSnapshot, setCardSnapshot] = useState<{key: string; profile: ApiFounder | null; state: FounderCardState}>({key: '', profile: null, state: 'checking'})
+  const profile = ownedSnapshot.key === requestKey ? ownedSnapshot.profile : null
+  const publicProfile = cardSnapshot.key === requestKey ? cardSnapshot.profile : null
+  const cardState = cardSnapshot.key === requestKey ? cardSnapshot.state : 'checking'
   const [score, setScore] = useState<Scorecard | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(false)
@@ -67,9 +72,9 @@ export default function DashboardPage() {
       if (overview.status === 'fulfilled') { setData(overview.value.data); setUpdated(new Date()) }
       if (founder.status === 'fulfilled') {
         const ownedProfile = founder.value.data
-        setProfile(ownedProfile)
+        setOwnedSnapshot({key: requestKey, profile: ownedProfile})
         if (!isFounderProfileEligibleForPublicCard(ownedProfile)) {
-          setCardState('hidden')
+          setCardSnapshot({key: requestKey, profile: null, state: 'hidden'})
         } else {
           // Confirm the published record has the same database identity as this member's
           // profile before enabling links to either public grid; never trust a slug alone.
@@ -78,26 +83,26 @@ export default function DashboardPage() {
               if (controller.signal.aborted) return
               const published = response.data
               if (published.id === ownedProfile.id && published.is_public === true && published.status === 'active') {
-                setPublicProfile(published)
-                setCardState('published')
+                setCardSnapshot({key: requestKey, profile: published, state: 'published'})
               } else {
-                setCardState('hidden')
+                setCardSnapshot({key: requestKey, profile: null, state: 'hidden'})
               }
             })
             .catch(error => {
-              if (!controller.signal.aborted) setCardState(error instanceof ApiError && error.status === 404 ? 'hidden' : 'unavailable')
+              if (!controller.signal.aborted) setCardSnapshot({key: requestKey, profile: null, state: error instanceof ApiError && error.status === 404 ? 'hidden' : 'unavailable'})
             })
         }
       } else {
-        setCardState(founder.reason instanceof ApiError && founder.reason.status === 404 ? 'missing' : 'unavailable')
+        setOwnedSnapshot({key: requestKey, profile: null})
+        setCardSnapshot({key: requestKey, profile: null, state: founder.reason instanceof ApiError && founder.reason.status === 404 ? 'missing' : 'unavailable'})
       }
       if (scorecard.status === 'fulfilled') setScore(parseScorecard(scorecard.value.data))
       setError([overview, founder, scorecard].some(result => result.status === 'rejected' && !(result.reason instanceof ApiError && result.reason.status === 404)))
       setLoading(false)
     })
     return () => controller.abort()
-  }, [locale, attempt])
-  const refresh = () => { setLoading(true); setError(false); setPublicProfile(null); setCardState('checking'); setAttempt(n => n + 1) }
+  }, [locale, attempt, user?.id, requestKey])
+  const refresh = () => { setLoading(true); setError(false); setAttempt(n => n + 1) }
   const founder = profile ? mapFounder(profile) : null
   const completion = profile ? profileCompletion(profile) : data?.profile_completion
   const name = founder?.name || user?.name || (ar ? 'المؤسس' : 'Founder')
