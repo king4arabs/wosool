@@ -1,5 +1,117 @@
 [
   {
+    "slug": "ahmed-alsharif-think-ai",
+    "founder_name_en": "Ahmed AlSharif",
+    "founder_name_ar": "أحمد الشريف",
+    "role_en": "Founder & CEO",
+    "role_ar": "المؤسس والرئيس التنفيذي",
+    "founder_brief_en": "Ahmed AlSharif founded Think AI in Riyadh in 2025 to build integrated hardware and software for efficient AI compute.",
+    "founder_brief_ar": "أسس أحمد الشريف «Think AI» في الرياض عام 2025 لتطوير بنية حوسبة للذكاء الاصطناعي تجمع الأجهزة والبرمجيات.",
+    "company_name_en": "Think AI",
+    "company_name_ar": "ثينك للذكاء الاصطناعي",
+    "company_brief_en": "Riyadh-based AI infrastructure company integrating compute hardware and orchestration software.",
+    "company_brief_ar": "شركة سعودية تطور بنية تحتية للحوسبة الذكية تجمع العتاد وبرمجيات إدارة موارد المعالجة.",
+    "country_en": "Saudi Arabia",
+    "country_ar": "السعودية",
+    "country_code": "SA",
+    "sector_en": "AI infrastructure",
+    "sector_ar": "البنية التحتية للذكاء الاصطناعي",
+    "website": "https://www.think-ai.com/",
+    "portrait_url": null,
+    "logo_url": null,
+    "founder_socials": [
+      {
+        "label": "LinkedIn",
+        "url": "https://www.linkedin.com/in/ahmed-a-sharif/"
+      }
+    ],
+    "source_url": "https://www.think-ai.com/company",
+    "source_urls": [
+      "https://www.think-ai.com/company",
+      "https://raed.vc/news/think-closes-menas-largest-ai-infrastructure-pre-seed-round-at-over-8-million/"
+    ],
+    "reviewed_at": "2026-10-30",
+    "company_key": "think-ai",
+    "region": "saudi",
+    "founded_year": 2025,
+    "traction_en": "Over US$8m pre-seed financing announced July 2026; this is funding, not revenue.",
+    "traction_ar": "تمويل ما قبل التأسيس يتجاوز 8 ملايين دولار أُعلن في يوليو 2026، وهو تمويل وليس إيرادات.",
+    "traction_source_url": "https://raed.vc/news/think-closes-menas-largest-ai-infrastructure-pre-seed-round-at-over-8-million/"
+  },
+  {
+    "slug": "ammar-enaya-think-ai",
+    "founder_name_en": "Ammar Enaya",
+    "founder_name_ar": "عمار عناية",
+    "role_en": "Co-founder & COO",
+    "role_ar": "شريك مؤسس ورئيس العمليات",
+    "founder_brief_en": "Ammar Enaya joined Think AI as co-founder and chief operating officer in October 2025 to lead commercial operations.",
+    "founder_brief_ar": "انضم عمار عناية إلى «Think AI» شريكًا مؤسسًا ورئيسًا للعمليات في أكتوبر 2025 لقيادة الأعمال التشغيلية والتجارية.",
+    "company_name_en": "Think AI",
+    "company_name_ar": "ثينك للذكاء الاصطناعي",
+    "company_brief_en": "Riyadh-based AI infrastructure company integrating compute hardware and orchestration software.",
+    "company_brief_ar": "شركة سعودية تطور بنية تحتية للحوسبة الذكية تجمع العتاد وبرمجيات إدارة موارد المعالجة.",
+    "country_en": "Saudi Arabia",
+    "country_ar": "السعودية",
+    "country_code": "SA",
+    "sector_en": "AI infrastructure",
+    "sector_ar": "البنية التحتية للذكاء الاصطناعي",
+    "website": "https://www.think-ai.com/",
+    "portrait_url": null,
+    "logo_url": null,
+    "founder_socials": [
+      {
+        "label": "LinkedIn",
+        "url": "https://www.linkedin.com/in/ammarenaya/"
+      }
+    ],
+    "source_url": "https://www.think-ai.com/company",
+    "source_urls": [
+      "https://www.think-ai.com/company",
+      "https://raed.vc/news/think-closes-menas-largest-ai-infrastructure-pre-seed-round-at-over-8-million/"
+    ],
+    "reviewed_at": "2026-10-30",
+    "company_key": "think-ai",
+    "region": "saudi",
+    "founded_year": 2025,
+    "traction_en": null,
+    "traction_ar": null,
+    "traction_source_url": null
+  },
+  {
+    "slug": "mohamed-oueida-stitch",
+    "founder_name_en": "Mohamed Oueida",
+    "founder_name_ar": "محمد عويدة",
+    "role_en": "Founder & CEO",
+    "role_ar": "المؤسس والرئيس التنفيذي",
+    "founder_brief_en": "Mohamed Oueida founded and leads Stitch, a Riyadh-headquartered platform for modern banking and financial-institution infrastructure.",
+    "founder_brief_ar": "أسس محمد عويدة ويقود «Stitch»، المنصة التي تتخذ من الرياض مقرًا لتطوير الأنظمة التقنية للمؤسسات المالية.",
+    "company_name_en": "Stitch",
+    "company_name_ar": "ستيتش",
+    "company_brief_en": "Cloud-native platform for financial institutions covering payments, cards, lending and ledgers.",
+    "company_brief_ar": "منصة سحابية للمؤسسات المالية تشمل المدفوعات والبطاقات والإقراض والسجلات المالية.",
+    "country_en": "Saudi Arabia",
+    "country_ar": "السعودية",
+    "country_code": "SA",
+    "sector_en": "Fintech infrastructure",
+    "sector_ar": "البنية التحتية للتقنية المالية",
+    "website": "https://www.stitch.co/",
+    "portrait_url": null,
+    "logo_url": null,
+    "founder_socials": [],
+    "source_url": "https://www.stitch.co/press/stitch-raises-25m-series-a-led-by-andreessen-horowitz",
+    "source_urls": [
+      "https://www.stitch.co/press/stitch-raises-25m-series-a-led-by-andreessen-horowitz",
+      "https://a16z.com/announcement/investing-in-stitch/"
+    ],
+    "reviewed_at": "2026-10-30",
+    "company_key": "stitch-saudi",
+    "region": "saudi",
+    "founded_year": null,
+    "traction_en": "US$25m Series A in May 2026; over US$5bn in transactions processed over the preceding six months, company-reported and not revenue.",
+    "traction_ar": "جولة تمويل فئة «أ» بقيمة 25 مليون دولار في مايو 2026، وقيمة معاملات تتجاوز 5 مليارات دولار خلال الأشهر الستة السابقة وفق الشركة، وليست إيرادات.",
+    "traction_source_url": "https://www.stitch.co/press/stitch-raises-25m-series-a-led-by-andreessen-horowitz"
+  },
+  {
     "slug": "erad-salem-abu-hammour",
     "founder_name_en": "Salem Abu-Hammour",
     "founder_name_ar": "سالم أبو حمور",

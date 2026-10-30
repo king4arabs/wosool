@@ -43,6 +43,50 @@
     }
   },
   {
+    "id": "sourced-aba-life-morocco-admaius-agreement-october-2026",
+    "slug": "aba-life-morocco-admaius-agreement-october-2026",
+    "title": "Morocco's ABA Life signs $40m investment agreement, subject to approvals",
+    "excerpt": "The health-technology arm of ABA Technology has signed a $40 million investment agreement with Admaius Capital Partners. Completion remains conditional on regulatory approval.",
+    "content": "Moroccan healthtech business ABA Life signed a $40 million investment agreement with Admaius Capital Partners, according to its announcement published by Wamda on October 29, 2026. The transaction has not been reported as completed: customary closing conditions and approval by Morocco's Competition Council remain outstanding. The planned investment would support clinical AI, telemedicine infrastructure and international expansion.",
+    "category": "Funding",
+    "region": "mena",
+    "imageUrl": "",
+    "imageCredit": "",
+    "sourceUrl": "https://www.wamda.com/2026/10/morocco-aba-life-secures-40-million-investment-admaius-capital-partners-arabic",
+    "sourceName": "Wamda",
+    "companies": [
+      "ABA Life",
+      "ABA Technology",
+      "Admaius Capital Partners"
+    ],
+    "publishedAt": "2026-10-29",
+    "author": "Wosool news desk",
+    "tags": [
+      "Morocco",
+      "Healthtech",
+      "Investment agreement"
+    ],
+    "keyFacts": [
+      "US$40m investment agreement signed, not yet closed",
+      "Subject to Moroccan Competition Council approval",
+      "Investment plans include clinical AI and international growth"
+    ],
+    "translations": {
+      "ar": {
+        "title": "«ABA Life» المغربية توقّع اتفاقية استثمار بقيمة 40 مليون دولار بانتظار الموافقات",
+        "excerpt": "وقّعت شركة التكنولوجيا الصحية المغربية اتفاقية استثمار مع «Admaius Capital Partners» بقيمة 40 مليون دولار، ولم يُعلن اكتمال الصفقة بعد.",
+        "body": [
+          "أعلنت «ABA Life»، ذراع الرعاية الصحية لمجموعة «ABA Technology»، توقيع اتفاقية استثمار بقيمة 40 مليون دولار مع «Admaius Capital Partners». لا تمثل الاتفاقية إغلاقًا نهائيًا للصفقة؛ إذ يتوقف إتمامها على الشروط المعتادة وموافقة مجلس المنافسة المغربي. وتستهدف الخطة توسيع حلول الذكاء الاصطناعي السريري والتطبيب عن بُعد والتوسع دوليًا."
+        ],
+        "keyFacts": [
+          "اتفاقية استثمار بقيمة 40 مليون دولار لم تُغلق بعد",
+          "الإتمام مشروط بموافقة مجلس المنافسة المغربي",
+          "التوسع المخطط يشمل الذكاء الاصطناعي السريري والأسواق الدولية"
+        ]
+      }
+    }
+  },
+  {
     "id": "sourced-tanmiya-capital-fund-two-october-2026",
     "slug": "tanmiya-capital-fund-two-october-2026",
     "title": "Tanmiya Capital closes its second fund at $130m",
@@ -2887,6 +2931,51 @@
     "region": "global"
   },
   {
+    "id": "sourced-think-ai-preseed-saudi-july-2026",
+    "slug": "think-ai-preseed-saudi-july-2026",
+    "title": "Saudi AI infrastructure startup Think secures over $8m in pre-seed funding",
+    "excerpt": "Riyadh-based Think announced more than $8 million in pre-seed financing co-led by RAED Ventures and Wa'ed Ventures in July 2026.",
+    "content": "Think, a Riyadh-based developer of AI hardware and orchestration software, announced over $8 million in pre-seed funding on July 15, 2026. RAED Ventures and Wa'ed Ventures co-led the round, with Dhahran Techno Valley's venture arm and angel investors participating. The company said it would invest in product development, manufacturing capacity and deployment across Saudi Arabia and other markets; the sum is financing raised, not company revenue.",
+    "category": "Funding",
+    "region": "saudi",
+    "imageUrl": "",
+    "imageCredit": "",
+    "sourceUrl": "https://raed.vc/news/think-closes-menas-largest-ai-infrastructure-pre-seed-round-at-over-8-million/",
+    "sourceName": "RAED Ventures",
+    "companies": [
+      "Think AI",
+      "Think",
+      "RAED Ventures",
+      "Wa'ed Ventures"
+    ],
+    "publishedAt": "2026-07-15",
+    "author": "Wosool news desk",
+    "tags": [
+      "Saudi Arabia",
+      "AI infrastructure",
+      "Pre-seed"
+    ],
+    "keyFacts": [
+      "More than US$8m pre-seed funding announced July 15, 2026",
+      "Co-led by RAED Ventures and Wa'ed Ventures",
+      "Riyadh-based AI infrastructure company"
+    ],
+    "translations": {
+      "ar": {
+        "title": "«Think» السعودية تجمع أكثر من 8 ملايين دولار في جولة ما قبل التأسيس",
+        "excerpt": "أعلنت «Think» في الرياض جولة تمويل تتجاوز 8 ملايين دولار بقيادة مشتركة من «رائد فنتشرز» و«واعد فنتشرز» في يوليو 2026.",
+        "body": [
+          "أعلنت شركة «Think» المتخصصة في أجهزة الحوسبة والبنية البرمجية للذكاء الاصطناعي جمع أكثر من 8 ملايين دولار في جولة ما قبل التأسيس بتاريخ 15 يوليو 2026. قادت الجولة «رائد فنتشرز» و«واعد فنتشرز» بمشاركة الذراع الاستثمارية لوادي الظهران للتقنية ومستثمرين أفراد. وتخطط الشركة لاستخدام التمويل لتطوير المنتجات والتصنيع والتوسع؛ والمبلغ المعلن تمويل وليس إيرادات للشركة."
+        ],
+        "keyFacts": [
+          "تمويل يتجاوز 8 ملايين دولار أُعلن في 15 يوليو 2026",
+          "قيادة مشتركة من رائد فنتشرز وواعد فنتشرز",
+          "شركة سعودية للبنية التحتية للذكاء الاصطناعي مقرها الرياض"
+        ]
+      }
+    }
+  },
+  {
     "id": "sourced-microsoft-e7-agent-governance",
     "slug": "microsoft-e7-agent-governance",
     "title": "Microsoft explains what enterprise agent governance means for startups",
@@ -3224,6 +3313,49 @@
       }
     },
     "region": "global"
+  },
+  {
+    "id": "sourced-stitch-saudi-series-a-may-2026",
+    "slug": "stitch-saudi-series-a-may-2026",
+    "title": "Saudi fintech infrastructure provider Stitch raises $25m Series A",
+    "excerpt": "Stitch announced a $25 million Series A led by Andreessen Horowitz on May 14, 2026, bringing cumulative announced funding to $35 million.",
+    "content": "Riyadh-headquartered banking-technology company Stitch announced a $25 million Series A investment led by Andreessen Horowitz on May 14, 2026. The company said cumulative funding reached $35 million and reported that its platform had processed more than $5 billion in transactions during the preceding six months; transaction value is not revenue. Stitch provides cloud-native infrastructure for payments, cards, ledgers and lending.",
+    "category": "Funding",
+    "region": "saudi",
+    "imageUrl": "",
+    "imageCredit": "",
+    "sourceUrl": "https://www.stitch.co/press/stitch-raises-25m-series-a-led-by-andreessen-horowitz",
+    "sourceName": "Stitch",
+    "companies": [
+      "Stitch",
+      "Andreessen Horowitz"
+    ],
+    "publishedAt": "2026-05-14",
+    "author": "Wosool news desk",
+    "tags": [
+      "Saudi Arabia",
+      "Fintech",
+      "Series A"
+    ],
+    "keyFacts": [
+      "US$25m Series A announced May 14, 2026",
+      "US$35m total funding reported by Stitch",
+      "Over US$5bn in platform transactions over six months, not revenue"
+    ],
+    "translations": {
+      "ar": {
+        "title": "«Stitch» السعودية تجمع 25 مليون دولار في جولة تمويل من الفئة «أ»",
+        "excerpt": "أعلنت شركة «Stitch» للتقنية المالية في الرياض تمويلًا بقيمة 25 مليون دولار بقيادة «أندريسن هورويتز» في 14 مايو 2026.",
+        "body": [
+          "أعلنت شركة «Stitch» السعودية المتخصصة في البنية التحتية للأنظمة المالية جمع 25 مليون دولار في جولة من الفئة «أ» بقيادة «أندريسن هورويتز» في 14 مايو 2026. وذكرت أن إجمالي تمويلها المعلن وصل إلى 35 مليون دولار، وأن منصتها عالجت معاملات تتجاوز قيمتها 5 مليارات دولار خلال الأشهر الستة السابقة؛ وقيمة المعاملات ليست إيرادات. وتوفر الشركة حلولًا للمدفوعات والبطاقات والسجلات المالية والإقراض."
+        ],
+        "keyFacts": [
+          "جولة بقيمة 25 مليون دولار في 14 مايو 2026",
+          "إجمالي تمويل معلن بلغ 35 مليون دولار وفق الشركة",
+          "معاملات تتجاوز 5 مليارات دولار خلال ستة أشهر وليست إيرادات"
+        ]
+      }
+    }
   },
   {
     "id": "sourced-ema-drishya-enterprise-ai-lessons",

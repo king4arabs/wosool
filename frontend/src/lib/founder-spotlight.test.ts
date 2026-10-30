@@ -10,6 +10,8 @@ import countryProfiles from '../data/founder-spotlight-expansion-2026-10-29.json
 const rank: Record<string, number> = { saudi: 0, gcc: 1, mena: 2, global: 3 }
 const sourceProfiles = [...historicalProfiles, ...additionalProfiles, ...discoveryProfiles, ...countryProfiles]
   .sort((left, right) => (rank[left.region] ?? 4) - (rank[right.region] ?? 4))
+const originalCountryCohort = countryProfiles.filter(profile => profile.reviewed_at === '2026-10-29')
+const october30Additions = countryProfiles.filter(profile => profile.reviewed_at === '2026-10-30')
 import { getFounderSpotlights } from './founder-spotlight'
 
 test('public spotlights stay separate from member profiles and provide supported links', () => {
@@ -42,11 +44,13 @@ test('frontend source snapshots and database import share the same reviewed reco
   assert.equal(discoveryProfiles.length, 62)
   const databaseCountry = JSON.parse(readFileSync(new URL('../../../backend/resources/data/founder-directory-expansion-2026-10-29.json', import.meta.url), 'utf8'))
   assert.deepEqual(databaseCountry, countryProfiles)
-  assert.equal(countryProfiles.length, 102)
-  assert.equal(new Set(countryProfiles.map(profile => profile.country_code)).size, 51)
-  for (const code of new Set(countryProfiles.map(profile => profile.country_code))) assert.equal(countryProfiles.filter(profile => profile.country_code === code).length, 2, code)
-  assert.equal(new Set(sourceProfiles.map(profile => profile.company_key)).size, 168)
-  assert.equal(sourceProfiles.length, 308)
+  assert.equal(countryProfiles.length, 105)
+  assert.equal(originalCountryCohort.length, 102)
+  assert.equal(october30Additions.length, 3)
+  assert.equal(new Set(originalCountryCohort.map(profile => profile.country_code)).size, 51)
+  for (const code of new Set(originalCountryCohort.map(profile => profile.country_code))) assert.equal(originalCountryCohort.filter(profile => profile.country_code === code).length, 2, code)
+  assert.equal(new Set(sourceProfiles.map(profile => profile.company_key)).size, 170)
+  assert.equal(sourceProfiles.length, 311)
   assert.equal(new Set(sourceProfiles.map(profile => profile.founder_name_en.toLowerCase())).size, sourceProfiles.length)
   assert.equal(new Set(sourceProfiles.map(profile => profile.slug)).size, sourceProfiles.length)
   assert.ok(sourceProfiles.every(profile => profile.source_urls.length > 0 && profile.reviewed_at))
@@ -100,7 +104,7 @@ test('country founder cards have factual provenance and the latest update adds t
 })
 
 test('reconciled worldwide source batch adds two founders in 30 new countries without duplicates or membership claims', () => {
-  const additional = countryProfiles.slice(42)
+  const additional = originalCountryCohort.slice(42)
   const expected = ['PK','IN','BD','JP','MY','PH','ID','SG','NG','KE','ZA',
     'GB','FR','DE','NL','SE','ES','DK','NO','FI','IE','AT','BE','GR','CH','CO','CL','MX','CA','AR']
   assert.equal(additional.length, 60)
@@ -123,5 +127,19 @@ test('reconciled worldwide source batch adds two founders in 30 new countries wi
     assert.equal(item.traction_ar, null)
     assert.equal(item.traction_source_url, null)
     assert.ok(!('member' in item) && !('email' in item) && !('user_id' in item))
+  }
+})
+
+test('30 October Saudi founder discoveries have primary evidence and retain unclaimed public-only status', () => {
+  assert.deepEqual(october30Additions.map(item => item.slug).sort(), [
+    'ahmed-alsharif-think-ai', 'ammar-enaya-think-ai', 'mohamed-oueida-stitch',
+  ])
+  for (const row of october30Additions) {
+    assert.equal(row.country_code, 'SA')
+    assert.equal(row.region, 'saudi')
+    assert.ok(row.source_urls.includes(row.source_url))
+    assert.equal(row.portrait_url, null) // Never invent a likeness.
+    assert.equal(row.logo_url, null) // Unlicensed image reuse is not permitted.
+    assert.ok(!('isVerified' in row) && !('member' in row) && !('email' in row))
   }
 })
