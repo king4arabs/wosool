@@ -51,9 +51,13 @@ function FounderDirectory({ visitSeed }: { visitSeed: number }) {
   const hasFilters = Boolean(linkedSlug || search || sector || stage || location || region !== 'all')
   // The API searches both languages and every public linked company. Rechecking
   // only the translated card would incorrectly remove valid server matches.
-  const filtered = searchPending ? [] : isSpotlight ? founders.filter(founder =>
-    matchesFounderSearch(founder, search) && (!sector || founder.sector === sector) && (!stage || founder.stage === stage) && (!location || founderCountry(founder) === location)
-  ) : founders
+  // Guard the deep link on the client as well: older API releases may ignore
+  // the new slug parameter, but must never present an unrelated founder card.
+  const filtered = searchPending ? [] : linkedSlug
+    ? founders.filter(founder => founder.slug === linkedSlug)
+    : isSpotlight ? founders.filter(founder =>
+      matchesFounderSearch(founder, search) && (!sector || founder.sector === sector) && (!stage || founder.stage === stage) && (!location || founderCountry(founder) === location)
+    ) : founders
   const options = (key: 'sector' | 'stage') => [...new Set([
     ...(key === 'sector' ? collection.meta.sectors?.map(item => item[locale]) ?? [] : collection.meta.stages ?? []),
     ...founders.map(founder => founder[key]),
@@ -62,7 +66,7 @@ function FounderDirectory({ visitSeed }: { visitSeed: number }) {
   function changeRegion(value: FounderRegionFilter) { setLocation(''); setRegion(value) }
   const control = "min-h-12 w-full min-w-0 rounded-xl border border-[var(--border)] bg-[var(--surface)] px-4 text-sm text-[var(--text)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--focus-ring)]"
   const label = "grid min-w-0 gap-2 text-xs font-bold text-[var(--text)]"
-  const filtersKey = `${isSpotlight}-${search}-${sector}-${stage}-${location}`
+  const filtersKey = `${isSpotlight}-${linkedSlug}-${search}-${sector}-${stage}-${location}`
 
   return <PublicLayout><div className={styles.home} dir={direction} lang={locale}>
     <PageHero
@@ -80,7 +84,11 @@ function FounderDirectory({ visitSeed }: { visitSeed: number }) {
 
     <section id="founder-directory" className={`${styles.container} ${styles.section}`} aria-labelledby="founder-results-title" style={{ scrollMarginTop: 100 }}>
       <div className={styles.sectionHead}><div><p className={styles.eyebrow}>{isSpotlight ? ar ? 'أعمال وخبرات من المنطقة' : 'BUSINESSES AND EXPERIENCE FROM THE REGION' : copy.directoryEyebrow}</p><h2 id="founder-results-title">{isSpotlight ? ar ? 'استكشف ملفات المؤسسين' : 'Explore founder profiles' : copy.directoryTitle}</h2></div><Link className={styles.textLink} href="/startups">{ar ? 'دليل الشركات الناشئة' : 'Startup directory'}<Arrow size={17} aria-hidden="true" /></Link></div>
-      {linkedSlug && <div className="mt-5 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-indigo-200 bg-indigo-50 p-4 text-sm text-indigo-950"><p>{ar ? 'عرض بطاقة المؤسس المرتبطة بحسابه' : 'Viewing the founder card linked to its account'}</p><Link href="/founders#founder-directory" className="inline-flex min-h-11 items-center font-bold underline">{ar ? 'عرض جميع المؤسسين' : 'Browse all founders'}</Link></div>}
+      {linkedSlug && <div className="mt-5 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-indigo-200 bg-indigo-50 p-4 text-sm text-indigo-950"><p role="status">{collection.loading
+        ? ar ? 'جارٍ البحث عن بطاقة المؤسس…' : 'Finding the founder card…'
+        : filtered.length
+        ? ar ? 'بطاقة المؤسس المرتبطة بحسابه' : 'Founder card linked to the account'
+        : ar ? 'هذا الملف غير متاح في الدليل العام حالياً.' : 'This profile is not currently available in the public directory.'}</p><Link href="/founders#founder-directory" className="inline-flex min-h-11 items-center font-bold underline">{ar ? 'عرض جميع المؤسسين' : 'Browse all founders'}</Link></div>}
       <div className="mt-7 grid min-w-0 gap-4 rounded-2xl border border-[var(--border-soft)] bg-[var(--surface-soft)] p-4 sm:p-5 lg:grid-cols-2">
         <label className={label}><span>{copy.searchAria}</span><span className="relative flex min-w-0 items-center"><Search size={17} aria-hidden="true" className="pointer-events-none absolute start-3 text-[var(--text-muted)]" /><input type="search" maxLength={120} value={search} onChange={event => setSearch(event.target.value)} placeholder={copy.searchPlaceholder} className={`${control} ps-10`} /></span></label>
         <div className="grid min-w-0 gap-3 sm:grid-cols-2">
