@@ -66,6 +66,8 @@ export interface ApiCompany {
 }
 
 export interface ApiFounder {
+  /** Permanent opaque profile identity; never a user account ID. */
+  founder_uid?: string | null
   community_engagement_score?: number | null
   skills?: string[] | null
   activation_status?: "active" | "unclaimed" | "suspended"
@@ -201,6 +203,7 @@ export interface WrappedResponse<T> {
 export function mapFounder(founder: ApiFounder): Founder {
   const company = founder.companies?.find(company => company.pivot?.is_primary) ?? founder.companies?.[0]
   return {
+    founderUid: founder.founder_uid ?? undefined,
     activationStatus: founder.activation_status,
     communityEngagementScore: founder.community_engagement_score ?? null,
     canCommunicate: founder.can_communicate,
