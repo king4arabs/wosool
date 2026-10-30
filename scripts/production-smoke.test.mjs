@@ -4,7 +4,7 @@ import { buildProbes, formatResponseDiagnostics, probeEndpoint, validateOrigin }
 
 test("covers website, direct Laravel endpoints, and the frontend proxy", () => {
   const probes = buildProbes("https://wosool.org", "https://api.wosool.org")
-  assert.equal(probes.length, 16)
+  assert.equal(probes.length, 18)
   assert.ok(probes.some((p) => p.url === "https://wosool.org/api/health"))
   assert.ok(probes.some((p) => p.url === "https://api.wosool.org/api/ready"))
 })
@@ -90,5 +90,32 @@ test("rejects an empty or placeholder homepage", async () => {
       assert.equal(options.body, "{}")
       return Response.json({ errors: Object.fromEntries(spec.fields.map(field => [field, ["Required"]])) }, { status: 422 })
     })
+  }
+})
+
+test("production smoke rejects an API version that ignores a nonexistent founder slug", async () => {
+  const probes = buildProbes("https://wosool.org", "https://api.wosool.org")
+    .filter(spec => spec.kind === "empty-founder-list")
+  assert.equal(probes.length, 2)
+  for (const spec of probes) {
+    assert.match(spec.url, /\/api\/v1\/founders\?slug=/)
+    await probeEndpoint(spec, async (_url, options) => {
+      assert.equal(options.method, "GET")
+      assert.equal(options.body, undefined)
+      assert.equal(options.headers.Accept, "application/json")
+      return Response.json({ data: [], meta: { total: 0 } })
+    })
+    await assert.rejects(
+      () => probeEndpoint(spec, async () => Response.json({ data: [{ id: 1, slug: "unrelated-founder" }], meta: { total: 29 } })),
+      /slug filter is missing or returns unrelated profiles/,
+    )
+    await assert.rejects(
+      () => probeEndpoint(spec, async () => Response.json({ message: "Not found" }, { status: 404 })),
+      /Expected HTTP 200; got HTTP 404/,
+    )
+    await assert.rejects(
+      () => probeEndpoint(spec, async () => new Response("<html>Wrong route</html>", { headers: { "content-type": "text/html" } })),
+      /Expected JSON public founder collection/,
+    )
   }
 })

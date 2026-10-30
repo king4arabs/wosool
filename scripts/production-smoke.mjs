@@ -18,6 +18,13 @@ export function buildProbes(site, api) {
     { name: "Laravel liveness", url: api + "/api/health", kind: "json", status: "healthy" },
     { name: "Laravel readiness", url: api + "/api/ready", kind: "json", status: "ready" },
     { name: "Same-origin API proxy", url: site + "/api/health", kind: "json", status: "healthy" },
+    // Detect stale API releases that ignore the exact founder slug filter even
+    // when /api/ready reports healthy. No accounts or private records are read.
+    ...[["Direct", api], ["Same-origin", site]].map(([label, origin]) => ({
+      name: `${label} founder slug lookup`,
+      url: origin + "/api/v1/founders?slug=wosool-smoke-no-founder-0000000000000000&per_page=1",
+      kind: "empty-founder-list",
+    })),
     ...[["Direct", api], ["Same-origin", site]].flatMap(([label, origin]) => [
       ...["verify", "resend"].map(action => ({
         name: `${label} registration ${action}`, url: origin + "/api/v1/auth/registration/" + action,
@@ -62,6 +69,12 @@ export async function probeEndpoint(spec, fetchImpl = fetch) {
     const data = await response.json()
     if (!(spec.fields || ["email", "locale", "consent"]).every(field => Array.isArray(data?.errors?.[field]) && data.errors[field].length > 0)) {
       throw new Error(spec.fields ? "Expected current registration validation errors" : "Expected newsletter validation errors")
+    }
+  } else if (spec.kind === "empty-founder-list") {
+    if (!contentType.includes("application/json")) throw new Error("Expected JSON public founder collection")
+    const data = await response.json()
+    if (!Array.isArray(data?.data) || data.data.length !== 0 || data?.meta?.total !== 0) {
+      throw new Error("Founder slug filter is missing or returns unrelated profiles; deploy matching Laravel API before publishing account card links")
     }
   } else if (spec.kind === "protected") {
     if (!contentType.includes("application/json")) throw new Error("Expected JSON authentication response")
