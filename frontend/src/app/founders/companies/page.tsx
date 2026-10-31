@@ -15,6 +15,7 @@ import {
   companiesPageCopy,
   localizeCompany,
 } from "@/data/localized-seed"
+import { companyOptions, filterCompanies } from "@/lib/company-filters"
 import { type ApiCompany, mapCompany } from "@/lib/content-api"
 import { useLocale } from "@/lib/locale"
 
@@ -26,11 +27,7 @@ export default function CompaniesPage() {
   const [sector, setSector] = useState("")
   const [stage, setStage] = useState("")
   const companyItems = collection.items.map(item => localizeCompany(mapCompany(item), locale))
-
-
-
-
-  const filtered = companyItems.filter(c => (!search || `${c.name} ${c.description} ${c.location}`.toLowerCase().includes(search.toLowerCase())) && (!sector || c.sector === sector) && (!stage || c.stage === stage))
+  const filtered = filterCompanies(companyItems, { search, sector, stage }, locale)
   const hiring = companyItems.filter((company) => company.isHiring)
   const fundraising = companyItems.filter((company) => company.isFundraising)
   const collaborating = companyItems.filter((company) => company.isCollaborating)
@@ -66,27 +63,27 @@ export default function CompaniesPage() {
             <div className="flex flex-col gap-4 lg:flex-row">
               <div className="relative flex-1">
                 <Search
-                  className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400"
+                  className="pointer-events-none absolute start-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400"
                   aria-hidden="true"
                 />
                 <input
                   type="search" value={search} onChange={e=>setSearch(e.target.value)}
                   placeholder={copy.searchPlaceholder}
-                  className="w-full rounded-lg border border-gray-200 py-2.5 pl-10 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-[#C9A84C]"
+                  className="w-full rounded-lg border border-gray-200 py-2.5 ps-10 pe-4 text-sm focus:outline-none focus:ring-2 focus:ring-[#C9A84C]"
                   aria-label={copy.searchAria}
                 />
               </div>
               <select value={sector} onChange={e=>setSector(e.target.value)}
-                className="rounded-lg border border-gray-200 px-3 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#C9A84C]"
-                aria-label={copy.searchAria}
+                className="min-h-11 rounded-lg border border-gray-200 px-3 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#C9A84C]"
+                aria-label={copy.sectorLabel}
               >
-                <option value="">{copy.sectors[0]}</option>{[...new Set(companyItems.map(c=>c.sector).filter(Boolean))].map(value=><option key={value}>{value}</option>)}
+                <option value="">{copy.sectors[0]}</option>{companyOptions(companyItems, "sector", locale).map(value=><option key={value} value={value}>{value}</option>)}
               </select>
               <select value={stage} onChange={e=>setStage(e.target.value)}
-                className="rounded-lg border border-gray-200 px-3 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#C9A84C]"
-                aria-label={copy.searchAria}
+                className="min-h-11 rounded-lg border border-gray-200 px-3 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#C9A84C]"
+                aria-label={copy.stageLabel}
               >
-                <option value="">{copy.stages[0]}</option>{[...new Set(companyItems.map(c=>c.stage).filter(Boolean))].map(value=><option key={value}>{value}</option>)}
+                <option value="">{copy.stages[0]}</option>{companyOptions(companyItems, "stage", locale).map(value=><option key={value} value={value}>{value}</option>)}
               </select>
             </div>
           </div>
