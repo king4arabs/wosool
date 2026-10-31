@@ -17,6 +17,8 @@ Community membership, Accelerator admission and administrator access are separat
 
 **Founder integrity checkpoint (30 October 2026):** founder profiles use immutable public identities and one private scorecard per profile. Approving a community application cannot reactivate a suspended founder profile; an administrator must resolve that moderation state separately before approval. These source safeguards require the matching Laravel release and production verification before they can be treated as live behavior.
 
+**Release snapshot (31 October 2026):** checked-in catalogs contain 320 founders, 175 company groups and 97 bilingual news briefs, with zero integrity problems and no founder reviews due. Company-directory search now matches sectors, founders and normalized Arabic words, while member profile validation exposes every rejected field in the active language. The hourly production smoke workflow has recovered, but the serving frontend/backend SHAs, authenticated journeys and production import state still require separate verification.
+
 ## Architecture
 
 | Layer | Technology and responsibility |
