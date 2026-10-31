@@ -471,6 +471,8 @@ export const companiesPageCopy: Record<Locale, {
   directoryTitle: string
   searchPlaceholder: string
   searchAria: string
+  sectorLabel: string
+  stageLabel: string
   sectors: string[]
   stages: string[]
   hiringTitle: string
@@ -488,6 +490,8 @@ export const companiesPageCopy: Record<Locale, {
     directoryTitle: "جميع الشركات",
     searchPlaceholder: "ابحث باسم الشركة أو القطاع",
     searchAria: "ابحث في الشركات",
+    sectorLabel: "القطاع",
+    stageLabel: "المرحلة",
     sectors: ["جميع القطاعات", "التقنية المالية", "التقنية الصحية", "برمجيات الأعمال", "اللوجستيات", "تقنية الغذاء", "تقنية الموارد البشرية"],
     stages: ["جميع المراحل", "ما قبل البذرة", "البذرة", "السلسلة A", "التوسّع"],
     hiringTitle: "شركات توظّف حاليًا",
@@ -505,6 +509,8 @@ export const companiesPageCopy: Record<Locale, {
     directoryTitle: "All companies",
     searchPlaceholder: "Search by company or sector",
     searchAria: "Search companies",
+    sectorLabel: "Sector",
+    stageLabel: "Stage",
     sectors: ["All sectors", "Fintech", "HealthTech", "B2B SaaS", "Logistics", "FoodTech", "HRTech"],
     stages: ["All stages", "Pre-seed", "Seed", "Series A", "Scale-up"],
     hiringTitle: "Companies hiring now",

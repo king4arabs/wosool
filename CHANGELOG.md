@@ -1,5 +1,19 @@
 # Changelog
 
+## Company directory search and filters — 2026-10-31
+
+- **Problem:** on `/founders/companies` the search box said "Search by company or sector" / "ابحث باسم الشركة أو القطاع", but it only looked in the name, description and location, so typing a sector found nothing. It also needed the whole query as one exact substring: "pay riyadh" or an Arabic name typed with ا instead of إ matched nothing, unlike the `/founders` search. Both dropdowns reused the search box's accessible name, so screen readers announced three controls as "Search companies". In Arabic the search icon and its padding sat on the left, at the end of the field.
+- **Fix:** new `lib/company-filters` uses the same Arabic-aware `normalizeSearch` as founder and FAQ search: every word must appear somewhere in the name, sector, stage, location, description or founder names. The sector and stage dropdowns get their own labels ("القطاع"/"Sector", "المرحلة"/"Stage"), list trimmed values sorted for the visitor's language, and are 44px tall. The icon and padding use logical `start-3`/`ps-10`/`pe-4`.
+- **Tests:** `company-filters` (7). The label and direction guards fail on the previous page; the search helper did not exist.
+- **Checks:** `npm run verify` green on `main` before the change (251 frontend, 358 Laravel tests) and on this branch after it. GitHub Actions on `main` (`83e17ce`): CI run 468 green. The hourly production smoke check is green again: 18/18 at 01:20 UTC, including the registration and newsletter routes that returned 404 on 29–30 October. This sandbox cannot reach wosool.org directly, so the live status comes from that job. No data, deployment or hosting change.
+
+## Founder profile form shows every validation error — 2026-10-30
+
+- **Problem:** on `/dashboard/profile`, a skill longer than 100 characters, or a need or offer longer than 255, was rejected by the API as `skills.1` / `needs.0` / `offers.0`. The page only looked up `errors.skills`, so the member saw "Please correct the highlighted fields." with nothing highlighted and could not tell what to change. The API text itself read "The skills.1 field must not be greater than 100 characters." (Arabic: "حقل skills.1"). The photo-link error was English only in both languages. Display name, position, photo link, country code, skills, location, sector, stage, needs and offers never set `aria-invalid`, so they showed no red border. No error message was linked to its input, focus stayed on the save button, and the small error text used `red-500` (below 4.5:1 contrast).
+- **Fix:** new `lib/profile-form-errors` puts list-item errors on their field and gives each message an id. Every validated field sets `aria-invalid` and `aria-describedby`. After a rejected save, focus moves to the first invalid field. Needs and offers show their errors, have real labels, and cap input at the API's 255 characters. Error text uses `red-600`. The API now words list-item and photo-link errors in the request language ("Keep each skill to 100 characters or fewer." / "اجعل كل مهارة في حدود 100 حرفًا أو أقل.").
+- **Tests:** `profile-form-errors` (frontend) and `FounderProfileValidationLocaleTest` (Laravel). Both fail on the previous code. A browser check at 390px (Arabic) and 1366px (English) as a seeded member showed focus on the first invalid field, each message linked to its input, and no horizontal overflow.
+- No data, deployment or hosting change. (When this entry was written, the hourly production smoke check got 404 from the registration and newsletter API routes; by 31 October 01:20 UTC it passed 18/18, see the 31 October entry.)
+
 ## Founder suspension remains authoritative during membership approval — 2026-10-30
 
 - Reject an administrator's membership approval with HTTP 409 when the linked founder profile is suspended. The check runs inside the locked application transaction before status changes, publication, audit logging or approval email handling.
