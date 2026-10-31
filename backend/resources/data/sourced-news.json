@@ -87,6 +87,49 @@
     }
   },
   {
+    "id": "sourced-serval-series-c-enterprise-ai-october-2026",
+    "slug": "serval-series-c-enterprise-ai-october-2026",
+    "title": "Serval raises $150m Series C at a reported $3bn valuation",
+    "excerpt": "Sequoia leads the AI enterprise-automation financing; valuation is not revenue.",
+    "content": "On 29 October 2026, Serval announced a US$150 million Series C led by Sequoia at a reported US$3 billion post-money valuation. Co-founded by Jake Stauch and Alex McLeod, the US company builds enterprise service-management and AI-assisted workflow software. Conviction and Headline joined as new investors. Serval plans to hire more than 500 people over 12 months; the hiring is planned, not completed. The company did not disclose dollar revenue.",
+    "category": "Funding",
+    "region": "global",
+    "imageUrl": "",
+    "imageCredit": "",
+    "sourceUrl": "https://www.serval.com/blog/we-raised-150m-to-make-everyone-a-builder",
+    "sourceName": "Serval",
+    "companies": [
+      "Serval"
+    ],
+    "publishedAt": "2026-10-29",
+    "author": "Wosool news desk",
+    "tags": [
+      "Serval",
+      "Enterprise AI",
+      "United States",
+      "Funding"
+    ],
+    "keyFacts": [
+      "US$150m Series C led by Sequoia",
+      "Reported US$3bn post-money valuation is not revenue",
+      "500+ future hires planned, not completed"
+    ],
+    "translations": {
+      "ar": {
+        "title": "سيرفال تجمع 150 مليون دولار في الجولة «ج» بتقييم مُعلن 3 مليارات دولار",
+        "excerpt": "قادت «سيكويا» تمويل شركة أتمتة المؤسسات، والتقييم لا يمثل إيرادات.",
+        "body": [
+          "أعلنت «سيرفال» في 29 أكتوبر 2026 جولة تمويل بقيمة 150 مليون دولار بقيادة «سيكويا» عند تقييم مُعلن بعد الاستثمار يبلغ 3 مليارات دولار. شارك جيك ستاوتش وأليكس ماكليود في تأسيس الشركة الأمريكية التي تطور إدارة خدمات المؤسسات وأتمتة سير العمل بالذكاء الاصطناعي. ومن المستثمرين الجدد Conviction وHeadline. وتخطط لتوظيف أكثر من 500 شخص خلال 12 شهراً؛ وهي خطة لم تكتمل بعد. ولم تفصح الشركة عن رقم إيرادات بالدولار."
+        ],
+        "keyFacts": [
+          "جولة «ج» بقيمة 150 مليون دولار بقيادة سيكويا",
+          "تقييم مُعلن بعد الاستثمار 3 مليارات دولار وليس إيرادات",
+          "خطة لتوظيف أكثر من 500 شخص لم تكتمل"
+        ]
+      }
+    }
+  },
+  {
     "id": "sourced-tanmiya-capital-fund-two-october-2026",
     "slug": "tanmiya-capital-fund-two-october-2026",
     "title": "Tanmiya Capital closes its second fund at $130m",
@@ -2983,6 +3026,49 @@
       }
     },
     "region": "global"
+  },
+  {
+    "id": "sourced-rime-saudi-physical-ai-seed-august-2026",
+    "slug": "rime-saudi-physical-ai-seed-august-2026",
+    "title": "Saudi physical-AI company RIME closes seed financing above $2m",
+    "excerpt": "SEEDRA Ventures led the Riyadh startup’s August 2026 physical-AI financing.",
+    "content": "On 4 August 2026, RIME announced closing a seed round of more than US$2 million led by SEEDRA Ventures, with Athlah Investment, Unity Invest Partners and angels. Founded in Riyadh in 2024 by Mohammed Almarshidi and Aarif Al-Otaibi, RIME builds on-site AI agents using existing cameras and sensors. The company reported more than 6,000 linked cameras across GCC retail and service chains at announcement time; this is company-reported deployments, not revenue. This is retrospective coverage of an August announcement, not new October funding.",
+    "category": "Funding",
+    "region": "saudi",
+    "imageUrl": "",
+    "imageCredit": "",
+    "sourceUrl": "https://rime.sa/en/news/rime-closes-seed-round-led-by-seedra-ventures",
+    "sourceName": "RIME",
+    "companies": [
+      "RIME"
+    ],
+    "publishedAt": "2026-08-04",
+    "author": "Wosool news desk",
+    "tags": [
+      "RIME",
+      "Saudi Arabia",
+      "Physical AI",
+      "Seed"
+    ],
+    "keyFacts": [
+      "More than US$2m seed round led by SEEDRA Ventures",
+      "Riyadh-based, co-founded in 2024 by Mohammed Almarshidi and Aarif Al-Otaibi",
+      "Over 6,000 cameras, company-reported August 2026; not revenue"
+    ],
+    "translations": {
+      "ar": {
+        "title": "«رايم» السعودية تغلق جولة بذرية تتجاوز مليوني دولار",
+        "excerpt": "قادت «سيدرا فنتشرز» جولة أغسطس 2026 لتمويل الذكاء الاصطناعي الميداني.",
+        "body": [
+          "أعلنت «رايم» في 4 أغسطس 2026 إغلاق جولة بذرية تتجاوز مليوني دولار بقيادة «سيدرا فنتشرز» وبمشاركة «أثلة للاستثمار» و«يونيتي إنفست بارتنرز» ومستثمرين ملائكيين. أسس محمد المرشدي وعارف العتيبي الشركة بالرياض في 2024 لتطوير وكلاء ذكاء اصطناعي يعملون في المواقع عبر الكاميرات والمستشعرات الموجودة. وأعلنت ربط أكثر من 6,000 كاميرا لدى سلاسل بيع وخدمات خليجية وقتها؛ وهو نطاق استخدام معلن وليس إيرادات. وهذه تغطية لإعلان أغسطس وليست جولة جديدة في أكتوبر."
+        ],
+        "keyFacts": [
+          "جولة بذرية تتجاوز مليوني دولار بقيادة سيدرا فنتشرز",
+          "أسسها محمد المرشدي وعارف العتيبي بالرياض عام 2024",
+          "أكثر من 6,000 كاميرا بحسب إعلان أغسطس 2026، وليس إيرادات"
+        ]
+      }
+    }
   },
   {
     "id": "sourced-saudi-vc-h1-2026-magnitt",

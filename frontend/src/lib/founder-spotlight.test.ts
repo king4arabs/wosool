@@ -44,13 +44,13 @@ test('frontend source snapshots and database import share the same reviewed reco
   assert.equal(discoveryProfiles.length, 62)
   const databaseCountry = JSON.parse(readFileSync(new URL('../../../backend/resources/data/founder-directory-expansion-2026-10-29.json', import.meta.url), 'utf8'))
   assert.deepEqual(databaseCountry, countryProfiles)
-  assert.equal(countryProfiles.length, 110)
+  assert.equal(countryProfiles.length, 114)
   assert.equal(originalCountryCohort.length, 102)
   assert.equal(october30Additions.length, 8)
   assert.equal(new Set(originalCountryCohort.map(profile => profile.country_code)).size, 51)
   for (const code of new Set(originalCountryCohort.map(profile => profile.country_code))) assert.equal(originalCountryCohort.filter(profile => profile.country_code === code).length, 2, code)
-  assert.equal(new Set(sourceProfiles.map(profile => profile.company_key)).size, 173)
-  assert.equal(sourceProfiles.length, 316)
+  assert.equal(new Set(sourceProfiles.map(profile => profile.company_key)).size, 175)
+  assert.equal(sourceProfiles.length, 320)
   assert.equal(new Set(sourceProfiles.map(profile => profile.founder_name_en.toLowerCase())).size, sourceProfiles.length)
   assert.equal(new Set(sourceProfiles.map(profile => profile.slug)).size, sourceProfiles.length)
   assert.ok(sourceProfiles.every(profile => profile.source_urls.length > 0 && profile.reviewed_at))
@@ -143,5 +143,19 @@ test('30 October sourced founder discoveries have primary evidence and retain un
     assert.equal(row.portrait_url, null) // Never invent a likeness.
     assert.equal(row.logo_url, null) // Unlicensed image reuse is not permitted.
     assert.ok(!('isVerified' in row) && !('member' in row) && !('email' in row))
+  }
+})
+
+// Source-only profiles do not constitute membership or account creation.
+test('31 October sourced founders retain primary evidence without membership claims', () => {
+  const latest = countryProfiles.filter(profile => profile.reviewed_at === '2026-10-31')
+  assert.deepEqual(latest.map(profile => profile.slug).sort(), [
+    'aarif-al-otaibi-rime', 'alex-mcleod-serval', 'jake-stauch-serval', 'mohammed-almarshidi-rime',
+  ])
+  for (const profile of latest) {
+    assert.ok(profile.source_urls.includes(profile.source_url))
+    assert.equal(profile.portrait_url, null)
+    assert.equal(profile.logo_url, null)
+    assert.ok(!('member' in profile) && !('email' in profile) && !('user_id' in profile) && !('isVerified' in profile))
   }
 })
