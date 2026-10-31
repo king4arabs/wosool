@@ -1,5 +1,12 @@
 # Changelog
 
+## 31 October release and content reconciliation — 2026-10-31
+
+- Merge the bilingual founder-profile validation and company-directory search corrections after required CI run 469 passed frontend/browser/accessibility checks, production guardrails, standalone Node 22 / pnpm 11.24 installation and Laravel on PHP 8.3, 8.4 and 8.5.
+- Reconcile repository snapshots to **320 founders / 175 companies / 97 stories** after the separate reviewed RIME and Serval content update. `content:check`, `content:review` and all 12 content tests pass with zero integrity problems and zero founder reviews due.
+- Record that hourly production health run 205 passes the public website/API probes that failed on 30 October. This recovery does not identify the serving frontend/backend SHA, prove authenticated OTP or membership behavior, or establish a production founder/news import.
+- Close superseded PR #162: current `main` already contains stricter linked-founder identity matching, stale-request isolation, exact-card filtering for older APIs and regression coverage. No account, moderation flag, review date, startup revenue decision, production database or hosting setting changed in this reconciliation.
+
 ## Company directory search and filters — 2026-10-31
 
 - **Problem:** on `/founders/companies` the search box said "Search by company or sector" / "ابحث باسم الشركة أو القطاع", but it only looked in the name, description and location, so typing a sector found nothing. It also needed the whole query as one exact substring: "pay riyadh" or an Arabic name typed with ا instead of إ matched nothing, unlike the `/founders` search. Both dropdowns reused the search box's accessible name, so screen readers announced three controls as "Search companies". In Arabic the search icon and its padding sat on the left, at the end of the field.
