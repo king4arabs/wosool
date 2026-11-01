@@ -70,3 +70,19 @@ test("related news prefers the same company, then the same region", () => {
   assert.ok(related.every(item => item.slug !== barq.slug))
   assert.ok(related[0].companies?.includes("Barq"))
 })
+
+test("Saudi Endeavor and TalMal sourced briefs preserve real dates and Arabic facts", () => {
+  for (const [slug, date] of [
+    ["endeavor-saudi-entrepreneurs-2025-revenue-october-2026", "2026-10-30"],
+    ["talmal-saudi-preseed-september-2026", "2026-09-21"],
+  ]) {
+    const item = curatedNews.find(story => story.slug === slug)!
+    assert.ok(item, slug)
+    assert.equal(item.region, "saudi")
+    assert.equal(item.publishedAt, date)
+    assert.equal(item.keyFacts?.length, item.translations?.ar.keyFacts?.length)
+    assert.ok(item.translations?.ar.body.length)
+    assert.ok(safeNewsUrl(item.sourceUrl))
+    assert.equal(item.imageUrl, "")
+  }
+})

@@ -44,13 +44,13 @@ test('frontend source snapshots and database import share the same reviewed reco
   assert.equal(discoveryProfiles.length, 62)
   const databaseCountry = JSON.parse(readFileSync(new URL('../../../backend/resources/data/founder-directory-expansion-2026-10-29.json', import.meta.url), 'utf8'))
   assert.deepEqual(databaseCountry, countryProfiles)
-  assert.equal(countryProfiles.length, 114)
+  assert.equal(countryProfiles.length, 117)
   assert.equal(originalCountryCohort.length, 102)
   assert.equal(october30Additions.length, 8)
   assert.equal(new Set(originalCountryCohort.map(profile => profile.country_code)).size, 51)
   for (const code of new Set(originalCountryCohort.map(profile => profile.country_code))) assert.equal(originalCountryCohort.filter(profile => profile.country_code === code).length, 2, code)
-  assert.equal(new Set(sourceProfiles.map(profile => profile.company_key)).size, 175)
-  assert.equal(sourceProfiles.length, 320)
+  assert.equal(new Set(sourceProfiles.map(profile => profile.company_key)).size, 177)
+  assert.equal(sourceProfiles.length, 323)
   assert.equal(new Set(sourceProfiles.map(profile => profile.founder_name_en.toLowerCase())).size, sourceProfiles.length)
   assert.equal(new Set(sourceProfiles.map(profile => profile.slug)).size, sourceProfiles.length)
   assert.ok(sourceProfiles.every(profile => profile.source_urls.length > 0 && profile.reviewed_at))
@@ -157,5 +157,19 @@ test('31 October sourced founders retain primary evidence without membership cla
     assert.equal(profile.portrait_url, null)
     assert.equal(profile.logo_url, null)
     assert.ok(!('member' in profile) && !('email' in profile) && !('user_id' in profile) && !('isVerified' in profile))
+  }
+})
+
+test('1 November sourced founders retain independent evidence and no Wosool membership', () => {
+  const additions = countryProfiles.filter(profile => profile.reviewed_at === '2026-11-01')
+  assert.deepEqual(additions.map(profile => profile.slug).sort(), [
+    'abdallah-yafi-by-venture-partners', 'ghaith-yafi-by-venture-partners', 'thamer-faisal-al-quayshish-talmal',
+  ])
+  for (const row of additions) {
+    assert.ok(row.source_urls.includes(row.source_url))
+    assert.equal(row.portrait_url, null)
+    assert.equal(row.logo_url, null)
+    assert.equal(row.traction_en, null)
+    assert.ok(!('isVerified' in row) && !('member' in row) && !('email' in row) && !('user_id' in row))
   }
 })
