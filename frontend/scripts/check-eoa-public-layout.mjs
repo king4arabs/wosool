@@ -20,7 +20,7 @@ app.stderr.on('data', value => { log = (log + value).slice(-5000) })
 let browser
 
 async function assertContained(page, selector) {
-  const issues = await page.locator(selector).evaluateAll(elements => elements.flatMap(element => {
+  const issues = await page.locator(selector).filter({ visible: true }).evaluateAll(elements => elements.flatMap(element => {
     const rect = element.getBoundingClientRect()
     const parent = element.closest('.eoa-card')?.getBoundingClientRect()
     return rect.width > 0 && (element.scrollWidth > element.clientWidth + 2 || (parent && (rect.left < parent.left - 1 || rect.right > parent.right + 1 || rect.bottom > parent.bottom + 1)))
@@ -31,7 +31,7 @@ async function assertContained(page, selector) {
 }
 
 async function assertRows(cards) {
-  const boxes = await cards.evaluateAll(elements => elements.map(element => {
+  const boxes = await cards.filter({ visible: true }).evaluateAll(elements => elements.map(element => {
     const { top, bottom, width, height } = element.getBoundingClientRect()
     return { top, bottom, width, height }
   }))
@@ -63,16 +63,16 @@ try {
       const errors = []
       page.on('pageerror', error => errors.push(error.message))
       for (const path of ['eligibility', 'partners']) {
-        await page.goto(`${origin}/eoa/${path}`)
+        await page.goto(`${origin}/eoa/${path}`, { waitUntil: 'networkidle' })
         await page.waitForFunction(value => document.documentElement.lang === value, locale)
         await page.evaluate(() => document.fonts.ready)
         if (path === 'eligibility') {
           await page.locator('.eoa-fee dd').first().waitFor()
-          const panels = page.locator('[data-eoa-eligibility] > .eoa-card')
+          const panels = page.locator('[data-eoa-eligibility]:visible > .eoa-card')
           await assertRows(panels)
           const positions = await panels.evaluateAll(elements => elements.map(element => element.getBoundingClientRect().top))
           assert.equal(Math.abs(positions[0] - positions[1]) < 2, width > 900, 'Panels stack on tablet and phone')
-          const form = page.locator('[data-eoa-eligibility] form')
+          const form = page.locator('[data-eoa-eligibility]:visible form')
           await form.locator('input[type=number]').fill('300000')
           await form.locator('input[type=checkbox]').check()
           await form.locator('button[type=submit]').click()
@@ -90,15 +90,29 @@ try {
           await form.getByRole('status').waitFor()
           await assertContained(page, '[data-eoa-eligibility] h2, [data-eoa-eligibility] p, [data-eoa-eligibility] input, [data-eoa-eligibility] select, [data-eoa-eligibility] .eoa-btn, .eoa-fee dd')
         } else {
-          await page.locator('[data-eoa-directory] article').first().waitFor()
-          await assertRows(page.locator('[data-eoa-directory] article'))
-          const links = await page.locator('[data-eoa-directory] article').evaluateAll(elements => elements.map(element => {
+          await page.locator('[data-eoa-directory]:visible article').first().waitFor()
+          await assertRows(page.locator('[data-eoa-directory]:visible article'))
+          const links = await page.locator('[data-eoa-directory]:visible article').evaluateAll(elements => elements.map(element => {
             const card = element.getBoundingClientRect()
             const link = element.querySelector('a').getBoundingClientRect()
             return { top: card.top, bottom: link.bottom }
           }))
           for (const link of links) assert.ok(links.filter(other => Math.abs(other.top - link.top) < 2).every(other => Math.abs(other.bottom - link.bottom) < 2), 'Directory links align within each row')
-          await assertRows(page.locator('[data-partner-carousel] [data-partner]'))
+          await assertRows(page.locator('[data-partner-carousel]:visible [data-partner]'))
+          if ([390, 1440].includes(width)) {
+            await page.emulateMedia({ reducedMotion: 'no-preference' })
+            const carousel = page.locator('[data-partner-carousel]:visible')
+            const expand = carousel.locator('button[aria-expanded]')
+            await expand.waitFor()
+            const controlsFit = await carousel.locator('button').evaluateAll(buttons => buttons.every(button => {
+              const box = button.getBoundingClientRect()
+              return box.left >= 0 && box.right <= innerWidth && box.height >= 44
+            }))
+            assert.ok(controlsFit, 'Carousel controls stay within the viewport')
+            await expand.click()
+            await assertRows(carousel.locator('[data-partner]'))
+            await page.emulateMedia({ reducedMotion: 'reduce' })
+          }
           await assertContained(page, '[data-eoa-directory] h3, [data-eoa-directory] p, [data-eoa-directory] a')
         }
         if ([390, 1440].includes(width)) await page.screenshot({ path: `/tmp/eoa-layout-${engine}-${locale}-${width}-${path}.png`, fullPage: true })
@@ -106,7 +120,7 @@ try {
       if (width === 320) {
         unavailable = true
         for (const path of ['eligibility', 'partners']) {
-          await page.goto(`${origin}/eoa/${path}`)
+          await page.goto(`${origin}/eoa/${path}`, { waitUntil: 'networkidle' })
           await page.locator('.eoa-error').waitFor()
           await assertContained(page, '.eoa-error')
         }
