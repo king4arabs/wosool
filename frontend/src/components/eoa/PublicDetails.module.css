@@ -1,0 +1,171 @@
+.eligibility {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: stretch;
+  gap: clamp(20px, 2.5vw, 32px);
+}
+
+.eligibility > *,
+.partners,
+.partnerStrip,
+.ecosystem {
+  min-width: 0;
+}
+
+.eligibility .summary,
+.eligibility .assessment,
+.directory .organization {
+  padding: clamp(20px, 2.5vw, 32px);
+  overflow-wrap: anywhere;
+}
+
+.eligibility h2 {
+  margin-block: 0 20px;
+  font-size: clamp(22px, 2.2vw, 28px);
+  line-height: 1.5;
+}
+
+.summary > p:last-child,
+.fee > p:last-child {
+  margin-bottom: 0;
+}
+
+.summary .fee {
+  margin-top: 24px;
+  padding-top: 24px;
+  border-top: 1px solid var(--border-soft);
+}
+
+.fee > strong {
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+
+.fee dl {
+  grid-template-columns: minmax(0, 1fr) minmax(0, .6fr);
+  align-items: baseline;
+  gap: 16px;
+  margin-top: 24px;
+}
+
+.fee dd {
+  margin: 0;
+  text-align: end;
+  font-variant-numeric: tabular-nums;
+}
+
+.assessment {
+  display: flex;
+  flex-direction: column;
+}
+
+.fields {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(100px, .45fr);
+  align-items: end;
+  gap: 16px;
+}
+
+.fields > label {
+  margin-bottom: 0;
+}
+
+.fields input,
+.fields select {
+  min-width: 0;
+  min-height: 48px;
+  font-size: 16px;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.actions > * {
+  flex: 1 1 180px;
+  min-width: 0;
+  min-height: 48px;
+  padding-inline: 16px;
+  overflow-wrap: anywhere;
+}
+
+.partners {
+  display: grid;
+  gap: 24px;
+}
+
+.partners > p {
+  margin: 0;
+}
+
+.partnerStrip {
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-card);
+  background: var(--surface);
+  box-shadow: var(--shadow-card);
+}
+
+.partnerStrip > section {
+  min-width: 0;
+  border: 0;
+  border-radius: inherit;
+}
+
+/* The operator is already inside the page container on this route. */
+.partners > section:global(.eoa-section) {
+  padding-block: 0 8px;
+}
+
+.partners > section > :global(.eoa-container) {
+  width: 100%;
+}
+
+.ecosystem {
+  margin-top: 12px;
+}
+
+.directory {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-items: stretch;
+  gap: 24px;
+}
+
+.organization {
+  display: flex;
+  flex-direction: column;
+}
+
+.organization h3 {
+  font-size: clamp(20px, 1.8vw, 24px);
+  line-height: 1.6;
+}
+
+.organization > a {
+  align-self: flex-start;
+  margin-top: auto;
+  padding-top: 16px;
+  max-width: 100%;
+}
+
+@media (max-width: 1000px) {
+  .directory { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 900px) {
+  .eligibility { grid-template-columns: minmax(0, 1fr); }
+}
+
+@media (max-width: 600px) {
+  .directory { grid-template-columns: minmax(0, 1fr); gap: 16px; }
+  .fields { grid-template-columns: minmax(0, 1fr); }
+  .actions { flex-direction: column; }
+  .actions > * { flex-basis: auto; width: 100%; }
+  .fee dl { grid-template-columns: minmax(0, 1fr); gap: 4px; }
+  .fee dd { text-align: start; margin-bottom: 12px; }
+  .partners { gap: 20px; }
+}

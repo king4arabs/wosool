@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { useLocale } from '@/lib/locale'
 import { eligibility } from '@/lib/eoa'
 import { Field, Notice, useEoaProgram } from './Shared'
+import styles from './PublicDetails.module.css'
 export function Eligibility() {
   const { locale } = useLocale()
   const ar = locale === 'ar'
@@ -27,17 +28,17 @@ export function Eligibility() {
       : 'Enter a valid annual revenue amount.',
   }
   return (
-    <div className="eoa-two-grid">
-      <div>
+    <div className={styles.eligibility} data-eoa-eligibility>
+      <div className={`eoa-card ${styles.summary}`}>
         <h2>{ar ? 'هل يناسبك البرنامج؟' : 'Is Accelerator right for you?'}</h2>
         <p>
           {ar
             ? 'لمالك أو مؤسس شركة قائمة بإيراد سنوي إجمالي بين 250,000 و999,999 دولار أمريكي.'
             : 'For an owner or founder of an operating business with gross annual revenue of US$250,000–999,999.'}
         </p>
-        <div className="eoa-card eoa-fee">
+        <div className={`eoa-fee ${styles.fee}`}>
           <span>{ar ? 'تكلفة رحلة EOA السنوية' : 'ANNUAL EOA JOURNEY COST'}</span>
-          <strong>{program ? `US$${program.facts.annual_journey_usd.toLocaleString('en-US')}` : '—'}</strong>
+          <strong><bdi dir="ltr">{program ? `US$${program.facts.annual_journey_usd.toLocaleString('en-US')}` : '—'}</bdi></strong>
           {!program && <Notice error={failed}>{failed ? (ar ? 'تعذر تحميل الرسوم المعتمدة.' : 'Published fees could not load.') : (ar ? 'جارٍ تحميل الرسوم…' : 'Loading fees…')}{failed && <button type="button" className="eoa-text-link" onClick={retry}>{ar ? 'إعادة المحاولة' : 'Try again'}</button>}</Notice>}
           <p>
             {ar
@@ -47,17 +48,17 @@ export function Eligibility() {
           {program?.local_fees ? (
             <dl>
               <dt>{ar ? 'رسوم محلية سنوية' : 'Annual local fee'}</dt>
-              <dd>US${program.local_fees.local_fee_usd}</dd>
+              <dd><bdi dir="ltr">US${program.local_fees.local_fee_usd.toLocaleString('en-US')}</bdi></dd>
               <dt>
                 {ar ? 'مساهمة الراعي السنوية' : 'Annual sponsor contribution'}
               </dt>
-              <dd>US${program.local_fees.sponsor_contribution_usd}</dd>
+              <dd><bdi dir="ltr">US${program.local_fees.sponsor_contribution_usd.toLocaleString('en-US')}</bdi></dd>
               <dt>
                 {ar
                   ? 'مساهمة المشارك السنوية'
                   : 'Annual participant contribution'}
               </dt>
-              <dd>US${program.local_fees.participant_contribution_usd}</dd>
+              <dd><bdi dir="ltr">US${program.local_fees.participant_contribution_usd.toLocaleString('en-US')}</bdi></dd>
             </dl>
           ) : (
             program && <p className="eoa-muted">
@@ -69,7 +70,8 @@ export function Eligibility() {
         </div>
       </div>
       <form
-        className="eoa-card"
+        className={`eoa-card ${styles.assessment}`}
+        aria-labelledby="eligibility-assessment-title"
         onSubmit={(e) => {
           e.preventDefault()
           setResult(
@@ -77,32 +79,36 @@ export function Eligibility() {
           )
         }}
       >
-        <h3>{ar ? 'تقييم أولي للأهلية' : 'Eligibility self-assessment'}</h3>
-        <Field label={ar ? 'الإيراد السنوي الإجمالي' : 'Gross annual revenue'}>
-          <input
-            type="number"
-            min="0"
-            step="0.01"
-            required
-            value={amount}
-            onChange={(e) => {
-              setAmount(e.target.value)
-              setResult('')
-            }}
-          />
-        </Field>
-        <Field label={ar ? 'العملة' : 'Currency'}>
-          <select
-            value={currency}
-            onChange={(e) => {
-              setCurrency(e.target.value)
-              setResult('')
-            }}
-          >
-            <option>USD</option>
-            <option>SAR</option>
-          </select>
-        </Field>
+        <h2 id="eligibility-assessment-title">{ar ? 'تقييم أولي للأهلية' : 'Eligibility self-assessment'}</h2>
+        <div className={styles.fields}>
+          <Field label={ar ? 'الإيراد السنوي الإجمالي' : 'Gross annual revenue'}>
+            <input
+              type="number"
+              inputMode="decimal"
+              dir="ltr"
+              min="0"
+              step="0.01"
+              required
+              value={amount}
+              onChange={(e) => {
+                setAmount(e.target.value)
+                setResult('')
+              }}
+            />
+          </Field>
+          <Field label={ar ? 'العملة' : 'Currency'}>
+            <select
+              value={currency}
+              onChange={(e) => {
+                setCurrency(e.target.value)
+                setResult('')
+              }}
+            >
+              <option>USD</option>
+              <option>SAR</option>
+            </select>
+          </Field>
+        </div>
         <label className="eoa-check">
           <input
             type="checkbox"
@@ -112,9 +118,9 @@ export function Eligibility() {
               setResult('')
             }}
           />
-          {ar
+          <span>{ar
             ? 'أنا مالك أو مؤسس شركة قائمة.'
-            : 'I am an owner or founder of an operating business.'}
+            : 'I am an owner or founder of an operating business.'}</span>
         </label>
         {currency === 'SAR' && (
           <p className="eoa-muted">
@@ -130,13 +136,15 @@ export function Eligibility() {
             </a>
           </p>
         )}
-        <button className="eoa-btn" type="submit">
-          {ar ? 'تحقق من الأهلية' : 'Check eligibility'}
-        </button>
+        <div className={styles.actions}>
+          <button className="eoa-btn" type="submit">
+            {ar ? 'تحقق من الأهلية' : 'Check eligibility'}
+          </button>
+          <Link className="eoa-btn eoa-btn-outline" href="/eoa/apply">
+            {ar ? 'جهز طلبك' : 'Prepare your application'} ↗
+          </Link>
+        </div>
         {result && <Notice>{messages[result]}</Notice>}
-        <Link className="eoa-text-link" href="/eoa/apply">
-          {ar ? 'جهز طلبك' : 'Prepare your application'} ↗
-        </Link>
       </form>
     </div>
   )

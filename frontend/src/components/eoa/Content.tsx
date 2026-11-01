@@ -13,6 +13,7 @@ import { EoaDirectory } from './Directory'
 import { Eligibility } from './Eligibility'
 import { PartnerStrip, useEoaProgram } from './Shared'
 import { formatEoaDate } from '@/lib/eoa'
+import styles from './PublicDetails.module.css'
 const titles: Record<string, [string, string]> = {
   alumni: ['الخريجون ومتابعة النمو', 'Alumni & continued growth'],
   privacy: ['الخصوصية والبيانات', 'Privacy & data'],
@@ -148,10 +149,10 @@ export function EoaContent({ section }: { section: string }) {
           {!!program?.mentors?.length && <EoaMentors mentors={program.mentors} ar={ar} />}
         </>}
         {section === 'faq' && <EoaProgramDetails program={program} section="faq" />}
-        {section === 'partners' && <EoaProgramDetails program={program} section="operator" />}
         {section === 'partners' && (
-          <>
-            <PartnerStrip partners={program?.partners} />
+          <div className={styles.partners}>
+            <EoaProgramDetails program={program} section="operator" />
+            <div className={styles.partnerStrip}><PartnerStrip partners={program?.partners} /></div>
             {!program?.partners.length && (
               <p>
                 {ar
@@ -159,18 +160,20 @@ export function EoaContent({ section }: { section: string }) {
                   : 'Help founders grow through your expertise or resources. Contact the team to explore partnership opportunities.'}
               </p>
             )}
-            <h2 className="eoa-space">
-              {ar
-                ? 'منظومة الدعم في السعودية'
-                : 'Saudi founder support ecosystem'}
-            </h2>
-            <p>
-              {ar
-                ? 'هذه جهات تعمل مع رواد الأعمال في السعودية. زر مواقعها الرسمية لمعرفة خدماتها؛ إدراجها هنا لا يعني أنها شريكة في المسرّعة.'
-                : 'These organizations work with entrepreneurs in Saudi Arabia. Check their official sites for services; appearing here does not mean they are Accelerator partners.'}
-            </p>
-            <EoaDirectory ar={ar} />
-          </>
+            <section className={styles.ecosystem} aria-labelledby="eoa-directory-title">
+              <h2 id="eoa-directory-title">
+                {ar
+                  ? 'منظومة الدعم في السعودية'
+                  : 'Saudi founder support ecosystem'}
+              </h2>
+              <p>
+                {ar
+                  ? 'هذه جهات تعمل مع رواد الأعمال في السعودية. زر مواقعها الرسمية لمعرفة خدماتها؛ إدراجها هنا لا يعني أنها شريكة في المسرّعة.'
+                  : 'These organizations work with entrepreneurs in Saudi Arabia. Check their official sites for services; appearing here does not mean they are Accelerator partners.'}
+              </p>
+              <EoaDirectory ar={ar} />
+            </section>
+          </div>
         )}
         {section === 'contact' && (
           <div className="eoa-two-grid">
