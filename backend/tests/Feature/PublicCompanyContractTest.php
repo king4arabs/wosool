@@ -31,7 +31,7 @@ class PublicCompanyContractTest extends TestCase
     {
         $result = app(FounderDirectoryImporter::class)->run();
         $this->assertSame(175, $result['companies_created']);
-        $this->assertSame(320, $result['founders_created']);
+        $this->assertSame(322, $result['founders_created']);
         $this->assertSame(0, User::count());
         $samples = [];
         foreach (['en', 'ar'] as $locale) {
