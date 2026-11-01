@@ -47,6 +47,18 @@ jobs:
           SEO_CANONICAL_ORIGIN: http://localhost:3000
       - name: Install Chromium for isolated public-collection checks
         run: npx playwright install --with-deps chromium
+      - name: Install Firefox and WebKit for EOA responsive checks
+        run: npx playwright install --with-deps firefox webkit
+      - name: Verify EOA partners and eligibility across browsers and screen sizes
+        run: node scripts/check-eoa-public-layout.mjs
+      - name: Save EOA responsive browser previews
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: eoa-responsive-previews
+          path: /tmp/eoa-layout-*.png
+          retention-days: 3
+          if-no-files-found: ignore
       - name: Verify public collection fallback in both languages and viewport sizes
         run: npm run test:collections:browser
       - name: Verify homepage founder discovery and fresh visit mixes
@@ -89,18 +101,6 @@ jobs:
         run: node scripts/check-ecosystem-calendar.mjs
       - name: Verify EO Accelerator value and cohort card layout in both languages
         run: node scripts/check-eoa-equal-cards.mjs
-      - name: Install Firefox and WebKit for EOA responsive checks
-        run: npx playwright install --with-deps firefox webkit
-      - name: Verify EOA partners and eligibility across browsers and screen sizes
-        run: node scripts/check-eoa-public-layout.mjs
-      - name: Save EOA responsive browser previews
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: eoa-responsive-previews
-          path: /tmp/eoa-layout-*.png
-          retention-days: 3
-          if-no-files-found: ignore
       - name: Verify homepage video playback and accessible fallbacks
         run: node scripts/check-home-hero.mjs
       - name: Check public pages for serious WCAG 2.1 A/AA violations (axe-core)
