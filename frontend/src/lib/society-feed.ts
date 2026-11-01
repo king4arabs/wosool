@@ -126,7 +126,9 @@ export function societySectorLabel(locale: Locale, sector?: string | null): stri
   if (!value) return null
   const copy = societyFeed(locale)
   const known: Record<SocietySector, string> = { fintech: copy.sectorFintech, saas: copy.sectorSaas, ai: copy.sectorAi }
-  return known[value.toLowerCase() as SocietySector] ?? value
+  const key = value.toLowerCase()
+  // Own keys only: a stored sector such as "__proto__" or "constructor" must stay plain text.
+  return Object.hasOwn(known, key) ? known[key as SocietySector] : value
 }
 
 const count = (value: unknown) => (typeof value === "number" && Number.isFinite(value) && value >= 0 ? Math.floor(value) : null)

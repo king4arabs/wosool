@@ -1,6 +1,6 @@
 "use client"
 
-import { FormEvent, useCallback, useEffect, useState } from "react"
+import { FormEvent, useCallback, useEffect, useRef, useState } from "react"
 import Link from "next/link"
 import { useSearchParams } from "next/navigation"
 import { useLocale } from "@/lib/locale"
@@ -45,21 +45,29 @@ export default function SocietyPage() {
   const [deleteTargetPost, setDeleteTargetPost] = useState<SocietyPost | null>(null)
   const [meta, setMeta] = useState<NonNullable<FeedResponse["meta"]>>({ current_page: 1, last_page: 1, total: 0 })
 
+  // Every load gets a number; only the newest one may update the feed, so a
+  // refresh started before a filter change cannot overwrite the new results.
+  const latestRequest = useRef(0)
+  const returnFocus = useRef<HTMLElement | null>(null)
+  const newPostButton = useRef<HTMLButtonElement | null>(null)
+
   const loadPosts = useCallback(async (signal?: AbortSignal) => {
+    const request = ++latestRequest.current
+    const current = () => request === latestRequest.current && !signal?.aborted
     setLoading(true); setLoadError(null)
     try {
       if (postId > 0) {
         const response = await api.get<{ data: SocietyPost }>(`/member/society/posts/${postId}`, { signal })
-        if (signal?.aborted) return
+        if (!current()) return
         setPosts([response.data]); setMeta({ current_page: 1, last_page: 1, total: 1 })
       } else {
         const response = await api.get<FeedResponse>("/member/society/posts", { params: { tab, sector, page, sort: "latest" }, signal })
-        if (signal?.aborted) return
+        if (!current()) return
         setPosts(response.data ?? [])
         setMeta(response.meta ?? { current_page: 1, last_page: 1, total: response.data?.length ?? 0 })
       }
-    } catch (error) { if (!signal?.aborted) setLoadError(error instanceof Error && error.message ? error.message : copy.loadFailed) }
-    finally { if (!signal?.aborted) setLoading(false) }
+    } catch (error) { if (current()) setLoadError(error instanceof Error && error.message ? error.message : copy.loadFailed) }
+    finally { if (current()) setLoading(false) }
   }, [page, tab, sector, postId, copy.loadFailed])
 
   useEffect(() => {
@@ -67,6 +75,16 @@ export default function SocietyPage() {
     void loadPosts(controller.signal)
     return () => controller.abort()
   }, [loadPosts])
+
+  // Dialogs here have no DialogTrigger, so put focus back on the control that
+  // opened them, or on "New post" when that control is gone (a deleted card).
+  function rememberFocus() { returnFocus.current = document.activeElement instanceof HTMLElement ? document.activeElement : null }
+  function restoreFocus(event: Event) {
+    event.preventDefault()
+    const target = returnFocus.current?.isConnected ? returnFocus.current : newPostButton.current
+    returnFocus.current = null
+    target?.focus()
+  }
 
   function actionError(error: unknown) { toast(error instanceof Error && error.message ? error.message : copy.actionFailed, "error") }
 
@@ -148,8 +166,9 @@ export default function SocietyPage() {
     setLoadingActionId(postId)
     try {
       await api.delete(`/member/society/posts/${postId}`)
-      setDeleteTargetPost(null)
+      // Reload before closing, so focus returns after the deleted card is gone.
       await loadPosts()
+      setDeleteTargetPost(null)
     } catch (error) { actionError(error) } finally {
       setLoadingActionId(null)
     }
@@ -165,7 +184,7 @@ export default function SocietyPage() {
           title={copy.title}
           subtitle={copy.subtitle}
           cta={
-            <button type="button" onClick={() => setIsModalOpen(true)} className="w-full sm:w-auto min-h-11 bg-[#3B52D4] hover:bg-[#2E44C8] text-white font-semibold text-sm px-4 py-2.5 rounded-lg shadow-sm transition-colors text-center shrink-0">
+            <button ref={newPostButton} type="button" onClick={() => { rememberFocus(); setIsModalOpen(true) }} className="w-full sm:w-auto min-h-11 bg-[#3B52D4] hover:bg-[#2E44C8] text-white font-semibold text-sm px-4 py-2.5 rounded-lg shadow-sm transition-colors text-center shrink-0">
               {copy.newPost}
             </button>
           }
@@ -188,6 +207,7 @@ export default function SocietyPage() {
               onShare={() => sharePost(post.id).catch(error => { if (!(error instanceof Error && error.name === "AbortError")) actionError(error) })}
               onReportOrDelete={() => {
                 if (post.viewer_state?.is_owner) {
+                  rememberFocus()
                   setDeleteTargetPost(post)
                   return
                 }
@@ -213,13 +233,14 @@ export default function SocietyPage() {
         form={form}
         setForm={setForm}
         onClose={() => setIsModalOpen(false)}
+        onCloseAutoFocus={restoreFocus}
         onSubmit={handleSubmit}
         submitting={isSubmitting}
         submitError={submitError}
       />
 
       <Dialog open={deleteTargetPost !== null} onOpenChange={open => { if (!open) setDeleteTargetPost(null) }}>
-        <DialogContent className="max-w-md">
+        <DialogContent className="max-w-md" onCloseAutoFocus={restoreFocus}>
           <DialogHeader className="mb-4">
             <DialogTitle className="text-base">{copy.deleteTitle}</DialogTitle>
             <DialogDescription className="text-sm text-slate-600">{copy.deleteBody}</DialogDescription>

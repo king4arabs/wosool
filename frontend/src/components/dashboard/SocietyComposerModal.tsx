@@ -24,6 +24,7 @@ export function SocietyComposerModal({
   onSubmit,
   submitting,
   submitError,
+  onCloseAutoFocus,
 }: {
   open: boolean
   form: SocietyPostForm
@@ -32,6 +33,7 @@ export function SocietyComposerModal({
   onSubmit: (e: FormEvent<HTMLFormElement>) => void
   submitting: boolean
   submitError?: string | null
+  onCloseAutoFocus?: (event: Event) => void
 }) {
   const { locale } = useLocale()
   const copy = societyFeed(locale)
@@ -40,7 +42,7 @@ export function SocietyComposerModal({
 
   return (
     <Dialog open={open} onOpenChange={next => { if (!next) onClose() }}>
-      <DialogContent className="max-w-xl">
+      <DialogContent className="max-w-xl" onCloseAutoFocus={onCloseAutoFocus}>
         <DialogHeader>
           <DialogTitle className="text-lg">{copy.composerTitle}</DialogTitle>
           <DialogDescription className="text-sm text-slate-600">{copy.composerSubtitle}</DialogDescription>

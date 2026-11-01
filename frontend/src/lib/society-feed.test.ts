@@ -44,6 +44,7 @@ test("post cards do not invent a company, and sector values read as names", () =
   assert.equal(societySectorLabel("en", "HealthTech"), "HealthTech")
   assert.equal(societySectorLabel("en", "  "), null)
   assert.equal(societySectorLabel("ar", null), null)
+  for (const odd of ["__proto__", "constructor", "toString", "hasOwnProperty"]) assert.equal(societySectorLabel("en", odd), odd)
 })
 
 test("pagination summary and fallbacks follow the visitor's language", () => {
@@ -64,4 +65,12 @@ test("composer and delete confirmation are labelled, RTL-safe modal dialogs", ()
 
 test("member pages inside the dashboard layout do not add a second main landmark", () => {
   for (const path of ["../app/dashboard/society/page.tsx", "../app/dashboard/matches/page.tsx"]) assert.doesNotMatch(source(path), /<main\b/, path)
+})
+
+test("only the newest feed request updates the page, and dialogs hand focus back", () => {
+  assert.match(files.page, /request === latestRequest\.current/)
+  assert.doesNotMatch(files.page, /if \(signal\?\.aborted\) return/)
+  assert.match(files.page, /onCloseAutoFocus=\{restoreFocus\}/)
+  assert.match(files.composer, /onCloseAutoFocus=\{onCloseAutoFocus\}/)
+  assert.equal((files.page.match(/rememberFocus\(\)(?! \{)/g) ?? []).length, 2)
 })
