@@ -1,6 +1,6 @@
 "use client"
 
-import { FormEvent, useCallback, useEffect, useMemo, useState } from "react"
+import { FormEvent, useCallback, useEffect, useState } from "react"
 import Link from "next/link"
 import { useSearchParams } from "next/navigation"
 import { useLocale } from "@/lib/locale"
@@ -10,10 +10,12 @@ import { StrategicHeaderCard } from "@/components/dashboard/StrategicHeaderCard"
 import { FeedFilterBar } from "@/components/dashboard/FeedFilterBar"
 import { SocietyPostCard, type SocietyPost } from "@/components/dashboard/SocietyPostCard"
 import { SocietyComposerModal, type SocietyPostForm } from "@/components/dashboard/SocietyComposerModal"
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
+import { societyFeed, societyShowing, societyTabCounts, type SocietyCounts, type SocietyTab } from "@/lib/society-feed"
 
 type FeedResponse = {
   data: SocietyPost[]
-  meta?: { current_page: number; last_page: number; total: number }
+  meta?: { current_page: number; last_page: number; total: number; counts?: SocietyCounts }
 }
 
 const INITIAL_FORM: SocietyPostForm = {
@@ -26,7 +28,7 @@ const INITIAL_FORM: SocietyPostForm = {
 
 export default function SocietyPage() {
   const { locale, direction } = useLocale()
-  const ar = locale === "ar"
+  const copy = societyFeed(locale)
   const { toast } = useToast()
   const postId = Number(useSearchParams().get("post"))
   const [page, setPage] = useState(1)
@@ -37,11 +39,11 @@ export default function SocietyPage() {
   const [submitError, setSubmitError] = useState<string | null>(null)
   const [form, setForm] = useState<SocietyPostForm>(INITIAL_FORM)
   const [posts, setPosts] = useState<SocietyPost[]>([])
-  const [tab, setTab] = useState<"all" | "asks" | "offers">("all")
+  const [tab, setTab] = useState<SocietyTab>("all")
   const [sector, setSector] = useState("")
   const [loadingActionId, setLoadingActionId] = useState<number | null>(null)
   const [deleteTargetPost, setDeleteTargetPost] = useState<SocietyPost | null>(null)
-  const [meta, setMeta] = useState<{ current_page: number; last_page: number; total: number }>({ current_page: 1, last_page: 1, total: 0 })
+  const [meta, setMeta] = useState<NonNullable<FeedResponse["meta"]>>({ current_page: 1, last_page: 1, total: 0 })
 
   const loadPosts = useCallback(async (signal?: AbortSignal) => {
     setLoading(true); setLoadError(null)
@@ -56,9 +58,9 @@ export default function SocietyPage() {
         setPosts(response.data ?? [])
         setMeta(response.meta ?? { current_page: 1, last_page: 1, total: response.data?.length ?? 0 })
       }
-    } catch (error) { if (!signal?.aborted) setLoadError(error instanceof Error ? error.message : "Unable to load posts") }
+    } catch (error) { if (!signal?.aborted) setLoadError(error instanceof Error && error.message ? error.message : copy.loadFailed) }
     finally { if (!signal?.aborted) setLoading(false) }
-  }, [page, tab, sector, postId])
+  }, [page, tab, sector, postId, copy.loadFailed])
 
   useEffect(() => {
     const controller = new AbortController()
@@ -66,7 +68,7 @@ export default function SocietyPage() {
     return () => controller.abort()
   }, [loadPosts])
 
-  function actionError(error: unknown) { toast(error instanceof Error ? error.message : (ar ? "تعذر إتمام الإجراء." : "Unable to complete the action."), "error") }
+  function actionError(error: unknown) { toast(error instanceof Error && error.message ? error.message : copy.actionFailed, "error") }
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -80,12 +82,14 @@ export default function SocietyPage() {
         sector: form.sector,
         priority: form.priority,
       }
-      const response = await api.post<{ data: SocietyPost }>("/member/society/posts", payload)
-      setPosts((prev) => [response.data, ...prev])
+      await api.post<{ data: SocietyPost }>("/member/society/posts", payload)
       setForm(INITIAL_FORM)
       setIsModalOpen(false)
+      // Reload so the new post, page totals and tab badges all agree.
+      if (page === 1) await loadPosts()
+      else setPage(1)
     } catch (err) {
-      setSubmitError(err instanceof Error ? err.message : "تعذر إرسال المنشور الآن.")
+      setSubmitError(err instanceof Error && err.message ? err.message : copy.publishFailed)
     } finally {
       setIsSubmitting(false)
     }
@@ -94,7 +98,7 @@ export default function SocietyPage() {
   async function postAction(postId: number, action: "help" | "save" | "report" | "match") {
     setLoadingActionId(postId)
     try {
-      if (action === "help") await api.post(`/member/society/posts/${postId}/help-offers`, { message: "أستطيع المساعدة" })
+      if (action === "help") await api.post(`/member/society/posts/${postId}/help-offers`, { message: copy.helpMessage })
       if (action === "save") {
         const saved = posts.find(post => post.id === postId)?.viewer_state?.saved
         if (saved) await api.delete(`/member/society/posts/${postId}/save`)
@@ -119,7 +123,7 @@ export default function SocietyPage() {
   }
 
   async function commentOnPost(postId: number) {
-    const content = window.prompt("اكتب تعليقك")
+    const content = window.prompt(copy.commentPrompt)
     if (!content || !content.trim()) return
     setLoadingActionId(postId)
     try {
@@ -133,11 +137,11 @@ export default function SocietyPage() {
   async function sharePost(postId: number) {
     const url = `${window.location.origin}/dashboard/society?post=${postId}`
     if (navigator.share) {
-      await navigator.share({ title: "Wosool Society Post", url })
+      await navigator.share({ title: copy.shareTitle, url })
       return
     }
     await navigator.clipboard.writeText(url)
-    toast(ar ? "تم نسخ الرابط." : "Link copied.", "success")
+    toast(copy.linkCopied, "success")
   }
 
   async function deletePost(postId: number) {
@@ -151,32 +155,27 @@ export default function SocietyPage() {
     }
   }
 
-  const counts = useMemo(() => {
-    const all = posts.length
-    const asks = posts.filter((p) => p.post_type === "ask").length
-    const offers = posts.filter((p) => p.post_type === "offer").length
-    return { all, asks, offers }
-  }, [posts])
+  const counts = postId > 0 ? {} : societyTabCounts(tab, meta)
 
   return (
     <div className="relative min-h-screen antialiased bg-slate-50 text-slate-900 flex flex-col" dir={direction}>
-      <main className="max-w-4xl w-full mx-auto flex-1 px-4 py-6 space-y-6">
+      <div className="max-w-4xl w-full mx-auto flex-1 px-4 py-6 space-y-6">
         <StrategicHeaderCard
-          badge="خلاصة التنفيذ الحية"
-          title="مجتمع البُناة المشترك (Society Feed)"
-          subtitle="شارك خبراتك وتحدياتك، وتواصل مع المؤسسين المناسبين."
+          badge={copy.badge}
+          title={copy.title}
+          subtitle={copy.subtitle}
           cta={
-            <button id="openModalBtn" onClick={() => setIsModalOpen(true)} className="w-full sm:w-auto bg-[#3B52D4] hover:bg-[#2E44C8] text-white font-semibold text-xs px-4 py-2.5 rounded-lg shadow-sm transition-colors text-center shrink-0">
-              + مشاركة طلب دعم أو إنجاز جديد
+            <button type="button" onClick={() => setIsModalOpen(true)} className="w-full sm:w-auto min-h-11 bg-[#3B52D4] hover:bg-[#2E44C8] text-white font-semibold text-sm px-4 py-2.5 rounded-lg shadow-sm transition-colors text-center shrink-0">
+              {copy.newPost}
             </button>
           }
         />
 
         <FeedFilterBar tab={tab} onTab={value => { setPage(1); setTab(value) }} sector={sector} onSector={value => { setPage(1); setSector(value) }} counts={counts} />
 
-        {postId > 0 && <Link href="/dashboard/society" className="underline">{ar ? "عرض جميع المنشورات" : "View all posts"}</Link>}
-        {loading && <p role="status">{ar ? "جارٍ تحميل المنشورات…" : "Loading posts…"}</p>}
-        {loadError && <div role="alert" className="rounded-xl border border-rose-200 bg-rose-50 p-4"><p>{loadError}</p><button className="mt-3 underline" onClick={() => void loadPosts()}>{ar ? "إعادة المحاولة" : "Try again"}</button></div>}
+        {postId > 0 && <Link href="/dashboard/society" className="underline">{copy.viewAll}</Link>}
+        {loading && <p role="status">{copy.loading}</p>}
+        {loadError && <div role="alert" className="rounded-xl border border-rose-200 bg-rose-50 p-4"><p>{loadError}</p><button className="mt-3 underline" onClick={() => void loadPosts()}>{copy.retry}</button></div>}
         <div className="space-y-4">
           {posts.map((post) => (
             <SocietyPostCard
@@ -199,15 +198,15 @@ export default function SocietyPage() {
             />
           ))}
 
-          {!loading && !loadError && posts.length === 0 ? <div className="rounded-xl bg-white border border-slate-200 p-6 text-sm text-slate-500">لا توجد منشورات بعد. ابدأ أول منشور داخل المجتمع.</div> : null}
+          {!loading && !loadError && posts.length === 0 ? <div className="rounded-xl bg-white border border-slate-200 p-6 text-sm text-slate-600">{tab === "all" && !sector ? copy.empty : copy.emptyFiltered}</div> : null}
         </div>
 
         <div className="pt-4 flex items-center justify-between border-t border-slate-200 text-xs">
-          <button className="bg-white border border-slate-200 text-slate-600 py-2 px-3 rounded-md disabled:opacity-40" disabled={page <= 1 || loading || postId > 0} onClick={() => setPage(value => value - 1)}>الصفحة السابقة</button>
-          <span className="text-slate-500 font-medium">عرض {posts.length} من أصل {meta.total} منشور</span>
-          <button disabled={page >= meta.last_page || loading || postId > 0} onClick={() => setPage(value => value + 1)} className="bg-white border border-slate-200 hover:bg-slate-50 text-slate-600 font-semibold py-2 px-3 rounded-md transition-colors disabled:opacity-40">الصفحة التالية</button>
+          <button type="button" className="min-h-11 bg-white border border-slate-200 text-slate-700 py-2 px-3 rounded-md disabled:opacity-40" disabled={page <= 1 || loading || postId > 0} onClick={() => setPage(value => value - 1)}>{copy.previous}</button>
+          <span className="text-slate-600 font-medium">{societyShowing(locale, posts.length, meta.total)}</span>
+          <button type="button" disabled={page >= meta.last_page || loading || postId > 0} onClick={() => setPage(value => value + 1)} className="min-h-11 bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 font-semibold py-2 px-3 rounded-md transition-colors disabled:opacity-40">{copy.next}</button>
         </div>
-      </main>
+      </div>
 
       <SocietyComposerModal
         open={isModalOpen}
@@ -219,34 +218,32 @@ export default function SocietyPage() {
         submitError={submitError}
       />
 
-      {deleteTargetPost ? (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 p-4 backdrop-blur-sm">
-          <div className="w-full max-w-md rounded-2xl border border-slate-200 bg-white shadow-2xl">
-            <div className="border-b border-slate-100 px-5 py-4">
-              <h3 className="text-sm font-bold text-slate-900">تأكيد حذف المنشور</h3>
-              <p className="mt-1 text-xs text-slate-500">سيتم أرشفة هذا المنشور ولن يظهر للأعضاء بعد الحذف.</p>
-            </div>
-            <div className="px-5 py-4">
-              <p className="line-clamp-2 text-xs text-slate-600">&ldquo;{deleteTargetPost.title}&rdquo;</p>
-            </div>
-            <div className="flex items-center justify-end gap-2 border-t border-slate-100 px-5 py-4">
-              <button
-                onClick={() => setDeleteTargetPost(null)}
-                className="rounded-lg border border-slate-200 bg-white px-4 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50"
-              >
-                إلغاء
-              </button>
-              <button
-                onClick={() => deletePost(deleteTargetPost.id)}
-                disabled={loadingActionId === deleteTargetPost.id}
-                className="rounded-lg bg-rose-600 px-4 py-2 text-xs font-semibold text-white hover:bg-rose-700 disabled:opacity-60"
-              >
-                {loadingActionId === deleteTargetPost.id ? "جارٍ الحذف..." : "تأكيد الحذف"}
-              </button>
-            </div>
+      <Dialog open={deleteTargetPost !== null} onOpenChange={open => { if (!open) setDeleteTargetPost(null) }}>
+        <DialogContent className="max-w-md">
+          <DialogHeader className="mb-4">
+            <DialogTitle className="text-base">{copy.deleteTitle}</DialogTitle>
+            <DialogDescription className="text-sm text-slate-600">{copy.deleteBody}</DialogDescription>
+          </DialogHeader>
+          {deleteTargetPost ? <p className="line-clamp-2 text-sm text-slate-700">&ldquo;{deleteTargetPost.title}&rdquo;</p> : null}
+          <div className="mt-6 flex items-center justify-end gap-2">
+            <button
+              type="button"
+              onClick={() => setDeleteTargetPost(null)}
+              className="min-h-11 rounded-lg border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50"
+            >
+              {copy.cancel}
+            </button>
+            <button
+              type="button"
+              onClick={() => { if (deleteTargetPost) void deletePost(deleteTargetPost.id) }}
+              disabled={!deleteTargetPost || loadingActionId === deleteTargetPost.id}
+              className="min-h-11 rounded-lg bg-rose-600 px-4 py-2 text-sm font-semibold text-white hover:bg-rose-700 disabled:opacity-60"
+            >
+              {deleteTargetPost && loadingActionId === deleteTargetPost.id ? copy.deleting : copy.confirmDelete}
+            </button>
           </div>
-        </div>
-      ) : null}
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }

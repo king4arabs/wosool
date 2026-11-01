@@ -59,6 +59,17 @@ class SocietyPostController extends Controller
 
         $posts = $query->paginate($perPage)->withQueryString();
 
+        // Tab badges show totals for the whole feed (with the sector filter),
+        // not only the posts on the current page or tab.
+        $countsByType = SocietyPost::query()
+            ->where('moderation_status', 'published')
+            ->when(! empty($validated['sector']), fn ($counts) => $counts->where('sector', $validated['sector']))
+            ->selectRaw('post_type, COUNT(*) as aggregate')
+            ->groupBy('post_type')
+            ->pluck('aggregate', 'post_type');
+        $asks = (int) ($countsByType['ask'] ?? 0);
+        $offers = (int) ($countsByType['offer'] ?? 0);
+
         return response()->json([
             'data' => SocietyPostResource::collection($posts->items()),
             'meta' => [
@@ -68,6 +79,7 @@ class SocietyPostController extends Controller
                 'total' => $posts->total(),
                 'tab' => $tab,
                 'sort' => $sort,
+                'counts' => ['all' => $asks + $offers, 'asks' => $asks, 'offers' => $offers],
             ],
         ]);
     }
