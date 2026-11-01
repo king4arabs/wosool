@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { api } from '@/lib/api'
 import type { Organization } from '@/lib/eoa'
 import { Notice } from './Shared'
+import styles from './PublicDetails.module.css'
 
 export function EoaDirectory({ ar }: { ar: boolean }) {
   const [organizations, setOrganizations] = useState<Organization[]>([])
@@ -23,8 +24,8 @@ export function EoaDirectory({ ar }: { ar: boolean }) {
   return <>
     {loading && <Notice>{ar ? 'جارٍ تحميل الدليل…' : 'Loading directory…'}</Notice>}
     {failed && <Notice error>{ar ? 'تعذر تحميل الدليل. تحقق من اتصال الخدمة أو أعد المحاولة.' : 'The directory could not load. Check the service connection or try again.'} <button type="button" className="eoa-text-link" onClick={retry}>{ar ? 'إعادة المحاولة' : 'Try again'}</button></Notice>}
-    <div className="eoa-three-grid">
-      {organizations.map(o => <article className="eoa-card" key={o.id}>
+    <div className={styles.directory} data-eoa-directory>
+      {organizations.map(o => <article className={`eoa-card ${styles.organization}`} key={o.id}>
         <h3>{ar ? o.name_ar : o.name_en}</h3>
         <p>{ar ? o.support_ar : o.support_en}</p>
         <a className="eoa-text-link" href={o.website} target="_blank" rel="noopener noreferrer">{ar ? 'الموقع الرسمي' : 'Official website'} ↗</a>
