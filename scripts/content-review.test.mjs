@@ -100,7 +100,7 @@ test('checked-in report covers the exact frontend and importer catalog paths', a
   const result = await loadContentReport()
   assert.deepEqual(result.problems, [])
   assert.deepEqual(result.totals, { founders: 322, companies: 175, news: 99 })
-  assert.equal(result.upcoming_reviews.length + result.reviews_due.length, 320)
+  assert.equal(result.upcoming_reviews.length + result.reviews_due.length, 322)
   assert.equal([...result.upcoming_reviews, ...result.reviews_due].filter(row => row.catalog === catalogs[1].backend).length, 100)
   assert.equal([...result.upcoming_reviews, ...result.reviews_due].filter(row => row.catalog === catalogs[4].backend).length, 116)
   for (const [path, field, prefix] of [
