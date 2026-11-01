@@ -44,13 +44,13 @@ test('frontend source snapshots and database import share the same reviewed reco
   assert.equal(discoveryProfiles.length, 62)
   const databaseCountry = JSON.parse(readFileSync(new URL('../../../backend/resources/data/founder-directory-expansion-2026-10-29.json', import.meta.url), 'utf8'))
   assert.deepEqual(databaseCountry, countryProfiles)
-  assert.equal(countryProfiles.length, 114)
+  assert.equal(countryProfiles.length, 116)
   assert.equal(originalCountryCohort.length, 102)
   assert.equal(october30Additions.length, 8)
   assert.equal(new Set(originalCountryCohort.map(profile => profile.country_code)).size, 51)
   for (const code of new Set(originalCountryCohort.map(profile => profile.country_code))) assert.equal(originalCountryCohort.filter(profile => profile.country_code === code).length, 2, code)
   assert.equal(new Set(sourceProfiles.map(profile => profile.company_key)).size, 175)
-  assert.equal(sourceProfiles.length, 320)
+  assert.equal(sourceProfiles.length, 322)
   assert.equal(new Set(sourceProfiles.map(profile => profile.founder_name_en.toLowerCase())).size, sourceProfiles.length)
   assert.equal(new Set(sourceProfiles.map(profile => profile.slug)).size, sourceProfiles.length)
   assert.ok(sourceProfiles.every(profile => profile.source_urls.length > 0 && profile.reviewed_at))
@@ -157,5 +157,21 @@ test('31 October sourced founders retain primary evidence without membership cla
     assert.equal(profile.portrait_url, null)
     assert.equal(profile.logo_url, null)
     assert.ok(!('member' in profile) && !('email' in profile) && !('user_id' in profile) && !('isVerified' in profile))
+  }
+})
+
+test('1 November erad additions are sourced, unclaimed and retain the existing company identity', () => {
+  const additions = countryProfiles.filter(profile => profile.reviewed_at === '2026-11-01')
+  assert.deepEqual(additions.map(profile => profile.slug).sort(), [
+    'abdulmalik-almeheini-erad', 'youssef-said-erad',
+  ])
+  for (const profile of additions) {
+    assert.equal(profile.company_key, 'erad')
+    assert.equal(profile.region, 'saudi')
+    assert.ok(profile.source_urls.includes(profile.source_url))
+    assert.equal(profile.portrait_url, null)
+    assert.equal(profile.traction_en, null)
+    assert.equal(profile.traction_ar, null)
+    assert.ok(!('member' in profile) && !('isVerified' in profile) && !('email' in profile))
   }
 })
