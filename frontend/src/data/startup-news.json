@@ -1,5 +1,48 @@
 [
   {
+    "id": "sourced-endeavor-saudi-entrepreneurs-2025-revenue-october-2026",
+    "imageUrl": "",
+    "imageCredit": "",
+    "author": "Wosool news desk",
+    "slug": "endeavor-saudi-entrepreneurs-2025-revenue-october-2026",
+    "title": "Endeavor Saudi cites $1.5bn combined 2025 revenue among supported companies",
+    "excerpt": "Endeavor Saudi reports supporting at least 63 entrepreneurs and over 850 companies since 2012.",
+    "content": "In an interview published on 30 October 2026, Endeavor Saudi Arabia managing director Lateefa Al-Waalan said companies of entrepreneurs supported by the network generated US$1.5 billion in combined 2025 revenue. Endeavor Saudi also reported supporting at least 63 entrepreneurs, benefiting more than 850 companies and delivering over 2,500 mentoring hours since its 2012 launch. These are network-reported ecosystem figures, not Wosool revenue, Wosool membership counts or financing raised. Individual company revenues were not disclosed.",
+    "category": "Ecosystem",
+    "region": "saudi",
+    "sourceUrl": "https://www.arabnews.com/startups/endeavor-saudi-entrepreneurs-generate-15bn-in-revenue-up-from-45m-in-early-years-3008980",
+    "sourceName": "Arab News",
+    "companies": [
+      "Endeavor Saudi Arabia"
+    ],
+    "publishedAt": "2026-10-30",
+    "tags": [
+      "Endeavor",
+      "Saudi Arabia",
+      "Entrepreneurship",
+      "2025 revenue"
+    ],
+    "keyFacts": [
+      "US$1.5bn aggregate 2025 revenue, as reported by Endeavor Saudi",
+      "At least 63 entrepreneurs and 850+ companies benefited since 2012",
+      "Over 2,500 mentoring hours reported"
+    ],
+    "translations": {
+      "ar": {
+        "title": "إنديفور السعودية تعلن إيرادات مجمعة بـ1.5 مليار دولار لشركات رواد أعمالها في 2025",
+        "excerpt": "تشير المؤسسة إلى دعم 63 رائد أعمال على الأقل واستفادة أكثر من 850 شركة منذ 2012.",
+        "body": [
+          "قالت لطيفة الوعلان، المديرة التنفيذية لإنديفور السعودية، في مقابلة نُشرت في 30 أكتوبر 2026، إن الشركات المرتبطة برواد الأعمال الذين تدعمهم المؤسسة حققت إيرادات مجمعة بقيمة 1.5 مليار دولار خلال 2025. وأفادت المؤسسة بدعم 63 رائد أعمال على الأقل، واستفادة أكثر من 850 شركة، وتقديم أكثر من 2,500 ساعة إرشاد منذ انطلاقها عام 2012. هذه بيانات إجمالية أعلنتها إنديفور وليست إيرادات «وصول» أو أرقام عضويتها أو قيمة تمويل استثماري. ولم تُذكر إيرادات كل شركة على حدة."
+        ],
+        "keyFacts": [
+          "إيرادات مجمعة معلنة بقيمة 1.5 مليار دولار في 2025",
+          "دعم 63 رائد أعمال على الأقل واستفادة أكثر من 850 شركة منذ 2012",
+          "أكثر من 2,500 ساعة إرشاد بحسب المؤسسة"
+        ]
+      }
+    }
+  },
+  {
     "id": "sourced-by-venture-partners-fund-three-october-2026",
     "slug": "by-venture-partners-fund-three-october-2026",
     "title": "BY Venture Partners closes a $60m fund for early-stage AI companies",
@@ -2363,6 +2406,49 @@
           "أكثر من 390 ألف تاجر في 4 أسواق",
           "الإيرادات 3 أضعاف خلال 18 شهراً؛ الخليج 7 أضعاف",
           "الخليج يقارب نصف الإيرادات"
+        ]
+      }
+    }
+  },
+  {
+    "id": "sourced-talmal-saudi-preseed-september-2026",
+    "imageUrl": "",
+    "imageCredit": "",
+    "author": "Wosool news desk",
+    "slug": "talmal-saudi-preseed-september-2026",
+    "title": "Saudi fintech TalMal closes undisclosed pre-seed with MM Partners",
+    "excerpt": "The salary-linked purchasing startup plans to expand its employer and merchant network.",
+    "content": "A company press release published on 21 September 2026 reported that Saudi fintech TalMal closed a pre-seed funding round of undisclosed size with participation from MM Partners. Founder and CEO Thamer Faisal Al-Qu’ayshish leads a platform connecting employees, employers and participating merchants for purchases repaid through payroll. The startup was incubated in Jada30, affiliated with the Saudi Social Development Bank. Proceeds are intended for technology and network expansion. Neither the investment amount nor company revenue was disclosed; this is retrospective coverage of a September announcement, not a new November round.",
+    "category": "Funding",
+    "region": "saudi",
+    "sourceUrl": "https://www.wamda.com/2026/09/saudi-fintech-talmal-lands-pre-seed-investment-local-expansion",
+    "sourceName": "Wamda",
+    "companies": [
+      "TalMal"
+    ],
+    "publishedAt": "2026-09-21",
+    "tags": [
+      "Saudi Arabia",
+      "TalMal",
+      "Fintech",
+      "Pre-seed"
+    ],
+    "keyFacts": [
+      "Undisclosed pre-seed with MM Partners participation",
+      "Founder and CEO Thamer Faisal Al-Qu’ayshish",
+      "Salary-linked purchases joining employees, employers and merchants"
+    ],
+    "translations": {
+      "ar": {
+        "title": "تالمال السعودية تغلق جولة ما قبل البذرة بمشاركة إم إم بارتنرز دون إعلان قيمتها",
+        "excerpt": "تخطط منصة الشراء المرتبط بالراتب لتوسيع شبكة جهات العمل والمتاجر.",
+        "body": [
+          "أفاد بيان للشركة نُشر في 21 سبتمبر 2026 بإغلاق «تالمال» السعودية جولة تمويل ما قبل البذرة بمشاركة «إم إم بارتنرز» دون الإفصاح عن قيمتها. ويقود المؤسس والرئيس التنفيذي ثامر فيصل القعيشيش منصة تربط الموظفين وجهات عملهم بالمتاجر المشاركة لتسديد المشتريات لاحقاً من الراتب. واحتضنت «جادة30» التابعة لبنك التنمية الاجتماعية المشروع، ويستهدف التمويل تطوير التقنية وتوسيع الشبكة. لم تُعلن الشركة قيمة الاستثمار أو الإيرادات، وهذه تغطية لإعلان سبتمبر وليست جولة جديدة في نوفمبر."
+        ],
+        "keyFacts": [
+          "جولة ما قبل البذرة بمشاركة إم إم بارتنرز دون إعلان قيمتها",
+          "المؤسس والرئيس التنفيذي ثامر فيصل القعيشيش",
+          "الشراء المرتبط بالراتب يربط الموظفين وجهات العمل والمتاجر"
         ]
       }
     }
