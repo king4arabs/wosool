@@ -1,6 +1,8 @@
 "use client"
 
 import { SocietyPostActionsBar } from "@/components/dashboard/SocietyPostActionsBar"
+import { useLocale } from "@/lib/locale"
+import { societyFeed, societySectorLabel } from "@/lib/society-feed"
 
 export type SocietyPost = {
   id: number
@@ -38,7 +40,11 @@ export function SocietyPostCard({
   onMatch: () => void
   loading?: boolean
 }) {
+  const { locale } = useLocale()
+  const copy = societyFeed(locale)
   const isAsk = post.post_type === "ask"
+  const company = post.author?.company?.name?.trim()
+  const sector = societySectorLabel(locale, post.sector || post.author?.company?.sector)
   return (
     <div className="bg-white border border-slate-200 rounded-xl p-5 space-y-4 shadow-sm hover:border-slate-300 transition-all">
       <div className="flex justify-between items-start gap-4">
@@ -46,14 +52,14 @@ export function SocietyPostCard({
           <div className="w-10 h-10 rounded-full bg-slate-100 border border-slate-200 overflow-hidden flex-shrink-0" />
           <div>
             <div className="flex items-center gap-2">
-              <h3 className="text-xs font-bold text-slate-900">{post.author?.name ?? "Founder"}</h3>
-              <span className="bg-slate-100 border border-slate-200 text-slate-600 text-xs px-1.5 py-0.2 rounded font-sans font-medium">{post.author?.company?.name ?? "Wosool"}</span>
+              <h3 className="text-xs font-bold text-slate-900">{post.author?.name?.trim() || copy.founder}</h3>
+              {company ? <span className="bg-slate-100 border border-slate-200 text-slate-600 text-xs px-1.5 py-0.5 rounded font-sans font-medium">{company}</span> : null}
             </div>
-            <p className="text-xs text-slate-400 mt-0.5">{post.author?.company?.sector ?? post.sector ?? "General"}</p>
+            {sector ? <p className="text-xs text-slate-500 mt-0.5">{sector}</p> : null}
           </div>
         </div>
         <span className={`inline-flex items-center rounded px-2 py-0.5 text-xs font-bold border uppercase shrink-0 ${isAsk ? "bg-rose-50 text-rose-700 border-rose-200/60" : "bg-emerald-50 text-emerald-700 border-emerald-200/60"}`}>
-          {isAsk ? "طلب دعم" : "عرض قيمة"}
+          {isAsk ? copy.ask : copy.offer}
         </span>
       </div>
 
@@ -63,8 +69,8 @@ export function SocietyPostCard({
       </div>
 
       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 border-t border-slate-100 pt-3.5 text-xs">
-        <div className="text-slate-400 text-xs">
-          التفاعلات: <span className="font-sans font-bold text-slate-700">{post.counts?.reactions ?? 0}</span> • التعليقات: <span className="font-sans font-bold text-slate-700">{post.counts?.comments ?? 0}</span>
+        <div className="text-slate-500 text-xs">
+          {copy.reactions}: <span className="font-sans font-bold text-slate-700">{post.counts?.reactions ?? 0}</span> • {copy.comments}: <span className="font-sans font-bold text-slate-700">{post.counts?.comments ?? 0}</span>
         </div>
         <SocietyPostActionsBar
           onHelp={onHelp}

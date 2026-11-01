@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\FounderProfile;
+use App\Models\SocietyPost;
 use App\Models\User;
 use Database\Seeders\RoleAndPermissionSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -102,5 +103,40 @@ class MemberScorecardSocietyTest extends TestCase
                 'data',
                 'meta' => ['current_page', 'last_page', 'per_page', 'total'],
             ]);
+    }
+
+    public function test_feed_tab_counts_cover_every_page_and_follow_the_sector_filter(): void
+    {
+        $user = $this->makeMemberWithProfile();
+
+        $posts = [
+            ['ask', 'fintech'], ['ask', 'fintech'], ['ask', 'saas'],
+            ['offer', 'fintech'], ['offer', 'ai'],
+        ];
+        foreach ($posts as $index => [$type, $sector]) {
+            $this->actingAs($user)->postJson('/api/v1/member/society/posts', [
+                'post_type' => $type,
+                'title' => "Post {$index}",
+                'content' => 'Details',
+                'sector' => $sector,
+            ])->assertCreated();
+        }
+
+        $hidden = SocietyPost::query()->latest('id')->first();
+        $hidden->update(['moderation_status' => 'hidden']);
+
+        // One post per page, asks tab: the badges still count the whole feed.
+        $this->actingAs($user)
+            ->getJson('/api/v1/member/society/posts?tab=asks&per_page=1')
+            ->assertOk()
+            ->assertJsonCount(1, 'data')
+            ->assertJsonPath('meta.total', 3)
+            ->assertJsonPath('meta.counts', ['all' => 4, 'asks' => 3, 'offers' => 1]);
+
+        $this->actingAs($user)
+            ->getJson('/api/v1/member/society/posts?tab=offers&sector=fintech')
+            ->assertOk()
+            ->assertJsonPath('meta.total', 1)
+            ->assertJsonPath('meta.counts', ['all' => 3, 'asks' => 2, 'offers' => 1]);
     }
 }

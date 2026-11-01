@@ -95,7 +95,7 @@ export default function MatchesPage() {
 
   return (
     <div dir="rtl" className="bg-slate-50 text-slate-900 min-h-screen antialiased">
-      <main className="max-w-4xl w-full mx-auto flex-1 px-4 py-6 space-y-6">
+      <div className="max-w-4xl w-full mx-auto flex-1 px-4 py-6 space-y-6">
         <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <div>
             <div className="flex items-center gap-2">
@@ -238,7 +238,7 @@ export default function MatchesPage() {
             </div>
           )}
         </div>
-      </main>
+      </div>
     </div>
   )
 }
