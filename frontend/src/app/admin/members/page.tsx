@@ -56,6 +56,12 @@ export default function AdminMembersPage() {
       })
       // A slower earlier request must not replace the results of a newer search, filter or page.
       if (request !== latestRequest.current) return
+      // The list shrank (a review moved the last item out of this filter): go to the last page that exists.
+      const lastPage = response.meta?.last_page
+      if (response.data.length === 0 && page > 1 && typeof lastPage === "number" && lastPage >= 1 && page > lastPage) {
+        setPage(lastPage)
+        return
+      }
       setApplications(response.data)
       setMeta(response.meta)
       setLoaded(true)

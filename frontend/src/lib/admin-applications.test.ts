@@ -43,6 +43,10 @@ test("the list can reach applications past the first API page", () => {
   assert.equal(applicationRange("en", applicationPage({ total: 0 }, 0)), "0 applications")
 })
 
+test("a page that no longer exists after a review moves to the last page instead of showing an empty list", () => {
+  assert.match(page, /page > lastPage\)\s*\{\s*setPage\(lastPage\)/)
+})
+
 test("the overall total tile does not shrink when a status filter is applied", () => {
   assert.equal(applicationAllCount({ total: 3, all: 23 }), 23)
   assert.equal(applicationAllCount({ total: 3 }), 3)
