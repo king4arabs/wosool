@@ -16,7 +16,8 @@ concurrency:
 jobs:
   frontend:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    # The full browser suite (incl. Firefox/WebKit EOA checks and axe) runs past 15 minutes.
+    timeout-minutes: 25
     defaults:
       run:
         working-directory: frontend
