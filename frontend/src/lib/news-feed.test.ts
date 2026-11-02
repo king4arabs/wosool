@@ -93,6 +93,7 @@ test('2 November verified stories retain dated Arabic and English facts without 
     ['erad-22m-series-a-september-2026', '2026-09-28'],
     ['tracxn-uae-tech-nine-months-2026', '2026-10-30'],
     ['solink-over-100m-funding-october-2026', '2026-10-29'],
+    ['abwab-ai-four-million-seed-september-2026', '2026-09-21'],
   ]) {
     const item = curatedNews.find(story => story.slug === slug)!
     assert.ok(item, slug)
