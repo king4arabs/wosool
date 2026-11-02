@@ -1,7 +1,7 @@
 "use client"
 
 import Image from "next/image"
-import { useCallback, useEffect, useMemo, useState } from "react"
+import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -18,49 +18,58 @@ import {
 import { useToast } from "@/components/ui/toast"
 import { api } from "@/lib/api"
 import { type AdminApplication, type AdminCollectionResponse, formatDate } from "@/lib/admin"
+import { adminApplications, applicationAllCount, applicationPage, applicationRange, applicationStatuses, applicationStatusLabel } from "@/lib/admin-applications"
+import { useLocale } from "@/lib/locale"
 
 type ReviewState = {
   status: AdminApplication["status"]
   admin_notes: string
 }
 
-const statusOptions: AdminApplication["status"][] = ["submitted", "reviewing", "request_more_info", "approved", "rejected", "waitlisted"]
-
-const statusLabel: Record<AdminApplication["status"], string> = {
-  submitted: "جديد",
-  reviewing: "قيد المراجعة",
-  request_more_info: "مطلوب معلومات إضافية",
-  approved: "مقبول",
-  rejected: "مرفوض",
-  waitlisted: "قائمة الانتظار",
-}
-
 export default function AdminMembersPage() {
   const { toast } = useToast()
+  const { locale } = useLocale()
+  const copy = adminApplications(locale)
+  const statusLabel = (status: AdminApplication["status"]) => applicationStatusLabel(locale, status)
   const [applications, setApplications] = useState<AdminApplication[]>([])
   const [meta, setMeta] = useState<Record<string, number>>({})
+  const [loaded, setLoaded] = useState(false)
+  const [searchInput, setSearchInput] = useState("")
   const [search, setSearch] = useState("")
   const [status, setStatus] = useState("")
+  const [page, setPage] = useState(1)
   const [selected, setSelected] = useState<AdminApplication | null>(null)
   const [form, setForm] = useState<ReviewState>({ status: "submitted", admin_notes: "" })
   const [saving, setSaving] = useState(false)
   const [sending, setSending] = useState(false)
+  const latestRequest = useRef(0)
 
   const loadApplications = useCallback(async () => {
-    const response = await api.get<AdminCollectionResponse<AdminApplication>>("/admin/applications", {
-      params: {
-        search: search || undefined,
-        status: status || undefined,
-      },
-    })
-
-    setApplications(response.data)
-    setMeta(response.meta)
-  }, [search, status])
+    const request = ++latestRequest.current
+    try {
+      const response = await api.get<AdminCollectionResponse<AdminApplication>>("/admin/applications", {
+        params: {
+          search: search || undefined,
+          status: status || undefined,
+          page,
+        },
+      })
+      // A slower earlier request must not replace the results of a newer search, filter or page.
+      if (request !== latestRequest.current) return
+      setApplications(response.data)
+      setMeta(response.meta)
+      setLoaded(true)
+    } catch (err) {
+      if (request !== latestRequest.current) return
+      toast(err instanceof Error && err.message ? err.message : copy.loadFailed, "error")
+    }
+  }, [search, status, page, toast, copy.loadFailed])
 
   useEffect(() => {
-    loadApplications().catch((err: Error) => toast(err.message, "error"))
-  }, [loadApplications, toast])
+    void loadApplications()
+  }, [loadApplications])
+
+  const position = applicationPage(meta, applications.length)
 
   const openReview = (application: AdminApplication) => {
     setSelected(application)
@@ -78,10 +87,10 @@ export default function AdminMembersPage() {
       const response = await api.patch<{ data: AdminApplication; notification_accepted?: boolean | null }>(`/admin/applications/${selected.id}`, form)
       const updated = response.data
       setSelected(updated)
-      toast(response.notification_accepted === false ? "تم تحديث الطلب، لكن تعذر إرسال إشعار البريد." : "تم تحديث الطلب بنجاح", response.notification_accepted === false ? "error" : "success")
+      toast(response.notification_accepted === false ? copy.savedMailFailed : copy.saved, response.notification_accepted === false ? "error" : "success")
       await loadApplications()
     } catch (err) {
-      toast(err instanceof Error ? err.message : "تعذر تحديث الطلب", "error")
+      toast(err instanceof Error && err.message ? err.message : copy.saveFailed, "error")
     } finally {
       setSaving(false)
     }
@@ -89,15 +98,15 @@ export default function AdminMembersPage() {
 
   const copyInviteLink = async () => {
     if (!selected?.invite_url) {
-      toast("لا يوجد رابط دعوة بعد. اعتمد الطلب أولًا.", "error")
+      toast(copy.noInviteYet, "error")
       return
     }
 
     try {
       await navigator.clipboard.writeText(selected.invite_url)
-      toast("تم نسخ رابط الدعوة", "success")
+      toast(copy.copied, "success")
     } catch {
-      toast("تعذر نسخ الرابط", "error")
+      toast(copy.copyFailed, "error")
     }
   }
 
@@ -107,76 +116,86 @@ export default function AdminMembersPage() {
     try {
       const response = await api.post<{ data: AdminApplication }>(`/admin/applications/${selected.id}/invite`)
       setSelected(response.data)
-      toast("تم قبول رسالة الدعوة للإرسال", "success")
+      toast(copy.inviteQueued, "success")
       await loadApplications()
     } catch (err) {
-      toast(err instanceof Error ? err.message : "تعذر إرسال الدعوة", "error")
+      toast(err instanceof Error && err.message ? err.message : copy.inviteFailed, "error")
     } finally {
       setSending(false)
     }
   }
 
-  const waitingCount = useMemo(() => (meta.submitted || 0) + (meta.reviewing || 0), [meta])
+  const waitingCount = useMemo(() => (meta.submitted || 0) + (meta.reviewing || 0) + (meta.request_more_info || 0), [meta])
 
   return (
-    <div className="space-y-5" dir="rtl">
+    <div className="space-y-5">
       <div className="flex items-start justify-between gap-3">
         <div>
-          <h2 className="text-2xl font-bold text-gray-900">مراجعة طلبات العضوية</h2>
-          <p className="text-sm text-gray-500 mt-1">راجع بيانات المتقدم، اعتمد الطلب، ثم أرسل الدعوة إلى بريده الإلكتروني.</p>
+          <h2 className="text-2xl font-bold text-gray-900">{copy.title}</h2>
+          <p className="text-sm text-gray-600 mt-1">{copy.intro}</p>
         </div>
-        <Button variant="outline" size="sm" onClick={() => loadApplications().catch((err: Error) => toast(err.message, "error"))}>
-          تحديث
+        <Button variant="outline" size="sm" onClick={() => void loadApplications()}>
+          {copy.refresh}
         </Button>
       </div>
 
       <Card>
         <CardContent className="pt-5">
-          <div className="grid sm:grid-cols-4 gap-3 text-sm">
-            <div className="rounded-lg border p-3"><p className="text-gray-500">إجمالي الطلبات</p><p className="text-xl font-bold">{meta.total || 0}</p></div>
-            <div className="rounded-lg border p-3"><p className="text-gray-500">بانتظار الإجراء</p><p className="text-xl font-bold">{waitingCount}</p></div>
-            <div className="rounded-lg border p-3"><p className="text-gray-500">مقبول</p><p className="text-xl font-bold">{meta.approved || 0}</p></div>
-            <div className="rounded-lg border p-3"><p className="text-gray-500">مرفوض</p><p className="text-xl font-bold">{meta.rejected || 0}</p></div>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-sm">
+            <div className="rounded-lg border p-3"><p className="text-gray-600">{copy.totalAll}</p><p className="text-xl font-bold">{applicationAllCount(meta)}</p></div>
+            <div className="rounded-lg border p-3"><p className="text-gray-600">{copy.waiting}</p><p className="text-xl font-bold">{waitingCount}</p></div>
+            <div className="rounded-lg border p-3"><p className="text-gray-600">{statusLabel("approved")}</p><p className="text-xl font-bold">{meta.approved || 0}</p></div>
+            <div className="rounded-lg border p-3"><p className="text-gray-600">{statusLabel("rejected")}</p><p className="text-xl font-bold">{meta.rejected || 0}</p></div>
           </div>
         </CardContent>
       </Card>
 
       <Card>
         <CardContent className="pt-5">
-          <div className="flex flex-col sm:flex-row gap-3">
+          <form
+            role="search"
+            className="flex flex-col sm:flex-row gap-3"
+            onSubmit={(event) => {
+              event.preventDefault()
+              const next = searchInput.trim()
+              setPage(1)
+              if (next === search && page === 1) void loadApplications()
+              else setSearch(next)
+            }}
+          >
             <Input
               type="search"
-              value={search}
-              onChange={(event) => setSearch(event.target.value)}
-              onKeyDown={(event) => event.key === "Enter" && loadApplications().catch((err: Error) => toast(err.message, "error"))}
-              placeholder="ابحث بالاسم أو البريد أو الشركة"
-              aria-label="ابحث بالاسم أو البريد أو الشركة"
+              value={searchInput}
+              onChange={(event) => setSearchInput(event.target.value)}
+              placeholder={copy.searchLabel}
+              aria-label={copy.searchLabel}
             />
-            <Select aria-label="حالة الطلب" value={status} onChange={(event) => setStatus(event.target.value)}>
-              <option value="">كل الحالات</option>
-              {statusOptions.map((option) => (
-                <option key={option} value={option}>{statusLabel[option]}</option>
+            <Select aria-label={copy.statusFilter} value={status} onChange={(event) => { setStatus(event.target.value); setPage(1) }}>
+              <option value="">{copy.allStatuses}</option>
+              {applicationStatuses.map((option) => (
+                <option key={option} value={option}>{statusLabel(option)}</option>
               ))}
             </Select>
-            <Button className="shrink-0" onClick={() => loadApplications().catch((err: Error) => toast(err.message, "error"))}>بحث</Button>
-          </div>
+            <Button type="submit" className="shrink-0">{copy.search}</Button>
+          </form>
         </CardContent>
       </Card>
 
       <Card>
-        <CardHeader>
-          <h3 className="font-semibold text-gray-900">قائمة الطلبات ({applications.length})</h3>
+        <CardHeader className="flex flex-row flex-wrap items-center justify-between gap-2">
+          <h3 className="font-semibold text-gray-900">{copy.listTitle}</h3>
+          <p className="text-sm text-gray-600" aria-live="polite">{applicationRange(locale, position)}</p>
         </CardHeader>
         <CardContent className="p-0">
-          <div className="overflow-x-auto">
+          <div className="relative overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b bg-gray-50">
-                  <th className="text-right px-4 py-3">المتقدم</th>
-                  <th className="text-right px-4 py-3">الشركة</th>
-                  <th className="text-right px-4 py-3">الحالة</th>
-                  <th className="text-right px-4 py-3">تاريخ التقديم</th>
-                  <th className="text-right px-4 py-3">إجراء</th>
+                  <th scope="col" className="text-start px-4 py-3">{copy.applicant}</th>
+                  <th scope="col" className="text-start px-4 py-3">{copy.company}</th>
+                  <th scope="col" className="text-start px-4 py-3">{copy.status}</th>
+                  <th scope="col" className="text-start px-4 py-3">{copy.submittedAt}</th>
+                  <th scope="col" className="text-start px-4 py-3">{copy.action}</th>
                 </tr>
               </thead>
               <tbody className="divide-y">
@@ -184,103 +203,116 @@ export default function AdminMembersPage() {
                   <tr key={application.id} className="hover:bg-gray-50">
                     <td className="px-4 py-3">
                       <p className="font-semibold text-gray-900">{application.full_name}</p>
-                      <p className="text-xs text-gray-500">{application.email}</p>
+                      <p className="text-xs text-gray-600"><span dir="ltr">{application.email}</span></p>
                     </td>
                     <td className="px-4 py-3">
                       <p className="text-gray-800">{application.company_name || "—"}</p>
-                      <p className="text-xs text-gray-500">{application.sector || "—"}</p>
+                      <p className="text-xs text-gray-600">{application.sector || "—"}</p>
                     </td>
                     <td className="px-4 py-3">
                       <Badge variant={application.status === "approved" ? "success" : application.status === "rejected" ? "destructive" : "warning"}>
-                        {statusLabel[application.status]}
+                        {statusLabel(application.status)}
                       </Badge>
                     </td>
                     <td className="px-4 py-3 text-gray-600">{formatDate(application.created_at)}</td>
                     <td className="px-4 py-3">
-                      <Button size="sm" variant="outline" onClick={() => openReview(application)}>مراجعة</Button>
+                      <Button size="sm" variant="outline" onClick={() => openReview(application)}>
+                        {copy.review}<span className="sr-only"> {application.full_name}</span>
+                      </Button>
                     </td>
                   </tr>
                 ))}
+                {loaded && applications.length === 0 ? (
+                  <tr><td colSpan={5} className="px-4 py-8 text-center text-gray-600">{copy.empty}</td></tr>
+                ) : null}
               </tbody>
             </table>
           </div>
+          {position.lastPage > 1 ? (
+            <nav aria-label={copy.pagination} className="flex items-center justify-between gap-3 border-t px-4 py-3">
+              <Button size="sm" variant="outline" disabled={position.page <= 1} onClick={() => setPage(position.page - 1)}>{copy.previous}</Button>
+              <span className="text-sm text-gray-600">{position.page} / {position.lastPage}</span>
+              <Button size="sm" variant="outline" disabled={position.page >= position.lastPage} onClick={() => setPage(position.page + 1)}>{copy.next}</Button>
+            </nav>
+          ) : null}
         </CardContent>
       </Card>
 
       <Dialog open={!!selected} onOpenChange={(open) => !open && setSelected(null)}>
-        <DialogContent className="max-w-4xl" dir="rtl">
+        <DialogContent className="max-w-4xl">
           <DialogHeader>
-            <DialogTitle>مراجعة الطلب: {selected?.full_name}</DialogTitle>
-            <DialogDescription>معلومات المتقدم وحالة الطلب وإرسال دعوة التفعيل.</DialogDescription>
+            <DialogTitle>{copy.dialogTitle}: {selected?.full_name}</DialogTitle>
+            <DialogDescription>{copy.dialogDescription}</DialogDescription>
           </DialogHeader>
 
           {selected ? (
             <div className="space-y-5">
               <div className="grid sm:grid-cols-2 gap-4 text-sm">
-                <Info label="الاسم الكامل" value={selected.full_name} />
-                <Info label="البريد" value={selected.email} />
-                <Info label="الهاتف" value={selected.phone} />
-                <Info label="الموقع" value={selected.location} />
-                <Info label="الشركة" value={selected.company_name} />
-                <Info label="موقع الشركة" value={selected.company_website} />
-                <Info label="القطاع" value={selected.sector} />
-                <Info label="المرحلة" value={selected.stage} />
-                <Info label="LinkedIn" value={selected.linkedin_url} />
-                <Info label="مصدر الإحالة" value={selected.referral_source} />
-                <Info label="اسم المُحيل" value={selected.referrer_name} />
-                <Info label="آخر مراجعة" value={selected.reviewer?.name ? `${selected.reviewer.name} - ${formatDate(selected.reviewed_at)}` : "لم تتم مراجعة بعد"} />
+                <Info label={copy.fullName} value={selected.full_name} />
+                <Info label={copy.email} value={selected.email} ltr />
+                <Info label={copy.phone} value={selected.phone} ltr />
+                <Info label={copy.location} value={selected.location} />
+                <Info label={copy.company} value={selected.company_name} />
+                <Info label={copy.companyWebsite} value={selected.company_website} ltr />
+                <Info label={copy.sector} value={selected.sector} />
+                <Info label={copy.stage} value={selected.stage} />
+                <Info label={copy.linkedin} value={selected.linkedin_url} ltr />
+                <Info label={copy.referralSource} value={selected.referral_source} />
+                <Info label={copy.referrerName} value={selected.referrer_name} />
+                <Info label={copy.lastReview} value={selected.reviewer?.name ? `${selected.reviewer.name} - ${formatDate(selected.reviewed_at)}` : copy.notReviewed} />
               </div>
 
               {selected.onboarding_data && <>
                 <div className="flex gap-4">
-                  {selected.onboarding_data.avatar_url && <Image src={selected.onboarding_data.avatar_url} alt="صورة المؤسس" width={96} height={96} unoptimized className="h-24 w-24 rounded-2xl object-cover" />}
-                  {selected.onboarding_data.logo_url && <Image src={selected.onboarding_data.logo_url} alt="شعار الشركة" width={160} height={96} unoptimized className="h-24 w-40 rounded-2xl border bg-white p-3 object-contain" />}
+                  {selected.onboarding_data.avatar_url && <Image src={selected.onboarding_data.avatar_url} alt={copy.founderPhoto} width={96} height={96} unoptimized className="h-24 w-24 rounded-2xl object-cover" />}
+                  {selected.onboarding_data.logo_url && <Image src={selected.onboarding_data.logo_url} alt={copy.companyLogo} width={160} height={96} unoptimized className="h-24 w-40 rounded-2xl border bg-white p-3 object-contain" />}
                 </div>
-                <Info label="الدور" value={selected.onboarding_data.position} />
-                <Info label="الدولة" value={selected.onboarding_data.country_code} />
-                <Info label="سنة التأسيس" value={String(selected.onboarding_data.founded_year)} />
-                <Info label="حجم الفريق" value={String(selected.onboarding_data.team_size)} />
-                <LongInfo label="نبذة المؤسس" value={selected.onboarding_data.bio} />
-                <LongInfo label="نبذة الشركة" value={selected.onboarding_data.company_description} />
+                <Info label={copy.position} value={selected.onboarding_data.position} />
+                <Info label={copy.country} value={selected.onboarding_data.country_code} />
+                <Info label={copy.foundedYear} value={selected.onboarding_data.founded_year ? String(selected.onboarding_data.founded_year) : null} />
+                <Info label={copy.teamSize} value={selected.onboarding_data.team_size ? String(selected.onboarding_data.team_size) : null} />
+                <LongInfo label={copy.founderBio} value={selected.onboarding_data.bio} />
+                <LongInfo label={copy.companyDescription} value={selected.onboarding_data.company_description} />
               </>}
-              <LongInfo label="الدافع للانضمام" value={selected.motivation} />
-              <LongInfo label="ما الذي سيقدمه" value={selected.what_you_offer} />
-              <LongInfo label="ما الذي يحتاجه" value={selected.what_you_need} />
+              <LongInfo label={copy.motivation} value={selected.motivation} />
+              <LongInfo label={copy.offer} value={selected.what_you_offer} />
+              <LongInfo label={copy.need} value={selected.what_you_need} />
 
               <div className="grid sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="mb-2 block text-sm font-medium text-gray-700">الحالة</label>
-                  <Select value={form.status} onChange={(event) => setForm((current) => ({ ...current, status: event.target.value as AdminApplication["status"] }))}>
-                    {statusOptions.map((option) => (
-                      <option key={option} value={option}>{statusLabel[option]}</option>
+                  <label htmlFor="application-status" className="mb-2 block text-sm font-medium text-gray-700">{copy.status}</label>
+                  <Select id="application-status" value={form.status} onChange={(event) => setForm((current) => ({ ...current, status: event.target.value as AdminApplication["status"] }))}>
+                    {applicationStatuses.map((option) => (
+                      <option key={option} value={option}>{statusLabel(option)}</option>
                     ))}
                   </Select>
                 </div>
                 <div>
-                  <label className="mb-2 block text-sm font-medium text-gray-700">رابط الدعوة</label>
+                  <label htmlFor="application-invite-link" className="mb-2 block text-sm font-medium text-gray-700">{copy.inviteLink}</label>
                   <div className="flex gap-2">
-                    <Input value={selected.invite_url || "أرسل الدعوة بعد اعتماد الطلب"} readOnly />
-                    <Button variant="outline" onClick={copyInviteLink} disabled={!selected.invite_url}>نسخ</Button>
+                    <Input id="application-invite-link" value={selected.invite_url || copy.invitePending} readOnly dir={selected.invite_url ? "ltr" : undefined} />
+                    <Button variant="outline" onClick={copyInviteLink} disabled={!selected.invite_url}>{copy.copy}</Button>
                   </div>
                   {selected.invite_sent_at ? (
-                    <p className="mt-1 text-xs text-emerald-600">تم قبول البريد للإرسال: {formatDate(selected.invite_sent_at)}</p>
+                    <p className="mt-1 text-xs text-emerald-700">{copy.inviteAccepted} {formatDate(selected.invite_sent_at)}</p>
                   ) : null}
                 </div>
               </div>
 
               <div>
-                <label className="mb-2 block text-sm font-medium text-gray-700">ملاحظات الإدارة</label>
+                <label htmlFor="application-admin-notes" className="mb-2 block text-sm font-medium text-gray-700">{copy.adminNotes}</label>
                 <Textarea
+                  id="application-admin-notes"
                   value={form.admin_notes}
                   onChange={(event) => setForm((current) => ({ ...current, admin_notes: event.target.value }))}
-                  placeholder="أضف ملاحظات القرار والمتابعة"
+                  placeholder={copy.adminNotesPlaceholder}
                 />
               </div>
 
-              <div className="flex justify-end gap-2">
-                <Button variant="outline" onClick={() => setSelected(null)}>إغلاق</Button>
-                {selected.status === "approved" && <Button variant="outline" onClick={sendInvitation} loading={sending} disabled={saving}>{selected.invite_sent_at ? "إعادة إرسال الدعوة" : "إرسال دعوة التفعيل"}</Button>}
-                <Button onClick={saveReview} loading={saving}>حفظ التحديث</Button>
+              <div className="flex flex-wrap justify-end gap-2">
+                <Button variant="outline" onClick={() => setSelected(null)}>{copy.close}</Button>
+                {selected.status === "approved" && <Button variant="outline" onClick={sendInvitation} loading={sending} disabled={saving}>{selected.invite_sent_at ? copy.resendInvite : copy.sendInvite}</Button>}
+                <Button onClick={saveReview} loading={saving}>{copy.save}</Button>
               </div>
             </div>
           ) : null}
@@ -290,11 +322,11 @@ export default function AdminMembersPage() {
   )
 }
 
-function Info({ label, value }: { label: string; value?: string | null }) {
+function Info({ label, value, ltr }: { label: string; value?: string | null; ltr?: boolean }) {
   return (
     <div className="rounded-lg border p-3">
-      <p className="text-xs text-gray-500 mb-1">{label}</p>
-      <p className="text-sm text-gray-900 break-words">{value || "—"}</p>
+      <p className="text-xs text-gray-600 mb-1">{label}</p>
+      <p className="text-sm text-gray-900 break-words">{ltr && value ? <span dir="ltr">{value}</span> : value || "—"}</p>
     </div>
   )
 }
@@ -302,7 +334,7 @@ function Info({ label, value }: { label: string; value?: string | null }) {
 function LongInfo({ label, value }: { label: string; value?: string | null }) {
   return (
     <div className="rounded-lg border p-3">
-      <p className="text-xs text-gray-500 mb-1">{label}</p>
+      <p className="text-xs text-gray-600 mb-1">{label}</p>
       <p className="text-sm text-gray-900 whitespace-pre-wrap">{value || "—"}</p>
     </div>
   )

@@ -136,6 +136,27 @@ class AdminEndpointsTest extends TestCase
         $this->assertNotNull($application->fresh()->invite_sent_at);
     }
 
+    public function test_application_list_pages_past_the_first_twenty_and_caps_page_size(): void
+    {
+        $this->seed(DatabaseSeeder::class);
+        $admin = User::where('email', 'admin@wosool.org')->firstOrFail();
+        Application::query()->delete();
+        foreach (range(1, 23) as $i) {
+            Application::create(['full_name' => "Applicant {$i}", 'email' => "applicant{$i}@example.com", 'status' => $i <= 3 ? 'approved' : 'submitted']);
+        }
+
+        $this->actingAs($admin)->getJson('/api/v1/admin/applications')
+            ->assertOk()->assertJsonCount(20, 'data')
+            ->assertJsonPath('meta.total', 23)->assertJsonPath('meta.last_page', 2)->assertJsonPath('meta.all', 23);
+        $this->getJson('/api/v1/admin/applications?page=2')
+            ->assertOk()->assertJsonCount(3, 'data')->assertJsonPath('meta.current_page', 2);
+        // Filtering narrows the list and its total, not the overall count.
+        $this->getJson('/api/v1/admin/applications?status=approved')
+            ->assertOk()->assertJsonPath('meta.total', 3)->assertJsonPath('meta.last_page', 1)->assertJsonPath('meta.all', 23);
+        $this->getJson('/api/v1/admin/applications?per_page=100000')->assertOk()->assertJsonPath('meta.per_page', 100);
+        $this->getJson('/api/v1/admin/applications?per_page=0')->assertOk()->assertJsonPath('meta.per_page', 1);
+    }
+
     public function test_failed_delivery_does_not_mark_an_invitation_sent(): void
     {
         $this->seed(DatabaseSeeder::class);

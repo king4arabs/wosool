@@ -45,7 +45,8 @@ class ApplicationController extends Controller
             $query->where('stage', $stage);
         }
 
-        $applications = $query->latest()->paginate($request->integer('per_page', 20));
+        $perPage = max(1, min(100, $request->integer('per_page', 20)));
+        $applications = $query->latest()->latest('id')->paginate($perPage);
 
         return response()->json([
             'data' => ApplicationResource::collection(collect($applications->items())),
@@ -53,6 +54,8 @@ class ApplicationController extends Controller
                 'total' => $applications->total(),
                 'current_page' => $applications->currentPage(),
                 'per_page' => $applications->perPage(),
+                'last_page' => $applications->lastPage(),
+                'all' => Application::count(),
                 'submitted' => Application::where('status', 'submitted')->count(),
                 'reviewing' => Application::where('status', 'reviewing')->count(),
                 'approved' => Application::where('status', 'approved')->count(),
