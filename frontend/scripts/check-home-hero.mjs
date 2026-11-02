@@ -1,10 +1,19 @@
 /** Run against a local built frontend: HERO_ORIGIN=http://127.0.0.1:3000 node scripts/check-home-hero.mjs */
 import assert from 'node:assert/strict'
+import { readFileSync } from 'node:fs'
 import { spawn } from 'node:child_process'
 import { once } from 'node:events'
 import { chromium } from 'playwright'
 
 const origin = process.env.HERO_ORIGIN || 'http://127.0.0.1:18082'
+// Values are refreshed in the checked-in regional metrics component, independently of UI tests.
+// Keep numeric rendering under test without locking the test to last month's figures.
+const metricsCode = readFileSync(new URL('../src/components/sections/RegionalHeroMetrics.tsx', import.meta.url), 'utf8')
+const gccMatch = metricsCode.match(/region === 1\s*\?\s*\[([^\]]+)\]/)
+assert.ok(gccMatch, 'GCC metrics must remain a source-backed four-value array')
+const gccValues = gccMatch[1].split(',').map(value => Number(value.trim()))
+assert.equal(gccValues.length, 4)
+assert.ok(gccValues.every(Number.isFinite))
 const app = process.env.HERO_ORIGIN ? null : spawn(process.execPath, ['node_modules/next/dist/bin/next', 'start', '-H', '127.0.0.1', '-p', '18082'], { stdio: ['ignore', 'pipe', 'pipe'] })
 if (app) {
   await new Promise((resolve, reject) => {
@@ -38,8 +47,9 @@ try {
     const panel = hero.locator('aside')
     assert.equal(await panel.locator('article').count(), 4)
     await panel.getByRole('button').nth(1).click()
-    await panel.locator('strong').first().filter({ hasText: '2,977' }).waitFor()
-    assert.deepEqual((await panel.locator('strong').allTextContents()).map(text => text.replace(/[\u200e\u200f\u061c]/g, '')), ['2,977', '2,430', '+3.6%', '-33.3%'])
+    const expectedGcc = gccValues.map((value, i) => `${i > 1 && value > 0 ? '+' : ''}${new Intl.NumberFormat(locale === 'ar' ? 'ar-u-nu-latn' : 'en').format(value)}${i > 1 ? '%' : ''}`)
+    await panel.locator('strong').first().filter({ hasText: expectedGcc[0] }).waitFor()
+    assert.deepEqual((await panel.locator('strong').allTextContents()).map(text => text.replace(/[\u200e\u200f\u061c]/g, '')), expectedGcc)
     for (const regionIndex of [2, 3]) {
       await panel.getByRole('button').nth(regionIndex).click()
       await page.waitForFunction(index => {
