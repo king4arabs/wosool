@@ -9,8 +9,14 @@
 
 ## Implementation and restrictions
 
-- Four original short English/Arabic sourced news briefs, three unclaimed public editor-reviewed founder profiles. Historical publication dates preserved; no misleading freshness relabel.
+- Five original short English/Arabic sourced news briefs, five unclaimed public editorial founder profiles. Historical publication dates preserved; no misleading freshness relabel.
 - Earlier public Endeavor brief: removed explicit Wosool revenue / membership disclaimers in **both** languages while preserving Endeavor source attribution and aggregate reported business facts. Internal editorial qualification retained here rather than displayed publicly.
-- Mirrored frontend/backend JSON catalogs are byte-for-byte identical. Repository totals: **326 founders**, **178 company groups**, **103 news briefs**. No account, invitation, activation, partnership, actual membership or other private record creation.
+- Mirrored frontend/backend JSON catalogs are byte-for-byte identical. Repository totals: **328 founders**, **179 company groups**, **104 news briefs**. No account, invitation, activation, partnership, actual membership or other private record creation.
 - New stories intentionally omit unlicensed external imagery and use the existing Wosool branded fallback; new founder portraits are not invented. Existing editorial images, records, soft deletions, user edits and membership states preserved.
 - Hostinger baseline a7be830 (hoisted dependencies, runtime traces, worker limits and env gates) is not modified. CI validation, a production Laravel import and verified live deployment are **separate** checkpoints. No production database import or hosting deployment undertaken.
+
+## Additional verified Saudi fintech — Abwab.ai
+
+- **21 September 2026**: Abwab.ai reported **US$4 million in seed funding**, led by Speedinvest with MEVP participating. Its infrastructure supports lenders; **SAR 10 billion+ in SME loans processed by its institutional clients** is not startup revenue or money raised by Abwab.ai. Source: https://www.arabnews.com/startups/saudi-fintech-abwabai-raises-4m-in-seed-round-led-by-speedinvest-3002549
+- The company's official executive-team page identifies **Baraa Koshak** (co-founder and CEO) and **Mohammad Hashem** (co-founder and chief business officer): https://www.abwab.ai/about
+- Two new source-only, unclaimed public directory entries with no account activation, membership, invitations, manufactured portraits or unlicensed news imagery. The bilingual story keeps the publisher's historical 21 September date rather than its later entry date.
