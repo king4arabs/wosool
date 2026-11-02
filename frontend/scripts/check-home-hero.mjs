@@ -49,7 +49,9 @@ try {
     await panel.getByRole('button').nth(1).click()
     const expectedGcc = gccValues.map((value, i) => `${i > 1 && value > 0 ? '+' : ''}${new Intl.NumberFormat(locale === 'ar' ? 'ar-u-nu-latn' : 'en').format(value)}${i > 1 ? '%' : ''}`)
     await panel.locator('strong').first().filter({ hasText: expectedGcc[0] }).waitFor()
-    assert.deepEqual((await panel.locator('strong').allTextContents()).map(text => text.replace(/[\u200e\u200f\u061c]/g, '')), expectedGcc)
+    // Intl may emit invisible bidi marks for Arabic negative values; they are not numerals.
+    const normalizeNumber = text => text.replace(/[\u200e\u200f\u061c]/g, '')
+    assert.deepEqual((await panel.locator('strong').allTextContents()).map(normalizeNumber), expectedGcc.map(normalizeNumber))
     for (const regionIndex of [2, 3]) {
       await panel.getByRole('button').nth(regionIndex).click()
       await page.waitForFunction(index => {
