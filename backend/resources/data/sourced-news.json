@@ -1,5 +1,50 @@
 [
   {
+    "id": "sourced-humain-aramco-pif-equity-closing-november-2026",
+    "imageUrl": "",
+    "imageCredit": "",
+    "author": "Wosool news desk",
+    "slug": "humain-aramco-pif-equity-closing-november-2026",
+    "title": "PIF and Aramco complete HUMAIN ownership transaction",
+    "excerpt": "Aramco takes 49% of the Saudi AI company; PIF retains 51%. The transaction combines cash contributions and AI assets, not a venture funding round.",
+    "content": "PIF and Aramco announced on 1 November 2026 that they had completed their HUMAIN transaction. PIF retains a 51% holding and Aramco, through a subsidiary, obtains 49%. Aramco's contribution includes approximately SAR 9.9 billion in cash during 2026 alongside AI, computing and digital assets. HUMAIN is targeting 3 gigawatts of AI data-centre capacity by 2030; that is a future plan rather than installed capacity. The transaction concerns shareholder ownership and contributed assets, not venture capital raised in a priced startup round.",
+    "category": "Ecosystem",
+    "region": "saudi",
+    "sourceUrl": "https://www.aramco.com/en/news-media/news/2026/pif-and-aramco-close-humain-transaction-to-accelerate-humains-global-growth",
+    "sourceName": "Aramco",
+    "companies": [
+      "HUMAIN",
+      "هيوماين"
+    ],
+    "publishedAt": "2026-11-01",
+    "tags": [
+      "HUMAIN",
+      "Aramco",
+      "PIF",
+      "Saudi Arabia",
+      "AI infrastructure"
+    ],
+    "keyFacts": [
+      "PIF holds 51%; Aramco acquires 49%",
+      "Approx. SAR 9.9bn cash contribution in 2026 plus AI assets",
+      "3 GW AI data-centre capacity is a 2030 target, not current deployment"
+    ],
+    "translations": {
+      "ar": {
+        "title": "اكتمال صفقة ملكية «هيوماين» بين صندوق الاستثمارات العامة وأرامكو",
+        "excerpt": "حصلت أرامكو على 49% من «هيوماين» واحتفظ الصندوق بـ51%؛ وتشمل الصفقة مساهمات نقدية وأصولاً تقنية، وليست جولة رأس مال جريء.",
+        "body": [
+          "أعلن صندوق الاستثمارات العامة وأرامكو السعودية في 1 نوفمبر 2026 اكتمال صفقة «هيوماين»، بحيث يحتفظ الصندوق بحصة 51% وتستحوذ أرامكو عبر إحدى شركاتها التابعة على 49%. وتشمل مساهمة أرامكو نحو 9.9 مليارات ريال نقداً خلال 2026، إلى جانب أصول في مجالات الذكاء الاصطناعي والحوسبة والتقنية الرقمية. وتستهدف «هيوماين» الوصول إلى سعة مراكز بيانات للذكاء الاصطناعي تبلغ 3 غيغاواط بحلول 2030، وهو هدف مستقبلي لا يمثل طاقة تشغيلية قائمة. الصفقة تتعلق بالملكية والمساهمات وليست جولة تمويل استثماري لشركة ناشئة."
+        ],
+        "keyFacts": [
+          "51% للصندوق و49% لأرامكو",
+          "نحو 9.9 مليارات ريال مساهمة نقدية خلال 2026 بالإضافة إلى أصول تقنية",
+          "سعة 3 غيغاواط مستهدفة بحلول 2030 وليست سعة تشغيلية حالية"
+        ]
+      }
+    }
+  },
+  {
     "id": "sourced-endeavor-saudi-entrepreneurs-2025-revenue-october-2026",
     "imageUrl": "",
     "imageCredit": "",
@@ -2366,6 +2411,50 @@
     "region": "global"
   },
   {
+    "id": "sourced-erad-22-million-series-a-september-2026",
+    "imageUrl": "",
+    "imageCredit": "",
+    "author": "Wosool news desk",
+    "slug": "erad-22-million-series-a-september-2026",
+    "title": "Saudi SME financing startup erad closes $22m Series A",
+    "excerpt": "The Riyadh fintech said the MEVP-led round will support new financing products and GCC expansion; financing provided to SMEs is not company revenue.",
+    "content": "In a company press release published on 28 September 2026, Riyadh-based erad announced a $22 million Series A led by Middle East Venture Partners (MEVP), joined by Saudi Venture Capital, 500 Global and other new and existing investors. The company said it had provided more than SAR 500 million in financing to SMEs and received financing requests exceeding SAR 4 billion. Those figures describe cumulative customer financing and demand, not erad's revenue. The startup supplies data-led, Shariah-compliant working-capital products in Saudi Arabia and the UAE.",
+    "category": "Funding",
+    "region": "saudi",
+    "sourceUrl": "https://www.zawya.com/en/press-release/companies-news/erad-raises-22mln-series-a-led-by-mevp-to-accelerate-sme-financing-across-the-gcc-1298531",
+    "sourceName": "erad via Zawya",
+    "companies": [
+      "erad",
+      "إراد"
+    ],
+    "publishedAt": "2026-09-28",
+    "tags": [
+      "erad",
+      "Saudi Arabia",
+      "Fintech",
+      "SME financing"
+    ],
+    "keyFacts": [
+      "$22m Series A, led by MEVP, announced 28 September 2026",
+      "More than SAR 500m cumulative SME financing reported",
+      "More than SAR 4bn cumulative financing requests reported"
+    ],
+    "translations": {
+      "ar": {
+        "title": "«إراد» السعودية تغلق جولة استثمارية من الفئة أ بقيمة 22 مليون دولار",
+        "excerpt": "أفادت الشركة بأن الجولة بقيادة MEVP ستدعم منتجات تمويل جديدة وتوسعها الخليجي، وأن التمويل المقدم للعملاء لا يمثل إيراداتها.",
+        "body": [
+          "أعلنت «إراد» في بيان نُشر بتاريخ 28 سبتمبر 2026 إغلاق جولة استثمارية من الفئة أ بقيمة 22 مليون دولار بقيادة «ميدل إيست فينتشر بارتنرز» وبمشاركة مستثمرين جدد وحاليين من بينهم الشركة السعودية للاستثمار الجريء و500 Global. وذكرت الشركة أنها قدمت تمويلات تراكمية بأكثر من 500 مليون ريال للمنشآت الصغيرة والمتوسطة، وتلقت طلبات تمويل تتجاوز 4 مليارات ريال. هذه مبالغ تمويل للعملاء وطلبات مقدمة، وليست إيرادات الشركة. وتوفر «إراد» حلول رأس مال عامل تعتمد على البيانات وتتوافق مع الشريعة في السعودية والإمارات."
+        ],
+        "keyFacts": [
+          "جولة فئة أ بقيمة 22 مليون دولار بقيادة MEVP أُعلنت 28 سبتمبر 2026",
+          "أكثر من 500 مليون ريال تمويلات تراكمية مقدمة للمنشآت بحسب الشركة",
+          "أكثر من 4 مليارات ريال طلبات تمويل تراكمية بحسب الشركة"
+        ]
+      }
+    }
+  },
+  {
     "id": "sourced-paymob-35-million-pre-series-c",
     "slug": "paymob-35-million-pre-series-c",
     "title": "Paymob raises $35 million as GCC revenue reaches about half its business",
@@ -2449,6 +2538,50 @@
           "جولة ما قبل البذرة بمشاركة إم إم بارتنرز دون إعلان قيمتها",
           "المؤسس والرئيس التنفيذي ثامر فيصل القعيشيش",
           "الشراء المرتبط بالراتب يربط الموظفين وجهات العمل والمتاجر"
+        ]
+      }
+    }
+  },
+  {
+    "id": "sourced-abwab-ai-four-million-seed-september-2026",
+    "imageUrl": "",
+    "imageCredit": "",
+    "author": "Wosool news desk",
+    "slug": "abwab-ai-four-million-seed-september-2026",
+    "title": "Abwab.ai secures $4m seed funding for Saudi SME lending infrastructure",
+    "excerpt": "Speedinvest led the Saudi fintech's seed round with MEVP participating; its software helps financial institutions originate and assess SME credit.",
+    "content": "In coverage published on 21 September 2026, Abwab.ai announced a SAR 15 million (approximately $4 million) seed round led by Speedinvest with participation from Middle East Venture Partners (MEVP). Founded in Riyadh in 2023, the fintech supplies AI-powered loan origination, credit assessment and servicing tools to financial institutions rather than lending directly to SMEs. Co-founder and CEO Baraa Koshak discussed growth in the market. Funding raised is distinct from the volume of loans processed by customers using the platform.",
+    "category": "Funding",
+    "region": "saudi",
+    "sourceUrl": "https://www.arabnews.com/startups/saudi-fintech-abwabai-raises-4m-in-seed-round-led-by-speedinvest-3002549",
+    "sourceName": "Arab News",
+    "companies": [
+      "Abwab.ai",
+      "أبواب للذكاء الاصطناعي"
+    ],
+    "publishedAt": "2026-09-21",
+    "tags": [
+      "Abwab.ai",
+      "Saudi Arabia",
+      "AI lending",
+      "SME finance"
+    ],
+    "keyFacts": [
+      "SAR 15m (about $4m) seed round",
+      "Speedinvest led; MEVP participated",
+      "Founded in Riyadh in 2023; provides lending software, not direct loans"
+    ],
+    "translations": {
+      "ar": {
+        "title": "«أبواب للذكاء الاصطناعي» تحصل على تمويل تأسيسي بقيمة 15 مليون ريال",
+        "excerpt": "قادت «سبيد إنفست» الجولة بمشاركة MEVP لتطوير البنية التقنية لتمويل المنشآت الصغيرة والمتوسطة لدى المؤسسات المالية.",
+        "body": [
+          "تناولت تغطية نُشرت في 21 سبتمبر 2026 إعلان «أبواب للذكاء الاصطناعي» عن جولة تمويل تأسيسية بقيمة 15 مليون ريال سعودي (نحو 4 ملايين دولار)، بقيادة «سبيد إنفست» ومشاركة «ميدل إيست فينتشر بارتنرز». تأسست الشركة في الرياض عام 2023 وتقدم للمؤسسات المالية أدوات مدعومة بالذكاء الاصطناعي لبدء القروض وتقييم الجدارة الائتمانية وخدمتها، ولا تقرض المنشآت مباشرة. وتحدث براء كوشك، الشريك المؤسس والرئيس التنفيذي، عن فرص تطوير البنية التقنية للتمويل. ولا تمثل قيمة الجولة حجم القروض التي عالجتها المؤسسات المستخدمة للمنصة."
+        ],
+        "keyFacts": [
+          "15 مليون ريال (نحو 4 ملايين دولار) تمويل تأسيسي",
+          "سبيد إنفست تقود الجولة بمشاركة MEVP",
+          "تأسست بالرياض في 2023 وتقدم أنظمة إقراض للمؤسسات لا قروضاً مباشرة"
         ]
       }
     }

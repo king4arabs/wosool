@@ -86,3 +86,21 @@ test("Saudi Endeavor and TalMal sourced briefs preserve real dates and Arabic fa
     assert.equal(item.imageUrl, "")
   }
 })
+
+test("November 2026 Saudi HUMAIN transaction and September fintech financings retain source dates and Arabic facts", () => {
+  const cases = [
+    ["humain-aramco-pif-equity-closing-november-2026", "2026-11-01"],
+    ["erad-22-million-series-a-september-2026", "2026-09-28"],
+    ["abwab-ai-four-million-seed-september-2026", "2026-09-21"],
+  ] as const
+  for (const [slug, date] of cases) {
+    const item = curatedNews.find(row => row.slug === slug)
+    assert.ok(item, slug)
+    assert.equal(item.publishedAt, date)
+    assert.equal(item.region, "saudi")
+    assert.equal(item.keyFacts?.length, 3)
+    assert.equal(item.translations?.ar.keyFacts?.length, 3)
+    assert.ok(item.translations?.ar.body?.length)
+    assert.equal(item.imageUrl, "")
+  }
+})
