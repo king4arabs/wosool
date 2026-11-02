@@ -38,8 +38,19 @@ try {
     const panel = hero.locator('aside')
     assert.equal(await panel.locator('article').count(), 4)
     await panel.getByRole('button').nth(1).click()
-    await panel.locator('strong').first().filter({ hasText: '2,977' }).waitFor()
-    assert.deepEqual((await panel.locator('strong').allTextContents()).map(text => text.replace(/[\u200e\u200f\u061c]/g, '')), ['2,977', '2,430', '+3.6%', '-33.3%'])
+    await page.waitForFunction(() => document.querySelector('section[aria-labelledby="home-title"] aside')
+      ?.querySelectorAll('button')[1]?.getAttribute('aria-pressed') === 'true')
+    // Regional counts are updated independently each month; the video smoke test
+    // should validate rendered metrics without freezing an obsolete data snapshot.
+    const gccValues = (await panel.locator('strong').allTextContents())
+      .map(value => value.replace(/[\u200e\u200f\u061c]/g, ''))
+    assert.equal(gccValues.length, 4)
+    for (const count of gccValues.slice(0, 2)) {
+      assert.match(count, /^\d[\d,]*$/)
+      assert.ok(Number(count.replaceAll(',', '')) > 0)
+    }
+    for (const growth of gccValues.slice(2)) assert.match(growth, /^[+-]?\d+(?:\.\d+)?%$/)
+    assert.equal(await panel.locator('article a').count(), 4)
     for (const regionIndex of [2, 3]) {
       await panel.getByRole('button').nth(regionIndex).click()
       await page.waitForFunction(index => {
