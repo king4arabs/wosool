@@ -1,40 +1,28 @@
 "use client"
 
 import Link from "next/link"
-import { useEffect, useMemo, useState } from "react"
+import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import { api } from "@/lib/api"
 import { useAuth } from "@/lib/auth"
 import { useLocale } from "@/lib/locale"
 import { resolveDashboardLocale } from "@/lib/dashboard-i18n"
+import {
+  founderMeta,
+  joinList,
+  listItems,
+  matchCounterpart,
+  matchReasons,
+  matchStatusLabel,
+  memberMatches,
+  profileHref,
+  splitMatches,
+  type MemberMatch,
+} from "@/lib/member-matches"
 import IntroRouterLedger from "@/components/dashboard/IntroRouterLedger"
 
-type Founder = {
-  id: number
-  slug?: string | null
-  user?: { id?: number | null } | null
-  name?: string | null
-  city?: string | null
-  sector?: string | null
-  stage?: string | null
-  tagline?: string | null
-  companies?: Array<{ name: string }>
-}
-
-type Match = {
-  id: number
-  match_score: number
-  match_reasons: string[]
-  status: "suggested" | "accepted" | "connected" | "declined" | string
-  founder_a?: Founder
-  founder_b?: Founder
-  created_at?: string
-}
-
-/** The counterpart in a match is whichever side is not the signed-in member. */
-function getOtherFounder(match: Match, userId?: number | null): Founder | undefined {
-  if (userId && match.founder_a?.user?.id === userId) return match.founder_b
-  if (userId && match.founder_b?.user?.id === userId) return match.founder_a
-  return match.founder_b || match.founder_a
+type MatchesResponse = {
+  data?: MemberMatch[]
+  meta?: { profile_required?: boolean; credits?: { remaining?: number } }
 }
 
 function scoreTone(score: number) {
@@ -43,201 +31,238 @@ function scoreTone(score: number) {
   return "bg-amber-50 text-amber-700 border-amber-200/60"
 }
 
+function initial(name?: string | null) {
+  return (name || "").trim().charAt(0) || "·"
+}
+
 export default function MatchesPage() {
   const { user } = useAuth()
-  const { locale } = useLocale()
+  const { locale: activeLocale } = useLocale()
+  const locale = resolveDashboardLocale(activeLocale)
+  const copy = memberMatches(locale)
   const userId = user?.id ? Number(user.id) : null
-  const [matches, setMatches] = useState<Match[]>([])
-  const [error, setError] = useState<string | null>(null)
+  const [matches, setMatches] = useState<MemberMatch[]>([])
+  const [loadFailed, setLoadFailed] = useState(false)
+  const [actionError, setActionError] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
-  const [busyId, setBusyId] = useState<number | null>(null)
-  const [creditRemaining, setCreditRemaining] = useState(3)
+  const [busy, setBusy] = useState<{ id: number; action: "accept" | "decline" } | null>(null)
+  const [creditRemaining, setCreditRemaining] = useState<number | null>(null)
+  const [profileRequired, setProfileRequired] = useState(false)
+  const requestId = useRef(0)
 
-  const load = async () => {
-    setError(null)
+  const load = useCallback(async () => {
+    const current = ++requestId.current
     setLoading(true)
     try {
-      const response = await api.get<{ data: Match[]; meta?: { credits?: { remaining?: number } } }>("/member/matches")
-      setMatches(response.data || [])
-      setCreditRemaining(response.meta?.credits?.remaining ?? 3)
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "تعذر تحميل التوافق حالياً")
+      const response = await api.get<MatchesResponse>("/member/matches")
+      if (current !== requestId.current) return
+      setMatches(Array.isArray(response.data) ? response.data : [])
+      setProfileRequired(Boolean(response.meta?.profile_required))
+      const remaining = response.meta?.credits?.remaining
+      setCreditRemaining(typeof remaining === "number" ? remaining : null)
+      setLoadFailed(false)
+    } catch {
+      if (current === requestId.current) setLoadFailed(true)
     } finally {
-      setLoading(false)
+      if (current === requestId.current) setLoading(false)
     }
-  }
-
-  useEffect(() => {
-    load()
   }, [])
 
-  const requestIntro = async (id: number) => {
-    setBusyId(id)
+  useEffect(() => {
+    void load()
+  }, [load])
+
+  const respond = async (id: number, action: "accept" | "decline") => {
+    setBusy({ id, action })
+    setActionError(null)
     try {
-      await api.post(`/member/matches/${id}/accept`)
+      await api.post(`/member/matches/${id}/${action}`)
       await load()
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "تعذر إرسال الطلب")
+    } catch {
+      setActionError(copy.actionFailed)
     } finally {
-      setBusyId(null)
+      setBusy(null)
     }
   }
 
-  const activeIntroductions = useMemo(
-    () => matches.filter((m) => m.status === "accepted" || m.status === "connected"),
-    [matches]
-  )
-
-  const suggestedMatches = useMemo(
-    () => matches.filter((m) => m.status === "suggested"),
-    [matches]
-  )
+  const { active, suggested } = useMemo(() => splitMatches(matches), [matches])
+  const panel = "bg-white border border-slate-200 rounded-xl shadow-sm"
+  const muted = `${panel} p-4 text-sm text-slate-600`
 
   return (
-    <div dir="rtl" className="bg-slate-50 text-slate-900 min-h-screen antialiased">
+    <div className="bg-slate-50 text-slate-900 min-h-screen antialiased">
       <div className="max-w-4xl w-full mx-auto flex-1 px-4 py-6 space-y-6">
-        <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-          <div>
-            <div className="flex items-center gap-2">
-              <span className="inline-block w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-              <span className="text-xs font-bold text-emerald-700 uppercase tracking-wider">نظام الربط الخوارزمي المباشر</span>
-            </div>
-            <h1 className="text-xl font-bold tracking-tight text-slate-900 mt-1">المطابقة الموجهة وتقصي الأقران</h1>
-            <p className="text-xs text-slate-500 mt-0.5">تعرّف على مؤسسين تتكامل خبراتهم مع احتياجاتك، وأرسل طلب التعارف المناسب.</p>
+        <div className={`${panel} p-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4`}>
+          <div className="min-w-0">
+            <h1 className="text-xl font-bold tracking-tight text-slate-900">{copy.title}</h1>
+            <p className="text-sm text-slate-600 mt-1">{copy.subtitle}</p>
           </div>
-          <div className="bg-slate-950 text-white/80 font-sans text-xs px-3 py-1.5 rounded-lg border border-slate-800 text-center shrink-0">
-            الرصيد المتاح: <span className="text-amber-400 font-bold">{creditRemaining} طلبات تقديم/الشهر</span>
-          </div>
+          {creditRemaining !== null ? (
+            <p className="bg-slate-950 text-white text-xs px-3 py-2 rounded-lg text-center shrink-0">
+              {copy.creditsLabel}: <span className="text-amber-300 font-bold">{creditRemaining}</span>
+            </p>
+          ) : null}
         </div>
 
-        {error ? (
-          <div className="rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">{error}</div>
+        {loadFailed ? (
+          <div role="alert" className="rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700 flex flex-wrap items-center justify-between gap-3">
+            <span>{copy.loadFailed}</span>
+            <button type="button" onClick={() => void load()} className="min-h-11 rounded-lg border border-rose-200 bg-white px-4 text-sm font-semibold text-rose-700 hover:bg-rose-100">
+              {copy.retry}
+            </button>
+          </div>
+        ) : null}
+        {actionError ? (
+          <div role="alert" className="rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">{actionError}</div>
         ) : null}
 
-        <IntroRouterLedger locale={resolveDashboardLocale(locale)} onChange={load} />
+        {profileRequired ? (
+          <div className={`${muted} flex flex-wrap items-center justify-between gap-3`}>
+            <span>{copy.profileRequired}</span>
+            <Link href="/dashboard/profile" className="min-h-11 inline-flex items-center rounded-lg bg-slate-900 px-4 text-sm font-semibold text-white hover:bg-slate-800">
+              {copy.profileCta}
+            </Link>
+          </div>
+        ) : null}
 
-        <div className="space-y-3">
-          <h2 className="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center gap-2">
-            <span>مسار الاتصالات النشطة</span>
-            <span className="bg-slate-200 text-slate-700 px-1.5 py-0.2 rounded font-sans text-xs">{activeIntroductions.length} معلق</span>
+        <IntroRouterLedger locale={locale} onChange={load} />
+
+        <section className="space-y-3" aria-labelledby="active-introductions">
+          <h2 id="active-introductions" className="text-sm font-bold text-slate-700 flex items-center gap-2">
+            <span>{copy.activeTitle}</span>
+            <span className="bg-slate-200 text-slate-700 px-1.5 rounded text-xs">{active.length}</span>
           </h2>
 
-          {loading ? (
-            <div className="bg-white border border-slate-200 rounded-xl p-4 text-xs text-slate-500 shadow-sm">جاري تحميل الاتصالات النشطة...</div>
-          ) : activeIntroductions.length === 0 ? (
-            <div className="bg-white border border-slate-200 rounded-xl p-4 text-xs text-slate-500 shadow-sm">لا توجد طلبات تقديم نشطة حالياً. ابدأ بطلب تقديم مباشر من التوصيات أدناه.</div>
+          {loading && matches.length === 0 ? (
+            <div className={muted}>{copy.loading}</div>
+          ) : active.length === 0 ? (
+            <div className={muted}>{copy.activeEmpty}</div>
           ) : (
-            activeIntroductions.slice(0, 1).map((match) => {
-              const founder = getOtherFounder(match, userId)
-              return (
-                <div key={match.id} className="bg-white border border-slate-200 rounded-xl p-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 shadow-sm">
-                  <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-full bg-slate-100 border flex items-center justify-center text-xs font-bold text-slate-600">
-                      {(founder?.name || "م").charAt(0)}
-                    </div>
-                    <div className="text-xs">
-                      <p className="font-bold text-slate-900">طلب تقديم معلق مع: <span className="text-slate-700 font-semibold">{founder?.name || "مؤسس"} ({founder?.companies?.[0]?.name || "شركة ناشئة"})</span></p>
-                      <p className="text-xs text-slate-400 mt-0.5">الموضوع: تواصل مباشر بين مؤسسين • الحالة: {match.status}</p>
-                    </div>
-                  </div>
-                  <span className="inline-flex items-center rounded-md bg-amber-50 px-2 py-1 text-xs font-bold text-amber-700 border border-amber-200/60 uppercase whitespace-nowrap">
-                    بانتظار موافقة الطرف الآخر
-                  </span>
-                </div>
-              )
-            })
-          )}
-        </div>
-
-        <div className="space-y-4">
-          <h2 className="text-xs font-bold text-slate-400 uppercase tracking-wider">توصيات المطابقة المتاحة لك الآن (بناءً على تحديثك الأخير)</h2>
-
-          {loading ? (
-            <div className="bg-white border border-slate-200 rounded-xl p-5 text-sm text-slate-500 shadow-sm">جاري تحميل التوصيات...</div>
-          ) : suggestedMatches.length === 0 ? (
-            <div className="bg-white border border-slate-200 rounded-xl p-5 text-sm text-slate-500 shadow-sm">لا توجد توصيات جديدة الآن. حدّث بطاقة الأداء أو نشاط المجتمع للحصول على مطابقات أدق.</div>
-          ) : (
-            <div className="space-y-4">
-              {suggestedMatches.map((match) => {
-                const founder = getOtherFounder(match, userId)
-                const score = Math.round(match.match_score || 0)
+            <ul className="space-y-2">
+              {active.map((match) => {
+                const founder = matchCounterpart(match, userId)
+                const company = founder?.companies?.[0]?.name
                 return (
-                  <div key={match.id} className="bg-white border border-slate-200 rounded-xl p-5 space-y-4 shadow-sm hover:border-slate-300 transition-all">
-                    <div className="flex justify-between items-start gap-4">
-                      <div className="flex items-center gap-3">
-                        <div className="w-11 h-11 rounded-full border-2 border-slate-200 overflow-hidden shrink-0 bg-slate-100 flex items-center justify-center text-sm font-bold text-slate-600">
-                          {(founder?.name || "م").charAt(0)}
-                        </div>
-                        <div>
-                          <div className="flex items-center gap-2">
-                            <h3 className="text-sm font-bold text-slate-900">{founder?.name || "مؤسس"}</h3>
-                            <span className="bg-slate-100 border border-slate-200 text-slate-500 text-xs px-1.5 py-0.2 rounded font-sans">{founder?.companies?.[0]?.name || "شركة ناشئة"}</span>
-                          </div>
-                          <p className="text-xs text-slate-400 mt-0.5">{founder?.stage || "مؤسس"} • {founder?.city || "المملكة العربية السعودية"}</p>
-                        </div>
-                      </div>
-                      <div className="text-left shrink-0">
-                        <span className={`inline-flex items-center rounded-md px-2 py-1 text-xs font-bold border font-sans ${scoreTone(score)}`}>
-                          توافق بنسبة {score}%
-                        </span>
-                      </div>
-                    </div>
-
-                    <hr className="border-slate-100" />
-
-                    <div className="bg-slate-50 border border-slate-200/80 rounded-xl p-4 text-xs space-y-2.5">
-                      <div className="flex items-center gap-2">
-                        <span className="bg-slate-900 text-white font-bold text-xs px-1.5 py-0.5 rounded uppercase tracking-wider font-sans">أسباب الترشيح</span>
-                        <p className="text-slate-800 font-semibold">لماذا تم اقتراح هذا الاتصال؟</p>
-                      </div>
-                      <p className="text-slate-600 leading-relaxed text-xs">
-                        {(match.match_reasons && match.match_reasons.length > 0)
-                          ? match.match_reasons.join("، ")
-                          : (founder?.tagline || "تم اقتراح هذا الاتصال بناءً على تقاطع الاحتياج التشغيلي والخبرة ذات الصلة داخل الشبكة.")}
+                  <li key={match.id} className={`${panel} p-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3`}>
+                    <div className="flex items-center gap-3 min-w-0">
+                      <span aria-hidden="true" className="w-8 h-8 shrink-0 rounded-full bg-slate-100 border flex items-center justify-center text-xs font-bold text-slate-600">
+                        {initial(founder?.name)}
+                      </span>
+                      <p className="text-sm font-semibold text-slate-900 min-w-0 break-words">
+                        <bdi>{founder?.name || copy.founderFallback}</bdi>
+                        {company ? <span className="font-normal text-slate-600"> · <bdi>{company}</bdi></span> : null}
                       </p>
                     </div>
-
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs pt-1">
-                      <div>
-                        <span className="block text-slate-400 font-bold uppercase text-xs tracking-wider mb-0.5">يمكنه مساعدتك في:</span>
-                        <p className="text-slate-700 font-medium">{founder?.sector ? `خبرات ضمن قطاع ${founder.sector}` : "إرشاد مؤسس-لمؤسس بحسب مراحل النمو والتشغيل."}</p>
-                      </div>
-                      <div>
-                        <span className="block text-slate-400 font-bold uppercase text-xs tracking-wider mb-0.5">يبحث حالياً عن:</span>
-                        <p className="text-slate-700 font-medium">تعاونات استراتيجية واتصالات ذات قيمة داخل المجتمع.</p>
-                      </div>
-                    </div>
-
-                    <div className="flex justify-between items-center border-t border-slate-100 pt-4 text-xs gap-3">
-                      <div className="text-slate-400 text-xs flex items-center gap-1.5">
-                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 inline-block" />
-                        متاح للاستشارة التشغيلية هذا الأسبوع
-                      </div>
-                      <div className="flex gap-2">
-                        {founder?.slug ? (
-                          <Link
-                            href={`/founders/${founder.slug}`}
-                            className="bg-slate-50 hover:bg-slate-100 text-slate-700 font-semibold px-3 py-2 border border-slate-200 rounded-lg text-xs transition-colors"
-                          >
-                            معاينة ملف الربط
-                          </Link>
-                        ) : null}
-                        <button
-                          type="button"
-                          onClick={() => requestIntro(match.id)}
-                          disabled={busyId === match.id}
-                          className="bg-slate-900 hover:bg-slate-800 disabled:opacity-60 disabled:cursor-not-allowed text-white font-semibold px-4 py-2 rounded-lg text-xs transition-colors shadow-sm"
-                        >
-                          {busyId === match.id ? "جاري الإرسال..." : "طلب تقديم مُنسَّق"}
-                        </button>
-                      </div>
-                    </div>
-                  </div>
+                    <span className={`inline-flex items-center rounded-md px-2 py-1 text-xs font-bold border whitespace-nowrap ${match.status === "connected" ? "bg-emerald-50 text-emerald-700 border-emerald-200/60" : "bg-amber-50 text-amber-800 border-amber-200/60"}`}>
+                      {matchStatusLabel(locale, match.status)}
+                    </span>
+                  </li>
                 )
               })}
-            </div>
+            </ul>
           )}
-        </div>
+        </section>
+
+        <section className="space-y-4" aria-labelledby="suggested-founders">
+          <h2 id="suggested-founders" className="text-sm font-bold text-slate-700">{copy.suggestedTitle}</h2>
+
+          {loading && matches.length === 0 ? (
+            <div className={muted}>{copy.loading}</div>
+          ) : suggested.length === 0 ? (
+            <div className={muted}>{copy.suggestedEmpty}</div>
+          ) : (
+            <ul className="space-y-4">
+              {suggested.map((match) => {
+                const founder = matchCounterpart(match, userId)
+                const score = Math.round(match.match_score || 0)
+                const company = founder?.companies?.[0]?.name
+                const meta = founderMeta(locale, founder)
+                const reasons = matchReasons(locale, match.match_reasons)
+                const offers = listItems(founder?.offers)
+                const needs = listItems(founder?.needs)
+                const href = profileHref(founder)
+                const isBusy = busy?.id === match.id
+                return (
+                  <li key={match.id} className={`${panel} p-5 space-y-4 hover:border-slate-300 transition-colors`}>
+                    <div className="flex flex-wrap justify-between items-start gap-3">
+                      <div className="flex items-center gap-3 min-w-0">
+                        <span aria-hidden="true" className="w-11 h-11 rounded-full border-2 border-slate-200 shrink-0 bg-slate-100 flex items-center justify-center text-sm font-bold text-slate-600">
+                          {initial(founder?.name)}
+                        </span>
+                        <div className="min-w-0">
+                          <h3 className="text-base font-bold text-slate-900 break-words">
+                            <bdi>{founder?.name || copy.founderFallback}</bdi>
+                            {company ? <span className="ms-2 inline-block bg-slate-100 border border-slate-200 text-slate-600 text-xs font-medium px-1.5 rounded align-middle">{company}</span> : null}
+                          </h3>
+                          {meta.length ? (
+                            <p className="text-xs text-slate-600 mt-0.5">
+                              {meta.map((part, index) => (
+                                <span key={index}>{index > 0 ? " · " : null}<bdi>{part}</bdi></span>
+                              ))}
+                            </p>
+                          ) : null}
+                        </div>
+                      </div>
+                      {score > 0 ? (
+                        <span className={`inline-flex items-center rounded-md px-2 py-1 text-xs font-bold border shrink-0 ${scoreTone(score)}`}>
+                          {score}%
+                        </span>
+                      ) : null}
+                    </div>
+
+                    {reasons || founder?.tagline ? (
+                      <div className="bg-slate-50 border border-slate-200/80 rounded-xl p-4 text-sm space-y-1">
+                        <p className="font-semibold text-slate-800">{copy.reasonsTitle}</p>
+                        <p className="text-slate-600 leading-relaxed"><bdi>{reasons || founder?.tagline}</bdi></p>
+                      </div>
+                    ) : null}
+
+                    {offers.length || needs.length ? (
+                      <dl className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
+                        {offers.length ? (
+                          <div>
+                            <dt className="text-xs font-bold text-slate-600 mb-0.5">{copy.canHelp}</dt>
+                            <dd className="text-slate-800"><bdi>{joinList(locale, offers)}</bdi></dd>
+                          </div>
+                        ) : null}
+                        {needs.length ? (
+                          <div>
+                            <dt className="text-xs font-bold text-slate-600 mb-0.5">{copy.looksFor}</dt>
+                            <dd className="text-slate-800"><bdi>{joinList(locale, needs)}</bdi></dd>
+                          </div>
+                        ) : null}
+                      </dl>
+                    ) : null}
+
+                    <div className="flex flex-wrap justify-end gap-2 border-t border-slate-100 pt-4">
+                      {href ? (
+                        <Link href={href} className="min-h-11 inline-flex items-center bg-white hover:bg-slate-50 text-slate-700 font-semibold px-4 border border-slate-200 rounded-lg text-sm transition-colors">
+                          {copy.viewProfile}
+                        </Link>
+                      ) : null}
+                      <button
+                        type="button"
+                        onClick={() => void respond(match.id, "decline")}
+                        disabled={busy !== null}
+                        className="min-h-11 bg-white hover:bg-slate-50 disabled:opacity-60 disabled:cursor-not-allowed text-slate-700 font-semibold px-4 border border-slate-200 rounded-lg text-sm transition-colors"
+                      >
+                        {isBusy && busy?.action === "decline" ? copy.declining : copy.decline}
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => void respond(match.id, "accept")}
+                        disabled={busy !== null}
+                        className="min-h-11 bg-slate-900 hover:bg-slate-800 disabled:opacity-60 disabled:cursor-not-allowed text-white font-semibold px-4 rounded-lg text-sm transition-colors shadow-sm"
+                      >
+                        {isBusy && busy?.action === "accept" ? copy.requesting : copy.requestIntro}
+                      </button>
+                    </div>
+                  </li>
+                )
+              })}
+            </ul>
+          )}
+        </section>
       </div>
     </div>
   )
