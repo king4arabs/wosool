@@ -1,5 +1,12 @@
 # Changelog
 
+## 3 November release and content reconciliation — 2026-11-03
+
+- Merge the bilingual membership-application and member-matching corrections after required CI run 510 passed frontend/browser/accessibility checks, production guardrails, standalone Node 22 / pnpm 11.24 installation and Laravel on PHP 8.3, 8.4 and 8.5.
+- Reconcile repository snapshots to **332 founders / 180 company groups / 106 stories** after the separate consolidated Saudi/Gulf source review. `content:check`, `content:review` and all 12 content tests pass with zero integrity problems and zero founder reviews due.
+- Record that hourly production health run 251 passes the public website/API probes at repository revision `bf19927`. This does not identify the serving frontend/backend SHA, prove authenticated admin/member behavior or establish a production founder/news import.
+- No account, membership decision, review date, moderation flag, startup revenue decision, production database or hosting setting changed in this reconciliation.
+
 ## Member matches page: both languages, real founder details, working "Not now" — 2026-11-03
 
 - **Problem:** `/dashboard/matches` was fixed Arabic with a hard-coded `dir="rtl"`, so an English member got an Arabic, right-to-left page. Several lines were not true for the founder shown: every suggestion said "available for operational advice this week" and "looking for strategic collaborations", a missing company read "startup" and the location always read "Saudi Arabia" — the page read `city`, which the API never sends (it sends `location`), so even a founder in Dubai was shown as in Saudi Arabia. The founder's real `offers` and `needs` were never shown. Only the first requested introduction was listed although the counter counted all of them, and every one, including completed ones, was labelled "waiting for the other side's approval" next to the raw status (`connected`). The API's decline endpoint had no button, so a member could not skip a suggestion. When loading failed, the credit badge still showed 3; a member without a founder profile saw an empty page with no explanation. The header read "direct algorithmic matching system", buttons were 32px tall and the score used physical `text-left`.
