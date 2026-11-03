@@ -86,3 +86,21 @@ test("Saudi Endeavor and TalMal sourced briefs preserve real dates and Arabic fa
     assert.equal(item.imageUrl, "")
   }
 })
+
+test("3 November sourced briefs preserve verified publication dates, bilingual facts and image rights", () => {
+  for (const [slug, date, region] of [
+    ["pif-aramco-humain-transaction-november-2026", "2026-11-01", "saudi"],
+    ["mozn-humain-strategic-investment-august-2026", "2026-08-03", "saudi"],
+    ["1001-sovereign-ai-series-a-june-2026", "2026-06-30", "gcc"],
+  ] as const) {
+    const item = curatedNews.find(story => story.slug === slug)!
+    assert.ok(item, slug)
+    assert.equal(item.publishedAt, date)
+    assert.equal(item.region, region)
+    assert.equal(item.keyFacts?.length, 3)
+    assert.equal(item.translations?.ar.keyFacts?.length, 3)
+    assert.ok(item.translations?.ar.body.length)
+    assert.ok(safeNewsUrl(item.sourceUrl))
+    assert.equal(item.imageUrl, "")
+  }
+})
