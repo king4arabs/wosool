@@ -44,13 +44,13 @@ test('frontend source snapshots and database import share the same reviewed reco
   assert.equal(discoveryProfiles.length, 62)
   const databaseCountry = JSON.parse(readFileSync(new URL('../../../backend/resources/data/founder-directory-expansion-2026-10-29.json', import.meta.url), 'utf8'))
   assert.deepEqual(databaseCountry, countryProfiles)
-  assert.equal(countryProfiles.length, 121)
+  assert.equal(countryProfiles.length, 126)
   assert.equal(originalCountryCohort.length, 102)
   assert.equal(october30Additions.length, 8)
   assert.equal(new Set(originalCountryCohort.map(profile => profile.country_code)).size, 51)
   for (const code of new Set(originalCountryCohort.map(profile => profile.country_code))) assert.equal(originalCountryCohort.filter(profile => profile.country_code === code).length, 2, code)
-  assert.equal(new Set(sourceProfiles.map(profile => profile.company_key)).size, 178)
-  assert.equal(sourceProfiles.length, 327)
+  assert.equal(new Set(sourceProfiles.map(profile => profile.company_key)).size, 180)
+  assert.equal(sourceProfiles.length, 332)
   assert.equal(new Set(sourceProfiles.map(profile => profile.founder_name_en.toLowerCase())).size, sourceProfiles.length)
   assert.equal(new Set(sourceProfiles.map(profile => profile.slug)).size, sourceProfiles.length)
   assert.ok(sourceProfiles.every(profile => profile.source_urls.length > 0 && profile.reviewed_at))
@@ -190,5 +190,21 @@ test('3 November sourced co-founders carry evidence and no Wosool membership', (
       assert.ok(item.traction_ar)
       assert.ok(item.source_urls.includes(item.traction_source_url!))
     }
+  }
+})
+
+test('2 November sourced founders retain independently linked evidence and no membership claims', () => {
+  const latest = countryProfiles.filter(profile => profile.reviewed_at === '2026-11-02')
+  assert.deepEqual(latest.map(profile => profile.slug).sort(), [
+    'baraa-koshak-abwab', 'erad-abdulmalik-almeheini', 'erad-youssef-said', 'mike-matta-solink',
+    'mohammad-hashem-abwab',
+  ])
+  for (const row of latest) {
+    assert.ok(row.source_urls.includes(row.source_url))
+    assert.ok(row.founder_name_en && row.founder_name_ar && row.founder_brief_en && row.founder_brief_ar)
+    assert.equal(row.portrait_url, null)
+    assert.equal(row.traction_en, null)
+    assert.equal(row.traction_ar, null)
+    assert.ok(!('member' in row) && !('isVerified' in row) && !('email' in row) && !('user_id' in row))
   }
 })
