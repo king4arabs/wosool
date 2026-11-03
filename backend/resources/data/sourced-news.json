@@ -1,5 +1,50 @@
 [
   {
+    "id": "sourced-pif-aramco-humain-transaction-november-2026",
+    "slug": "pif-aramco-humain-transaction-november-2026",
+    "imageUrl": "",
+    "imageCredit": "",
+    "author": "Wosool news desk",
+    "title": "PIF and Aramco close HUMAIN deal; Aramco takes 49% stake",
+    "excerpt": "PIF retains 51% as Aramco contributes AI assets and approximately SAR 9.9bn in 2026 cash.",
+    "content": "On 1 November 2026, Aramco and PIF announced completion of their shareholder transaction in HUMAIN. Aramco, through a subsidiary, acquired 49%, while PIF retained 51%. The transaction includes AI and digital assets and approximately SAR 9.9 billion (US$2.6 billion) in Aramco cash contributions during 2026. HUMAIN targets 3GW of AI data-centre capacity by 2030. This is a shareholder transaction rather than a conventional startup funding round; the contribution is not reported revenue.",
+    "category": "Ecosystem",
+    "region": "saudi",
+    "sourceUrl": "https://www.aramco.com/en/news-media/news/2026/pif-and-aramco-close-humain-transaction-to-accelerate-humains-global-growth",
+    "sourceName": "Aramco",
+    "companies": [
+      "HUMAIN",
+      "Aramco",
+      "Public Investment Fund"
+    ],
+    "publishedAt": "2026-11-01",
+    "tags": [
+      "Saudi Arabia",
+      "HUMAIN",
+      "AI infrastructure",
+      "Aramco"
+    ],
+    "keyFacts": [
+      "49% Aramco ownership; 51% retained by PIF",
+      "Approximately SAR 9.9bn in 2026 cash plus AI assets",
+      "3GW AI data-centre capacity targeted for 2030"
+    ],
+    "translations": {
+      "ar": {
+        "title": "الصندوق وأرامكو يتممان صفقة «هيوماين» بحصة 49% لأرامكو",
+        "excerpt": "الصندوق يحتفظ بـ51% مع نقل أصول تقنية ومساهمات نقدية من أرامكو تقارب 9.9 مليارات ريال في 2026.",
+        "body": [
+          "أعلنت أرامكو وصندوق الاستثمارات العامة في 1 نوفمبر 2026 إتمام صفقة «هيوماين»، حيث استحوذت أرامكو عبر شركة تابعة على 49% واحتفظ الصندوق بنسبة 51%. وتشمل الصفقة أصولاً تقنية ومساهمات نقدية من أرامكو خلال 2026 تقارب 9.9 مليارات ريال (2.6 مليار دولار). وتستهدف «هيوماين» الوصول إلى قدرات مراكز بيانات للذكاء الاصطناعي تبلغ ثلاثة غيغاواط بحلول 2030. يتعلق الخبر بصفقة ملكية، وليس بجولة تمويل ناشئة أو بإيرادات محققة."
+        ],
+        "keyFacts": [
+          "49% لأرامكو و51% لصندوق الاستثمارات العامة",
+          "نحو 9.9 مليارات ريال مساهمات نقدية خلال 2026 مع أصول تقنية",
+          "مستهدف 3 غيغاواط لقدرات مراكز بيانات الذكاء الاصطناعي بحلول 2030"
+        ]
+      }
+    }
+  },
+  {
     "id": "sourced-endeavor-saudi-entrepreneurs-2025-revenue-october-2026",
     "imageUrl": "",
     "imageCredit": "",
@@ -4125,6 +4170,95 @@
           "جولة تأسيسية بقيمة 3 ملايين دولار في مارس 2022",
           "دعم أكثر من 300 مصنع محلي",
           "تأسست عام 2020"
+        ]
+      }
+    }
+  },
+  {
+    "id": "sourced-mozn-humain-strategic-investment-august-2026",
+    "slug": "mozn-humain-strategic-investment-august-2026",
+    "imageUrl": "",
+    "imageCredit": "",
+    "author": "Wosool news desk",
+    "title": "HUMAIN invests in Saudi AI company MOZN; amount undisclosed",
+    "excerpt": "The 3 August 2026 announcement outlines a partnership and MOZN's reported base of more than 150 customers.",
+    "content": "HUMAIN announced a strategic investment and co-development partnership with MOZN on 3 August 2026. The parties plan secure enterprise AI for regulated financial institutions and the public sector. They did not disclose the investment amount. The announcement said funding would support MOZN's international expansion and reported more than 150 customers at the time. This is a company-reported customer count, not revenue.",
+    "category": "Funding",
+    "region": "saudi",
+    "sourceUrl": "https://www.mozn.ai/humain-mozn-partnership",
+    "sourceName": "MOZN",
+    "companies": [
+      "MOZN",
+      "HUMAIN"
+    ],
+    "publishedAt": "2026-08-03",
+    "tags": [
+      "Saudi Arabia",
+      "MOZN",
+      "HUMAIN",
+      "Enterprise AI"
+    ],
+    "keyFacts": [
+      "Strategic investment announced 3 August 2026",
+      "Investment amount undisclosed",
+      "MOZN reported more than 150 customers"
+    ],
+    "translations": {
+      "ar": {
+        "title": "«هيوماين» تستثمر في «مُزن» السعودية دون إعلان قيمة الاستثمار",
+        "excerpt": "شراكة أُعلنت في 3 أغسطس 2026 لتطوير حلول ذكاء اصطناعي للمؤسسات، وتفيد «مُزن» بخدمة أكثر من 150 عميلاً.",
+        "body": [
+          "أعلنت «هيوماين» و«مُزن» في 3 أغسطس 2026 استثماراً استراتيجياً وشراكة لتطوير حلول الذكاء الاصطناعي للمؤسسات المالية والقطاع العام. ولم يُكشف عن قيمة الاستثمار. ووفق إعلان الشركتين، يستهدف التمويل دعم توسع «مُزن» دولياً، فيما أفادت الشركة بأنها تخدم أكثر من 150 عميلاً. هذا عدد عملاء أعلنت عنه الشركة، وليس إيرادات."
+        ],
+        "keyFacts": [
+          "أُعلن الاستثمار في 3 أغسطس 2026",
+          "قيمة الاستثمار غير معلنة",
+          "أفادت «مُزن» بخدمة أكثر من 150 عميلاً"
+        ]
+      }
+    }
+  },
+  {
+    "id": "sourced-1001-sovereign-ai-series-a-june-2026",
+    "slug": "1001-sovereign-ai-series-a-june-2026",
+    "imageUrl": "",
+    "imageCredit": "",
+    "author": "Wosool news desk",
+    "title": "1001 raises $30m Series A for sovereign AI across the GCC",
+    "excerpt": "Lux Capital led the round, with Saudi Sanabil Investments joining other regional and global investors.",
+    "content": "On 30 June 2026, GCC- and London-based 1001 announced US$30 million in Series A financing led by Lux Capital, with Saudi Sanabil Investments among participants. Founder and CEO Bilal Abu-Ghazaleh established the business in 2025. It develops locally governed AI systems for critical infrastructure including aviation, ports, logistics and energy. The funding is intended for engineering and commercial expansion across GCC markets.",
+    "category": "Funding",
+    "region": "gcc",
+    "sourceUrl": "https://www.wamda.com/en/2026/06/1001-closes-30-million-series-a-build-sovereign-ai-gcc",
+    "sourceName": "Wamda",
+    "companies": [
+      "1001",
+      "Lux Capital",
+      "Sanabil Investments"
+    ],
+    "publishedAt": "2026-06-30",
+    "tags": [
+      "GCC",
+      "1001",
+      "Sovereign AI",
+      "Series A"
+    ],
+    "keyFacts": [
+      "US$30m Series A announced 30 June 2026",
+      "Lux Capital led; Sanabil participated",
+      "Founded in 2025 by Bilal Abu-Ghazaleh"
+    ],
+    "translations": {
+      "ar": {
+        "title": "«1001» تجمع 30 مليون دولار بجولة أولى لتوسيع الذكاء الاصطناعي السيادي بالخليج",
+        "excerpt": "قاد «لوكس كابيتال» التمويل بمشاركة «سنابل للاستثمار» السعودية ومستثمرين آخرين.",
+        "body": [
+          "أعلنت شركة «1001»، التي تنشط في الخليج ولندن، في 30 يونيو 2026 جمع 30 مليون دولار ضمن جولة تمويل من الفئة A بقيادة «لوكس كابيتال»، بمشاركة «سنابل للاستثمار» السعودية ومستثمرين آخرين. أسس بلال أبو غزالة الشركة عام 2025 لتطوير ذكاء اصطناعي سيادي للبنية التحتية الحيوية في قطاعات الطيران والموانئ والخدمات اللوجستية والطاقة. وتعتزم الشركة استخدام التمويل للتوسع الهندسي والتجاري في الخليج."
+        ],
+        "keyFacts": [
+          "جولة تمويل بقيمة 30 مليون دولار في 30 يونيو 2026",
+          "قادها «لوكس كابيتال» بمشاركة «سنابل»",
+          "تأسست في 2025 على يد بلال أبو غزالة"
         ]
       }
     }
