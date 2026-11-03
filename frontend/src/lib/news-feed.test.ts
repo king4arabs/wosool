@@ -86,3 +86,43 @@ test("Saudi Endeavor and TalMal sourced briefs preserve real dates and Arabic fa
     assert.equal(item.imageUrl, "")
   }
 })
+
+test("3 November sourced briefs preserve verified publication dates, bilingual facts and image rights", () => {
+  for (const [slug, date, region] of [
+    ["pif-aramco-humain-transaction-november-2026", "2026-11-01", "saudi"],
+    ["mozn-humain-strategic-investment-august-2026", "2026-08-03", "saudi"],
+    ["1001-sovereign-ai-series-a-june-2026", "2026-06-30", "gcc"],
+  ] as const) {
+    const item = curatedNews.find(story => story.slug === slug)!
+    assert.ok(item, slug)
+    assert.equal(item.publishedAt, date)
+    assert.equal(item.region, region)
+    assert.equal(item.keyFacts?.length, 3)
+    assert.equal(item.translations?.ar.keyFacts?.length, 3)
+    assert.ok(item.translations?.ar.body.length)
+    assert.ok(safeNewsUrl(item.sourceUrl))
+    assert.equal(item.imageUrl, "")
+  }
+})
+
+test('2 November verified stories retain dated Arabic and English facts without process copy', () => {
+  for (const [slug, date] of [
+    ['erad-22m-series-a-september-2026', '2026-09-28'],
+    ['tracxn-uae-tech-nine-months-2026', '2026-10-30'],
+    ['solink-over-100m-funding-october-2026', '2026-10-29'],
+    ['abwab-ai-four-million-seed-september-2026', '2026-09-21'],
+  ]) {
+    const item = curatedNews.find(story => story.slug === slug)!
+    assert.ok(item, slug)
+    assert.equal(item.publishedAt, date)
+    assert.ok(safeNewsUrl(item.sourceUrl))
+    assert.equal(item.imageUrl, '')
+    assert.equal(item.keyFacts?.length, 3)
+    assert.equal(item.translations?.ar.keyFacts?.length, 3)
+    assert.ok(item.content && item.translations?.ar.body[0])
+  }
+  const endeavor = curatedNews.find(story => story.slug === 'endeavor-saudi-entrepreneurs-2025-revenue-october-2026')!
+  assert.ok(endeavor)
+  assert.doesNotMatch(endeavor.content, /Wosool (?:revenue|membership)/)
+  assert.doesNotMatch(endeavor.translations!.ar.body.join(' '), /إيرادات «وصول»|أرقام عضويتها/)
+})

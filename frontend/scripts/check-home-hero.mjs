@@ -37,17 +37,32 @@ try {
     })
     const panel = hero.locator('aside')
     assert.equal(await panel.locator('article').count(), 4)
-    await panel.getByRole('button').nth(1).click()
-    await panel.locator('strong').first().filter({ hasText: '2,977' }).waitFor()
-    assert.deepEqual((await panel.locator('strong').allTextContents()).map(text => text.replace(/[\u200e\u200f\u061c]/g, '')), ['2,977', '2,430', '+3.6%', '-33.3%'])
-    for (const regionIndex of [2, 3]) {
+    // Region figures are refreshed monthly from sourced data (docs/REGIONAL-HERO-METRICS.md), so this
+    // smoke test checks how they render, not last month's numbers. A figure without a supported source
+    // is withdrawn and shown as an "unavailable" dash with no source link.
+    const metricCards = () => panel.locator('article').evaluateAll(cards => cards.map(card => {
+      const value = card.querySelector('strong')
+      return { text: (value?.textContent || '').replace(/[\u200e\u200f\u061c]/g, ''), label: value?.getAttribute('aria-label') || '', links: card.querySelectorAll('a[href^="https://"]').length }
+    }))
+    for (const regionIndex of [1, 2, 3]) {
       await panel.getByRole('button').nth(regionIndex).click()
       await page.waitForFunction(index => {
         const panel = document.querySelector('section[aria-labelledby="home-title"] aside')
         return panel?.querySelectorAll('button')[index]?.getAttribute('aria-pressed') === 'true'
       }, regionIndex)
-      assert.equal((await panel.locator('strong').allTextContents()).includes('—'), false)
-      assert.ok(await panel.locator('article a').count() >= 4)
+      const cards = await metricCards()
+      assert.equal(cards.length, 4)
+      for (const [i, card] of cards.entries()) {
+        if (card.text === '—') {
+          assert.match(card.label, /^(Unavailable|غير متاح)$/, `region ${regionIndex} card ${i}: a dash must be announced as unavailable`)
+          assert.equal(card.links, 0, `region ${regionIndex} card ${i}: an unavailable figure must not cite a source`)
+        } else {
+          assert.match(card.text, i < 2 ? /^\d[\d,.]*(?:\s?[^\s\d]+)?\+?$/ : /^[+-]?\d+(?:\.\d+)?%$/, `region ${regionIndex} card ${i}: ${card.text}`)
+          assert.equal(card.links, 1, `region ${regionIndex} card ${i}: a figure needs its source link`)
+        }
+      }
+      // GCC is fully sourced; a missing GCC figure means the panel lost data.
+      if (regionIndex === 1) assert.equal(cards.filter(card => card.text === '—').length, 0)
     }
     await panel.getByRole('button').first().click()
     assert.equal(await panel.locator('article a').count(), 4)
