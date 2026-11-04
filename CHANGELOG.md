@@ -1,5 +1,11 @@
 # Changelog
 
+## 4 November content and release reconciliation — 2026-11-04
+
+- Add two source-only Aya founder profiles and three bilingual news briefs after checking the official investor identity, role and dated funding evidence. The funding and reported usage figures are not treated as revenue, audited results, Wosool membership or programme approval.
+- Reconcile repository snapshots to **334 founders / 181 company groups / 109 stories**. `content:check`, `content:review` and all 12 content tests pass with zero integrity problems and zero founder reviews due.
+- Record required CI run 519 passing on merged source `2d708c9`, including the preceding opportunities-directory correction. Scheduled production health run 254 is also green against repository source `9057be5`; neither result identifies the revisions currently served by Hostinger or establishes a production database import.
+
 ## Opportunities directory: English reads left to right, search finds what visitors type — 2026-11-04
 
 - **Problem:** on `/opportunities` the card rail was always `dir="rtl"`, so in English the first card sat at the right edge, the rail auto-scrolled leftwards and Tab moved through cards right to left. The search box needed the whole query as one exact lower-cased substring: "stv ai" found nothing (the words come from the provider name and the title), "مول" did not find "موّل مستقبل الألعاب", "waed" did not find "Wa’ed Ventures", and typing a group name such as "VC" matched nothing.
