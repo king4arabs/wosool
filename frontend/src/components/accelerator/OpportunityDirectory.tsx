@@ -21,6 +21,10 @@ import {
   connectProblem,
   type ConnectProblem,
 } from "@/lib/opportunity-connect";
+import {
+  matchesOpportunitySearch,
+  nextRailPosition,
+} from "@/lib/opportunity-filters";
 import styles from "./opportunities.module.css";
 export type { EcosystemRecord } from "./LegacyOpportunityDetails";
 
@@ -120,12 +124,17 @@ export function OpportunityDirectory({ slug }: { slug?: string }) {
       active = false;
     };
   }, []);
+  // Group names in both languages, so "VC" or "المزايا" finds the cards in that group.
+  const groupNames = (value: string) =>
+    value === "investment"
+      ? ["فرص الاستثمار", "Investment"]
+      : value === "vc"
+        ? ["تواصل مع المستثمرين", "VC connections"]
+        : ["المزايا والبرامج", "Perks & programs"];
   const visible = rows.filter(
     (r) =>
       (!group || r.group === group) &&
-      `${r.brand} ${r.title_ar} ${r.title_en} ${r.description_ar} ${r.description_en}`
-        .toLowerCase()
-        .includes(search.toLowerCase().trim()),
+      matchesOpportunitySearch(r, search, locale, groupNames(r.group)),
   );
   useEffect(() => {
     const element = rail.current;
@@ -145,20 +154,21 @@ export function OpportunityDirectory({ slug }: { slug?: string }) {
         !document.hidden &&
         !element.contains(document.activeElement)
       ) {
-        const end = element.scrollWidth - element.clientWidth;
-        if (end > 0) {
-          if (element.scrollLeft <= -end + 1) {
-            element.scrollLeft = 0;
-            holdUntil.current = now + 1800;
-          } else element.scrollLeft -= Math.min(now - previous, 50) * 0.035;
-        }
+        const next = nextRailPosition(
+          element.scrollLeft,
+          element.scrollWidth - element.clientWidth,
+          Math.min(now - previous, 50) * 0.035,
+          ar,
+        );
+        element.scrollLeft = next.left;
+        if (next.wrapped) holdUntil.current = now + 1800;
       }
       previous = now;
       frame = requestAnimationFrame(tick);
     };
     frame = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(frame);
-  }, [slug, group, search]);
+  }, [slug, group, search, ar]);
   const label = (value: string) =>
     value === "investment"
       ? t("فرص الاستثمار", "Investment")
@@ -336,7 +346,7 @@ export function OpportunityDirectory({ slug }: { slug?: string }) {
             <div
               ref={rail}
               className={styles.rail}
-              dir="rtl"
+              dir={ar ? "rtl" : "ltr"}
               aria-label={t("الفرص", "Opportunities")}
               tabIndex={0}
               onPointerEnter={() => {
@@ -353,11 +363,7 @@ export function OpportunityDirectory({ slug }: { slug?: string }) {
               }}
             >
               {visible.map((row) => (
-                <article
-                  key={row.slug}
-                  className={styles.card}
-                  dir={ar ? "rtl" : "ltr"}
-                >
+                <article key={row.slug} className={styles.card}>
                   <Brand row={row} />
                   <div className={styles.body}>
                     <span className={styles.category}>{label(row.group)}</span>

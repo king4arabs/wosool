@@ -1,5 +1,12 @@
 # Changelog
 
+## Opportunities directory: English reads left to right, search finds what visitors type — 2026-11-04
+
+- **Problem:** on `/opportunities` the card rail was always `dir="rtl"`, so in English the first card sat at the right edge, the rail auto-scrolled leftwards and Tab moved through cards right to left. The search box needed the whole query as one exact lower-cased substring: "stv ai" found nothing (the words come from the provider name and the title), "مول" did not find "موّل مستقبل الألعاب", "waed" did not find "Wa’ed Ventures", and typing a group name such as "VC" matched nothing.
+- **Fix:** the rail follows the page direction, and the auto-scroll step (new `nextRailPosition`) moves in reading direction and returns to the start in both. New `lib/opportunity-filters` reuses the Arabic-aware `normalizeSearch` from founder, company and FAQ search: every word must appear in the provider name, either title, either description or the group name in either language; apostrophes are optional.
+- **Tests:** `opportunity-filters` (6, frontend). The page-source check fails on the previous component; the helpers did not exist.
+- **Checks:** `npm run verify` green on `main` before the change (292 frontend, 362 Laravel tests) and on this branch after it (298, 362). QA crawl on `main` as visitor and admin: 406 page visits, 0 problems; after the change `/opportunities` and a detail page: 8 visits, 0 problems. A browser check at 390px and 1366px in both languages showed the rail running in reading direction, no horizontal overflow, and the four searches above returning 1, 2, 1 and 9 cards. CI on `main` is green at `f155960` (run 517); hourly production health run 254 is green. This sandbox cannot reach wosool.org directly, and its CLI PHP (8.3.6) is below the required patched runtime, so backend dependencies were installed locally with the PHP platform check skipped; CI runs the patched PHP 8.3/8.4/8.5 matrix. No data, deployment or hosting change.
+
 ## 3 November release and content reconciliation — 2026-11-03
 
 - Merge the bilingual membership-application and member-matching corrections after required CI run 510 passed frontend/browser/accessibility checks, production guardrails, standalone Node 22 / pnpm 11.24 installation and Laravel on PHP 8.3, 8.4 and 8.5.
