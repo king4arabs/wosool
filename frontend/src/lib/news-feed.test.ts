@@ -126,3 +126,21 @@ test('2 November verified stories retain dated Arabic and English facts without 
   assert.doesNotMatch(endeavor.content, /Wosool (?:revenue|membership)/)
   assert.doesNotMatch(endeavor.translations!.ar.body.join(' '), /إيرادات «وصول»|أرقام عضويتها/)
 })
+
+test('4 November sourced briefs retain real dates, Arabic facts and licensed-image safeguards', () => {
+  for (const [slug, date, region] of [
+    ['aya-seven-million-series-a-april-2026', '2026-04-16', 'saudi'],
+    ['sheraa-nestle-nextgen-founders-october-2026', '2026-10-29', 'gcc'],
+    ['percent-labs-syria-seed-undisclosed-november-2026', '2026-11-02', 'mena'],
+  ] as const) {
+    const item = curatedNews.find(story => story.slug === slug)!
+    assert.ok(item, slug)
+    assert.equal(item.publishedAt, date)
+    assert.equal(item.region, region)
+    assert.equal(item.imageUrl, '')
+    assert.equal(item.keyFacts?.length, 3)
+    assert.equal(item.translations?.ar.keyFacts?.length, 3)
+    assert.ok(safeNewsUrl(item.sourceUrl))
+    assert.ok(item.translations?.ar.body[0]?.length)
+  }
+})
