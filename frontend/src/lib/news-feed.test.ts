@@ -144,3 +144,23 @@ test('4 November sourced briefs retain real dates, Arabic facts and licensed-ima
     assert.ok(item.translations?.ar.body[0]?.length)
   }
 })
+
+test('RABEH sourced stories link to its founder without implying membership', () => {
+  const articles = curatedNews.filter(item => item.companies?.includes('RABEH Financial'))
+  assert.equal(articles.length, 3)
+  for (const item of articles) {
+    assert.equal(item.region, 'saudi')
+    assert.equal(item.imageUrl, '/startup-directory/rabeh-logo.webp')
+    assert.equal(item.imageCredit, 'RABEH')
+    assert.equal(item.keyFacts?.length, item.translations?.ar.keyFacts?.length)
+    assert.equal(newsFounders(item).some(founder => founder.slug === 'mohammed-alsolami-rabeh'), true)
+  }
+  assert.deepEqual(articles.map(item => item.publishedAt).sort(), ['2024-03-06', '2025-09-17', '2026-09-03'])
+})
+
+test('RABEH public briefs do not contain internal membership review notes', () => {
+  const award = curatedNews.find(item => item.slug === 'rabeh-wins-moneysurge-seed-award-money2020-september-2025')!
+  assert.ok(award)
+  assert.doesNotMatch(award.content, /membership in Wosool/i)
+  assert.doesNotMatch(award.translations!.ar.body.join(' '), /عضوية وصول/)
+})
