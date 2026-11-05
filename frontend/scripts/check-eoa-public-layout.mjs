@@ -100,7 +100,10 @@ try {
             return { top, width, height }
           }))
           assert.ok(boxes.every(box => Math.abs(box.width - boxes[0].width) < 2 && Math.abs(box.height - boxes[0].height) < 2), 'All three leadership cards have equal dimensions')
-          assert.equal(boxes.every(box => Math.abs(box.top - boxes[0].top) < 2), width > 760, 'Leadership shares one desktop row and stacks on small screens')
+          // WebKit can reserve scrollbar space inside the requested viewport.
+          // Assert against the CSS viewport that actually selects the layout.
+          const viewport = await page.evaluate(() => ({ width: innerWidth, threeColumns: matchMedia('(min-width: 761px)').matches }))
+          assert.equal(boxes.every(box => Math.abs(box.top - boxes[0].top) < 2), viewport.threeColumns, `Leadership shares one desktop row and stacks on small screens: ${JSON.stringify({ viewport, boxes })}`)
           for (const image of await cards.locator('img').all()) {
             await image.scrollIntoViewIfNeeded()
             await image.evaluate(element => element.decode())
