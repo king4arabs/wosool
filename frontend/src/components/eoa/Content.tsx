@@ -145,7 +145,7 @@ export function EoaContent({ section }: { section: string }) {
         )}
         {section === 'leadership' && <EoaLeadership program={program} ar={ar} />}
         {section === 'mentors' && <>
-          <EoGlobalNetwork key={ar ? "ar" : "en"} ar={ar} />
+          <EoGlobalNetwork ar={ar} />
           {!!program?.mentors?.length && <EoaMentors mentors={program.mentors} ar={ar} />}
         </>}
         {section === 'faq' && <EoaProgramDetails program={program} section="faq" />}

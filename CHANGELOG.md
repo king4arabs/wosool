@@ -7,6 +7,12 @@
 - Add 10 Wosool questions and 8 EO Accelerator questions. Administrators can import missing suggested EO questions into a draft without replacing existing answers or hidden entries.
 - Verify both languages at phone and desktop sizes, along with search, filtering, contact handoff, URL anchors and accessibility.
 
+## EO network expansion and fresh visit order — 2026-11-05
+
+- Expand the public EO network from 36 to 56 profiles, with official EO references, local portraits and bilingual professional summaries.
+- Shuffle cards on each new visit while retaining the same order across search, filters, language changes and carousel/grid views.
+- Add focused browser coverage for portrait loading, fresh reload/navigation order, stable controls and accessibility.
+
 ## Daily admin workflows and relationship queues — 2026-11-05
 
 - Replace the long mobile navigation select with the searchable service menu used on desktop, including keyboard focus restoration; add work-area filters and daily shortcuts to the service directory.

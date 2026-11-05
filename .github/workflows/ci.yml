@@ -48,6 +48,16 @@ jobs:
           SEO_CANONICAL_ORIGIN: http://localhost:3000
       - name: Install Chromium for isolated public-collection checks
         run: npx playwright install --with-deps chromium
+      - name: Verify EO network profiles and fresh-visit shuffling
+        run: node scripts/check-eo-network.mjs
+      - name: Save EO network browser previews
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: eo-network-previews
+          path: /tmp/eo-network-*.png
+          retention-days: 3
+          if-no-files-found: ignore
       - name: Verify admin CRM, PR, analytics and priorities
         run: node scripts/check-admin-operations.mjs
       - name: Verify interactive FAQs in Arabic and English
