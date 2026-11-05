@@ -23,3 +23,17 @@ export function matchesFaq(item: FaqItem, query: string) {
   const haystack = normalizeSearch([item.q.ar, item.q.en, ...item.a.ar, ...item.a.en].join(" "))
   return terms.every(term => haystack.includes(term))
 }
+/** A malformed pasted URL must not break the help page. */
+export function faqIdFromHash(hash: string): string | null {
+  try { return decodeURIComponent(hash.replace(/^#/, "")) || null } catch { return null }
+}
+
+/** WAI accordion keyboard navigation; Arrow keys wrap through visible questions. */
+export function nextFaqIndex(key: string, index: number, length: number): number | null {
+  if (length < 1) return null
+  if (key === "Home") return 0
+  if (key === "End") return length - 1
+  if (key === "ArrowDown") return (index + 1) % length
+  if (key === "ArrowUp") return (index - 1 + length) % length
+  return null
+}

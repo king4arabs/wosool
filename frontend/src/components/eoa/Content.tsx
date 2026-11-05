@@ -38,9 +38,10 @@ export function EoaContent({ section }: { section: string }) {
   return (
     <section className="eoa-section">
       <div className="eoa-container">
-        <header className="eoa-page-heading">
+        <header className={`eoa-page-heading ${section === 'faq' ? 'mx-auto text-center' : ''}`}>
           <span className="eoa-eyebrow">EO RIYADH ACCELERATOR</span>
           <h1>{titles[section]?.[ar ? 0 : 1]}</h1>
+          {section === 'faq' && <p className="eoa-lead">{ar ? 'إجابات واضحة عن الأهلية، والتقديم، وتجربة التعلم، وما بعد التخرج.' : 'Clear answers about eligibility, applying, the learning experience and life after graduation.'}</p>}
         </header>
         {['program', 'alumni'].includes(section) && <CohortModel ar={ar} />}
         {section === 'alumni' && <div className="eoa-card eoa-space"><h2>{ar?'تستمر الرحلة بعد التخرج':'Your journey continues after graduation'}</h2><p>{ar?'تابع أهداف شركتك وتواصل مع مدربك وراجع الأنشطة ومواعيد المتابعة من حسابك. يسجل فريق البرنامج التخرج وخطة المتابعة، وتُقيّم أهلية EO بصورة مستقلة عند استيفاء شروطها.':'Keep tracking company goals, connect with your coach and review activities and follow-up dates in your account. The program team records graduation and follow-up plans; EO eligibility is assessed separately against its membership requirements.'}</p><Link href="/dashboard/eoa" className="eoa-btn">{ar?'افتح مساحة الخريجين':'Open your alumni workspace'}</Link></div>}

@@ -3,7 +3,7 @@
 import { useEffect, useState, type FormEvent } from 'react'
 import { api } from '@/lib/api'
 import { errorText, type Organization } from '@/lib/eoa'
-import { defaultEoaFaqs, type EoaEditorial, type EoaFaq, type EoaOperator, type EoaPartnerRole } from '@/lib/eoa-editorial'
+import { defaultEoaFaqs, suggestedEoaFaqs, type EoaEditorial, type EoaFaq, type EoaOperator, type EoaPartnerRole } from '@/lib/eoa-editorial'
 import { Field, Notice } from './Shared'
 
 type EditorialResponse = {
@@ -138,7 +138,11 @@ export function EoaEditorialManager({ ar, organizations, onSaved }: { ar: boolea
               <Field label={ar ? 'الموقع الرسمي للمشغّل (https://)' : 'Operator official website (https://)'}><input type="url" dir="ltr" value={editorial.operator?.website ?? ''} maxLength={255} onChange={(event) => updateOperator({ website: event.target.value })} /></Field>
             </div>
             <div className="eoa-space">
-              <h3>{ar ? 'الأسئلة الشائعة' : 'Frequently asked questions'}</h3>
+              <h3 className="text-center">{ar ? 'الأسئلة الشائعة' : 'Frequently asked questions'}</h3>
+              {suggestedEoaFaqs(editorial.faqs).length > 0 && <div className="eoa-card eoa-actions">
+                <p>{ar ? 'أضف أسئلة جاهزة للمراجعة دون تغيير إجاباتك الحالية.' : 'Add suggested questions for review while keeping your existing answers.'}</p>
+                <button type="button" className="eoa-btn eoa-btn-secondary" onClick={() => setEditorial({ ...editorial, faqs: [...editorial.faqs, ...suggestedEoaFaqs(editorial.faqs).map(faq => ({ ...faq }))] })}>{ar ? 'إضافة الأسئلة المقترحة' : 'Add suggested questions'}</button>
+              </div>}
               {editorial.faqs.map((faq, index) => (
                 <div key={index} className="eoa-card eoa-space">
                   <div className="eoa-actions">

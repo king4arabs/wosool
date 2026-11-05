@@ -1,0 +1,110 @@
+/** Exercise shared FAQs in both languages, at phone and desktop widths. */
+import assert from 'node:assert/strict'
+import { spawn } from 'node:child_process'
+import { readFileSync } from 'node:fs'
+import { chromium } from 'playwright'
+const origin = 'http://127.0.0.1:18097'
+const axe = readFileSync(new URL('../node_modules/axe-core/axe.min.js', import.meta.url), 'utf8')
+const app = spawn(process.execPath, ['node_modules/next/dist/bin/next', 'start', '-H', '127.0.0.1', '-p', '18097'], { stdio: ['ignore', 'pipe', 'pipe'] })
+let log = ''; app.stdout.on('data', value => { log = (log + value).slice(-5000) }); app.stderr.on('data', value => { log = (log + value).slice(-5000) })
+let browser
+try {
+  for (let i = 0; i < 150 && !log.includes('Ready'); i++) await new Promise(resolve => setTimeout(resolve, 100))
+  assert.ok(log.includes('Ready'), log)
+  browser = await chromium.launch({ executablePath: process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH || undefined })
+  for (const locale of ['ar', 'en']) for (const width of [390, 1440]) {
+    const ar = locale === 'ar'
+    const context = await browser.newContext({ viewport: { width, height: 1000 }, reducedMotion: 'reduce' })
+    await context.addInitScript(value => localStorage.setItem('wosool-locale', value), locale)
+    await context.route('**/*', route => {
+      const url = new URL(route.request().url())
+      if (url.origin !== origin) return route.abort()
+      if (url.pathname.endsWith('/eoa/program')) return route.fulfill({ json: { data: null } })
+      if (url.pathname.startsWith('/api/')) return route.fulfill({ status: 401, json: { message: 'Unauthenticated' } })
+      return route.continue()
+    })
+    const page = await context.newPage(); const errors = []
+    page.on('pageerror', error => errors.push(error.message))
+    for (const path of ['/faq', '/eoa/faq']) {
+      await page.goto(origin + path, { waitUntil: 'networkidle' })
+      const faq = page.locator('[data-faq-explorer]')
+      const questions = faq.locator('[data-faq-question]')
+      await questions.first().waitFor()
+      assert.ok(await questions.count() >= (path === '/faq' ? 35 : 16))
+      const heading = await page.locator('h1').boundingBox()
+      assert.ok(Math.abs(heading.x + heading.width / 2 - width / 2) < 2, 'FAQ title is centered')
+      const frame = await faq.boundingBox()
+      assert.ok(Math.abs(frame.x + frame.width / 2 - width / 2) < 2, 'FAQ content is centered')
+      await questions.first().focus()
+      await page.keyboard.press('ArrowDown')
+      assert.equal(await questions.nth(1).evaluate(el => el === document.activeElement), true)
+      await page.keyboard.press('End')
+      assert.equal(await questions.last().evaluate(el => el === document.activeElement), true)
+      await page.keyboard.press('Home')
+      await page.keyboard.press('Enter')
+      assert.equal(await questions.first().getAttribute('aria-expanded'), 'true')
+      const answerId = await questions.first().getAttribute('aria-controls')
+      assert.equal(await page.locator(`[id="${answerId}"]`).isVisible(), true)
+      const question = (await questions.first().innerText()).replace(/^[QSس]\s*/, '').trim()
+      const follow = page.locator(`[id="${answerId}"]`).getByRole('link', { name: ar ? 'اسأل عن هذا الموضوع' : 'Ask a follow-up', exact: true })
+      const followUrl = new URL(await follow.getAttribute('href'), origin)
+      assert.equal(followUrl.pathname, path === '/faq' ? '/contact' : '/eoa/contact')
+      assert.equal(followUrl.searchParams.get('subject'), question.slice(0, 120))
+      if (locale === 'en' && width === 1440) {
+        await follow.click()
+        await page.getByRole('textbox', { name: 'Subject', exact: true }).waitFor()
+        assert.equal(await page.getByRole('textbox', { name: 'Subject', exact: true }).inputValue(), question.slice(0, 120))
+        await page.goto(origin + path, { waitUntil: 'networkidle' })
+        await questions.first().waitFor()
+        if (path === '/faq') {
+          await faq.getByRole('searchbox').fill('newsletter')
+          await faq.locator('#newsletter-signup').getByRole('link', { name: 'Subscribe to the newsletter', exact: true }).click()
+          await page.locator('#newsletter-title').waitFor()
+          assert.ok(await page.locator('#newsletter-title').isVisible(), 'Newsletter action reaches the signup form')
+          await page.goto(origin + path, { waitUntil: 'networkidle' })
+          await questions.first().waitFor()
+        }
+      }
+      await faq.getByRole('searchbox').fill(path === '/faq' ? 'newsletter' : 'mentor')
+      assert.ok(await questions.count() > 0)
+      assert.ok((await questions.evaluateAll(nodes => nodes.map(n => n.getAttribute('aria-expanded')))).every(value => value === 'true'), 'Search exposes answers')
+      await questions.first().click()
+      assert.equal(await questions.first().getAttribute('aria-expanded'), 'false', 'Search results remain collapsible')
+      await faq.getByRole('searchbox').fill('unmatched-question-xyz987')
+      assert.equal(await questions.count(), 0)
+      assert.ok(await faq.getByRole('link', { name: ar ? 'اسأل الفريق' : 'Ask the team', exact: true }).isVisible())
+      await faq.getByRole('button', { name: ar ? 'عرض كل الأسئلة' : 'Show all questions', exact: true }).click()
+      await faq.getByRole('button', { name: ar ? 'توسيع الكل' : 'Expand all', exact: true }).click()
+      assert.ok((await questions.evaluateAll(nodes => nodes.map(n => n.getAttribute('aria-expanded')))).every(value => value === 'true'))
+      await faq.getByRole('button', { name: ar ? 'طيّ الكل' : 'Collapse all', exact: true }).click()
+      if (path === '/faq') {
+        if (width < 640) await faq.getByRole('combobox').selectOption('account')
+        else await faq.getByRole('group').getByRole('button', { name: ar ? /الحساب وتسجيل الدخول/ : /Account & sign-in/ }).click()
+        assert.ok(await questions.count() < 10)
+        await page.goto(origin + path + '#reset-password', { waitUntil: 'networkidle' })
+        assert.equal(await page.locator('#reset-password [data-faq-question]').getAttribute('aria-expanded'), 'true')
+      }
+      await page.goto(origin + path + '#%E0%A4%A', { waitUntil: 'networkidle' })
+      await questions.first().waitFor()
+      assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth + 1), false)
+      await questions.first().click()
+      await page.addScriptTag({ content: axe })
+      const violations = await page.evaluate(async () => (await window.axe.run(document, { runOnly: { type: 'tag', values: ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'] } })).violations.filter(v => ['critical', 'serious'].includes(v.impact)).map(v => ({ id: v.id, nodes: v.nodes.map(n => n.target) })))
+      assert.deepEqual(violations, [], 'Accessible FAQ controls and answers')
+      await page.evaluate(() => document.fonts.ready)
+      await page.locator('h1').scrollIntoViewIfNeeded()
+      await page.screenshot({ path: `/tmp/faq-${path === '/faq' ? 'wosool' : 'eoa'}-${locale}-${width}.png` })
+      await questions.first().evaluate(el => el.scrollIntoView({ block: 'center' }))
+      await page.screenshot({ path: `/tmp/faq-${path === '/faq' ? 'wosool' : 'eoa'}-answers-${locale}-${width}.png` })
+      console.log(`PASS ${path} ${locale}/${width}: centered layout, search, accordion keyboard, deep links, contact handoff, accessibility`)
+    }
+    await page.goto(origin + '/eoa', { waitUntil: 'networkidle' })
+    const embedded = page.locator('#faq')
+    await embedded.locator('[data-faq-question]').first().waitFor()
+    assert.ok(await embedded.locator('[data-faq-question]').count() >= 16)
+    const center = await embedded.locator('h2').boundingBox()
+    assert.ok(Math.abs(center.x + center.width / 2 - width / 2) < 2, 'Embedded FAQ title is centered')
+    assert.deepEqual(errors, [], 'No hydration or runtime errors')
+    await context.close()
+  }
+} finally { await browser?.close(); app.kill('SIGTERM') }

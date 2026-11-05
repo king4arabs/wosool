@@ -1,5 +1,12 @@
 # Changelog
 
+## Interactive bilingual FAQ experience — 2026-11-05
+
+- Center the Wosool help page, EO FAQ page and embedded Accelerator FAQ headings and content. Use readable answer panels, compact mobile topic selection and desktop topic filters.
+- Open matching answers during search; support keyboard accordion navigation, expand/collapse all, safe deep links and contextual follow-up links with prefilled contact subjects.
+- Add 10 Wosool questions and 8 EO Accelerator questions. Administrators can import missing suggested EO questions into a draft without replacing existing answers or hidden entries.
+- Verify both languages at phone and desktop sizes, along with search, filtering, contact handoff, URL anchors and accessibility.
+
 ## EO network expansion and fresh visit order — 2026-11-05
 
 - Expand the public EO network from 36 to 56 profiles, with official EO references, local portraits and bilingual professional summaries.
