@@ -335,15 +335,15 @@ export const FAQS: FaqItem[] = [
     "id": "company-details",
     "category": "profile",
     "q": {
-      "ar": "أين أضيف شركتي وشعارها؟",
-      "en": "Where can I add my company and its logo?"
+      "ar": "كيف أضيف بيانات شركتي أو أحدّثها؟",
+      "en": "How do I add or update my company details?"
     },
     "a": {
       "ar": [
-        "استخدم صفحة «إدارة الشركة» لإضافة بيانات الشركة وموقعها وشعارها. استخدم رابط الموقع الرسمي وشعارًا واضحًا، واحفظ التغييرات بعد المراجعة."
+        "أكمل ملف المؤسس أولًا، ثم افتح «إدارة الشركة» لإضافة اسمها ووصفها وموقعها الإلكتروني ومرحلتها. راجع البيانات واحفظ التغييرات."
       ],
       "en": [
-        "Use Manage company to add company details, its website and logo. Use the official website and a clear logo, review your details and save the changes."
+        "Complete your founder profile first, then open Manage company to add its name, description, website and stage. Review the details and save your changes."
       ]
     },
     "link": {
@@ -410,7 +410,7 @@ export const FAQS: FaqItem[] = [
       ]
     },
     "link": {
-      "href": "/newsletter",
+      "href": "/#newsletter-title",
       "ar": "الاشتراك بالنشرة",
       "en": "Subscribe to the newsletter"
     }
@@ -429,11 +429,6 @@ export const FAQS: FaqItem[] = [
       "en": [
         "Use the unsubscribe link at the bottom of a newsletter email and follow the confirmation on the page. Unsubscribing does not delete your Wosool account."
       ]
-    },
-    "link": {
-      "href": "/newsletter",
-      "ar": "صفحة النشرة",
-      "en": "Newsletter page"
     }
   },
   {

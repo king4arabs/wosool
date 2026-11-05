@@ -56,6 +56,14 @@ try {
         assert.equal(await page.getByRole('textbox', { name: 'Subject', exact: true }).inputValue(), question.slice(0, 120))
         await page.goto(origin + path, { waitUntil: 'networkidle' })
         await questions.first().waitFor()
+        if (path === '/faq') {
+          await faq.getByRole('searchbox').fill('newsletter')
+          await faq.locator('#newsletter-signup').getByRole('link', { name: 'Subscribe to the newsletter', exact: true }).click()
+          await page.locator('#newsletter-title').waitFor()
+          assert.ok(await page.locator('#newsletter-title').isVisible(), 'Newsletter action reaches the signup form')
+          await page.goto(origin + path, { waitUntil: 'networkidle' })
+          await questions.first().waitFor()
+        }
       }
       await faq.getByRole('searchbox').fill(path === '/faq' ? 'newsletter' : 'mentor')
       assert.ok(await questions.count() > 0)
