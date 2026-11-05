@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { ArrowLeft, ArrowRight, ArrowUpRight, Globe2, UserRound, MapPin, Pause, Play, Search, Users } from 'lucide-react'
 import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react'
 import { eoNetworkProfiles, filterEoNetwork, NETWORK_INTERVAL_MS, type EoNetworkProfile } from '@/lib/eo-global-network'
+import { createPartnerVisitStore, partnerDiscoveryOrder } from '@/lib/partner-discovery'
 import styles from './GlobalNetwork.module.css'
 
 const motionQuery = '(prefers-reduced-motion: reduce)'
@@ -75,7 +76,7 @@ function ProfileCarousel({ profiles, ar, grid }: { profiles: EoNetworkProfile[];
       </div>
     </div>}
     <div ref={viewport} className={grid ? styles.grid : styles.viewport} dir={grid ? (ar ? 'rtl' : 'ltr') : 'ltr'}
-      role="region" aria-label={ar ? 'ملفات شبكة EO' : 'EO network profiles'} tabIndex={grid ? undefined : 0}
+      data-view={grid ? 'grid' : 'carousel'} role="region" aria-label={ar ? 'ملفات شبكة EO' : 'EO network profiles'} tabIndex={grid ? undefined : 0}
       onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)}
       onFocusCapture={() => setFocused(true)} onBlurCapture={event => { if (!event.currentTarget.contains(event.relatedTarget)) setFocused(false) }}
       onPointerDown={() => setPaused(true)}
@@ -92,10 +93,12 @@ export function EoGlobalNetwork({ ar }: { ar: boolean }) {
   const [group, setGroup] = useState('all')
   const [topic, setTopic] = useState('all')
   const [grid, setGrid] = useState(false)
-  const profiles = useMemo(() => filterEoNetwork(query, group, topic), [query, group, topic])
+  const [visitStore] = useState(createPartnerVisitStore)
+  const visitSeed = useSyncExternalStore(visitStore.subscribe, visitStore.getSnapshot, visitStore.getServerSnapshot)
+  const profiles = useMemo(() => partnerDiscoveryOrder(filterEoNetwork(query, group, topic), visitSeed), [query, group, topic, visitSeed])
   const chapters = new Set(eoNetworkProfiles.map(p => p.chapter.replace('Spain-', ''))).size
   const topics = [...new Map(eoNetworkProfiles.map(p => [p.topic, p.topic_ar])).entries()]
-  return <section id="eo-global-network" className={styles.section} aria-labelledby="global-network-title">
+  return <section id="eo-global-network" className={styles.section} aria-labelledby="global-network-title" data-visit-ready={visitSeed ? 'true' : undefined}>
     <div className={styles.intro}>
       <div>
         <span className={styles.eyebrow}><Globe2 size={16} aria-hidden="true" />{ar ? 'خبرات تتجاوز الحدود' : 'EXPERIENCE BEYOND BORDERS'}</span>

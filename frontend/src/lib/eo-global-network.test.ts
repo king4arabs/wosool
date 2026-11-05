@@ -2,6 +2,7 @@ import assert from 'node:assert/strict'
 import test from 'node:test'
 import { existsSync } from 'node:fs'
 import { eoNetworkProfiles, filterEoNetwork } from './eo-global-network'
+import { createPartnerVisitStore, partnerDiscoveryOrder } from './partner-discovery'
 
 test('network profiles have unique identities, local portraits and traceable professional sources', () => {
   assert.equal(new Set(eoNetworkProfiles.map(p => p.id)).size, eoNetworkProfiles.length)
@@ -21,4 +22,20 @@ test('network discovery combines company, chapter, bilingual expertise and netwo
   assert.deepEqual(filterEoNetwork('Chennai', 'all', 'all').map(p => p.name), ['Prabhakar Kadavasal'])
   assert.ok(filterEoNetwork('القيادة', 'speakers', 'all').length > 0)
   assert.equal(filterEoNetwork('not-a-real-profile', 'all', 'all').length, 0)
+})
+
+test('EO cards get a fresh visit order without losing profiles or reshuffling filters', () => {
+  const original = structuredClone(eoNetworkProfiles)
+  const first = partnerDiscoveryOrder(eoNetworkProfiles, 12345)
+  const second = partnerDiscoveryOrder(eoNetworkProfiles, 67890)
+  assert.notDeepEqual(first.slice(0, 12), second.slice(0, 12))
+  assert.deepEqual(first.map(p => p.id).sort(), original.map(p => p.id).sort())
+  assert.deepEqual(eoNetworkProfiles, original)
+  assert.deepEqual(partnerDiscoveryOrder(filterEoNetwork('', 'speakers', 'Leadership'), 12345), first.filter(p => p.group === 'speakers' && p.topic === 'Leadership'))
+  let calls = 0
+  const visit = createPartnerVisitStore(() => ++calls)
+  assert.equal(visit.getServerSnapshot(), 0)
+  visit.subscribe(() => {})()
+  visit.subscribe(() => {})()
+  assert.equal(calls, 1, 'One random seed for the whole visit')
 })
