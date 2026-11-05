@@ -80,14 +80,14 @@ export function EoaProgramDetails({
         </section>
       )}
       {(section === 'all' || section === 'faq') && faqs.length > 0 && (
-        <section className="eoa-section" id="faq" aria-labelledby="eoa-faq-title">
+        <section className={section === 'faq' ? 'pb-8 pt-2 sm:pb-12' : 'eoa-section'} id="faq" aria-labelledby="eoa-faq-title">
           <div className="eoa-container">
             <div className={section === 'faq' ? 'sr-only' : 'mx-auto max-w-3xl text-center'}>
               <span className="eoa-eyebrow">{ar ? 'قبل التقديم' : 'BEFORE YOU APPLY'}</span>
               <h2 id="eoa-faq-title">{ar ? 'الأسئلة الشائعة' : 'Frequently asked questions'}</h2>
               <p className="eoa-lead">{ar ? 'تعرّف على البرنامج، وخطوات التقديم، وما ينتظرك خلال رحلة التعلم.' : 'Explore the program, the application steps and what to expect on your learning journey.'}</p>
             </div>
-            <div className="eoa-space mx-auto max-w-4xl">
+            <div className={`${section === 'faq' ? '' : 'eoa-space'} mx-auto max-w-4xl`}>
               <FaqExplorer items={faqItems} categories={['events']} searchable={faqItems.length > 5} grouped={false} jsonLd={section === 'faq'} footer={false} contactPath="/eoa/contact" placeholder={ar ? 'ابحث: الرسوم، المدة، الأهلية…' : 'Search: fees, duration, eligibility…'} />
               <p className="mt-8 text-center text-sm text-[var(--text-muted)]">
                 {ar ? 'لديك سؤال آخر؟ ' : 'Have another question? '}

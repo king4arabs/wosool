@@ -86,6 +86,8 @@ try {
       await page.evaluate(() => document.fonts.ready)
       await page.locator('h1').scrollIntoViewIfNeeded()
       await page.screenshot({ path: `/tmp/faq-${path === '/faq' ? 'wosool' : 'eoa'}-${locale}-${width}.png` })
+      await questions.first().evaluate(el => el.scrollIntoView({ block: 'center' }))
+      await page.screenshot({ path: `/tmp/faq-${path === '/faq' ? 'wosool' : 'eoa'}-answers-${locale}-${width}.png` })
       console.log(`PASS ${path} ${locale}/${width}: centered layout, search, accordion keyboard, deep links, contact handoff, accessibility`)
     }
     await page.goto(origin + '/eoa', { waitUntil: 'networkidle' })
