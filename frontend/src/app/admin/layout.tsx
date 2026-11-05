@@ -83,7 +83,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
                 <Link href="/" className="inline-flex min-h-11 items-center rounded-[var(--radius-control)] border border-[var(--border)] px-3 text-xs font-bold text-[var(--text-muted)] hover:border-[var(--action-bg)] hover:text-[var(--action-bg)]">
                   {t.visit}
                 </Link>
-                <Avatar className="h-9 w-9"><AvatarFallback className="bg-[var(--action-bg)] text-xs font-bold text-white">{initials}</AvatarFallback></Avatar>
+                <Avatar className="hidden h-9 w-9 sm:flex"><AvatarFallback className="bg-[var(--action-bg)] text-xs font-bold text-white">{initials}</AvatarFallback></Avatar>
               </div>
             </div>
           </header>

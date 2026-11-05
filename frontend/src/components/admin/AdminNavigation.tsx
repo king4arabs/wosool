@@ -13,7 +13,7 @@ export function AdminNavigation({ locale, pathname, onNavigate }: { locale: "ar"
   return <>
     <label className="mx-4 mt-4 flex min-h-11 shrink-0 items-center gap-2 rounded-xl bg-white/10 px-3 focus-within:ring-2 focus-within:ring-white">
       <Search size={18} aria-hidden="true" />
-      <input type="search" value={query} onChange={event => setQuery(event.target.value)} aria-label={locale === "ar" ? "ابحث عن خدمة إدارية" : "Search admin services"} placeholder={locale === "ar" ? "ابحث عن خدمة…" : "Find a service…"} className="min-w-0 w-full bg-transparent py-3 text-white placeholder:text-white/75 focus:outline-none" />
+      <input style={{ outline: "none" }} type="search" value={query} onChange={event => setQuery(event.target.value)} aria-label={locale === "ar" ? "ابحث عن خدمة إدارية" : "Search admin services"} placeholder={locale === "ar" ? "ابحث عن خدمة…" : "Find a service…"} className="min-w-0 w-full bg-transparent py-3 text-white placeholder:text-white/75 focus:outline-none" />
     </label>
     <nav className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-3 py-4" aria-label={t.navigation}>
       {!groups.length && <p role="status" className="p-3 text-sm text-white/80">{locale === "ar" ? "لا توجد خدمة مطابقة. جرّب اسمًا آخر." : "No matching services. Try another name."}</p>}
