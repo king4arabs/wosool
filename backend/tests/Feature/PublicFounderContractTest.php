@@ -29,7 +29,11 @@ class PublicFounderContractTest extends TestCase
         $this->assertSame(338, $result['founders_created']);
         $this->assertSame(0, User::count());
         $samples = [];
-        foreach (['en', 'ar'] as $locale) {
+        foreach (['en', 'ar'] as $index => $locale) {
+            // 16 requests per locale; /founders is limited to 30 a minute, so start each locale in a new window.
+            if ($index > 0) {
+                $this->travel(61)->seconds();
+            }
             foreach (range(1, 15) as $page) {
                 $response = $this->getJson('/api/v1/founders?per_page=24&page='.$page, ['X-Locale' => $locale])
                     ->assertOk()->assertJsonPath('meta.total', 338)->assertJsonCount($page === 15 ? 2 : 24, 'data');

@@ -1,5 +1,10 @@
 # Changelog
 
+## Content check totals after the 5 November content merge — 2026-11-05
+
+- CI on `main` (run 530) failed after #189 because `scripts/content-review.test.mjs` still expected 334 founders / 181 companies / 109 stories. The catalogs now hold **338 founders / 184 company groups / 112 stories** (the 29 October founder cohort has 132 entries) with zero integrity problems and zero founder reviews due. The test's expected totals are updated; no content changed.
+- With 338 founders, `PublicFounderContractTest` needs 15 list pages and one detail request per locale (32 in all), which exceeds the deliberate 30-per-minute limit on `/api/v1/founders` and returned 429. The test now starts the second locale in a new one-minute window; the limit is unchanged.
+
 ## Symfony security patch: http-foundation, http-kernel, routing 7.4.23 — 2026-11-05
 
 - `composer audit` in CI started failing on every branch after Symfony published six advisories on 4 November (CVE-2026-118514 and CVE-2026-118516, plus four GHSA advisories on trusted proxies, generated URL hosts, path rules and inline fragments). Wosool locked 7.4.20; the fixed release is 7.4.23.
