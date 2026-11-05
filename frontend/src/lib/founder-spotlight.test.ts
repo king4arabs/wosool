@@ -217,7 +217,7 @@ test('RABEH founder directory listing keeps original company imagery and never c
   assert.equal(rabeh.website, 'https://rabeh.sa/')
   assert.equal(rabeh.region, 'saudi')
   assert.equal(rabeh.logo_url, '/startup-directory/rabeh-logo.webp')
-  assert.ok(rabeh.portrait_url?.startsWith('/wosool/board/'))
+  assert.equal(rabeh.portrait_url, '/startup-directory/mohammed-alsolami-rabeh.webp')
   assert.ok(rabeh.source_urls.includes(rabeh.source_url))
   assert.equal(rabeh.traction_en, null)
   assert.ok(!('user_id' in rabeh) && !('email' in rabeh) && !('isVerified' in rabeh) && !('member' in rabeh))
