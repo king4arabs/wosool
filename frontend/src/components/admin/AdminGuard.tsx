@@ -13,7 +13,7 @@ export function AdminGuard({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     if (!isLoading && !error && !isAdminUser(user)) {
-      router.replace("/dashboard")
+      router.replace(user ? "/dashboard" : `/login?redirect=${encodeURIComponent(window.location.pathname + window.location.search)}`)
     }
   }, [isLoading, error, router, user])
 
