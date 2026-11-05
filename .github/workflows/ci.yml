@@ -48,8 +48,6 @@ jobs:
           SEO_CANONICAL_ORIGIN: http://localhost:3000
       - name: Install Chromium for isolated public-collection checks
         run: npx playwright install --with-deps chromium
-      - name: Install Firefox and WebKit for EOA responsive checks
-        run: npx playwright install --with-deps firefox webkit
       - name: Verify admin CRM, PR, analytics and priorities
         run: node scripts/check-admin-operations.mjs
       - name: Save admin browser review images
@@ -60,6 +58,8 @@ jobs:
           path: /tmp/admin-operations-*.png
           retention-days: 3
           if-no-files-found: ignore
+      - name: Install Firefox and WebKit for EOA responsive checks
+        run: npx playwright install --with-deps firefox webkit
       - name: Verify EOA partners and eligibility across browsers and screen sizes
         run: node scripts/check-eoa-public-layout.mjs
       - name: Save EOA responsive browser previews
