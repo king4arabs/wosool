@@ -62,7 +62,7 @@ try {
       const page = await context.newPage()
       const errors = []
       page.on('pageerror', error => errors.push(error.message))
-      for (const path of ['eligibility', 'partners']) {
+      for (const path of ['eligibility', 'partners', 'leadership']) {
         await page.goto(`${origin}/eoa/${path}`, { waitUntil: 'networkidle' })
         await page.waitForFunction(value => document.documentElement.lang === value, locale)
         await page.evaluate(() => document.fonts.ready)
@@ -89,6 +89,30 @@ try {
           await form.locator('button[type=submit]').click()
           await form.getByRole('status').waitFor()
           await assertContained(page, '[data-eoa-eligibility] h2, [data-eoa-eligibility] p, [data-eoa-eligibility] input, [data-eoa-eligibility] select, [data-eoa-eligibility] .eoa-btn, .eoa-fee dd')
+        } else if (path === 'leadership') {
+          const cards = page.locator('[data-program-leaders] > article')
+          assert.equal(await cards.count(), 3, 'Program leadership includes all three requested positions')
+          assert.deepEqual(await cards.locator('h2').allTextContents(), locale === 'ar'
+            ? ['محمد السلمي', 'فؤاد النزّاوي', 'بشاير عبدالله']
+            : ['Mohammed Alsolami', 'Fouad Alnazawi', 'Bashaier Abdullah'])
+          const boxes = await cards.evaluateAll(elements => elements.map(element => {
+            const { top, width, height } = element.getBoundingClientRect()
+            return { top, width, height }
+          }))
+          assert.ok(boxes.every(box => Math.abs(box.width - boxes[0].width) < 2 && Math.abs(box.height - boxes[0].height) < 2), 'All three leadership cards have equal dimensions')
+          // WebKit can reserve scrollbar space inside the requested viewport.
+          // Assert against the CSS viewport that actually selects the layout.
+          const viewport = await page.evaluate(() => ({ width: innerWidth, threeColumns: matchMedia('(min-width: 761px)').matches }))
+          assert.equal(boxes.every(box => Math.abs(box.top - boxes[0].top) < 2), viewport.threeColumns, `Leadership shares one desktop row and stacks on small screens: ${JSON.stringify({ viewport, boxes })}`)
+          for (const image of await cards.locator('img').all()) {
+            await image.scrollIntoViewIfNeeded()
+            await image.evaluate(element => element.decode())
+          }
+          for (const href of ['https://www.lamarka.com/', 'https://me.sh/profile/fouad-alnazawi', 'https://sa.linkedin.com/in/bashaier-abdullah-685190283']) {
+            assert.equal(await cards.locator(`a[href="${href}"]`).count(), 1)
+          }
+          assert.ok(await cards.locator('a').evaluateAll(links => links.every(link => link.getBoundingClientRect().height >= 44)), 'Leadership links have accessible touch targets')
+          await assertContained(page, '[data-program-leaders] h2, [data-program-leaders] p, [data-program-leaders] a')
         } else {
           await page.locator('[data-eoa-directory]:visible article').first().waitFor()
           await assertRows(page.locator('[data-eoa-directory]:visible article'))
@@ -126,7 +150,7 @@ try {
         }
       }
       assert.deepEqual(errors, [], `${engine}/${locale}/${width}: script errors`)
-      console.log(`PASS EOA partners + eligibility: ${engine}/${locale}/${width}px`)
+      console.log(`PASS EOA partners + eligibility + leadership: ${engine}/${locale}/${width}px`)
       await context.close()
     }
     await browser.close()
