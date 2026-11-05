@@ -157,3 +157,10 @@ test('RABEH sourced stories link to its founder without implying membership', ()
   }
   assert.deepEqual(articles.map(item => item.publishedAt).sort(), ['2024-03-06', '2025-09-17', '2026-09-03'])
 })
+
+test('RABEH public briefs do not contain internal membership review notes', () => {
+  const award = curatedNews.find(item => item.slug === 'rabeh-wins-moneysurge-seed-award-money2020-september-2025')!
+  assert.ok(award)
+  assert.doesNotMatch(award.content, /membership in Wosool/i)
+  assert.doesNotMatch(award.translations!.ar.body.join(' '), /عضوية وصول/)
+})
