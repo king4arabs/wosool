@@ -116,7 +116,10 @@ try {
         } else {
           await page.locator('[data-eoa-directory]:visible article').first().waitFor()
           assert.equal(await page.locator('[data-eoa-directory] [data-brand-logo]').count(), organizations.length, 'Every organization has a logo space')
-          for (const logo of await page.locator('[data-eoa-directory] img').all()) await logo.evaluate(element => element.decode())
+          for (const logo of await page.locator('[data-eoa-directory] img').all()) {
+            await logo.scrollIntoViewIfNeeded()
+            await logo.evaluate(element => element.decode())
+          }
           await assertRows(page.locator('[data-eoa-directory]:visible article'))
           const links = await page.locator('[data-eoa-directory]:visible article').evaluateAll(elements => elements.map(element => {
             const card = element.getBoundingClientRect()

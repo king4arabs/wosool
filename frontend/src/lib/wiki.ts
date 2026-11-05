@@ -1,6 +1,6 @@
 export const wikiArticles = [
   {
-    slug: "founder-profiles", updatedAt: "2026-10-14",
+    slug: "founder-profiles", updatedAt: "2026-11-05",
     title: { en: "Your founder profile", ar: "ملفك كمؤسس" },
     summary: { en: "Understand public profiles, account activation and community access.", ar: "تعرّف على الملفات العامة وتفعيل الحساب والوصول إلى المجتمع." },
     sections: [
@@ -11,7 +11,7 @@ export const wikiArticles = [
     links: [{ href: "/founders", en: "Explore founders", ar: "اكتشف المؤسسين" }, { href: "/contact", en: "Request a correction", ar: "اطلب تصحيحاً" }],
   },
   {
-    slug: "reading-company-evidence", updatedAt: "2026-10-14",
+    slug: "reading-company-evidence", updatedAt: "2026-11-05",
     title: { en: "Read company evidence clearly", ar: "كيف تقرأ أدلة نمو الشركات" },
     summary: { en: "Separate revenue, investment, payment volume and reported traction.", ar: "ميّز بين الإيرادات والاستثمار وحجم المدفوعات ومؤشرات النمو المعلنة." },
     sections: [
@@ -33,7 +33,7 @@ export const wikiArticles = [
     links: [{ href: "/eoa", en: "Explore the Accelerator", ar: "اكتشف المسرّعة" }, { href: "/eoa/eligibility", en: "Check eligibility", ar: "راجع الأهلية" }],
   },
   {
-    slug: "news-and-corrections", updatedAt: "2026-10-14",
+    slug: "news-and-corrections", updatedAt: "2026-11-05",
     title: { en: "News sources and corrections", ar: "مصادر الأخبار وتصحيح المعلومات" },
     summary: { en: "Find original sources and help keep community information accurate.", ar: "ارجع إلى المصادر الأصلية وساهم في دقة معلومات المجتمع." },
     sections: [
