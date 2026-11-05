@@ -1,5 +1,12 @@
 # Changelog
 
+## Three-card EOA program leadership — 2026-11-05
+
+- Add owner-requested Program Operation Partner Fouad Alnazawi and EOA Riyadh PMO Leader Bashaier Abdullah alongside Program Lead Mohammed Alsolami at `/eoa/leadership#program-lead`, with Arabic/English names, roles and profile links.
+- Use the supplied Fouad portrait and Bashaier monogram, retain Mohammed's existing portrait, and share card dimensions, image frames, bottom-aligned links and keyboard focus treatment. Three cards share a desktop row and stack below 761px.
+- Extend the existing Chromium, Firefox and WebKit responsive checks to cover all three cards, equal dimensions, image loading, external profile links, touch targets and horizontal overflow. Update the README and EOA maintenance guide.
+- This frontend change does not alter the board roster, account permissions, backend or hosting configuration. GitHub merge and Hostinger deployment are verified separately.
+
 ## Content check totals after the 5 November content merge — 2026-11-05
 
 - CI on `main` (run 530) failed after #189 because `scripts/content-review.test.mjs` still expected 334 founders / 181 companies / 109 stories. The catalogs now hold **338 founders / 184 company groups / 112 stories** (the 29 October founder cohort has 132 entries) with zero integrity problems and zero founder reviews due. The test's expected totals are updated; no content changed.

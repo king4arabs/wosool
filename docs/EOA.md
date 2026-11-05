@@ -4,6 +4,18 @@
 
 EO Riyadh provides chapter leadership and governance. EO Accelerator provides the applicable program framework. Wosool supports discovery, applications, coordination and participant services. Operating partners deliver only their approved scope. Mohammed Alsolami is identified as EO Riyadh Membership & Accelerator Chair, as supplied by project leadership. Application, local acceptance, official Accelerator enrollment and subsequent EO membership are distinct events.
 
+### Public program leadership
+
+The owner-supplied team at `/eoa/leadership#program-lead` is presented in three equal-sized cards, in one row above 760px and stacked on smaller screens. English and Arabic share the same order:
+
+| Name | Program position | Supporting role / link |
+| --- | --- | --- |
+| Mohammed Alsolami | Program Lead | EO Riyadh Membership & Accelerator Chair |
+| Fouad Alnazawi | Program Operation Partner | [LAMARKA](https://www.lamarka.com/) · [Professional profile](https://me.sh/profile/fouad-alnazawi) |
+| Bashaier Abdullah | EOA Riyadh PMO Leader | [EO Riyadh Chapter Manager](https://sa.linkedin.com/in/bashaier-abdullah-685190283) |
+
+Fouad's portrait and Bashaier's monogram were supplied by the owner on 5 November 2026 and are stored under `frontend/public/wosool/leadership/`; Mohammed retains his existing portrait. The public team cards are maintained in `frontend/src/components/eoa/Leadership.tsx` with shared styles in `Leadership.module.css`. These presentation roles do not provision accounts, grant permissions or modify the separately managed board roster. The responsive CI check covers equal dimensions, desktop row/mobile stacking, image loading and profile links in Arabic/English across Chromium, Firefox and WebKit.
+
 ## Architecture and setup
 
 The October 9 integration repair makes this the authoritative operating guide. Older gateway writes are retired; legacy applications/events remain preserved and require reviewed transfer if present. See [integration and deployment notes](EOA-INTEGRATION-2026-10-09.md). Applicant data-rights requests are available in `/eoa/account`; existing administrators review them at `/admin/privacy-requests`, with audited status changes.
