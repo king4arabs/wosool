@@ -15,7 +15,7 @@ Wosool is an Arabic/English founders platform connecting Saudi Arabia, the GCC, 
 
 Community membership, Accelerator admission and administrator access are separate permissions. Registration requires email verification; community membership requires review and approval.
 
-**Administration:** `/admin/services` provides bilingual search across all management tools. EOA administration groups services by task and preserves API capability checks. See [administration](docs/ADMIN-OPERATIONS.md) for navigation and CRM workflows. Public partner cards include local logo artwork and service search.
+**Administration:** `/admin/services` provides bilingual search, work-area filters and daily shortcuts across management tools. The mobile menu shares the desktop service directory; CRM/PR queues preserve filters and record links in the URL, and Accelerator sections support direct links. EOA administration groups services by task and preserves API capability checks. See [administration](docs/ADMIN-OPERATIONS.md) for navigation and CRM workflows. Public partner cards include local logo artwork and service search.
 
 **EOA leadership:** [`/eoa/leadership#program-lead`](https://wosool.org/eoa/leadership#program-lead) presents Mohammed Alsolami (Program Lead), Fouad Alnazawi (Program Operation Partner) and Bashaier Abdullah (EOA Riyadh PMO Leader) in three equal-sized bilingual cards. See [EOA operations](docs/EOA.md#public-program-leadership) for profile sources and maintenance details.
 

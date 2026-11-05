@@ -106,6 +106,28 @@ class AdminRelationshipsTest extends TestCase
             ->assertDontSee('lead@example.com')->assertDontSee('Private relationship brief');
     }
 
+    public function test_saved_views_filter_all_pages_without_changing_summary_totals(): void
+    {
+        $admin = $this->admin();
+        $unassigned = RelationshipRecord::create($this->payload(['name' => 'Alpha', 'priority' => 'high']));
+        RelationshipRecord::create($this->payload(['name' => 'Beta', 'owner_id' => $admin->id]));
+        RelationshipRecord::create($this->payload(['name' => 'Closed', 'stage' => 'won', 'priority' => 'high']));
+        RelationshipRecord::create($this->payload(['kind' => 'pr', 'stage' => 'pitched', 'priority' => 'high']));
+        $this->actingAs($admin);
+        $this->getJson('/api/v1/admin/relationships?kind=crm&view=unassigned&priority=high')
+            ->assertOk()->assertJsonPath('meta.total', 1)->assertJsonPath('data.0.id', $unassigned->id)
+            ->assertJsonPath('summary.total', 3)->assertJsonPath('summary.open', 2)->assertJsonPath('summary.unassigned', 1);
+        $this->getJson('/api/v1/admin/relationships?kind=crm&view=open&sort=name&per_page=1&page=2')
+            ->assertOk()->assertJsonPath('meta.total', 2)->assertJsonPath('data.0.name', 'Beta');
+        $this->getJson('/api/v1/admin/relationships?kind=crm&view=due')
+            ->assertOk()->assertJsonPath('meta.total', 2);
+        $this->getJson('/api/v1/admin/relationships?kind=crm&view=unassigned&owner_id='.$admin->id)
+            ->assertOk()->assertJsonPath('meta.total', 0);
+        foreach (['view=invalid', 'sort=invalid', 'priority=invalid'] as $filter) {
+            $this->getJson('/api/v1/admin/relationships?kind=crm&'.$filter)->assertUnprocessable();
+        }
+    }
+
     public function test_analytics_uses_equal_date_windows_and_zero_fills_the_trend(): void
     {
         $this->travelTo(now()->setDate(2026, 10, 29)->setTime(12, 0));

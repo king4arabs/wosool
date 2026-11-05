@@ -16,20 +16,31 @@ class RelationshipController extends Controller
             'kind' => ['required', Rule::in(array_keys(RelationshipRecord::STAGES))],
             'stage' => ['nullable', 'string', 'max:30'], 'search' => ['nullable', 'string', 'max:120'],
             'due' => ['nullable', 'boolean'], 'owner_id' => ['nullable', 'integer'],
+            'view' => ['nullable', Rule::in(['all', 'open', 'due', 'unassigned'])],
+            'priority' => ['nullable', Rule::in(['normal', 'high'])],
+            'sort' => ['nullable', Rule::in(['follow_up', 'updated', 'name'])],
             'page' => ['nullable', 'integer', 'min:1'], 'per_page' => ['nullable', 'integer', 'min:1', 'max:50'],
         ]);
         $base = RelationshipRecord::where('kind', $data['kind']);
         $query = (clone $base)->with('owner:id,name');
         if ($request->filled('stage')) $query->where('stage', $data['stage']);
         if ($request->filled('owner_id')) $query->where('owner_id', $data['owner_id']);
-        if ($request->boolean('due')) $query->due();
+        if ($request->boolean('due') || ($data['view'] ?? '') === 'due') $query->due();
+        if (($data['view'] ?? '') === 'open') $query->open();
+        if (($data['view'] ?? '') === 'unassigned') $query->open()->whereNull('owner_id');
+        if ($request->filled('priority')) $query->where('priority', $data['priority']);
         if ($search = trim($data['search'] ?? '')) {
             $term = '%'.str_replace(['!', '%', '_'], ['!!', '!%', '!_'], $search).'%';
             $query->where(fn ($q) => $q->whereRaw("name LIKE ? ESCAPE '!'", [$term])
                 ->orWhereRaw("organization LIKE ? ESCAPE '!'", [$term])->orWhereRaw("campaign LIKE ? ESCAPE '!'", [$term])
                 ->orWhereRaw("email LIKE ? ESCAPE '!'", [$term]));
         }
-        $page = $query->orderByRaw('CASE WHEN follow_up_on IS NULL THEN 1 ELSE 0 END')->orderBy('follow_up_on')->latest('id')->paginate($data['per_page'] ?? 20);
+        match ($data['sort'] ?? 'follow_up') {
+            'updated' => $query->orderByDesc('updated_at'),
+            'name' => $query->orderBy('name'),
+            default => $query->orderByRaw('CASE WHEN follow_up_on IS NULL THEN 1 ELSE 0 END')->orderBy('follow_up_on'),
+        };
+        $page = $query->latest('id')->paginate($data['per_page'] ?? 20);
         return response()->json([
             'data' => $page->items(),
             'meta' => ['current_page' => $page->currentPage(), 'last_page' => $page->lastPage(), 'total' => $page->total()],

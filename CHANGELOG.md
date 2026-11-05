@@ -1,5 +1,12 @@
 # Changelog
 
+## Daily admin workflows and relationship queues — 2026-11-05
+
+- Replace the long mobile navigation select with the searchable service menu used on desktop, including keyboard focus restoration; add work-area filters and daily shortcuts to the service directory.
+- Add CRM/PR Open, Due and Unassigned queues, priority filters and stable sorting. Preserve filters, pagination and record links in the URL; show next steps and localized follow-up urgency. Keep private notes, version-conflict protection and server authorization intact.
+- Make Accelerator sections directly linkable and history-aware, with capability-limited fallback to Overview. Preserve the requested admin destination when an expired session returns to sign-in.
+- Extend unit, backend and browser regression coverage. Deploy the matching API query support before the frontend; no additional migration or hosting configuration change is required.
+
 ## Partners, public copy and administration navigation — 2026-11-05
 
 - Add logo frames and bilingual service search to EOA organization cards, with exact-host fallbacks for legacy records and official NTDP artwork. Improve the partners introduction and links to organizations and partnership inquiries.

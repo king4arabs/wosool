@@ -1,5 +1,7 @@
 'use client'
-import { useCallback, useEffect, useState } from 'react'
+import { Suspense, useCallback, useEffect, useState } from 'react'
+import { useSearchParams } from 'next/navigation'
+import { eoaAdminTab } from '@/lib/eoa-admin-navigation'
 import Link from 'next/link'
 import { useAuth } from '@/lib/auth'
 import { useLocale } from '@/lib/locale'
@@ -108,7 +110,7 @@ const operationTitles: Record<OperationType, [string, string]> = {
 
 export function Admin() {
   const { user } = useAuth()
-  return <AdminSession key={user?.id ?? 'guest'} />
+  return <Suspense><AdminSession key={user?.id ?? 'guest'} /></Suspense>
 }
 
 function AdminSession() {
@@ -118,7 +120,13 @@ function AdminSession() {
   const [review, setReview] = useState<ReviewResponse | null>(null)
   const [ops, setOps] = useState<Operations | null>(null)
   const [selected, setSelected] = useState<EoaApplication | null>(null)
-  const [tab, setTab] = useState('overview')
+  const params = useSearchParams()
+  const tab = eoaAdminTab(params.get('tab'), review?.capabilities, Boolean(ops))
+  function setTab(next: string) {
+    const query = new URLSearchParams(window.location.search)
+    if (next === 'overview') query.delete('tab'); else query.set('tab', next)
+    window.history.pushState(null, '', `${window.location.pathname}${query.size ? `?${query}` : ''}`)
+  }
   const [page, setPage] = useState(1)
   const [statusFilter, setStatusFilter] = useState('')
   const [searchInput, setSearchInput] = useState('')
@@ -211,7 +219,7 @@ function AdminSession() {
                 ...(review.capabilities.manage_roles
                   ? [['accounts', ar ? 'حسابات الفريق' : 'Team access']]
                   : []),
-                ...(review.capabilities.lead
+                ...(review.capabilities.lead && ops
                   ? [['tracks', ar ? 'مسارات القبول' : 'Admission tracks']]
                   : []),
                 ...(ops
