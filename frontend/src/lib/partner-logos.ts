@@ -18,7 +18,7 @@ const misk: PartnerLogo = { id: 'misk', name_ar: 'مؤسسة مسك', name_en: '
 const code: PartnerLogo = { id: 'code', name_ar: 'مركز ريادة الأعمال الرقمية · كود', name_en: 'CODE · Digital Entrepreneurship', website: 'https://mcit.gov.sa/code', logo_path: '/partners/code.png' }
 const lamarka: PartnerLogo = { id: 'lamarka', name_ar: 'لاماركا', name_en: 'LAMARKA', website: 'https://www.lamarka.com/', logo_path: '/partners/lamarka.png' }
 const humain: PartnerLogo = { id: 'humain', name_ar: 'هيوماين', name_en: 'HUMAIN', website: 'https://www.humain.com/', logo_path: '/partners/humain.svg' }
-const cipherVentures: PartnerLogo = { id: 'cipher-ventures', name_ar: 'سايفر فينتشرز', name_en: 'Cipher Ventures', website: 'https://www.cipherventures.sa/', logo_path: 'https://github.com/user-attachments/assets/b9cb90be-b844-4ec2-b8a7-8612ae762ea9' }
+const cipherVentures: PartnerLogo = { id: 'cipher-ventures', name_ar: 'سايفر فينتشرز', name_en: 'Cipher Ventures', website: 'https://www.cipherventures.sa/', logo_path: '/partners/cipher-ventures.png' }
 const rdia: PartnerLogo = { id: 'rdia', name_ar: 'هيئة تنمية البحث والتطوير والابتكار', name_en: 'Research, Development and Innovation Authority', website: 'https://www.rdia.gov.sa/', logo_path: '/partners/rdia.svg' }
 
 export const communityPartnerLogos = [eo, garage, misk, code, cipherVentures, rdia]

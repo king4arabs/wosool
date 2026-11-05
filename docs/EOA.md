@@ -18,7 +18,7 @@ Fouad's portrait and Bashaier's monogram were supplied by the owner on 5 Novembe
 
 ## Architecture and setup
 
-The public partners page uses logo cards with bilingual service search. Existing API logo paths take priority; missing legacy logos resolve by exact official host through `frontend/src/lib/eoa-organizations.ts`. Monsha’at reuses the reviewed local asset and NTDP uses its official mark from `https://ntdp.mcit.gov.sa/images/icons/mini-logo.svg` (retrieved 5 November 2026). CODE is matched by its `/code` path so the ministry's own site keeps the MCIT logo. Uploaded administrator artwork is not overwritten, and relationship statuses are unchanged.
+The public partners page uses logo cards with bilingual service search. Existing API logo paths take priority; missing legacy logos resolve by exact official host through `frontend/src/lib/eoa-organizations.ts`. Monsha’at reuses the reviewed local asset with a frame around its visible artwork. NTDP uses its official mark from `https://ntdp.mcit.gov.sa/images/icons/mini-logo.svg`, and Cipher Ventures uses `https://www.cipherventures.sa/_next/static/media/logo-cipher.440f432d.png` (retrieved 5 November 2026). CODE is matched by its `/code` path so the ministry's own site keeps the MCIT logo. Uploaded administrator artwork is not overwritten, and relationship statuses are unchanged.
 
 Public source-collection and review notes are kept out of the interface; functional eligibility guidance, source links and privacy controls remain available. The EOA footer provides concise links to program, eligibility, contact, privacy and the official EO pages.
 

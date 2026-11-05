@@ -10,6 +10,7 @@ import styles from "./BrandLogo.module.css"
 // Original raster canvases include large transparent margins. SVG's viewBox
 // frames their visible artwork plus clear space without altering the artwork.
 const frames: Record<string, { width: number; height: number; viewBox: string }> = {
+  '/partner-ecosystem/monshaat-official.png': { width: 1080, height: 1080, viewBox: '36 181 1008 718' },
   '/partners/code.png': { width: 450, height: 450, viewBox: '58 105 332 222' },
   '/partners/pwc.svg': { width: 70, height: 53, viewBox: '0 12 70 41' },
   '/startup-directory/kitopi-logo.png': { width: 4000, height: 1542, viewBox: '326 242 3349 1053' },
