@@ -1,5 +1,12 @@
 # Changelog
 
+## Partners, public copy and administration navigation — 2026-11-05
+
+- Add logo frames and bilingual service search to EOA organization cards, with exact-host fallbacks for legacy records and official NTDP artwork. Improve the partners introduction and links to organizations and partnership inquiries.
+- Remove public source-collection/review notes from EOA, mentor, founder, startup and wiki surfaces. Preserve functional eligibility guidance, source links and accurate active-member states.
+- Add a searchable administration service directory and sidebar, grouped EOA service navigation, readable controls and CRM/PR filter reset. Preserve all API permissions, publication state and existing records.
+- Extend browser regression checks for partner logo loading, service discovery, EOA capability boundaries and CRM workflows; add unit coverage for navigation, artwork resolution and public copy.
+
 ## Three-card EOA program leadership — 2026-11-05
 
 - Add owner-requested Program Operation Partner Fouad Alnazawi and EOA Riyadh PMO Leader Bashaier Abdullah alongside Program Lead Mohammed Alsolami at `/eoa/leadership#program-lead`, with Arabic/English names, roles and profile links.

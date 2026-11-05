@@ -681,3 +681,10 @@ html[lang="ar"] :is(h1,h2,h3,h4,h5,h6) { letter-spacing:0; line-height:1.5; }
 .eoa input[aria-invalid="true"], .eoa select[aria-invalid="true"], .eoa textarea[aria-invalid="true"] { border-color:var(--error-text); }
 #participant-workspace, #application-updates, #verify-email { scroll-margin-top:100px; }
 @media (max-width:600px) { .eoa-journey-progress { grid-template-columns:1fr; gap:8px; } .eoa-journey-progress li { display:flex; align-items:center; gap:12px; border-block-start:0; border-inline-start:3px solid var(--border-soft); padding:8px 12px; } .eoa-journey-progress li > span:first-child { margin:0; } }
+
+/* Shared administration readability and touch-target baseline. */
+.admin-workspace :is(input:not([type="checkbox"]):not([type="radio"]), select, textarea) { font-size: 16px; line-height: 1.6; }
+.admin-workspace :is(button, input:not([type="checkbox"]):not([type="radio"]), select) { min-height: 44px; }
+.admin-workspace :is(h1,h2,h3) { overflow-wrap: anywhere; }
+.admin-workspace :is(th,td) { vertical-align: middle; }
+.admin-workspace :is(a,button,input,select,textarea,summary):focus-visible { outline: 3px solid var(--focus-ring); outline-offset: 3px; }

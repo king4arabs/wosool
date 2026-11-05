@@ -125,8 +125,8 @@ export function Eligibility() {
         {currency === 'SAR' && (
           <p className="eoa-muted">
             {ar
-              ? 'تحويل استرشادي: 3.75 ريال لكل دولار وفق سياسة الربط لدى البنك المركزي السعودي. تحقق 8 أكتوبر 2026.'
-              : 'Indicative conversion: SAR 3.75 per US$1, using SAMA’s peg policy. Verified 8 October 2026.'}{' '}
+              ? 'يُحسب التحويل بسعر 3.75 ريال لكل دولار أمريكي.'
+              : 'Converted at SAR 3.75 per US dollar.'}{' '}
             <a
               href="https://sama.gov.sa/en-US/MediaCenter/News/Pages/news-557.aspx"
               target="_blank"

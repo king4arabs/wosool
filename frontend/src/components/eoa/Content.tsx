@@ -12,7 +12,6 @@ import { EoaPerks } from './Perks'
 import { EoaDirectory } from './Directory'
 import { Eligibility } from './Eligibility'
 import { PartnerStrip, useEoaProgram } from './Shared'
-import { formatEoaDate } from '@/lib/eoa'
 import styles from './PublicDetails.module.css'
 const titles: Record<string, [string, string]> = {
   alumni: ['الخريجون ومتابعة النمو', 'Alumni & continued growth'],
@@ -151,6 +150,11 @@ export function EoaContent({ section }: { section: string }) {
         {section === 'faq' && <EoaProgramDetails program={program} section="faq" />}
         {section === 'partners' && (
           <div className={styles.partners}>
+            <header className={styles.partnerIntro}>
+              <h2>{ar ? 'جهات تدعم رحلتك الريادية' : 'Support for your next stage of growth'}</h2>
+              <p>{ar ? 'استكشف فرص التعلم والتمويل والتقنية ومساحات العمل، وتواصل مع فريقنا للمساهمة في البرنامج.' : 'Explore learning, funding, technology and workspace support, or speak with our team about contributing to the program.'}</p>
+              <nav aria-label={ar ? 'روابط الشراكات' : 'Partnership links'}><a href="#eoa-ecosystem">{ar ? 'استكشف الجهات' : 'Explore organizations'}</a><Link href="/eoa/contact">{ar ? 'تواصل للشراكة' : 'Discuss a partnership'}</Link></nav>
+            </header>
             <EoaProgramDetails program={program} section="operator" />
             <div className={styles.partnerStrip}><PartnerStrip partners={program?.partners} /></div>
             {!program?.partners.length && (
@@ -160,7 +164,7 @@ export function EoaContent({ section }: { section: string }) {
                   : 'Help founders grow through your expertise or resources. Contact the team to explore partnership opportunities.'}
               </p>
             )}
-            <section className={styles.ecosystem} aria-labelledby="eoa-directory-title">
+            <section id="eoa-ecosystem" className={styles.ecosystem} aria-labelledby="eoa-directory-title">
               <h2 id="eoa-directory-title">
                 {ar
                   ? 'منظومة الدعم في السعودية'
@@ -168,8 +172,8 @@ export function EoaContent({ section }: { section: string }) {
               </h2>
               <p>
                 {ar
-                  ? 'هذه جهات تعمل مع رواد الأعمال في السعودية. زر مواقعها الرسمية لمعرفة خدماتها؛ إدراجها هنا لا يعني أنها شريكة في المسرّعة.'
-                  : 'These organizations work with entrepreneurs in Saudi Arabia. Check their official sites for services; appearing here does not mean they are Accelerator partners.'}
+                  ? 'اكتشف الجهات وخدماتها، وانتقل إلى مواقعها الرسمية لمعرفة البرامج المتاحة.'
+                  : 'Find organizations and services, then visit their official websites to explore available programs.'}
               </p>
               <EoaDirectory ar={ar} />
             </section>
@@ -202,33 +206,15 @@ export function EoaContent({ section }: { section: string }) {
             </div>
           </div>
         )}
-        <footer className="eoa-source"><Link href="/eoa/privacy">{ar ? 'إشعار الخصوصية' : 'Data notice'}</Link> · 
-          {ar
-            ? 'نموذج الدفعات المحلي: قيادة برنامج الرياض. شروط EO: المصادر الرسمية.'
-            : 'Local cohort model: Riyadh program leadership. EO requirements: official EO publications.'}{' '}
-          {program?.facts.verified_at && <span>{ar ? 'آخر مراجعة مسجلة' : 'Last recorded review'}: {formatEoaDate(program.facts.verified_at, ar)} · </span>}
-          <a
-            href="https://eonetwork.org/accelerator"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            EO Accelerator ↗
-          </a>{' '}
-          ·{' '}
-          <a
-            href="https://eonetwork.org/accelerator/faqs/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            FAQ ↗
-          </a>
-          <div className="eoa-actions">
-            {Object.entries(titles).map(([slug, title]) => (
-              <Link key={slug} href={`/eoa/${slug}`}>
-                {title[ar ? 0 : 1]}
-              </Link>
-            ))}
-          </div>
+        <footer className="eoa-source">
+          <nav className="eoa-actions" aria-label={ar ? 'روابط مفيدة' : 'Useful links'}>
+            <Link href="/eoa/program">{ar ? 'البرنامج' : 'Program'}</Link>
+            <Link href="/eoa/eligibility">{ar ? 'الأهلية والرسوم' : 'Eligibility & fees'}</Link>
+            <Link href="/eoa/contact">{ar ? 'تواصل معنا' : 'Contact us'}</Link>
+            <Link href="/eoa/privacy">{ar ? 'الخصوصية' : 'Privacy'}</Link>
+            <a href="https://eonetwork.org/accelerator" target="_blank" rel="noopener noreferrer">EO Accelerator ↗</a>
+            <a href="https://eonetwork.org/accelerator/faqs/" target="_blank" rel="noopener noreferrer">{ar ? 'أسئلة EO الشائعة' : 'EO FAQs'} ↗</a>
+          </nav>
         </footer>
       </div>
     </section>

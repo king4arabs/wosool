@@ -10,7 +10,7 @@ export function ApiReference() {
   return <PublicLayout><div className="bg-[var(--page-bg)] pb-16">
     <header className="bg-[var(--surface-inverse)] px-5 py-14 text-[var(--on-dark)]"><div className="mx-auto max-w-5xl">
       <p className="font-bold text-[var(--on-dark-muted)]">{ar ? "وصول / للمطورين" : "WOSOOL / DEVELOPERS"}</p><h1 className="mt-4 text-3xl font-extrabold sm:text-5xl">{ar ? "واجهة البيانات العامة" : "Build with Wosool public data"}</h1>
-      <p className="mt-5 max-w-3xl text-lg leading-8 text-[var(--on-dark-muted)]">{ar ? "مرجع للقراءة فقط: ملفات المؤسسين والأخبار المنشورة ودليل الشركات. استخدم المصادر وافصل الحقائق عن مؤشرات النمو." : "A read-only reference for founder discovery, published news and sourced startups. Preserve attribution and distinguish facts from growth signals."}</p>
+      <p className="mt-5 max-w-3xl text-lg leading-8 text-[var(--on-dark-muted)]">{ar ? "استكشف بيانات المؤسسين والشركات والأخبار عبر نقاط وصول موثقة وصيغ استجابة واضحة." : "Access public founder, company and news data through documented endpoints and response formats."}</p>
       <a href="/api/openapi.json" className="mt-7 inline-flex min-h-12 items-center rounded-xl bg-white px-5 py-3 font-bold text-[var(--surface-inverse)]">{ar ? "تنزيل مواصفة OpenAPI" : "Download OpenAPI specification"}</a>
     </div></header>
     <div className="mx-auto max-w-5xl space-y-8 px-5 py-10">

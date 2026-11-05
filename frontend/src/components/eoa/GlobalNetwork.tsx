@@ -108,7 +108,6 @@ export function EoGlobalNetwork({ ar }: { ar: boolean }) {
         <div><strong>{topics.length}</strong><span>{ar ? 'مجالات خبرة' : 'areas of experience'}</span></div>
       </div>
     </div>
-    <p className={styles.context}>{ar ? 'ملفات عامة من مصادر EO؛ ينسّق فريق البرنامج المشاركة المحلية ومواعيد الإرشاد. يوضّح اسم الفرع مدينة العضوية أو نطاقها الإقليمي وفق المصدر.' : 'Public profiles from EO sources. Local participation and mentoring availability are coordinated by the program team. Chapter labels retain EO’s published city or regional affiliation.'}</p>
     <div className={styles.filters}>
       <label><span>{ar ? 'ابحث في الشبكة' : 'Search the network'}</span><div className={styles.search}><Search size={17} aria-hidden="true" /><input type="search" value={query} onChange={e => setQuery(e.target.value)} placeholder={ar ? 'الاسم، الشركة أو الفرع…' : 'Name, company or chapter…'} /></div></label>
       <label><span>{ar ? 'الشبكة' : 'Network'}</span><select value={group} onChange={e => setGroup(e.target.value)}><option value="all">{ar ? 'جميع الملفات' : 'All profiles'}</option><option value="speakers">{ar ? 'المتحدثون والمدربون' : 'Speakers & coaches'}</option><option value="leaders">{ar ? 'القيادة العالمية' : 'Global leadership'}</option></select></label>

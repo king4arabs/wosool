@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { useAuth } from '@/lib/auth'
 import { useLocale } from '@/lib/locale'
 import { api } from '@/lib/api'
+import { isAdminUser } from '@/lib/admin'
 import {
   applicationFieldLabel,
   applicationFieldValue,
@@ -22,6 +23,7 @@ import { ManagementOverview, AccessGuide, type Management } from './ManagementOv
 import { AlumniManager } from './AlumniManager'
 import { TrackManager } from './TrackManager'
 import { PerkManager } from './PerkManager'
+import { EoaAdminNavigation } from './AdminNavigation'
 import type { EoaTrack } from '@/lib/eoa'
 
 type Row = Record<string, string | number | boolean | null>
@@ -188,7 +190,7 @@ function AdminSession() {
       </div>
     )
   return (
-    <section className="eoa-section">
+    <section className="eoa-section admin-workspace">
       <div className="eoa-container">
         <div className="eoa-page-heading">
           <span className="eoa-eyebrow">EOA / OPERATIONS</span>
@@ -202,8 +204,7 @@ function AdminSession() {
         {notice && <Notice>{notice}</Notice>}
         {review && (
           <>
-            <div className="eoa-tabs">
-              {[
+            <EoaAdminNavigation ar={ar} current={tab} items={[
                 ['overview', ar ? 'نظرة عامة' : 'Overview'],
                 ['applications', ar ? 'الطلبات' : 'Applications'],
                 ['access', ar ? 'دليل الصلاحيات' : 'Access guide'],
@@ -228,19 +229,7 @@ function AdminSession() {
                       ['report', ar ? 'التقارير والسجل' : 'Reports & audit'],
                     ]
                   : []),
-              ].map(([key, label]) => (
-                <button
-                  key={key}
-                  className={tab === key ? 'active' : ''}
-                  onClick={() => {
-                    setTab(key)
-                    setSelected(null)
-                  }}
-                >
-                  {label}
-                </button>
-              ))}
-            </div>
+              ]} platformAdmin={isAdminUser(user)} onChange={(next) => { setTab(next); setSelected(null) }} />
             {tab === 'overview' && (ops ? <ManagementOverview data={ops.management} ar={ar} settings={ops.settings} mail={ops.mail_configured} open={ops.is_open} navigate={(next) => { if (next === 'coaching') window.location.assign('/eoa/coach'); else setTab(next) }} /> : <div className="eoa-card"><h2>{ar ? 'مساحة المراجع' : 'Reviewer workspace'}</h2><p>{ar ? 'راجع الطلبات المسندة إليك واطلب المعلومات المطلوبة قبل رفع التوصية للقيادة.' : 'Review your assigned applications and request the evidence needed for a leadership decision.'}</p><button className="eoa-btn" onClick={() => setTab('applications')}>{ar ? 'عرض الطلبات' : 'View assigned applications'}</button></div>)}
             {tab === 'access' && <AccessGuide ar={ar} />}
             {tab === 'accounts' && review.capabilities.manage_roles && (
