@@ -52,8 +52,8 @@ try {
       assert.equal(followUrl.searchParams.get('subject'), question.slice(0, 120))
       if (locale === 'en' && width === 1440) {
         await follow.click()
-        await page.locator('input[name="subject"]').waitFor()
-        assert.equal(await page.locator('input[name="subject"]').inputValue(), question.slice(0, 120))
+        await page.getByRole('textbox', { name: 'Subject', exact: true }).waitFor()
+        assert.equal(await page.getByRole('textbox', { name: 'Subject', exact: true }).inputValue(), question.slice(0, 120))
         await page.goto(origin + path, { waitUntil: 'networkidle' })
         await questions.first().waitFor()
       }
