@@ -27,9 +27,14 @@ try {
     const ids = () => strip.locator('[data-partner-copy="primary"] a[tabindex="0"]').evaluateAll(links => links.map(link => link.dataset.partnerId))
     const original = await ids()
     assert.equal(new Set(original).size, 80)
-    assert.equal(await strip.locator('img').count(), 160)
+    assert.equal(await strip.locator('[data-brand-logo]').count(), 160)
     const failed = await strip.locator('img').evaluateAll(images => images.filter(img => !img.complete || !img.naturalWidth).map(img => img.getAttribute('src')))
     assert.deepEqual(failed, [], 'Every logo must load')
+    for (const frame of await strip.locator('svg[role="img"] image').all()) {
+      const source = await frame.getAttribute('href')
+      assert.ok(source, 'Framed logos retain their source artwork')
+      assert.ok((await page.request.get(new URL(source, origin).href)).ok(), 'Framed logo artwork must load')
+    }
     const track = strip.locator(':scope > div')
     const transform = () => track.evaluate(el => new DOMMatrixReadOnly(getComputedStyle(el).transform).m41)
     const before = await transform(); await strip.hover(); await page.waitForTimeout(600); const after = await transform()
