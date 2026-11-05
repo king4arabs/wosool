@@ -60,6 +60,7 @@ export const memberEventsCopy = {
     saved: "محفوظ",
     share: "نسخ الرابط",
     registeredToast: "تم تسجيلك.",
+    notAccepted: "لم يُؤكَّد لك مقعد في هذه الفعالية. تواصل مع المنظّم إن احتجت إلى توضيح.",
     cancelledToast: "أُلغي تسجيلك.",
     rsvpFailed: "تعذر إتمام التسجيل.",
     cancelFailed: "تعذر إلغاء التسجيل.",
@@ -103,6 +104,7 @@ export const memberEventsCopy = {
     saved: "Saved",
     share: "Copy link",
     registeredToast: "You are registered.",
+    notAccepted: "You do not have a confirmed place at this event. Contact the organiser if you need details.",
     cancelledToast: "Your registration is cancelled.",
     rsvpFailed: "Registration did not go through.",
     cancelFailed: "Your registration could not be cancelled.",
@@ -161,9 +163,14 @@ export function activeRegistrations(records: MemberRsvpRecord[]): Map<string, Re
   return states
 }
 
-/** After a successful RSVP the API reports the place the member actually got. */
-export function stateAfterRsvp(status?: string | null): RegistrationState {
-  return registrationState(status) ?? "registered"
+/**
+ * After an RSVP the API reports the place the member actually got. A rejected or no-show registration
+ * comes back unchanged with HTTP 200, so a reported status that is not active gives no place (null).
+ * Only a response without any status falls back to registered.
+ */
+export function stateAfterRsvp(status?: string | null): RegistrationState | null {
+  if (!status) return "registered"
+  return registrationState(status)
 }
 
 export function registrationLabel(locale: DashboardLocale, state: RegistrationState): string {
@@ -178,11 +185,13 @@ function normalized(value?: string | null): string {
 const ONLINE = ["virtual", "online"]
 
 /**
- * Online when either field says so. `mode` was added later with a default of "in-person",
- * so on older events it can say in-person while `format` says virtual.
+ * `format` is the required field on every event and decides online versus in person. `mode` is
+ * optional and was added later (older rows default it to "in-person"), so it is only consulted when
+ * `format` is missing, and for "hybrid".
  */
 export function isOnline(event: Pick<MemberEvent, "format" | "mode">): boolean {
-  return ONLINE.includes(normalized(event.format)) || ONLINE.includes(normalized(event.mode))
+  const format = normalized(event.format)
+  return format ? ONLINE.includes(format) : ONLINE.includes(normalized(event.mode))
 }
 
 /** How the member will attend, in the values the RSVP endpoint accepts. */

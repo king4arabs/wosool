@@ -212,14 +212,20 @@ export default function EventsPage() {
         allow_ai_networking_suggestions: true,
         calendar_sync_option: "ics",
       })
+      const state = stateAfterRsvp(res.status)
+      if (!state) {
+        // A rejected or no-show registration is returned unchanged: no place was given.
+        toast(copy.notAccepted, "error")
+        return
+      }
       toast(res.message || copy.registeredToast, "success")
-      setRegistrations((prev) => new Map(prev).set(event.slug, stateAfterRsvp(res.status)))
+      setRegistrations((prev) => new Map(prev).set(event.slug, state))
     } catch (err) {
       toast(err instanceof ApiError && err.message ? err.message : copy.rsvpFailed, "error")
     } finally {
       setBusySlug(null)
     }
-  }, [toast, copy.registeredToast, copy.rsvpFailed])
+  }, [toast, copy.registeredToast, copy.rsvpFailed, copy.notAccepted])
 
   const onCancel = useCallback(async (slug: string) => {
     setBusySlug(slug)
