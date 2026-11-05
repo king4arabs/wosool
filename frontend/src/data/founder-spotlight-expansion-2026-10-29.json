@@ -4529,5 +4529,49 @@
     "traction_en": "Nooks reported 2,000+ customer companies and 135% net revenue retention on 4 November 2026; revenue amount undisclosed.",
     "traction_ar": "أعلنت «نوكس» في 4 نوفمبر 2026 تجاوز ألفي شركة عميلة وصافي احتفاظ بالإيرادات بنسبة 135%، دون إعلان قيمة الإيرادات.",
     "traction_source_url": "https://www.nooks.ai/blog-posts/introducing-node-revenue-agent-platform"
+  },
+  {
+    "slug": "mohammed-alsolami-rabeh",
+    "founder_name_en": "Mohammed Alsolami",
+    "founder_name_ar": "محمد السلمي",
+    "role_en": "Founder & CEO",
+    "role_ar": "المؤسس والرئيس التنفيذي",
+    "founder_brief_en": "Founded RABEH Financial in Riyadh in 2022, applying financial technology and AI to investment-opportunity discovery, fundraising and digital asset workflows.",
+    "founder_brief_ar": "أسس «رابح المالية» في الرياض عام 2022 لتطوير حلول التقنية المالية والذكاء الاصطناعي لاكتشاف الفرص الاستثمارية والتمويل وإدارة الأصول الرقمية.",
+    "company_name_en": "RABEH Financial",
+    "company_name_ar": "رابح المالية",
+    "company_brief_en": "Riyadh fintech platform developing investment marketplaces, crowdfunding, tokenization and AI-supported deal discovery; regulatory authorizations remain in process.",
+    "company_brief_ar": "منصة تقنية مالية في الرياض تطور أسواق الاستثمار والتمويل الجماعي وترميز الأصول واكتشاف الصفقات بالذكاء الاصطناعي؛ ولا تزال الإجراءات والتصاريح التنظيمية قيد الاستكمال.",
+    "country_en": "Saudi Arabia",
+    "country_ar": "السعودية",
+    "country_code": "SA",
+    "sector_en": "Fintech and AI",
+    "sector_ar": "التقنية المالية والذكاء الاصطناعي",
+    "website": "https://rabeh.sa/",
+    "portrait_url": "/wosool/board/mohammed-alsolami.webp",
+    "logo_url": "/startup-directory/rabeh-logo.webp",
+    "founder_socials": [
+      {
+        "label": "LinkedIn",
+        "url": "https://www.linkedin.com/in/mohammedalsolami"
+      }
+    ],
+    "source_url": "https://money2020middleeast.com/speakers/mohammed-alsolami",
+    "source_urls": [
+      "https://money2020middleeast.com/speakers/mohammed-alsolami",
+      "https://onegiantleap.com/2026-speakers/mohammed-alsolami",
+      "https://rabeh.sa/",
+      "https://www.linkedin.com/company/rabeh-ksa",
+      "https://www.wamda.com/en/2024/03/rabeh-raises-800000-seed-round-english",
+      "https://eddekhar.com/en/blog/eddekhar-at-money2020-middle-east-winning-the-moneysurge-impact-award",
+      "https://entarabi.com/en/2026/09/saudi-fintech-rabeh-raises-8-5-million/"
+    ],
+    "reviewed_at": "2026-11-05",
+    "company_key": "rabeh",
+    "region": "saudi",
+    "founded_year": 2022,
+    "traction_en": null,
+    "traction_ar": null,
+    "traction_source_url": null
   }
 ]
