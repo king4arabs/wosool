@@ -1,5 +1,11 @@
 # Changelog
 
+## Symfony security patch: http-foundation, http-kernel, routing 7.4.23 — 2026-11-05
+
+- `composer audit` in CI started failing on every branch after Symfony published six advisories on 4 November (CVE-2026-118514 and CVE-2026-118516, plus four GHSA advisories on trusted proxies, generated URL hosts, path rules and inline fragments). Wosool locked 7.4.20; the fixed release is 7.4.23.
+- `backend/composer.lock` now locks `symfony/http-foundation`, `symfony/http-kernel` and `symfony/routing` at v7.4.23. Their requirements are unchanged from 7.4.20, so no other package moves and `composer.json` is untouched. Laravel suite on PHP 8.5.12: 350 pass, the same as before the bump (the 14 GD-dependent image tests cannot run in this sandbox and are covered by CI).
+- Production still needs a deploy of the backend with this lock to receive the fix; nothing was deployed.
+
 ## Member events page: both languages, honest registration state — 2026-11-05
 
 - **Problem:** `/dashboard/events` was fixed Arabic: an English member got Arabic tabs, buttons, dates and empty states. Every card showed "70% صلة" and the English line "Recommended by member visibility and your activity context.", because the member catalog API stamped the same score and sentence on every event; nothing was computed from the member. The registrations list includes cancelled, rejected and no-show RSVPs, and the page counted all of them, so after a reload a cancelled event showed "مسجل" with a "cancel" button again, and a waitlisted or pending RSVP was labelled registered. Online events were registered as in-person attendance, the raw type code ("wosool") appeared as a chip, and RSVP success and error toasts showed the API's English text in the Arabic page.
