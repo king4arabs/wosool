@@ -151,4 +151,44 @@ class EventRsvpTest extends TestCase
         $response->assertOk();
         $this->assertCount(1, $response->json('data'));
     }
+
+    public function test_rsvp_messages_follow_the_request_language(): void
+    {
+        $user = User::factory()->member()->create();
+        $event = $this->makeEvent(['max_attendees' => 1]);
+        $other = User::factory()->member()->create();
+        $event->attendees()->attach($other->id, ['status' => 'approved']);
+
+        $this->actingAs($user)
+            ->withHeader('X-Locale', 'ar')
+            ->postJson("/api/v1/member/events/{$event->slug}/rsvp", ['attendance_type' => 'in_person'])
+            ->assertCreated()
+            ->assertJsonPath('status', 'waitlisted')
+            ->assertJsonPath('message', 'اكتمل العدد، وأُضفت إلى قائمة الانتظار.');
+
+        $this->actingAs($user)
+            ->withHeader('X-Locale', 'en')
+            ->deleteJson("/api/v1/member/events/{$event->slug}/rsvp")
+            ->assertOk()
+            ->assertJsonPath('message', 'Your registration is cancelled.');
+
+        $closed = $this->makeEvent(['status_flow' => 'registration_closed']);
+        $this->actingAs($user)
+            ->withHeader('X-Locale', 'ar')
+            ->postJson("/api/v1/member/events/{$closed->slug}/rsvp", ['attendance_type' => 'in_person'])
+            ->assertUnprocessable()
+            ->assertJsonPath('errors.event.0', 'أُغلق التسجيل في هذه الفعالية.');
+    }
+
+    public function test_member_catalog_does_not_invent_a_relevance_score_or_reason(): void
+    {
+        $user = User::factory()->member()->create();
+        $this->makeEvent(['slug' => 'catalog-event']);
+
+        $this->actingAs($user)->getJson('/api/v1/member/events/catalog')
+            ->assertOk()
+            ->assertJsonPath('data.0.slug', 'catalog-event')
+            ->assertJsonPath('data.0.relevance_score', 0)
+            ->assertJsonPath('data.0.why_recommended', null);
+    }
 }

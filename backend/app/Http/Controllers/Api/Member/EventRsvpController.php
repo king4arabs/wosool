@@ -130,37 +130,37 @@ class EventRsvpController extends Controller
 
         if (! in_array($lifecycleStatus, ['published', 'live_now', 'registration_closed', 'upcoming', 'live'], true)) {
             throw ValidationException::withMessages([
-                'event' => ['This event is not available for RSVP in its current status.'],
+                'event' => [__('messages.events.not_open')],
             ]);
         }
 
         if ($this->isInviteOnly($event)) {
             throw ValidationException::withMessages([
-                'event' => ['This event is invite only.'],
+                'event' => [__('messages.events.invite_only')],
             ]);
         }
 
         if (! $event->requires_rsvp && ! $rsvpRequired) {
             throw ValidationException::withMessages([
-                'event' => ['This event does not require RSVP.'],
+                'event' => [__('messages.events.no_rsvp')],
             ]);
         }
 
         if (in_array($lifecycleStatus, ['completed', 'cancelled', 'archived', 'registration_closed'], true)) {
             throw ValidationException::withMessages([
-                'event' => ['This event is no longer accepting RSVPs.'],
+                'event' => [__('messages.events.closed')],
             ]);
         }
 
         if ($registrationDeadline && now()->greaterThanOrEqualTo($registrationDeadline)) {
             throw ValidationException::withMessages([
-                'event' => ['Registration deadline has passed for this event.'],
+                'event' => [__('messages.events.deadline_passed')],
             ]);
         }
 
         if (! $event->registrationWindowOpen()) {
             throw ValidationException::withMessages([
-                'event' => ['This event is no longer accepting RSVPs or has an invalid schedule.'],
+                'event' => [__('messages.events.closed')],
             ]);
         }
 
@@ -168,7 +168,7 @@ class EventRsvpController extends Controller
 
         if ($existing && ! in_array((string) $existing->pivot->status, ['cancelled', 'cancelled_by_user'], true)) {
             return response()->json([
-                'message' => 'You are already registered for this event.',
+                'message' => __('messages.events.already_registered'),
                 'status' => $existing->pivot->status,
             ]);
         }
@@ -180,7 +180,7 @@ class EventRsvpController extends Controller
             if ($confirmedCount >= $capacity) {
                 if ($waitlistEnabled === false) {
                     throw ValidationException::withMessages([
-                        'event' => ['Event capacity has been reached.'],
+                        'event' => [__('messages.events.full')],
                     ]);
                 }
                 $status = 'waitlisted';
@@ -242,9 +242,11 @@ class EventRsvpController extends Controller
         );
 
         return response()->json([
-            'message' => $status === 'waitlisted'
-                ? 'Event is full — you have been waitlisted.'
-                : ($status === 'pending_approval' ? 'RSVP submitted and pending approval.' : 'RSVP confirmed.'),
+            'message' => match ($status) {
+                'waitlisted' => __('messages.events.waitlisted'),
+                'pending_approval' => __('messages.events.pending_approval'),
+                default => __('messages.events.confirmed'),
+            },
             'status' => $status,
             'registration_state' => $this->mapPivotStatusToState($status, $this->computeEventRegistrationState($event)),
             'calendar' => [
@@ -266,7 +268,7 @@ class EventRsvpController extends Controller
 
         $existing = $event->attendees()->where('users.id', $user->id)->first();
         if (! $existing) {
-            return response()->json(['message' => 'You are not registered for this event.'], 404);
+            return response()->json(['message' => __('messages.events.not_registered')], 404);
         }
 
         $event->attendees()->updateExistingPivot($user->id, $this->sanitizePivotPayload([
@@ -286,7 +288,7 @@ class EventRsvpController extends Controller
 
         $this->promoteWaitlistedAttendeeIfPossible($event);
 
-        return response()->json(['message' => 'RSVP cancelled.']);
+        return response()->json(['message' => __('messages.events.cancelled')]);
     }
 
     private function isInviteOnly(Event $event): bool
