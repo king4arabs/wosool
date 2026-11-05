@@ -66,9 +66,9 @@ class EventCatalogController extends Controller
         }
 
         $events->getCollection()->transform(function (Event $event) use ($savedIds) {
+            // No relevance score or recommendation reason: nothing here is computed from the member,
+            // so a fixed "70%" and a stock sentence on every card would claim a match that was never made.
             $event->is_saved = in_array($event->id, $savedIds, true);
-            $event->relevance_score = 70;
-            $event->why_recommended = 'Recommended by member visibility and your activity context.';
             return $event;
         });
 

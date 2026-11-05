@@ -102,4 +102,18 @@ return [
             ],
         ],
     ],
+    'events' => [
+        'not_open' => 'This event is not open for registration.',
+        'invite_only' => 'This event is by invitation only.',
+        'no_rsvp' => 'This event does not need registration.',
+        'closed' => 'Registration for this event has closed.',
+        'deadline_passed' => 'The registration deadline for this event has passed.',
+        'full' => 'This event is full.',
+        'already_registered' => 'You are already registered for this event.',
+        'confirmed' => 'You are registered.',
+        'pending_approval' => 'Request sent. The organiser will confirm your place.',
+        'waitlisted' => 'This event is full. You are on the waiting list.',
+        'not_registered' => 'You are not registered for this event.',
+        'cancelled' => 'Your registration is cancelled.',
+    ],
 ];
