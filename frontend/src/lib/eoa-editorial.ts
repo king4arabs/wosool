@@ -89,7 +89,68 @@ export const defaultEoaFaqs: EoaFaq[] = [
     answer_ar: 'بعد تفعيل مشاركتك، يعرض حسابك جلسات التعلم ومجموعة المساءلة والموارد ومراحل التقدم المخصصة لك.',
     visible: true,
   },
+  {
+    "question_en": "What should I prepare before applying?",
+    "question_ar": "ما الذي أجهزه قبل التقديم؟",
+    "answer_en": "Have your founder profile, company details and current annual revenue information ready. Check the eligibility page, then complete the application using accurate, up-to-date information.",
+    "answer_ar": "جهّز ملفك كمؤسس وبيانات شركتك ومعلومات الإيرادات السنوية الحالية. راجع صفحة الأهلية، ثم أكمل الطلب بمعلومات دقيقة ومحدثة.",
+    "visible": true
+  },
+  {
+    "question_en": "Can I apply if my company is below the revenue requirement?",
+    "question_ar": "هل يمكنني التقديم إذا كانت إيرادات شركتي أقل من الحد المطلوب؟",
+    "answer_en": "Review the published revenue requirement before applying. If your company is not yet in that range, contact the team about fit and explore Wosool events and founder community activities.",
+    "answer_ar": "راجع شرط الإيرادات المنشور قبل التقديم. إذا لم تصل شركتك إلى النطاق المطلوب، تواصل مع الفريق بشأن ملاءمة البرنامج واستكشف فعاليات وصول وأنشطة مجتمع المؤسسين.",
+    "visible": true
+  },
+  {
+    "question_en": "How can I check my application status?",
+    "question_ar": "كيف أتابع حالة طلبي؟",
+    "answer_en": "Sign in with the account you used to apply and open the EO Accelerator area in your dashboard. Check the status shown there and contact the program team if you need clarification.",
+    "answer_ar": "سجّل الدخول بالحساب الذي استخدمته للتقديم وافتح مساحة مسرّعة EO في لوحتك. راجع حالة الطلب الظاهرة وتواصل مع فريق البرنامج إذا احتجت إلى توضيح.",
+    "visible": true
+  },
+  {
+    "question_en": "Are sessions in person or online?",
+    "question_ar": "هل الجلسات حضورية أم عبر الإنترنت؟",
+    "answer_en": "Check each session in the cohort schedule for its delivery format, venue or joining link. Do not assume every session uses the same format.",
+    "answer_ar": "راجع كل جلسة في جدول الدفعة لمعرفة طريقة انعقادها ومقرها أو رابط الانضمام. قد تختلف طريقة الحضور بين جلسة وأخرى.",
+    "visible": true
+  },
+  {
+    "question_en": "What if I cannot attend a session?",
+    "question_ar": "ماذا أفعل إذا تعذّر عليّ حضور جلسة؟",
+    "answer_en": "Tell the program team as early as possible and check the requirements for your cohort. Ask about available resources or follow-up; a recording or replacement session is not guaranteed.",
+    "answer_ar": "أبلغ فريق البرنامج مبكرًا وراجع متطلبات دفعتك. اسأل عن الموارد أو المتابعة المتاحة؛ لا يُضمن توفر تسجيل أو جلسة بديلة.",
+    "visible": true
+  },
+  {
+    "question_en": "Does the program guarantee investment or US$1 million in revenue?",
+    "question_ar": "هل يضمن البرنامج الاستثمار أو تحقيق إيرادات مليون دولار؟",
+    "answer_en": "No. The program supports you through learning, coaching and accountability. Business outcomes and investment decisions depend on your company and the parties involved.",
+    "answer_ar": "لا. يدعمك البرنامج بالتعلم والتوجيه والمساءلة. تعتمد نتائج الأعمال وقرارات الاستثمار على شركتك والأطراف المعنية.",
+    "visible": true
+  },
+  {
+    "question_en": "Can I choose a mentor from the EO network cards?",
+    "question_ar": "هل يمكنني اختيار مرشد من بطاقات شبكة EO؟",
+    "answer_en": "Use the cards to learn about EO people, their chapters and experience. Ask the program team about mentoring arrangements for your cohort; a listing does not confirm availability or an assignment.",
+    "answer_ar": "استخدم البطاقات للتعرف على أشخاص من EO وفروعهم وخبراتهم. اسأل فريق البرنامج عن ترتيبات الإرشاد لدفعتك؛ لا يعني ظهور الشخص توفره أو تعيينه مرشدًا لك.",
+    "visible": true
+  },
+  {
+    "question_en": "Can my organisation support or sponsor the program?",
+    "question_ar": "هل يمكن لجهتي دعم البرنامج أو رعايته؟",
+    "answer_en": "Yes. Contact the program team and choose the partnership or sponsorship inquiry type. Describe your organisation and the support you can offer so the team can discuss the next step.",
+    "answer_ar": "نعم. تواصل مع فريق البرنامج واختر نوع الاستفسار «شراكة» أو «رعاية». عرّف بجهتك والدعم الذي يمكنك تقديمه لبحث الخطوة التالية مع الفريق.",
+    "visible": true
+  },
 ]
+
+/** Explicitly import missing suggestions without changing existing answers or visibility. */
+export function suggestedEoaFaqs(existing: EoaFaq[]) {
+  return defaultEoaFaqs.filter(faq => !existing.some(row => row.question_en === faq.question_en || row.question_ar === faq.question_ar)).slice(0, Math.max(0, 30 - existing.length))
+}
 
 export function eoaFaqs(editorial?: EoaEditorial | null) {
   const core = defaultEoaFaqs.filter(faq => ['How long is the program and what is the time commitment?', 'Does completing Accelerator give me EO membership?'].includes(faq.question_en))

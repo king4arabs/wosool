@@ -288,6 +288,217 @@ export const FAQS: FaqItem[] = [
     },
     link: { href: "/sponsors#sponsor-inquiry", ar: "صفحة الرعاة", en: "Sponsors page" },
   },
+  // Practical account, discovery, events and newsletter journeys.
+  {
+    "id": "account-and-membership",
+    "category": "membership",
+    "q": {
+      "ar": "هل إنشاء الحساب يفعّل عضويتي مباشرة؟",
+      "en": "Does creating an account activate my membership?"
+    },
+    "a": {
+      "ar": [
+        "إنشاء الحساب وتوثيق البريد خطوتان للبدء. أكمل طلب العضوية وأرسله للمراجعة؛ تظهر حالة طلبك في حسابك، وتُفعّل العضوية بعد الموافقة."
+      ],
+      "en": [
+        "Creating an account and verifying your email are the first steps. Complete and submit your membership application, then follow its status in your account. Membership is activated after approval."
+      ]
+    },
+    "link": {
+      "href": "/dashboard",
+      "ar": "افتح حسابك",
+      "en": "Open your dashboard"
+    }
+  },
+  {
+    "id": "update-profile",
+    "category": "profile",
+    "q": {
+      "ar": "كيف أحدّث معلوماتي وروابط التواصل؟",
+      "en": "How do I update my profile and social links?"
+    },
+    "a": {
+      "ar": [
+        "افتح «ملفي الشخصي» من لوحة العضو، وحدّث نبذتك ودورك وروابطك ثم احفظ التغييرات. راجع خيار الظهور في الدليل قبل نشر معلوماتك."
+      ],
+      "en": [
+        "Open My profile from your member dashboard, update your bio, role and links, then save. Review directory visibility before sharing your information."
+      ]
+    },
+    "link": {
+      "href": "/dashboard/profile",
+      "ar": "تعديل الملف",
+      "en": "Edit your profile"
+    }
+  },
+  {
+    "id": "company-details",
+    "category": "profile",
+    "q": {
+      "ar": "أين أضيف شركتي وشعارها؟",
+      "en": "Where can I add my company and its logo?"
+    },
+    "a": {
+      "ar": [
+        "استخدم صفحة «إدارة الشركة» لإضافة بيانات الشركة وموقعها وشعارها. استخدم رابط الموقع الرسمي وشعارًا واضحًا، واحفظ التغييرات بعد المراجعة."
+      ],
+      "en": [
+        "Use Manage company to add company details, its website and logo. Use the official website and a clear logo, review your details and save the changes."
+      ]
+    },
+    "link": {
+      "href": "/dashboard/company",
+      "ar": "إدارة الشركة",
+      "en": "Manage company"
+    }
+  },
+  {
+    "id": "find-founders",
+    "category": "connect",
+    "q": {
+      "ar": "كيف أجد مؤسسين يناسبون اهتماماتي؟",
+      "en": "How can I find founders relevant to my interests?"
+    },
+    "a": {
+      "ar": [
+        "ابدأ من دليل المؤسسين وابحث بالاسم أو الشركة، ثم استخدم المرشحات المتاحة لتضييق النتائج. افتح الملف للتعرف على المؤسس قبل طلب التعارف."
+      ],
+      "en": [
+        "Start in the founder directory, search by name or company and use the available filters to narrow the results. Open a profile to learn about the founder before requesting an introduction."
+      ]
+    },
+    "link": {
+      "href": "/founders",
+      "ar": "استكشف المؤسسين",
+      "en": "Explore founders"
+    }
+  },
+  {
+    "id": "discovery-order",
+    "category": "content",
+    "q": {
+      "ar": "لماذا يتغير ترتيب بطاقات المؤسسين؟",
+      "en": "Why does the order of founder cards change?"
+    },
+    "a": {
+      "ar": [
+        "يتجدد ترتيب البطاقات عند زيارة الصفحة لتتعرف على أشخاص مختلفين. استخدم البحث للوصول إلى اسم محدد، أو انتقل إلى عرض جميع البطاقات لاستكشاف المزيد."
+      ],
+      "en": [
+        "The cards are reshuffled when you visit the page so you can discover different people. Search for a specific name or switch to the full card view to explore more."
+      ]
+    },
+    "link": {
+      "href": "/founders",
+      "ar": "تصفح البطاقات",
+      "en": "Browse cards"
+    }
+  },
+  {
+    "id": "newsletter-signup",
+    "category": "content",
+    "q": {
+      "ar": "كيف أشترك في نشرة وصول؟",
+      "en": "How do I subscribe to the Wosool newsletter?"
+    },
+    "a": {
+      "ar": [
+        "أدخل بريدك الإلكتروني في نموذج الاشتراك بالنشرة. افتح رسالة التأكيد واضغط رابط تأكيد الاشتراك لتصلك التحديثات. إذا لم تجد الرسالة، تحقق من مجلد الرسائل غير المرغوبة."
+      ],
+      "en": [
+        "Enter your email in the newsletter signup form. Open the confirmation email and follow its link to receive updates. Check your spam folder if the message does not arrive."
+      ]
+    },
+    "link": {
+      "href": "/newsletter",
+      "ar": "الاشتراك بالنشرة",
+      "en": "Subscribe to the newsletter"
+    }
+  },
+  {
+    "id": "newsletter-unsubscribe",
+    "category": "content",
+    "q": {
+      "ar": "كيف ألغي الاشتراك في النشرة؟",
+      "en": "How do I unsubscribe from the newsletter?"
+    },
+    "a": {
+      "ar": [
+        "استخدم رابط إلغاء الاشتراك في أسفل رسالة النشرة واتبع التأكيد على الصفحة. إلغاء النشرة لا يحذف حسابك في وصول."
+      ],
+      "en": [
+        "Use the unsubscribe link at the bottom of a newsletter email and follow the confirmation on the page. Unsubscribing does not delete your Wosool account."
+      ]
+    },
+    "link": {
+      "href": "/newsletter",
+      "ar": "صفحة النشرة",
+      "en": "Newsletter page"
+    }
+  },
+  {
+    "id": "calendar-events",
+    "category": "events",
+    "q": {
+      "ar": "كيف أضيف فعالية إلى تقويمي؟",
+      "en": "How do I add an event to my calendar?"
+    },
+    "a": {
+      "ar": [
+        "افتح تفاصيل الفعالية واستخدم خيار إضافتها إلى التقويم. راجع التاريخ والوقت والمنطقة الزمنية والموقع قبل الحضور؛ إضافة الموعد إلى التقويم لا تحل محل تسجيل الحضور."
+      ],
+      "en": [
+        "Open the event details and use the add-to-calendar option. Check the date, time, time zone and venue before attending; adding an event to your calendar does not replace registration."
+      ]
+    },
+    "link": {
+      "href": "/events",
+      "ar": "تصفح الفعاليات",
+      "en": "Browse events"
+    }
+  },
+  {
+    "id": "eo-network-profiles",
+    "category": "events",
+    "q": {
+      "ar": "أين أتعرف على أشخاص من شبكة EO؟",
+      "en": "Where can I meet people across the EO network?"
+    },
+    "a": {
+      "ar": [
+        "افتح صفحة المرشدين والمستشارين لاستكشاف الأشخاص حسب الاسم والفرع ومجال الخبرة. تعرض البطاقات الروابط المتاحة للتعرف على أعمالهم؛ لا تعني البطاقة وجود موعد إرشاد مؤكد."
+      ],
+      "en": [
+        "Open Mentors & advisors to explore people by name, chapter and expertise. Use the available profile links to learn about their work; a profile does not confirm a mentoring appointment."
+      ]
+    },
+    "link": {
+      "href": "/eoa/mentors",
+      "ar": "استكشف شبكة EO",
+      "en": "Explore the EO network"
+    }
+  },
+  {
+    "id": "report-issue",
+    "category": "account",
+    "q": {
+      "ar": "كيف أبلغ عن مشكلة في الموقع؟",
+      "en": "How do I report a problem with the website?"
+    },
+    "a": {
+      "ar": [
+        "اختر «دعم المؤسسين» في صفحة التواصل، وأرسل رابط الصفحة ووصف الخطوات التي سبقت المشكلة. اذكر نوع الجهاز والمتصفح، ولا ترسل كلمة المرور أو رمز التحقق."
+      ],
+      "en": [
+        "Choose Founder support on the contact page and include the page link and the steps that led to the problem. Mention your device and browser, and never send your password or verification code."
+      ]
+    },
+    "link": {
+      "href": "/contact?category=founder-support",
+      "ar": "تواصل مع الدعم",
+      "en": "Contact support"
+    }
+  },
 ]
 
 export const faqText = (item: FaqItem, locale: "ar" | "en") => ({

@@ -1,5 +1,5 @@
 'use client'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useLocale } from '@/lib/locale'
 import { api } from '@/lib/api'
 import { errorText } from '@/lib/eoa'
@@ -10,6 +10,10 @@ export function EoaContact() {
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState('')
   const [saved, setSaved] = useState(false)
+  const [subject, setSubject] = useState('')
+  useEffect(() => {
+    setSubject(new URLSearchParams(window.location.search).get('subject')?.slice(0, 220) ?? '')
+  }, [])
   return (
     <form
       onSubmit={async (e) => {
@@ -65,7 +69,7 @@ export function EoaContact() {
             </select>
           </Field>
           <Field label={ar ? 'الموضوع' : 'Subject'}>
-            <input name="subject" required maxLength={220} />
+            <input name="subject" required maxLength={220} value={subject} onChange={event => setSubject(event.target.value)} />
           </Field>
           <Field label={ar ? 'الرسالة' : 'Message'}>
             <textarea name="message" required maxLength={3000} />

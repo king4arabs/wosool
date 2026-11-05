@@ -50,6 +50,16 @@ jobs:
         run: npx playwright install --with-deps chromium
       - name: Verify admin CRM, PR, analytics and priorities
         run: node scripts/check-admin-operations.mjs
+      - name: Verify interactive FAQs in Arabic and English
+        run: node scripts/check-faq-experience.mjs
+      - name: Save FAQ browser previews
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: faq-experience-previews
+          path: /tmp/faq-*.png
+          retention-days: 3
+          if-no-files-found: ignore
       - name: Save admin browser review images
         if: always()
         uses: actions/upload-artifact@v4
