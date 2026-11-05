@@ -16,6 +16,12 @@ The owner-supplied team at `/eoa/leadership#program-lead` is presented in three 
 
 Fouad's portrait and Bashaier's monogram were supplied by the owner on 5 November 2026 and are stored under `frontend/public/wosool/leadership/`; Mohammed retains his existing portrait. The public team cards are maintained in `frontend/src/components/eoa/Leadership.tsx` with shared styles in `Leadership.module.css`. These presentation roles do not provision accounts, grant permissions or modify the separately managed board roster. The responsive CI check covers equal dimensions, desktop row/mobile stacking, image loading and profile links in Arabic/English across Chromium, Firefox and WebKit.
 
+### EO network discovery
+
+`/eoa/mentors#eo-global-network` contains 56 public profiles from the wider EO network. The 20 profiles added on 5 November 2026 use EO's official Global Speakers Academy profiles and locally optimized portraits. [Source notes](research/EO-NETWORK-EXPANSION-2026-11-05.md) record the profile and additional company references.
+
+Each page visit generates its own random seed after hydration. Search, network/expertise filters, language changes and carousel/grid toggles preserve that visit's order; a reload or a return through navigation creates a new order. All profiles remain available. The existing three-second rightward carousel, keyboard controls, pause behavior and reduced-motion support are retained. Network listings are separate from appointed cohort mentors.
+
 ## Architecture and setup
 
 The public partners page uses logo cards with bilingual service search. Existing API logo paths take priority; missing legacy logos resolve by exact official host through `frontend/src/lib/eoa-organizations.ts`. Monsha’at reuses the reviewed local asset with a frame around its visible artwork. NTDP uses its official mark from `https://ntdp.mcit.gov.sa/images/icons/mini-logo.svg`, and Cipher Ventures uses `https://www.cipherventures.sa/_next/static/media/logo-cipher.440f432d.png` (retrieved 5 November 2026). CODE is matched by its `/code` path so the ministry's own site keeps the MCIT logo. Uploaded administrator artwork is not overwritten, and relationship statuses are unchanged.
