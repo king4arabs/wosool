@@ -2,6 +2,14 @@
 
 For administrator account provisioning and email-verification requirements, see [registration QA](REGISTRATION-QA.md). For Accelerator-specific roles and decisions, see [EOA operations](EOA.md).
 
+## Find and manage services
+
+`/admin/services` is the searchable directory for every administration area. The desktop sidebar also searches Arabic and English names and service descriptions. The page header and mobile navigation keep the directory one step away. Service names, descriptions and routes share `frontend/src/lib/admin-navigation.ts`; add future services there so navigation stays consistent.
+
+The EOA administration page groups its available services into applications/participants, operations, content/partnerships and team/settings, with quick access to daily tasks. The menu includes only the capabilities already returned by the API; navigation never grants additional access.
+
+CRM and PR include a direct return to the service directory, clearable filters and readable touch controls. Unavailable stage counts display a dash while data loads. Existing version checks, private notes and save behavior are preserved.
+
 
 - The partner ecosystem shows bilingual search and the per-visit randomized rightward logo strip; category controls and the duplicate website directory are removed. Logos remain links to the organizations.
 - The founders hero reads “تعرف على مجتمع المؤسسين في شبكة وصول”. Verified registration plus admin approval publishes both founder and co-founder profiles and creates their initial scorecard, regardless of featured status or score. Public card and grid views share the same paginated API collection; email, phone and private scores remain excluded. Repeated approval is idempotent; revoked approval removes public visibility.

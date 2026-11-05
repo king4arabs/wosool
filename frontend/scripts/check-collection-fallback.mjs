@@ -57,13 +57,13 @@ try {
         await eventually(() => requests > 0)
         if (status === 503) await eventually(async () => await page.locator(selector).count() > 0)
         else {
-          if (path !== "/founders/fixture-founder" && status !== 200) await page.getByRole("button", { name: locale === "ar" ? "إعادة المحاولة" : path === "/news" ? "Retry live updates" : "Try again", exact: true }).filter({ visible: true }).first().waitFor()
+          if (path !== "/founders/fixture-founder" && status !== 200) await page.getByRole("button", { name: locale === "ar" ? "إعادة المحاولة" : "Try again", exact: true }).filter({ visible: true }).first().waitFor()
           await delay(100)
           assert.equal(await page.locator(selector).count(), 0, `${path}: ${status} must not restore snapshots`)
         }
         // A denial after an outage removes the snapshot; a later outage cannot restore it.
         if (status === 503 && path !== "/founders/fixture-founder") {
-          const retry = page.getByRole("button", { name: locale === "ar" ? "إعادة المحاولة" : path === "/news" ? "Retry live updates" : "Try again", exact: true }).filter({ visible: true }).first()
+          const retry = page.getByRole("button", { name: locale === "ar" ? "إعادة المحاولة" : "Try again", exact: true }).filter({ visible: true }).first()
           for (const next of [403, 503]) {
             const before = requests
             responseStatus = next

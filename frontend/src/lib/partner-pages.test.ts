@@ -35,10 +35,10 @@ test('unsafe partner links cannot render and official hotlinks deduplicate again
   assert.equal(items[1].website, undefined)
 })
 
-test('the homepage and EOA snapshots include the supplied Cipher artwork and local RDIA logo', () => {
+test('the homepage and EOA snapshots include local official Cipher artwork and local RDIA logo', () => {
   for (const partners of [communityPartnerLogos, acceleratorPartnerLogos]) {
     const logos = uniquePartnerLogos(partners)
-    assert.equal(logos.find(partner => partner.id === 'cipher-ventures')?.logo_path, 'https://github.com/user-attachments/assets/b9cb90be-b844-4ec2-b8a7-8612ae762ea9')
+    assert.equal(logos.find(partner => partner.id === 'cipher-ventures')?.logo_path, '/partners/cipher-ventures.png')
     assert.equal(logos.find(partner => partner.id === 'rdia')?.logo_path, '/partners/rdia.svg')
   }
 })

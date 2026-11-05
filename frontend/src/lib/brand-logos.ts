@@ -7,6 +7,7 @@ const darkCompanyLogos = new Set(companyLogos.filter(logo => logo.tone === 'dark
 // Resolve legacy API records to reviewed, local transparent artwork as well as
 // updating the editorial snapshots. This requires no production data migration.
 const transparentSources: Record<string, string> = {
+  'https://github.com/user-attachments/assets/b9cb90be-b844-4ec2-b8a7-8612ae762ea9': '/partners/cipher-ventures.png',
   'https://thegarage.sa/assets/images/logo/logo.png': '/partners/the-garage.png',
   'https://brand.misk.org.sa/wp-content/uploads/2025/06/Misk_P_H_RGB.svg': '/partners/misk.svg',
   'https://www.humain.com/content/dam/PIF-Humain/hero-logos/humain-logo.svg': '/partners/humain.svg',

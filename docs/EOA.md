@@ -18,6 +18,10 @@ Fouad's portrait and Bashaier's monogram were supplied by the owner on 5 Novembe
 
 ## Architecture and setup
 
+The public partners page uses logo cards with bilingual service search. Existing API logo paths take priority; missing legacy logos resolve by exact official host through `frontend/src/lib/eoa-organizations.ts`. Monsha’at reuses the reviewed local asset with a frame around its visible artwork. NTDP uses its official mark from `https://ntdp.mcit.gov.sa/images/icons/mini-logo.svg`, and Cipher Ventures uses `https://www.cipherventures.sa/_next/static/media/logo-cipher.440f432d.png` (retrieved 5 November 2026). CODE is matched by its `/code` path so the ministry's own site keeps the MCIT logo. Uploaded administrator artwork is not overwritten, and relationship statuses are unchanged.
+
+Public source-collection and review notes are kept out of the interface; functional eligibility guidance, source links and privacy controls remain available. The EOA footer provides concise links to program, eligibility, contact, privacy and the official EO pages.
+
 The October 9 integration repair makes this the authoritative operating guide. Older gateway writes are retired; legacy applications/events remain preserved and require reviewed transfer if present. See [integration and deployment notes](EOA-INTEGRATION-2026-10-09.md). Applicant data-rights requests are available in `/eoa/account`; existing administrators review them at `/admin/privacy-requests`, with audited status changes.
 
 The existing Next.js 16 / React 19 frontend, Cairo typography, locale provider, Laravel 13 API, Sanctum sessions and Spatie roles are reused. Public components are in `frontend/src/components/eoa`; routes are in `frontend/src/app/eoa`. The API is registered by `backend/routes/eoa.php` at `/api/v1/eoa`. Laravel controllers/services enforce authorization; UI visibility is not a security boundary.

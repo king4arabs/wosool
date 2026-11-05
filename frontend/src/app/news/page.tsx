@@ -83,7 +83,7 @@ function Newsroom({ params }: { params: SearchParamsLike }) {
         <button type="button" onClick={() => router.replace(pathname, { scroll: false })} className="min-h-11 text-sm font-bold text-[var(--link)]">{ar ? "مسح البحث" : "Clear search"}</button>
       </div>}
 
-      {collection.error && <div role="status" className="mb-6 rounded-xl border border-[var(--border-soft)] bg-[var(--surface)] p-4 text-sm text-[var(--text-muted)]"><p>{collection.snapshotAllowed ? ar ? "التحديث المباشر غير متاح. الأخبار المحفوظة تبقى متاحة للقراءة." : "Live updates are temporarily unavailable. Saved, sourced stories remain readable." : ar ? "تعذر تحميل الأخبار. لم تُضف أخبار من النسخة المحفوظة." : "Stories could not be loaded. No saved stories have been added."}</p><button onClick={collection.retry} className="mt-2 min-h-11 font-bold text-[var(--link)]">{ar ? "إعادة المحاولة" : "Retry live updates"}</button></div>}
+      {collection.error && <div role="status" className="mb-6 rounded-xl border border-[var(--border-soft)] bg-[var(--surface)] p-4 text-sm text-[var(--text-muted)]"><p>{collection.snapshotAllowed ? ar ? "تعذر تحديث الأخبار الآن. يمكنك متابعة قراءة الأخبار المتاحة." : "News could not be refreshed. You can still read the available stories." : ar ? "تعذر تحميل الأخبار. يرجى إعادة المحاولة." : "News could not be loaded. Please try again."}</p><button onClick={collection.retry} className="mt-2 min-h-11 font-bold text-[var(--link)]">{ar ? "إعادة المحاولة" : "Try again"}</button></div>}
 
       {lead && <div className="mb-8"><NewsCard item={lead} variant="lead" /></div>}
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">{shown.map(item => <NewsCard key={item.sourceUrl || item.slug} item={item} />)}</div>

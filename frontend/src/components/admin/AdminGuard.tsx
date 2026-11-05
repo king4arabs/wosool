@@ -21,16 +21,16 @@ export function AdminGuard({ children }: { children: React.ReactNode }) {
 
   if (isLoading) {
     return (
-      <div className="flex min-h-[50vh] items-center justify-center text-sm text-gray-500">
-        جاري تحميل لوحة الأدمن...
+      <div role="status" className="flex min-h-[50vh] items-center justify-center text-base text-slate-600">
+        {locale === 'ar' ? 'جارٍ تحميل لوحة الإدارة…' : 'Loading administration…'}
       </div>
     )
   }
 
   if (!isAdminUser(user)) {
     return (
-      <div className="flex min-h-[50vh] items-center justify-center text-sm text-gray-500">
-        جاري التحقق من الصلاحيات...
+      <div role="status" className="flex min-h-[50vh] items-center justify-center text-base text-slate-600">
+        {locale === 'ar' ? 'جارٍ التحقق من صلاحيات الوصول…' : 'Checking access permissions…'}
       </div>
     )
   }

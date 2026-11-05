@@ -4,6 +4,13 @@ import { readFileSync } from 'node:fs'
 
 const read = (relative: string) => readFileSync(new URL(relative, import.meta.url), 'utf8')
 
+test('public pages omit internal editorial notes while keeping useful source links and permissions', () => {
+  const pages = ['../components/eoa/Content.tsx', '../components/eoa/GlobalNetwork.tsx', '../components/eoa/LamarkaProfile.tsx', '../components/eoa/Eligibility.tsx', '../components/sections/StartupDirectory.tsx', '../components/sections/PublicProfile.tsx', './wiki.ts'].map(read).join('\n')
+  for (const phrase of ['Last recorded review', 'Local cohort model:', 'Figures and experience reported', 'Some sources still have businesses awaiting review', 'Automated feed discoveries enter', 'Public profile snapshot', 'Awaiting founder activation']) assert.ok(!pages.includes(phrase), phrase)
+  assert.ok(pages.includes('https://eonetwork.org/accelerator'))
+  assert.ok(pages.includes('founder.canCommunicate'))
+})
+
 test('home and founder discovery omit nonessential public instructions in both languages', () => {
   const home = read('../app/page.tsx')
   const founder = read('../components/sections/CommunityShowcase.tsx')

@@ -39,7 +39,7 @@ export function StartupDirectory({ compact = false }: { compact?: boolean }) {
   return <section className="mx-auto max-w-7xl px-4 py-16" aria-labelledby={compact ? 'startup-preview' : 'startup-heading'}>
     <p className="text-sm font-bold text-blue-700">{ar ? 'من السعودية إلى العالم' : 'From Saudi Arabia to the world'}</p>
     <Heading id={compact ? 'startup-preview' : 'startup-heading'} className="mt-3 text-3xl font-extrabold text-slate-900">{ar ? 'اكتشف الشركات ومؤسسيها' : 'Discover businesses and their founders'}</Heading>
-    <p className="mt-4 max-w-3xl text-slate-600 leading-relaxed">{ar ? 'شركات لها مواقع رسمية ودليل منشور على الإيرادات، مرتبة من السعودية إلى العالم. راجع المصدر والفترة في كل بطاقة؛ الإدراج لا يعني العضوية في وصول أو EO.' : 'Businesses with official websites and published revenue evidence, ordered from Saudi Arabia to the world. Check each card’s source and reporting period; inclusion does not imply Wosool or EO membership.'}</p>
+    <p className="mt-4 max-w-3xl text-slate-600 leading-relaxed">{ar ? 'استكشف الشركات ومؤسسيها حسب القطاع والمنطقة ومجال العمل.' : 'Explore businesses and their founders by sector, region and area of focus.'}</p>
     {!compact && <>
       <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
         <label className="flex min-w-0 flex-col gap-2 text-sm">{ar ? 'البحث' : 'Search'}<input type="search" maxLength={120} className={control} value={search} onChange={e=>setSearch(e.target.value)} placeholder={ar ? 'شركة، مؤسس أو مجال تركيز' : 'Company, founder or focus area'} /></label>
@@ -49,7 +49,6 @@ export function StartupDirectory({ compact = false }: { compact?: boolean }) {
         <label className="flex min-w-0 flex-col gap-2 text-sm">{ar ? 'الجهة أو الفعالية' : 'Program or event'}<select aria-label={ar ? 'الجهة أو الفعالية' : 'Program or event'} className={control} value={source} onChange={e=>setSource(e.target.value)}><option value="">{ar ? 'كل المصادر' : 'All sources'}</option>{sources.map(([key,en,arLabel])=><option key={key} value={key}>{ar?arLabel:en}</option>)}</select></label>
         {query && <button className="self-end min-h-12 px-4 text-blue-700 underline" onClick={clear}>{ar ? 'مسح الفلاتر' : 'Clear filters'}</button>}
       </div>
-      <p className="mt-4 text-sm text-slate-500">{ar ? 'التصنيف حسب المنتج أو الخدمة الأساسية. تتضمن الأدلة إفصاحات مالية وتصريحات منشورة؛ ليست جميع الأرقام مدققة. بعض الجهات لم تكتمل مراجعة شركاتها بعد.' : 'Categories reflect the primary offering. Evidence includes financial disclosures and published reports; figures are not all audited. Some sources still have businesses awaiting review.'}</p>
     </>}
     <CardBrowser key={query} items={collection.items.filter(p => isDirectoryRecordVisible({ country_code: p.country_code, location: p.country_en })).map(p=>({id:p.slug,content:<ProfileCard data={{
       company:p[`company_name_${lang}`],companyBrief:p[`company_brief_${lang}`],founder:p[`founder_name_${lang}`],

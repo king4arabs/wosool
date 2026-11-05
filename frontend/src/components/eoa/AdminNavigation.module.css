@@ -1,0 +1,19 @@
+.navigation { margin-bottom: 28px; min-width: 0; }
+.quickLinks { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 14px; }
+.quickLinks button, .quickLinks a { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; padding: 10px 16px; border: 1px solid var(--border); border-radius: 12px; background: var(--surface); color: var(--brand-navy); font-size: 14px; font-weight: 700; }
+.quickLinks [aria-pressed=true] { background: var(--brand-navy); color: white; border-color: var(--brand-navy); }
+.menu { border: 1px solid var(--border-soft); border-radius: 18px; background: var(--surface); }
+.menu summary { display: flex; align-items: center; justify-content: space-between; gap: 16px; min-height: 60px; padding: 16px 20px; cursor: pointer; list-style: none; color: var(--text-muted); font-size: 13px; }
+.menu summary::-webkit-details-marker { display: none; }
+.menu summary strong { display: block; margin-top: 4px; color: var(--brand-navy); font-size: 16px; }
+.menu[open] summary svg { transform: rotate(180deg); }
+.content { padding: 0 20px 20px; }
+.search { display: flex; align-items: center; gap: 10px; margin-bottom: 18px; padding: 0 14px; border: 1px solid var(--border); border-radius: 12px; }
+.search input { width: 100%; min-width: 0; min-height: 48px; border: 0; background: transparent; font-size: 16px; }
+.groups { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 20px; }
+.groups h2 { font-size: 14px; line-height: 1.7; margin-bottom: 10px; color: var(--text-muted); }
+.groups button { display: block; width: 100%; min-height: 44px; padding: 10px 12px; border-radius: 10px; text-align: start; font-size: 14px; line-height: 1.6; color: var(--brand-navy); }
+.groups button:hover, .groups [aria-pressed=true] { background: var(--surface-blue); color: var(--link); }
+.navigation :is(a,button,summary,input):focus-visible { outline: 3px solid var(--focus-ring); outline-offset: 3px; }
+@media(max-width:900px) { .groups { grid-template-columns: repeat(2,minmax(0,1fr)); } }
+@media(max-width:480px) { .groups { grid-template-columns: minmax(0,1fr); } .content { padding-inline: 16px; } }

@@ -16,14 +16,14 @@ export function LamarkaProfile({ ar }: { ar: boolean }) {
   ]
   const icons = [BrainCircuit, Rocket, Network]
   const programs = ar ? [
-    ['InspireU', 'STC', 'تصميم وتشغيل مسرّعة للأعمال الرقمية؛ يذكر الملف تخرّج أكثر من 70 شركة ناشئة.'],
+    ['InspireU', 'STC', 'تصميم وتشغيل مسرّعة للأعمال الرقمية دعمت تخرّج أكثر من 70 شركة ناشئة.'],
     ['Saudi Unicorns', 'الشركات عالية النمو', 'تصميم وتشغيل برنامج لمساندة الشركات الطامحة للوصول إلى مصاف الشركات المليارية.'],
     ['Multiverse', 'CODE', 'برنامج عالمي للابتكار والاستثمار يفتح قنوات للتواصل مع منظومات تقنية متقدمة.'],
     ['Sedrah', 'MEWA', 'تصميم وتشغيل برنامج لاحتضان وتسريع مشاريع التقنيات البيئية.'],
     ['Global Exposure', 'التعلم عبر الحدود', 'رحلات تعلم لقادة الاستثمار والابتكار حول الذكاء الاصطناعي والتقنيات العميقة والاستحواذات.'],
     ['Entrepreneurs Community', 'مجتمعات المؤسسين', 'تصميم برامج ومنتجات وعروض قيمة ونماذج شراكة تدعم استدامة المجتمعات الريادية.'],
   ] : [
-    ['InspireU', 'STC', 'Design and operation of a digital accelerator, with more than 70 startup graduates reported in the profile.'],
+    ['InspireU', 'STC', 'Design and operation of a digital accelerator supporting more than 70 startup graduates.'],
     ['Saudi Unicorns', 'HIGH-GROWTH VENTURES', 'A program designed and operated to support high-growth startups with unicorn ambitions.'],
     ['Multiverse', 'CODE', 'A global innovation and investment program connecting founders to advanced technology ecosystems.'],
     ['Sedrah', 'MEWA', 'Program design and operation for the incubation and acceleration of environmental technologies.'],
@@ -43,20 +43,19 @@ export function LamarkaProfile({ ar }: { ar: boolean }) {
     <dl className={styles.metrics}>
       {(ar ? [['2015', 'بداية دعم الشركات'], ['500+', 'شركة ناشئة دعمتها البرامج'], ['20', 'شركة ناشئة في المحفظة']] : [['2015', 'Supporting startups since'], ['500+', 'Startups supported through programs'], ['20', 'Startups in the portfolio']]).map(([value, label]) => <div key={value}><dt>{label}</dt><dd dir="ltr">{value}</dd></div>)}
     </dl>
-    <p className={styles.sourceNote}>{ar ? 'خبرات شريك التشغيل LAMARKA لخدمة الأفضل ل EOA' : 'Figures and experience reported in the LAMARKA Ventures profile supplied in October 2026.'}</p>
     <div className={styles.engines}>
       {engines.map(([title, label, detail], index) => {
         const Icon = icons[index]
         return <article key={title}><div className={styles.engineIcon}><Icon size={27} aria-hidden="true" /><span>0{index + 1}</span></div><span className={styles.eyebrow}>{label}</span><h3>{title}</h3><p>{detail}</p></article>
       })}
     </div>
-    <div className={styles.sectionHeading}><span className={styles.eyebrow}>{ar ? 'خبرات تشغيلية' : 'PROGRAM EXPERIENCE'}</span><h3>{ar ? 'برامج تجمع المؤسسين بالفرص' : 'Programs that connect founders with opportunity'}</h3><p>{ar ? 'نماذج مختارة من البرامج التي صممتها أو شغّلتها لاماركا، كما وردت في ملفها التعريفي.' : 'Selected programs LAMARKA has designed or operated, as presented in its company profile.'}</p></div>
+    <div className={styles.sectionHeading}><span className={styles.eyebrow}>{ar ? 'خبرات تشغيلية' : 'PROGRAM EXPERIENCE'}</span><h3>{ar ? 'برامج تجمع المؤسسين بالفرص' : 'Programs that connect founders with opportunity'}</h3><p>{ar ? 'تعرّف على خبرات لاماركا في تطوير الشركات الناشئة وتشغيل البرامج الريادية.' : 'Explore LAMARKA’s experience in startup development and entrepreneurial programs.'}</p></div>
     <div className={styles.programs}>
       {programs.map(([title, label, detail], index) => <article key={title}><span className={styles.programNumber}>0{index + 1}</span><div><span className={styles.eyebrow}>{label}</span><h4>{title}</h4><p>{detail}</p></div></article>)}
     </div>
     <div className={styles.globalReach}>
       <Globe2 size={34} aria-hidden="true" />
-      <div><h3>{ar ? 'منظومات عالمية. معرفة قابلة للتطبيق.' : 'Global ecosystems. Practical perspective.'}</h3><p>{ar ? 'من الوجهات التي يربط بها برنامج Multiverse المؤسسين، وفق ملف لاماركا:' : 'Ecosystems connected through Multiverse, as described in LAMARKA’s profile:'}</p><ul>{(ar ? ['وادي السيليكون', 'لندن', 'كوريا الجنوبية', 'سنغافورة'] : ['Silicon Valley', 'London', 'South Korea', 'Singapore']).map(place => <li key={place}>{place}</li>)}</ul></div>
+      <div><h3>{ar ? 'منظومات عالمية. معرفة قابلة للتطبيق.' : 'Global ecosystems. Practical perspective.'}</h3><p>{ar ? 'تواصل مع منظومات الابتكار العالمية من خلال برنامج Multiverse:' : 'Connect with global innovation ecosystems through Multiverse:'}</p><ul>{(ar ? ['وادي السيليكون', 'لندن', 'كوريا الجنوبية', 'سنغافورة'] : ['Silicon Valley', 'London', 'South Korea', 'Singapore']).map(place => <li key={place}>{place}</li>)}</ul></div>
     </div>
   </section>
 }

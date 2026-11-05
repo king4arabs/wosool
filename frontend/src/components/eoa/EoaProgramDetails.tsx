@@ -1,11 +1,13 @@
 'use client'
 
 import Link from 'next/link'
-import { ArrowUpRight, Building2, Handshake } from 'lucide-react'
+import { ArrowUpRight, Building2 } from 'lucide-react'
 import { FaqExplorer } from '@/components/sections/FaqExplorer'
 import type { FaqItem } from '@/data/faq'
 import { useLocale } from '@/lib/locale'
 import { eoaFaqs, safeEoaWebsite, type EoaEditorialProgram } from '@/lib/eoa-editorial'
+import { BrandLogo } from '@/components/ui/BrandLogo'
+import { eoaOrganizationLogo } from '@/lib/eoa-organizations'
 
 export function EoaProgramDetails({
   program,
@@ -37,6 +39,7 @@ export function EoaProgramDetails({
           <div className="eoa-container eoa-two-grid">
             <div>
               <span className="eoa-eyebrow">{ar ? 'الشريك المشغّل' : 'OPERATING PARTNER'}</span>
+              <div style={{ height: 90, maxWidth: 260, marginBottom: 24 }}><BrandLogo name={ar ? operator.name_ar : operator.name_en} website={operatorUrl} src={eoaOrganizationLogo({ website: operatorUrl })} /></div>
               <h2 id="eoa-operator-title">{ar ? operator.name_ar : operator.name_en}</h2>
               <p className="eoa-lead" style={{ whiteSpace: 'pre-line' }}>
                 {ar ? operator.description_ar : operator.description_en}
@@ -64,7 +67,7 @@ export function EoaProgramDetails({
                 const website = safeEoaWebsite(partner.website)
                 return (
                   <article key={partner.id} className="eoa-card">
-                    <Handshake size={24} aria-hidden="true" />
+                    <div style={{ height: 90, marginBottom: 24 }}><BrandLogo name={ar ? partner.name_ar : partner.name_en} website={partner.website} src={eoaOrganizationLogo(partner)} /></div>
                     {role && <span className="eoa-eyebrow">{role === 'operator' ? (ar ? 'الشريك المشغّل' : 'OPERATING PARTNER') : role === 'enabler' ? (ar ? 'الشريك الممكّن' : 'ENABLING PARTNER') : (ar ? 'الشريك الداعم' : 'SUPPORTING PARTNER')}</span>}
                     <h3>{ar ? partner.name_ar : partner.name_en}</h3>
                     <p style={{ whiteSpace: 'pre-line' }}>{ar ? partner.support_ar : partner.support_en}</p>
