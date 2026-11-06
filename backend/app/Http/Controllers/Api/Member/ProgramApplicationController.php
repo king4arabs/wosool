@@ -35,6 +35,7 @@ class ProgramApplicationController extends Controller
 
         // A program the member already applied to or joined is listed in its own tab, not recommended again.
         // The EO Riyadh Accelerator has its own verified application journey at /eoa.
+        $currentProgramIds = $participants->reject(fn (ProgramParticipant $participant) => $participant->status === 'dropped')->pluck('program_id')->unique()->values();
         $knownProgramIds = $applications->pluck('program_id')->merge($participants->pluck('program_id'))->unique()->values();
         $recommendedQuery = Program::query()
             ->where('is_open', true)
@@ -47,7 +48,8 @@ class ProgramApplicationController extends Controller
 
         return response()->json([
             'data' => [
-                'applied_programs' => $applications->map(fn (ProgramApplication $application) => [
+                // Once an application becomes a participation, the program is listed under enrolled or completed instead.
+                'applied_programs' => $applications->reject(fn (ProgramApplication $application) => $currentProgramIds->contains($application->program_id))->map(fn (ProgramApplication $application) => [
                     'id' => $application->id,
                     'status' => $application->status,
                     'submitted_at' => $application->created_at?->toIso8601String(),

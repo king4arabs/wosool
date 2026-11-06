@@ -39,6 +39,13 @@ test("the programs page renders from the dictionary and follows the member's lan
 test("statuses read in the member's language and unknown codes are never shown raw", () => {
   assert.equal(programStatusLabel("en", "pending_review"), "Under review")
   assert.equal(programStatusLabel("ar", "waitlisted"), "قائمة الانتظار")
+  // EO Riyadh Accelerator application states (AcceleratorGateway::TRANSITIONS) are labelled too.
+  for (const status of ["draft", "submitted", "under_review", "information_requested", "shortlisted", "waitlisted", "accepted", "declined", "onboarded"]) {
+    assert.notEqual(programStatusLabel("en", status), "Not set", status)
+    assert.notEqual(programStatusLabel("ar", status), "غير محدد", status)
+  }
+  assert.equal(programStatusLabel("en", "information_requested"), "More information requested")
+  assert.equal(applicationTone("declined"), "destructive")
   assert.equal(programStatusLabel("en", "some_new_code"), "Not set")
   assert.equal(programStatusLabel("ar", null), "غير محدد")
   assert.equal(applicationTone("accepted"), "success")

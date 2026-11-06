@@ -134,9 +134,11 @@ class ProgramApplicationTest extends TestCase
         foreach ([[$active, 'in_progress'], [$finished, 'completed'], [$dropped, 'dropped']] as [$program, $status]) {
             ProgramParticipant::create(['program_id' => $program->id, 'user_id' => $user->id, 'status' => $status]);
         }
-        $this->actingAs($user)->postJson("/api/v1/member/programs/{$applied->slug}/apply", [
-            'motivation' => 'I want to grow my company through this program.',
-        ])->assertCreated();
+        foreach ([$applied, $active] as $program) {
+            $this->actingAs($user)->postJson("/api/v1/member/programs/{$program->slug}/apply", [
+                'motivation' => 'I want to grow my company through this program.',
+            ])->assertCreated();
+        }
 
         $data = $this->actingAs($user)->getJson('/api/v1/member/programs/my-programs')->assertOk()->json('data');
 

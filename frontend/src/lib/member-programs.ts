@@ -59,8 +59,14 @@ export const memberProgramsCopy = {
     needsFollowUp: "بحاجة إلى متابعة",
     viewProgram: "عرض البرنامج",
     status: {
+      draft: "مسودة",
       submitted: "تم الإرسال",
       pending_review: "قيد المراجعة",
+      under_review: "قيد المراجعة",
+      information_requested: "مطلوب معلومات إضافية",
+      shortlisted: "في القائمة المختصرة",
+      declined: "غير مقبول",
+      onboarded: "اكتملت التهيئة",
       accepted: "مقبول",
       rejected: "غير مقبول",
       waitlisted: "قائمة الانتظار",
@@ -103,8 +109,14 @@ export const memberProgramsCopy = {
     needsFollowUp: "Needs follow-up",
     viewProgram: "View program",
     status: {
+      draft: "Draft",
       submitted: "Submitted",
       pending_review: "Under review",
+      under_review: "Under review",
+      information_requested: "More information requested",
+      shortlisted: "Shortlisted",
+      declined: "Not accepted",
+      onboarded: "Onboarding complete",
       accepted: "Accepted",
       rejected: "Not accepted",
       waitlisted: "Waiting list",
@@ -140,9 +152,9 @@ export function programStatusLabel(locale: DashboardLocale, status: string | nul
 export type BadgeTone = "success" | "warning" | "destructive" | "secondary"
 
 export function applicationTone(status: string | null | undefined): BadgeTone {
-  if (status === "accepted" || status === "enrolled") return "success"
-  if (status === "rejected") return "destructive"
-  if (status === "withdrawn") return "secondary"
+  if (status === "accepted" || status === "enrolled" || status === "onboarded") return "success"
+  if (status === "rejected" || status === "declined") return "destructive"
+  if (status === "withdrawn" || status === "draft") return "secondary"
   return "warning"
 }
 
