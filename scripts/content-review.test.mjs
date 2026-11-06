@@ -99,10 +99,17 @@ test('news parity, duplicate URL and publication guards are preserved', () => {
 test('checked-in report covers the exact frontend and importer catalog paths', async () => {
   const result = await loadContentReport()
   assert.deepEqual(result.problems, [])
+<<<<<<< HEAD
+  assert.deepEqual(result.totals, { founders: 343, companies: 186, news: 118 })
+  assert.equal(result.upcoming_reviews.length + result.reviews_due.length, 339)
+  assert.equal([...result.upcoming_reviews, ...result.reviews_due].filter(row => row.catalog === catalogs[1].backend).length, 100)
+  assert.equal([...result.upcoming_reviews, ...result.reviews_due].filter(row => row.catalog === catalogs[4].backend).length, 137)
+=======
   assert.deepEqual(result.totals, { founders: 345, companies: 187, news: 119 })
   assert.equal(result.upcoming_reviews.length + result.reviews_due.length, 345)
   assert.equal([...result.upcoming_reviews, ...result.reviews_due].filter(row => row.catalog === catalogs[1].backend).length, 100)
   assert.equal([...result.upcoming_reviews, ...result.reviews_due].filter(row => row.catalog === catalogs[4].backend).length, 139)
+>>>>>>> origin/main
   for (const [path, field, prefix] of [
     ['../frontend/src/lib/founder-spotlight.ts', 'frontend', 'founder-spotlight'],
     ['../backend/app/Services/FounderDirectoryImporter.php', 'backend', 'founder-directory'],
@@ -150,8 +157,15 @@ test('both CLI modes report full coverage from a different working directory', (
   const script = new URL('./content-review.mjs', import.meta.url)
   const check = spawnSync(process.execPath, [script.pathname, '--check'], { cwd: tmpdir(), encoding: 'utf8' })
   assert.equal(check.status, 0, check.stderr)
+<<<<<<< HEAD
+  assert.match(check.stdout, /343 founders, 186 companies, 118 stories/)
+  const review = spawnSync(process.execPath, [script.pathname], { cwd: tmpdir(), encoding: 'utf8' })
+  assert.equal(review.status, 0, review.stderr)
+  assert.equal(JSON.parse(review.stdout).totals.founders, 343)
+=======
   assert.match(check.stdout, /345 founders, 187 companies, 119 stories/)
   const review = spawnSync(process.execPath, [script.pathname], { cwd: tmpdir(), encoding: 'utf8' })
   assert.equal(review.status, 0, review.stderr)
   assert.equal(JSON.parse(review.stdout).totals.founders, 345)
+>>>>>>> origin/main
 })
