@@ -23,6 +23,8 @@ Community membership, Accelerator admission and administrator access are separat
 
 **Release snapshot (5 November 2026):** checked-in catalogs contain 339 founders, 185 company groups and 115 bilingual news briefs, with zero integrity problems and no founder reviews due. Member events now follow the active Arabic/English locale, distinguish confirmed, pending and waitlisted registrations, submit the required attendance format and no longer present a fixed recommendation score as personalized. The backend lock also carries Symfony's 7.4.23 security fixes. Required CI and the scheduled production smoke workflow are green, but the serving frontend/backend SHAs, authenticated journeys, security-patch deployment and production import state still require separate verification.
 
+**Editorial catalog update (6 November 2026):** source snapshots now contain **345 unclaimed/editorial founder profiles**, **187 company groups** and **119 bilingual news briefs** across byte-synchronized frontend/backend catalogs. This update adds four source-dated briefs (HUMAIN/CNTXT, Mamun, Journify and Kalepa), six founder profiles and two Mamun source/role refinements; see [reviewed evidence](docs/research/CONTENT-REFRESH-2026-11-06.md). It creates no user accounts, invitations, membership rights or production database records. CI, authenticated import, active Hostinger source SHA and live publication are **separate verification steps**; the previously working runtime/build baseline is unchanged.
+
 ## Architecture
 
 | Layer | Technology and responsibility |
