@@ -10,8 +10,9 @@ import countryProfiles from '../data/founder-spotlight-expansion-2026-10-29.json
 const rank: Record<string, number> = { saudi: 0, gcc: 1, mena: 2, global: 3 }
 const sourceProfiles = [...historicalProfiles, ...additionalProfiles, ...discoveryProfiles, ...countryProfiles]
   .sort((left, right) => (rank[left.region] ?? 4) - (rank[right.region] ?? 4))
-const originalCountryCohort = countryProfiles.filter(profile => profile.reviewed_at === '2026-10-29')
-const october30Additions = countryProfiles.filter(profile => profile.reviewed_at === '2026-10-30')
+// Historical batches retain their membership when an existing profile receives new verification dates.
+const originalCountryCohort = countryProfiles.slice(0, 102)
+const october30Additions = countryProfiles.slice(102, 110)
 import { getFounderSpotlights } from './founder-spotlight'
 
 test('public spotlights stay separate from member profiles and provide supported links', () => {
@@ -221,4 +222,20 @@ test('RABEH founder directory listing keeps original company imagery and never c
   assert.ok(rabeh.source_urls.includes(rabeh.source_url))
   assert.equal(rabeh.traction_en, null)
   assert.ok(!('user_id' in rabeh) && !('email' in rabeh) && !('isVerified' in rabeh) && !('member' in rabeh))
+})
+
+test('6 November founder additions are source-linked, unclaimed and do not duplicate people', () => {
+  const newSlugs = ['mamun-ahmed-al-issaei', 'journify-taoufik-el-jamali', 'journify-amine-chouki', 'journify-omar-al-shoubaki']
+  const newRows = countryProfiles.filter(profile => newSlugs.includes(profile.slug))
+  assert.equal(newRows.length, 4)
+  for (const profile of newRows) {
+    assert.equal(profile.reviewed_at, '2026-11-06')
+    assert.ok(profile.source_urls.includes(profile.source_url))
+    assert.equal(profile.portrait_url, null)
+    assert.ok(!('member' in profile) && !('email' in profile) && !('user_id' in profile))
+    assert.ok(!('isVerified' in profile))
+  }
+  const mamun = countryProfiles.find(profile => profile.slug === 'mamun-mohammed-al-tamami')!
+  assert.equal(mamun.role_en, 'Co-founder & CCO')
+  assert.equal(mamun.reviewed_at, '2026-11-06')
 })
