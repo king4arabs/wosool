@@ -50,7 +50,7 @@ test('frontend source snapshots and database import share the same reviewed reco
   assert.equal(new Set(originalCountryCohort.map(profile => profile.country_code)).size, 51)
   for (const code of new Set(originalCountryCohort.map(profile => profile.country_code))) assert.equal(originalCountryCohort.filter(profile => profile.country_code === code).length, 2, code)
   assert.equal(new Set(sourceProfiles.map(profile => profile.company_key)).size, 185)
-  assert.equal(sourceProfiles.length, 339)
+  assert.equal(sourceProfiles.length, 345)
   assert.equal(new Set(sourceProfiles.map(profile => profile.founder_name_en.toLowerCase())).size, sourceProfiles.length)
   assert.equal(new Set(sourceProfiles.map(profile => profile.slug)).size, sourceProfiles.length)
   assert.ok(sourceProfiles.every(profile => profile.source_urls.length > 0 && profile.reviewed_at))
