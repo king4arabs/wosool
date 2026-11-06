@@ -33,7 +33,13 @@ class ProgramApplicationController extends Controller
             ->orderByDesc('updated_at')
             ->get();
 
-        $recommendedQuery = Program::query()->where('is_open', true);
+        // A program the member already applied to or joined is listed in its own tab, not recommended again.
+        // The EO Riyadh Accelerator has its own verified application journey at /eoa.
+        $knownProgramIds = $applications->pluck('program_id')->merge($participants->pluck('program_id'))->unique()->values();
+        $recommendedQuery = Program::query()
+            ->where('is_open', true)
+            ->where('slug', '!=', AcceleratorGateway::SLUG)
+            ->whereNotIn('id', $knownProgramIds);
         if (Schema::hasColumn('programs', 'language')) {
             $recommendedQuery->where('language', 'ar');
         }
@@ -47,7 +53,8 @@ class ProgramApplicationController extends Controller
                     'submitted_at' => $application->created_at?->toIso8601String(),
                     'program' => new ProgramResource($application->program),
                 ])->values(),
-                'enrolled_programs' => $participants->map(function (ProgramParticipant $participant): array {
+                // Finished and dropped participations are not current enrolments; completed ones have their own list.
+                'enrolled_programs' => $participants->reject(fn (ProgramParticipant $participant) => in_array($participant->status, ['completed', 'dropped'], true))->map(function (ProgramParticipant $participant): array {
                     $nextSession = ProgramSession::query()
                         ->where('program_id', $participant->program_id)
                         ->when($participant->cohort_id, fn ($q) => $q->where(function ($inner) use ($participant) {

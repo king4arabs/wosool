@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\Program;
+use App\Models\ProgramParticipant;
 use App\Models\User;
 use Database\Seeders\RoleAndPermissionSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -118,5 +119,30 @@ class ProgramApplicationTest extends TestCase
         $response = $this->actingAs($user)->getJson('/api/v1/member/program-applications');
         $response->assertOk();
         $this->assertCount(1, $response->json('data'));
+    }
+
+    public function test_my_programs_lists_each_participation_once_and_recommends_only_new_programs(): void
+    {
+        $user = User::factory()->member()->create();
+        $active = $this->makeProgram(['name' => 'Active']);
+        $finished = $this->makeProgram(['name' => 'Finished']);
+        $dropped = $this->makeProgram(['name' => 'Dropped']);
+        $applied = $this->makeProgram(['name' => 'Applied']);
+        $fresh = $this->makeProgram(['name' => 'Fresh']);
+        $this->makeProgram(['name' => 'Accelerator', 'slug' => 'eo-riyadh-accelerator']);
+
+        foreach ([[$active, 'in_progress'], [$finished, 'completed'], [$dropped, 'dropped']] as [$program, $status]) {
+            ProgramParticipant::create(['program_id' => $program->id, 'user_id' => $user->id, 'status' => $status]);
+        }
+        $this->actingAs($user)->postJson("/api/v1/member/programs/{$applied->slug}/apply", [
+            'motivation' => 'I want to grow my company through this program.',
+        ])->assertCreated();
+
+        $data = $this->actingAs($user)->getJson('/api/v1/member/programs/my-programs')->assertOk()->json('data');
+
+        $this->assertSame(['Active'], array_column(array_column($data['enrolled_programs'], 'program'), 'name'));
+        $this->assertSame(['Finished'], array_column(array_column($data['completed_programs'], 'program'), 'name'));
+        $this->assertSame(['Applied'], array_column(array_column($data['applied_programs'], 'program'), 'name'));
+        $this->assertSame([$fresh->id], array_column($data['recommended_programs'], 'id'));
     }
 }

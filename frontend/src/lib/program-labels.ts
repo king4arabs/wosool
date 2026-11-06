@@ -91,6 +91,13 @@ export function programDurationLabel(duration: string, locale: Locale): string {
   return `${count} ${unit.many}`
 }
 
+/** Program name in the selected language: the installed accelerator has an Arabic name; everything else is shown as entered. */
+export function programName(slug: string, name: string, locale: Locale): string {
+  const installed = locale === "ar" ? INSTALLED_PROGRAM_ARABIC[slug] : undefined
+  if (!installed) return name
+  return name.trim() === installed.name[0] ? installed.name[1] : name
+}
+
 /** Card-ready program in the selected language. `category` keeps its code so filtering stays stable. */
 export function localizeApiProgram(program: Program, locale: Locale): Program {
   const installed = locale === "ar" ? INSTALLED_PROGRAM_ARABIC[program.slug] : undefined
