@@ -164,3 +164,23 @@ test('RABEH public briefs do not contain internal membership review notes', () =
   assert.doesNotMatch(award.content, /membership in Wosool/i)
   assert.doesNotMatch(award.translations!.ar.body.join(' '), /عضوية وصول/)
 })
+
+
+test('6 November news briefs retain primary source dates, bilingual facts and safe image fallbacks', () => {
+  for (const [slug, date, region] of [
+    ['humain-cntxt-enterprise-ai-platform-november-2026', '2026-11-03', 'saudi'],
+    ['mamun-oman-three-million-seed-november-2026', '2026-11-04', 'gcc'],
+    ['journify-twelve-million-series-a-november-2026', '2026-11-03', 'gcc'],
+    ['kalepa-75-million-series-b-november-2026', '2026-11-05', 'global'],
+  ] as const) {
+    const item = curatedNews.find(story => story.slug === slug)!
+    assert.ok(item, slug)
+    assert.equal(item.publishedAt, date)
+    assert.equal(item.region, region)
+    assert.equal(item.imageUrl, '')
+    assert.equal(item.keyFacts?.length, 3)
+    assert.equal(item.translations?.ar.keyFacts?.length, 3)
+    assert.ok(safeNewsUrl(item.sourceUrl))
+    assert.ok(item.content && item.translations?.ar.body[0])
+  }
+})
