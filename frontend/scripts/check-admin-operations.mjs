@@ -87,6 +87,8 @@ try {
       assert.equal(await menu.getByRole('link').count(), 1)
       await audit('mobile-menu')
       await page.keyboard.press('Escape')
+      // Radix restores focus after the dialog's close animation; assert the settled state.
+      await page.waitForFunction(() => document.activeElement === document.querySelector('button[aria-haspopup="dialog"]'))
       assert.equal(await trigger.evaluate(element => element === document.activeElement), true, 'Menu returns focus to its trigger')
     }
     await page.goto(origin + '/eoa/admin', { waitUntil: 'networkidle' })

@@ -23,6 +23,8 @@ Community membership, Accelerator admission and administrator access are separat
 
 **Editorial catalog snapshot (6 November 2026):** 343 founders, 186 company groups and 118 bilingual news briefs in synchronized frontend/backend sources. This refresh adds sourced CNTXT/HUMAIN, mamun and Journify announcements, four unclaimed founder profiles and two mamun source/role corrections. No accounts, invitations, membership states or private information changed. Publication depends on independent CI, approved backend import and Hostinger release/served SHA verification; repository updates alone do not establish live deployment.
 
+**Editorial catalog update (6 November 2026):** source snapshots now contain **345 unclaimed/editorial founder profiles**, **187 company groups** and **119 bilingual news briefs** across byte-synchronized frontend/backend catalogs. This update adds four source-dated briefs (HUMAIN/CNTXT, Mamun, Journify and Kalepa), six founder profiles and two Mamun source/role refinements; see [reviewed evidence](docs/research/CONTENT-REFRESH-2026-11-06.md). It creates no user accounts, invitations, membership rights or production database records. CI, authenticated import, active Hostinger source SHA and live publication are **separate verification steps**; the previously working runtime/build baseline is unchanged.
+
 ## Architecture
 
 | Layer | Technology and responsibility |
