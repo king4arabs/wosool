@@ -718,12 +718,8 @@
     "source_urls": [
       "https://www.wamda.com/2024/05/numa-partners-mamun-freelancers-access-finance",
       "https://www.mamun.om/",
-<<<<<<< HEAD
-      "https://phazeventures.com/phaze-ventures-invests-in-mamun"
-=======
       "https://phazeventures.com/phaze-ventures-invests-in-mamun",
       "https://www.omanobserver.om/article/1199115/business/economy/omans-mamun-reaches-20m-financing-milestone"
->>>>>>> origin/main
     ],
     "region": "gcc",
     "founded_year": 2019,
@@ -735,17 +731,10 @@
     "slug": "mamun-mohammed-al-tamami",
     "founder_name_en": "Mohammed Al Tamami",
     "founder_name_ar": "محمد التميمي",
-<<<<<<< HEAD
-    "role_en": "Co-founder & CCO",
-    "role_ar": "شريك مؤسس ورئيس الشؤون التجارية",
-    "founder_brief_en": "Co-founder and chief commercial officer of mamun's trade-finance platform.",
-    "founder_brief_ar": "شريك مؤسس ورئيس الشؤون التجارية في منصة «مأمون» لتمويل التجارة.",
-=======
     "role_en": "Co-founder & Chief Commercial Officer",
     "role_ar": "شريك مؤسس والرئيس التنفيذي للشؤون التجارية",
     "founder_brief_en": "Mohammed Al Tamami co-founded Mamun, omani fintech working on digital financing and trade-finance solutions.",
     "founder_brief_ar": "ساهم في تأسيس مأمون، تقنية مالية عُمانية تعمل على التمويل الرقمي وحلول تمويل التجارة.",
->>>>>>> origin/main
     "company_name_en": "Mamun",
     "company_name_ar": "مأمون",
     "company_brief_en": "Omani fintech working on digital financing and trade-finance solutions.",
@@ -765,12 +754,8 @@
     "source_urls": [
       "https://www.wamda.com/2024/05/numa-partners-mamun-freelancers-access-finance",
       "https://www.mamun.om/",
-<<<<<<< HEAD
-      "https://phazeventures.com/phaze-ventures-invests-in-mamun"
-=======
       "https://phazeventures.com/phaze-ventures-invests-in-mamun",
       "https://www.omanobserver.om/article/1199115/business/economy/omans-mamun-reaches-20m-financing-milestone"
->>>>>>> origin/main
     ],
     "region": "gcc",
     "founded_year": 2019,
@@ -4594,24 +4579,6 @@
     "traction_source_url": null
   },
   {
-<<<<<<< HEAD
-    "slug": "mamun-ahmed-al-issaei",
-    "founder_name_en": "Ahmed Al-Issaei",
-    "founder_name_ar": "أحمد العيسائي",
-    "role_en": "Co-founder & CTO",
-    "role_ar": "شريك مؤسس ومدير التقنية",
-    "founder_brief_en": "Co-founded mamun and leads its Shariah-compliant trade-finance technology.",
-    "founder_brief_ar": "شارك في تأسيس «مأمون» ويقود التقنية لمنصة تمويل التجارة المتوافقة مع الشريعة.",
-    "company_name_en": "Mamun",
-    "company_name_ar": "مأمون",
-    "company_brief_en": "Omani fintech connecting businesses with investors for cross-border trade finance.",
-    "company_brief_ar": "تقنية مالية عُمانية تربط الشركات بالمستثمرين لتمويل التجارة عبر الحدود.",
-    "country_en": "Oman",
-    "country_ar": "عُمان",
-    "country_code": "OM",
-    "sector_en": "Fintech",
-    "sector_ar": "التقنية المالية",
-=======
     "slug": "ahmed-al-issaei-mamun",
     "founder_name_en": "Ahmed Al-Issaei",
     "founder_name_ar": "أحمد العيسائي",
@@ -4628,53 +4595,11 @@
     "country_code": "OM",
     "sector_en": "Fintech · Trade finance",
     "sector_ar": "التقنية المالية · تمويل التجارة",
->>>>>>> origin/main
     "website": "https://www.mamun.om/",
     "portrait_url": null,
     "logo_url": "/company-logos/mamun.png",
     "founder_socials": [],
     "source_url": "https://phazeventures.com/phaze-ventures-invests-in-mamun",
-<<<<<<< HEAD
-    "source_urls": [
-      "https://phazeventures.com/phaze-ventures-invests-in-mamun",
-      "https://www.mamun.om/"
-    ],
-    "reviewed_at": "2026-11-06",
-    "company_key": "mamun",
-    "region": "gcc",
-    "founded_year": 2019,
-    "traction_en": null,
-    "traction_ar": null,
-    "traction_source_url": null
-  },
-  {
-    "company_name_en": "Journify",
-    "company_name_ar": "جورنيفاي",
-    "company_brief_en": "Privacy-first advertising data infrastructure delivering trustworthy conversion signals.",
-    "company_brief_ar": "بنية بيانات إعلانية تراعي الخصوصية وتقدم إشارات تحويل موثوقة.",
-    "country_en": "United States",
-    "country_ar": "الولايات المتحدة",
-    "country_code": "US",
-    "sector_en": "Advertising data infrastructure",
-    "sector_ar": "بنية بيانات الإعلانات",
-    "website": "https://www.journify.io/",
-    "portrait_url": null,
-    "logo_url": null,
-    "founder_socials": [],
-    "source_url": "https://www.journify.io/about/",
-    "source_urls": [
-      "https://www.journify.io/about/",
-      "https://www.journify.io/resources/journify-raises-12m-series-a/"
-    ],
-    "reviewed_at": "2026-11-06",
-    "company_key": "journify",
-    "region": "global",
-    "founded_year": null,
-    "traction_en": "Company reports more than 100 business customers in November 2026; not a revenue figure.",
-    "traction_ar": "تذكر الشركة أكثر من 100 عميل تجاري في نوفمبر 2026؛ هذا ليس رقماً للإيرادات.",
-    "traction_source_url": "https://www.journify.io/resources/journify-raises-12m-series-a/",
-    "slug": "journify-taoufik-el-jamali",
-=======
     "reviewed_at": "2026-11-06",
     "company_key": "mamun",
     "source_urls": [
@@ -4690,26 +4615,10 @@
   },
   {
     "slug": "taoufik-el-jamali-journify",
->>>>>>> origin/main
     "founder_name_en": "Taoufik El Jamali",
     "founder_name_ar": "توفيق الجمالي",
     "role_en": "Co-founder & CEO",
     "role_ar": "شريك مؤسس ورئيس تنفيذي",
-<<<<<<< HEAD
-    "founder_brief_en": "Co-founded Journify and leads its advertising data infrastructure business.",
-    "founder_brief_ar": "شارك في تأسيس «جورنيفاي» ويقود أعمالها في بنية بيانات الإعلانات."
-  },
-  {
-    "company_name_en": "Journify",
-    "company_name_ar": "جورنيفاي",
-    "company_brief_en": "Privacy-first advertising data infrastructure delivering trustworthy conversion signals.",
-    "company_brief_ar": "بنية بيانات إعلانية تراعي الخصوصية وتقدم إشارات تحويل موثوقة.",
-    "country_en": "United States",
-    "country_ar": "الولايات المتحدة",
-    "country_code": "US",
-    "sector_en": "Advertising data infrastructure",
-    "sector_ar": "بنية بيانات الإعلانات",
-=======
     "founder_brief_en": "Co-founded Journify in 2022, building advertising signal infrastructure serving brands across the GCC and international markets.",
     "founder_brief_ar": "شارك في تأسيس جورنيفي عام 2022 لتطوير بنية إشارات الإعلانات لخدمة العلامات التجارية في الخليج والأسواق الدولية.",
     "company_name_en": "Journify",
@@ -4721,43 +4630,11 @@
     "country_code": "AE",
     "sector_en": "Marketing technology · Data infrastructure",
     "sector_ar": "التقنية التسويقية · بنية البيانات",
->>>>>>> origin/main
     "website": "https://www.journify.io/",
     "portrait_url": null,
     "logo_url": null,
     "founder_socials": [],
     "source_url": "https://www.journify.io/about/",
-<<<<<<< HEAD
-    "source_urls": [
-      "https://www.journify.io/about/",
-      "https://www.journify.io/resources/journify-raises-12m-series-a/"
-    ],
-    "reviewed_at": "2026-11-06",
-    "company_key": "journify",
-    "region": "global",
-    "founded_year": null,
-    "traction_en": "Company reports more than 100 business customers in November 2026; not a revenue figure.",
-    "traction_ar": "تذكر الشركة أكثر من 100 عميل تجاري في نوفمبر 2026؛ هذا ليس رقماً للإيرادات.",
-    "traction_source_url": "https://www.journify.io/resources/journify-raises-12m-series-a/",
-    "slug": "journify-amine-chouki",
-    "founder_name_en": "Amine Chouki",
-    "founder_name_ar": "أمين شوقي",
-    "role_en": "Co-founder & CTO",
-    "role_ar": "شريك مؤسس ومدير التقنية",
-    "founder_brief_en": "Co-founder and CTO who designed Journify's customer event pipeline.",
-    "founder_brief_ar": "شريك مؤسس ومدير التقنية صمم منظومة معالجة أحداث العملاء لدى «جورنيفاي»."
-  },
-  {
-    "company_name_en": "Journify",
-    "company_name_ar": "جورنيفاي",
-    "company_brief_en": "Privacy-first advertising data infrastructure delivering trustworthy conversion signals.",
-    "company_brief_ar": "بنية بيانات إعلانية تراعي الخصوصية وتقدم إشارات تحويل موثوقة.",
-    "country_en": "United States",
-    "country_ar": "الولايات المتحدة",
-    "country_code": "US",
-    "sector_en": "Advertising data infrastructure",
-    "sector_ar": "بنية بيانات الإعلانات",
-=======
     "reviewed_at": "2026-11-06",
     "company_key": "journify",
     "source_urls": [
@@ -4788,32 +4665,11 @@
     "country_code": "AE",
     "sector_en": "Marketing technology · Data infrastructure",
     "sector_ar": "التقنية التسويقية · بنية البيانات",
->>>>>>> origin/main
     "website": "https://www.journify.io/",
     "portrait_url": null,
     "logo_url": null,
     "founder_socials": [],
     "source_url": "https://www.journify.io/about/",
-<<<<<<< HEAD
-    "source_urls": [
-      "https://www.journify.io/about/",
-      "https://www.journify.io/resources/journify-raises-12m-series-a/"
-    ],
-    "reviewed_at": "2026-11-06",
-    "company_key": "journify",
-    "region": "global",
-    "founded_year": null,
-    "traction_en": "Company reports more than 100 business customers in November 2026; not a revenue figure.",
-    "traction_ar": "تذكر الشركة أكثر من 100 عميل تجاري في نوفمبر 2026؛ هذا ليس رقماً للإيرادات.",
-    "traction_source_url": "https://www.journify.io/resources/journify-raises-12m-series-a/",
-    "slug": "journify-omar-al-shoubaki",
-    "founder_name_en": "Omar Al Shoubaki",
-    "founder_name_ar": "عمر الشوبكي",
-    "role_en": "Co-founder & CRO",
-    "role_ar": "شريك مؤسس ورئيس الإيرادات",
-    "founder_brief_en": "Co-founder and chief revenue officer specializing in performance marketing.",
-    "founder_brief_ar": "شريك مؤسس ورئيس الإيرادات متخصص في التسويق القائم على الأداء."
-=======
     "reviewed_at": "2026-11-06",
     "company_key": "journify",
     "source_urls": [
@@ -4931,6 +4787,5 @@
     "traction_en": "US$75M Series B at US$470M valuation, announced November 2026; valuation is not revenue.",
     "traction_ar": "جولة السلسلة ب بقيمة 75 مليون دولار بتقييم 470 مليون دولار في نوفمبر 2026؛ التقييم ليس إيرادات.",
     "traction_source_url": "https://www.reuters.com/legal/transactional/ai-powered-insurance-startup-kalepa-valued-470-million-new-funding-round-2026-11-05/"
->>>>>>> origin/main
   }
 ]

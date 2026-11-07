@@ -11,8 +11,10 @@ const rank: Record<string, number> = { saudi: 0, gcc: 1, mena: 2, global: 3 }
 const sourceProfiles = [...historicalProfiles, ...additionalProfiles, ...discoveryProfiles, ...countryProfiles]
   .sort((left, right) => (rank[left.region] ?? 4) - (rank[right.region] ?? 4))
 // Historical batches retain their membership when an existing profile receives new verification dates.
-const originalCountryCohort = countryProfiles.slice(0, 102)
-const october30Additions = countryProfiles.slice(102, 110)
+// Cohort boundaries are source-linked, not array positions: editorial entries can be prepended.
+const originalCountryCohort = countryProfiles.filter(profile => profile.reviewed_at === '2026-10-29'
+  || ['mamun-saleh-al-tamami', 'mamun-mohammed-al-tamami'].includes(profile.slug))
+const october30Additions = countryProfiles.filter(profile => profile.reviewed_at === '2026-10-30')
 import { getFounderSpotlights } from './founder-spotlight'
 
 test('public spotlights stay separate from member profiles and provide supported links', () => {
@@ -45,22 +47,13 @@ test('frontend source snapshots and database import share the same reviewed reco
   assert.equal(discoveryProfiles.length, 62)
   const databaseCountry = JSON.parse(readFileSync(new URL('../../../backend/resources/data/founder-directory-expansion-2026-10-29.json', import.meta.url), 'utf8'))
   assert.deepEqual(databaseCountry, countryProfiles)
-<<<<<<< HEAD
-  assert.equal(countryProfiles.length, 137)
-=======
   assert.equal(countryProfiles.length, 139)
->>>>>>> origin/main
   assert.equal(originalCountryCohort.length, 102)
   assert.equal(october30Additions.length, 8)
   assert.equal(new Set(originalCountryCohort.map(profile => profile.country_code)).size, 51)
   for (const code of new Set(originalCountryCohort.map(profile => profile.country_code))) assert.equal(originalCountryCohort.filter(profile => profile.country_code === code).length, 2, code)
-<<<<<<< HEAD
-  assert.equal(new Set(sourceProfiles.map(profile => profile.company_key)).size, 186)
-  assert.equal(sourceProfiles.length, 343)
-=======
   assert.equal(new Set(sourceProfiles.map(profile => profile.company_key)).size, 187)
   assert.equal(sourceProfiles.length, 345)
->>>>>>> origin/main
   assert.equal(new Set(sourceProfiles.map(profile => profile.founder_name_en.toLowerCase())).size, sourceProfiles.length)
   assert.equal(new Set(sourceProfiles.map(profile => profile.slug)).size, sourceProfiles.length)
   assert.ok(sourceProfiles.every(profile => profile.source_urls.length > 0 && profile.reviewed_at))
@@ -234,9 +227,10 @@ test('RABEH founder directory listing keeps original company imagery and never c
 })
 
 test('6 November founder additions are source-linked, unclaimed and do not duplicate people', () => {
-  const newSlugs = ['mamun-ahmed-al-issaei', 'journify-taoufik-el-jamali', 'journify-amine-chouki', 'journify-omar-al-shoubaki']
+  const newSlugs = ['ahmed-al-issaei-mamun', 'taoufik-el-jamali-journify', 'amine-chouki-journify',
+    'omar-al-shoubaki-journify', 'paul-monasterio-kalepa', 'daniel-hillman-kalepa']
   const newRows = countryProfiles.filter(profile => newSlugs.includes(profile.slug))
-  assert.equal(newRows.length, 4)
+  assert.equal(newRows.length, 6)
   for (const profile of newRows) {
     assert.equal(profile.reviewed_at, '2026-11-06')
     assert.ok(profile.source_urls.includes(profile.source_url))
@@ -245,6 +239,6 @@ test('6 November founder additions are source-linked, unclaimed and do not dupli
     assert.ok(!('isVerified' in profile))
   }
   const mamun = countryProfiles.find(profile => profile.slug === 'mamun-mohammed-al-tamami')!
-  assert.equal(mamun.role_en, 'Co-founder & CCO')
+  assert.equal(mamun.role_en, 'Co-founder & Chief Commercial Officer')
   assert.equal(mamun.reviewed_at, '2026-11-06')
 })

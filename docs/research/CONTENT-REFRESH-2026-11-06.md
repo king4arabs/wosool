@@ -1,22 +1,3 @@
-<<<<<<< HEAD
-# Wosool editorial source refresh — 6 November 2026
-
-Repository-only source update; no account activation, membership, invitation, partnership, database import or live deployment is implied.
-
-## Verified primary sources
-
-- Saudi Arabia: CNTXT's 3 November 2026 announcement that it joined HUMAIN: https://cntxt.com/news/cntxt-joins-humain-adding-enterprise-ai-cloud-data-and-technology-services-capabilities-proprietary-solutions-and-a-broad-customer-base-to-humains-growing-platform/. Context from Wamda dated 4 November 2026: https://www.wamda.com/2026/11/humain-acquires-saudi-tech-firm-cntxt-expand-enterprise-ai-services. The primary announcement does not state transaction value or ownership shares.
-- Oman: Phaze Ventures investor announcement, 4 November 2026: https://phazeventures.com/phaze-ventures-invests-in-mamun. Wamda corroboration: https://www.wamda.com/2026/11/oman-mamun-secures-3-million-expand-gulf-asia-trade-financing. Confirms $3m seed capital and all three mamun founders' roles. Seed capital is not business revenue.
-- Global/GCC: Journify official 3 November 2026 announcement: https://www.journify.io/resources/journify-raises-12m-series-a/. Official leadership roles: https://www.journify.io/about/. Wamda: https://www.wamda.com/2026/11/journify-raises-12-million-fourfold-valuation-increase. 100+ customers is a company-reported customer count, not revenue. Older founding-year sources conflict; no founded year was asserted.
-
-## Editorial control and publication boundary
-
-Synchronized frontend/backend catalogs contain **343 founder records, 186 company groups and 118 bilingual news briefs**. Four new editorial founder profiles and two mamun role/primary-source corrections. Global slug, name and canonical story source URL duplication checks passed during preparation; article dates match primary source publication dates.
-
-Existing locally stored, reviewed CNTXT and mamun logos were reused with attribution. Journify uses the existing fallback treatment rather than an unlicensed portrait or logo. No public AI-generation, sourcing process or review-process notes were added; this record is internal documentation.
-
-The founder importer preserves existing database edits, tombstones, real member states and account boundaries. A repository change **does not** import the production database or overwrite edited production records. CI, Hostinger active build SHA, database import and live acceptance require separate authenticated evidence. Preserve existing deployment baseline a7be830, standalone frontend hoisting/runtime tracing/webpack worker limits and the separate Laravel API.
-=======
 # Verified Wosool editorial refresh — 6 November 2026
 
 ## Saudi Arabia — HUMAIN / CNTXT
@@ -41,4 +22,11 @@ The founder importer preserves existing database edits, tombstones, real member 
 - No third-party images copied: each new news record has empty image URL and image credit to render native fallback; new founder portraits are null. Existing Mamun logo references the already-tracked local company asset. No login, Wosool membership, invitations, communication, verification, financial data or private data changed.
 - Research notes remain **in this internal repository documentation only**, not public UI. Bilingual public copy contains facts and links, no AI-generation, methodology or review-process commentary. Existing admin edits/soft deletes are respected by idempotent import code.
 - Hostinger deployment baseline a7be830 preserved; no runtime, dependency or build configuration changed. GitHub commit and CI do not constitute a production database import or verified live deployment; separately run `php artisan wosool:import-founders` and `php artisan wosool:import-news` in the existing authorized backend hosting environment and verify source SHA/site/API readiness before marking production live.
->>>>>>> origin/main
+
+## 7 November 2026 — integrity repair and Saudi market brief
+
+- Resolved unresolved merge markers in the founder catalogs, frontend/backend tests and this internal record, retaining the evidence-backed six-founder version (**345** editorial profiles; **187** company groups). Both founder catalogs match byte for byte.
+- Removed three news duplicates with identical canonical sources (CNTXT/HUMAIN, Mamun and Journify), retaining the earlier source-record slugs. The CNTXT brief uses the site fallback; the separate CNTXT AI brand is not attributed to CNTXT.
+- Added an original bilingual Saudi venture-capital market brief from the dated **5 November 2026** EntArabi report: https://entarabi.com/en/2026/11/saudi-arabias-venture-capital-funding-fall/ . The numbers also appear in MAGNiTT's original **October 2026** study: https://www.magnitt.com/research/ksa-venture-capital-the-q3-2026-update-51062 . The 9M 2026 data show approximately **US$1bn** across **113 Saudi deals**, down **29%** in capital and **39%** in deal count year on year. Two mega-rounds totaling **US$563m** account for **56%** of funding. These are ecosystem investment figures, not company revenues.
+- Counts after reconciliation: **345** editorial founders, **187** company groups and **120** original bilingual briefs, each with a unique canonical source. The new report brief uses the native image fallback; no unlicensed image is copied.
+- No accounts, membership privileges, communication, production database imports, hosting or runtime/dependency changes were made. GitHub CI, authorized production import and Hostinger active serving-SHA verification remain distinct release steps.
