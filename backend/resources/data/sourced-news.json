@@ -1,5 +1,46 @@
 [
   {
+    "id": "sourced-saudi-venture-capital-nine-months-2026-november-update",
+    "slug": "saudi-venture-capital-nine-months-2026-november-update",
+    "title": "Saudi VC investment reaches $1bn across 113 deals in first nine months of 2026",
+    "excerpt": "MAGNiTT's Q3 report shows a 29% year-on-year funding decline and a 39% drop in deal count, with two mega-rounds accounting for most capital.",
+    "content": "On 5 November 2026, EntArabi reported figures from MAGNiTT's October Q3 2026 Saudi venture-capital study. Saudi startups attracted approximately US$1 billion across 113 deals in January–September 2026, down 29% in funding value and 39% in deal count from the same nine months of 2025. Two mega-rounds totaling US$563 million represented 56% of the reported funding; excluding mega-rounds, funding fell 50% year on year. These are market-wide investment flows, not startup revenue or a single new funding round. The underlying MAGNiTT research is titled 'KSA Venture Capital: The Q3 2026 Update'.",
+    "category": "Ecosystem",
+    "region": "saudi",
+    "imageUrl": "",
+    "imageCredit": "",
+    "sourceUrl": "https://entarabi.com/en/2026/11/saudi-arabias-venture-capital-funding-fall/",
+    "sourceName": "EntArabi (citing MAGNiTT)",
+    "companies": [],
+    "publishedAt": "2026-11-05",
+    "author": "Wosool news desk",
+    "tags": [
+      "Saudi Arabia",
+      "Venture Capital",
+      "MAGNiTT",
+      "2026"
+    ],
+    "keyFacts": [
+      "US$1bn invested across 113 Saudi VC deals in 9M 2026",
+      "Funding down 29% and deal count down 39% year on year",
+      "Two mega-rounds totaled US$563m; no company revenue implied"
+    ],
+    "translations": {
+      "ar": {
+        "title": "مليار دولار استثمارات جريئة في السعودية عبر 113 صفقة خلال أول تسعة أشهر من 2026",
+        "excerpt": "أظهرت بيانات MAGNiTT انخفاض قيمة التمويل 29% وعدد الصفقات 39% مقارنة بالفترة نفسها من 2025، مع تركز رأس المال في جولتين كبيرتين.",
+        "body": [
+          "نشر «إنت عربي» في 5 نوفمبر 2026 عرضاً لنتائج تقرير MAGNiTT عن السوق السعودية حتى نهاية سبتمبر 2026. ووفق البيانات، استقطبت الشركات الناشئة في المملكة نحو مليار دولار عبر 113 صفقة خلال الأشهر التسعة الأولى من العام، بانخفاض 29% في قيمة الاستثمارات و39% في عدد الصفقات على أساس سنوي. وشكلت جولتان ضخمتان بقيمة إجمالية 563 مليون دولار نحو 56% من التمويل. وبعد استبعاد الجولات الضخمة، انخفض التمويل بنسبة 50%. الأرقام تخص تدفقات الاستثمار في السوق، وليست إيرادات شركات أو جولة استثمارية جديدة لشركة محددة."
+        ],
+        "keyFacts": [
+          "نحو مليار دولار استثمارات عبر 113 صفقة خلال أول تسعة أشهر من 2026",
+          "تراجع قيمة التمويل 29% وعدد الصفقات 39% على أساس سنوي",
+          "جولتان ضخمتان بقيمة 563 مليون دولار؛ الأرقام لا تمثل إيرادات شركات"
+        ]
+      }
+    }
+  },
+  {
     "id": "sourced-humain-cntxt-enterprise-ai-platform-november-2026",
     "slug": "humain-cntxt-enterprise-ai-platform-november-2026",
     "title": "CNTXT joins HUMAIN to extend enterprise cloud and AI delivery",
@@ -306,138 +347,6 @@
           "تمويل تأسيسي بنحو 800 ألف دولار (3 ملايين ريال) ورد في تقرير بتاريخ 6 مارس 2024",
           "وردت شركة «مجالس للاستثمار» ومستثمرون ملائكيون ضمن المشاركين",
           "قيمة التمويل ليست إيرادات للشركة"
-        ]
-      }
-    }
-  },
-  {
-    "id": "sourced-cntxt-joins-humain-november-2026",
-    "slug": "cntxt-joins-humain-november-2026",
-    "title": "CNTXT joins HUMAIN to strengthen Saudi enterprise AI services",
-    "excerpt": "The companies bring together cloud, data and AI implementation expertise; transaction terms remain undisclosed.",
-    "content": "CNTXT announced on 3 November 2026 that it had joined HUMAIN, a Public Investment Fund portfolio company. The Riyadh technology firm brings enterprise cloud, data, artificial intelligence, cybersecurity and managed services capabilities to HUMAIN's full-stack AI offering. The chief executives of HUMAIN and CNTXT described plans to make enterprise AI adoption easier. The announcement disclosed no transaction value, consideration or ownership percentage. Planned integrations are not evidence that every combined offering is already available.",
-    "category": "Ecosystem",
-    "region": "saudi",
-    "imageUrl": "/company-logos/cntxt-ai.svg",
-    "imageCredit": "CNTXT",
-    "sourceUrl": "https://cntxt.com/news/cntxt-joins-humain-adding-enterprise-ai-cloud-data-and-technology-services-capabilities-proprietary-solutions-and-a-broad-customer-base-to-humains-growing-platform/",
-    "sourceName": "CNTXT",
-    "companies": [
-      "CNTXT",
-      "HUMAIN"
-    ],
-    "publishedAt": "2026-11-03",
-    "author": "Wosool news desk",
-    "tags": [
-      "Saudi Arabia",
-      "HUMAIN",
-      "CNTXT",
-      "Enterprise AI"
-    ],
-    "keyFacts": [
-      "CNTXT announced joining HUMAIN on 3 November 2026",
-      "Enterprise AI, cloud, cybersecurity, data and managed services included",
-      "No transaction price or ownership breakdown disclosed"
-    ],
-    "translations": {
-      "ar": {
-        "title": "«CNTXT» تنضم إلى «هيوماين» لدعم خدمات الذكاء الاصطناعي المؤسسي في السعودية",
-        "excerpt": "تجمع الخطوة خبرات السحابة والبيانات وتطبيقات الذكاء الاصطناعي دون إفصاح عن الشروط المالية.",
-        "body": [
-          "أعلنت «CNTXT» في 3 نوفمبر 2026 انضمامها إلى «هيوماين» التابعة لمحفظة صندوق الاستثمارات العامة. وتضيف الشركة السعودية خبرات في السحابة والبيانات والذكاء الاصطناعي والأمن السيبراني والخدمات المُدارة إلى عروض «هيوماين». وتحدث الرئيسان التنفيذيان للشركتين عن دعم تبني الذكاء الاصطناعي في المؤسسات. لم يُكشف عن قيمة الصفقة أو المقابل أو نسب الملكية، ولا يعني الإعلان تشغيل جميع الخدمات المشتركة بالفعل."
-        ],
-        "keyFacts": [
-          "إعلان الانضمام في 3 نوفمبر 2026",
-          "تشمل القدرات السحابة والبيانات والذكاء الاصطناعي والأمن السيبراني",
-          "لم تُعلن قيمة الصفقة أو نسب الملكية"
-        ]
-      }
-    }
-  },
-  {
-    "id": "sourced-mamun-oman-seed-three-million-november-2026",
-    "slug": "mamun-oman-seed-three-million-november-2026",
-    "title": "Oman's mamun raises $3m seed funding led by Phaze Ventures",
-    "excerpt": "Phaze Ventures and Jasoor Ventures support Shariah-compliant trade finance across the Gulf–Asia corridor.",
-    "content": "Phaze Ventures announced on 4 November 2026 that it had led a US$3 million seed round for Oman's mamun through its Oman Fund, alongside Jasoor Ventures. The fintech's three co-founders are Saleh Al Tamami (CEO), Mohammed Al Tamami (CCO) and Ahmed Al-Issaei (CTO). Mamun connects businesses needing working capital with investors financing individual trade transactions and operates across Muscat, Abu Dhabi and Hong Kong. The funding will develop AI-supported deal origination and underwriting. This round is corporate investment, not company revenue or lending volume.",
-    "category": "Funding",
-    "region": "gcc",
-    "imageUrl": "/company-logos/mamun.png",
-    "imageCredit": "mamun",
-    "sourceUrl": "https://phazeventures.com/phaze-ventures-invests-in-mamun",
-    "sourceName": "Phaze Ventures",
-    "companies": [
-      "mamun",
-      "Mamun",
-      "مأمون"
-    ],
-    "publishedAt": "2026-11-04",
-    "author": "Wosool news desk",
-    "tags": [
-      "Oman",
-      "Fintech",
-      "Seed",
-      "Trade finance"
-    ],
-    "keyFacts": [
-      "US$3m seed round led by Phaze Oman Fund with Jasoor Ventures",
-      "Founders Saleh Al Tamami (CEO), Mohammed Al Tamami (CCO), Ahmed Al-Issaei (CTO)",
-      "Capital for AI-supported trade-finance origination and underwriting"
-    ],
-    "translations": {
-      "ar": {
-        "title": "«مأمون» العُمانية تحصل على 3 ملايين دولار في جولة تأسيسية بقيادة «فيز فينتشرز»",
-        "excerpt": "تمويل بمشاركة «جسور فينتشرز» لتوسيع حلول تمويل التجارة المتوافقة مع الشريعة.",
-        "body": [
-          "أعلنت «فيز فينتشرز» في 4 نوفمبر 2026 قيادة جولة تأسيسية بقيمة 3 ملايين دولار لصالح شركة «مأمون» العُمانية عبر صندوقها العُماني، بمشاركة «جسور فينتشرز». أسس الشركة صالح التميمي (الرئيس التنفيذي)، ومحمد التميمي (رئيس الشؤون التجارية)، وأحمد العيسائي (المدير التقني). تربط المنصة الشركات التي تحتاج رأس مال عامل بمستثمرين لتمويل معاملات التجارة وتعمل في مسقط وأبوظبي وهونغ كونغ. وسيدعم التمويل اكتشاف الصفقات وتقييمها بالذكاء الاصطناعي. مبلغ الجولة تمويل للشركة وليس إيرادات أو حجم إقراض."
-        ],
-        "keyFacts": [
-          "3 ملايين دولار تمويل تأسيسي بمشاركة «جسور فينتشرز»",
-          "تأكيد أسماء المؤسسين الثلاثة وأدوارهم",
-          "التمويل لتطوير اكتشاف صفقات التجارة وتقييم مخاطرها"
-        ]
-      }
-    }
-  },
-  {
-    "id": "sourced-journify-series-a-twelve-million-november-2026",
-    "slug": "journify-series-a-twelve-million-november-2026",
-    "title": "Journify raises $12m Series A for advertising data infrastructure",
-    "excerpt": "The US-based business with Dubai and Riyadh offices reports more than 100 business customers.",
-    "content": "On 3 November 2026, Journify announced a US$12 million Series A led by Al Mada Ventures and co-led by Silicon Badia. Shorooq and Bunat Ventures increased their investments, and Du Ventures and Oraseya Capital joined. Co-founded by Taoufik El Jamali, Amine Chouki and Omar Al Shoubaki, the business helps brands send reliable, consented conversion signals to advertising platforms. Journify reports more than 100 business customers and plans to expand into the US and Europe. It described a fourfold increase from its previous valuation but gave no current dollar valuation; customer counts are not revenue.",
-    "category": "Funding",
-    "region": "global",
-    "imageUrl": "",
-    "imageCredit": "",
-    "sourceUrl": "https://www.journify.io/resources/journify-raises-12m-series-a/",
-    "sourceName": "Journify",
-    "companies": [
-      "Journify"
-    ],
-    "publishedAt": "2026-11-03",
-    "author": "Wosool news desk",
-    "tags": [
-      "United States",
-      "GCC",
-      "Adtech",
-      "Series A"
-    ],
-    "keyFacts": [
-      "US$12m Series A led by Al Mada Ventures and co-led by Silicon Badia",
-      "Over 100 business customers, company-reported in November 2026",
-      "Valuation four times previous level, absolute valuation undisclosed"
-    ],
-    "translations": {
-      "ar": {
-        "title": "«جورنيفاي» تجمع 12 مليون دولار لتطوير بنية بيانات الإعلانات",
-        "excerpt": "الشركة التي لها مكاتب في دبي والرياض أعلنت تجاوز 100 عميل من الشركات.",
-        "body": [
-          "أعلنت «جورنيفاي» في 3 نوفمبر 2026 جمع 12 مليون دولار في جولة «Series A» بقيادة «المدى فينتشرز» و«سيليكون باديا»، مع تعزيز استثمارات «شروق» و«بناة فينتشرز» وانضمام «دو فينتشرز» و«أوراسيا كابيتال». أسس الشركة توفيق الجمالي وأمين شوقي وعمر الشوبكي، وتساعد المعلنين على توصيل بيانات تحويل موثوقة ومصرّح بها إلى منصات الإعلانات. وأفادت بخدمة أكثر من 100 شركة وتعتزم التوسع إلى الولايات المتحدة وأوروبا. وذكرت أن تقييمها تضاعف أربع مرات مقارنة بالسابق دون الإفصاح عن قيمته بالدولار؛ عدد العملاء ليس إيرادات."
-        ],
-        "keyFacts": [
-          "جولة بقيمة 12 مليون دولار بقيادة «المدى فينتشرز» و«سيليكون باديا»",
-          "أكثر من 100 عميل بحسب إعلان الشركة في نوفمبر 2026",
-          "لم تُعلن قيمة التقييم الحالية بالدولار"
         ]
       }
     }
