@@ -70,7 +70,8 @@ const ar = {
   deleteFailed: "تعذر حذف البرنامج.",
   created: "أُنشئ البرنامج.",
   updated: "حُدّث البرنامج.",
-  saveFailed: "تعذر حفظ البرنامج. راجع الحقول المحددة.",
+  saveFailed: "تعذر حفظ البرنامج. حاول مرة أخرى.",
+  saveInvalid: "تعذر حفظ البرنامج. راجع الحقول المحددة.",
   dialogCreate: "إنشاء برنامج",
   dialogEdit: "تعديل برنامج",
   dialogDescription: "تظهر هذه البيانات في صفحة البرنامج ولوحات الأعضاء بعد الحفظ.",
@@ -138,7 +139,8 @@ const en: AdminProgramsCopy = {
   deleteFailed: "The program could not be deleted.",
   created: "Program created.",
   updated: "Program updated.",
-  saveFailed: "The program could not be saved. Check the marked fields.",
+  saveFailed: "The program could not be saved. Try again.",
+  saveInvalid: "The program could not be saved. Check the marked fields.",
   dialogCreate: "Create program",
   dialogEdit: "Edit program",
   dialogDescription: "These details appear on the program page and member dashboards once saved.",
@@ -222,6 +224,16 @@ export function fromRiyadhInput(value: string): string | null {
   return Number.isNaN(time) ? null : new Date(time).toISOString()
 }
 
+/**
+ * The deadline is a date-only field that the API stores at midnight UTC, so it is read back
+ * as its UTC calendar day; a Riyadh reading would move a saved deadline a day later.
+ */
+function utcDate(iso: string | null | undefined): string {
+  if (!iso) return ""
+  const time = new Date(iso).getTime()
+  return Number.isNaN(time) ? "" : new Date(time).toISOString().slice(0, 10)
+}
+
 export const emptyProgramForm: ProgramForm = {
   name: "",
   title: "",
@@ -269,7 +281,7 @@ export function toProgramForm(program?: AdminProgram | null): ProgramForm {
     language: program.language || emptyProgramForm.language,
     city_region: program.city_region || "",
     capacity: program.capacity ? String(program.capacity) : "",
-    application_deadline: toRiyadhInput(program.application_deadline).slice(0, 10),
+    application_deadline: utcDate(program.application_deadline),
     starts_at: toRiyadhInput(program.starts_at),
     ends_at: toRiyadhInput(program.ends_at),
     is_open: Boolean(program.is_open),

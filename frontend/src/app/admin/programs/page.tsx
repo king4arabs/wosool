@@ -50,13 +50,16 @@ export default function AdminProgramsPage() {
   const [open, setOpen] = useState(false)
   const [saving, setSaving] = useState(false)
   const latestRequest = useRef(0)
+  const currentQuery = useRef(query)
 
+  // Reads the search through a ref so a refresh after a save or delete that started under an
+  // earlier search still loads the search shown now.
   const loadPrograms = useCallback(async () => {
     const request = ++latestRequest.current
     setStatus("loading")
     try {
       const response = await api.get<AdminCollectionResponse<AdminProgram>>("/admin/programs", {
-        params: { search: query || undefined },
+        params: { search: currentQuery.current || undefined },
       })
       if (request !== latestRequest.current) return
       setPrograms(response.data)
@@ -65,11 +68,12 @@ export default function AdminProgramsPage() {
     } catch {
       if (request === latestRequest.current) setStatus("error")
     }
-  }, [query])
+  }, [])
 
   useEffect(() => {
+    currentQuery.current = query
     void loadPrograms()
-  }, [loadPrograms])
+  }, [query, loadPrograms])
 
   const update = <K extends ProgramFormField>(field: K, value: ProgramForm[K]) => {
     setForm((previous) => ({ ...previous, [field]: value }))
@@ -110,13 +114,15 @@ export default function AdminProgramsPage() {
       await loadPrograms()
     } catch (err) {
       const apiErrors = err instanceof ApiError && err.status === 422
-        ? programFieldErrors((err.data as { errors?: unknown } | undefined)?.errors, copy.saveFailed)
+        ? programFieldErrors((err.data as { errors?: unknown } | undefined)?.errors, copy.saveInvalid)
         : {}
       if (Object.keys(apiErrors).length > 0) {
         setErrors(apiErrors)
         focusFirstError(apiErrors)
+        toast(copy.saveInvalid, "error")
+      } else {
+        toast(copy.saveFailed, "error")
       }
-      toast(copy.saveFailed, "error")
     } finally {
       setSaving(false)
     }

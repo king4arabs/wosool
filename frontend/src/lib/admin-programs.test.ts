@@ -50,6 +50,8 @@ test("the page follows the admin's language, labels every field and edits start 
     assert.match(page, new RegExp(`field\\("${name}"`), `${name} has no labelled field`)
   }
   assert.doesNotMatch(page, /err\.message/, "raw API text must not be shown in place of page copy")
+  assert.match(page, /currentQuery\.current/, "refreshes after a save or delete must load the search shown now")
+  assert.match(page, /copy\.saveInvalid[\s\S]*copy\.saveFailed/, "only validation failures point to marked fields")
 })
 
 test("start and end times are entered in Riyadh time and sent in UTC", () => {
@@ -89,6 +91,8 @@ test("editing and saving a program keeps its times instead of shifting or droppi
   assert.deepEqual(payload.tags, ["growth", "sales"])
   assert.equal(payload.is_open, false)
   assert.equal(programPayload(emptyProgramForm).starts_at, null)
+  // A deadline late in the UTC day keeps its UTC date instead of moving to the next Riyadh day.
+  assert.equal(toProgramForm({ ...program, application_deadline: "2026-11-20T22:00:00Z" }).application_deadline, "2026-11-20")
 })
 
 test("invalid entries are reported on their fields in the admin's language", () => {
