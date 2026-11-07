@@ -1,266 +1,308 @@
 "use client"
 
-import { useCallback, useEffect, useState } from "react"
+import { useCallback, useEffect, useRef, useState, type ReactNode } from "react"
 import Link from "next/link"
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Select } from "@/components/ui/select"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { useToast } from "@/components/ui/toast"
-import { api } from "@/lib/api"
-import { type AdminCollectionResponse, type AdminProgram, fromCsvLines, toCsvLines } from "@/lib/admin"
+import { ApiError, api } from "@/lib/api"
+import type { AdminCollectionResponse, AdminProgram } from "@/lib/admin"
+import {
+  adminPrograms,
+  emptyProgramForm,
+  fill,
+  programFieldErrors,
+  programFieldId,
+  programFormats,
+  programOptionLabel,
+  programPayload,
+  programStatusFlows,
+  programVisibilities,
+  toProgramForm,
+  validateProgramForm,
+  type ProgramForm,
+  type ProgramFormErrors,
+  type ProgramFormField,
+} from "@/lib/admin-programs"
+import { useLocale } from "@/lib/locale"
 import { Search, BookOpen, Users, Plus, Pencil, Trash2 } from "lucide-react"
 
-type ProgramForm = {
-  name: string
-  title: string
-  slug: string
-  short_description: string
-  full_description: string
-  program_type: string
-  category: string
-  tags: string
-  visibility: string
-  status_flow: string
-  objective: string
-  who_it_is_for: string
-  expected_outcomes: string
-  duration: string
-  format: string
-  language: string
-  city_region: string
-  capacity: string
-  application_deadline: string
-  starts_at: string
-  ends_at: string
-  is_open: boolean
-}
-
-const emptyForm: ProgramForm = {
-  name: "",
-  title: "",
-  slug: "",
-  short_description: "",
-  full_description: "",
-  program_type: "Founder Onboarding Track",
-  category: "onboarding",
-  tags: "",
-  visibility: "members_only",
-  status_flow: "draft",
-  objective: "",
-  who_it_is_for: "",
-  expected_outcomes: "",
-  duration: "",
-  format: "cohort-based",
-  language: "ar",
-  city_region: "",
-  capacity: "",
-  application_deadline: "",
-  starts_at: "",
-  ends_at: "",
-  is_open: true,
-}
-
-function toForm(program?: AdminProgram | null): ProgramForm {
-  if (!program) return emptyForm
-  return {
-    ...emptyForm,
-    name: program.name || "",
-    title: program.title || program.name || "",
-    slug: program.slug || "",
-    short_description: program.short_description || program.description || "",
-    full_description: program.full_description || program.description || "",
-    program_type: program.program_type || "Founder Onboarding Track",
-    category: program.category || "",
-    tags: toCsvLines(program.tags),
-    visibility: program.visibility || "members_only",
-    status_flow: program.status_flow || "draft",
-    objective: program.objective || "",
-    who_it_is_for: program.who_it_is_for || "",
-    expected_outcomes: program.expected_outcomes || "",
-    duration: program.duration || "",
-    format: program.format || "cohort-based",
-    language: program.language || "ar",
-    city_region: program.city_region || "",
-    capacity: program.capacity ? String(program.capacity) : "",
-    application_deadline: program.application_deadline ? program.application_deadline.slice(0, 10) : "",
-    starts_at: program.starts_at ? program.starts_at.slice(0, 16) : "",
-    ends_at: program.ends_at ? program.ends_at.slice(0, 16) : "",
-    is_open: program.is_open,
-  }
-}
+const fieldOrder: ProgramFormField[] = ["name", "title", "slug", "program_type", "category", "duration", "visibility", "status_flow", "format", "city_region", "capacity", "application_deadline", "starts_at", "ends_at", "tags", "short_description", "full_description", "objective", "who_it_is_for", "expected_outcomes"]
 
 export default function AdminProgramsPage() {
   const { toast } = useToast()
+  const { locale } = useLocale()
+  const copy = adminPrograms(locale)
   const [programs, setPrograms] = useState<AdminProgram[]>([])
   const [meta, setMeta] = useState<Record<string, number>>({})
-  const [search, setSearch] = useState("")
+  const [searchInput, setSearchInput] = useState("")
+  const [query, setQuery] = useState("")
+  const [status, setStatus] = useState<"loading" | "ready" | "error">("loading")
   const [editing, setEditing] = useState<AdminProgram | null>(null)
-  const [form, setForm] = useState<ProgramForm>(emptyForm)
+  const [form, setForm] = useState<ProgramForm>(emptyProgramForm)
+  const [errors, setErrors] = useState<ProgramFormErrors>({})
   const [open, setOpen] = useState(false)
   const [saving, setSaving] = useState(false)
+  const latestRequest = useRef(0)
 
   const loadPrograms = useCallback(async () => {
-    const response = await api.get<AdminCollectionResponse<AdminProgram>>("/admin/programs", {
-      params: { search: search || undefined },
-    })
-    setPrograms(response.data)
-    setMeta(response.meta)
-  }, [search])
+    const request = ++latestRequest.current
+    setStatus("loading")
+    try {
+      const response = await api.get<AdminCollectionResponse<AdminProgram>>("/admin/programs", {
+        params: { search: query || undefined },
+      })
+      if (request !== latestRequest.current) return
+      setPrograms(response.data)
+      setMeta(response.meta)
+      setStatus("ready")
+    } catch {
+      if (request === latestRequest.current) setStatus("error")
+    }
+  }, [query])
 
   useEffect(() => {
-    loadPrograms().catch((err: Error) => toast(err.message, "error"))
-  }, [loadPrograms, toast])
+    void loadPrograms()
+  }, [loadPrograms])
+
+  const update = <K extends ProgramFormField>(field: K, value: ProgramForm[K]) => {
+    setForm((previous) => ({ ...previous, [field]: value }))
+    setErrors((previous) => (previous[field] ? { ...previous, [field]: undefined } : previous))
+  }
 
   const openEditor = (program?: AdminProgram) => {
     setEditing(program || null)
-    setForm(toForm(program))
+    setForm(toProgramForm(program))
+    setErrors({})
     setOpen(true)
   }
 
+  const focusFirstError = (found: ProgramFormErrors) => {
+    const first = fieldOrder.find((field) => found[field])
+    if (first) window.requestAnimationFrame(() => document.getElementById(programFieldId(first))?.focus())
+  }
+
   const saveProgram = async () => {
+    const found = validateProgramForm(locale, form)
+    if (Object.keys(found).length > 0) {
+      setErrors(found)
+      focusFirstError(found)
+      return
+    }
     setSaving(true)
     try {
-      const payload = {
-        ...form,
-        tags: fromCsvLines(form.tags),
-        capacity: form.capacity ? Number(form.capacity) : null,
-        application_deadline: form.application_deadline || null,
-        starts_at: form.starts_at || null,
-        ends_at: form.ends_at || null,
-        description: form.short_description,
-      }
-
+      const payload = programPayload(form)
       if (editing) {
         await api.put(`/admin/programs/${editing.id}`, payload)
       } else {
         await api.post("/admin/programs", payload)
       }
-      toast(`${editing ? "تم تحديث" : "تم إنشاء"} البرنامج.`, "success")
+      toast(editing ? copy.updated : copy.created, "success")
       setOpen(false)
       setEditing(null)
-      setForm(emptyForm)
+      setForm(emptyProgramForm)
       await loadPrograms()
     } catch (err) {
-      toast(err instanceof Error ? err.message : "تعذر حفظ البرنامج.", "error")
+      const apiErrors = err instanceof ApiError && err.status === 422
+        ? programFieldErrors((err.data as { errors?: unknown } | undefined)?.errors, copy.saveFailed)
+        : {}
+      if (Object.keys(apiErrors).length > 0) {
+        setErrors(apiErrors)
+        focusFirstError(apiErrors)
+      }
+      toast(copy.saveFailed, "error")
     } finally {
       setSaving(false)
     }
   }
 
   const deleteProgram = async (program: AdminProgram) => {
-    if (!window.confirm(`هل تريد حذف برنامج: ${program.name}؟`)) return
+    const name = program.title || program.name
+    if (!window.confirm(fill(copy.confirmDelete, { name }))) return
     try {
       await api.delete(`/admin/programs/${program.id}`)
-      toast("تم حذف البرنامج.", "success")
+      toast(copy.deleted, "success")
       await loadPrograms()
-    } catch (err) {
-      toast(err instanceof Error ? err.message : "تعذر حذف البرنامج.", "error")
+    } catch {
+      toast(copy.deleteFailed, "error")
     }
   }
+
+  const invalid = (field: ProgramFormField) =>
+    errors[field] ? { "aria-invalid": true, "aria-describedby": `${programFieldId(field)}-error` } : { "aria-invalid": false }
+
+  const field = (name: ProgramFormField, label: string, control: ReactNode, options: { required?: boolean; hint?: string; wide?: boolean } = {}) => (
+    <div className={`space-y-1.5 ${options.wide ? "sm:col-span-2" : ""}`}>
+      <Label htmlFor={programFieldId(name)}>
+        {label}
+        {options.required && <span className="text-red-600"> *<span className="sr-only"> ({copy.required})</span></span>}
+      </Label>
+      {control}
+      {options.hint && !errors[name] && <p id={`${programFieldId(name)}-hint`} className="text-xs text-gray-500">{options.hint}</p>}
+      {errors[name] && <p id={`${programFieldId(name)}-error`} className="text-xs font-medium text-red-700">{errors[name]}</p>}
+    </div>
+  )
+
+  const text = (name: Exclude<ProgramFormField, "is_open">, extra: Record<string, unknown> = {}) => (
+    <Input id={programFieldId(name)} value={form[name]} onChange={(e) => update(name, e.target.value)} {...invalid(name)} {...extra} />
+  )
+
+  const longText = (name: Exclude<ProgramFormField, "is_open">) => (
+    <Textarea id={programFieldId(name)} value={form[name]} onChange={(e) => update(name, e.target.value)} {...invalid(name)} />
+  )
+
+  const empty = status === "ready" && programs.length === 0
 
   return (
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h2 className="text-2xl font-bold text-gray-900">البرامج</h2>
-          <p className="text-gray-500 text-sm mt-1">إنشاء وإدارة البرامج والطلبات والدفعات.</p>
+          <h2 className="text-2xl font-bold text-gray-900">{copy.title}</h2>
+          <p className="text-gray-500 text-sm mt-1">{copy.intro}</p>
         </div>
         <div className="flex gap-2">
-          <Button variant="outline" size="sm" onClick={() => loadPrograms().catch((err: Error) => toast(err.message, "error"))}>تحديث</Button>
-          <Button size="sm" onClick={() => openEditor()}><Plus className="h-4 w-4 mr-2" />إنشاء برنامج</Button>
+          <Button variant="outline" size="sm" onClick={() => void loadPrograms()}>{copy.refresh}</Button>
+          <Button size="sm" onClick={() => openEditor()}><Plus className="h-4 w-4 me-2" aria-hidden="true" />{copy.create}</Button>
         </div>
       </div>
 
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         {[
-          { label: "إجمالي البرامج", value: meta.total || 0, icon: BookOpen, color: "text-blue-600" },
-          { label: "التقديم مفتوح", value: meta.open || 0, icon: BookOpen, color: "text-emerald-600" },
-          { label: "إجمالي المتقدمين", value: meta.applicants || 0, icon: Users, color: "text-amber-600" },
-          { label: "الدفعات", value: meta.cohorts || 0, icon: Users, color: "text-purple-600" },
+          { label: copy.totalPrograms, value: meta.total || 0, icon: BookOpen, color: "text-blue-600" },
+          { label: copy.openPrograms, value: meta.open || 0, icon: BookOpen, color: "text-emerald-600" },
+          { label: copy.applicants, value: meta.applicants || 0, icon: Users, color: "text-amber-600" },
+          { label: copy.cohorts, value: meta.cohorts || 0, icon: Users, color: "text-purple-600" },
         ].map(({ label, value, icon: Icon, color }) => (
-          <Card key={label}><CardContent className="pt-6"><Icon className={`h-5 w-5 ${color}`} /><p className="text-3xl font-bold mt-2">{value}</p><p className="text-sm text-gray-500 mt-1">{label}</p></CardContent></Card>
+          <Card key={label}><CardContent className="pt-6"><Icon className={`h-5 w-5 ${color}`} aria-hidden="true" /><p className="text-3xl font-bold mt-2">{value}</p><p className="text-sm text-gray-500 mt-1">{label}</p></CardContent></Card>
         ))}
       </div>
 
       <Card>
         <CardContent className="pt-5">
-          <div className="flex gap-4">
+          <form
+            role="search"
+            className="flex gap-4"
+            onSubmit={(event) => {
+              event.preventDefault()
+              const next = searchInput.trim()
+              if (next === query) void loadPrograms()
+              else setQuery(next)
+            }}
+          >
             <div className="flex-1 relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
-              <Input value={search} onChange={(event) => setSearch(event.target.value)} placeholder="ابحث باسم البرنامج أو الفئة..." className="pl-10" />
+              <label htmlFor="program-search" className="sr-only">{copy.searchLabel}</label>
+              <Search className="absolute start-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" aria-hidden="true" />
+              <Input id="program-search" type="search" value={searchInput} onChange={(event) => setSearchInput(event.target.value)} placeholder={copy.searchLabel} className="ps-10" />
             </div>
-            <Button variant="outline" size="sm" onClick={() => loadPrograms().catch((err: Error) => toast(err.message, "error"))}>بحث</Button>
-          </div>
+            <Button type="submit" variant="outline" size="sm">{copy.search}</Button>
+          </form>
         </CardContent>
       </Card>
 
+      <div aria-live="polite">
+        {status === "loading" && programs.length === 0 && <p className="text-sm text-gray-500">{copy.loading}</p>}
+        {status === "error" && (
+          <div className="flex flex-wrap items-center gap-3 rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-800">
+            <p>{copy.loadFailed}</p>
+            <Button variant="outline" size="sm" onClick={() => void loadPrograms()}>{copy.retry}</Button>
+          </div>
+        )}
+        {empty && <p className="rounded-lg border border-dashed border-gray-300 p-6 text-center text-sm text-gray-600">{query ? copy.emptySearch : copy.empty}</p>}
+      </div>
+
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        {programs.map((program) => (
-          <Card key={program.id}>
-            <CardHeader>
-              <div className="flex items-center justify-between">
-                <div><h3 className="font-semibold text-gray-900">{program.title || program.name}</h3><p className="text-xs text-gray-500 mt-0.5">{program.program_type || program.category}</p></div>
-                <Badge variant={program.is_open ? "success" : "secondary"}>{program.is_open ? "مفتوح" : "مغلق"}</Badge>
-              </div>
-            </CardHeader>
-            <CardContent>
-              <p className="text-sm text-gray-600 mb-4 line-clamp-2">{program.short_description || program.description}</p>
-              <div className="flex items-center justify-between pt-3 border-t border-gray-100">
-                <div className="flex gap-4">
-                  <div><p className="text-xs text-gray-500">طلبات</p><p className="text-sm font-bold text-[#0A1628]">{program.applications_count || 0}</p></div>
-                  <div><p className="text-xs text-gray-500">دفعات</p><p className="text-sm font-bold text-[#0A1628]">{program.cohorts_count || 0}</p></div>
+        {programs.map((program) => {
+          const name = program.title || program.name
+          return (
+            <Card key={program.id}>
+              <CardHeader>
+                <div className="flex items-start justify-between gap-3">
+                  <div className="min-w-0"><h3 className="font-semibold text-gray-900 break-words">{name}</h3><p className="text-xs text-gray-500 mt-0.5">{program.program_type || program.category}</p></div>
+                  <Badge variant={program.is_open ? "success" : "secondary"}>{program.is_open ? copy.open : copy.closed}</Badge>
                 </div>
-                <div className="flex items-center gap-3">
-                  <Link href={`/admin/programs/${program.id}`} className="text-blue-600 hover:text-blue-800 text-xs font-semibold">إدارة</Link>
-                  <button className="text-gray-500 hover:text-gray-700" onClick={() => openEditor(program)} aria-label={`تعديل ${program.title || program.name}`} title="تعديل"><Pencil className="h-4 w-4" aria-hidden="true" /></button>
-                  <button className="text-red-500 hover:text-red-700" onClick={() => deleteProgram(program)} aria-label={`حذف ${program.title || program.name}`} title="حذف"><Trash2 className="h-4 w-4" aria-hidden="true" /></button>
+              </CardHeader>
+              <CardContent>
+                <p className="text-sm text-gray-600 mb-4 line-clamp-2">{program.short_description || program.description}</p>
+                <div className="flex items-center justify-between pt-3 border-t border-gray-100">
+                  <div className="flex gap-4">
+                    <div><p className="text-xs text-gray-500">{copy.applications}</p><p className="text-sm font-bold text-[#0A1628]">{program.applications_count || 0}</p></div>
+                    <div><p className="text-xs text-gray-500">{copy.cohortsShort}</p><p className="text-sm font-bold text-[#0A1628]">{program.cohorts_count || 0}</p></div>
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <Link href={`/admin/programs/${program.id}`} className="inline-flex min-h-11 items-center px-2 text-blue-600 hover:text-blue-800 text-xs font-semibold">{copy.manage}</Link>
+                    <button type="button" className="inline-flex h-11 w-11 items-center justify-center text-gray-500 hover:text-gray-700" onClick={() => openEditor(program)} aria-label={fill(copy.edit, { name })} title={copy.editShort}><Pencil className="h-4 w-4" aria-hidden="true" /></button>
+                    <button type="button" className="inline-flex h-11 w-11 items-center justify-center text-red-500 hover:text-red-700" onClick={() => void deleteProgram(program)} aria-label={fill(copy.remove, { name })} title={copy.removeShort}><Trash2 className="h-4 w-4" aria-hidden="true" /></button>
+                  </div>
                 </div>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
+              </CardContent>
+            </Card>
+          )
+        })}
       </div>
 
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent className="max-w-3xl">
           <DialogHeader>
-            <DialogTitle>{editing ? "تعديل برنامج" : "إنشاء برنامج"}</DialogTitle>
-            <DialogDescription>سيتم نشر هذه البيانات مباشرة في صفحة البرنامج ولوحات الأعضاء.</DialogDescription>
+            <DialogTitle>{editing ? copy.dialogEdit : copy.dialogCreate}</DialogTitle>
+            <DialogDescription>{copy.dialogDescription}</DialogDescription>
           </DialogHeader>
-          <div className="space-y-4">
+          <form
+            noValidate
+            className="space-y-4"
+            onSubmit={(event) => {
+              event.preventDefault()
+              void saveProgram()
+            }}
+          >
             <div className="grid gap-3 sm:grid-cols-2">
-              <Input placeholder="اسم البرنامج" value={form.name} onChange={(e) => setForm((p) => ({ ...p, name: e.target.value }))} />
-              <Input placeholder="عنوان العرض" value={form.title} onChange={(e) => setForm((p) => ({ ...p, title: e.target.value }))} />
-              <Input placeholder="Slug" value={form.slug} onChange={(e) => setForm((p) => ({ ...p, slug: e.target.value }))} />
-              <Input placeholder="نوع البرنامج" value={form.program_type} onChange={(e) => setForm((p) => ({ ...p, program_type: e.target.value }))} />
-              <Input placeholder="الفئة" value={form.category} onChange={(e) => setForm((p) => ({ ...p, category: e.target.value }))} />
-              <Input placeholder="المدة" value={form.duration} onChange={(e) => setForm((p) => ({ ...p, duration: e.target.value }))} />
-              <Select value={form.visibility} onChange={(e) => setForm((p) => ({ ...p, visibility: e.target.value }))}>
-                <option value="public">عام</option><option value="members_only">للأعضاء</option><option value="founder_only">للمؤسسين</option><option value="invite_only">بدعوة</option><option value="application_required">يتطلب تقديم</option>
-              </Select>
-              <Select value={form.status_flow} onChange={(e) => setForm((p) => ({ ...p, status_flow: e.target.value }))}>
-                <option value="draft">مسودة</option><option value="pending_review">بانتظار المراجعة</option><option value="published">منشور</option><option value="applications_open">التقديم مفتوح</option><option value="applications_closed">التقديم مغلق</option><option value="active">نشط</option><option value="completed">مكتمل</option><option value="cancelled">ملغي</option><option value="archived">مؤرشف</option>
-              </Select>
-              <Select value={form.format} onChange={(e) => setForm((p) => ({ ...p, format: e.target.value }))}>
-                <option value="online">عن بعد</option><option value="in-person">حضوري</option><option value="hybrid">هجين</option><option value="self-paced">ذاتي</option><option value="cohort-based">دفعات</option>
-              </Select>
-              <Input placeholder="المنطقة/المدينة" value={form.city_region} onChange={(e) => setForm((p) => ({ ...p, city_region: e.target.value }))} />
-              <Input placeholder="السعة" value={form.capacity} onChange={(e) => setForm((p) => ({ ...p, capacity: e.target.value }))} />
-              <Input type="date" value={form.application_deadline} onChange={(e) => setForm((p) => ({ ...p, application_deadline: e.target.value }))} />
+              {field("name", copy.name, text("name", { required: true, "aria-required": true }), { required: true })}
+              {field("title", copy.displayTitle, text("title"))}
+              {field("slug", copy.slug, text("slug", { dir: "ltr", "aria-describedby": errors.slug ? `${programFieldId("slug")}-error` : `${programFieldId("slug")}-hint` }), { hint: copy.slugHint })}
+              {field("program_type", copy.programType, text("program_type"))}
+              {field("category", copy.category, text("category", { required: true, "aria-required": true }), { required: true })}
+              {field("duration", copy.duration, text("duration"))}
+              {field("visibility", copy.visibility, (
+                <Select id={programFieldId("visibility")} value={form.visibility} onChange={(e) => update("visibility", e.target.value)} {...invalid("visibility")}>
+                  {programVisibilities.map((value) => <option key={value} value={value}>{programOptionLabel(locale, "visibility", value)}</option>)}
+                </Select>
+              ))}
+              {field("status_flow", copy.status, (
+                <Select id={programFieldId("status_flow")} value={form.status_flow} onChange={(e) => update("status_flow", e.target.value)} {...invalid("status_flow")}>
+                  {programStatusFlows.map((value) => <option key={value} value={value}>{programOptionLabel(locale, "status_flow", value)}</option>)}
+                </Select>
+              ))}
+              {field("format", copy.format, (
+                <Select id={programFieldId("format")} value={form.format} onChange={(e) => update("format", e.target.value)} {...invalid("format")}>
+                  {programFormats.map((value) => <option key={value} value={value}>{programOptionLabel(locale, "format", value)}</option>)}
+                </Select>
+              ))}
+              {field("city_region", copy.cityRegion, text("city_region"))}
+              {field("capacity", copy.capacity, text("capacity", { inputMode: "numeric" }))}
+              {field("application_deadline", copy.deadline, text("application_deadline", { type: "date" }))}
+              {field("starts_at", copy.startsAt, text("starts_at", { type: "datetime-local" }))}
+              {field("ends_at", copy.endsAt, text("ends_at", { type: "datetime-local", min: form.starts_at || undefined }))}
+              {field("tags", copy.tags, text("tags", { "aria-describedby": errors.tags ? `${programFieldId("tags")}-error` : `${programFieldId("tags")}-hint` }), { hint: copy.tagsHint, wide: true })}
+              {field("short_description", copy.shortDescription, longText("short_description"), { wide: true })}
+              {field("full_description", copy.fullDescription, longText("full_description"), { wide: true })}
+              {field("objective", copy.objective, longText("objective"), { wide: true })}
+              {field("who_it_is_for", copy.whoItIsFor, longText("who_it_is_for"), { wide: true })}
+              {field("expected_outcomes", copy.expectedOutcomes, longText("expected_outcomes"), { wide: true })}
             </div>
-            <Input placeholder="وسوم (مفصولة بفاصلة)" value={form.tags} onChange={(e) => setForm((p) => ({ ...p, tags: e.target.value }))} />
-            <Textarea placeholder="وصف مختصر" value={form.short_description} onChange={(e) => setForm((p) => ({ ...p, short_description: e.target.value }))} />
-            <Textarea placeholder="وصف تفصيلي" value={form.full_description} onChange={(e) => setForm((p) => ({ ...p, full_description: e.target.value }))} />
-            <Textarea placeholder="هدف البرنامج" value={form.objective} onChange={(e) => setForm((p) => ({ ...p, objective: e.target.value }))} />
-            <Textarea placeholder="لمن هذا البرنامج" value={form.who_it_is_for} onChange={(e) => setForm((p) => ({ ...p, who_it_is_for: e.target.value }))} />
-            <Textarea placeholder="المخرجات المتوقعة" value={form.expected_outcomes} onChange={(e) => setForm((p) => ({ ...p, expected_outcomes: e.target.value }))} />
-            <div className="flex items-center gap-2 text-sm"><input type="checkbox" checked={form.is_open} onChange={(e) => setForm((p) => ({ ...p, is_open: e.target.checked }))} /> التقديم مفتوح</div>
-            <div className="flex justify-end gap-2"><Button variant="outline" onClick={() => setOpen(false)}>إلغاء</Button><Button onClick={saveProgram} loading={saving}>حفظ</Button></div>
-          </div>
+            <label className="flex min-h-11 items-center gap-2 text-sm">
+              <input type="checkbox" className="h-4 w-4" checked={form.is_open} onChange={(e) => update("is_open", e.target.checked)} />
+              {copy.isOpen}
+            </label>
+            <div className="flex justify-end gap-2">
+              <Button type="button" variant="outline" onClick={() => setOpen(false)}>{copy.cancel}</Button>
+              <Button type="submit" loading={saving}>{copy.save}</Button>
+            </div>
+          </form>
         </DialogContent>
       </Dialog>
     </div>
