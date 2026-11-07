@@ -4787,5 +4787,40 @@
     "traction_en": "US$75M Series B at US$470M valuation, announced November 2026; valuation is not revenue.",
     "traction_ar": "جولة السلسلة ب بقيمة 75 مليون دولار بتقييم 470 مليون دولار في نوفمبر 2026؛ التقييم ليس إيرادات.",
     "traction_source_url": "https://www.reuters.com/legal/transactional/ai-powered-insurance-startup-kalepa-valued-470-million-new-funding-round-2026-11-05/"
+  },
+  {
+    "slug": "yousuf-tyabji-sitr",
+    "founder_name_en": "Yousuf Tyabji",
+    "founder_name_ar": "يوسف طيبجي",
+    "role_en": "Founder & CEO",
+    "role_ar": "المؤسس والرئيس التنفيذي",
+    "founder_brief_en": "Founded SITR Compliance Technology in Bahrain to develop continuous Shariah-compliance monitoring for Islamic financial institutions.",
+    "founder_brief_ar": "أسّس «ستر لتقنيات الامتثال الشرعي» في البحرين لتطوير مراقبة مستمرة للامتثال الشرعي لدى المؤسسات المالية الإسلامية.",
+    "company_name_en": "SITR Compliance Technology",
+    "company_name_ar": "ستر لتقنيات الامتثال الشرعي",
+    "company_brief_en": "Bahrain-based regulatory technology company developing read-only transaction monitoring against Islamic banks' Shariah supervisory board rules.",
+    "company_brief_ar": "شركة تقنية تنظيمية مقرها البحرين تطوّر مراقبة للعمليات المصرفية عبر تكاملات للقراءة فقط وفق قرارات الهيئات الشرعية للمصارف الإسلامية.",
+    "country_en": "Bahrain",
+    "country_ar": "البحرين",
+    "country_code": "BH",
+    "sector_en": "RegTech · Islamic finance",
+    "sector_ar": "التقنية التنظيمية · التمويل الإسلامي",
+    "website": "https://sitr.bh/",
+    "portrait_url": null,
+    "logo_url": null,
+    "founder_socials": [],
+    "source_url": "https://bh.linkedin.com/company/sitr-bh",
+    "reviewed_at": "2026-11-07",
+    "company_key": "sitr-compliance-technology",
+    "source_urls": [
+      "https://bh.linkedin.com/company/sitr-bh",
+      "https://www.zawya.com/en/economy/the-world-of-islamic-finance/bahrain-fintech-startup-sitr-launches-shariah-compliance-platform-for-islamic-banks-1917160",
+      "https://www.albiladpress.com/news/2026/6595/finance/1029514.html"
+    ],
+    "region": "gcc",
+    "founded_year": 2026,
+    "traction_en": null,
+    "traction_ar": null,
+    "traction_source_url": null
   }
 ]
