@@ -45,22 +45,13 @@ test('frontend source snapshots and database import share the same reviewed reco
   assert.equal(discoveryProfiles.length, 62)
   const databaseCountry = JSON.parse(readFileSync(new URL('../../../backend/resources/data/founder-directory-expansion-2026-10-29.json', import.meta.url), 'utf8'))
   assert.deepEqual(databaseCountry, countryProfiles)
-<<<<<<< HEAD
-  assert.equal(countryProfiles.length, 137)
-=======
   assert.equal(countryProfiles.length, 139)
->>>>>>> origin/main
   assert.equal(originalCountryCohort.length, 102)
   assert.equal(october30Additions.length, 8)
   assert.equal(new Set(originalCountryCohort.map(profile => profile.country_code)).size, 51)
   for (const code of new Set(originalCountryCohort.map(profile => profile.country_code))) assert.equal(originalCountryCohort.filter(profile => profile.country_code === code).length, 2, code)
-<<<<<<< HEAD
-  assert.equal(new Set(sourceProfiles.map(profile => profile.company_key)).size, 186)
-  assert.equal(sourceProfiles.length, 343)
-=======
   assert.equal(new Set(sourceProfiles.map(profile => profile.company_key)).size, 187)
   assert.equal(sourceProfiles.length, 345)
->>>>>>> origin/main
   assert.equal(new Set(sourceProfiles.map(profile => profile.founder_name_en.toLowerCase())).size, sourceProfiles.length)
   assert.equal(new Set(sourceProfiles.map(profile => profile.slug)).size, sourceProfiles.length)
   assert.ok(sourceProfiles.every(profile => profile.source_urls.length > 0 && profile.reviewed_at))
