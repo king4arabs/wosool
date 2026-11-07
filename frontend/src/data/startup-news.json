@@ -5043,5 +5043,50 @@
         ]
       }
     }
+  },
+  {
+    "id": "sourced-sitr-bahrain-sharia-compliance-november-2026",
+    "slug": "sitr-bahrain-sharia-compliance-november-2026",
+    "title": "Bahrain's SITR launches Shariah compliance monitoring platform",
+    "excerpt": "SITR launched in Manama with read-only monitoring of Islamic-finance transactions against banks' own Shariah board rulings.",
+    "content": "Bahrain's SITR Compliance Technology launched operations in Manama and introduced a platform to monitor Islamic-finance transactions against each institution's Shariah supervisory board rules. Its proposed read-only integrations sit outside transaction execution. Founder and CEO Yousuf Tyabji described a regional focus; no customer totals, funding or revenue were disclosed.",
+    "category": "Product",
+    "region": "gcc",
+    "imageUrl": "",
+    "imageCredit": "",
+    "sourceUrl": "https://www.zawya.com/en/economy/the-world-of-islamic-finance/bahrain-fintech-startup-sitr-launches-shariah-compliance-platform-for-islamic-banks-1917160",
+    "sourceName": "TradeArabia via Zawya",
+    "companies": [
+      "SITR Compliance Technology",
+      "ستر لتقنيات الامتثال الشرعي",
+      "SITR"
+    ],
+    "publishedAt": "2026-11-04",
+    "author": "Wosool news desk",
+    "tags": [
+      "SITR",
+      "Bahrain",
+      "RegTech",
+      "Islamic finance"
+    ],
+    "keyFacts": [
+      "Operations launched in Manama, Bahrain",
+      "Read-only transaction monitoring",
+      "Founder and CEO: Yousuf Tyabji"
+    ],
+    "translations": {
+      "ar": {
+        "title": "«ستر» البحرينية تطلق منصة لمراقبة الامتثال الشرعي",
+        "excerpt": "أطلقت «ستر» عملياتها في المنامة بمنصة تراقب المعاملات المصرفية الإسلامية عبر تكاملات للقراءة فقط.",
+        "body": [
+          "أعلنت «ستر لتقنيات الامتثال الشرعي» إطلاق عملياتها في المنامة، وقدّمت منصة لمراقبة معاملات التمويل الإسلامي وفق قرارات الهيئة الشرعية في كل مؤسسة. وتعتمد المنصة على تكاملات للقراءة فقط خارج مسار تنفيذ العمليات. وأوضح المؤسس والرئيس التنفيذي يوسف طيبجي توجه الشركة لخدمة أسواق الخليج، من دون إعلان أرقام للعملاء أو التمويل أو الإيرادات."
+        ],
+        "keyFacts": [
+          "إطلاق العمليات في المنامة بالبحرين",
+          "مراقبة للمعاملات عبر تكاملات للقراءة فقط",
+          "المؤسس والرئيس التنفيذي: يوسف طيبجي"
+        ]
+      }
+    }
   }
 ]
