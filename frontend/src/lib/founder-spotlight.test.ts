@@ -10,9 +10,10 @@ import countryProfiles from '../data/founder-spotlight-expansion-2026-10-29.json
 const rank: Record<string, number> = { saudi: 0, gcc: 1, mena: 2, global: 3 }
 const sourceProfiles = [...historicalProfiles, ...additionalProfiles, ...discoveryProfiles, ...countryProfiles]
   .sort((left, right) => (rank[left.region] ?? 4) - (rank[right.region] ?? 4))
-// Historical batches retain their membership when an existing profile receives new verification dates.
-const originalCountryCohort = countryProfiles.slice(0, 102)
-const october30Additions = countryProfiles.slice(102, 110)
+// The original 102-record country cohort begins after the four 31 October and eight 30 October additions.
+// Existing Mamun records remain in that cohort even after their November source-review date changes.
+const originalCountryCohort = countryProfiles.slice(12, 114)
+const october30Additions = countryProfiles.filter(profile => profile.reviewed_at === '2026-10-30')
 import { getFounderSpotlights } from './founder-spotlight'
 
 test('public spotlights stay separate from member profiles and provide supported links', () => {
@@ -225,9 +226,9 @@ test('RABEH founder directory listing keeps original company imagery and never c
 })
 
 test('6 November founder additions are source-linked, unclaimed and do not duplicate people', () => {
-  const newSlugs = ['mamun-ahmed-al-issaei', 'journify-taoufik-el-jamali', 'journify-amine-chouki', 'journify-omar-al-shoubaki']
+  const newSlugs = ['ahmed-al-issaei-mamun', 'taoufik-el-jamali-journify', 'amine-chouki-journify', 'omar-al-shoubaki-journify', 'paul-monasterio-kalepa', 'daniel-hillman-kalepa']
   const newRows = countryProfiles.filter(profile => newSlugs.includes(profile.slug))
-  assert.equal(newRows.length, 4)
+  assert.equal(newRows.length, 6)
   for (const profile of newRows) {
     assert.equal(profile.reviewed_at, '2026-11-06')
     assert.ok(profile.source_urls.includes(profile.source_url))
@@ -236,6 +237,6 @@ test('6 November founder additions are source-linked, unclaimed and do not dupli
     assert.ok(!('isVerified' in profile))
   }
   const mamun = countryProfiles.find(profile => profile.slug === 'mamun-mohammed-al-tamami')!
-  assert.equal(mamun.role_en, 'Co-founder & CCO')
+  assert.equal(mamun.role_en, 'Co-founder & Chief Commercial Officer')
   assert.equal(mamun.reviewed_at, '2026-11-06')
 })
