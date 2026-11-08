@@ -4822,5 +4822,41 @@
     "traction_en": null,
     "traction_ar": null,
     "traction_source_url": null
+  },
+  {
+    "slug": "ibrahim-manna-brkz",
+    "founder_name_en": "Ibrahim Manna",
+    "founder_name_ar": "إبراهيم مناع",
+    "role_en": "Founder & CEO",
+    "role_ar": "المؤسس والرئيس التنفيذي",
+    "founder_brief_en": "Founder and CEO of BRKZ, the Riyadh-based building-materials procurement platform. Previously a managing director at Careem.",
+    "founder_brief_ar": "مؤسس شركة «بركز» ورئيسها التنفيذي في الرياض، وهي منصة لمشتريات مواد البناء. شغل سابقاً منصب مدير تنفيذي لدى «كريم».",
+    "company_name_en": "BRKZ",
+    "company_name_ar": "بركز",
+    "company_brief_en": "Saudi B2B construction procurement platform connecting contractors and factories with building-materials suppliers, logistics and payment options.",
+    "company_brief_ar": "منصة سعودية لمشتريات مواد البناء بين المقاولين والمصانع والموردين، تشمل التسعير والخدمات اللوجستية وخيارات الدفع.",
+    "country_en": "Saudi Arabia",
+    "country_ar": "السعودية",
+    "country_code": "SA",
+    "sector_en": "Construction technology · B2B procurement",
+    "sector_ar": "تقنية البناء · مشتريات الشركات",
+    "website": "https://brkz.com/en",
+    "portrait_url": null,
+    "logo_url": null,
+    "founder_socials": [],
+    "source_url": "https://www.globenewswire.com/news-release/2026/09/14/3360818/0/en/brkz-secures-31-million-to-scale-ai-enabled-building-materials-procurement-across-saudi-arabia-and-the-gcc.html",
+    "reviewed_at": "2026-11-08",
+    "company_key": "brkz",
+    "source_urls": [
+      "https://www.globenewswire.com/news-release/2026/09/14/3360818/0/en/brkz-secures-31-million-to-scale-ai-enabled-building-materials-procurement-across-saudi-arabia-and-the-gcc.html",
+      "https://www.wamda.com/index.php/en/2026/09/brkz-secures-31-million-scale-ai-powered-construction-procurement",
+      "https://brkz.com/en",
+      "https://www.forbes.com/sites/davidprosser/2025/02/09/brkz-raises-8-million-to-build-on-saudi-construction-boom/"
+    ],
+    "region": "saudi",
+    "founded_year": 2022,
+    "traction_en": "As reported by BRKZ on 14 September 2026: over 1,500 contracting companies, about 2,100 suppliers and over US$133M in cumulative building-material sales through the platform (transaction value, not BRKZ revenue).",
+    "traction_ar": "وفق إفصاح «بركز» في 14 سبتمبر 2026: أكثر من 1500 شركة مقاولات ونحو 2100 مورد، ومبيعات مواد بناء تراكمية عبر المنصة تتجاوز 133 مليون دولار (قيمة معاملات وليست إيرادات للشركة).",
+    "traction_source_url": "https://www.globenewswire.com/news-release/2026/09/14/3360818/0/en/brkz-secures-31-million-to-scale-ai-enabled-building-materials-procurement-across-saudi-arabia-and-the-gcc.html"
   }
 ]

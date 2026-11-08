@@ -41,6 +41,51 @@
     }
   },
   {
+    "id": "sourced-brkz-saudi-31-million-mixed-financing-september-2026",
+    "slug": "brkz-saudi-31-million-mixed-financing-september-2026",
+    "title": "Saudi construction-tech firm BRKZ announces $31m in equity and growth-debt commitments",
+    "excerpt": "BRKZ reported $13m in Series B equity led by Wa'ed Ventures and 500 Global plus $18m of growth debt committed under an existing facility.",
+    "content": "BRKZ announced on 14 September 2026 that it had secured US$31 million in a combination of US$13 million of Series B equity and an US$18 million growth-debt commitment. Wa'ed Ventures and 500 Global co-led the equity round, with BECO Capital and ANB participating. Stride Ventures' US$18 million commitment is part of a US$30 million debt facility already announced, not an additional independent facility. Founder and CEO Ibrahim Manna said the Riyadh company will expand AI-assisted pricing, procurement, fulfilment and embedded finance. BRKZ reports serving over 1,500 contracting companies and roughly 2,100 suppliers. The US$31 million combines different financing instruments and is not company revenue or a pure equity raise.",
+    "category": "Funding",
+    "region": "saudi",
+    "imageUrl": "",
+    "imageCredit": "",
+    "sourceUrl": "https://www.globenewswire.com/news-release/2026/09/14/3360818/0/en/brkz-secures-31-million-to-scale-ai-enabled-building-materials-procurement-across-saudi-arabia-and-the-gcc.html",
+    "sourceName": "BRKZ (GlobeNewswire)",
+    "companies": [
+      "BRKZ",
+      "بركز"
+    ],
+    "publishedAt": "2026-09-14",
+    "author": "Wosool news desk",
+    "tags": [
+      "Saudi Arabia",
+      "BRKZ",
+      "ConTech",
+      "Series B",
+      "Venture debt"
+    ],
+    "keyFacts": [
+      "US$13m Series B equity co-led by Wa'ed Ventures and 500 Global",
+      "US$18m growth-debt commitment under an existing US$30m Stride Ventures facility",
+      "Founder and CEO: Ibrahim Manna; amounts are financing, not company revenue"
+    ],
+    "translations": {
+      "ar": {
+        "title": "«بركز» السعودية تعلن تمويلاً بقيمة 31 مليون دولار بين الأسهم والدين",
+        "excerpt": "تشمل الحزمة 13 مليون دولار استثماراً بالأسهم و18 مليون دولار التزاماً بتمويل دين ضمن تسهيل سبق الإعلان عنه.",
+        "body": [
+          "أعلنت شركة «بركز» السعودية لتقنية البناء في 14 سبتمبر 2026 تأمين حزمة تمويل بقيمة 31 مليون دولار: 13 مليون دولار في جولة أسهم من السلسلة «ب» بقيادة مشتركة من «واعد فنتشرز» و«500 غلوبال»، وبمشاركة «بيكو كابيتال» و«ANB»، إلى جانب التزام من «سترايد فنتشرز» بتمويل دين للنمو بقيمة 18 مليون دولار ضمن تسهيل سابق تبلغ قيمته 30 مليون دولار، وليس تسهيلاً إضافياً منفصلاً. وتعمل الشركة التي أسسها ويقودها إبراهيم مناع على تطوير التسعير والمشتريات وتنفيذ الطلبات بالذكاء الاصطناعي وخيارات التمويل المدمج. ولا تمثل الـ31 مليون دولار جولة أسهم كاملة أو إيرادات تشغيلية للشركة."
+        ],
+        "keyFacts": [
+          "13 مليون دولار أسهم في جولة «ب» بقيادة «واعد فنتشرز» و«500 غلوبال»",
+          "18 مليون دولار التزام دين ضمن تسهيل سابق قيمته 30 مليون دولار",
+          "المؤسس والرئيس التنفيذي إبراهيم مناع؛ المبلغ تمويل وليس إيرادات"
+        ]
+      }
+    }
+  },
+  {
     "id": "sourced-humain-cntxt-enterprise-ai-platform-november-2026",
     "slug": "humain-cntxt-enterprise-ai-platform-november-2026",
     "title": "CNTXT joins HUMAIN to extend enterprise cloud and AI delivery",
