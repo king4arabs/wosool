@@ -5088,5 +5088,49 @@
         ]
       }
     }
+  },
+  {
+    "id": "sourced-madeed-cumulative-preseed-may-2026",
+    "slug": "madeed-cumulative-preseed-may-2026",
+    "title": "Saudi Madeed reports $925,000 cumulative pre-seed financing",
+    "excerpt": "Madeed added backers to its existing pre-seed round, bringing total financing to $925,000; the amount is not a separate new round.",
+    "content": "On 5 May 2026, Saudi preventive-health startup Madeed reported additional investment from SEEDRA Ventures, Unity Investment Partners and Seen Growth, bringing its cumulative pre-seed funding to US$925,000. The total includes an earlier US$400,000 round led by Vision Ventures in January. Physician Adam Bataineh founded Madeed in 2025 to build lab biomarker testing and clinical interpretation services. The company reported 150 pilot subscribers, a self-reported test-phase figure rather than an independently verified active customer count. The US$925,000 is total funding, not a new standalone round or company revenue.",
+    "category": "Funding",
+    "region": "saudi",
+    "imageUrl": "",
+    "imageCredit": "",
+    "sourceUrl": "https://www.wamda.com/2026/05/madeed-closes-925k-pre-seed-scale-personalised-preventive-healthcare-ksa",
+    "sourceName": "Wamda (company statement)",
+    "companies": [
+      "Madeed",
+      "مديد"
+    ],
+    "publishedAt": "2026-05-05",
+    "author": "Wosool news desk",
+    "tags": [
+      "Saudi Arabia",
+      "Madeed",
+      "Healthtech",
+      "Preventive health"
+    ],
+    "keyFacts": [
+      "US$925,000 total pre-seed funding reported May 2026",
+      "Includes earlier US$400,000 January 2026 investment",
+      "Founded by Adam Bataineh in 2025"
+    ],
+    "translations": {
+      "ar": {
+        "title": "«مديد» السعودية تعلن بلوغ إجمالي تمويلها قبل البذري 925 ألف دولار",
+        "excerpt": "أضافت «مديد» مستثمرين إلى تمويل سابق ليصل المجموع إلى 925 ألف دولار، وليس جولة جديدة منفصلة.",
+        "body": [
+          "أعلنت «مديد» السعودية للصحة الوقائية في 5 مايو 2026 استثمارات إضافية من «سدرة فينتشرز» و«يونيتي إنفستمنت بارتنرز» و«سين غروث»، ليصل إجمالي التمويل قبل البذري إلى 925 ألف دولار. ويشمل المجموع جولة سابقة بقيمة 400 ألف دولار قادتها «فيجن فينتشرز» في يناير. أسس الطبيب آدم بطاينة الشركة عام 2025 لتطوير خدمات الفحوص المخبرية وتفسيرها الطبي. وذكرت الشركة استقطاب 150 مشتركاً في المرحلة التجريبية؛ وهو رقم معلن منها وليس عدداً موثقاً مستقلاً للعملاء النشطين. إجمالي التمويل ليس إيرادات أو جولة مستقلة جديدة بالقيمة نفسها."
+        ],
+        "keyFacts": [
+          "925 ألف دولار إجمالي التمويل قبل البذري في مايو 2026",
+          "يشمل 400 ألف دولار من استثمار يناير السابق",
+          "أسسها آدم بطاينة عام 2025"
+        ]
+      }
+    }
   }
 ]
