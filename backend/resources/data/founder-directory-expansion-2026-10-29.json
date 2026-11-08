@@ -4858,5 +4858,40 @@
     "traction_en": "As reported by BRKZ on 14 September 2026: over 1,500 contracting companies, about 2,100 suppliers and over US$133M in cumulative building-material sales through the platform (transaction value, not BRKZ revenue).",
     "traction_ar": "وفق إفصاح «بركز» في 14 سبتمبر 2026: أكثر من 1500 شركة مقاولات ونحو 2100 مورد، ومبيعات مواد بناء تراكمية عبر المنصة تتجاوز 133 مليون دولار (قيمة معاملات وليست إيرادات للشركة).",
     "traction_source_url": "https://www.globenewswire.com/news-release/2026/09/14/3360818/0/en/brkz-secures-31-million-to-scale-ai-enabled-building-materials-procurement-across-saudi-arabia-and-the-gcc.html"
+  },
+  {
+    "slug": "adam-bataineh-madeed",
+    "founder_name_en": "Adam Bataineh",
+    "founder_name_ar": "آدم بطاينة",
+    "role_en": "Founder & CEO",
+    "role_ar": "المؤسس والرئيس التنفيذي",
+    "founder_brief_en": "Physician who founded Saudi preventive-health platform Madeed in 2025.",
+    "founder_brief_ar": "طبيب أسس منصة «مديد» السعودية للصحة الوقائية عام 2025.",
+    "company_name_en": "Madeed",
+    "company_name_ar": "مديد",
+    "company_brief_en": "Saudi preventive healthcare service combining lab biomarkers, clinical interpretation and personalised plans.",
+    "company_brief_ar": "خدمة سعودية للصحة الوقائية تجمع الفحوص المخبرية والتفسير الطبي والخطط الشخصية.",
+    "country_en": "Saudi Arabia",
+    "country_ar": "السعودية",
+    "country_code": "SA",
+    "sector_en": "Preventive health · Healthtech",
+    "sector_ar": "الصحة الوقائية · التقنية الصحية",
+    "website": "https://www.madeed.co/",
+    "portrait_url": null,
+    "logo_url": null,
+    "founder_socials": [],
+    "source_url": "https://www.wamda.com/2026/05/madeed-closes-925k-pre-seed-scale-personalised-preventive-healthcare-ksa",
+    "reviewed_at": "2026-11-08",
+    "company_key": "madeed",
+    "source_urls": [
+      "https://www.madeed.co/",
+      "https://www.wamda.com/2026/05/madeed-closes-925k-pre-seed-scale-personalised-preventive-healthcare-ksa",
+      "https://en.incarabia.com/ksabased-madeed-secures-us925000-to-scale-preventive-aidriven-healthcare-platform-across-the-gcc-853775.html"
+    ],
+    "region": "saudi",
+    "founded_year": 2025,
+    "traction_en": "US$925,000 cumulative pre-seed funding as of May 2026, including a US$400,000 earlier tranche; not revenue.",
+    "traction_ar": "إجمالي تمويل قبل بذري 925 ألف دولار في مايو 2026، بما يشمل 400 ألف دولار سابقة؛ وليس إيرادات.",
+    "traction_source_url": "https://www.wamda.com/2026/05/madeed-closes-925k-pre-seed-scale-personalised-preventive-healthcare-ksa"
   }
 ]
