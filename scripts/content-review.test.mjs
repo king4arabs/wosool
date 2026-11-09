@@ -102,7 +102,7 @@ test('checked-in report covers the exact frontend and importer catalog paths', a
   assert.deepEqual(result.totals, { founders: 354, companies: 192, news: 125 })
   assert.equal(result.upcoming_reviews.length + result.reviews_due.length, 354)
   assert.equal([...result.upcoming_reviews, ...result.reviews_due].filter(row => row.catalog === catalogs[1].backend).length, 100)
-  assert.equal([...result.upcoming_reviews, ...result.reviews_due].filter(row => row.catalog === catalogs[4].backend).length, 142)
+  assert.equal([...result.upcoming_reviews, ...result.reviews_due].filter(row => row.catalog === catalogs[4].backend).length, 148)
   for (const [path, field, prefix] of [
     ['../frontend/src/lib/founder-spotlight.ts', 'frontend', 'founder-spotlight'],
     ['../backend/app/Services/FounderDirectoryImporter.php', 'backend', 'founder-directory'],
