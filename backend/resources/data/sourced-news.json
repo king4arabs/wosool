@@ -5177,5 +5177,95 @@
         ]
       }
     }
+  },
+  {
+    "id": "sourced-aila-pre-series-a-august-2026",
+    "slug": "aila-pre-series-a-august-2026",
+    "title": "Saudi edtech AILA raises $3m pre-Series A for AI-personalised learning",
+    "excerpt": "AILA secured $3 million led by Rua Growth Fund to develop personalised learning tools and expand beyond Saudi Arabia.",
+    "content": "On 19 August 2026, Saudi education technology company AILA announced US$3 million in pre-Series A funding led by Rua Growth Fund, with participation from Jo Academy, 500 Global, Bunat VC and Fikr Ventures. Founded in 2023 by Yousef Alsayed, Abdulaziz Bin Mugayel and Nouf Bin Mugayel, AILA builds AI-supported assessments and learning tools to identify students' learning gaps and offer tailored practice and insights for teachers. The company plans to improve its AI platform and expand into regional and international education markets. The US$3 million refers to financing, not company revenue.",
+    "category": "Funding",
+    "region": "saudi",
+    "imageUrl": "",
+    "imageCredit": "",
+    "sourceUrl": "https://www.wamda.com/2026/08/aila-raises-3-million-pre-series-a-expand-personalised-learning-platform",
+    "sourceName": "Wamda (company announcement)",
+    "companies": [
+      "AILA",
+      "آيلا"
+    ],
+    "publishedAt": "2026-08-19",
+    "author": "Wosool news desk",
+    "tags": [
+      "Saudi Arabia",
+      "AILA",
+      "Edtech",
+      "AI learning",
+      "Pre-Series A"
+    ],
+    "keyFacts": [
+      "US$3m pre-Series A announced 19 August 2026",
+      "Rua Growth Fund led, with Jo Academy, 500 Global, Bunat VC and Fikr Ventures",
+      "Founded in 2023 by Yousef Alsayed, Abdulaziz Bin Mugayel and Nouf Bin Mugayel"
+    ],
+    "translations": {
+      "ar": {
+        "title": "«آيلا» السعودية تجمع 3 ملايين دولار لتوسيع التعلم الشخصي بالذكاء الاصطناعي",
+        "excerpt": "حصلت شركة التقنية التعليمية السعودية على تمويل ما قبل المرحلة «أ» بقيادة صندوق روا للنمو لتطوير أدوات التقييم والتعلم.",
+        "body": [
+          "في 19 أغسطس 2026، أعلنت «آيلا» السعودية للتقنية التعليمية جمع 3 ملايين دولار في جولة ما قبل المرحلة «أ» بقيادة Rua Growth Fund، وبمشاركة Jo Academy و500 Global وBunat VC وFikr Ventures. أسس الشركة عام 2023 يوسف السيد وعبدالعزيز بن مغيّل ونوف بن مغيّل، وتطوّر أدوات تقييم وتعلم مدعومة بالذكاء الاصطناعي تساعد على تحديد فجوات التعلم وتقديم تمارين مخصصة ومؤشرات للمعلمين. وتستهدف الشركة تحسين المنصة والتوسع إقليمياً ودولياً. يمثل المبلغ تمويلاً استثمارياً وليس إيرادات للشركة."
+        ],
+        "keyFacts": [
+          "3 ملايين دولار تمويل ما قبل المرحلة «أ» أُعلن في 19 أغسطس 2026",
+          "قادت الجولة Rua Growth Fund بمشاركة Jo Academy و500 Global وجهات أخرى",
+          "أسسها يوسف السيد وعبدالعزيز بن مغيّل ونوف بن مغيّل عام 2023"
+        ]
+      }
+    }
+  },
+  {
+    "id": "sourced-cashin-series-a-february-2026",
+    "slug": "cashin-series-a-february-2026",
+    "title": "Saudi CASHIN secures SAR 60m Series A for digital fuel-station infrastructure",
+    "excerpt": "Impact46 led a SAR 60 million ($16 million) Series A for CASHIN's software linking fuel-station operations and payments.",
+    "content": "On 16 February 2026, Saudi technology company CASHIN announced a SAR 60 million (approximately US$16 million) Series A investment led by Impact46. Co-founders Omar AlRammah, Abdulkarim Zrik and Obay AlMadi built the platform to connect fuel-station financial flows with pump, tank, inventory, payments and related operations. CASHIN intends to use the investment for product development, AI-enabled analytics and expansion within Saudi Arabia. This financing amount is capital raised, not revenue or the value of fuel sold.",
+    "category": "Funding",
+    "region": "saudi",
+    "imageUrl": "",
+    "imageCredit": "",
+    "sourceUrl": "https://impact46.sa/cashin-closes-sar-60-million-series-a-round-led-by-impact46-to-accelerate-automation-and-digitalization-of-fuel-and-energy-stations/",
+    "sourceName": "Impact46 (lead investor)",
+    "companies": [
+      "CASHIN",
+      "كاشن"
+    ],
+    "publishedAt": "2026-02-16",
+    "author": "Wosool news desk",
+    "tags": [
+      "Saudi Arabia",
+      "CASHIN",
+      "EnergyTech",
+      "Fintech",
+      "Series A"
+    ],
+    "keyFacts": [
+      "SAR 60m (~US$16m) Series A announced 16 February 2026",
+      "Led by Impact46",
+      "Co-founded by Omar AlRammah, Abdulkarim Zrik and Obay AlMadi"
+    ],
+    "translations": {
+      "ar": {
+        "title": "«كاشن» السعودية تجمع 60 مليون ريال في جولة «أ» لرقمنة محطات الوقود",
+        "excerpt": "قادت «إمباكت46» جولة بقيمة 60 مليون ريال لتطوير منصة «كاشن» التي تربط عمليات محطات الوقود والمدفوعات.",
+        "body": [
+          "في 16 فبراير 2026، أعلنت شركة «كاشن» السعودية إغلاق جولة استثمارية من الفئة «أ» بقيمة 60 مليون ريال (نحو 16 مليون دولار) بقيادة «إمباكت46». أسس الشركة عمر الرماح وعبدالكريم زريق وأُبيّ الماضي، وتطوّر منصة لربط المدفوعات بالمضخات والخزانات والمخزون وسائر العمليات في محطات الوقود. وتستهدف الاستثمارات تطوير المنتجات والتحليلات المدعومة بالذكاء الاصطناعي والتوسع داخل السعودية. القيمة المعلنة تمويل استثماري وليست إيرادات أو قيمة الوقود المباع."
+        ],
+        "keyFacts": [
+          "60 مليون ريال (نحو 16 مليون دولار) جولة «أ» في 16 فبراير 2026",
+          "قادت الجولة «إمباكت46»",
+          "المؤسسون عمر الرماح وعبدالكريم زريق وأُبيّ الماضي"
+        ]
+      }
+    }
   }
 ]
