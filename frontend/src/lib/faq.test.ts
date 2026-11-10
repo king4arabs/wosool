@@ -3,7 +3,7 @@ import { readdirSync, statSync } from "node:fs"
 import { join } from "node:path"
 import test from "node:test"
 import { FAQS, FAQ_CATEGORIES } from "../data/faq"
-import { faqIdFromHash, matchesFaq, nextFaqIndex, normalizeSearch } from "./faq-search"
+import { eoaFaqTopic, faqIdFromHash, matchesFaq, nextFaqIndex, normalizeSearch } from "./faq-search"
 import { defaultEoaFaqs, eoaFaqs, suggestedEoaFaqs } from "./eoa-editorial"
 
 const appDir = join(process.cwd(), "src/app")
@@ -78,4 +78,13 @@ test("EO suggestions preserve published answers, hidden questions and the editor
   assert.ok(!published.some(row => row.question_en === hidden.question_en))
   assert.equal(published.find(row => row.question_en === custom.question_en)?.answer_en, 'Custom approved answer.')
   assert.equal(suggestedEoaFaqs(Array.from({ length: 29 }, (_, i) => ({ ...custom, question_en: `Custom ${i}`, question_ar: `سؤال ${i}` }))).length, 1)
+})
+
+test('EOA topic navigation separates fees, applying, coaches and the program without editing content', () => {
+  assert.equal(eoaFaqTopic('Can a sponsor pay my participation fees?'), 'fees')
+  assert.equal(eoaFaqTopic('When does paid participation begin?'), 'fees')
+  assert.equal(eoaFaqTopic('How do I apply through Wosool?'), 'joining')
+  assert.equal(eoaFaqTopic('How are accountability coaches selected?'), 'coaching')
+  assert.equal(eoaFaqTopic('How long is the program?'), 'program')
+  assert.ok(defaultEoaFaqs.every(faq => ['program', 'joining', 'fees', 'coaching'].includes(eoaFaqTopic(faq.question_en))))
 })

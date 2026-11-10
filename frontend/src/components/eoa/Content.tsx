@@ -39,12 +39,12 @@ export function EoaContent({ section }: { section: string }) {
   useEffect(() => { document.title = `EO Riyadh Accelerator — ${titles[section]?.[ar ? 0 : 1] ?? ''}` }, [ar, section])
 
   return (
-    <section className="eoa-section">
+    <section className={`eoa-section ${section === 'faq' ? styles.faqPage : ''}`}>
       <div className="eoa-container">
         <header className={`eoa-page-heading ${section === 'faq' ? 'mx-auto text-center' : ''}`}>
           <span className="eoa-eyebrow">EO RIYADH ACCELERATOR</span>
           <h1>{titles[section]?.[ar ? 0 : 1]}</h1>
-          {section === 'faq' && <p className="eoa-lead">{ar ? 'إجابات واضحة عن الأهلية، والتقديم، وتجربة التعلم، وما بعد التخرج.' : 'Clear answers about eligibility, applying, the learning experience and life after graduation.'}</p>}
+          {section === 'faq' && <p>{ar ? 'إجابات واضحة عن الأهلية، والتقديم، وتجربة التعلم، وما بعد التخرج.' : 'Clear answers about eligibility, applying, the learning experience and life after graduation.'}</p>}
         </header>
         {['program', 'alumni'].includes(section) && <CohortModel ar={ar} />}
         {section === 'alumni' && <section className="eoa-card eoa-space"><h2>{ar?'الانتقال إلى عضوية EO':'Progressing to EO membership'}</h2><p>{ar?'بعد تحقق الأهلية، يراجع الفرع طلب عضويتك بصورة مستقلة. قد يستفيد خريجو EOA المؤهلون من تخفيض 50% على رسم الانضمام الأولي إلى EO وفق الشروط السارية؛ يختلف هذا الرسم عن رسوم المشاركة السنوية. يؤكد الفرع أهليتك والمبلغ قبل الدفع.':'The chapter reviews your EO membership application separately once you qualify. Eligible EOA graduates may receive a 50% reduction in the EO initiation fee under the applicable terms. This is separate from annual participation dues; the chapter confirms your eligibility and amount before payment.'}</p></section>}

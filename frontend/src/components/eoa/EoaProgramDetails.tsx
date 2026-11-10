@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 import { ArrowUpRight, Building2 } from 'lucide-react'
+import { eoaFaqTopic } from '@/lib/faq-search'
 import { FaqExplorer } from '@/components/sections/FaqExplorer'
 import type { FaqItem } from '@/data/faq'
 import { useLocale } from '@/lib/locale'
@@ -31,6 +32,13 @@ export function EoaProgramDetails({
     q: { ar: faq.question_ar, en: faq.question_en },
     a: { ar: faq.answer_ar.split(/\n{2,}/), en: faq.answer_en.split(/\n{2,}/) },
   }))
+
+  const faqTopics = [
+    { id: 'program', ar: 'البرنامج والتعلم', en: 'Program & learning', contact: 'general' },
+    { id: 'joining', ar: 'الأهلية والتقديم', en: 'Eligibility & applying', contact: 'general' },
+    { id: 'fees', ar: 'الرسوم والرعاية', en: 'Fees & sponsorship', contact: 'eoa-fees' },
+    { id: 'coaching', ar: 'المدربون والمساءلة', en: 'Coaches & accountability', contact: 'eoa-coaching' },
+  ].map(topic => ({ ...topic, items: faqItems.filter(item => eoaFaqTopic(item.q.en) === topic.id).map(item => item.id) })).filter(topic => topic.items.length)
 
   return (
     <>
@@ -81,14 +89,14 @@ export function EoaProgramDetails({
       )}
       {(section === 'all' || section === 'faq') && faqs.length > 0 && (
         <section className={section === 'faq' ? 'pb-8 pt-2 sm:pb-12' : 'eoa-section'} id="faq" aria-labelledby="eoa-faq-title">
-          <div className="eoa-container">
+          <div className={section === 'faq' ? '' : 'eoa-container'}>
             <div className={section === 'faq' ? 'sr-only' : 'mx-auto max-w-3xl text-center'}>
               <span className="eoa-eyebrow">{ar ? 'قبل التقديم' : 'BEFORE YOU APPLY'}</span>
               <h2 id="eoa-faq-title">{ar ? 'الأسئلة الشائعة' : 'Frequently asked questions'}</h2>
-              <p className="eoa-lead">{ar ? 'تعرّف على البرنامج، وخطوات التقديم، وما ينتظرك خلال رحلة التعلم.' : 'Explore the program, the application steps and what to expect on your learning journey.'}</p>
+              <p>{ar ? 'تعرّف على البرنامج، وخطوات التقديم، وما ينتظرك خلال رحلة التعلم.' : 'Explore the program, the application steps and what to expect on your learning journey.'}</p>
             </div>
-            <div className={`${section === 'faq' ? '' : 'eoa-space'} mx-auto max-w-4xl`}>
-              <FaqExplorer items={faqItems} categories={['events']} searchable={faqItems.length > 5} grouped={false} jsonLd={section === 'faq'} footer={false} contactPath="/eoa/contact" placeholder={ar ? 'ابحث: الرسوم، المدة، الأهلية…' : 'Search: fees, duration, eligibility…'} />
+            <div className={`${section === 'faq' ? '' : 'eoa-space'} mx-auto`}>
+              <FaqExplorer items={faqItems} categories={['events']} topics={faqTopics} searchable={faqItems.length > 5} grouped={false} jsonLd={section === 'faq'} footer={false} contactPath="/eoa/contact" placeholder={ar ? 'ابحث: الرسوم، المدة، الأهلية…' : 'Search: fees, duration, eligibility…'} />
               <p className="mt-8 text-center text-sm text-[var(--text-muted)]">
                 {ar ? 'لديك سؤال آخر؟ ' : 'Have another question? '}
                 <Link href="/eoa/contact" className="font-bold text-[var(--link)] underline">{ar ? 'تواصل مع فريق المسرّعة' : 'Contact the Accelerator team'}</Link>
