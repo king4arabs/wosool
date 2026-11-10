@@ -53,8 +53,11 @@ class EoaAlumniTest extends TestCase
         $this->actingAs($this->account('eoa_staff'))->patchJson($url, $data)->assertForbidden();
         $this->actingAs($this->account('eoa_lead'))->patchJson($url, $data)->assertUnprocessable();
         $c->update(['starts_at' => now()->subMonths(25), 'ends_at' => now()->subMonth()]);
+        $data['early_graduation_reference'] = 'Verified eligibility record';
         $this->patchJson($url, $data)->assertOk();
         $this->assertSame('alumni', $row->fresh()->status);
+        $this->patchJson($url, array_diff_key($data, ['early_graduation_reference' => true]))->assertOk();
+        $this->assertSame('Verified eligibility record', $row->fresh()->eoa_onboarding['alumni']['early_graduation_reference']);
         $this->assertNotNull($row->fresh()->completed_at);
         $this->assertEquals(['eoa_applicant'], $u->fresh()->getRoleNames()->all());
         $this->patchJson('/api/v1/eoa/operations/participants/'.$row->id, ['fee_status' => 'paid', 'global_confirmed' => true, 'official_reference' => 'EOA registration', 'fee_reference' => 'receipt'])->assertConflict();

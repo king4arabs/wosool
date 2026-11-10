@@ -133,7 +133,7 @@ export function ReadinessPanel({
                   <Field key={key} label={ar ? a : en}>
                     <input
                       maxLength={key === 'reference' ? 500 : 200}
-                      value={row[key as keyof Board]}
+                      value={row[key as keyof Board] ?? ''}
                       onChange={(e) =>
                         change('board', [
                           ...data.board.filter((b) => b.role !== role),
@@ -187,7 +187,7 @@ export function ReadinessPanel({
                     <input
                       type={type}
                       maxLength={500}
-                      value={String(row[key as keyof Coach])}
+                      value={String(row[key as keyof Coach] ?? '')}
                       onChange={(e) =>
                         change('coaches', [
                           ...data.coaches.filter(
