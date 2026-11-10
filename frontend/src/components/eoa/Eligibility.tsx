@@ -2,6 +2,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { useLocale } from '@/lib/locale'
+import { eoaPolicy } from '@/lib/eoa-policy'
 import { eligibility } from '@/lib/eoa'
 import { Field, Notice, useEoaProgram } from './Shared'
 import styles from './PublicDetails.module.css'
@@ -12,11 +13,12 @@ export function Eligibility() {
   const [amount, setAmount] = useState('')
   const [currency, setCurrency] = useState('USD')
   const [owner, setOwner] = useState(false)
+  const [basis, setBasis] = useState('revenue')
   const [result, setResult] = useState('')
   const messages: Record<string, string> = {
     potential: ar
-      ? 'قد تستوفي معيار الإيراد. تبدأ المراجعة الرسمية بعد تقديم المستندات ومراجعة الفرع.'
-      : 'You may meet the revenue criterion. Documentary verification and chapter review are still required.',
+      ? 'قد تستوفي المعيار المالي المحدد. تبدأ المراجعة الرسمية بعد تقديم المستندات ومراجعة الفرع.'
+      : 'You may meet the selected financial criterion. Documentary verification and chapter review are still required.',
     membership: ar
       ? 'قد يناسبك مسار عضوية EO المباشرة. تواصل مع قيادة الفرع للتحقق من المتطلبات.'
       : 'The direct EO membership pathway may fit. Contact chapter leadership to verify all requirements.',
@@ -38,35 +40,20 @@ export function Eligibility() {
         </p>
         <div className={`eoa-fee ${styles.fee}`}>
           <span>{ar ? 'تكلفة رحلة EOA السنوية' : 'ANNUAL EOA JOURNEY COST'}</span>
-          <strong><bdi dir="ltr">{program ? `US$${program.facts.annual_journey_usd.toLocaleString('en-US')}` : '—'}</bdi></strong>
-          {!program && <Notice error={failed}>{failed ? (ar ? 'تعذر تحميل الرسوم المعتمدة.' : 'Published fees could not load.') : (ar ? 'جارٍ تحميل الرسوم…' : 'Loading fees…')}{failed && <button type="button" className="eoa-text-link" onClick={retry}>{ar ? 'إعادة المحاولة' : 'Try again'}</button>}</Notice>}
+          <strong><bdi dir="ltr">{`US$${eoaPolicy.annualFee.toLocaleString('en-US')}`}</bdi></strong>
+
           <p>
             {ar
               ? 'يشمل الإجمالي الرسوم العالمية والرسوم المحلية. من المخطط أن يغطي الرعاة نصف التكلفة (2,000 دولار)، لكن الرعاية والجهات الراعية قيد التحديد والاعتماد؛ لا تُضمن مساهمة المشارك المخفضة حتى تأكيد الرعاية.'
               : 'The total includes global and local fees. Sponsors are intended to cover half (US$2,000), but sponsorship and sponsors are still to be confirmed; a reduced participant share is not guaranteed until confirmed.'}
           </p>
-          {program?.local_fees ? (
-            <dl>
-              <dt>{ar ? 'رسوم محلية سنوية' : 'Annual local fee'}</dt>
-              <dd><bdi dir="ltr">US${program.local_fees.local_fee_usd.toLocaleString('en-US')}</bdi></dd>
-              <dt>
-                {ar ? 'مساهمة الراعي السنوية' : 'Annual sponsor contribution'}
-              </dt>
-              <dd><bdi dir="ltr">US${program.local_fees.sponsor_contribution_usd.toLocaleString('en-US')}</bdi></dd>
-              <dt>
-                {ar
-                  ? 'مساهمة المشارك السنوية'
-                  : 'Annual participant contribution'}
-              </dt>
-              <dd><bdi dir="ltr">US${program.local_fees.participant_contribution_usd.toLocaleString('en-US')}</bdi></dd>
-            </dl>
-          ) : (
-            program && <p className="eoa-muted">
-              {ar
-                ? 'تفاصيل السداد ومساهمة الراعي قيد الاعتماد. تواصل مع الفريق قبل أي التزام مالي.'
-                : 'Payment details and sponsor contributions await approval. Contact the team before making any financial commitment.'}
-            </p>
-          )}
+          <dl>
+            {[[ar?'الرسوم العالمية السنوية':'Annual global dues',eoaPolicy.globalFee], [ar?'الرسوم المحلية السنوية':'Annual local dues',eoaPolicy.localFee], [ar?'مساهمة الراعي':'Sponsor contribution',eoaPolicy.sponsorShare], [ar?'مساهمة المشارك بعد تأكيد الرعاية':'Participant share after sponsorship confirmation',eoaPolicy.participantShare]].map(([label,amount])=><div key={label}><dt>{label}</dt><dd><bdi dir="ltr">US${Number(amount).toLocaleString('en-US')}</bdi></dd></div>)}
+          </dl>
+          <p>{ar?'السنة المالية من 1 يوليو إلى 30 يونيو. يؤكد الفريق المبلغ المحتسب حسب شهر البداية المعتمد وتغطية الراعي قبل الدفع. الباقة سنوية وليست رسماً لمرة واحدة لمدة عامين.':'The fiscal year runs from 1 July to 30 June. The team confirms prorating from the approved start month and sponsor coverage before payment. This is an annual package, not a one-time two-year fee.'}</p>
+          {!program?.local_fees && <p className="eoa-muted">{ar?'لا تُعد الرعاية مؤكدة لمشاركتك حتى يؤكدها الفريق. تواصل قبل أي التزام مالي.':'Sponsorship for your place is not confirmed until verified by the team. Contact us before a financial commitment.'}</p>}
+          {failed && <Notice error>{ar?'تعذر تحديث حالة الرعاية.':'Sponsorship status could not be refreshed.'} <button type="button" onClick={retry}>{ar?'إعادة المحاولة':'Retry'}</button></Notice>}
+
         </div>
       </div>
       <form
@@ -75,13 +62,13 @@ export function Eligibility() {
         onSubmit={(e) => {
           e.preventDefault()
           setResult(
-            eligibility(amount === '' ? NaN : Number(amount), currency, owner),
+            eligibility(amount === '' ? NaN : Number(amount), currency, owner, basis),
           )
         }}
       >
         <h2 id="eligibility-assessment-title">{ar ? 'تقييم أولي للأهلية' : 'Eligibility self-assessment'}</h2>
-        <div className={styles.fields}>
-          <Field label={ar ? 'الإيراد السنوي الإجمالي' : 'Gross annual revenue'}>
+        <Field label={ar?'أساس التقييم':'Eligibility basis'}><select value={basis} onChange={e=>{setBasis(e.target.value);setResult('')}}><option value="revenue">{ar?'الإيرادات السنوية':'Annual gross revenue'}</option><option value="funding">{ar?'تمويل خاص لشركة مدعومة استثمارياً':'Privately raised funds — venture-backed business'}</option></select></Field><div className={styles.fields}>
+          <Field label={basis === 'funding' ? (ar?'التمويل الخاص المحصل':'Privately raised funds') : (ar ? 'الإيراد السنوي الإجمالي' : 'Gross annual revenue')}>
             <input
               type="number"
               inputMode="decimal"

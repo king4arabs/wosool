@@ -182,7 +182,7 @@ export interface ContactMessage {
   name: string
   email: string
   company?: string
-  category: "general" | "partnerships" | "sponsorship" | "founder-support" | "media" | "office-hours"
+  category: "general" | "partnerships" | "sponsorship" | "founder-support" | "media" | "office-hours" | "eoa-coaching" | "eoa-fees" | "eoa-privacy"
   subject: string
   message: string
 }

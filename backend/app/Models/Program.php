@@ -10,6 +10,8 @@ class Program extends Model
 {
     use SoftDeletes;
 
+    protected $hidden = ['settings'];
+
     protected $fillable = [
         'name', 'title', 'slug', 'description', 'short_description', 'full_description',
         'program_type', 'category', 'duration', 'format', 'language', 'city_region',

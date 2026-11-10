@@ -24,6 +24,7 @@ class ApplicationRequest extends FormRequest
 
         return [
             'preferred_track_id' => [$r, 'integer', Rule::exists('eoa_tracks', 'id')->where('program_id', ProgramService::program()->id)->where('is_active', true)],
+            'qualification_basis' => 'nullable|in:revenue,funding', 'privately_raised_usd' => 'nullable|numeric|min:0|max:999999999999.99',
             'founder_name' => "$r|string|max:255", 'phone' => "$r|string|max:40",
             'founder_role' => "$r|in:founder,owner,cofounder",
             'company_name' => "$r|string|max:255", 'company_website' => 'nullable|url:https|max:255',

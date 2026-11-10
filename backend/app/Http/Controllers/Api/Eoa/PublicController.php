@@ -33,9 +33,19 @@ class PublicController extends Controller
             $editorial = null;
         }
 
+        if ($editorial) {
+            $editorial['faqs'] = array_values(array_filter($editorial['faqs'], fn ($faq) => ! ProgramService::containsInternalFunding(json_encode($faq, JSON_UNESCAPED_UNICODE))));
+            if (ProgramService::containsInternalFunding(json_encode($editorial['operator'], JSON_UNESCAPED_UNICODE))) $editorial['operator'] = null;
+        }
+        foreach (['public_message_en', 'public_message_ar', 'participation_terms_en', 'participation_terms_ar', 'privacy_notice_en', 'privacy_notice_ar'] as $field) {
+            if (ProgramService::containsInternalFunding($settings[$field] ?? null)) $settings[$field] = null;
+        }
+
         return response()->json(['data' => [
             'delivery_model' => ProgramService::deliveryModel(),
+            'governance' => \App\Services\Eoa\Readiness::publicBoard($program),
             'data_collection_open' => ProgramService::collectionReady(),
+            'registration_open' => ProgramService::registrationReady(),
             'privacy_notice_ar' => $settings['privacy_status'] === 'approved' ? $settings['privacy_notice_ar'] : null,
             'privacy_notice_en' => $settings['privacy_status'] === 'approved' ? $settings['privacy_notice_en'] : null,
             'privacy_notice_version' => $settings['privacy_status'] === 'approved' ? $settings['privacy_notice_version'] : null,

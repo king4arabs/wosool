@@ -291,3 +291,10 @@
 .eoa-role-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:16px}.eoa-role-grid article{background:#f6f5fd;border-radius:16px;padding:18px}.eoa-role-grid h3{font-size:1rem}
 .eoa-workspace-nav{display:flex;flex-wrap:wrap;gap:10px;margin:20px 0}.eoa-workspace-nav a{padding:10px 16px;border:1px solid #dedcec;border-radius:999px;font-size:.85rem;font-weight:700}
 .eoa-sr-target{scroll-margin-top:120px}.eoa-admin-filter{display:flex;flex-wrap:wrap;align-items:end;gap:12px;margin-bottom:20px}.eoa-admin-filter .eoa-field{flex:1;min-width:180px}
+
+.eoa-policy-table { overflow-x: auto; margin-block: 1.25rem; }
+.eoa-policy-table table { width: 100%; border-collapse: collapse; text-align: start; }
+.eoa-policy-table th, .eoa-policy-table td { padding: 1rem; border-bottom: 1px solid var(--border, #dbe2ea); vertical-align: top; text-align: start; }
+.eoa-policy-table th { font-weight: 800; background: var(--surface-soft, #f1f5f9); }
+.eoa-policy-table small { display: block; margin-top: .35rem; }
+.eoa-policy-table a { text-decoration: underline; font-weight: 700; }

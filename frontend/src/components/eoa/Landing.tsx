@@ -13,6 +13,7 @@ import {
   TrendingUp,
 } from "lucide-react"
 import { useLocale } from "@/lib/locale"
+import { eoaIntakeAction } from "@/lib/eoa-policy"
 import { programAvailability } from "@/lib/eoa"
 import { EoaHeroMedia } from "./HeroMedia"
 import { CohortModel } from './CohortModel'
@@ -36,13 +37,13 @@ export function EoaLanding() {
     ? [
         ["$250K–$999K", "نطاق الإيراد السنوي المستهدف"],
         ["4", "محاور للعمل على شركتك"],
-        ["٦ أشهر", "تعلم وتوجيه مع الدفعة"],
+        ["عامان", "منهج التعلم والنمو"],
         ["$1M+", "هدف الإيراد السنوي"],
       ]
     : [
         ["$250K–$999K", "Target annual revenue"],
         ["4", "Areas to work on"],
-        ["6 months", "Learning and coaching with your cohort"],
+        ["2 years", "Learning and growth curriculum"],
         ["$1M+", "Annual revenue goal"],
       ]
 
@@ -74,13 +75,13 @@ export function EoaLanding() {
               </h1>
               <p className="eoa-hero-message">
                 {ar
-                  ? "لديك شركة قائمة وقرارات لا يمكن تأجيلها؟ خصص ستة أشهر للعمل عليها مع مؤسسين آخرين ومدربين، ثم واصل المتابعة ضمن مجتمع الخريجين. تنطلق دفعة جديدة كل ستة أشهر."
-                  : "Running a business means making decisions you can’t put off. Spend six months working through them with fellow founders and coaches, then stay connected through the alumni program. A new cohort begins every six months."}
+                  ? "طوّر شركتك عبر منهج تعلم لمدة عامين، وأيام تعلم ربع سنوية، ومجموعات مساءلة شهرية مع مؤسسين ومدربين من EO. المشاركة والتجديد سنويان؛ تُعلن مواعيد الدفعات عند تأكيدها."
+                  : "Grow your business through a two-year curriculum, quarterly Learning Days and monthly accountability groups with founders and EO-member coaches. Participation and renewal are annual; intake dates are announced when confirmed."}
               </p>
 
               <div className="eoa-hero-join-row">
                 <div className="eoa-actions">
-                  <Link className="eoa-btn" href="/eoa/apply">{ar ? "انضم إلى مسرّعة EO الرياض" : "Apply to EO Riyadh Accelerator"}<Arrow size={18} /></Link>
+                  <Link className="eoa-btn" href={eoaIntakeAction(program?.applications_open, ar).href}>{eoaIntakeAction(program?.applications_open, ar).label}<Arrow size={18} /></Link>
                   <Link className="eoa-btn eoa-btn-outline" href="/eoa/program">{ar ? "استكشف البرنامج" : "Explore the Program"}</Link>
                   <Link className="eoa-text-link" href="/eoa/perks">{ar ? "مزايا المشاركين" : "Participant perks"}</Link>
                   <a className="eoa-text-link" href="https://eonetwork.org/" target="_blank" rel="noopener noreferrer">{ar ? "اكتشف EO" : "Discover EO"}<Arrow size={18} /></a>

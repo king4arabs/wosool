@@ -10,8 +10,12 @@ const organizations = JSON.parse(readFileSync(new URL('../../backend/database/da
   .map((item, index) => ({ ...item, id: index + 1 }))
 const program = {
   facts: { annual_journey_usd: 4000 },
-  local_fees: { local_fee_usd: 2000, sponsor_contribution_usd: 2000, participant_contribution_usd: 2000 },
-  partners: [], ecosystem: [],
+  local_fees: { local_fee_usd: 2250, sponsor_contribution_usd: 2000, participant_contribution_usd: 2000 },
+  // Explicitly published fixtures exercise carousel controls without relying on unconfirmed fallbacks.
+  partners: [
+    { id: 21, name_ar: "الكراج", name_en: "The Garage", website: "https://thegarage.sa/", logo_path: "/partners/the-garage.png" },
+    { id: 22, name_ar: "لاماركا", name_en: "LAMARKA", website: "https://www.lamarka.com/", logo_path: "/partners/lamarka.png" },
+  ], ecosystem: [],
 }
 const app = spawn(process.execPath, ['node_modules/next/dist/bin/next', 'start', '-H', '127.0.0.1', '-p', '18095'], { stdio: ['ignore', 'pipe', 'pipe'] })
 let log = ''
@@ -84,7 +88,7 @@ try {
           const [a, b] = actions
           assert.ok(actions.every(box => box.height >= 48))
           assert.ok(a.right + 10 <= b.left || b.right + 10 <= a.left || a.bottom + 10 <= b.top || b.bottom + 10 <= a.top, 'Actions need a clear gap')
-          await form.locator('select').selectOption('SAR')
+          await form.getByRole('combobox', { name: locale === 'ar' ? 'العملة' : 'Currency', exact: true }).selectOption('SAR')
           await form.locator('input[type=number]').fill('1125000')
           await form.locator('button[type=submit]').click()
           await form.getByRole('status').waitFor()

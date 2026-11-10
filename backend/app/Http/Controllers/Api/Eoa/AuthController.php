@@ -24,7 +24,7 @@ class AuthController extends Controller
             'password' => ['required', 'confirmed', Password::min(12)->mixedCase()->numbers()],
             'privacy_consent' => 'required|accepted', 'website_confirm' => 'nullable|max:0',
         ]);
-        abort_unless(ProgramService::collectionReady(), 503, 'Account registration awaits approval of the local data notice / إنشاء الحسابات بانتظار اعتماد إشعار البيانات المحلي.');
+        abort_unless(ProgramService::registrationReady(), 503, 'Registration is not ready yet. Contact the program team / التسجيل غير متاح حالياً. تواصل مع فريق البرنامج.');
         $user = DB::transaction(function () use ($data) {
             $payload = [
                 'name' => $data['name'], 'email' => $data['email'],

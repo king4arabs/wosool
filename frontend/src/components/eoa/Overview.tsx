@@ -40,8 +40,8 @@ export function EoaOverview() {
           <h2 id="eoa-overview-title">EO Riyadh Accelerator</h2>
           <p>
             {ar
-              ? 'مسرّعة تمتد ستة أشهر تجمع التوجيه والتدريب والأنشطة المرموقة، يليها برنامج مستمر للخريجين. تنطلق دفعة جديدة كل ستة أشهر.'
-              : 'A six-month accelerator combining coaching, training and prestigious activities, followed by an ongoing alumni program. New cohorts begin every six months.'}
+              ? 'منهج تعلم لمدة عامين يجمع أيام التعلم الربع سنوية والمساءلة الشهرية، مع مشاركة وتجديد سنويين ودعم بعد التخرج المعتمد.'
+              : 'A two-year curriculum combining quarterly Learning Days and monthly accountability, with annual participation and renewal and support after approved graduation.'}
           </p>
         </div>
       </div>

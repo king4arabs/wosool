@@ -1,4 +1,4 @@
-export type ContactCategory = "general" | "founder-support" | "partnerships" | "sponsorship" | "media" | "office-hours"
+export type ContactCategory = "general" | "founder-support" | "partnerships" | "sponsorship" | "media" | "office-hours" | "eoa-coaching" | "eoa-fees" | "eoa-privacy"
 export type InboxStatus = "open" | "answered" | ""
 
 export type InboxMessage = {

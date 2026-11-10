@@ -49,6 +49,7 @@ export function EoaPerks() {
     <p className="eoa-lead">{ar
       ? 'قد يقدّم شركاء البرنامج عروضاً للمشاركين. لا تظهر تفاصيل أي عرض إلا بعد اعتماد الشريك والعرض من فريق البرنامج، وتأكيد تسجيلك في الدفعة.'
       : 'Program partners may make offers to participants. Offer details appear only after the team approves the provider and offer, and your enrollment is confirmed.'}</p>
+    <div className="eoa-card eoa-space"><h2>{ar?'ما تتضمنه المشاركة':'Included in participation'}</h2><p>{ar?'أيام تعلم ربع سنوية، ومجموعات مساءلة شهرية، وأدوات تحديد الأهداف ومتابعتها، وفرص EO المتاحة لدفعتك. تختلف العروض الإضافية للشركاء عن هذه الخدمات الأساسية.':'Quarterly Learning Days, monthly accountability groups, goal-setting and tracking tools, and EO opportunities available to your cohort. Additional partner offers are separate from these core services.'}</p></div>
     <h2 id="eoa-perks-title">{ar ? 'عروض الشركاء المعتمدة' : 'Approved partner perks'}</h2>
     {(isLoading || (user && (loadedFor !== user.id || state === 'loading'))) && <Notice>{ar ? 'جارٍ تحميل المزايا…' : 'Loading perks…'}</Notice>}
     {!isLoading && !user && <div className="eoa-card"><p>{ar ? 'سجّل الدخول للاطلاع على المزايا بعد اعتماد مشاركتك.' : 'Sign in to view perks once your participation is approved.'}</p><Link className="eoa-btn" href="/eoa/account?mode=login&redirect=%2Feoa%2Fperks">{ar ? 'تسجيل الدخول أو إنشاء حساب' : 'Sign in or create an account'}</Link></div>}

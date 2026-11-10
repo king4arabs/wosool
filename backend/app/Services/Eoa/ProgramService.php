@@ -37,6 +37,11 @@ class ProgramService
         return $s['privacy_status'] === 'approved' && ! empty($s['privacy_approval_reference']) && ! empty($s['privacy_notice_ar']) && ! empty($s['privacy_notice_en']) && ! empty($s['privacy_notice_version']);
     }
 
+    public static function registrationReady(): bool
+    {
+        return self::collectionReady() && self::mailConfigured() && ! empty(Readiness::records(self::program())['mail_delivery_verified']);
+    }
+
     public static function mailConfigured(): bool
     {
         return ! in_array(config('mail.default'), ['log', 'array', null], true);
@@ -53,6 +58,11 @@ class ProgramService
         }
     }
 
+    public static function containsInternalFunding(?string $text): bool
+    {
+        return (bool) preg_match('/\b(?:launch grants?|grant funding|payback)\b|منحة|منح الإطلاق|مرتجع الرسوم/iu', $text ?? '');
+    }
+
     public static function facts(): array
     {
         return [
@@ -60,15 +70,15 @@ class ProgramService
             'annual_global_fee_usd' => 1750,
             'annual_journey_usd' => self::ANNUAL_JOURNEY_USD,
             'proposed_sponsor_share_usd' => self::SPONSOR_SHARE_USD,
-            'verified_at' => '2026-10-09',
+            'verified_at' => '2026-11-10',
             'sources' => ['https://eonetwork.org/accelerator', 'https://eonetwork.org/accelerator/faqs/'],
         ];
     }
 
     public static function deliveryModel(): array
     {
-        return ['duration_months' => 6, 'cohort_interval_months' => 6, 'alumni_support' => true,
+        return ['duration_months' => 24, 'annual_learning_days' => 4, 'accountability_group_min' => 4, 'accountability_group_max' => 6, 'cohort_interval_months' => 6, 'alumni_support' => true,
             'revenue_goal_usd' => 1000000, 'eo_membership_automatic' => false,
-            'source' => 'Riyadh program leadership direction, 2026-10-11'];
+            'source' => 'https://eonetwork.org/accelerator/faqs/'];
     }
 }

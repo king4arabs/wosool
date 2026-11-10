@@ -26,23 +26,23 @@ class EoaAlumniTest extends TestCase
         return $u;
     }
 
-    public function test_install_uses_six_month_duration_and_preserves_local_program_edits(): void
+    public function test_install_uses_two_year_duration_and_preserves_local_program_edits(): void
     {
-        $this->assertSame('6 months', ProgramService::program()->duration);
+        $this->assertSame('24 months', ProgramService::program()->duration);
         ProgramService::program()->update(['duration' => '6 months plus alumni support']);
         $this->artisan('eoa:install')->assertSuccessful();
         $this->assertSame('6 months plus alumni support', ProgramService::program()->duration);
     }
 
-    public function test_local_model_and_new_cohort_default_are_six_months(): void
+    public function test_local_model_and_new_cohort_default_are_two_years(): void
     {
-        $this->getJson('/api/v1/eoa/program')->assertOk()->assertJsonPath('data.delivery_model.duration_months', 6)->assertJsonPath('data.delivery_model.cohort_interval_months', 6)->assertJsonPath('data.delivery_model.eo_membership_automatic', false)->assertJsonMissingPath('data.facts.duration_years');
+        $this->getJson('/api/v1/eoa/program')->assertOk()->assertJsonPath('data.delivery_model.duration_months', 24)->assertJsonPath('data.delivery_model.cohort_interval_months', 6)->assertJsonPath('data.delivery_model.eo_membership_automatic', false)->assertJsonMissingPath('data.facts.duration_years');
         $r = $this->actingAs($this->account('eoa_staff'))->postJson('/api/v1/eoa/operations/create/cohorts', ['name' => 'Six month cohort', 'starts_at' => '2026-08-31', 'capacity' => 15, 'status' => 'forming'])->assertCreated();
         $cohort = ProgramService::program()->cohorts()->findOrFail($r->json('id'));
-        $this->assertSame('2027-02-28', $cohort->ends_at->toDateString());
+        $this->assertSame('2028-08-31', $cohort->ends_at->toDateString());
     }
 
-    public function test_graduation_is_lead_only_requires_six_months_and_preserves_membership(): void
+    public function test_graduation_is_lead_only_requires_curriculum_completion_and_preserves_membership(): void
     {
         $p = ProgramService::program();
         $u = $this->account('eoa_applicant');
@@ -52,7 +52,7 @@ class EoaAlumniTest extends TestCase
         $data = ['graduation_reference' => 'Leadership review', 'follow_up_on' => now()->addMonth()->toDateString(), 'support_plan' => 'Review progress toward the revenue target.'];
         $this->actingAs($this->account('eoa_staff'))->patchJson($url, $data)->assertForbidden();
         $this->actingAs($this->account('eoa_lead'))->patchJson($url, $data)->assertUnprocessable();
-        $c->update(['starts_at' => now()->subMonths(7), 'ends_at' => now()->subMonth()]);
+        $c->update(['starts_at' => now()->subMonths(25), 'ends_at' => now()->subMonth()]);
         $this->patchJson($url, $data)->assertOk();
         $this->assertSame('alumni', $row->fresh()->status);
         $this->assertNotNull($row->fresh()->completed_at);

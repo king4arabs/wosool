@@ -22,12 +22,14 @@ export type Organization = EoaPartner & {
   logo_source_url?: string
 }
 export type EoaProgram = {
+  governance?: {role:string;name_ar:string;name_en:string}[]
   mentors?: EoaMentor[]
   board_members?: EoaBoardMember[]
   editorial?: EoaEditorial | null
   partner_roles?: Record<string, 'operator' | 'enabler' | 'supporter'>
   tracks: EoaTrack[]
   program_id: number
+  registration_open?: boolean
   data_collection_open: boolean
   privacy_notice_ar: string | null
   privacy_notice_en: string | null
@@ -86,6 +88,8 @@ export function reviewTransitions(status: string, lead: boolean) {
   )
 }
 export type ApplicationFields = {
+  qualification_basis?: string
+  privately_raised_usd?: number | string
   preferred_track_id?: number | string
   founder_name?: string
   phone?: string
@@ -138,6 +142,8 @@ export type Participant = {
   alumni?: {follow_up_on?: string; support_plan?: string} | null
   onboarding: { completed_at?: string }
   finance: {
+    participation_starts_on?: string
+    paid_through?: string
     fee_status?: string
     global_confirmed?: boolean
     participant_amount_usd?: number
@@ -195,7 +201,7 @@ export function errorText(error: unknown) {
     ? error.message
     : 'Please try again / يرجى المحاولة مرة أخرى'
 }
-export function eligibility(amount: number, currency: string, owner: boolean) {
+export function eligibility(amount: number, currency: string, owner: boolean, basis = 'revenue') {
   if (
     !Number.isFinite(amount) ||
     amount < 0 ||
@@ -204,7 +210,7 @@ export function eligibility(amount: number, currency: string, owner: boolean) {
     return 'invalid'
   const usd = currency === 'SAR' ? amount / 3.75 : amount
   if (!owner) return 'review'
-  if (usd >= 1000000) return 'membership'
+  if (usd >= 1000000) return basis === 'funding' ? 'review' : 'membership'
   return usd >= 250000 ? 'potential' : 'review'
 }
 

@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { ArrowUpRight } from 'lucide-react'
 import type { EoaProgram } from '@/lib/eoa'
 import { leadershipBoard } from '@/lib/eoa-leadership'
+import { EoaGovernance } from './Governance'
 import { EoaBoard } from './Board'
 import { LamarkaProfile } from './LamarkaProfile'
 import styles from './Leadership.module.css'
@@ -74,6 +75,7 @@ export function EoaLeadership({ program, ar }: { program: EoaProgram | null; ar:
         </article>)}
       </div>
     </section>
+    <EoaGovernance ar={ar} program={program} />
     <EoaBoard members={board} ar={ar} layout="grid" />
     <LamarkaProfile ar={ar} />
     <section className={styles.nextStep}>

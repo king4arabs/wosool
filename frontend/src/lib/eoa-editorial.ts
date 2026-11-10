@@ -57,15 +57,15 @@ export const defaultEoaFaqs: EoaFaq[] = [
   {
     question_en: 'How long is the program and what is the time commitment?',
     question_ar: 'ما مدة البرنامج والالتزام الزمني؟',
-    answer_en: 'The Riyadh cohort lasts six months, with coaching, training and cohort activities. A new round begins every six months. After graduation, the alumni program offers follow-ups and support as you continue working on your business.',
-    answer_ar: 'تمتد دفعة الرياض ستة أشهر وتشمل التوجيه والتدريب وأنشطة الدفعة. تنطلق جولة جديدة كل ستة أشهر. بعد التخرج، يمكنك متابعة العمل على شركتك من خلال برنامج الخريجين.',
+    answer_en: 'EO Accelerator follows a two-year curriculum with annual participation and renewal. Expect four quarterly Learning Days each year and monthly accountability groups of 4–6 participants. Riyadh may admit new intakes every six months when confirmed; intake frequency does not shorten the program.',
+    answer_ar: 'يقدم EO Accelerator منهجاً لمدة عامين مع مشاركة وتجديد سنويين، وأربعة أيام تعلم سنوياً ومجموعات مساءلة شهرية تضم 4–6 مشاركين. قد تستقبل الرياض دفعات كل ستة أشهر عند تأكيدها؛ ولا يختصر ذلك مدة البرنامج.',
     visible: true,
   },
   {
     question_en: 'What are the participation fees?',
     question_ar: 'ما رسوم المشاركة؟',
-    answer_en: 'The annual EO global program fee is US$1,750, plus any local chapter fees. Riyadh fees, sponsorship contributions and payment arrangements are shared after confirmation by program leadership.',
-    answer_ar: 'تبلغ رسوم برنامج EO العالمية 1,750 دولاراً سنوياً، إضافة إلى رسوم الفرع المحلية إن وجدت. تُعلن رسوم الرياض ومساهمات الرعاية وترتيبات السداد بعد تأكيدها من قيادة البرنامج.',
+    answer_en: 'The Riyadh annual package is US$4,000: US$1,750 global dues and US$2,250 local dues. The sponsorship model allocates US$2,000 to the sponsor and US$2,000 to the participant. The reduced participant amount applies after sponsorship is confirmed. Fees are aligned to the approved start date through 30 June; leadership confirms the payable amount before payment.',
+    answer_ar: 'الباقة السنوية للرياض 4,000 دولار: 1,750 دولار للرسوم العالمية و2,250 دولار للرسوم المحلية. يخصص نموذج الرعاية 2,000 دولار للراعي و2,000 دولار للمشارك بعد تأكيد الرعاية. تُحتسب الرسوم وفق البداية المعتمدة وحتى 30 يونيو، ويؤكد الفريق المبلغ المستحق قبل الدفع.',
     visible: true,
   },
   {
@@ -78,8 +78,8 @@ export const defaultEoaFaqs: EoaFaq[] = [
   {
     question_en: 'Does completing Accelerator give me EO membership?',
     question_ar: 'هل إكمال المسرّعة يمنحني عضوية EO؟',
-    answer_en: 'EOA participants, founders and alumni can apply to EO once they meet all joining requirements and pass its admission and chapter-review process. Reaching US$1 million is a growth goal; cohort graduation alone does not grant EO membership.',
-    answer_ar: 'يمكن لمشاركي EOA والمؤسسين والخريجين التقدم إلى EO بعد استيفاء جميع شروط الانضمام واجتياز إجراءات القبول ومراجعة الفرع. الوصول إلى مليون دولار هدف للنمو؛ ولا يمنح التخرج وحده عضوية EO.',
+    answer_en: 'EOA participants and graduates can apply to EO once they meet all joining requirements and pass the chapter admission process. A six-month progress review is not EOA graduation, and program participation does not provide automatic EO membership.',
+    answer_ar: 'يمكن للمشاركين والخريجين التقدم إلى EO عند استيفاء جميع شروط الانضمام واجتياز قبول الفرع. مراجعة التقدم بعد ستة أشهر ليست تخرجاً من EOA، والمشاركة لا تمنح عضوية EO تلقائياً.',
     visible: true,
   },
   {
@@ -113,8 +113,8 @@ export const defaultEoaFaqs: EoaFaq[] = [
   {
     "question_en": "Are sessions in person or online?",
     "question_ar": "هل الجلسات حضورية أم عبر الإنترنت؟",
-    "answer_en": "Check each session in the cohort schedule for its delivery format, venue or joining link. Do not assume every session uses the same format.",
-    "answer_ar": "راجع كل جلسة في جدول الدفعة لمعرفة طريقة انعقادها ومقرها أو رابط الانضمام. قد تختلف طريقة الحضور بين جلسة وأخرى.",
+    "answer_en": "Below 10 paid participants, programs use global virtual Learning Days. At 10–14, an assigned trainer delivers virtual Learning Days; at 15 or more, the program becomes eligible for in-person Learning Days. Local accountability groups meet monthly; check the confirmed calendar for venues and access.",
+    "answer_ar": "أقل من 10 مشاركين مسددين: أيام تعلم افتراضية عالمية. من 10 إلى 14: أيام تعلم افتراضية مع مدرب مخصص. من 15 فأكثر: تأهل لأيام تعلم حضورية. تجتمع مجموعات المساءلة المحلية شهرياً؛ راجع التقويم المؤكد للمقار وروابط الحضور.",
     "visible": true
   },
   {
@@ -145,6 +145,10 @@ export const defaultEoaFaqs: EoaFaq[] = [
     "answer_ar": "نعم. تواصل مع فريق البرنامج واختر نوع الاستفسار «شراكة» أو «رعاية». عرّف بجهتك والدعم الذي يمكنك تقديمه لبحث الخطوة التالية مع الفريق.",
     "visible": true
   },
+  {"question_en": "Can a sponsor pay my participation fees?", "question_ar": "هل يمكن للراعي دفع رسوم مشاركتي؟", "answer_en": "Yes. A confirmed sponsor can cover the agreed contribution. Sponsorship pays the dues; global dues are not waived. The team confirms coverage and any remaining participant payment before activation.", "answer_ar": "نعم، يغطي الراعي المؤكد المساهمة المتفق عليها. الرعاية تسدد الرسوم ولا تعفي من الرسوم العالمية. يؤكد الفريق التغطية والمبلغ المتبقي قبل التفعيل.", "visible": true},
+  {"question_en": "When does paid participation begin?", "question_ar": "متى تبدأ المشاركة المدفوعة؟", "answer_en": "Local acceptance, EO approval, payment and participation activation are separate steps. Your approved start date should align with a ready program and available learning. Do not pay from an unverified link.", "answer_ar": "القبول المحلي واعتماد EO والسداد وتفعيل المشاركة خطوات منفصلة. تتوافق البداية المعتمدة مع جاهزية البرنامج والتعلم. لا تسدد عبر رابط غير موثق.", "visible": true},
+  {"question_en": "Can business partners both join?", "question_ar": "هل يمكن للشركاء في الشركة الانضمام؟", "answer_en": "Each owner or business partner applies separately and pays individual participant fees. Venture-backed businesses may request review of the official privately raised funding criterion of US$250,000–999,999.", "answer_ar": "يتقدم كل مالك أو شريك بطلب منفصل ويسدد رسوم مشاركته. ويمكن للشركات المدعومة استثمارياً طلب مراجعة معيار التمويل الخاص البالغ 250,000–999,999 دولار.", "visible": true},
+  {"question_en": "How are accountability coaches selected?", "question_ar": "كيف يتم اختيار مدربي المساءلة؟", "answer_en": "Coaches are current EO members with business-scaling experience, a 12-month commitment, training and regular check-ins. Published global network profiles are not appointments to your group.", "answer_ar": "المدربون أعضاء حاليون في EO لديهم خبرة في تنمية الأعمال والتزام لمدة 12 شهراً وتدريب ومتابعة منتظمة. الملفات المنشورة للشبكة العالمية لا تعني التعيين لمجموعتك.", "visible": true},
 ]
 
 /** Explicitly import missing suggestions without changing existing answers or visibility. */
@@ -153,9 +157,10 @@ export function suggestedEoaFaqs(existing: EoaFaq[]) {
 }
 
 export function eoaFaqs(editorial?: EoaEditorial | null) {
-  const core = defaultEoaFaqs.filter(faq => ['How long is the program and what is the time commitment?', 'Does completing Accelerator give me EO membership?'].includes(faq.question_en))
+  const core = defaultEoaFaqs.filter(faq => ['How long is the program and what is the time commitment?', 'Does completing Accelerator give me EO membership?', 'What are the participation fees?', 'Are sessions in person or online?'].includes(faq.question_en))
   const others = editorial ? editorial.faqs.filter(faq => faq.visible) : defaultEoaFaqs
-  return [...core, ...others.filter(faq => !core.some(item => item.question_en === faq.question_en || item.question_ar === faq.question_ar))]
+  const added = defaultEoaFaqs.slice(16).filter(faq => !others.some(item => item.question_en === faq.question_en || item.question_ar === faq.question_ar))
+  return [...core, ...others.filter(faq => !core.some(item => item.question_en === faq.question_en || item.question_ar === faq.question_ar)), ...added]
 }
 
 export function safeEoaWebsite(value: string | null | undefined) {

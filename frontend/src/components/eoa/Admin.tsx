@@ -22,6 +22,7 @@ import { BoardManager } from './BoardManager'
 import { MentorManager } from './MentorManager'
 import { EoaEditorialManager } from './EoaEditorialManager'
 import { ManagementOverview, AccessGuide, type Management } from './ManagementOverview'
+import { ReadinessPanel, PrivateFinancePanel } from './ReadinessPanel'
 import { AlumniManager } from './AlumniManager'
 import { TrackManager } from './TrackManager'
 import { PerkManager } from './PerkManager'
@@ -220,7 +221,7 @@ function AdminSession() {
                   ? [['accounts', ar ? 'حسابات الفريق' : 'Team access']]
                   : []),
                 ...(review.capabilities.lead && ops
-                  ? [['tracks', ar ? 'مسارات القبول' : 'Admission tracks']]
+                  ? [['tracks', ar ? 'مسارات القبول' : 'Admission tracks'], ['readiness', ar ? 'جاهزية الإطلاق' : 'Launch readiness'], ['finance', ar ? 'المالية الداخلية' : 'Internal finance']]
                   : []),
                 ...(ops
                   ? [
@@ -240,6 +241,8 @@ function AdminSession() {
               ]} platformAdmin={isAdminUser(user)} onChange={(next) => { setTab(next); setSelected(null) }} />
             {tab === 'overview' && (ops ? <ManagementOverview data={ops.management} ar={ar} settings={ops.settings} mail={ops.mail_configured} open={ops.is_open} navigate={(next) => { if (next === 'coaching') window.location.assign('/eoa/coach'); else setTab(next) }} /> : <div className="eoa-card"><h2>{ar ? 'مساحة المراجع' : 'Reviewer workspace'}</h2><p>{ar ? 'راجع الطلبات المسندة إليك واطلب المعلومات المطلوبة قبل رفع التوصية للقيادة.' : 'Review your assigned applications and request the evidence needed for a leadership decision.'}</p><button className="eoa-btn" onClick={() => setTab('applications')}>{ar ? 'عرض الطلبات' : 'View assigned applications'}</button></div>)}
             {tab === 'access' && <AccessGuide ar={ar} />}
+            {tab === 'readiness' && ops && review.capabilities.lead && <ReadinessPanel ar={ar} people={ops.people} />}
+            {tab === 'finance' && ops && review.capabilities.lead && <PrivateFinancePanel ar={ar} />}
             {tab === 'accounts' && review.capabilities.manage_roles && (
               <RoleManager />
             )}
@@ -529,6 +532,8 @@ function AdminSession() {
                           official_reference:
                             f.get('official_reference') || null,
                           fee_reference: f.get('fee_reference') || null,
+                          participation_starts_on: f.get('participation_starts_on') || null,
+                          paid_through: f.get('paid_through') || null,
                           participant_amount_usd:
                             f.get('participant_amount_usd') || null,
                           sponsor_amount_usd:
@@ -574,7 +579,7 @@ function AdminSession() {
                         ar ? 'name_ar' : 'name_en'
                       ] ?? '—'}
                     </p>
-                    {review.capabilities.lead && <><Field label={ar ? 'حالة الرسوم' : 'Fee status'}>
+                    {review.capabilities.lead && <>{[['participation_starts_on',ar?'تاريخ بدء المشاركة':'Participation start'],['paid_through',ar?'الرسوم مسددة حتى':'Paid through']].map(([key,label])=><Field key={key} label={label}><input type="date" name={key} defaultValue={String(p.finance?.[key]??'')}/></Field>)}<Field label={ar ? 'حالة الرسوم' : 'Fee status'}>
                       <select
                         name="fee_status"
                         defaultValue={String(
@@ -1078,7 +1083,7 @@ function OperationManager({
       </div>
       <div className="eoa-two-grid">
         <div className="eoa-card">
-          <h2>{operationTitles[type][ar ? 0 : 1]}</h2>{type === 'cohorts' && <p>{ar?'مدة كل دفعة ستة أشهر، وجولة جديدة كل ستة أشهر. عند إنشاء دفعة بتاريخ بداية دون تاريخ نهاية، تُحسب النهاية بعد ستة أشهر.':'Each cohort lasts six months, with a new round every six months. For a new cohort with a start date and no end date, the end is set six months later.'}</p>}
+          <h2>{operationTitles[type][ar ? 0 : 1]}</h2>{type === 'cohorts' && <p>{ar?'مدة المنهج عامان مع مشاركة سنوية. تاريخ نهاية الدفعة الجديدة يُحسب بعد 24 شهراً؛ تواريخ الدفعات القائمة لا تتغير.':'The curriculum spans two years with annual participation. New cohorts default to a 24-month end date; existing cohort dates are preserved.'}</p>}
           {rows.map((r) => (
             <button
               className="eoa-app-row"
@@ -1198,7 +1203,7 @@ function OperationManager({
                 </option>
                 <option value="mentoring">{ar ? 'إرشاد' : 'Mentoring'}</option>
                 <option value="prestigious_activity">{ar?'نشاط مرموق':'Prestigious activity'}</option>
-                <option value="alumni_follow_up">{ar?'متابعة الخريجين':'Alumni follow-up'}</option>
+                <option value="coach_training">{ar?'تدريب المدربين':'Coach training'}</option><option value="coach_checkin">{ar?'متابعة المدربين':'Coach check-in'}</option><option value="participant_webinar">{ar?'تعريف المشاركين':'Participant webinar'}</option><option value="alumni_follow_up">{ar?'متابعة الخريجين':'Alumni follow-up'}</option>
               </select>
             </Field>
           )}
