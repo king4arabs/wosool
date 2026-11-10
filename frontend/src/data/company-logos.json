@@ -928,5 +928,29 @@
     "website": "https://paymob.com/",
     "src": "/startup-directory/paymob-logo.svg",
     "tone": "light"
+  },
+  {
+    "company_key": "cognna",
+    "website": "https://www.cognna.com/",
+    "src": "/company-logos/cognna.webp",
+    "tone": "dark"
+  },
+  {
+    "company_key": "nabt",
+    "website": "https://nabt.app/",
+    "src": "/company-logos/nabt.svg",
+    "tone": "dark"
+  },
+  {
+    "company_key": "flawless",
+    "website": "https://weflawless.co/",
+    "src": "/company-logos/flawless.svg",
+    "tone": "light"
+  },
+  {
+    "company_key": "ovasave",
+    "website": "https://www.ovasave.com/",
+    "src": "/company-logos/ovasave.png",
+    "tone": "dark"
   }
 ]
