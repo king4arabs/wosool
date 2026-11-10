@@ -39,7 +39,7 @@ export function EoaContent({ section }: { section: string }) {
   useEffect(() => { document.title = `EO Riyadh Accelerator — ${titles[section]?.[ar ? 0 : 1] ?? ''}` }, [ar, section])
 
   return (
-    <section className="eoa-section">
+    <section className={`eoa-section ${section === 'faq' ? styles.faqPage : ''}`}>
       <div className="eoa-container">
         <header className={`eoa-page-heading ${section === 'faq' ? 'mx-auto text-center' : ''}`}>
           <span className="eoa-eyebrow">EO RIYADH ACCELERATOR</span>

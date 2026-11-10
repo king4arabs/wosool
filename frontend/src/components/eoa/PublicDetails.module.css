@@ -184,3 +184,10 @@
   .fee dd { text-align: start; margin-bottom: 12px; }
   .partners { gap: 20px; }
 }
+
+.faqPage { padding-block: 44px 64px; }
+.faqPage :global(.eoa-page-heading) { max-width: 900px; margin-bottom: 30px; }
+.faqPage :global(.eoa-page-heading) h1 { margin: 12px 0 16px; font-size: clamp(28px, 3.6vw, 44px); }
+.faqPage :global(.eoa-page-heading) :global(.eoa-eyebrow) { margin-bottom: 12px; }
+.faqPage :global(.eoa-page-heading) p { margin: 0; font-size: 15px; }
+@media (max-width: 767px) { .faqPage { padding-block: 30px 44px; } .faqPage :global(.eoa-page-heading) p { font-size: 13px; } }

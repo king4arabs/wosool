@@ -32,6 +32,7 @@ try {
       await questions.first().waitFor()
       assert.ok(await questions.count() >= (path === '/faq' ? 35 : 16))
       const quick = faq.getByRole('navigation', { name: ar ? 'إجابات سريعة' : 'Quick answers' })
+      await faq.locator('details summary').click()
       await quick.getByRole('button').first().click()
       assert.equal(await questions.first().getAttribute('aria-expanded'), 'true', 'Quick answer opens its question')
       await page.waitForFunction(() => document.querySelector('[data-faq-question]') === document.activeElement)
@@ -41,6 +42,9 @@ try {
       await faq.getByRole('searchbox').press('Escape')
       assert.equal(await faq.getByRole('searchbox').inputValue(), '', 'Escape clears search')
       assert.ok(await quick.isVisible())
+      await faq.locator('details summary').click()
+      const firstRow = await questions.first().boundingBox()
+      if (width === 1440) assert.ok(firstRow.y < 760, 'A question is visible without a full-screen search panel')
       const heading = await page.locator('h1').boundingBox()
       assert.ok(Math.abs(heading.x + heading.width / 2 - width / 2) < 2, 'FAQ title is centered')
       const frame = await faq.boundingBox()
@@ -87,8 +91,14 @@ try {
       await faq.getByRole('button', { name: ar ? 'توسيع الكل' : 'Expand all', exact: true }).click()
       assert.ok((await questions.evaluateAll(nodes => nodes.map(n => n.getAttribute('aria-expanded')))).every(value => value === 'true'))
       await faq.getByRole('button', { name: ar ? 'طيّ الكل' : 'Collapse all', exact: true }).click()
+      if (path === '/eoa/faq') {
+        if (width < 768) await faq.getByRole('combobox').selectOption('fees')
+        else await faq.getByRole('group').getByRole('button', { name: ar ? /الرسوم والرعاية/ : /Fees & sponsorship/ }).click()
+        assert.ok(await questions.count() >= 2 && await questions.count() < 10, 'EOA questions filter by participant topic')
+        await faq.getByRole('button', { name: ar ? 'مسح التصفية' : 'Clear filters', exact: true }).click()
+      }
       if (path === '/faq') {
-        if (width < 640) await faq.getByRole('combobox').selectOption('account')
+        if (width < 768) await faq.getByRole('combobox').selectOption('account')
         else await faq.getByRole('group').getByRole('button', { name: ar ? /الحساب وتسجيل الدخول/ : /Account & sign-in/ }).click()
         assert.ok(await questions.count() < 10)
         await page.goto(origin + path + '#reset-password', { waitUntil: 'networkidle' })

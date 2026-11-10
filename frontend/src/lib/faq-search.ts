@@ -37,3 +37,12 @@ export function nextFaqIndex(key: string, index: number, length: number): number
   if (key === "ArrowUp") return (index - 1 + length) % length
   return null
 }
+
+/** Navigation only; the editorial question and approved answer remain unchanged. */
+export function eoaFaqTopic(question: string): 'program' | 'joining' | 'fees' | 'coaching' {
+  const q = normalizeSearch(question)
+  if (/fees?|sponsor|paid participation/.test(q)) return 'fees'
+  if (/coach|mentor|accountability/.test(q)) return 'coaching'
+  if (/appl|eligib|revenue requirement|business partners/.test(q)) return 'joining'
+  return 'program'
+}
