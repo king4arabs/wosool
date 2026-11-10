@@ -1,5 +1,11 @@
 # Changelog
 
+## Founder freshness review and Kitopi role correction — 2026-11-10
+
+- Re-verify the 12 founder profiles that reached their 30-day deadline across Unifonic, Foodics, Salla, Tamara and Kitopi, using current official company or investor evidence and active official websites.
+- Correct Saman Darkan's bilingual Kitopi title and biography from the less precise CTO wording to **Co-founder & Chief Product and Technology Officer / شريك مؤسس ورئيس المنتجات والتقنية**. Keep the backend and frontend catalogs identical and advance review dates only for the verified records.
+- Preserve the catalog totals at **356 founders / 193 company groups / 126 stories**. No startup revenue decision, claimed account, member record, moderation state, production database, deployment or hosting configuration changes in this source review.
+
 ## Admin introductions page: both languages, status filters, every request reachable — 2026-11-08
 
 - **Problem:** `/admin/intros` was fixed English ("Intros", "Route Ledger", "Approve"), so an Arabic administrator got English copy in an RTL workspace, and each card showed the raw status code (`INTRO_PENDING`, `ROUTE_EXPIRED`). Only the first 20 requests were loaded, with no way to reach older ones, and the status filter the API supports was not offered. Every card had Approve, Decline and Expire whatever its state, so an administrator could mark a declined or expired request approved, and nothing said that an administrator approval only changes the status: the message thread, intro email and requester credit are created only when the requested founder accepts from their dashboard. Buttons could be pressed twice while a change was saving, there was no loading or empty state, a failed load showed the raw error text, and the request date, expiry and admin note were not shown.
