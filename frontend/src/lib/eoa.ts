@@ -215,6 +215,8 @@ export function eligibility(amount: number, currency: string, owner: boolean, ba
 }
 
 const applicationFieldNames: Record<string, [string, string]> = {
+  qualification_basis: ['أساس الأهلية', 'Eligibility basis'],
+  privately_raised_usd: ['التمويل الخاص بالدولار', 'Privately raised funds in USD'],
   preferred_track_id: ['المسار المفضل', 'Preferred track'],
   founder_name: ['اسم المؤسس', 'Founder name'],
   phone: ['رقم الهاتف', 'Phone'],
@@ -246,6 +248,8 @@ export function applicationFieldValue(value: unknown, ar: boolean) {
   if (typeof value === 'boolean')
     return value ? (ar ? 'نعم' : 'Yes') : ar ? 'لا' : 'No'
   const names: Record<string, [string, string]> = {
+    revenue: ['الإيراد السنوي', 'Annual revenue'],
+    funding: ['التمويل الخاص', 'Private funding'],
     founder: ['مؤسس', 'Founder'],
     owner: ['مالك', 'Owner'],
     cofounder: ['شريك مؤسس', 'Co-founder'],
