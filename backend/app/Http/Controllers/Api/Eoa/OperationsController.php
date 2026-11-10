@@ -220,6 +220,7 @@ class OperationsController extends Controller
             }
             $before = $row->status;
             $onboarding = $row->eoa_onboarding ?? [];
+            if (empty($data['early_graduation_reference']) && ! empty($onboarding['alumni']['early_graduation_reference'])) $data['early_graduation_reference'] = $onboarding['alumni']['early_graduation_reference'];
             $onboarding['alumni'] = $data + ['recorded_by' => $request->user()->id, 'updated_at' => now()->toIso8601String()];
             $row->update(['status' => 'alumni', 'completed_at' => $row->completed_at ?? now(), 'eoa_onboarding' => $onboarding]);
             AdminAction::log($request->user()->id, 'eoa.alumni_updated', 'program_participant', $row->id, null, ['status' => $before], ['status' => 'alumni', 'follow_up_on' => $data['follow_up_on']]);
