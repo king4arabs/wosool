@@ -65,7 +65,7 @@ function FounderDirectory({ visitSeed }: { visitSeed: number }) {
     key === 'sector' ? sector : stage,
   ].filter(Boolean))].sort((a, b) => a.localeCompare(b, locale))
   function changeRegion(value: FounderRegionFilter) { setLocation(''); setRegion(value) }
-  const control = "min-h-12 w-full min-w-0 rounded-xl border border-[var(--border)] bg-[var(--surface)] px-4 text-sm text-[var(--text)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--focus-ring)]"
+  const control = "min-h-12 w-full min-w-0 rounded-xl border border-[var(--border)] bg-[var(--surface)] px-4 text-base sm:text-sm text-[var(--text)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--focus-ring)]"
   const label = "grid min-w-0 gap-2 text-xs font-bold text-[var(--text)]"
   const filtersKey = `${isSpotlight}-${linkedSlug}-${search}-${sector}-${stage}-${location}`
 
