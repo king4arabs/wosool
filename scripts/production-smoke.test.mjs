@@ -1,12 +1,24 @@
 import test from "node:test"
 import assert from "node:assert/strict"
-import { buildProbes, formatResponseDiagnostics, probeEndpoint, validateOrigin } from "./production-smoke.mjs"
+import {
+  buildProbes,
+  expectedReleaseRevision,
+  formatResponseDiagnostics,
+  normalizeReleaseRevision,
+  probeEndpoint,
+  runSmoke,
+  validateOrigin,
+} from "./production-smoke.mjs"
 
 test("covers website, direct Laravel endpoints, and the frontend proxy", () => {
   const probes = buildProbes("https://wosool.org", "https://api.wosool.org")
   assert.equal(probes.length, 18)
   assert.ok(probes.some((p) => p.url === "https://wosool.org/api/health"))
   assert.ok(probes.some((p) => p.url === "https://api.wosool.org/api/ready"))
+  assert.deepEqual(
+    probes.filter((p) => p.revisionRole).map((p) => p.revisionRole),
+    ["frontend", "backend", "backend", "backend"],
+  )
 })
 
 test("newsletter probes detect stale routes without submitting an address or consent", async () => {
@@ -34,8 +46,53 @@ test("requires safe origins", () => {
 
 test("accepts a valid JSON health response", async () => {
   const spec = { url: "https://wosool.org/health", kind: "json", status: "healthy", service: "wosool-frontend" }
-  const fetcher = async () => new Response('{"status":"healthy","service":"wosool-frontend"}', { headers: { "content-type": "application/json" } })
-  await assert.doesNotReject(() => probeEndpoint(spec, fetcher))
+  const fetcher = async () => new Response('{"status":"healthy","service":"wosool-frontend","revision":"ABCDEF1234567"}', { headers: { "content-type": "application/json" } })
+  assert.deepEqual(await probeEndpoint(spec, fetcher), { revision: "abcdef1234567" })
+})
+
+test("validates reported and expected release revisions without accepting arbitrary environment text", async () => {
+  assert.equal(normalizeReleaseRevision(" ABCDEF1234567 "), "abcdef1234567")
+  assert.equal(normalizeReleaseRevision("release-main"), null)
+  assert.equal(expectedReleaseRevision("", "EXPECTED"), null)
+  assert.throws(() => expectedReleaseRevision("release-main", "EXPECTED"), /EXPECTED must be/)
+
+  const spec = { url: "https://api.wosool.org/api/health", kind: "json", status: "healthy" }
+  await assert.rejects(
+    () => probeEndpoint(spec, async () => Response.json({ status: "healthy", revision: "private-environment-value" })),
+    /not a hexadecimal Git revision/,
+  )
+})
+
+test("fails the production run when a configured expected revision does not match", async () => {
+  const probes = buildProbes("https://wosool.org", "https://api.wosool.org")
+  const responses = new Map(probes.map((probe) => [probe.url + "|" + (probe.method || "GET"), probe]))
+  const fetcher = async (url, options) => {
+    const probe = responses.get(url + "|" + options.method)
+    if (probe.kind === "html") return new Response("<title>Wosool</title>", { headers: { "content-type": "text/html" } })
+    if (probe.kind === "validation") {
+      const fields = probe.fields || ["email", "locale", "consent"]
+      return Response.json({ errors: Object.fromEntries(fields.map((field) => [field, ["Required"]])) }, { status: 422 })
+    }
+    if (probe.kind === "protected") return Response.json({ message: "Unauthenticated." }, { status: 401 })
+    if (probe.kind === "empty-founder-list") return Response.json({ data: [], meta: { total: 0 } })
+    return Response.json({ status: probe.status, service: probe.service, revision: probe.revisionRole === "frontend" ? "1111111" : "2222222" })
+  }
+
+  const originalError = console.error
+  const originalLog = console.log
+  console.error = () => {}
+  console.log = () => {}
+  try {
+    assert.equal(await runSmoke({
+      WOSOOL_SITE_ORIGIN: "https://wosool.org",
+      WOSOOL_API_ORIGIN: "https://api.wosool.org",
+      WOSOOL_EXPECTED_FRONTEND_REVISION: "3333333",
+      WOSOOL_EXPECTED_BACKEND_REVISION: "2222222",
+    }, fetcher), false)
+  } finally {
+    console.error = originalError
+    console.log = originalLog
+  }
 })
 
 test("rejects server errors, wrong types, and unhealthy dependencies", async () => {

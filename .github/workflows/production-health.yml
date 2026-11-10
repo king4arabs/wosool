@@ -22,4 +22,7 @@ jobs:
         with:
           node-version: 22
       - name: Check public website, accelerator, Laravel and same-origin API
+        env:
+          WOSOOL_EXPECTED_FRONTEND_REVISION: ${{ vars.WOSOOL_EXPECTED_FRONTEND_REVISION }}
+          WOSOOL_EXPECTED_BACKEND_REVISION: ${{ vars.WOSOOL_EXPECTED_BACKEND_REVISION }}
         run: node scripts/production-smoke.mjs

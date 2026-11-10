@@ -23,7 +23,10 @@ class HealthController extends Controller
             $ready = false;
         }
 
-        return response()->json(['status' => $ready ? 'ready' : 'unavailable'], $ready ? 200 : 503)
+        return response()->json([
+            'status' => $ready ? 'ready' : 'unavailable',
+            'revision' => $this->releaseRevision(),
+        ], $ready ? 200 : 503)
             ->header('Cache-Control', 'no-store');
     }
 
@@ -33,6 +36,20 @@ class HealthController extends Controller
             'status' => 'healthy',
             'version' => '1.0.0',
             'timestamp' => now()->toIso8601String(),
-        ]);
+            'revision' => $this->releaseRevision(),
+        ])->header('Cache-Control', 'no-store');
+    }
+
+    private function releaseRevision(): ?string
+    {
+        $revision = config('app.revision');
+
+        if (! is_string($revision)) {
+            return null;
+        }
+
+        $revision = strtolower(trim($revision));
+
+        return preg_match('/\A[0-9a-f]{7,40}\z/', $revision) === 1 ? $revision : null;
     }
 }

@@ -10,14 +10,27 @@ export function validateOrigin(value, allowLocalHttp = false) {
   return url.origin
 }
 
+export function normalizeReleaseRevision(value) {
+  if (typeof value !== "string") return null
+  const revision = value.trim()
+  return /^[0-9a-f]{7,40}$/i.test(revision) ? revision.toLowerCase() : null
+}
+
+export function expectedReleaseRevision(value, variableName) {
+  if (typeof value !== "string" || value.trim() === "") return null
+  const revision = normalizeReleaseRevision(value)
+  if (!revision) throw new Error(variableName + " must be a 7-40 character hexadecimal Git revision")
+  return revision
+}
+
 export function buildProbes(site, api) {
   return [
-    { name: "Frontend liveness", url: site + "/health", kind: "json", status: "healthy", service: "wosool-frontend" },
+    { name: "Frontend liveness", url: site + "/health", kind: "json", status: "healthy", service: "wosool-frontend", revisionRole: "frontend" },
     { name: "Homepage", url: site + "/", kind: "html", contains: /Wosool|وصول/i },
     { name: "Accelerator page", url: site + "/eoa", kind: "html" },
-    { name: "Laravel liveness", url: api + "/api/health", kind: "json", status: "healthy" },
-    { name: "Laravel readiness", url: api + "/api/ready", kind: "json", status: "ready" },
-    { name: "Same-origin API proxy", url: site + "/api/health", kind: "json", status: "healthy" },
+    { name: "Laravel liveness", url: api + "/api/health", kind: "json", status: "healthy", revisionRole: "backend" },
+    { name: "Laravel readiness", url: api + "/api/ready", kind: "json", status: "ready", revisionRole: "backend" },
+    { name: "Same-origin API proxy", url: site + "/api/health", kind: "json", status: "healthy", revisionRole: "backend" },
     // Detect stale API releases that ignore the exact founder slug filter even
     // when /api/ready reports healthy. No accounts or private records are read.
     ...[["Direct", api], ["Same-origin", site]].map(([label, origin]) => ({
@@ -86,23 +99,48 @@ export async function probeEndpoint(spec, fetchImpl = fetch) {
     if (data?.status !== spec.status || (spec.service && data?.service !== spec.service)) {
       throw new Error("Unexpected health status")
     }
+    if (data?.revision !== undefined && data.revision !== null && !normalizeReleaseRevision(data.revision)) {
+      throw new Error("Health revision is not a hexadecimal Git revision")
+    }
+    return { revision: normalizeReleaseRevision(data?.revision) }
   } else {
     if (!contentType.includes("text/html")) throw new Error("Expected HTML content type")
     const html = await response.text()
     if (spec.contains && !spec.contains.test(html)) throw new Error("Expected Wosool homepage content")
   }
+
+  return { revision: null }
 }
 
 export async function runSmoke(env = process.env, fetchImpl = fetch) {
   const site = validateOrigin(env.WOSOOL_SITE_ORIGIN || "https://wosool.org", env.SMOKE_ALLOW_HTTP === "1")
   const api = validateOrigin(env.WOSOOL_API_ORIGIN || "https://api.wosool.org", env.SMOKE_ALLOW_HTTP === "1")
   if (site === api) throw new Error("Site and API monitoring origins must be different")
+  const expectedRevisions = {
+    frontend: expectedReleaseRevision(env.WOSOOL_EXPECTED_FRONTEND_REVISION, "WOSOOL_EXPECTED_FRONTEND_REVISION"),
+    backend: expectedReleaseRevision(env.WOSOOL_EXPECTED_BACKEND_REVISION, "WOSOOL_EXPECTED_BACKEND_REVISION"),
+  }
   const probes = buildProbes(site, api)
+  const observedRevisions = new Map()
   let failures = 0
   for (const spec of probes) {
     try {
-      await probeEndpoint(spec, fetchImpl)
-      console.log("PASS " + spec.name)
+      const result = await probeEndpoint(spec, fetchImpl)
+      if (spec.revisionRole) {
+        const revision = result.revision
+        const expected = expectedRevisions[spec.revisionRole]
+        const observed = observedRevisions.get(spec.revisionRole)
+        if (expected && revision !== expected) {
+          throw new Error(`Expected ${spec.revisionRole} revision ${expected}; got ${revision || "unreported"}`)
+        }
+        if (observed && revision && observed !== revision) {
+          throw new Error(`Conflicting ${spec.revisionRole} revisions: ${observed} and ${revision}`)
+        }
+        if (revision) observedRevisions.set(spec.revisionRole, revision)
+        console.log(`PASS ${spec.name} revision=${revision || "unreported"}`)
+      } else {
+        console.log("PASS " + spec.name)
+      }
     } catch (error) {
       failures += 1
       // Do not log response bodies, tokens, or session data.
