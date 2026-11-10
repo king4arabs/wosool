@@ -1,21 +1,39 @@
 import { normalizeSearch } from './faq-search'
 
-/** One browser-generated seed per mounted page, with deterministic server hydration. */
+/** One seed per mounted visit; optionally renew it when a browser restores the page. */
 export function createPartnerVisitStore(randomSeed: () => number = () => {
   const values = new Uint32Array(1)
   crypto.getRandomValues(values)
   return values[0]
-}) {
+}, restoreTarget?: () => EventTarget | undefined) {
   let seed = 0
+  let target: EventTarget | undefined
+  const listeners = new Set<() => void>()
+  const renew = () => {
+    const next = (randomSeed() >>> 0) || 1
+    seed = next === seed ? ((next + 1) >>> 0) || 1 : next
+    listeners.forEach(listener => listener())
+  }
+  const restore = (event: Event) => {
+    if ((event as PageTransitionEvent).persisted) renew()
+  }
   return {
     getSnapshot: () => seed,
     getServerSnapshot: () => 0,
     subscribe: (listener: () => void) => {
-      if (!seed) {
-        seed = (randomSeed() >>> 0) || 1
-        listener()
+      listeners.add(listener)
+      if (listeners.size === 1) {
+        target = restoreTarget?.()
+        target?.addEventListener('pageshow', restore)
       }
-      return () => {}
+      if (!seed) renew()
+      return () => {
+        listeners.delete(listener)
+        if (!listeners.size) {
+          target?.removeEventListener('pageshow', restore)
+          target = undefined
+        }
+      }
     },
   }
 }
