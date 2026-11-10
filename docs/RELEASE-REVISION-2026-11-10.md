@@ -29,6 +29,7 @@ Hostinger documents that Node.js application environment variables can be added 
 - Frontend Node test suite: 344 passed, including release-revision normalization and OpenAPI 1.7.1 export.
 - ESLint and TypeScript passed. The local production-mode webpack build compiled, type-checked and generated all 97 static pages with the required one-worker limit.
 - Laravel coverage was added for null, normalized and malformed revisions. A patched PHP runtime is not installed in this workspace, so Laravel execution remains a required CI gate.
+- PR CI run 608 passed all backend, pnpm/Hostinger, production-guardrail and frontend steps through the last axe crawl, where GitHub cancelled the frontend job at its existing 25-minute timeout with no failed step. The frontend ceiling is raised to 40 minutes without removing or skipping any check; a complete rerun remains mandatory before merge.
 - Content catalogs were not edited: 356 founders, 193 companies and 126 stories; zero integrity problems and zero reviews due at inspection.
 
 ## Boundary
