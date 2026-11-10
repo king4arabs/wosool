@@ -261,12 +261,14 @@
     "logo_url": "/company-logos/inve.svg",
     "founder_socials": [],
     "source_url": "https://www.wamda.com/2026/10/inve-raises-300000-outliers-vc-scale-eventtech-platform-gcc",
-    "reviewed_at": "2026-10-27",
+    "reviewed_at": "2026-11-10",
     "company_key": "inve",
     "source_urls": [
       "https://www.wamda.com/2026/10/inve-raises-300000-outliers-vc-scale-eventtech-platform-gcc",
       "https://inve.sa/",
-      "https://sa.linkedin.com/in/abdulrahman-ak"
+      "https://sa.linkedin.com/in/abdulrahman-ak",
+      "https://entarabi.com/en/2026/10/saudi-startup-inve-raises-300000-to-develop/",
+      "https://enterpriseam.com/ksa/2026/10/25/saudi-student-turns-usd-133-wedding-gig-into-usd-300k-startup/"
     ],
     "region": "saudi",
     "founded_year": 2024,
@@ -419,9 +421,9 @@
     "logo_url": "/company-logos/vrtx.png",
     "founder_socials": [],
     "founded_year": 2025,
-    "traction_en": null,
-    "traction_ar": null,
-    "traction_source_url": null,
+    "traction_en": "Company announced US$3.6m pre-seed financing on 19 October 2026 (not revenue), and SAMA in-principle EMI approval (not a final licence).",
+    "traction_ar": "أعلنت الشركة تمويلاً ما قبل البذري بقيمة 3.6 ملايين دولار في 19 أكتوبر 2026 (ليس إيرادات)، وموافقة مبدئية من ساما لترخيص نقود إلكترونية (وليست ترخيصاً نهائياً).",
+    "traction_source_url": "https://www.vrtx.sa/blog/vrtx-raises-3.6-million-in-pre-seed-funding",
     "slug": "mishal-bin-slimah",
     "founder_name_en": "Mishal Bin Slimah",
     "founder_name_ar": "مشعل بن سلمة",
@@ -442,20 +444,22 @@
     "source_url": "https://www.wamda.com/2026/10/saudi-vrtx-secures-3-6-million-embedded-finance-platform",
     "source_urls": [
       "https://www.wamda.com/2026/10/saudi-vrtx-secures-3-6-million-embedded-finance-platform",
-      "https://www.vrtx.sa/"
+      "https://www.vrtx.sa/",
+      "https://www.vrtx.sa/blog/vrtx-raises-3.6-million-in-pre-seed-funding",
+      "https://www.vrtx.sa/about"
     ],
     "company_key": "vrtx",
     "region": "saudi",
-    "reviewed_at": "2026-10-24"
+    "reviewed_at": "2026-11-10"
   },
   {
     "portrait_url": null,
     "logo_url": "/company-logos/vrtx.png",
     "founder_socials": [],
     "founded_year": 2025,
-    "traction_en": null,
-    "traction_ar": null,
-    "traction_source_url": null,
+    "traction_en": "Company announced US$3.6m pre-seed financing on 19 October 2026 (not revenue), and SAMA in-principle EMI approval (not a final licence).",
+    "traction_ar": "أعلنت الشركة تمويلاً ما قبل البذري بقيمة 3.6 ملايين دولار في 19 أكتوبر 2026 (ليس إيرادات)، وموافقة مبدئية من ساما لترخيص نقود إلكترونية (وليست ترخيصاً نهائياً).",
+    "traction_source_url": "https://www.vrtx.sa/blog/vrtx-raises-3.6-million-in-pre-seed-funding",
     "slug": "omar-shaaban",
     "founder_name_en": "Omar Shaaban",
     "founder_name_ar": "عمر شعبان",
@@ -476,11 +480,13 @@
     "source_url": "https://www.wamda.com/2026/10/saudi-vrtx-secures-3-6-million-embedded-finance-platform",
     "source_urls": [
       "https://www.wamda.com/2026/10/saudi-vrtx-secures-3-6-million-embedded-finance-platform",
-      "https://www.vrtx.sa/"
+      "https://www.vrtx.sa/",
+      "https://www.vrtx.sa/blog/vrtx-raises-3.6-million-in-pre-seed-funding",
+      "https://www.vrtx.sa/about"
     ],
     "company_key": "vrtx",
     "region": "saudi",
-    "reviewed_at": "2026-10-24"
+    "reviewed_at": "2026-11-10"
   },
   {
     "portrait_url": null,
