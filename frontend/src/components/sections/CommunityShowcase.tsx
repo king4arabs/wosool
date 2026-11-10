@@ -99,7 +99,7 @@ export function FounderShowcase({ founders: suppliedFounders, showFilters = true
   loading?: boolean
   focusLinkedFounder?: boolean
   showFilters?: boolean
-  /** Homepage discovery only; directory/grid order remains stable. */
+  /** Keep the homepage's regional mix; every surface still shuffles per visit. */
   randomize?: boolean
   /** Page-owned seed keeps carousel and grid stable through filter remounts. */
   visitSeed?: number
@@ -135,8 +135,10 @@ export function FounderShowcase({ founders: suppliedFounders, showFilters = true
   const filtered = useMemo(() => filterFounders(founders, { search, sector, region }, locale), [founders, locale, search, sector, region])
   const [mixStore] = useState(createFounderMixStore)
   const mixSeed = useSyncExternalStore(mixStore.subscribe, mixStore.getSnapshot, mixStore.getServerSnapshot)
-  const ordered = useMemo(() => visitSeed === undefined ? filtered : founderVisitOrder(filtered, visitSeed), [filtered, visitSeed])
-  const carouselFounders = useMemo(() => randomize ? founderDiscoveryOrder(filtered, mixSeed).slice(0, 36) : ordered.slice(0, visitSeed === undefined ? 18 : 36), [filtered, ordered, randomize, mixSeed, visitSeed])
+  const ordered = useMemo(() => randomize
+    ? founderDiscoveryOrder(filtered, mixSeed)
+    : founderVisitOrder(filtered, visitSeed ?? mixSeed), [filtered, randomize, mixSeed, visitSeed])
+  const carouselFounders = useMemo(() => ordered.slice(0, randomize || visitSeed !== undefined ? 36 : 18), [ordered, randomize, visitSeed])
   const hasFilters = Boolean(search || sector || region !== 'all')
   function changeRegion(value: FounderRegionFilter) {
     setOwnRegion(value)

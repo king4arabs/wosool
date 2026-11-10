@@ -5180,5 +5180,125 @@
     "traction_en": "Turuq's official site advertises 200+ brands served across Egypt; company-reported service activity, not revenue.",
     "traction_ar": "يذكر الموقع الرسمي خدمة أكثر من 200 علامة تجارية في مصر؛ وهو نشاط معلن من الشركة وليس إيرادات.",
     "traction_source_url": "https://www.turuq.co/"
+  },
+  {
+    "country_en": "Saudi Arabia",
+    "country_ar": "السعودية",
+    "country_code": "SA",
+    "region": "saudi",
+    "portrait_url": null,
+    "logo_url": null,
+    "reviewed_at": "2026-11-10",
+    "company_key": "mawsool-sales-intelligence",
+    "company_name_en": "Mawsool",
+    "company_name_ar": "موصول",
+    "company_brief_en": "AI-powered B2B sales intelligence, lead discovery and CRM enrichment for Saudi and MENA teams.",
+    "company_brief_ar": "منصة ذكاء مبيعات بين الشركات لاكتشاف العملاء المحتملين وإثراء بيانات أنظمة إدارة العملاء في السعودية والمنطقة.",
+    "sector_en": "AI and sales technology",
+    "sector_ar": "الذكاء الاصطناعي وتقنيات المبيعات",
+    "website": "https://mawsool.co/",
+    "source_url": "https://www.startupresearcher.com/news/saudi-startup-mawsool-closes-pre-seed-round",
+    "source_urls": [
+      "https://mawsool.co/about",
+      "https://sa.linkedin.com/company/mawsool-%D9%85%D9%88%D8%B5%D9%88%D9%84",
+      "https://www.startupresearcher.com/news/saudi-startup-mawsool-closes-pre-seed-round",
+      "https://sa.linkedin.com/in/osama-abdelhadi"
+    ],
+    "traction_en": "Announced an undisclosed pre-seed round in November 2026 to develop its platform and expand across Saudi Arabia and MENA.",
+    "traction_ar": "أعلنت في نوفمبر 2026 جولة ما قبل البذرة بقيمة غير معلنة لتطوير منصتها والتوسع في السعودية والمنطقة.",
+    "traction_source_url": "https://www.startupresearcher.com/news/saudi-startup-mawsool-closes-pre-seed-round",
+    "slug": "osama-abdelhadi-mawsool",
+    "founder_name_en": "Osama Abdelhadi",
+    "founder_name_ar": "أسامة عبدالهادي",
+    "role_en": "Co-founder & CEO",
+    "role_ar": "شريك مؤسس ورئيس تنفيذي",
+    "founder_brief_en": "Co-founded Mawsool and leads its AI sales-intelligence business, helping teams find and qualify B2B prospects.",
+    "founder_brief_ar": "شارك في تأسيس موصول ويقود أعمالها في ذكاء المبيعات لمساعدة الفرق على اكتشاف العملاء المحتملين وتأهيلهم.",
+    "founder_socials": [
+      {
+        "label": "LinkedIn",
+        "url": "https://sa.linkedin.com/in/osama-abdelhadi"
+      }
+    ]
+  },
+  {
+    "country_en": "Saudi Arabia",
+    "country_ar": "السعودية",
+    "country_code": "SA",
+    "region": "saudi",
+    "portrait_url": null,
+    "logo_url": null,
+    "reviewed_at": "2026-11-10",
+    "company_key": "mawsool-sales-intelligence",
+    "company_name_en": "Mawsool",
+    "company_name_ar": "موصول",
+    "company_brief_en": "AI-powered B2B sales intelligence, lead discovery and CRM enrichment for Saudi and MENA teams.",
+    "company_brief_ar": "منصة ذكاء مبيعات بين الشركات لاكتشاف العملاء المحتملين وإثراء بيانات أنظمة إدارة العملاء في السعودية والمنطقة.",
+    "sector_en": "AI and sales technology",
+    "sector_ar": "الذكاء الاصطناعي وتقنيات المبيعات",
+    "website": "https://mawsool.co/",
+    "source_url": "https://www.startupresearcher.com/news/saudi-startup-mawsool-closes-pre-seed-round",
+    "source_urls": [
+      "https://mawsool.co/about",
+      "https://sa.linkedin.com/company/mawsool-%D9%85%D9%88%D8%B5%D9%88%D9%84",
+      "https://www.startupresearcher.com/news/saudi-startup-mawsool-closes-pre-seed-round",
+      "https://jo.linkedin.com/in/oday-ali-aa0b0428b"
+    ],
+    "traction_en": "Announced an undisclosed pre-seed round in November 2026 to develop its platform and expand across Saudi Arabia and MENA.",
+    "traction_ar": "أعلنت في نوفمبر 2026 جولة ما قبل البذرة بقيمة غير معلنة لتطوير منصتها والتوسع في السعودية والمنطقة.",
+    "traction_source_url": "https://www.startupresearcher.com/news/saudi-startup-mawsool-closes-pre-seed-round",
+    "slug": "oday-ali-mawsool",
+    "founder_name_en": "Oday Ali",
+    "founder_name_ar": "عدي علي",
+    "role_en": "Co-founder",
+    "role_ar": "شريك مؤسس",
+    "founder_brief_en": "Co-founded Mawsool, with a technical focus on big data, artificial intelligence and continuously updated B2B information.",
+    "founder_brief_ar": "شارك في تأسيس موصول مع تركيز تقني على البيانات الضخمة والذكاء الاصطناعي وتحديث معلومات الأعمال بين الشركات.",
+    "founder_socials": [
+      {
+        "label": "LinkedIn",
+        "url": "https://jo.linkedin.com/in/oday-ali-aa0b0428b"
+      }
+    ]
+  },
+  {
+    "country_en": "Saudi Arabia",
+    "country_ar": "السعودية",
+    "country_code": "SA",
+    "region": "saudi",
+    "portrait_url": null,
+    "logo_url": null,
+    "reviewed_at": "2026-11-10",
+    "slug": "adel-el-masri-persona",
+    "company_key": "persona-mena",
+    "founder_name_en": "Adel El-Masri",
+    "founder_name_ar": "عادل المصري",
+    "role_en": "Co-founder & CEO",
+    "role_ar": "شريك مؤسس ورئيس تنفيذي",
+    "founder_brief_en": "Leads Persona, building and operating consumer brands with creators, fan communities and media IP owners.",
+    "founder_brief_ar": "يقود بيرسونا لبناء وتشغيل علامات استهلاكية مع صنّاع المحتوى والمجتمعات الجماهيرية ومالكي الحقوق الإعلامية.",
+    "company_name_en": "Persona",
+    "company_name_ar": "بيرسونا",
+    "company_brief_en": "Riyadh-based venture studio developing consumer brands across food, beauty, retail and lifestyle for the GCC.",
+    "company_brief_ar": "استوديو مشاريع مقره الرياض يطوّر علامات استهلاكية في الأغذية والتجميل والتجزئة ونمط الحياة للأسواق الخليجية.",
+    "sector_en": "Consumer brands and commerce",
+    "sector_ar": "العلامات الاستهلاكية والتجارة",
+    "website": "https://personaglobal.co/",
+    "founder_socials": [
+      {
+        "label": "LinkedIn",
+        "url": "https://sa.linkedin.com/in/adel-el-masri"
+      }
+    ],
+    "source_url": "https://personaglobal.co/about-creative/",
+    "source_urls": [
+      "https://personaglobal.co/about-creative/",
+      "https://sa.linkedin.com/company/persona-mena",
+      "https://sharikatmubasher.com/media-hub/news/21585126/persona-raises-630k-pre-seed-funding-to-expand-across-gcc?lang=en"
+    ],
+    "founded_year": 2022,
+    "traction_en": "Raised US$630,000 in pre-seed funding led by Upturn in November 2026; reports eight operating brands and plans a live-commerce platform.",
+    "traction_ar": "جمعت 630 ألف دولار في جولة ما قبل البذرة بقيادة أبتيرن في نوفمبر 2026؛ وتعلن تشغيل ثماني علامات وتخطط لمنصة تجارة مباشرة.",
+    "traction_source_url": "https://sharikatmubasher.com/media-hub/news/21585126/persona-raises-630k-pre-seed-funding-to-expand-across-gcc?lang=en"
   }
 ]

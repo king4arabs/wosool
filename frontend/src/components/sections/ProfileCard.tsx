@@ -117,14 +117,25 @@ export function ProfileCard({ data, variant = "company", layout = "carousel" }: 
   const websiteHost = hostLabel(data.website)
   const flag = countryCode(data.countryCode)
   const hasDetails = Boolean(
-    data.revenue ||
+      data.traction || data.revenue ||
       data.ecosystemSources?.length ||
       data.sources?.length ||
       data.assetCredit ||
       data.founderBrief ||
       data.companyBrief,
   )
-  const hasEvidence = Boolean(data.revenue || data.ecosystemSources?.length || data.sources?.length || data.assetCredit)
+  const hasEvidence = Boolean(data.traction || data.revenue || data.ecosystemSources?.length || data.sources?.length || data.assetCredit)
+  const traction = data.traction && (
+    <div className={styles.traction}>
+      <p>{data.traction.text}</p>
+      {publicWebsite(data.traction.sourceUrl) && (
+        <a href={publicWebsite(data.traction.sourceUrl)} target="_blank" rel="noopener noreferrer">
+          {ar ? "المصدر" : "Source"}: <span dir="ltr">{hostLabel(data.traction.sourceUrl)}</span>
+          <ArrowUpRight size={13} aria-hidden="true" />
+        </a>
+      )}
+    </div>
+  )
 
   const person = data.founder && <div className={styles.personBlock}>
     <section className={styles.person} aria-label={ar ? "المؤسس" : "Founder"}>
@@ -135,7 +146,7 @@ export function ProfileCard({ data, variant = "company", layout = "carousel" }: 
         {data.role && <p>{data.role}</p>}
       </div>
     </section>
-    {data.founderBrief && <p className={styles.founderBrief}>{data.founderBrief}</p>}
+    {!founderFirst && data.founderBrief && <p className={styles.founderBrief}>{data.founderBrief}</p>}
   </div>
 
   function socialLinks(
@@ -159,7 +170,7 @@ export function ProfileCard({ data, variant = "company", layout = "carousel" }: 
   }
 
   return (
-    <article className={`${styles.card} ${founderFirst ? styles.founderCard : ''} ${layout === 'grid' ? styles.gridCard : ''}`} aria-labelledby={id}>
+    <article className={`${styles.card} ${founderFirst ? styles.founderCard : ''} ${layout === 'grid' ? styles.gridCard : ''}`} aria-labelledby={id} data-profile-card={variant}>
       <div className={styles.cardTopline} aria-hidden="true" />
       <header
         className={[
@@ -226,17 +237,7 @@ export function ProfileCard({ data, variant = "company", layout = "carousel" }: 
           )}
         </div>
 
-        {data.traction && (
-          <div className={styles.traction}>
-            <p>{data.traction.text}</p>
-            {publicWebsite(data.traction.sourceUrl) && (
-              <a href={publicWebsite(data.traction.sourceUrl)} target="_blank" rel="noopener noreferrer">
-                {ar ? "المصدر" : "Source"}: <span dir="ltr">{hostLabel(data.traction.sourceUrl)}</span>
-                <ArrowUpRight size={13} aria-hidden="true" />
-              </a>
-            )}
-          </div>
-        )}
+        {!founderFirst && traction}
 
         {(!!data.signals?.length || data.engagement !== undefined) && (
           <div role="group"
@@ -297,6 +298,7 @@ export function ProfileCard({ data, variant = "company", layout = "carousel" }: 
             <div className={styles.detailsBody}>
               {data.companyBrief && <p>{data.companyBrief}</p>}
               {data.founderBrief && <p>{data.founderBrief}</p>}
+              {founderFirst && traction}
               {data.revenue && (
                 <div className={styles.evidence}>
                   <strong>

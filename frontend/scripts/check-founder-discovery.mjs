@@ -64,6 +64,7 @@ try {
     await spotlight.getByRole('button', { name: locale === 'ar' ? 'عرض جميع المؤسسين' : 'View all founders', exact: true }).click()
     const grid = spotlight.locator('section[id]')
     await eventually(async () => await grid.locator('article').count() === 6)
+    assert.deepEqual(await grid.locator('h3 a').evaluateAll(links => links.map(link => link.getAttribute('href'))), shuffled.slice(0, 6), 'The expanded grid shares the carousel visit order')
     await grid.getByRole('button', { name: locale === 'ar' ? 'التالي' : 'Next', exact: true }).click()
     assert.ok(await grid.getByRole('button', { name: locale === 'ar' ? 'الصفحة 2' : 'Page 2', exact: true }).getAttribute('aria-current') === 'page')
     const sector = spotlight.getByRole('combobox').first()
