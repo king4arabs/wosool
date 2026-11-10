@@ -1,0 +1,30 @@
+/* Shared by the Wosool help centre and every embedded EOA FAQ. */
+.root { --faq-accent: var(--action-bg); width: 100%; }
+.root button, .root a, .root input, .root select { -webkit-tap-highlight-color: transparent; }
+.root button:focus-visible, .root a:focus-visible, .root select:focus-visible { outline: 3px solid var(--focus-ring, var(--faq-accent)); outline-offset: 4px; }
+.searchPanel { position: relative; isolation: isolate; background: linear-gradient(145deg, var(--surface), var(--surface-soft)); box-shadow: 0 12px 36px -26px var(--faq-accent); }
+.helpIcon { display: grid; place-items: center; width: 48px; height: 48px; margin: 0 auto 14px; border-radius: 16px; color: var(--link); background: var(--surface); border: 1px solid var(--border-soft); }
+.searchPanel input { color: var(--text-strong); }
+.topics { max-width: 760px; margin-inline: auto; }
+.quickAnswers { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 8px; margin-top: 20px; }
+.quickAnswers > span { flex-basis: 100%; text-align: center; font-size: 12px; font-weight: 700; color: var(--text-muted); }
+.quickAnswers button { display: inline-flex; align-items: center; justify-content: center; gap: 7px; max-width: 100%; min-height: 44px; padding: 8px 14px; border: 1px solid var(--border-soft); border-radius: 12px; background: var(--surface); color: var(--link); font-size: 12px; line-height: 1.6; text-align: start; cursor: pointer; }
+.quickAnswers button:hover { border-color: var(--faq-accent); background: var(--surface-soft); }
+.quickAnswers svg { flex-shrink: 0; }
+.toolbar { border-bottom: 1px solid var(--border-soft); padding-bottom: 10px; }
+.toolbarActions { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+.reset { display: inline-flex; align-items: center; gap: 6px; min-height: 44px; padding: 8px 12px; border-radius: 12px; font-size: 13px; color: var(--text-muted); cursor: pointer; }
+.reset:hover { background: var(--surface-soft); color: var(--text-strong); }
+.root .groupTitle { display: flex; align-items: center; justify-content: center; gap: 10px; margin-block: 32px 18px; }
+.groupTitle span { display: inline-grid; place-items: center; min-width: 28px; height: 28px; border-radius: 9px; background: var(--surface-soft); color: var(--text-muted); font-size: 12px; }
+.card { position: relative; transition: border-color .2s, box-shadow .2s; }
+.card:hover { border-color: var(--faq-accent); }
+.card[data-expanded="true"] { box-shadow: 0 10px 24px -20px var(--faq-accent); }
+.card[data-expanded="true"]::before { content: ''; position: absolute; inset-block: 0; inset-inline-start: 0; width: 3px; background: var(--faq-accent); z-index: 1; }
+.question { align-items: center; }
+.answer:not([hidden]) { animation: reveal .18s ease-out; }
+.root .answerText p { max-width: 68ch; margin: 0; overflow-wrap: anywhere; }
+.root .answerText p + p { margin-top: 12px; }
+@keyframes reveal { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
+@media (max-width: 639px) { .quickAnswers { justify-content: stretch; } .quickAnswers button { width: 100%; justify-content: space-between; } .toolbarActions { gap: 0; } .root .groupTitle { font-size: 18px; } .question { gap: 12px; padding-inline: 16px; } .answer { padding-inline: 20px; } }
+@media (prefers-reduced-motion: reduce) { .card { transition: none; } .answer:not([hidden]) { animation: none; } }

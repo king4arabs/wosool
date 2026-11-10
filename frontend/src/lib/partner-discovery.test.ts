@@ -48,3 +48,26 @@ test('organization search supports both names, Arabic variants, websites and com
   assert.deepEqual(filterPartnerOrganizations(roster, 'bank', 'neom'), [])
   assert.deepEqual(filterPartnerOrganizations(roster, 'all', 'no-matching-organization'), [])
 })
+
+test('restored history visits renew discovery once and unsubscribe cleanly', () => {
+  const target = new EventTarget()
+  let calls = 0
+  let updates = 0
+  const visit = createPartnerVisitStore(() => ++calls, () => target)
+  const stop = visit.subscribe(() => updates++)
+  assert.equal(visit.getSnapshot(), 1)
+  target.dispatchEvent(new Event('pageshow'))
+  assert.equal(visit.getSnapshot(), 1, 'Normal load keeps its hydration seed')
+  const restored = () => Object.assign(new Event('pageshow'), { persisted: true })
+  target.dispatchEvent(restored())
+  assert.equal(visit.getSnapshot(), 2)
+  assert.equal(updates, 2)
+  stop()
+  target.dispatchEvent(restored())
+  assert.equal(calls, 2, 'Unmounted views stop listening')
+  const stopAgain = visit.subscribe(() => updates++)
+  assert.equal(visit.getSnapshot(), 2, 'React resubscription alone is not a new visit')
+  target.dispatchEvent(restored())
+  assert.equal(visit.getSnapshot(), 3)
+  stopAgain()
+})

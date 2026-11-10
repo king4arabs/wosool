@@ -6,6 +6,7 @@ import { ArrowUpRight, Check, ChevronDown, Link2, MessageCircleQuestion, Search,
 import { FAQ_CATEGORIES, type FaqCategory, type FaqItem } from "@/data/faq"
 import { faqIdFromHash, matchesFaq, nextFaqIndex } from "@/lib/faq-search"
 import { useLocale } from "@/lib/locale"
+import styles from "./FaqExplorer.module.css"
 
 function highlight(text: string, query: string): ReactNode {
   const terms = query.trim().split(/\s+/).filter(term => term.length > 1)
@@ -41,6 +42,7 @@ export function FaqExplorer({
   const [copied, setCopied] = useState<string | null>(null)
   const [searchClosed, setSearchClosed] = useState<Set<string>>(() => new Set())
   const root = useRef<HTMLDivElement>(null)
+  const searchInput = useRef<HTMLInputElement>(null)
   const instance = useId()
   const searching = query.trim().length > 0
   const isExpanded = (id: string) => searching ? !searchClosed.has(id) : open.has(id)
@@ -126,6 +128,22 @@ export function FaqExplorer({
   const sections = grouped && !searching && !category
     ? shownCategories.map(entry => ({ entry, rows: visible.filter(item => item.category === entry.id) })).filter(section => section.rows.length)
     : [{ entry: null, rows: visible }]
+  const resetFilters = () => {
+    changeQuery("")
+    setCategory("")
+    searchInput.current?.focus()
+  }
+  const openAnswer = (id: string) => {
+    changeQuery("")
+    setCategory("")
+    setOpen(previous => new Set(previous).add(id))
+    try { window.history.replaceState(null, "", `#${id}`) } catch {}
+    requestAnimationFrame(() => {
+      const question = document.getElementById(`${instance}-${id}-question`)
+      question?.scrollIntoView({ block: "center", behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth' })
+      question?.focus({ preventScroll: true })
+    })
+  }
   const categoryOf = (id: FaqCategory) => FAQ_CATEGORIES.find(entry => entry.id === id)!
   const contactCategory = category ? categoryOf(category).contact : "general"
   const helpHref = (subject?: string, topic = contactCategory) => `${contactPath}?category=${topic}${subject ? `&subject=${encodeURIComponent(subject.slice(0, 120))}` : ""}`
@@ -142,11 +160,12 @@ export function FaqExplorer({
     })),
   } : null
 
-  return <div ref={root} className="min-w-0 text-start" data-faq-explorer>
+  return <div ref={root} className={`${styles.root} min-w-0 text-start`} data-faq-explorer>
     {structured && <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structured).replace(/</g, "\\u003c") }} />}
 
-    {searchable && <div className="space-y-5 rounded-3xl border border-[var(--border-soft)] bg-[var(--surface-soft)] p-4 sm:p-6">
+    {searchable && <div className={`${styles.searchPanel} space-y-5 rounded-3xl border border-[var(--border-soft)] bg-[var(--surface-soft)] p-4 sm:p-6`}>
       <div className="text-center">
+        <span className={styles.helpIcon}><MessageCircleQuestion size={25} aria-hidden="true" /></span>
         <p className="font-bold text-[var(--text-strong)]">{ar ? "كيف يمكننا مساعدتك؟" : "How can we help?"}</p>
         <p id={`${instance}-search-help`} className="mt-1 text-sm leading-6 text-[var(--text-muted)]">{ar ? "ابحث بكلمة أو اختر موضوعًا للوصول إلى إجابتك." : "Search a keyword or choose a topic to find your answer."}</p>
       </div>
@@ -155,14 +174,16 @@ export function FaqExplorer({
         <span className="relative block">
           <Search size={20} aria-hidden="true" className="pointer-events-none absolute start-4 top-1/2 -translate-y-1/2 text-[var(--text-muted)]" />
           <input
+            ref={searchInput}
             type="search"
             value={query}
+            onKeyDown={event => { if (event.key === "Escape") { event.preventDefault(); resetFilters() } }}
             onChange={event => changeQuery(event.target.value)}
             aria-describedby={`${instance}-search-help`}
             placeholder={placeholder ?? (ar ? "ابحث: الرسوم، كلمة المرور، التعارف…" : "Search: fees, password, introductions…")}
             className="min-h-14 w-full rounded-2xl border border-[var(--border)] bg-[var(--surface)] pe-12 ps-12 text-base shadow-sm outline-none transition focus:border-[var(--action-bg)] focus:ring-4 focus:ring-[var(--action-bg)]/15"
           />
-          {query && <button type="button" onClick={() => changeQuery("")} aria-label={ar ? "مسح البحث" : "Clear search"} className="absolute end-2 top-1/2 inline-flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-xl text-[var(--text-muted)] hover:bg-[var(--surface-soft)]"><X size={18} aria-hidden="true" /></button>}
+          {query && <button type="button" onClick={() => { changeQuery(""); searchInput.current?.focus() }} aria-label={ar ? "مسح البحث" : "Clear search"} className="absolute end-2 top-1/2 inline-flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-xl text-[var(--text-muted)] hover:bg-[var(--surface-soft)]"><X size={18} aria-hidden="true" /></button>}
         </span>
       </label>
 
@@ -174,7 +195,7 @@ export function FaqExplorer({
             {shownCategories.map(entry => <option key={entry.id} value={entry.id} disabled={!counts[entry.id]}>{ar ? entry.ar : entry.en} ({counts[entry.id] ?? 0})</option>)}
           </select>
         </label>
-        <div role="group" aria-label={ar ? "تصفية حسب الموضوع" : "Filter by topic"} className="hidden flex-wrap justify-center gap-2 sm:flex">
+        <div role="group" aria-label={ar ? "تصفية حسب الموضوع" : "Filter by topic"} className={`${styles.topics} hidden flex-wrap justify-center gap-2 sm:flex`}>
         {[{ id: "" as const, ar: "الكل", en: "All" }, ...shownCategories].map(entry => {
           const active = category === entry.id
           const count = entry.id ? counts[entry.id] ?? 0 : Object.values(counts).reduce((sum, value) => sum + value, 0)
@@ -188,14 +209,22 @@ export function FaqExplorer({
       </>}
     </div>}
 
-    <div className={`flex flex-wrap items-center justify-between gap-3 ${searchable ? "mt-6" : ""}`}>
+    {searchable && !searching && !category && <nav aria-label={ar ? "إجابات سريعة" : "Quick answers"} className={styles.quickAnswers}>
+      <span>{ar ? "ابدأ من هنا" : "Start here"}</span>
+      {scoped.slice(0, 3).map(item => <button type="button" key={item.id} onClick={() => openAnswer(item.id)}>{item.q[locale]}<ArrowUpRight size={14} aria-hidden="true" className="rtl:-scale-x-100" /></button>)}
+    </nav>}
+
+    <div className={`${styles.toolbar} flex flex-wrap items-center justify-between gap-3 ${searchable ? "mt-6" : ""}`}>
       <p role="status" aria-live="polite" className="flex min-h-11 items-center text-sm text-[var(--text-muted)]">
-        {ar ? `${visible.length} ${visible.length === 1 ? "سؤال" : "أسئلة"}` : `${visible.length} ${visible.length === 1 ? "question" : "questions"}`}
+        {ar ? `${visible.length} من ${scoped.length} سؤال` : `${visible.length} of ${scoped.length} questions`}
       </p>
+      <div className={styles.toolbarActions}>
+      {(searching || category) && <button type="button" onClick={resetFilters} className={styles.reset}><X size={15} aria-hidden="true" />{ar ? "مسح التصفية" : "Clear filters"}</button>}
       {visible.length > 1 && <button type="button" onClick={toggleAll} className="inline-flex min-h-11 items-center gap-2 rounded-xl px-3 text-sm font-bold text-[var(--link)] hover:bg-[var(--surface-soft)]">
         <ChevronDown size={16} aria-hidden="true" className={allOpen ? "rotate-180" : ""} />
         {allOpen ? (ar ? "طيّ الكل" : "Collapse all") : (ar ? "توسيع الكل" : "Expand all")}
       </button>}
+      </div>
     </div>
 
     {visible.length === 0 && <div className="mt-4 rounded-2xl border border-dashed border-[var(--border)] bg-[var(--surface)] p-8 text-center">
@@ -204,20 +233,20 @@ export function FaqExplorer({
       <p className="mt-1 text-sm text-[var(--text-muted)]">{ar ? "أرسله إلى الفريق وسنرد عليك مباشرة." : "Send it to the team and we'll reply to you directly."}</p>
       <div className="mt-5 flex flex-wrap justify-center gap-3">
         <Link href={contactHref} className="inline-flex min-h-11 items-center gap-2 rounded-xl bg-[var(--action-bg)] px-5 text-sm font-bold text-[var(--action-fg)] hover:bg-[var(--action-hover)]">{ar ? "اسأل الفريق" : "Ask the team"}<ArrowUpRight size={16} aria-hidden="true" /></Link>
-        <button type="button" onClick={() => { changeQuery(""); setCategory("") }} className="min-h-11 px-3 text-sm font-bold text-[var(--link)]">{ar ? "عرض كل الأسئلة" : "Show all questions"}</button>
+        <button type="button" onClick={resetFilters} className="min-h-11 px-3 text-sm font-bold text-[var(--link)]">{ar ? "عرض كل الأسئلة" : "Show all questions"}</button>
       </div>
     </div>}
 
     <div className="mt-4 space-y-10">
-      {sections.map(({ entry, rows }) => <section key={entry?.id ?? "results"} aria-labelledby={entry ? `faq-group-${entry.id}` : undefined}>
-        {entry && <h2 id={`faq-group-${entry.id}`} className="mb-5 text-center text-xl font-bold text-[var(--text-strong)]">{ar ? entry.ar : entry.en}</h2>}
+      {sections.map(({ entry, rows }) => <section key={entry?.id ?? "results"} aria-labelledby={entry ? `${instance}-faq-group-${entry.id}` : undefined}>
+        {entry && <h2 id={`${instance}-faq-group-${entry.id}`} className={`${styles.groupTitle} mb-5 text-center text-xl font-bold text-[var(--text-strong)]`}>{ar ? entry.ar : entry.en}<span>{rows.length}</span></h2>}
         <ul className="space-y-3">
           {rows.map(item => {
             const expanded = isExpanded(item.id)
-            return <li key={item.id} id={item.id} className={`scroll-mt-28 overflow-hidden rounded-2xl border bg-[var(--surface)] transition-colors motion-reduce:transition-none ${expanded ? "border-[var(--action-bg)] shadow-sm" : "border-[var(--border)]"}`}>
+            return <li key={item.id} id={item.id} data-expanded={expanded} className={`${styles.card} scroll-mt-28 overflow-hidden rounded-2xl border bg-[var(--surface)] transition-colors motion-reduce:transition-none ${expanded ? "border-[var(--action-bg)] shadow-sm" : "border-[var(--border)]"}`}>
               <h3>
                 <button id={`${instance}-${item.id}-question`} data-faq-question type="button" onClick={() => toggle(item.id)} onKeyDown={navigateQuestions} aria-expanded={expanded} aria-controls={`${instance}-${item.id}-answer`}
-                  className="group flex min-h-16 w-full items-start justify-between gap-4 px-5 py-4 text-start transition-colors hover:bg-[var(--surface-soft)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[var(--action-bg)] sm:px-6">
+                  className={`${styles.question} group flex min-h-16 w-full items-start justify-between gap-4 px-5 py-4 text-start transition-colors hover:bg-[var(--surface-soft)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[var(--action-bg)] sm:px-6`}>
                   <span aria-hidden="true" className={`mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-sm font-extrabold ${expanded ? "bg-[var(--action-bg)] text-[var(--action-fg)]" : "bg-[var(--surface-soft)] text-[var(--text-muted)]"}`}>{ar ? "س" : "Q"}</span>
                   <span className="min-w-0 flex-1">
                     {shownCategories.length > 1 && (searching || category === "") && !entry && <span className="mb-1 block text-xs font-bold text-[var(--action-bg)]">{ar ? categoryOf(item.category).ar : categoryOf(item.category).en}</span>}
@@ -226,9 +255,9 @@ export function FaqExplorer({
                   <ChevronDown size={20} aria-hidden="true" className={`mt-1 shrink-0 text-[var(--text-muted)] transition-transform duration-200 motion-reduce:transition-none ${expanded ? "rotate-180 text-[var(--action-bg)]" : ""}`} />
                 </button>
               </h3>
-              <div id={`${instance}-${item.id}-answer`} role="region" aria-labelledby={`${instance}-${item.id}-question`} hidden={!expanded} className="border-t border-[var(--border-soft)] bg-[var(--surface-soft)] px-5 py-5 sm:px-6 sm:ps-[4.5rem]">
+              <div id={`${instance}-${item.id}-answer`} role="region" aria-labelledby={`${instance}-${item.id}-question`} hidden={!expanded} className={`${styles.answer} border-t border-[var(--border-soft)] bg-[var(--surface-soft)] px-5 py-5 sm:px-6 sm:ps-[4.5rem]`}>
                 <p className="mb-2 text-xs font-extrabold text-[var(--action-bg)]">{ar ? "الإجابة" : "Answer"}</p>
-                <div className="max-w-3xl space-y-3 text-[0.9375rem] leading-8 text-[var(--text-muted)]">
+                <div className={`${styles.answerText} max-w-3xl space-y-3 text-[0.9375rem] leading-8 text-[var(--text-muted)]`}>
                   {item.a[locale].map((paragraph, index) => <p key={index} className="whitespace-pre-line">{highlight(paragraph, query)}</p>)}
                 </div>
                 <div className="mt-4 flex flex-wrap items-center gap-x-5 gap-y-2">

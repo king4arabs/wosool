@@ -4,8 +4,8 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { ArrowLeft, ArrowRight, ArrowUpRight, Globe2, UserRound, MapPin, Pause, Play, Search, Users } from 'lucide-react'
 import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react'
-import { eoNetworkProfiles, filterEoNetwork, NETWORK_INTERVAL_MS, type EoNetworkProfile } from '@/lib/eo-global-network'
-import { createPartnerVisitStore, partnerDiscoveryOrder } from '@/lib/partner-discovery'
+import { createEoNetworkVisitStore, eoNetworkProfiles, filterEoNetwork, NETWORK_INTERVAL_MS, type EoNetworkProfile } from '@/lib/eo-global-network'
+import { partnerDiscoveryOrder } from '@/lib/partner-discovery'
 import styles from './GlobalNetwork.module.css'
 
 const motionQuery = '(prefers-reduced-motion: reduce)'
@@ -93,7 +93,7 @@ export function EoGlobalNetwork({ ar }: { ar: boolean }) {
   const [group, setGroup] = useState('all')
   const [topic, setTopic] = useState('all')
   const [grid, setGrid] = useState(false)
-  const [visitStore] = useState(createPartnerVisitStore)
+  const [visitStore] = useState(createEoNetworkVisitStore)
   const visitSeed = useSyncExternalStore(visitStore.subscribe, visitStore.getSnapshot, visitStore.getServerSnapshot)
   const profiles = useMemo(() => partnerDiscoveryOrder(filterEoNetwork(query, group, topic), visitSeed), [query, group, topic, visitSeed])
   const chapters = new Set(eoNetworkProfiles.map(p => p.chapter.replace('Spain-', ''))).size
