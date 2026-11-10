@@ -1,5 +1,6 @@
 "use client"
 
+import Link from "next/link"
 import { PublicLayout } from "@/components/layout/PublicLayout"
 import { PageHero } from "@/components/sections/PageHero"
 import { useLocale } from "@/lib/locale"
@@ -38,12 +39,13 @@ export default function TermsPage() {
   const body = "mt-3 text-base leading-8 text-[var(--text-muted)]"
   return <PublicLayout><div dir={direction} lang={locale} className="bg-[var(--page-bg)]">
     <PageHero
-      eyebrow={ar ? "آخر تحديث: أبريل 2026" : "Last updated: April 2026"}
+      eyebrow={ar ? "آخر تحديث: 10 نوفمبر 2026" : "Last updated: 10 November 2026"}
       title={ar ? "الشروط والأحكام" : "Terms of service"}
       description={ar ? "القواعد التي تحكم استخدام منصة وصول وعضويتها." : "The rules for using Wosool and holding a membership."}
     />
     <article className="mx-auto max-w-3xl px-4 py-12 sm:px-6 sm:py-16">
       {!ar && <p className="mb-8 rounded-xl bg-[var(--surface-soft)] p-4 text-sm leading-7 text-[var(--text-muted)]">This English text is a translation. If the two versions differ, the Arabic version applies.</p>}
+      <section className="mb-8 rounded-2xl border border-[var(--border-soft)] bg-[var(--surface)] p-6"><h2 className="text-lg font-bold">{ar ? "المشاركة في EO Riyadh Accelerator" : "EO Riyadh Accelerator participation"}</h2><p className={body}>{ar ? "حساب وصول وقبول المسرّعة والتسجيل الرسمي في EO قرارات منفصلة. تخضع رسوم EOA وتجديدها وإلغاؤها واستردادها للشروط الخاصة بالمشاركة التي يؤكدها فريق البرنامج قبل السداد؛ ولا تستبدلها أحكام عضوية وصول العامة. تظل شعارات EO ومنهجه ومواده ملكاً لأصحاب الحقوق." : "A Wosool account, local Accelerator admission and official EO enrollment are separate decisions. EOA fees, renewal, cancellation and refunds follow the specific participation terms confirmed by the program team before payment; general Wosool membership terms do not replace them. EO branding, curriculum and materials remain owned by their rights holders."}</p><Link className="font-semibold text-[var(--link)] underline" href="/eoa/eligibility#participation-terms">{ar ? "شروط المشاركة والرسوم" : "Participation terms and fees"}</Link></section>
       <ol className="space-y-5">
         {clauses.map((clause, index) => {
           const [title, text] = clause[ar ? "ar" : "en"]
