@@ -5267,5 +5267,51 @@
         ]
       }
     }
+  },
+  {
+    "id": "sourced-turuq-den-vc-undisclosed-seed-october-2026",
+    "slug": "turuq-den-vc-undisclosed-seed-october-2026",
+    "title": "Egypt's Turuq secures undisclosed seed investment from Den VC",
+    "excerpt": "Cairo-based fulfilment startup Turuq drew its first outside seed investment after the InvestIT accelerator; no round amount was disclosed.",
+    "content": "Reporting published 27 October 2026 said Cairo-based e-commerce logistics startup Turuq had received its first outside seed equity investment from Den VC. Co-founders Ahmed Atta and Karim Kamal built warehousing, order handling, packing and courier-routing services for online merchants. The company traces its launch to 2023, while independent founder reporting says it incorporated in January 2025; these refer to different stages of the business. The investment followed participation in InvestIT, delivered by Flat6Labs with ITIDA and TIEC. Neither the funding amount, valuation nor investor ownership share was disclosed, so no financing value or revenue is inferred.",
+    "category": "Funding",
+    "region": "mena",
+    "imageUrl": "",
+    "imageCredit": "",
+    "sourceUrl": "https://enterpriseam.com/egypt/2026/10/27/turuq-takes-its-first-outside-investment-from-den-vc/",
+    "sourceName": "EnterpriseAM Egypt (founder interview)",
+    "companies": [
+      "Turuq",
+      "طرق",
+      "Turuq Innovations"
+    ],
+    "publishedAt": "2026-10-27",
+    "author": "Wosool news desk",
+    "tags": [
+      "Egypt",
+      "Turuq",
+      "Logistics",
+      "Seed",
+      "Den VC"
+    ],
+    "keyFacts": [
+      "Seed equity investment from Den VC; amount undisclosed",
+      "Co-founders: Ahmed Atta and Karim Kamal",
+      "Participated in InvestIT accelerator supported by ITIDA, TIEC and Flat6Labs"
+    ],
+    "translations": {
+      "ar": {
+        "title": "«طرق» المصرية تحصل على استثمار بذري من Den VC بقيمة غير معلنة",
+        "excerpt": "حصلت شركة «طرق» المتخصصة في تجهيز طلبات التجارة الإلكترونية على أول استثمار خارجي بعد مشاركتها في برنامج InvestIT.",
+        "body": [
+          "أفاد تقرير نُشر في 27 أكتوبر 2026 بحصول شركة «طرق» المصرية للخدمات اللوجستية على أول استثمار خارجي في جولة بذرية من Den VC، من دون إعلان قيمة التمويل أو التقييم أو حصة المستثمر. أسس أحمد عطا وكريم كمال الشركة لتقديم خدمات التخزين وتجهيز الطلبات والتغليف وتنسيق التوصيل للتجار الإلكترونيين. بدأ نشاط المشروع عام 2023، في حين ذكرت مقابلة مع المؤسس أن تسجيل الشركة القانوني تم في يناير 2025؛ وهما مرحلتان مختلفتان. جاء الاستثمار بعد مشاركة الشركة في برنامج InvestIT الذي نفذته Flat6Labs بالتعاون مع ITIDA وTIEC. لا يُفترض مبلغ استثماري أو إيرادات غير معلنة."
+        ],
+        "keyFacts": [
+          "استثمار بذري من Den VC دون إعلان قيمته",
+          "المؤسسان أحمد عطا وكريم كمال",
+          "مشاركة سابقة في برنامج InvestIT المدعوم من ITIDA وTIEC وFlat6Labs"
+        ]
+      }
+    }
   }
 ]

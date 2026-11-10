@@ -99,10 +99,10 @@ test('news parity, duplicate URL and publication guards are preserved', () => {
 test('checked-in report covers the exact frontend and importer catalog paths', async () => {
   const result = await loadContentReport()
   assert.deepEqual(result.problems, [])
-  assert.deepEqual(result.totals, { founders: 354, companies: 192, news: 125 })
-  assert.equal(result.upcoming_reviews.length + result.reviews_due.length, 354)
+  assert.deepEqual(result.totals, { founders: 356, companies: 193, news: 126 })
+  assert.equal(result.upcoming_reviews.length + result.reviews_due.length, 356)
   assert.equal([...result.upcoming_reviews, ...result.reviews_due].filter(row => row.catalog === catalogs[1].backend).length, 100)
-  assert.equal([...result.upcoming_reviews, ...result.reviews_due].filter(row => row.catalog === catalogs[4].backend).length, 148)
+  assert.equal([...result.upcoming_reviews, ...result.reviews_due].filter(row => row.catalog === catalogs[4].backend).length, 150)
   for (const [path, field, prefix] of [
     ['../frontend/src/lib/founder-spotlight.ts', 'frontend', 'founder-spotlight'],
     ['../backend/app/Services/FounderDirectoryImporter.php', 'backend', 'founder-directory'],
@@ -150,8 +150,8 @@ test('both CLI modes report full coverage from a different working directory', (
   const script = new URL('./content-review.mjs', import.meta.url)
   const check = spawnSync(process.execPath, [script.pathname, '--check'], { cwd: tmpdir(), encoding: 'utf8' })
   assert.equal(check.status, 0, check.stderr)
-  assert.match(check.stdout, /354 founders, 192 companies, 125 stories/)
+  assert.match(check.stdout, /356 founders, 193 companies, 126 stories/)
   const review = spawnSync(process.execPath, [script.pathname], { cwd: tmpdir(), encoding: 'utf8' })
   assert.equal(review.status, 0, review.stderr)
-  assert.equal(JSON.parse(review.stdout).totals.founders, 354)
+  assert.equal(JSON.parse(review.stdout).totals.founders, 356)
 })
