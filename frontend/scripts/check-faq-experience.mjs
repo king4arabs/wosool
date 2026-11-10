@@ -34,6 +34,7 @@ try {
       const quick = faq.getByRole('navigation', { name: ar ? 'إجابات سريعة' : 'Quick answers' })
       await quick.getByRole('button').first().click()
       assert.equal(await questions.first().getAttribute('aria-expanded'), 'true', 'Quick answer opens its question')
+      await page.waitForFunction(() => document.querySelector('[data-faq-question]') === document.activeElement)
       assert.equal(await questions.first().evaluate(el => el === document.activeElement), true, 'Quick answer moves keyboard focus')
       await questions.first().click()
       await faq.getByRole('searchbox').fill('newsletter')
