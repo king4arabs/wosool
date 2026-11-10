@@ -50,7 +50,7 @@
 .card[data-expanded=true] { background: color-mix(in srgb, var(--faq-accent) 3%, var(--surface)); }
 .root .card :is(h3, h4) { margin: 0; font-size: inherit; line-height: inherit; letter-spacing: normal; text-wrap: initial; }
 .question { display: flex; align-items: center; justify-content: space-between; gap: 20px; width: 100%; min-height: 82px; padding: 22px 26px; border: 0; background: transparent; text-align: start; }
-.question > span:first-child { min-width: 0; color: var(--text-strong); font-size: 16px; font-weight: 700; line-height: 1.75; overflow-wrap: anywhere; }
+.question > span:first-child { min-width: 0; color: var(--text-strong); font-size: 17px; font-weight: 700; line-height: 1.75; overflow-wrap: anywhere; }
 .question:hover { background: color-mix(in srgb, var(--faq-accent) 3%, var(--surface)); }
 .question:focus-visible { outline-offset: -4px !important; }
 .toggleIcon { display: grid; place-items: center; flex-shrink: 0; width: 30px; height: 30px; border: 1px solid var(--border-soft); border-radius: 50%; color: var(--text-muted); background: var(--surface); }
@@ -60,7 +60,7 @@
 .resultTopic { display: block; margin-bottom: 5px; color: var(--link); font-size: 11px; font-weight: 600; }
 .answer { padding: 0 26px 20px; }
 .answer:not([hidden]) { animation: reveal .16s ease-out; }
-.root .answerText p { margin: 0; max-width: 65ch; padding-inline-end: 30px; color: var(--text); font-size: 15px; line-height: 1.95; white-space: pre-line; overflow-wrap: anywhere; }
+.root .answerText p { margin: 0; max-width: 65ch; padding-inline-end: 30px; color: var(--text); font-size: 16px; line-height: 1.95; white-space: pre-line; overflow-wrap: anywhere; }
 .root .answerText p + p { margin-top: 14px; }
 .answerActions { display: flex; flex-wrap: wrap; align-items: center; gap: 0 20px; padding-top: 12px; margin-top: 15px; border-top: 1px solid var(--border-soft); }
 .answerActions a, .answerActions button { display: inline-flex; align-items: center; gap: 7px; min-height: 44px; border: 0; background: transparent; color: var(--link); font-size: 12px; font-weight: 600; }
@@ -99,10 +99,10 @@
   .toolbarActions { gap: 0; }
   .toolbarActions button { font-size: 11px; padding-inline: 6px; }
   .question { padding: 18px; min-height: 76px; gap: 14px; }
-  .question > span:first-child { font-size: 15px; line-height: 1.85; }
+  .question > span:first-child { font-size: 16px; line-height: 1.85; }
   .toggleIcon { width: 27px; height: 27px; }
   .answer { padding: 0 18px 16px; }
-  .root .answerText p { padding-inline-end: 0; font-size: 14px; line-height: 2; }
+  .root .answerText p { padding-inline-end: 0; font-size: 15px; line-height: 1.95; }
   .answerActions { gap: 0 15px; }
   .answerActions a, .answerActions button { font-size: 11px; }
   .results, .card { scroll-margin-top: 150px; }
