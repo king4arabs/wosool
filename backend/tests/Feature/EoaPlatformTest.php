@@ -67,7 +67,10 @@ class EoaPlatformTest extends TestCase
 
     public function test_registration_verification_and_network_access_boundaries(): void
     {
-        $this->postJson('/api/v1/eoa/auth/register', ['name' => 'EOA Founder', 'email' => 'Founder@example.com', 'password' => 'StrongPassword2026', 'password_confirmation' => 'StrongPassword2026', 'privacy_consent' => true])->assertCreated()->assertJsonPath('email_queued', false);
+        config(['mail.default' => 'smtp']);
+        $program = ProgramService::program();
+        $program->update(['settings' => array_replace($program->settings, ['eoa_operations' => ['mail_delivery_verified' => 'controlled-inbox-test']])]);
+        $this->postJson('/api/v1/eoa/auth/register', ['name' => 'EOA Founder', 'email' => 'Founder@example.com', 'password' => 'StrongPassword2026', 'password_confirmation' => 'StrongPassword2026', 'privacy_consent' => true])->assertCreated()->assertJsonPath('email_queued', true);
         $u = User::where('email', 'founder@example.com')->firstOrFail();
         Notification::assertSentTo($u, EoaVerifyEmail::class);
         $this->actingAs($u)->putJson('/api/v1/eoa/application', ['version' => 0])->assertForbidden();
@@ -134,7 +137,9 @@ class EoaPlatformTest extends TestCase
         $this->assertSame('onboarding', $p->status);
         $this->actingAs($u)->postJson('/api/v1/eoa/onboarding', ['participation_agreed' => true, 'profile_confirmed' => true])->assertOk();
         $this->actingAs($lead)->patchJson('/api/v1/eoa/operations/participants/'.$p->id, ['fee_status' => 'paid', 'global_confirmed' => true])->assertUnprocessable();
-        $this->patchJson('/api/v1/eoa/operations/participants/'.$p->id, ['fee_status' => 'paid', 'global_confirmed' => true, 'fee_reference' => 'receipt-1', 'official_reference' => 'eo-record-1'])->assertOk();
+        $program = ProgramService::program();
+        $program->update(['settings' => array_replace($program->settings, ['eoa_operations' => ['delivery_ready' => true]])]);
+        $this->patchJson('/api/v1/eoa/operations/participants/'.$p->id, ['fee_status' => 'paid', 'global_confirmed' => true, 'fee_reference' => 'receipt-1', 'official_reference' => 'eo-record-1', 'participation_starts_on' => now()->toDateString(), 'paid_through' => now()->addMonths(7)->toDateString()])->assertOk();
         $this->assertSame('enrolled', $p->fresh()->status);
         $this->actingAs($u)->putJson('/api/v1/eoa/progress', ['milestones' => [['title' => 'Create a growth plan', 'completed' => false]]])->assertOk();
         $this->getJson('/api/v1/eoa/participant')->assertOk()->assertJsonPath('data.status', 'enrolled')->assertJsonMissing(['official_reference' => 'eo-record-1']);

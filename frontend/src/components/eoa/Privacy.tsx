@@ -18,7 +18,7 @@ export function EoaPrivacy() {
         ],
         [
           'من يمكنه الاطلاع',
-          'يطلع صاحب الطلب وقيادة البرنامج والموظفون المخولون والمراجعون المخصصون على الطلب ومستنداته. يطلع المدرب المخصص على الأهداف والتقدم والحضور دون الإيرادات أو المستندات المالية. لا يُعرض الطلب أو الإيراد للمشاركين الآخرين.',
+          'يطلع صاحب الطلب وقيادة البرنامج والموظفون المخولون والمراجعون المخصصون على الطلب ومستنداته. يطلع المدرب المخصص على الأهداف والتقدم والحضور دون الإيرادات أو المستندات المالية. لا يُعرض الطلب أو الإيراد للمشاركين الآخرين. تنسق القيادة المخولة التسجيل الرسمي مع EO Global وفق البيانات المحددة في الإشعار المحلي المعتمد.',
         ],
         [
           'الحماية والخدمات',
@@ -40,7 +40,7 @@ export function EoaPrivacy() {
         ],
         [
           'Who can access it',
-          'The applicant, authorized program leadership and staff, and assigned reviewers can access the application and evidence. Assigned coaches see goals, progress and attendance, without application revenue or financial documents. Other participants cannot see your application or revenue.',
+          'The applicant, authorized program leadership and staff, and assigned reviewers can access the application and evidence. Assigned coaches see goals, progress and attendance, without application revenue or financial documents. Other participants cannot see your application or revenue. Authorized leadership coordinates official enrollment with EO Global using the information described in the approved local notice.',
         ],
         [
           'Protection and services',
@@ -59,8 +59,8 @@ export function EoaPrivacy() {
     <div className="eoa-privacy">
       <p className="eoa-lead">
         {ar
-          ? 'إشعار بيانات EO Riyadh Accelerator — نسخة 8 أكتوبر 2026.'
-          : 'EO Riyadh Accelerator data notice — version 8 October 2026.'}
+          ? 'خصوصية بيانات مسرّعة EO الرياض'
+          : 'EO Riyadh Accelerator data privacy'}
       </p>
       {items.map(([title, body]) => (
         <article key={title} className="eoa-card eoa-space">

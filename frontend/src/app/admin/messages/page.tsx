@@ -13,6 +13,9 @@ import { useLocale } from "@/lib/locale"
 import { dateLocale } from "@/lib/date-locale"
 
 const categories: { value: ContactCategory; ar: string; en: string }[] = [
+  { value: "eoa-privacy", ar: "خصوصية EOA", en: "EOA privacy" },
+  { value: "eoa-fees", ar: "رسوم EOA", en: "EOA fees" },
+  { value: "eoa-coaching", ar: "تدريب EOA", en: "EOA coaching" },
   { value: "general", ar: "سؤال عام", en: "General question" },
   { value: "founder-support", ar: "دعم المؤسسين", en: "Founder support" },
   { value: "partnerships", ar: "شراكة", en: "Partnership" },

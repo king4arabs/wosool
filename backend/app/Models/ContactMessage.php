@@ -10,6 +10,9 @@ class ContactMessage extends Model
     /** Labels match the choices on the public contact form, so the team sees what the sender picked. */
     public const CATEGORIES = [
         'general' => ['سؤال عام', 'General question'],
+        'eoa-coaching' => ['تدريب EOA', 'EOA coaching'],
+        'eoa-fees' => ['رسوم EOA', 'EOA fees'],
+        'eoa-privacy' => ['خصوصية EOA', 'EOA privacy'],
         'founder-support' => ['دعم المؤسسين', 'Founder support'],
         'partnerships' => ['شراكة', 'Partnership'],
         'sponsorship' => ['رعاية', 'Sponsorship'],

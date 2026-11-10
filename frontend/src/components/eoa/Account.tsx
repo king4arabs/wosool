@@ -279,18 +279,18 @@ function AccountSession({ initialMode, redirectTo }: { initialMode: 'login' | 'r
                 )}
                 {mode === 'register' &&
                   program &&
-                  !program.data_collection_open && (
+                  !(program.registration_open ?? program.data_collection_open) && (
                     <Notice>
                       {ar
-                        ? 'إنشاء الحسابات بانتظار اعتماد إشعار البيانات المحلي. يمكنك استكشاف البرنامج والتواصل مع الفريق.'
-                        : 'Registration is awaiting approval of the local data notice. You can explore the program and contact the team.'}
+                        ? 'التسجيل غير متاح حالياً. يمكنك استكشاف البرنامج أو التواصل مع الفريق حول الدفعة القادمة.'
+                        : 'Registration is not available yet. Explore the program or contact the team about the next intake.'}
                     </Notice>
                   )}
                 <button
                   className="eoa-btn"
                   disabled={
                     busy ||
-                    (mode === 'register' && !program?.data_collection_open)
+                    (mode === 'register' && !(program?.registration_open ?? program?.data_collection_open))
                   }
                 >
                   {busy

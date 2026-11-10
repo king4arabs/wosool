@@ -16,8 +16,8 @@ export function EoaJourney({ program }: { program: EoaProgram | null }) {
         ['المراجعة', 'تابع طلبات المعلومات والمقابلة وقرار اللجنة من حسابك.'],
         ['القبول', 'تؤكد قيادة البرنامج قرار القبول والمسار المناسب.'],
         ['الانضمام والتسجيل', 'استكمل متطلبات المشاركة وتأكيد الرسوم والتسجيل الرسمي.'],
-        ['التعلم والمساءلة', 'احضر ستة أشهر من التدريب والتوجيه وأنشطة الدفعة، وراجع ما طبقته مع مجموعتك.'],
-        ['التخرج والخريجون', 'أكمل الدفعة وانضم إلى برنامج الخريجين للمتابعة ودعم النمو نحو مليون دولار.'],
+        ['التعلم والمساءلة', 'شارك في أيام التعلم الربع سنوية ومجموعات المساءلة الشهرية، وراجع تطبيق المنهج على مدى عامين.'],
+        ['التخرج والخريجون', 'راجع تقدمك مع القيادة، ثم استكمل التخرج المعتمد وخطة المتابعة عند تحقق متطلباتك.'],
         ['التقديم لعضوية EO', 'عند استيفاء شروط العضوية، قدّم طلباً مستقلاً يراجعه الفرع.'],
       ]
     : [
@@ -27,8 +27,8 @@ export function EoaJourney({ program }: { program: EoaProgram | null }) {
         ['Review', 'Follow information requests, interviews and committee decisions in your account.'],
         ['Acceptance', 'Program leadership confirms your admission decision and track.'],
         ['Onboarding', 'Complete participation requirements, fee confirmation and official enrollment.'],
-        ['Learn & apply', 'Join six months of coaching, training and cohort activities, and discuss what you’ve tried with your accountability group.'],
-        ['Graduation & alumni', 'Complete your cohort and continue with alumni follow-ups and growth support toward US$1 million.'],
+        ['Learn & apply', 'Follow the two-year curriculum through quarterly Learning Days and monthly accountability groups, with annual participation and renewal.'],
+        ['Graduation & alumni', 'Review progress with leadership; record approved graduation and a follow-up plan when the requirements are met.'],
         ['EO membership application', 'When eligible, apply separately for membership through the chapter’s review process.'],
       ]
 
@@ -91,8 +91,8 @@ export function EoaJourney({ program }: { program: EoaProgram | null }) {
             </p>
             <p>
               {ar
-                ? 'تستمر الدفعة ستة أشهر من التدريب والتوجيه وأنشطة الدفعة. تبدأ دفعة جديدة كل ستة أشهر، وتستمر المتابعة عبر برنامج الخريجين بعد التخرج.'
-                : 'Each cohort has six months of coaching, training and cohort activities. A new cohort begins every six months, with follow-up through the alumni program after graduation.'}
+                ? 'المنهج لمدة عامين، والمشاركة سنوية. قد تُفتح دفعات كل ستة أشهر وفق الجاهزية؛ يستمر الدعم بعد التخرج المعتمد.'
+                : 'The curriculum spans two years with annual participation. Intakes may open every six months when ready; follow-up continues after approved graduation.'}
             </p>
             <Link className="eoa-text-link" href="/eoa/eligibility">
               {ar ? 'تحقق من الأهلية والرسوم' : 'Check eligibility & fees'} ↗

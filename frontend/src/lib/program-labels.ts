@@ -35,7 +35,7 @@ const INSTALLED_PROGRAM_ARABIC: Record<string, { name: [string, string]; descrip
     name: ["EO Riyadh Accelerator", "مسرّعة EO الرياض"],
     description: [
       "Wosool digital gateway for EO Riyadh Accelerator. Saudi Founders. Global Connections. Extraordinary Growth.",
-      "اعمل على النقد والاستراتيجية والفريق والتنفيذ مع أصحاب أعمال آخرين ضمن دفعة مسرّعة EO الرياض لمدة ستة أشهر.",
+      "اعمل على النقد والاستراتيجية والفريق والتنفيذ مع أصحاب أعمال آخرين ضمن منهج مسرّعة EO الرياض لمدة عامين.",
     ],
   },
 }

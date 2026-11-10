@@ -38,7 +38,7 @@ class ProgramResource extends JsonResource
             'full_description' => $get('full_description', $this->description),
             'program_type' => $get('program_type', $this->category),
             'category' => $this->category,
-            'duration' => $this->duration,
+            'duration' => $this->slug === \App\Services\Eoa\ProgramService::SLUG ? '24 months' : $this->duration,
             'format' => $get('format', 'cohort-based'),
             'language' => $get('language', 'ar'),
             'city_region' => $get('city_region'),

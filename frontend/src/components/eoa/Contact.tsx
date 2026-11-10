@@ -10,8 +10,12 @@ export function EoaContact() {
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState('')
   const [saved, setSaved] = useState(false)
+  const [category, setCategory] = useState('general')
   const [subject, setSubject] = useState('')
   useEffect(() => {
+    const params = new URLSearchParams(window.location.search)
+    const requested = params.get('category')
+    if (['general','partnerships','sponsorship','eoa-coaching','eoa-fees','eoa-privacy'].includes(requested ?? '')) setCategory(requested!)
     setSubject(new URLSearchParams(window.location.search).get('subject')?.slice(0, 220) ?? '')
   }, [])
   return (
@@ -56,8 +60,8 @@ export function EoaContact() {
             <input name="company" maxLength={255} />
           </Field>
           <Field label={ar ? 'نوع الاستفسار' : 'Inquiry type'}>
-            <select name="category">
-              <option value="general">
+            <select name="category" value={category} onChange={e=>setCategory(e.target.value)}>
+              <option value="eoa-coaching">{ar?'التدريب ومجموعات المساءلة':'Coaching & accountability'}</option><option value="eoa-fees">{ar?'الرسوم والسداد':'Fees & payment'}</option><option value="eoa-privacy">{ar?'الخصوصية والبيانات':'Privacy & data'}</option><option value="general">
                 {ar ? 'البرنامج والتقديم' : 'Program & applications'}
               </option>
               <option value="partnerships">

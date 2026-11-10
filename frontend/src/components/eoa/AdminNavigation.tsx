@@ -8,7 +8,7 @@ import styles from './AdminNavigation.module.css'
 
 const groups = [
   { label: ['الطلبات والمشاركون', 'Applications & participants'], keys: ['overview', 'applications', 'tracks', 'enrollment', 'alumni'] },
-  { label: ['تشغيل البرنامج', 'Program operations'], keys: ['program', 'inquiries', 'report'] },
+  { label: ['تشغيل البرنامج', 'Program operations'], keys: ['readiness', 'program', 'finance', 'inquiries', 'report'] },
   { label: ['المحتوى والشراكات', 'Content & partnerships'], keys: ['partners', 'perks', 'board', 'mentors', 'editorial'] },
   { label: ['الفريق والإعدادات', 'Team & settings'], keys: ['accounts', 'access', 'settings'] },
 ]

@@ -192,6 +192,7 @@ function ApplicationSession() {
         {(isLoading || (user && !loaded)) && !error && (
           <Notice>{ar ? 'جارٍ التحميل…' : 'Loading…'}</Notice>
         )}
+        {program && !program.applications_open && <Notice>{ar?'التقديم غير مفتوح حالياً. تواصل مع الفريق عن الدفعة القادمة؛ القبول المحلي والسداد والتسجيل الرسمي خطوات منفصلة.':'Applications are not currently open. Ask the team about the next intake; local acceptance, payment and official enrollment are separate steps.'} <Link href="/eoa/contact">{ar?'تواصل معنا':'Contact us'}</Link></Notice>}
         {!isLoading && !user && (
           <div className="eoa-card">
             <h2>{ar ? 'ابدأ بحسابك' : 'Start with your account'}</h2>
@@ -200,8 +201,8 @@ function ApplicationSession() {
                 ? 'أنشئ حساباً ووثّق بريدك قبل تجهيز الطلب.'
                 : 'Create an account and verify your email before preparing an application.'}
             </p>
-            <Link className="eoa-btn" href="/eoa/account">
-              {ar ? 'إنشاء حساب أو الدخول' : 'Create account or sign in'}
+            <Link className="eoa-btn" href={program?.data_collection_open ? '/eoa/account' : '/eoa/contact'}>
+              {program?.data_collection_open ? (ar ? 'إنشاء حساب أو الدخول' : 'Create account or sign in') : (ar?'استفسر عن الدفعة القادمة':'Ask about the next intake')}
             </Link>
           </div>
         )}
@@ -383,6 +384,8 @@ function ApplicationSession() {
                       )}
                       {step === 1 && (
                         <div className="eoa-two-grid">
+                          <Field label={ar?"أساس الأهلية":"Eligibility basis"}><select value={fields.qualification_basis ?? "revenue"} onChange={e=>change("qualification_basis",e.target.value)}><option value="revenue">{ar?"الإيراد السنوي":"Annual revenue"}</option><option value="funding">{ar?"شركة مدعومة استثمارياً":"Venture-backed business"}</option></select></Field>
+                          {fields.qualification_basis === "funding" && <Field label={ar?"التمويل الخاص المحصل بالدولار":"Privately raised funds in USD"}><input type="number" min="0" step="0.01" value={fields.privately_raised_usd ?? ""} onChange={e=>change("privately_raised_usd",e.target.value)}/></Field>}
                           {input('company_name')}
                           {input('company_website', 'url')}
                           {input('city')}

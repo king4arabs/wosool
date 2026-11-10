@@ -43,6 +43,10 @@ Route::prefix('v1/eoa')->group(function () {
             Route::get('/operations/accounts', [AccountRoleController::class, 'index']);
             Route::patch('/operations/accounts/{account}', [AccountRoleController::class, 'update']);
             Route::get('/operations', [OperationsController::class, 'show']);
+            Route::get('/operations/readiness', [\App\Http\Controllers\Api\Eoa\ReadinessController::class, 'show']);
+            Route::put('/operations/readiness', [\App\Http\Controllers\Api\Eoa\ReadinessController::class, 'save']);
+            Route::get('/operations/finance', [\App\Http\Controllers\Api\Eoa\ReadinessController::class, 'finance']);
+            Route::put('/operations/finance', [\App\Http\Controllers\Api\Eoa\ReadinessController::class, 'saveFinance']);
             Route::get('/operations/perks', [PerkController::class, 'manage']);
             Route::post('/operations/perks', [PerkController::class, 'save']);
             Route::patch('/operations/perks/{perk}', [PerkController::class, 'save'])->whereNumber('perk');

@@ -22,6 +22,7 @@ class ManagementSummary
 
         return [
             'generated_at' => now()->toIso8601String(),
+            'readiness' => Readiness::summary($program),
             'alumni' => ['total' => $participants->where('status', 'alumni')->count(), 'follow_ups_due' => $participants->where('status', 'alumni')->filter(fn ($p) => ! empty($p->eoa_onboarding['alumni']['follow_up_on']) && $p->eoa_onboarding['alumni']['follow_up_on'] <= $today)->count()],
             'pipeline' => (clone $applications)->selectRaw('status, count(*) as total')->groupBy('status')->pluck('total', 'status'),
             'attention' => [

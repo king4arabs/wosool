@@ -1,6 +1,8 @@
 'use client'
 import Link from 'next/link'
+import { useEffect } from 'react'
 import { useLocale } from '@/lib/locale'
+import { LearningCalendar, CoachOverview, DeliveryModel, ParticipationTerms } from './ProgramGuide'
 import { CohortModel } from './CohortModel'
 import { EoaPrivacy } from './Privacy'
 import { EoaContact } from './Contact'
@@ -34,6 +36,7 @@ export function EoaContent({ section }: { section: string }) {
   const { locale } = useLocale()
   const ar = locale === 'ar'
   const { program } = useEoaProgram()
+  useEffect(() => { document.title = `EO Riyadh Accelerator — ${titles[section]?.[ar ? 0 : 1] ?? ''}` }, [ar, section])
 
   return (
     <section className="eoa-section">
@@ -45,9 +48,10 @@ export function EoaContent({ section }: { section: string }) {
         </header>
         {['program', 'alumni'].includes(section) && <CohortModel ar={ar} />}
         {section === 'alumni' && <div className="eoa-card eoa-space"><h2>{ar?'تستمر الرحلة بعد التخرج':'Your journey continues after graduation'}</h2><p>{ar?'تابع أهداف شركتك وتواصل مع مدربك وراجع الأنشطة ومواعيد المتابعة من حسابك. يسجل فريق البرنامج التخرج وخطة المتابعة، وتُقيّم أهلية EO بصورة مستقلة عند استيفاء شروطها.':'Keep tracking company goals, connect with your coach and review activities and follow-up dates in your account. The program team records graduation and follow-up plans; EO eligibility is assessed separately against its membership requirements.'}</p><Link href="/dashboard/eoa" className="eoa-btn">{ar?'افتح مساحة الخريجين':'Open your alumni workspace'}</Link></div>}
-        {section === 'eligibility' && <Eligibility />}
+        {section === 'eligibility' && <><Eligibility /><ParticipationTerms ar={ar} program={program} /></>}
         {section === 'perks' && <EoaPerks />}
         {section === 'privacy' && <EoaPrivacy />}
+        {section === 'about' && <CohortModel ar={ar} />}
         {section === 'about' && (
           <div className="eoa-two-grid">
             <div>
@@ -80,8 +84,8 @@ export function EoaContent({ section }: { section: string }) {
           <>
             <p className="eoa-lead">
               {ar
-                ? 'تمتد الدفعة ستة أشهر. ستتعلم مع مؤسسين آخرين، وتراجع معهم ما طبقته في شركتك، وتواصل المتابعة في برنامج الخريجين بعد انتهاء الدفعة. تنطلق دفعة جديدة كل ستة أشهر.'
-                : 'A cohort lasts six months. Learn alongside other founders, check back on what you’ve tried in your business, and continue with alumni follow-ups afterward. A new cohort begins every six months.'}
+                ? 'يقدم البرنامج منهجاً لمدة عامين مع مشاركة وتجديد سنويين وأيام تعلم ربع سنوية ومساءلة شهرية. مواعيد الدفعات مستقلة عن مدة المنهج، وتُنشر عند تأكيدها.'
+                : 'The program follows a two-year curriculum with annual participation and renewal, quarterly Learning Days and monthly accountability. Intake dates are separate from curriculum duration and are published when confirmed.'}
             </p>
             <div className="eoa-four-grid">
               {(ar
@@ -113,9 +117,10 @@ export function EoaContent({ section }: { section: string }) {
                 </p>
               </div>
             </div>
-            <div className="eoa-actions eoa-space"><Link className="eoa-btn" href="/eoa/apply">{ar ? 'ابدأ طلبك' : 'Start your application'}</Link><Link className="eoa-text-link" href="/eoa/mentors">{ar ? 'استكشف الإرشاد' : 'Explore mentoring'}</Link></div>
+            <DeliveryModel ar={ar} /><div className="eoa-actions eoa-space"><Link className="eoa-btn" href="/eoa/apply">{ar ? 'ابدأ طلبك' : 'Start your application'}</Link><Link className="eoa-text-link" href="/eoa/mentors">{ar ? 'استكشف الإرشاد' : 'Explore mentoring'}</Link></div>
           </>
         )}
+        {section === 'learning' && <LearningCalendar ar={ar} />}
         {section === 'learning' && (
           <div className="eoa-two-grid">
             <div>
@@ -145,8 +150,9 @@ export function EoaContent({ section }: { section: string }) {
         )}
         {section === 'leadership' && <EoaLeadership program={program} ar={ar} />}
         {section === 'mentors' && <>
+          <CoachOverview ar={ar} />
+          <EoaMentors mentors={program?.mentors ?? []} ar={ar} />
           <EoGlobalNetwork ar={ar} />
-          {!!program?.mentors?.length && <EoaMentors mentors={program.mentors} ar={ar} />}
         </>}
         {section === 'faq' && <EoaProgramDetails program={program} section="faq" />}
         {section === 'partners' && (

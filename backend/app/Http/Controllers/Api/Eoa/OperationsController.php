@@ -58,7 +58,12 @@ class OperationsController extends Controller
             'sponsor_contribution_usd' => 'nullable|numeric|min:0|max:1000000', 'participant_contribution_usd' => 'nullable|numeric|min:0|max:1000000',
             'participation_terms_en' => 'nullable|string|max:6000', 'participation_terms_ar' => 'nullable|string|max:6000', 'contact_email' => 'nullable|email|max:255', 'public_message_en' => 'nullable|string|max:2000', 'public_message_ar' => 'nullable|string|max:2000',
         ]);
+        foreach (['public_message_en', 'public_message_ar', 'participation_terms_en', 'participation_terms_ar', 'privacy_notice_en', 'privacy_notice_ar'] as $field) abort_if(ProgramService::containsInternalFunding($data[$field] ?? null), 422, 'Internal program funding must not be published.');
         abort_if($data['is_open'] && ($data['approval_status'] !== 'approved' || $data['privacy_status'] !== 'approved' || ! ProgramService::mailConfigured()), 422, 'Opening intake requires program and data-notice approval and a configured email transport.');
+        if ($data['is_open']) {
+            $r = \App\Services\Eoa\Readiness::records(ProgramService::program());
+            abort_unless(! empty($r['mail_delivery_verified']) && ! empty($data['starts_at']) && ! empty($data['participation_terms_en']) && ! empty($data['participation_terms_ar']) && $data['local_fee_status'] === 'approved', 422, 'Opening intake requires verified mail delivery, a start date, both participation terms and approved fees.');
+        }
         if ($data['local_fee_status'] === 'approved') {
             abort_unless(isset($data['local_fee_usd'],$data['sponsor_contribution_usd'],$data['participant_contribution_usd']), 422, 'Complete all local fee fields.');
             abort_unless(abs((float) $data['local_fee_usd'] - (ProgramService::ANNUAL_JOURNEY_USD - ProgramService::facts()['annual_global_fee_usd'])) < 0.01
@@ -106,6 +111,7 @@ class OperationsController extends Controller
             'faqs.*.answer_en' => 'required|string|max:3000', 'faqs.*.answer_ar' => 'required|string|max:3000',
             'faqs.*.visible' => 'required|boolean',
         ];
+        if ($request->input('action') === 'publish') abort_if(ProgramService::containsInternalFunding(json_encode($request->only(['operator', 'faqs']), JSON_UNESCAPED_UNICODE)), 422, 'Internal program funding must not be published.');
         if ($request->input('action') === 'unpublish') {
             $rules = array_intersect_key($rules, array_flip(['version', 'action']));
         }
@@ -149,7 +155,7 @@ class OperationsController extends Controller
         $rules = match ($type) {
             'tracks' => ['name_ar' => 'required|string|max:255', 'name_en' => ['required', 'string', 'max:255', Rule::unique('eoa_tracks')->where('program_id', $p->id)->ignore($record)], 'description_ar' => 'nullable|string|max:2000', 'description_en' => 'nullable|string|max:2000', 'is_active' => 'required|boolean'],
             'cohorts' => ['name' => 'required|string|max:255', 'starts_at' => 'nullable|date', 'ends_at' => 'nullable|date|after_or_equal:starts_at', 'capacity' => 'required|integer|min:1|max:200', 'status' => 'nullable|in:forming,active,completed,cancelled'],
-            'sessions' => ['title' => 'required|string|max:255', 'description' => 'nullable|string|max:2000', 'cohort_id' => $cohort, 'starts_at' => 'required|date', 'duration_minutes' => 'required|integer|min:15|max:600', 'location' => 'nullable|string|max:255', 'online_link' => 'nullable|url:https|max:255', 'session_type' => 'required|in:learning_day,accountability,mentoring,prestigious_activity,alumni_follow_up', 'status' => 'nullable|in:scheduled,completed,cancelled'],
+            'sessions' => ['title' => 'required|string|max:255', 'description' => 'nullable|string|max:2000', 'cohort_id' => $cohort, 'starts_at' => 'required|date', 'duration_minutes' => 'required|integer|min:15|max:600', 'location' => 'nullable|string|max:255', 'online_link' => 'nullable|url:https|max:255', 'session_type' => 'required|in:learning_day,accountability,mentoring,prestigious_activity,alumni_follow_up,coach_training,coach_checkin,participant_webinar', 'status' => 'nullable|in:scheduled,completed,cancelled'],
             'groups' => ['name' => 'required|string|max:255', 'cohort_id' => $cohort, 'coach_id' => 'nullable|integer|exists:users,id', 'meeting_link' => 'nullable|url:https|max:255'],
             'resources' => ['title' => 'required|string|max:255', 'description' => 'nullable|string|max:2000', 'cohort_id' => $cohort, 'url' => 'required|url:https|max:255', 'category' => 'nullable|string|max:80', 'is_archived' => 'nullable|boolean'],
             'announcements' => ['subject' => 'required|string|max:255', 'body' => 'required|string|max:8000', 'cohort_id' => $cohort],
@@ -157,7 +163,7 @@ class OperationsController extends Controller
         };
         $data = $request->validate($rules);
         if ($type === 'cohorts' && ! $record && ! empty($data['starts_at']) && empty($data['ends_at'])) {
-            $data['ends_at'] = Carbon::parse($data['starts_at'])->addMonthsNoOverflow(6)->toDateTimeString();
+            $data['ends_at'] = Carbon::parse($data['starts_at'])->addMonthsNoOverflow(24)->toDateTimeString();
         }
         foreach (['starts_at', 'ends_at'] as $date) {
             if (! empty($data[$date])) {
@@ -165,7 +171,7 @@ class OperationsController extends Controller
             }
         }
         if (! empty($data['coach_id'])) {
-            abort_unless(User::findOrFail($data['coach_id'])->hasRole('eoa_coach'), 422, 'Choose an EOA coach.');
+            abort_unless(\App\Services\Eoa\Readiness::coachReady($p, (int) $data['coach_id']), 422, 'Confirm EO membership, training and active coach term in launch readiness before assignment.');
         }
 
         return DB::transaction(function () use ($request, $type, $p, $data, $record) {
@@ -203,14 +209,14 @@ class OperationsController extends Controller
     {
         abort_unless(Access::lead($request->user()), 403);
         $data = $request->validate(['graduation_reference' => 'required|string|max:500',
-            'follow_up_on' => 'required|date_format:Y-m-d|after_or_equal:today', 'support_plan' => 'required|string|max:2000']);
+            'follow_up_on' => 'required|date_format:Y-m-d|after_or_equal:today', 'support_plan' => 'required|string|max:2000', 'early_graduation_reference' => 'nullable|string|max:500']);
         return DB::transaction(function () use ($request, $participant, $data) {
             $row = ProgramService::program()->participants()->lockForUpdate()->findOrFail($participant);
             abort_unless(in_array($row->status, ['enrolled', 'alumni']) && ($row->eoa_finance['global_confirmed'] ?? false), 409, 'Only enrolled participants can graduate.');
             if ($row->status !== 'alumni') {
                 $cohort = $row->cohort()->first();
-                abort_unless($cohort?->starts_at && $cohort->starts_at->copy()->addMonthsNoOverflow(6)->lte(now()), 422, 'The six-month cohort must finish before graduation.');
-                abort_if($cohort->ends_at?->isFuture(), 422, 'The cohort has not ended.');
+                abort_unless($cohort?->starts_at && ($cohort->starts_at->copy()->addMonthsNoOverflow(24)->lte(now()) || ! empty($data['early_graduation_reference'])), 422, 'Complete the two-year curriculum or record verified early graduation eligibility.');
+                abort_if($cohort->ends_at?->isFuture() && empty($data['early_graduation_reference']), 422, 'The cohort has not ended.');
             }
             $before = $row->status;
             $onboarding = $row->eoa_onboarding ?? [];
@@ -242,6 +248,7 @@ class OperationsController extends Controller
                 $group = DB::table('eoa_groups')->where('id', $data['group_id'])->lockForUpdate()->first();
                 abort_if($group->cohort_id && (int) $group->cohort_id !== $data['cohort_id'], 422, 'Group must belong to the selected cohort.');
             }
+            if (! empty($data['group_id'])) abort_if($p->participants()->where('eoa_group_id', $data['group_id'])->where('id', '!=', $row->id)->whereIn('status', ['enrolled', 'onboarding'])->count() >= 6, 422, 'Accountability groups support at most six participants.');
             $before = ['cohort_id' => $row->cohort_id, 'group_id' => $row->eoa_group_id];
             $row->update(['cohort_id' => $data['cohort_id'], 'eoa_group_id' => $data['group_id']]);
             AdminAction::log($request->user()->id, 'eoa.assignment', 'program_participant', $row->id, null, $before, $data);
@@ -260,6 +267,7 @@ class OperationsController extends Controller
             'official_reference' => 'required_if:global_confirmed,true|nullable|string|max:255',
             'fee_reference' => 'required_unless:fee_status,pending|nullable|string|max:255',
             'participant_amount_usd' => 'nullable|numeric|min:0|max:1000000', 'sponsor_amount_usd' => 'nullable|numeric|min:0|max:1000000',
+            'participation_starts_on' => 'nullable|date|before_or_equal:today', 'paid_through' => 'nullable|date|after_or_equal:participation_starts_on',
         ]);
         abort_unless(Access::lead($request->user()), 403); // only leadership confirms global admission and money
 
@@ -274,10 +282,14 @@ class OperationsController extends Controller
                 $cohort = $p->cohorts()->lockForUpdate()->findOrFail($data['cohort_id']);
                 abort_if($cohort->capacity && $p->participants()->where('cohort_id', $cohort->id)->where('id', '!=', $row->id)->count() >= $cohort->capacity, 422, 'Cohort is full.');
             }
+            if (! empty($data['group_id'])) abort_if($p->participants()->where('eoa_group_id', $data['group_id'])->where('id', '!=', $row->id)->whereIn('status', ['enrolled', 'onboarding'])->count() >= 6, 422, 'Accountability groups support at most six participants.');
             $active = $data['global_confirmed'] && $data['fee_status'] !== 'pending' && ! empty($row->eoa_onboarding['completed_at']);
+            if ($active && $row->status !== 'enrolled') {
+                abort_unless(\App\Services\Eoa\Readiness::records($p)['delivery_ready'] && ! empty($data['participation_starts_on']) && ! empty($data['paid_through']), 422, 'Confirm delivery readiness and the participant fee period before activation.');
+            }
             $before = $row->status;
             $row->update(['cohort_id' => $data['cohort_id'] ?? null, 'eoa_group_id' => $data['group_id'] ?? null,
-                'eoa_finance' => array_diff_key($data, array_flip(['cohort_id', 'group_id'])), 'status' => $active ? 'enrolled' : 'onboarding', 'enrolled_at' => $active ? now() : null]);
+                'eoa_finance' => array_diff_key($data, array_flip(['cohort_id', 'group_id'])), 'status' => $active ? 'enrolled' : 'onboarding', 'enrolled_at' => $active ? ($row->enrolled_at ?? now()) : null]);
             if ($row->application_id) {
                 $p->applications()->where('id', $row->application_id)->update(['status' => $active ? 'enrolled' : 'accepted']);
             }

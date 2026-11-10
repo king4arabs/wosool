@@ -9,9 +9,12 @@ import { api, ApiError } from "@/lib/api"
 import { gatewayError } from "@/lib/gateway"
 import { useLocale } from "@/lib/locale"
 
-type Category = "general" | "partnerships" | "sponsorship" | "media" | "founder-support" | "office-hours"
+type Category = "general" | "partnerships" | "sponsorship" | "media" | "founder-support" | "office-hours" | "eoa-coaching" | "eoa-fees" | "eoa-privacy"
 
 const categories: { value: Category; icon: LucideIcon; ar: [string, string]; en: [string, string] }[] = [
+  { value: "eoa-privacy", icon: Mail, ar: ["خصوصية EOA", "تواصل مع فريق المسرّعة"], en: ["EOA privacy", "Contact the Accelerator team"] },
+  { value: "eoa-fees", icon: Mail, ar: ["رسوم EOA", "تواصل مع فريق المسرّعة"], en: ["EOA fees", "Contact the Accelerator team"] },
+  { value: "eoa-coaching", icon: Mail, ar: ["تدريب EOA", "تواصل مع فريق المسرّعة"], en: ["EOA coaching", "Contact the Accelerator team"] },
   { value: "general", icon: Mail, ar: ["سؤال عام", "عن وصول أو العضوية أو أي شيء آخر"], en: ["General question", "About Wosool, membership or anything else"] },
   { value: "founder-support", icon: Users, ar: ["دعم المؤسسين", "حسابك أو ملفك أو التعارف"], en: ["Founder support", "Your account, profile or introductions"] },
   { value: "partnerships", icon: Handshake, ar: ["شراكة", "برامج أو فعاليات مشتركة"], en: ["Partnership", "Joint programs or events"] },
