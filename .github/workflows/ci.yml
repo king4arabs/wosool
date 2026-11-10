@@ -16,8 +16,9 @@ concurrency:
 jobs:
   frontend:
     runs-on: ubuntu-latest
-    # The full browser suite (incl. Firefox/WebKit EOA checks and axe) runs past 15 minutes.
-    timeout-minutes: 25
+    # The full browser suite (incl. browser installs, Firefox/WebKit EOA checks and axe)
+    # reached the final axe crawl when the previous 25-minute ceiling cancelled it.
+    timeout-minutes: 40
     defaults:
       run:
         working-directory: frontend

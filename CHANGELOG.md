@@ -1,5 +1,12 @@
 # Changelog
 
+## Verifiable frontend and backend release identity — 2026-11-10
+
+- Add a nullable, sanitized Git revision to frontend `/health` and Laravel `/api/health` plus `/api/ready`. Frontend reads `WOSOOL_BUILD_REVISION` (with `GITHUB_SHA` as a CI fallback); Laravel reads `APP_REVISION`. Only 7–40 hexadecimal characters can be returned, so unrelated environment text is not reflected.
+- Extend OpenAPI to 1.7.1 and the production smoke monitor to report each service revision, reject malformed/conflicting answers and optionally enforce `WOSOOL_EXPECTED_FRONTEND_REVISION` and `WOSOOL_EXPECTED_BACKEND_REVISION` repository variables. The monitor remains compatible with unconfigured releases by reporting `unreported` until an expected value is pinned.
+- Raise the frontend CI timeout from 25 to 40 minutes after the complete browser matrix reached its final axe accessibility crawl and was cancelled by the old ceiling with no failed step. The required checks are unchanged; the longer ceiling lets them finish.
+- Add focused frontend, smoke and Laravel coverage plus deployment instructions. This repository change does not configure Hostinger, deploy either service, import production data or resolve issue #166 until the active public revisions and controlled journeys are verified.
+
 ## Founder freshness review and Kitopi role correction — 2026-11-10
 
 - Re-verify the 12 founder profiles that reached their 30-day deadline across Unifonic, Foodics, Salla, Tamara and Kitopi, using current official company or investor evidence and active official websites.

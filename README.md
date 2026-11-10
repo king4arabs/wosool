@@ -108,9 +108,9 @@ Before `npm run verify`, configure the frontend release values described in [TES
 
 Follow [DEPLOYMENT.md](DEPLOYMENT.md) for release order, backups, migrations, mail, monitoring and rollback.
 
-The established Hostinger frontend configuration is **`frontend` root · Node 22 · pnpm 11.24.0 · `pnpm run build` · `.next` output**. Preserve the webpack build wrapper, one-worker limits and traced runtime dependencies. Deploy Laravel separately at `api.wosool.org`.
+The established Hostinger frontend configuration is **`frontend` root · Node 22 · pnpm 11.24.0 · `pnpm run build` · `.next` output**. Preserve the webpack build wrapper, one-worker limits and traced runtime dependencies. Deploy Laravel separately at `api.wosool.org`. Set `WOSOOL_BUILD_REVISION` for the frontend and `APP_REVISION` for Laravel to the full commit deployed by each service; health responses expose only a validated Git-shaped value (or `null`).
 
-**A successful build or merge is not a deployment.** Verify both releases, critical routes, real email delivery and authenticated account flows before declaring production ready. General health checks alone do not establish registration or OTP availability.
+**A successful build or merge is not a deployment.** Verify both release revisions, critical routes, real email delivery and authenticated account flows before declaring production ready. General health checks alone do not establish registration or OTP availability.
 
 ## Documentation
 
