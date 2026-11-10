@@ -29,6 +29,8 @@ Community membership, Accelerator admission and administrator access are separat
 
 **Editorial checkpoint (7 November 2026):** **346 editorial/unclaimed founder profiles**, **188 company groups** and **121 unique bilingual sourced briefs** in byte-synchronized frontend/backend JSON catalogs. Source-verified 6 November additions cover HUMAIN/CNTXT, Mamun, Journify and Kalepa; the 7 November refresh repairs conflicting merge artifacts, removes three duplicated canonical news records and adds a dated Saudi venture-capital market brief and a verified Bahrain SITR launch and founder profile. Editorial profiles are not activated memberships. No accounts, invitations, private records or production database imports are created by these source updates. See [6 November evidence](docs/research/CONTENT-REFRESH-2026-11-06.md) and [7 November evidence](docs/research/CONTENT-REFRESH-2026-11-07.md). CI, authorized backend import, active Hostinger SHA and live publication remain separate checks; the a7be830 deployment baseline is unchanged.
 
+**Founder cards (10 November 2026):** the catalog now contains **359 external/unclaimed founders across 195 companies**. New bilingual profiles cover Persona (Adel El-Masri) and Mawsool (Osama Abdelhadi and Oday Ali). Compact responsive cards retain full biographies and funding evidence in expandable details. The carousel and grid share a fresh visit order; searching, pagination and language changes preserve that order. See [sources and validation](docs/research/FOUNDER-CARDS-2026-11-10.md).
+
 ## Architecture
 
 | Layer | Technology and responsibility |

@@ -142,3 +142,31 @@
 .gridCard .actions { margin-top:0; }
 @media(max-width:660px) { .gridCard.founderCard .body { padding:18px; }.gridCard .person { min-height:72px; } }
 @media(max-width:360px) { .gridCard.founderCard .body { padding:15px; } }
+
+/* Compact founder summaries; full biographies and evidence stay in the disclosure. */
+.founderCard { container-type:inline-size; }
+.founderCard .logoArea,.gridCard.founderCard .logoArea { min-height:78px; padding-block:12px; }
+.founderCard .logo,.gridCard.founderCard .logo { height:56px; }
+.founderCard .body,.gridCard.founderCard .body { padding:18px; gap:10px; }
+.founderCard .person,.gridCard.founderCard .person { min-height:64px; }
+.founderCard .portrait { width:64px; height:64px; flex-basis:64px; }
+.founderCard .personCopy { flex:1; }
+.founderCard .person h3 { font-size:clamp(16px,5.5cqi,19px); line-height:1.45; }
+.founderCard .companyHeading,.gridCard.founderCard .companyHeading { min-height:44px; padding-top:10px; }
+.founderCard .brief { min-height:0; line-height:1.7; }
+.founderCard .factGrid>div:last-child:nth-child(odd) { grid-column:1/-1; }
+.founderCard .factGrid strong { align-items:flex-start; }
+.founderCard :is(.factGrid,.links,.details,.actions,.signalRow) { min-width:0; }
+.founderCard :is(.links a,.detailsBody,.businessSignal,.actions a) { overflow-wrap:anywhere; }
+.founderCard :is(.links svg,.factGrid svg,.actions svg) { flex-shrink:0; }
+.founderCard .engagement { display:flex; justify-content:space-between; width:100%; border-radius:var(--radius-control); }
+.founderCard .engagement strong { white-space:nowrap; }
+.founderCard .links { margin-top:0; padding-top:0; border:0; gap:0 12px; }
+.founderCard .details .traction a { min-height:44px; }
+@container(max-width:300px) {
+  .founderCard .body { padding:14px; }
+  .founderCard .person { gap:10px; }
+  .founderCard .portrait { width:54px; height:54px; flex-basis:54px; }
+  .founderCard .actions { flex-direction:column; }
+  .founderCard .actions>a { flex-basis:auto; width:100%; }
+}
