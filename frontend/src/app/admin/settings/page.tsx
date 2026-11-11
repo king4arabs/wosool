@@ -59,9 +59,17 @@ export default function AdminSettingsPage() {
     load()
   }, [load])
 
+  // Fields are disabled while saving and a disabled input cannot take focus, so the first
+  // invalid field is focused only once the form is enabled again.
+  const [focusField, setFocusField] = useState<SettingsField | null>(null)
+  useEffect(() => {
+    if (!focusField || saving) return
+    document.getElementById(settingsFieldId(focusField))?.focus()
+    setFocusField(null)
+  }, [focusField, saving])
+
   const focusFirstError = (found: SettingsFormErrors) => {
-    const first = settingsFields.find((field) => found[field])
-    if (first) window.requestAnimationFrame(() => document.getElementById(settingsFieldId(first))?.focus())
+    setFocusField(settingsFields.find((field) => found[field]) ?? null)
   }
 
   const save = async (event: FormEvent<HTMLFormElement>) => {

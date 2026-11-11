@@ -56,7 +56,7 @@ try {
     await page.getByRole('button', { name: ar ? 'حفظ التغييرات' : 'Save changes' }).click()
     await page.getByText(ar ? 'أدخل عددًا صحيحًا من 5 إلى 1440.' : 'Enter a whole number from 5 to 1440.').waitFor()
     assert.equal(await timeout.getAttribute('aria-invalid'), 'true')
-    assert.equal(await page.evaluate(() => document.activeElement?.id), 'setting-security-session-timeout-minutes')
+    await page.waitForFunction(id => document.activeElement?.id === id, 'setting-security-session-timeout-minutes', { timeout: 5000 })
     assert.equal(puts.length, 0)
 
     // Valid save: number is sent as an integer and untouched values round-trip.
@@ -72,7 +72,7 @@ try {
     reject = true
     await page.getByRole('button', { name: ar ? 'حفظ التغييرات' : 'Save changes' }).click()
     await page.getByText(ar ? 'لم يقبل الخادم هذه القيمة.' : 'The server did not accept this value.').waitFor()
-    assert.equal(await page.evaluate(() => document.activeElement?.id), 'setting-general-site-url')
+    await page.waitForFunction(id => document.activeElement?.id === id, 'setting-general-site-url', { timeout: 5000 })
     assert.equal(await page.getByText('The general.site url field').count(), 0, 'raw API message is not shown')
     await page.screenshot({ path: `/tmp/admin-operations-settings-${locale}-${width}.png`, fullPage: true })
     assert.deepEqual(errors, [])
