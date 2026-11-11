@@ -11,7 +11,7 @@
   <a href="https://github.com/king4arabs/wosool/actions/workflows/ci.yml">CI</a>
 </p>
 
-**Documentation version: 0.6.1 · Updated: 10 November 2026.**
+**Documentation version: 0.6.2 · Updated: 11 November 2026.**
 
 Wosool is an Arabic/English founders platform connecting Saudi Arabia, the GCC, MENA and the world. It brings founder and company profiles, events, news, introductions and community services together, with a dedicated EO Riyadh Accelerator experience.
 
@@ -24,6 +24,8 @@ Community membership, Accelerator admission and administrator access are separat
 **EOA leadership:** [`/eoa/leadership#program-lead`](https://wosool.org/eoa/leadership#program-lead) presents Mohammed Alsolami (Program Lead), Fouad Alnazawi (Program Operation Partner) and Bashaier Abdullah (EOA Riyadh PMO Leader) in three equal-sized bilingual cards. See [EOA operations](docs/EOA.md#public-program-leadership) for profile sources and maintenance details.
 
 **Founder integrity checkpoint (30 October 2026):** founder profiles use immutable public identities and one private scorecard per profile. Approving a community application cannot reactivate a suspended founder profile; an administrator must resolve that moderation state separately before approval. These source safeguards require the matching Laravel release and production verification before they can be treated as live behavior.
+
+**Editorial update (11 November 2026):** **372 external/unclaimed founder profiles, 202 company keys and 128 original bilingual news briefs** in six synchronized frontend/backend catalogs. Added Saudi retailtech Raff co-founders Ali Al Qudah and Abdul Kareem Munla and a brief dated **25 August 2026** on its US$1.7m pre-seed round. Added US Mercor co-founders Brendan Foody, Adarsh Hiremath and Surya Midha and a brief dated **10 November 2026** on its US$750m Series D at US$20bn valuation (including an employee tender with an undisclosed split). Financing and valuation are not revenues. No membership state, accounts or Hostinger deployment configuration was changed. See [11 November source notes](docs/research/CONTENT-REFRESH-2026-11-11.md). GitHub source updates do not establish production database imports or verified deployment.
 
 **Founder cards (10 November 2026):** the catalog now contains **367 external/unclaimed founders across 200 companies**. The latest additions cover COGNNA, Rekaz, Nabt, Flawless and Ovasave, with eight bilingual founder profiles and four original company logos. New bilingual profiles cover Persona (Adel El-Masri) and Mawsool (Osama Abdelhadi and Oday Ali). Compact responsive cards retain full biographies and funding evidence in expandable details. The carousel and grid share a fresh visit order; searching, pagination and language changes preserve that order. See [sources and validation](docs/research/FOUNDER-CARDS-2026-11-10.md) and [additional profiles](docs/research/FOUNDER-EXPANSION-2026-11-10.md).
 
