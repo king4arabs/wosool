@@ -184,3 +184,25 @@ test('6 November news briefs retain primary source dates, bilingual facts and sa
     assert.ok(item.content && item.translations?.ar.body[0])
   }
 })
+
+test('11 November Persona and AIREV stories keep source dates and link to verified founders', () => {
+  for (const [slug, date, region] of [
+    ['persona-630k-preseed-november-2026', '2026-11-05', 'saudi'],
+    ['airev-terra-invest-strategic-november-2026', '2026-11-04', 'gcc'],
+  ] as const) {
+    const item = curatedNews.find(story => story.slug === slug)!
+    assert.ok(item, slug)
+    assert.equal(item.publishedAt, date)
+    assert.equal(item.region, region)
+    assert.equal(item.imageUrl, '')
+    assert.equal(item.keyFacts?.length, 3)
+    assert.equal(item.translations?.ar.keyFacts?.length, 3)
+    assert.ok(item.content && item.translations?.ar.body[0])
+    assert.ok(safeNewsUrl(item.sourceUrl))
+  }
+  const persona = curatedNews.find(story => story.slug === 'persona-630k-preseed-november-2026')!
+  assert.ok(newsFounders(persona).some(founder => founder.slug === 'adel-el-masri-persona'))
+  const airev = curatedNews.find(story => story.slug === 'airev-terra-invest-strategic-november-2026')!
+  assert.deepEqual(newsFounders(airev).map(founder => founder.slug).sort(),
+    ['muhammad-khalid-airev', 'kayaan-unwalla-airev', 'youssef-youssef-airev'].sort())
+})

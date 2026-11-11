@@ -5313,5 +5313,97 @@
         ]
       }
     }
+  },
+  {
+    "id": "sourced-persona-630k-preseed-november-2026",
+    "slug": "persona-630k-preseed-november-2026",
+    "title": "Saudi venture studio Persona closes US$630,000 pre-seed led by Upturn",
+    "excerpt": "Riyadh-based Persona reports eight consumer brands; the financing supports brand expansion and a planned GCC live-commerce platform.",
+    "content": "In an announcement published on 5 November 2026, Riyadh-based Persona reported a US$630,000 pre-seed round led by venture builder Upturn. Founder Adel El-Masri said the studio develops consumer businesses with creators, fan communities and media intellectual-property owners. Persona reports eight operating brands across food, beauty, retail and lifestyle. It intends to invest the funding in GCC expansion and a live-commerce platform. Eight brands are company-reported, the platform is planned rather than launched, and the financing is investment capital rather than earned company revenue.",
+    "category": "Funding",
+    "region": "saudi",
+    "imageUrl": "",
+    "imageCredit": "",
+    "sourceUrl": "https://www.zawya.com/en/press-release/companies-news/persona-closes-630k-pre-seed-round-1993104",
+    "sourceName": "Persona press release via ZAWYA",
+    "companies": [
+      "Persona",
+      "بيرسونا",
+      "persona-mena"
+    ],
+    "publishedAt": "2026-11-05",
+    "author": "Wosool news desk",
+    "tags": [
+      "Saudi Arabia",
+      "Persona",
+      "Upturn",
+      "Pre-seed",
+      "Creator economy"
+    ],
+    "keyFacts": [
+      "US$630,000 pre-seed round led by Upturn",
+      "Founder: Adel El-Masri; Persona reports eight operating brands",
+      "Capital targets GCC growth and planned live commerce, not earned revenue"
+    ],
+    "translations": {
+      "ar": {
+        "title": "«بيرسونا» السعودية تغلق جولة ما قبل البذرة بقيمة 630 ألف دولار بقيادة «أبتيرن»",
+        "excerpt": "تمويل جديد لتوسيع العلامات الاستهلاكية وتطوير منصة تجارة مباشرة مخطط لها في الخليج.",
+        "body": [
+          "أعلنت «بيرسونا» في بيان نُشر يوم 5 نوفمبر 2026 إغلاق جولة تمويل ما قبل البذرة بقيمة 630 ألف دولار بقيادة «أبتيرن». وتطور الشركة التي تتخذ الرياض مقراً لها علامات استهلاكية مع صنّاع المحتوى والمجتمعات الجماهيرية ومالكي الحقوق الإعلامية، بقيادة مؤسسها عادل المصري. وتذكر «بيرسونا» أنها تشغّل ثماني علامات في قطاعات تشمل الأغذية والتجميل والتجزئة ونمط الحياة، وتعتزم توظيف التمويل للتوسع خليجياً وتطوير منصة تجارة مباشرة. عدد العلامات معلن من الشركة، والمنصة ضمن الخطط ولم تُعرض بوصفها مطلقة، ومبلغ الجولة تمويل استثماري وليس إيرادات محققة."
+        ],
+        "keyFacts": [
+          "630 ألف دولار جولة ما قبل البذرة بقيادة «أبتيرن»",
+          "المؤسس عادل المصري وثماني علامات قائمة وفق الشركة",
+          "التمويل للتوسع ومنصة تجارة مباشرة مخطط لها؛ لا يمثل إيرادات"
+        ]
+      }
+    }
+  },
+  {
+    "id": "sourced-airev-terra-invest-strategic-november-2026",
+    "slug": "airev-terra-invest-strategic-november-2026",
+    "title": "UAE's AIREV confirms Terra Invest participation in strategic funding",
+    "excerpt": "The Abu Dhabi agentic AI company announced a strategic investor from Singapore; no investment amount was disclosed.",
+    "content": "On 4 November 2026, Emirates News Agency reported that Singapore-based Terra Invest was participating in a strategic financing round for AIREV, the Abu Dhabi-based developer of the OnDemand agentic AI platform. Co-founder and CEO Muhammad Khalid said the system supports deployments on local infrastructure and sovereign data centres. The companies outlined prospective initiatives with Kairos Wealth in financial services and Shookra in healthcare; these are announced plans, not verified completed deployments. AIREV reports more than four million OnDemand users and over 300 specialist AI agents. Those company-reported usage figures are not revenue. The announcement did not disclose the investment amount or valuation.",
+    "category": "Funding",
+    "region": "gcc",
+    "imageUrl": "",
+    "imageCredit": "",
+    "sourceUrl": "https://www.wam.ae/en/article/c334734-singapore%E2%80%99s-terra-invest-participates-strategic",
+    "sourceName": "Emirates News Agency (WAM)",
+    "companies": [
+      "AIREV",
+      "أيريف",
+      "airev-agentic-ai-uae"
+    ],
+    "publishedAt": "2026-11-04",
+    "author": "Wosool news desk",
+    "tags": [
+      "United Arab Emirates",
+      "AIREV",
+      "Terra Invest",
+      "Sovereign AI",
+      "Agentic AI"
+    ],
+    "keyFacts": [
+      "Terra Invest joined strategic funding; amount undisclosed",
+      "Co-founder and CEO: Muhammad Khalid; founded Abu Dhabi in 2023",
+      "Prospective Kairos Wealth and Shookra projects; usage metrics are company-reported"
+    ],
+    "translations": {
+      "ar": {
+        "title": "«أيريف» الإماراتية تعلن مشاركة «تيرا إنفست» في تمويل استراتيجي بقيمة غير معلنة",
+        "excerpt": "استثمار سنغافوري جديد في شركة الذكاء الاصطناعي الوكيلي بأبوظبي مع مبادرات مالية وصحية مستقبلية.",
+        "body": [
+          "أفادت وكالة أنباء الإمارات في 4 نوفمبر 2026 بمشاركة «تيرا إنفست» السنغافورية في جولة تمويل استراتيجية لشركة «أيريف» ومقرها أبوظبي، من دون الإعلان عن مبلغ التمويل أو التقييم. وأوضح الشريك المؤسس والرئيس التنفيذي محمد خالد أن منصة «OnDemand» تدعم العمل في بيئات محلية ومراكز بيانات سيادية. وأعلنت الجهتان مبادرات مرتقبة مع «كايروس ويلث» للخدمات المالية و«شوكرا» للصحة، وهي خطط مستقبلية وليست عمليات تشغيل مكتملة. وتذكر «أيريف» أن منصتها تضم أكثر من أربعة ملايين مستخدم وأكثر من 300 وكيل ذكاء اصطناعي متخصص؛ وهذه مؤشرات استخدام معلنة من الشركة ولا تمثل إيرادات."
+        ],
+        "keyFacts": [
+          "مشاركة «تيرا إنفست» في تمويل استراتيجي بقيمة غير معلنة",
+          "الشريك المؤسس والرئيس التنفيذي محمد خالد؛ تأسست في أبوظبي عام 2023",
+          "مشروعات مخطط لها مع «كايروس ويلث» و«شوكرا»؛ أرقام الاستخدام ليست إيرادات"
+        ]
+      }
+    }
   }
 ]
