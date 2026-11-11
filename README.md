@@ -11,7 +11,7 @@
   <a href="https://github.com/king4arabs/wosool/actions/workflows/ci.yml">CI</a>
 </p>
 
-**Documentation version: 0.6.1 · Updated: 10 November 2026.**
+**Documentation version: 0.6.2 · Updated: 11 November 2026.**
 
 Wosool is an Arabic/English founders platform connecting Saudi Arabia, the GCC, MENA and the world. It brings founder and company profiles, events, news, introductions and community services together, with a dedicated EO Riyadh Accelerator experience.
 
@@ -25,7 +25,7 @@ Community membership, Accelerator admission and administrator access are separat
 
 **Founder integrity checkpoint (30 October 2026):** founder profiles use immutable public identities and one private scorecard per profile. Approving a community application cannot reactivate a suspended founder profile; an administrator must resolve that moderation state separately before approval. These source safeguards require the matching Laravel release and production verification before they can be treated as live behavior.
 
-**Founder cards (10 November 2026):** the catalog now contains **367 external/unclaimed founders across 200 companies**. The latest additions cover COGNNA, Rekaz, Nabt, Flawless and Ovasave, with eight bilingual founder profiles and four original company logos. New bilingual profiles cover Persona (Adel El-Masri) and Mawsool (Osama Abdelhadi and Oday Ali). Compact responsive cards retain full biographies and funding evidence in expandable details. The carousel and grid share a fresh visit order; searching, pagination and language changes preserve that order. See [sources and validation](docs/research/FOUNDER-CARDS-2026-11-10.md) and [additional profiles](docs/research/FOUNDER-EXPANSION-2026-11-10.md).
+**Founder cards (11 November 2026):** the catalog now contains **370 external/unclaimed founders across 201 companies**, with **128 original bilingual sourced briefs**. The latest reviewed additions cover Persona and AIREV; company-reported activity and investment are not presented as earned revenue or membership. Compact responsive cards retain full biographies and source links in expandable details. The carousel and grid share a fresh visit order; searching, pagination and language changes preserve that order. `content:check` reports zero integrity problems, while `content:review` identifies 15 profiles due for a new source review. See [11 November sources and release boundaries](docs/research/CONTENT-REFRESH-2026-11-11.md).
 
 **Editorial checkpoint (10 November 2026):** **356 external/unclaimed founder profiles**, **193 companies** and **126 original bilingual sourced briefs** in mirrored frontend/backend catalogs. Added Egypt's Turuq co-founders Ahmed Atta and Karim Kamal and a 27 October 2026 article on Den VC's **undisclosed** seed investment. Refreshed Saudi Vrtx's two existing profiles using its official 19 October statement confirming pre-seed financing and SAMA **in-principle** (not final) regulatory approval; corroborated the existing INVE founder profile with a first-person interview. No membership/invitation, private data or Hostinger changes. See [10 November sources](docs/research/CONTENT-REFRESH-2026-11-10.md). CI, database import and live publication are separate gates.
 

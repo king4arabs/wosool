@@ -216,10 +216,10 @@ export function EoaContent({ section }: { section: string }) {
         )}
         <footer className="eoa-source">
           <nav className="eoa-actions" aria-label={ar ? 'روابط مفيدة' : 'Useful links'}>
-            <Link href="/eoa/program">{ar ? 'البرنامج' : 'Program'}</Link>
-            <Link href="/eoa/eligibility">{ar ? 'الأهلية والرسوم' : 'Eligibility & fees'}</Link>
-            <Link href="/eoa/contact">{ar ? 'تواصل معنا' : 'Contact us'}</Link>
-            <Link href="/eoa/privacy">{ar ? 'الخصوصية' : 'Privacy'}</Link>
+            <Link href="/eoa/program" prefetch={false}>{ar ? 'البرنامج' : 'Program'}</Link>
+            <Link href="/eoa/eligibility" prefetch={false}>{ar ? 'الأهلية والرسوم' : 'Eligibility & fees'}</Link>
+            <Link href="/eoa/contact" prefetch={false}>{ar ? 'تواصل معنا' : 'Contact us'}</Link>
+            <Link href="/eoa/privacy" prefetch={false}>{ar ? 'الخصوصية' : 'Privacy'}</Link>
             <a href="https://eonetwork.org/accelerator" target="_blank" rel="noopener noreferrer">EO Accelerator ↗</a>
             <a href="https://eonetwork.org/accelerator/faqs/" target="_blank" rel="noopener noreferrer">{ar ? 'أسئلة EO الشائعة' : 'EO FAQs'} ↗</a>
           </nav>
