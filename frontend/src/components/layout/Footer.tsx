@@ -127,13 +127,13 @@ export function Footer() {
               <h2>{locale === "ar" ? "ابنِ علاقات تستحق وقتك." : "Make your next connection count."}</h2>
               <span>{locale === "ar" ? "شارك تجربتك. تعرّف على مجتمعك. وابنِ ما هو قادم." : "Share your experience. Find your community. Build what comes next."}</span>
             </div>
-            <Link href="/apply">{locale === "ar" ? "انضم إلى وصول" : "Join Wosool"}<ArrowUpRight size={20} /></Link>
+            <Link href="/apply" prefetch={false}>{locale === "ar" ? "انضم إلى وصول" : "Join Wosool"}<ArrowUpRight size={20} /></Link>
           </div>
         )}
 
         <div className={styles.main}>
           <div className={styles.brand}>
-            <Link href="/" className={styles.logo} aria-label={locale === "ar" ? "وصول — من مؤسس إلى مؤسس" : "Wosool — Founders to Founders"}>
+            <Link href="/" prefetch={false} className={styles.logo} aria-label={locale === "ar" ? "وصول — من مؤسس إلى مؤسس" : "Wosool — Founders to Founders"}>
               <Image
                 src="/wosool-logo-white.svg"
                 alt="Wosool — Founders to Founders"
@@ -161,7 +161,7 @@ export function Footer() {
               <h3 className={styles.groupTitle}>{category}</h3>
               <ul className={styles.linkList}>
                 {links.map((link) => (
-                  <li key={link.href}><Link href={link.href} aria-current={pathname === link.href ? "page" : undefined} className={`text-sm ${styles.muted}`}>{link.label}</Link></li>
+                  <li key={link.href}><Link href={link.href} prefetch={false} aria-current={pathname === link.href ? "page" : undefined} className={`text-sm ${styles.muted}`}>{link.label}</Link></li>
                 ))}
               </ul>
             </div>
@@ -172,9 +172,9 @@ export function Footer() {
         <div className={styles.bottom}>
           <p className={`text-sm ${styles.muted}`}>© {new Date().getFullYear()} Wosool. {copy.copyright}</p>
           <div className={styles.legalLinks}>
-            <Link href={isEoa ? "/eoa/privacy" : "/privacy"} className={`text-sm ${styles.muted}`}>{copy.privacy}</Link>
-            <Link href="/terms" className={`text-sm ${styles.muted}`}>{copy.terms}</Link>
-            <Link href={isEoa ? "/eoa/contact" : "/contact"} className={`text-sm ${styles.muted}`}>{copy.contact}</Link>
+            <Link href={isEoa ? "/eoa/privacy" : "/privacy"} prefetch={false} className={`text-sm ${styles.muted}`}>{copy.privacy}</Link>
+            <Link href="/terms" prefetch={false} className={`text-sm ${styles.muted}`}>{copy.terms}</Link>
+            <Link href={isEoa ? "/eoa/contact" : "/contact"} prefetch={false} className={`text-sm ${styles.muted}`}>{copy.contact}</Link>
             <button
               type="button"
               className={styles.backTop}
