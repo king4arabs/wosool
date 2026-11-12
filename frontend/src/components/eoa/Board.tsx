@@ -56,10 +56,10 @@ function BoardCard({ member, ar, index, count, slide }: { member: EoaBoardMember
       {company && <strong>{company}</strong>}
     </div>
     <div role="group" className={styles.links} aria-label={ar ? `روابط ${name}` : `${name} links`}>
-      {companyUrl && <a href={companyUrl} target="_blank" rel="noopener noreferrer" aria-label={ar ? `موقع شركة ${name} (نافذة جديدة)` : `${name} company website (opens in a new tab)`} title={ar ? 'موقع الشركة' : 'Company website'}><Globe2 size={19} aria-hidden="true" /></a>}
+      {companyUrl && <a className={styles.labeledLink} href={companyUrl} target="_blank" rel="noopener noreferrer" aria-label={ar ? `موقع شركة ${name} (نافذة جديدة)` : `${name} company website (opens in a new tab)`} title={company || (ar ? 'موقع الشركة' : 'Company website')}><Globe2 size={18} aria-hidden="true" /><span>{ar ? 'موقع الشركة' : 'Company website'}</span></a>}
       {socials.map(([kind, label, value]) => {
         const url = boardExternalUrl(value)
-        return url ? <a key={kind} href={url} target="_blank" rel="noopener noreferrer" aria-label={ar ? `${name} على ${label} (نافذة جديدة)` : `${name} on ${label} (opens in a new tab)`} title={label}><SocialIcon kind={kind} /></a> : null
+        return url ? <a key={kind} className={kind === 'linkedin' ? styles.labeledLink : undefined} href={url} target="_blank" rel="noopener noreferrer" aria-label={ar ? `${name} على ${label} (نافذة جديدة)` : `${name} on ${label} (opens in a new tab)`} title={label}><SocialIcon kind={kind} />{kind === 'linkedin' && <span>LinkedIn</span>}</a> : null
       })}
     </div>
   </article>

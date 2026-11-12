@@ -29,6 +29,9 @@
 .links { display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 7px; margin-top: 18px; min-height: 44px; }
 .links a { display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; border: 1px solid var(--border-soft); border-radius: 50%; color: var(--text-muted); transition: color .18s, background .18s; }
 .links a:hover { color: var(--action-fg); background: var(--action-bg); border-color: var(--action-bg); }
+.links .labeledLink { width: auto; min-width: 44px; min-height: 44px; height: auto; max-width: 100%; padding: 10px 12px; gap: 7px; border-radius: 10px; color: var(--link); font-size: 12px; line-height: 1.6; font-weight: 700; }
+.labeledLink span { min-width: 0; overflow-wrap: anywhere; }
+.labeledLink svg { flex-shrink: 0; }
 .caption { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; margin-top: 16px; color: var(--text-muted); font-size: 12px; line-height: 1.8; }
 .managerGrid { display: grid; grid-template-columns: minmax(220px, .7fr) minmax(0, 1.7fr); gap: 24px; align-items: start; }
 .memberList { display: grid; gap: 10px; margin-block: 18px; }

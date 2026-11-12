@@ -20,9 +20,21 @@ const lamarka: PartnerLogo = { id: 'lamarka', name_ar: 'لاماركا', name_en
 const humain: PartnerLogo = { id: 'humain', name_ar: 'هيوماين', name_en: 'HUMAIN', website: 'https://www.humain.com/', logo_path: '/partners/humain.svg' }
 const cipherVentures: PartnerLogo = { id: 'cipher-ventures', name_ar: 'سايفر فينتشرز', name_en: 'Cipher Ventures', website: 'https://www.cipherventures.sa/', logo_path: '/partners/cipher-ventures.png' }
 const rdia: PartnerLogo = { id: 'rdia', name_ar: 'هيئة تنمية البحث والتطوير والابتكار', name_en: 'Research, Development and Innovation Authority', website: 'https://www.rdia.gov.sa/', logo_path: '/partners/rdia.svg' }
+export const monshaatPartnerLogo: PartnerLogo = { id: 'monshaat', name_ar: 'منشآت', name_en: 'Monsha’at', website: 'https://www.monshaat.gov.sa/en', logo_path: '/partner-ecosystem/monshaat-official.png' }
 
 export const communityPartnerLogos = [eo, garage, misk, code, cipherVentures, rdia]
-export const acceleratorPartnerLogos = [eo, garage, misk, code, lamarka, humain, cipherVentures, rdia]
+export const acceleratorPartnerLogos = [eo, garage, misk, code, lamarka, humain, cipherVentures, rdia, monshaatPartnerLogo]
+
+/** Keep the owner's Monsha’at placement alongside the published EOA partners. */
+export function acceleratorPartnersToDisplay(published?: PartnerLogo[] | null): PartnerLogo[] {
+  const partners = published?.length ? published : [eo]
+  const withoutMonshaat = partners.filter(partner => {
+    const website = boardExternalUrl(partner.website)
+    const host = website ? new URL(website).hostname.toLowerCase().replace(/^www\./, '') : ''
+    return partner.id !== 'monshaat' && host !== 'monshaat.gov.sa' && partner.logo_path !== monshaatPartnerLogo.logo_path
+  })
+  return uniquePartnerLogos([...withoutMonshaat, monshaatPartnerLogo])
+}
 
 /** Canonical artwork prevents an old hotlink and its local copy appearing twice. */
 export function uniquePartnerLogos(partners: PartnerLogo[], includeEo = false): PartnerLogo[] {
