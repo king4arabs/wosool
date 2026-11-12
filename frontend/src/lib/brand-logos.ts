@@ -41,3 +41,17 @@ export function brandLogoNeedsDarkSurface(src?: string, website?: string) {
   const source = brandLogoSource(src) || reviewedCompanyLogo(website)
   return ['/startup-directory/rasan-logo.png', '/partners/lamarka.png'].includes(source ?? '') || darkCompanyLogos.has(source ?? '')
 }
+
+/** Ignore transparent padding; give predominantly pale artwork a dark surface. */
+export function logoPixelsNeedDarkSurface(pixels: ArrayLike<number>): boolean {
+  let visible = 0
+  let pale = 0
+  for (let i = 0; i + 3 < pixels.length; i += 4) {
+    if (pixels[i + 3] < 128) continue
+    visible++
+    const brightness = (0.2126 * pixels[i] + 0.7152 * pixels[i + 1] + 0.0722 * pixels[i + 2]) / 255
+    if (brightness >= 0.72) pale++
+  }
+  // Opaque artwork already supplies its own background (for example a JPG canvas).
+  return visible >= 4 && visible < pixels.length / 4 * 0.98 && pale / visible >= 0.6
+}

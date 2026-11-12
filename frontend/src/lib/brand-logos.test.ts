@@ -2,7 +2,7 @@ import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import { readFileSync, existsSync } from 'node:fs'
 import companyLogos from '../data/company-logos.json'
-import { reviewedCompanyLogo, brandLogoSource, brandLogoNeedsDarkSurface } from './brand-logos'
+import { reviewedCompanyLogo, brandLogoSource, brandLogoNeedsDarkSurface, logoPixelsNeedDarkSurface } from './brand-logos'
 
 test('reviewed company brands match exact canonical hosts, including legacy API records without logos', () => {
   assert.equal(reviewedCompanyLogo('https://www.zid.sa/en/'), '/company-logos/zid.svg')
@@ -25,4 +25,17 @@ test('reviewed company artwork is local, safe, unique by host and available for 
     assert.ok(existsSync(file), logo.company_key)
     if (logo.src.endsWith('.svg')) assert.doesNotMatch(readFileSync(file, 'utf8'), /<script|<foreignObject|(?:href|src)\s*=\s*["'](?:https?:|\/\/|javascript:)|\son[a-z]+\s*=/i)
   }
+})
+
+test('pale logo ink gets a dark surface without counting transparent padding', () => {
+  const white = [255, 255, 255, 255]
+  const black = [0, 0, 0, 255]
+  const purple = [58, 29, 92, 255]
+  const clear = [255, 255, 255, 0]
+  assert.equal(logoPixelsNeedDarkSurface([...white, ...white, ...white, ...white, ...black, ...clear, ...clear]), true)
+  assert.equal(logoPixelsNeedDarkSurface([...purple, ...purple, ...purple, ...purple]), false)
+  assert.equal(logoPixelsNeedDarkSurface([...black, ...black, ...black, ...black, ...clear]), false)
+  assert.equal(logoPixelsNeedDarkSurface([...clear, ...clear, ...clear, ...clear]), false)
+  assert.equal(logoPixelsNeedDarkSurface([...white, ...white, ...white, ...white]), false, 'opaque images retain their own background')
+  assert.equal(logoPixelsNeedDarkSurface([]), false)
 })

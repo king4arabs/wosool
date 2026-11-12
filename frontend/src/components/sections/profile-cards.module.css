@@ -175,3 +175,9 @@
   .founderCard .actions { flex-direction:column; }
   .founderCard .actions>a { flex-basis:auto; width:100%; }
 }
+
+/* The shared logo renderer can identify pale local uploads after image load. */
+.logoArea:has([data-logo-tone="dark"]),
+.gridCard.founderCard .logoArea:has([data-logo-tone="dark"]) {
+  background: #111b35;
+}
