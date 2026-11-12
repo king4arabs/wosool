@@ -63,6 +63,8 @@ jobs:
         run: node scripts/check-admin-operations.mjs
       - name: Verify admin settings in Arabic and English
         run: node scripts/check-admin-settings.mjs
+      - name: Verify admin sponsors in Arabic and English
+        run: node scripts/check-admin-sponsors.mjs
       - name: Verify interactive FAQs in Arabic and English
         run: node scripts/check-faq-experience.mjs
       - name: Save FAQ browser previews
