@@ -11,7 +11,7 @@ import { eoaOrganizationLogo } from '@/lib/eoa-organizations'
 import { publicWebsite } from '@/lib/community-display'
 import styles from './PublicDetails.module.css'
 
-export function EoaDirectory({ ar }: { ar: boolean }) {
+export function EoaDirectory({ ar, onOrganizationsChange }: { ar: boolean; onOrganizationsChange?: (organizations: Organization[]) => void }) {
   const [organizations, setOrganizations] = useState<Organization[]>([])
   const [failed, setFailed] = useState(false)
   const [loading, setLoading] = useState(true)
@@ -23,10 +23,10 @@ export function EoaDirectory({ ar }: { ar: boolean }) {
     let active = true
     const controller = new AbortController()
     api.get<{ data: Organization[] }>('/eoa/directory', { signal: controller.signal })
-      .then(result => { if (active) { setOrganizations(result.data); setLoading(false) } })
+      .then(result => { if (active) { setOrganizations(result.data); onOrganizationsChange?.(result.data); setLoading(false) } })
       .catch(() => { if (active) { setFailed(true); setLoading(false) } })
     return () => { active = false; controller.abort() }
-  }, [attempt])
+  }, [attempt, onOrganizationsChange])
 
   return <>
     <label className={styles.directorySearch}><Search size={19} aria-hidden="true" /><span className="sr-only">{ar ? 'ابحث عن جهة أو خدمة' : 'Search organizations or services'}</span><input type="search" value={query} onChange={event => setQuery(event.target.value)} placeholder={ar ? 'ابحث عن جهة أو خدمة…' : 'Search organizations or services…'} /></label>
