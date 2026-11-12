@@ -1,6 +1,6 @@
 # Founder expansion — 12 November 2026
 
-Adds seven bilingual profiles at four Saudi companies. The editorial catalog now contains 382 founders and 207 companies. The frontend snapshot, backend importer and content-review registry share the same batch. Public profiles remain unclaimed; adding a sourced profile does not create a member account or send an invitation. Existing per-visit shuffling and responsive cards are preserved.
+Adds seven bilingual profiles at four Saudi companies. The editorial catalog now contains 385 founders and 209 companies. The frontend snapshot, backend importer and content-review registry share the same batch. Public profiles remain unclaimed; adding a sourced profile does not create a member account or send an invitation. Existing per-visit shuffling and responsive cards are preserved.
 
 ## Evidence and identity
 

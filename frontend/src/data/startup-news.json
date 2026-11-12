@@ -5494,5 +5494,93 @@
         ]
       }
     }
+  },
+  {
+    "id": "sourced-omniops-bunyan-hub-november-2026",
+    "slug": "omniops-bunyan-hub-november-2026",
+    "title": "Saudi OmniOps launches Bunyan Inference Hub for locally hosted AI",
+    "excerpt": "The 11 November launch supports model access and workload routing on computing resources inside Saudi Arabia.",
+    "content": "Saudi AI infrastructure company OmniOps announced Bunyan Inference Hub on 11 November 2026. The service is designed to give government bodies, enterprises and startups access to open-source models hosted inside Saudi Arabia, as well as the ability to bring their own models. OmniOps says its engine routes requests to appropriate computing resources, tracks token use and offers dedicated GPU capacity. Founded in Riyadh in 2024 by CEO Mohammed Altassan, OmniOps describes product capabilities but does not disclose independently audited adoption figures or new funding in this announcement.",
+    "category": "Product",
+    "region": "saudi",
+    "imageUrl": "",
+    "imageCredit": "",
+    "sourceUrl": "https://www.wamda.com/2026/11/omniops-unveils-bunyan-inference-hub-simplify-ai-deployment-saudi-arabia",
+    "sourceName": "OmniOps press release via Wamda",
+    "companies": [
+      "OmniOps",
+      "أومني أوبس"
+    ],
+    "publishedAt": "2026-11-11",
+    "author": "Wosool news desk",
+    "tags": [
+      "Saudi Arabia",
+      "OmniOps",
+      "Bunyan",
+      "AI infrastructure"
+    ],
+    "keyFacts": [
+      "Bunyan Inference Hub announced 11 November 2026",
+      "In-Kingdom model hosting and workload routing",
+      "Founder and CEO: Mohammed Altassan"
+    ],
+    "translations": {
+      "ar": {
+        "title": "«أومني أوبس» السعودية تطلق «بنيان» لاستدلال الذكاء الاصطناعي محلياً",
+        "excerpt": "منصة أُعلنت في 11 نوفمبر 2026 للوصول إلى النماذج وتوجيه طلبات الحوسبة داخل المملكة.",
+        "body": [
+          "أعلنت شركة «أومني أوبس» السعودية في 11 نوفمبر 2026 إطلاق «Bunyan Inference Hub» لتقديم الوصول إلى نماذج ذكاء اصطناعي مفتوحة المصدر مستضافة داخل المملكة، مع إتاحة تشغيل نماذج المؤسسات الخاصة. وتوضح الشركة أن محركها يوجّه الطلبات إلى موارد الحوسبة المناسبة ويساعد على مراقبة استهلاك الرموز مع خيار تخصيص قدرات GPU. أسّس الشركة في الرياض عام 2024 محمد الطاسان، الذي يقودها رئيساً تنفيذياً. ويصف الإعلان إمكانات المنتج دون تقديم أرقام استخدام مدققة أو إعلان تمويل جديد."
+        ],
+        "keyFacts": [
+          "إطلاق «بنيان» في 11 نوفمبر 2026",
+          "استضافة النماذج داخل السعودية وتوجيه أحمال الاستدلال",
+          "المؤسس والرئيس التنفيذي: محمد الطاسان"
+        ]
+      }
+    }
+  },
+  {
+    "id": "sourced-wafrchain-sukuk-preseed-november-2026",
+    "slug": "wafrchain-sukuk-preseed-november-2026",
+    "title": "UAE's Wafr launches sukuk platform with undisclosed pre-seed backing",
+    "excerpt": "The 10 November announcement names two individual investors without stating a funding amount or valuation.",
+    "content": "Dubai-based fintech Wafr announced an undisclosed pre-seed round and the launch of WafrChain on 10 November 2026. WafrChain is a permissioned blockchain platform intended to connect institutions handling Shariah-compliant sukuk issuance, distribution, settlement and profit payments, including recording issuer Shariah-board approvals. Individual investors include Coen Jonker and Neal Cross. CEO Mahmoud Bouchelif and Chief Product Officer Anthony Murphy co-founded Wafr in 2026. The company says its product supports fiat and stablecoin settlement; future international accounts, remittances and cards remain plans subject to applicable approvals. Neither the funding amount nor independently verified transaction volume was disclosed.",
+    "category": "Funding",
+    "region": "gcc",
+    "imageUrl": "",
+    "imageCredit": "",
+    "sourceUrl": "https://www.globenewswire.com/news-release/2026/11/10/3399208/0/en/wafr-announces-wafrchain-for-on-chain-shariah-compliant-sukuk-and-pre-seed-funding.html",
+    "sourceName": "Wafr (company announcement)",
+    "companies": [
+      "Wafr",
+      "وفر"
+    ],
+    "publishedAt": "2026-11-10",
+    "author": "Wosool news desk",
+    "tags": [
+      "United Arab Emirates",
+      "Wafr",
+      "Sukuk",
+      "Islamic fintech"
+    ],
+    "keyFacts": [
+      "Undisclosed pre-seed round announced 10 November 2026",
+      "WafrChain for institutional sukuk issuance and settlement",
+      "Co-founders: Mahmoud Bouchelif and Anthony Murphy"
+    ],
+    "translations": {
+      "ar": {
+        "title": "«وفر» الإماراتية تطلق منصة للصكوك وتعلن تمويلاً ما قبل البذرة",
+        "excerpt": "أُعلن في 10 نوفمبر 2026 عن مستثمرين أفراد دون الكشف عن قيمة الجولة أو تقييم الشركة.",
+        "body": [
+          "أعلنت «وفر» التي تتخذ من دبي مقراً لها في 10 نوفمبر 2026 تمويلاً ما قبل البذرة بقيمة غير معلنة وإطلاق «وفر تشين»، منصة بلوك تشين خاصة ومقيّدة المشاركين لتنسيق إصدار الصكوك المتوافقة مع الشريعة وتوزيعها وتسويتها ودفع أرباحها، بما في ذلك تسجيل موافقات الهيئات الشرعية للمُصدرين. ومن المستثمرين الأفراد كوين يونكر ونيل كروس. شارك في تأسيس الشركة عام 2026 محمود بوشليف، الرئيس التنفيذي، وأنتوني ميرفي، رئيس المنتجات. وتقول الشركة إن المنصة تدعم التسوية بالعملات التقليدية والمستقرة؛ أما الحسابات والتحويلات والبطاقات المستقبلية فهي خطط تخضع للموافقات اللازمة. ولم تُعلن قيمة التمويل أو حجم المعاملات المدقق."
+        ],
+        "keyFacts": [
+          "تمويل ما قبل البذرة بقيمة غير معلنة في 10 نوفمبر 2026",
+          "«وفر تشين» لإدارة إصدار الصكوك وتسويتها",
+          "الشريكان المؤسسان: محمود بوشليف وأنتوني ميرفي"
+        ]
+      }
+    }
   }
 ]
