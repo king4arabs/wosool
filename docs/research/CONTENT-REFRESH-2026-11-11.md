@@ -18,3 +18,25 @@
 - Newly added cards are public editorial profiles **not** community memberships or verified accounts. No users, invitations, membership/partnership claims, private data, editorial edits or tombstones were affected.
 - Public briefs contain factual links and original publication dates without internal research or review notes. Existing artwork fallbacks apply until authorized authentic images become available.
 - **GitHub source release does not prove production import or live activation.** Follow DEPLOYMENT.md for CI, staging, backup, authenticated `wosool:import-founders` and `wosool:import-news`, and Hostinger SHA/runtime and smoke checks. Preserve baseline a7be830 (hoisted dependencies, traces and worker limits).
+
+## Saudi Arabia: Raff | رفّ
+
+- Official company press announcement published **25 August 2026**: https://www.zawya.com/en/press-release/companies-news/raff-closes-1.7mln-pre-seed-round-to-bridge-online-and-offline-retail-across-mena-466560
+- Independent dated corroboration: https://www.wamda.com/2026/08/raff-raises-17-million-bridge-online-brands-physical-retail
+- Arabic publication: https://www.wamda.com/ar/2026/08/raff-raises-17-million-bridge-online-brands-physical-retail-arabic
+- Company site: https://www.tryraff.com/
+- Verified co-founders **Ali Al Qudah (علي القضاة)**, CEO, and **Abdul Kareem Munla (عبد الكريم منلا)**. Founded 2024. US$1.7 million pre-seed led by Vision Ventures with other named participants; the amount is financing, **not revenue**.
+- The company reports helping **900+ brands in nine countries** at the time of the announcement. This is self-reported operating activity, not independent audit data.
+
+## Global: Mercor
+
+- Company announcement published **10 November 2026**: https://www.mercor.com/blog/series-d/
+- Official current founders and **co-CEO** roles: https://www.mercor.com/mission/
+- Investor verification of all three co-founders: https://www.felicis.com/portfolio/mercor
+- Reuters dated **10 November 2026** corroboration: https://www.reuters.com/legal/transactional/ai-training-startup-mercor-valued-20-billion-latest-funding-round-2026-11-10/
+- **Brendan Foody** and **Adarsh Hiremath** are current co-CEOs per the company; **Surya Midha** is confirmed as co-founder without an asserted present executive title.
+- US$750 million Series D announced at US$20 billion valuation; the amount **includes an employee share tender** without disclosure of the primary/secondary split. Neither the financing amount nor valuation is reported revenue.
+
+## Combined source catalog checkpoint
+
+All six frontend/backend mirrored catalog pairs hold 375 editorial/unclaimed founder profiles at 203 company identities, and 130 original bilingual news briefs. The source publication dates are retained. Funding is not revenue; company-supplied activity is distinguished from independently verified results. No accounts, invitations, user membership changes, private fields, original editorial or deleted records, Hostinger settings, database imports or production deployments are implied by this source merge.
