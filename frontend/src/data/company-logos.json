@@ -825,7 +825,7 @@
     "company_key": "salla",
     "website": "https://salla.com/",
     "src": "/startup-directory/salla-logo.png",
-    "tone": "light"
+    "tone": "dark"
   },
   {
     "company_key": "tamara",
@@ -975,6 +975,216 @@
     "company_key": "lawazem",
     "website": "https://www.lawazem.com/",
     "src": "/company-logos/lawazem.png",
+    "tone": "light"
+  },
+  {
+    "company_key": "1001-ai",
+    "website": "https://1001.ai/",
+    "src": "/company-logos/1001-ai.svg",
+    "tone": "light"
+  },
+  {
+    "company_key": "abwaab",
+    "website": "https://abwaab.com/",
+    "src": "/company-logos/abwaab.jpg",
+    "tone": "light"
+  },
+  {
+    "company_key": "abwab-ai",
+    "website": "https://www.abwab.ai/",
+    "src": "/company-logos/abwab-ai.webp",
+    "tone": "dark"
+  },
+  {
+    "company_key": "aila",
+    "website": "https://www.aila.sa/",
+    "src": "/company-logos/aila.svg",
+    "tone": "light"
+  },
+  {
+    "company_key": "aya-fashion",
+    "website": "https://www.aya.app/",
+    "src": "/company-logos/aya-fashion.png",
+    "tone": "light"
+  },
+  {
+    "company_key": "brkz",
+    "website": "https://brkz.com/en",
+    "src": "/company-logos/brkz.svg",
+    "tone": "light"
+  },
+  {
+    "company_key": "by-venture-partners",
+    "website": "https://www.byvp.com/",
+    "src": "/company-logos/by-venture-partners.png",
+    "tone": "dark"
+  },
+  {
+    "company_key": "cashin",
+    "website": "https://cashin.sa/en",
+    "src": "/company-logos/cashin.svg",
+    "tone": "light"
+  },
+  {
+    "company_key": "figma",
+    "website": "https://www.figma.com/",
+    "src": "/company-logos/figma.png",
+    "tone": "light"
+  },
+  {
+    "company_key": "flyakeed",
+    "website": "https://flyakeed.com/",
+    "src": "/company-logos/flyakeed.png",
+    "tone": "light"
+  },
+  {
+    "company_key": "journify",
+    "website": "https://www.journify.io/",
+    "src": "/company-logos/journify.svg",
+    "tone": "light"
+  },
+  {
+    "company_key": "justclean",
+    "website": "https://justclean.com/",
+    "src": "/company-logos/justclean.ico",
+    "tone": "light"
+  },
+  {
+    "company_key": "kalepa",
+    "website": "https://kalepa.com/",
+    "src": "/company-logos/kalepa.svg",
+    "tone": "light"
+  },
+  {
+    "company_key": "madeed",
+    "website": "https://www.madeed.co/",
+    "src": "/company-logos/madeed.png",
+    "tone": "light"
+  },
+  {
+    "company_key": "mawsool-sales-intelligence",
+    "website": "https://mawsool.co/",
+    "src": "/company-logos/mawsool-sales-intelligence.svg",
+    "tone": "light"
+  },
+  {
+    "company_key": "mozn",
+    "website": "https://www.mozn.ai/",
+    "src": "/company-logos/mozn.svg",
+    "tone": "dark"
+  },
+  {
+    "company_key": "nawy",
+    "website": "https://www.nawy.com/",
+    "src": "/company-logos/nawy.svg",
+    "tone": "light"
+  },
+  {
+    "company_key": "nooks",
+    "website": "https://www.nooks.ai/",
+    "src": "/company-logos/nooks.svg",
+    "tone": "dark"
+  },
+  {
+    "company_key": "omniops",
+    "website": "https://omniops.sa/",
+    "src": "/company-logos/omniops.svg",
+    "tone": "dark"
+  },
+  {
+    "company_key": "persona-mena",
+    "website": "https://personaglobal.co/",
+    "src": "/company-logos/persona-mena.png",
+    "tone": "dark"
+  },
+  {
+    "company_key": "raff-retailtech",
+    "website": "https://www.tryraff.com/",
+    "src": "/company-logos/raff-retailtech.png",
+    "tone": "light"
+  },
+  {
+    "company_key": "sav-fintech",
+    "website": "https://sav.money/",
+    "src": "/company-logos/sav-fintech.png",
+    "tone": "light"
+  },
+  {
+    "company_key": "serval-automation",
+    "website": "https://www.serval.com/",
+    "src": "/company-logos/serval-automation.svg",
+    "tone": "light"
+  },
+  {
+    "company_key": "sitr-compliance-technology",
+    "website": "https://sitr.bh/",
+    "src": "/company-logos/sitr-compliance-technology.png",
+    "tone": "dark"
+  },
+  {
+    "company_key": "solink",
+    "website": "https://solink.com/",
+    "src": "/company-logos/solink.svg",
+    "tone": "light"
+  },
+  {
+    "company_key": "stitch-saudi",
+    "website": "https://www.stitch.co/",
+    "src": "/company-logos/stitch-saudi.svg",
+    "tone": "light"
+  },
+  {
+    "company_key": "synapse-analytics",
+    "website": "https://synapse-analytics.io/",
+    "src": "/company-logos/synapse-analytics.svg",
+    "tone": "light"
+  },
+  {
+    "company_key": "talmal",
+    "website": "https://talmal.sa/",
+    "src": "/company-logos/talmal.svg",
+    "tone": "light"
+  },
+  {
+    "company_key": "theqa",
+    "website": "https://theqa.io/",
+    "src": "/company-logos/theqa.svg",
+    "tone": "light"
+  },
+  {
+    "company_key": "think-ai",
+    "website": "https://www.think-ai.com/",
+    "src": "/company-logos/think-ai.png",
+    "tone": "dark"
+  },
+  {
+    "company_key": "turuq-innovations",
+    "website": "https://www.turuq.co/",
+    "src": "/company-logos/turuq-innovations.png",
+    "tone": "light"
+  },
+  {
+    "company_key": "upwind-security",
+    "website": "https://www.upwind.io/",
+    "src": "/company-logos/upwind-security.svg",
+    "tone": "light"
+  },
+  {
+    "company_key": "velents",
+    "website": "https://velents.ai/",
+    "src": "/company-logos/velents.png",
+    "tone": "dark"
+  },
+  {
+    "company_key": "wafr-fintech",
+    "website": "https://www.wafrchain.com/",
+    "src": "/company-logos/wafr-fintech.png",
+    "tone": "dark"
+  },
+  {
+    "company_key": "rabeh",
+    "website": "https://rabeh.sa/",
+    "src": "/startup-directory/rabeh-logo.webp",
     "tone": "light"
   }
 ]

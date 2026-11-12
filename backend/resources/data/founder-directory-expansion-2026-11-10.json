@@ -387,7 +387,7 @@
     "sector_ar": "تقنيات التجزئة والتوزيع",
     "website": "https://www.tryraff.com/",
     "portrait_url": null,
-    "logo_url": null,
+    "logo_url": "/company-logos/raff-retailtech.png",
     "founder_socials": [],
     "source_url": "https://www.zawya.com/en/press-release/companies-news/raff-closes-1.7mln-pre-seed-round-to-bridge-online-and-offline-retail-across-mena-466560",
     "source_urls": [
@@ -423,7 +423,7 @@
     "sector_ar": "تقنيات التجزئة والتوزيع",
     "website": "https://www.tryraff.com/",
     "portrait_url": null,
-    "logo_url": null,
+    "logo_url": "/company-logos/raff-retailtech.png",
     "founder_socials": [],
     "source_url": "https://www.zawya.com/en/press-release/companies-news/raff-closes-1.7mln-pre-seed-round-to-bridge-online-and-offline-retail-across-mena-466560",
     "source_urls": [
@@ -567,7 +567,7 @@
     "sector_ar": "البنية التحتية السيادية للذكاء الاصطناعي",
     "website": "https://omniops.sa/",
     "portrait_url": null,
-    "logo_url": null,
+    "logo_url": "/company-logos/omniops.svg",
     "founder_socials": [],
     "source_url": "https://www.wamda.com/en/2024/12/omniops-raises-8-million-expand-ai-infrastructure-offerings",
     "source_urls": [
@@ -601,9 +601,9 @@
     "country_code": "AE",
     "sector_en": "Islamic fintech and asset tokenization",
     "sector_ar": "التقنية المالية الإسلامية وترميز الأصول",
-    "website": "https://www.wafrpay.com/",
+    "website": "https://www.wafrchain.com/",
     "portrait_url": null,
-    "logo_url": null,
+    "logo_url": "/company-logos/wafr-fintech.png",
     "founder_socials": [],
     "source_url": "https://www.globenewswire.com/news-release/2026/11/10/3399208/0/en/wafr-announces-wafrchain-for-on-chain-shariah-compliant-sukuk-and-pre-seed-funding.html",
     "source_urls": [
@@ -611,7 +611,7 @@
       "https://www.wamda.com/en/2026/11/uae-wafr-attracts-angel-investment-digitise-sukuk-issuance-settlement",
       "https://www.wamda.com/ar/2026/11/uae-wafr-attracts-angel-investment-digitise-sukuk-issuance-settlement-arabic",
       "https://thestartupscene.me/INVESTMENTS/UAE-Fintech-Wafr-Launches-Blockchain-Platform",
-      "https://www.wafrpay.com/"
+      "https://www.wafrchain.com/"
     ],
     "reviewed_at": "2026-11-12",
     "company_key": "wafr-fintech",
@@ -638,9 +638,9 @@
     "country_code": "AE",
     "sector_en": "Islamic fintech and asset tokenization",
     "sector_ar": "التقنية المالية الإسلامية وترميز الأصول",
-    "website": "https://www.wafrpay.com/",
+    "website": "https://www.wafrchain.com/",
     "portrait_url": null,
-    "logo_url": null,
+    "logo_url": "/company-logos/wafr-fintech.png",
     "founder_socials": [],
     "source_url": "https://www.globenewswire.com/news-release/2026/11/10/3399208/0/en/wafr-announces-wafrchain-for-on-chain-shariah-compliant-sukuk-and-pre-seed-funding.html",
     "source_urls": [
@@ -648,7 +648,7 @@
       "https://www.wamda.com/en/2026/11/uae-wafr-attracts-angel-investment-digitise-sukuk-issuance-settlement",
       "https://www.wamda.com/ar/2026/11/uae-wafr-attracts-angel-investment-digitise-sukuk-issuance-settlement-arabic",
       "https://thestartupscene.me/INVESTMENTS/UAE-Fintech-Wafr-Launches-Blockchain-Platform",
-      "https://www.wafrpay.com/"
+      "https://www.wafrchain.com/"
     ],
     "reviewed_at": "2026-11-12",
     "company_key": "wafr-fintech",

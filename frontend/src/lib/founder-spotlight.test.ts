@@ -153,7 +153,7 @@ test('30 October sourced founder discoveries have primary evidence and retain un
     assert.equal(row.region, expectedRegions[row.country_code])
     assert.ok(row.source_urls.includes(row.source_url))
     assert.equal(row.portrait_url, null) // Never invent a likeness.
-    assert.equal(row.logo_url, null) // Unlicensed image reuse is not permitted.
+    assert.equal(row.logo_url, reviewedCompanyLogo(row.website) ?? null) // Reviewed original company artwork only.
     assert.ok(!('isVerified' in row) && !('member' in row) && !('email' in row))
   }
 })
@@ -167,7 +167,7 @@ test('31 October sourced founders retain primary evidence without membership cla
   for (const profile of latest) {
     assert.ok(profile.source_urls.includes(profile.source_url))
     assert.equal(profile.portrait_url, null)
-    assert.equal(profile.logo_url, null)
+    assert.equal(profile.logo_url, reviewedCompanyLogo(profile.website) ?? null)
     assert.ok(!('member' in profile) && !('email' in profile) && !('user_id' in profile) && !('isVerified' in profile))
   }
 })
@@ -180,7 +180,7 @@ test('1 November sourced founders retain independent evidence and no Wosool memb
   for (const row of additions) {
     assert.ok(row.source_urls.includes(row.source_url))
     assert.equal(row.portrait_url, null)
-    assert.equal(row.logo_url, null)
+    assert.equal(row.logo_url, reviewedCompanyLogo(row.website) ?? null)
     assert.equal(row.traction_en, null)
     assert.ok(!('isVerified' in row) && !('member' in row) && !('email' in row) && !('user_id' in row))
   }
@@ -196,7 +196,7 @@ test('3 November sourced co-founders carry evidence and no Wosool membership', (
     assert.ok(item.source_urls.includes(item.source_url))
     assert.equal(item.region, item.country_code === 'SA' ? 'saudi' : 'gcc')
     assert.equal(item.portrait_url, null)
-    assert.equal(item.logo_url, null)
+    assert.equal(item.logo_url, reviewedCompanyLogo(item.website) ?? null)
     assert.ok(!('member' in item) && !('email' in item) && !('user_id' in item) && !('isVerified' in item))
     if (item.traction_en) {
       assert.ok(item.traction_ar)
