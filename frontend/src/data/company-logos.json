@@ -952,5 +952,29 @@
     "website": "https://www.ovasave.com/",
     "src": "/company-logos/ovasave.png",
     "tone": "dark"
+  },
+  {
+    "company_key": "seven-car-lounge",
+    "website": "https://sevencarlounge.com/",
+    "src": "/company-logos/seven-car-lounge.png",
+    "tone": "dark"
+  },
+  {
+    "company_key": "nob",
+    "website": "https://nob.sa/",
+    "src": "/company-logos/nob.svg",
+    "tone": "light"
+  },
+  {
+    "company_key": "salasa",
+    "website": "https://salasa.co/",
+    "src": "/company-logos/salasa.svg",
+    "tone": "dark"
+  },
+  {
+    "company_key": "lawazem",
+    "website": "https://www.lawazem.com/",
+    "src": "/company-logos/lawazem.png",
+    "tone": "light"
   }
 ]
