@@ -11,7 +11,7 @@
   <a href="https://github.com/king4arabs/wosool/actions/workflows/ci.yml">CI</a>
 </p>
 
-**Documentation version: 0.6.2 · Updated: 11 November 2026.**
+**Documentation version: 0.6.3 · Updated: 12 November 2026.**
 
 Wosool is an Arabic/English founders platform connecting Saudi Arabia, the GCC, MENA and the world. It brings founder and company profiles, events, news, introductions and community services together, with a dedicated EO Riyadh Accelerator experience.
 
@@ -22,6 +22,8 @@ Community membership, Accelerator admission and administrator access are separat
 **EOA program update:** the two-year curriculum, annual US$4,000 package with US$2,000 sponsor contribution, learning calendar, dedicated board and protected readiness controls are described in [the release notes](docs/EOA-GLOBAL-ALIGNMENT-2026-11-10.md).
 
 **EOA leadership:** [`/eoa/leadership#program-lead`](https://wosool.org/eoa/leadership#program-lead) presents Mohammed Alsolami (Program Lead), Fouad Alnazawi (Program Operation Partner) and Bashaier Abdullah (EOA Riyadh PMO Leader) in three equal-sized bilingual cards. See [EOA operations](docs/EOA.md#public-program-leadership) for profile sources and maintenance details.
+
+**Editorial update (12 November 2026):** **378 external/unclaimed founder profiles, 205 company identities and 132 original bilingual news briefs** across six mirrored catalog pairs. Source-verified new founders: Saudi OmniOps' Mohammed Altassan and UAE Wafr's Mahmoud Bouchelif and Anthony Murphy. New product/funding briefs retain **11 November** and **10 November 2026** announcement dates. See [evidence and release boundary](docs/research/CONTENT-REFRESH-2026-11-12.md). No membership state, production database import or verified Hostinger deployment is implied.
 
 **Editorial update (11 November 2026):** **375 external/unclaimed founder profiles, 203 company identities and 130 original bilingual news briefs** across six mirrored frontend/backend catalogs. New Saudi Raff, UAE AIREV and US Mercor co-founder profiles are source-verified. Raff's 25 August pre-seed, Persona's 5 November pre-seed, AIREV's 4 November strategic funding and Mercor's 10 November Series D retain the original announcement dates. Financing/valuation are not revenue; company-reported activity is labeled. See [11 November sources](docs/research/CONTENT-REFRESH-2026-11-11.md). No membership changes, production import or Hostinger deployment is implied.
 
