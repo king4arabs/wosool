@@ -131,6 +131,9 @@ export function toSettingsForm(settings: AdminSettingsResponse): SettingsForm {
   }
 }
 
+// Laravel's `max` rule counts characters (code points), not UTF-16 units, so an emoji counts once.
+const characterCount = (value: string) => Array.from(value).length
+
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
 function isHttpUrl(value: string): boolean {
@@ -158,7 +161,7 @@ export function validateSettingsForm(locale: Locale, form: SettingsForm): Settin
     if (!value(field)) errors[field] = copy.fieldRequired
   }
   for (const field of ["general.site_name", "general.site_url", "email.from_name", "email.from_email", "email.reply_to", "email.smtp_host", "security.password_policy"] as const) {
-    if (!errors[field] && value(field).length > settingsLimits.textMax) errors[field] = copy.tooLong
+    if (!errors[field] && characterCount(value(field)) > settingsLimits.textMax) errors[field] = copy.tooLong
   }
   if (!errors["general.site_url"] && !isHttpUrl(value("general.site_url"))) errors["general.site_url"] = copy.urlInvalid
   for (const field of ["email.from_email", "email.reply_to"] as const) {

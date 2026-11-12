@@ -93,6 +93,9 @@ test("invalid values are caught before sending, in the admin's language", () => 
   assert.deepEqual(validateSponsorForm("en", toSponsorForm(stored)), {})
   assert.deepEqual(validateSponsorForm("en", { ...toSponsorForm(), name: "New sponsor" }), {})
   assert.ok(validateSponsorForm("en", { ...toSponsorForm(stored), display_order: "2.5" }).display_order)
+  // Laravel counts characters: 254 letters and one emoji is 255.
+  assert.equal(validateSponsorForm("en", { ...toSponsorForm(stored), name: "a".repeat(254) + "🚀" }).name, undefined)
+  assert.ok(validateSponsorForm("en", { ...toSponsorForm(stored), name: "a".repeat(255) + "🚀" }).name)
 })
 
 test("saving keeps the active state and order, and sends blanks as null", () => {

@@ -212,6 +212,9 @@ export function toSponsorForm(sponsor?: AdminSponsor | null): SponsorForm {
   }
 }
 
+// Laravel's `max` rule counts characters (code points), not UTF-16 units, so an emoji counts once.
+const characterCount = (value: string) => Array.from(value).length
+
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 const datePattern = /^\d{4}-\d{2}-\d{2}$/
 
@@ -233,7 +236,7 @@ export function validateSponsorForm(locale: Locale, form: SponsorForm): SponsorF
   if (!value("name")) errors.name = copy.fieldRequired
   if (!isSponsorTier(form.tier)) errors.tier = copy.tierInvalid
   for (const field of ["name", "website", "logo_url", "contact_name", "contact_email"] as const) {
-    if (!errors[field] && value(field).length > sponsorLimits.textMax) errors[field] = copy.tooLong
+    if (!errors[field] && characterCount(value(field)) > sponsorLimits.textMax) errors[field] = copy.tooLong
   }
   for (const field of ["website", "logo_url"] as const) {
     if (!errors[field] && value(field) && !isHttpUrl(value(field))) errors[field] = copy.urlInvalid

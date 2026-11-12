@@ -87,6 +87,7 @@ test("invalid values are caught before sending, in the admin's language", () => 
   assert.match(validateSettingsForm("ar", form)["general.site_name"] ?? "", arabic)
   assert.deepEqual(validateSettingsForm("en", toSettingsForm(loaded)), {})
   assert.ok(validateSettingsForm("en", { ...toSettingsForm(loaded), "security.session_timeout_minutes": "4" })["security.session_timeout_minutes"])
+  assert.equal(validateSettingsForm("en", { ...toSettingsForm(loaded), "general.site_name": "a".repeat(254) + "🚀" })["general.site_name"], undefined)
 })
 
 test("saving sends edited fields and returns the unedited settings unchanged", () => {
