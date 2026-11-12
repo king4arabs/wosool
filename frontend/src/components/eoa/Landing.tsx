@@ -20,6 +20,7 @@ import { CohortModel } from './CohortModel'
 import { EoaJourney } from "./Journey"
 import { EoaLogo } from "./Logo"
 import { EoaBoard } from "./Board"
+import { leadershipBoard } from "@/lib/eoa-leadership"
 import { EoaMentors } from "./Mentors"
 import { EoGlobalNetwork } from "./GlobalNetwork"
 import { EoaProgramDetails } from "./EoaProgramDetails"
@@ -176,7 +177,7 @@ export function EoaLanding() {
       {!!program?.mentors?.length && <EoaMentors key={ar ? "ar" : "en"} mentors={program.mentors} ar={ar} compact />}
       <div className="eoa-container eoa-section"><EoGlobalNetwork key={ar ? "ar" : "en"} ar={ar} /></div>
       <EoaProgramDetails program={program} />
-      <EoaBoard members={program?.board_members ?? []} ar={ar} />
+      <EoaBoard members={leadershipBoard(program?.board_members)} ar={ar} />
 
       <section className="eoa-section">
         <div className="eoa-container eoa-two-grid">

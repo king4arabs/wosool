@@ -17,6 +17,8 @@
 .logoFrame { display:flex; align-items:center; justify-content:center; width:var(--partner-slot); height:100px; padding:16px 10px; border:1px solid transparent; border-radius:8px; background:transparent; }
 .logoFrame:is(a):hover { border-color:var(--border-soft); }
 .logoFrame[data-partner="cipher-ventures"] { padding-block:4px; }
+.logoFrame[data-partner="monshaat"] { padding:8px; }
+.logoFrame[data-partner="monshaat"] [data-brand-logo] { max-width:154px; max-height:80px; filter:none; opacity:1; }
 .logoFrame [data-brand-logo] { filter:grayscale(1); opacity:.72; transition:filter .25s ease,opacity .25s ease; }
 .logoFrame:is(:hover,:focus-visible) [data-brand-logo] { filter:none; opacity:1; }
 .logoFrame[data-dark] { background:var(--brand-navy); color:#fff; }
