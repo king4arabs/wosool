@@ -14,7 +14,7 @@ function subscribeMotion(callback: () => void) {
 }
 function motionSnapshot() { return window.matchMedia('(prefers-reduced-motion: reduce)').matches }
 
-export function PartnerCarousel({ partners, ar, includeEo = true, headingId, action, emptyState }: { partners: PartnerLogo[]; ar: boolean; includeEo?: boolean; headingId?: string; action?: ReactNode; emptyState?: ReactNode }) {
+export function PartnerCarousel({ partners, ar, includeEo = true, headingId, action, emptyState, heading, allLabel }: { partners: PartnerLogo[]; ar: boolean; includeEo?: boolean; headingId?: string; action?: ReactNode; emptyState?: ReactNode; heading?: string; allLabel?: string }) {
   const items = useMemo(() => uniquePartnerLogos(partners, includeEo), [includeEo, partners])
   const viewport = useRef<HTMLDivElement>(null)
   const group = useRef<HTMLDivElement>(null)
@@ -106,7 +106,7 @@ export function PartnerCarousel({ partners, ar, includeEo = true, headingId, act
   function logos(copy = false) {
     return items.map(partner => {
       const name = (ar ? partner.name_ar : partner.name_en) || partner.name_en || partner.name_ar
-      const artwork = <BrandLogo src={partner.logo_path} name={name} loading="eager" />
+      const artwork = <BrandLogo src={partner.logo_path} name={name} loading={items.length > 24 ? "lazy" : "eager"} />
       const dark = brandLogoNeedsDarkSurface(partner.logo_path) || undefined
       return <div role="listitem" className={styles.slot} key={`${partner.id}-${partner.logo_path ?? partner.website}`}>
         {partner.website ? <a className={styles.logoFrame} data-dark={dark} data-partner={partner.id} href={partner.website} target="_blank" rel="noopener noreferrer" tabIndex={copy ? -1 : undefined} aria-label={`${name}${ar ? ' (نافذة جديدة)' : ' (opens in a new tab)'}`} title={name}>{artwork}</a> : <div className={styles.logoFrame} data-dark={dark} data-partner={partner.id}>{artwork}</div>}
@@ -117,9 +117,9 @@ export function PartnerCarousel({ partners, ar, includeEo = true, headingId, act
   return <section className={styles.section} aria-labelledby={titleId} data-partner-carousel>
     <div className={styles.container}>
       <div className={styles.heading}>
-        <h2 id={titleId}>{ar ? 'نفخر بشركائنا' : 'Proud of our Partners'}</h2>
+        <h2 id={titleId}>{heading ?? (ar ? 'نفخر بشركائنا' : 'Proud of our Partners')}</h2>
         <div className={styles.headingActions}>{action}{items.length > 1 && !reducedMotion && <>
-          <button className={styles.viewAll} type="button" aria-expanded={showAll} aria-controls={`${id}-logos`} onClick={() => setShowAll(value => !value)}>{showAll ? <X size={16} aria-hidden="true" /> : <LayoutGrid size={16} aria-hidden="true" />}{showAll ? ar ? 'عرض متحرك' : 'Carousel view' : ar ? 'عرض جميع الشركاء' : 'View all partners'}</button>
+          <button className={styles.viewAll} type="button" aria-expanded={showAll} aria-controls={`${id}-logos`} onClick={() => setShowAll(value => !value)}>{showAll ? <X size={16} aria-hidden="true" /> : <LayoutGrid size={16} aria-hidden="true" />}{showAll ? ar ? 'عرض متحرك' : 'Carousel view' : allLabel ?? (ar ? 'عرض جميع الشركاء' : 'View all partners')}</button>
           {!expanded && <div role="group" className={styles.controls} dir="ltr" aria-label={ar ? 'التحكم بعرض الشركاء' : 'Partner carousel controls'}>
             <button type="button" aria-controls={`${id}-logos`} onClick={() => move('left')} aria-label={ar ? 'تحريك الشعارات إلى اليسار' : 'Move logos left'}><ArrowLeft size={18} aria-hidden="true" /></button>
             <button type="button" aria-controls={`${id}-logos`} onClick={() => setPaused(value => !value)} aria-label={paused ? ar ? 'تشغيل حركة الشعارات' : 'Start logo movement' : ar ? 'إيقاف حركة الشعارات' : 'Pause logo movement'}>{paused ? <Play size={16} aria-hidden="true" /> : <Pause size={16} aria-hidden="true" />}</button>
@@ -127,7 +127,7 @@ export function PartnerCarousel({ partners, ar, includeEo = true, headingId, act
           </div>}
         </>}</div>
       </div>
-      {items.length > 0 ? expanded ? <div id={`${id}-logos`} className={styles.grid} role="list" aria-labelledby={titleId}>{logos()}</div> : <div ref={viewport} id={`${id}-logos`} role="region" className={styles.viewport} dir="ltr" tabIndex={looping ? 0 : undefined} aria-label={ar ? 'شعارات الشركاء. استخدم السهمين للتنقل.' : 'Partner logos. Use the arrow keys to browse.'} onKeyDown={handleKey} onPointerEnter={event => { if (event.pointerType !== 'touch') setHovered(true) }} onPointerLeave={() => setHovered(false)} onPointerDown={() => setPaused(true)} onWheel={() => setPaused(true)} onFocusCapture={() => setFocused(true)} onBlurCapture={event => { if (!event.currentTarget.contains(event.relatedTarget)) setFocused(false) }}>
+      {items.length > 0 ? expanded ? <div id={`${id}-logos`} className={styles.grid} role="list" aria-labelledby={titleId}>{logos()}</div> : <div ref={viewport} id={`${id}-logos`} role="region" className={styles.viewport} dir="ltr" tabIndex={looping ? 0 : undefined} aria-label={heading ? (ar ? `${heading}. استخدم السهمين للتنقل.` : `${heading}. Use arrow keys to browse.`) : (ar ? 'شعارات الشركاء. استخدم السهمين للتنقل.' : 'Partner logos. Use the arrow keys to browse.')} onKeyDown={handleKey} onPointerEnter={event => { if (event.pointerType !== 'touch') setHovered(true) }} onPointerLeave={() => setHovered(false)} onPointerDown={() => setPaused(true)} onWheel={() => setPaused(true)} onFocusCapture={() => setFocused(true)} onBlurCapture={event => { if (!event.currentTarget.contains(event.relatedTarget)) setFocused(false) }}>
         <div className={styles.track}>
           {(looping ? [0, 1, 2] : [1]).map(copy => <div key={copy} ref={copy === 1 ? group : undefined} className={styles.group} role="list" aria-label={ar ? 'الشركاء' : 'Partners'} aria-hidden={copy !== 1 ? true : undefined}>{logos(copy !== 1)}</div>)}
         </div>

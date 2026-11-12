@@ -1,6 +1,6 @@
 'use client'
 import Link from 'next/link'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useLocale } from '@/lib/locale'
 import { LearningCalendar, CoachOverview, DeliveryModel, ParticipationTerms } from './ProgramGuide'
 import { CohortModel } from './CohortModel'
@@ -12,8 +12,10 @@ import { EoGlobalNetwork } from './GlobalNetwork'
 import { EoaProgramDetails } from './EoaProgramDetails'
 import { EoaPerks } from './Perks'
 import { EoaDirectory } from './Directory'
+import { EoaPartnerExplorer } from './PartnerExplorer'
+import type { Organization } from '@/lib/eoa'
 import { Eligibility } from './Eligibility'
-import { PartnerStrip, useEoaProgram } from './Shared'
+import { useEoaProgram } from './Shared'
 import styles from './PublicDetails.module.css'
 const titles: Record<string, [string, string]> = {
   alumni: ['الخريجون ومتابعة النمو', 'Alumni & continued growth'],
@@ -36,6 +38,7 @@ export function EoaContent({ section }: { section: string }) {
   const { locale } = useLocale()
   const ar = locale === 'ar'
   const { program } = useEoaProgram()
+  const [directoryOrganizations, setDirectoryOrganizations] = useState<Organization[]>([])
   useEffect(() => { document.title = `EO Riyadh Accelerator — ${titles[section]?.[ar ? 0 : 1] ?? ''}` }, [ar, section])
 
   return (
@@ -159,32 +162,30 @@ export function EoaContent({ section }: { section: string }) {
         {section === 'partners' && (
           <div className={styles.partners}>
             <header className={styles.partnerIntro}>
-              <h2>{ar ? 'جهات تدعم رحلتك الريادية' : 'Support for your next stage of growth'}</h2>
-              <p>{ar ? 'استكشف فرص التعلم والتمويل والتقنية ومساحات العمل، وتواصل مع فريقنا للمساهمة في البرنامج.' : 'Explore learning, funding, technology and workspace support, or speak with our team about contributing to the program.'}</p>
-              <nav aria-label={ar ? 'روابط الشراكات' : 'Partnership links'}><a href="#eoa-ecosystem">{ar ? 'استكشف الجهات' : 'Explore organizations'}</a><Link href="/eoa/contact">{ar ? 'تواصل للشراكة' : 'Discuss a partnership'}</Link></nav>
+              <span className="eoa-eyebrow">{ar ? 'الشراكات والمنظومة الريادية' : 'PARTNERSHIPS & ECOSYSTEM'}</span>
+              <h2>{ar ? 'العلاقات التي تفتح فرص النمو' : 'Connections that open opportunities'}</h2>
+              <p>{ar
+                ? 'استكشف الشركاء المعتمدين بصورة مستقلة، وتعرّف على الجهات والبرامج التي يمكن للمؤسسين البحث فيها في السعودية والخليج وخارجها.'
+                : 'Explore confirmed program partners separately from a broader directory of organizations and services for founders in Saudi Arabia, the Gulf and beyond.'}</p>
+              <nav aria-label={ar ? 'أقسام الجهات والشراكات' : 'Organization and partnership sections'}>
+                <a href="#eoa-logo-slider">{ar ? 'جميع الشعارات' : 'All organization logos'}</a>
+                <a href="#eoa-ecosystem">{ar ? 'دليل الجهات' : 'Organization directory'}</a>
+                <Link href="/eoa/contact">{ar ? 'تواصل للشراكة' : 'Discuss a partnership'}</Link>
+              </nav>
             </header>
             <EoaProgramDetails program={program} section="operator" />
-            <div className={styles.partnerStrip}><PartnerStrip partners={program?.partners} /></div>
-            {!program?.partners.length && (
-              <p>
-                {ar
-                  ? 'ساهم بخبرتك أو مواردك في دعم نمو المؤسسين. تواصل مع الفريق لاستكشاف فرص الشراكة.'
-                  : 'Help founders grow through your expertise or resources. Contact the team to explore partnership opportunities.'}
-              </p>
-            )}
-            <section id="eoa-ecosystem" className={styles.ecosystem} aria-labelledby="eoa-directory-title">
-              <h2 id="eoa-directory-title">
-                {ar
-                  ? 'منظومة الدعم في السعودية'
-                  : 'Saudi founder support ecosystem'}
-              </h2>
-              <p>
-                {ar
-                  ? 'اكتشف الجهات وخدماتها، وانتقل إلى مواقعها الرسمية لمعرفة البرامج المتاحة.'
-                  : 'Find organizations and services, then visit their official websites to explore available programs.'}
-              </p>
-              <EoaDirectory ar={ar} />
+            {Boolean(program?.partners?.length) && <EoaProgramDetails program={program} section="partners" />}
+            <EoaPartnerExplorer ar={ar} published={directoryOrganizations} confirmed={program?.partners ?? []} />
+            <section id="eoa-program-support-directory" className={styles.ecosystem} aria-labelledby="eoa-published-directory-title">
+              <h2 id="eoa-published-directory-title">{ar ? 'دليل الدعم المنشور من البرنامج' : 'Program-published support directory'}</h2>
+              <p>{ar
+                ? 'تعرض هذه القائمة بيانات الجهات المنشورة عبر البرنامج وخدماتها. الإدراج لا يعني شراكة رسمية ما لم تُعتمد وتُعرض بصورة منفصلة.'
+                : 'These are publicly listed organization and service records from the program. A directory entry is not a confirmed partnership unless separately approved and identified.'}</p>
+              <EoaDirectory ar={ar} onOrganizationsChange={setDirectoryOrganizations} />
             </section>
+            {!program?.partners?.length && <p>{ar
+              ? 'هل تود المساهمة بخبرتك أو مواردك؟ تواصل مع الفريق لاستكشاف فرص التعاون.'
+              : 'Interested in contributing expertise or resources? Contact the program team to discuss opportunities.'}</p>}
           </div>
         )}
         {section === 'contact' && (
