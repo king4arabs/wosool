@@ -1,5 +1,12 @@
 # Changelog
 
+## Reviewed company-logo coverage and readable contrast — 2026-11-12
+
+- Review all **209 catalog companies** and add 34 verified original logo assignments from official company or identified investor sources. Local artwork now covers **197 companies and 364 of 385 founder cards**; 12 companies retain name or website-icon fallbacks where artwork could not be verified or downloaded.
+- Keep logo provenance in `docs/COMPANY-LOGO-AUDIT-2026-11-12.json`, synchronize approved logo paths across the mirrored frontend/backend founder catalogs and preserve editor-uploaded artwork as authoritative. Wafr's source website is corrected to the WafrChain domain cited by its corporate announcement; applying an existing production-field correction still requires authorized admin review.
+- Preserve original logo colors and proportions. Reviewed pale marks use dark panels; same-origin transparent images can be classified after load without requesting cross-origin access, while opaque or unreadable images retain their reviewed surface. Add focused unit coverage and retain the browser, accessibility, production-guardrail, standalone pnpm/Hostinger and PHP 8.3–8.5 gates.
+- Reconcile the checked-in catalogs at **385 founders / 209 company groups / 132 stories**, with zero integrity problems and 15 founder reviews due. No review date, claimed account, moderation record, Hostinger release or production database import changes in this source slice.
+
 ## Admin sponsors page: both languages, labelled fields, hide a sponsor without deleting it — 2026-11-12
 
 - **Problem:** `/admin/sponsors` was fixed English, so an Arabic administrator got English headings, buttons, badges and toasts in an RTL workspace. The editor used placeholders as its only labels (the contract start and end dates had no label at all), took the tier as free text, and had no input for "active" or display order. Because the public `/sponsors` page lists every active sponsor in display order, each sponsor created here went public immediately and could only be hidden by deleting it. A failed save or delete threw an unhandled error with no message, the dialog could be submitted twice, each keystroke in the search box sent a request whose late answer could replace a newer one, and the list had no loading, error or empty state.
