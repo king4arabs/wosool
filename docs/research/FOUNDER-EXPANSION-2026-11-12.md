@@ -18,7 +18,7 @@ Lawazem's 2024 announcement names Abdulhakim as CEO while the current portfolio 
 ## Original company logos
 
 - SEVEN: official website icon, https://sevencarlounge.com/seven-favicon.png (gold mark on black).
-- NOB: original embedded white SVG from https://nob.sa/; copied without modifying paths, colors or viewBox.
+- NOB: original embedded purple SVG from https://nob.sa/; copied without modifying paths, colors or viewBox.
 - Salasa: original embedded SVG from https://salasa.co/; copied without modifying paths, colors or viewBox.
 - Lawazem: investor-provided company logo, https://cdn.prod.website-files.com/67ca547b3438f540d7a9161f/68f189c5bde40b75b34137e1_lawazem-min.png .
 
