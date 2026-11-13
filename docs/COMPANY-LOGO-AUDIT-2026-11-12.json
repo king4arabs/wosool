@@ -2329,5 +2329,15 @@
     "reviewed_at": "2026-11-13",
     "status": "unresolved",
     "reason": "No licensed original downloadable logo verified; keep the company-name fallback."
+  },
+  {
+    "company_key": "solidrange",
+    "company": "Solidrange",
+    "website": "https://www.solidrange.com/",
+    "src": null,
+    "tone": null,
+    "reviewed_at": "2026-11-13",
+    "status": "unresolved",
+    "reason": "No verified reusable original company logo asset; keep the company-name fallback."
   }
 ]

@@ -11,7 +11,7 @@
   <a href="https://github.com/king4arabs/wosool/actions/workflows/ci.yml">CI</a>
 </p>
 
-**Documentation version: 0.6.3 · Updated: 12 November 2026.**
+**Documentation version: 0.6.4 · Updated: 13 November 2026.**
 
 Wosool is an Arabic/English founders platform connecting Saudi Arabia, the GCC, MENA and the world. It brings founder and company profiles, events, news, introductions and community services together, with a dedicated EO Riyadh Accelerator experience.
 
@@ -22,6 +22,8 @@ Community membership, Accelerator admission and administrator access are separat
 **EOA program update:** the two-year curriculum, annual US$4,000 package with US$2,000 sponsor contribution, learning calendar, dedicated board and protected readiness controls are described in [the release notes](docs/EOA-GLOBAL-ALIGNMENT-2026-11-10.md).
 
 **EOA leadership:** [`/eoa/leadership#program-lead`](https://wosool.org/eoa/leadership#program-lead) presents Mohammed Alsolami (Program Lead), Fouad Alnazawi (Program Operation Partner) and Bashaier Abdullah (EOA Riyadh PMO Leader) in three equal-sized bilingual cards. See [EOA operations](docs/EOA.md#public-program-leadership) for profile sources and maintenance details.
+
+**Editorial update (13 November 2026):** **391 external/unclaimed founder profiles, 212 company keys and 136 original bilingual sourced news briefs** across eight mirrored catalog pairs. Saudi Solidrange's Jamal M. Labani now has an identity-matched professional URL, and the **11 November** SVC/Jadwa release distinguishes an undisclosed investor contribution from total credit-fund commitments. New GCC profiles cover Multipolitan and 44.01. See [dated sources](docs/research/CONTENT-REFRESH-2026-11-13.md). Neither repository commits nor mergers establish production database imports or verified live publication.
 
 **Editorial update (12 November 2026):** **385 external/unclaimed founder profiles, 209 company identities and 132 original bilingual news briefs** across seven mirrored catalog pairs. Source-verified new founders: Saudi OmniOps' Mohammed Altassan and UAE Wafr's Mahmoud Bouchelif and Anthony Murphy. New product/funding briefs retain **11 November** and **10 November 2026** announcement dates. See [evidence and release boundary](docs/research/CONTENT-REFRESH-2026-11-12.md). No membership state, production database import or verified Hostinger deployment is implied.
 

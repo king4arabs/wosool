@@ -173,5 +173,46 @@
     "traction_en": "Holcim announced a strategic investment on 4 November 2026; the amount and equity stake were not disclosed.",
     "traction_ar": "أعلنت هولسيم في 4 نوفمبر 2026 استثماراً استراتيجياً دون الكشف عن المبلغ أو الحصة المقتناة.",
     "traction_source_url": "https://www.holcim.com/media/media-release/carbon-mineralization-storage"
+  },
+  {
+    "slug": "jamal-m-labani-solidrange",
+    "founder_name_en": "Jamal M. Labani",
+    "founder_name_ar": "جمال لَبَني",
+    "role_en": "Co-founder & CEO",
+    "role_ar": "شريك مؤسس ورئيس تنفيذي",
+    "founder_brief_en": "Co-founder and CEO of Solidrange, developing Saudi-made software for cybersecurity governance, risk, compliance and workforce awareness.",
+    "founder_brief_ar": "شريك مؤسس ورئيس تنفيذي لشركة «سوليدرينج»، يطوّر حلولاً سعودية للحوكمة والمخاطر والالتزام والتوعية بالأمن السيبراني.",
+    "company_name_en": "Solidrange",
+    "company_name_ar": "سوليدرينج",
+    "company_brief_en": "Riyadh cybersecurity company offering GRC automation through EasyCompliance and cybersecurity awareness training and phishing simulations through Awareness10.",
+    "company_brief_ar": "شركة أمن سيبراني مقرها الرياض تقدّم أتمتة الحوكمة والمخاطر والالتزام عبر EasyCompliance والتوعية الأمنية ومحاكاة التصيد عبر Awareness10.",
+    "country_en": "Saudi Arabia",
+    "country_ar": "السعودية",
+    "country_code": "SA",
+    "sector_en": "Cybersecurity & compliance software",
+    "sector_ar": "الأمن السيبراني وبرمجيات الالتزام",
+    "website": "https://www.solidrange.com/",
+    "portrait_url": null,
+    "logo_url": null,
+    "founder_socials": [
+      {
+        "label": "LinkedIn",
+        "url": "https://www.linkedin.com/in/jamalmlabani/"
+      }
+    ],
+    "source_url": "https://www.wamda.com/2026/02/saudi-cybersecurity-startup-solidrange-raises-2-4-million-seed-round",
+    "source_urls": [
+      "https://www.wamda.com/2026/02/saudi-cybersecurity-startup-solidrange-raises-2-4-million-seed-round",
+      "https://www.solidrange.com/",
+      "https://www.linkedin.com/in/jamalmlabani/",
+      "https://www.saudimedianews.com/ar/2026/02/19/solidrange-%D8%AA%D8%AC%D9%85%D8%B9-2-4-%D9%85%D9%84%D9%8A%D9%88%D9%86-%D8%AF%D9%88%D9%84%D8%A7%D8%B1-%D9%81%D9%8A-%D8%AC%D9%88%D9%84%D8%A9-%D8%AA%D9%85%D9%88%D9%8A%D9%84-%D8%A3%D9%88%D9%84%D9%8A/"
+    ],
+    "reviewed_at": "2026-11-13",
+    "company_key": "solidrange",
+    "region": "saudi",
+    "founded_year": null,
+    "traction_en": "Announced a US$2.4m seed round on 16 February 2026; the company reported serving more than 50 enterprise customers.",
+    "traction_ar": "أعلنت جولة بذريّة بقيمة 2.4 مليون دولار في 16 فبراير 2026، وذكرت الشركة أنها تخدم أكثر من 50 عميلاً مؤسسياً.",
+    "traction_source_url": "https://www.wamda.com/2026/02/saudi-cybersecurity-startup-solidrange-raises-2-4-million-seed-round"
   }
 ]
