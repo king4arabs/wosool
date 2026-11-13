@@ -60,7 +60,7 @@ test('frontend source snapshots and database import share the same reviewed reco
   assert.equal(november12Profiles.length, 7)
   const november13Database = JSON.parse(readFileSync(new URL('../../../backend/resources/data/founder-directory-expansion-2026-11-13.json', import.meta.url), 'utf8'))
   assert.deepEqual(november13Database, november13Profiles)
-  assert.equal(november13Profiles.length, 5)
+  assert.equal(november13Profiles.length, 6)
   assert.equal(originalCountryCohort.length, 102)
   assert.equal(october30Additions.length, 8)
   assert.equal(new Set(originalCountryCohort.map(profile => profile.country_code)).size, 51)
