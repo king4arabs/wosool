@@ -96,6 +96,8 @@ export default function AdminScorecardsPage() {
   }, [load])
 
   const choose = (item: AdminScorecard) => {
+    // A pending request belongs to the founder that sent it; switching now would show its result on another founder.
+    if (busyRef.current) return
     setSelectedId(item.id)
     setOverride(emptyOverrideForm)
     setOverrideErrors({})
@@ -154,7 +156,7 @@ export default function AdminScorecardsPage() {
       setMessage({ kind: "success", text: copy.verificationSent })
       await load(page)
     } catch (err) {
-      setMessage({ kind: "error", text: sendErrorMessage(locale, err instanceof ApiError ? err.status : null) })
+      setMessage({ kind: "error", text: sendErrorMessage(locale, err instanceof ApiError ? err.status : null, err instanceof ApiError ? err.message : null) })
     } finally {
       finish()
     }
@@ -188,7 +190,7 @@ export default function AdminScorecardsPage() {
       setInviteErrors(apiErrors)
       const first = inviteFields.find((field) => apiErrors[field])
       if (first) setFocusField(first)
-      setMessage({ kind: "error", text: first ? copy.checkFields : sendErrorMessage(locale, err instanceof ApiError ? err.status : null) })
+      setMessage({ kind: "error", text: first ? copy.checkFields : sendErrorMessage(locale, err instanceof ApiError ? err.status : null, err instanceof ApiError ? err.message : null) })
     } finally {
       finish()
     }
@@ -281,6 +283,7 @@ export default function AdminScorecardsPage() {
                       <button
                         type="button"
                         aria-pressed={isSelected}
+                        disabled={busy !== null && !isSelected}
                         onClick={() => choose(item)}
                         className="block min-h-11 w-full text-start hover:underline"
                       >
@@ -331,7 +334,7 @@ export default function AdminScorecardsPage() {
                   </dl>
                 </section>
 
-                {action !== "none" ? (
+                {selected.user_email || action !== "none" ? (
                   <section aria-labelledby="scorecard-account" className="space-y-3 border-t pt-4">
                     <h4 id="scorecard-account" className="text-sm font-semibold text-gray-900">{copy.accountTitle}</h4>
                     {selected.user_email ? (

@@ -139,5 +139,22 @@ test("names, links, pages and send errors read correctly in both languages", () 
   assert.equal(sendErrorMessage("en", 503), adminScorecardsCopy.en.mailUnavailable)
   assert.equal(sendErrorMessage("ar", 409), adminScorecardsCopy.ar.sendConflict)
   assert.equal(sendErrorMessage("en", null), adminScorecardsCopy.en.sendFailed)
+  assert.equal(sendErrorMessage("en", 429), adminScorecardsCopy.en.waitBeforeResend)
   assert.deepEqual(fieldErrors(["email"], { email: ["bad"], other: ["x"] }, "No"), { email: "No" })
+})
+
+test("each invitation conflict gets its own explanation", () => {
+  const service = readFileSync(new URL("../../../backend/app/Services/FounderInvitationService.php", import.meta.url), "utf8")
+  // The messages matched here must still be the ones the service sends.
+  assert.match(service, /409, 'This recipient already owns a founder profile\.'/)
+  assert.match(service, /409, 'The invitation was revoked while mail was sending\./)
+  assert.equal(sendErrorMessage("en", 409, "This recipient already owns a founder profile."), adminScorecardsCopy.en.recipientOwnsProfile)
+  assert.equal(sendErrorMessage("ar", 409, "The invitation was revoked while mail was sending. The emailed link is inactive."), adminScorecardsCopy.ar.inviteRevoked)
+  assert.equal(sendErrorMessage("en", 409, "Only unclaimed, active profiles can be invited."), adminScorecardsCopy.en.sendConflict)
+  assert.equal(sendErrorMessage("en", 409, "This email is already verified."), adminScorecardsCopy.en.sendConflict)
+})
+
+test("a pending request cannot be shown against another founder, and a verified account stays visible", () => {
+  assert.match(page, /const choose = \(item: AdminScorecard\) => \{\s*\/\/[^\n]*\n\s*if \(busyRef\.current\) return/)
+  assert.match(page, /selected\.user_email \|\| action !== "none"/)
 })

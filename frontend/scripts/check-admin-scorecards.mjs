@@ -10,6 +10,7 @@ let log = ''; app.stdout.on('data', v => log += v); app.stderr.on('data', v => l
 const axe = readFileSync(new URL('../node_modules/axe-core/axe.min.js', import.meta.url), 'utf8')
 const initial = () => [
   { id: 1, founder_profile_id: 11, founder_name: 'Sara Example', founder_uid: 'WF-0001', founder_slug: 'sara-example', founder_status: 'active', founder_is_public: true, user_email: null, email_verified: false, invitation_email: 'sara@example.com', aggregate_score: 60, momentum: 55, growth: 70, readiness: 40, support_delta: 10, updated_at: '2026-11-01T09:00:00Z' },
+  { id: 3, founder_profile_id: 13, founder_name: 'Verified Founder', founder_uid: null, founder_slug: 'verified-founder', founder_status: 'active', founder_is_public: true, user_email: 'verified@example.com', email_verified: true, invitation_email: null, aggregate_score: 50, momentum: 50, growth: 50, readiness: 50, support_delta: 5, updated_at: null },
   { id: 2, founder_profile_id: 12, founder_name: null, founder_uid: null, founder_slug: 'pending-founder', founder_status: 'pending', founder_is_public: false, user_email: 'pending@example.com', email_verified: false, invitation_email: null, aggregate_score: 30, momentum: 20, growth: 25, readiness: 35, support_delta: 0, updated_at: null },
 ]
 let browser
@@ -41,6 +42,7 @@ try {
       }
       if (/\/admin\/founders\/\d+\/invite$/.test(url.pathname)) {
         writes.push({ kind: 'invite', body: route.request().postDataJSON() })
+        if (mailStatus === 409) return route.fulfill({ status: 409, json: { message: 'This recipient already owns a founder profile.' } })
         if (mailStatus === 503) return route.fulfill({ status: 503, json: { message: 'Configure a delivering mail transport before sending invitations.' } })
         return route.fulfill({ json: { message: 'Invitation accepted by the mail transport.' } })
       }
@@ -100,11 +102,20 @@ try {
     await send.click()
     await page.getByText(ar ? /خادم البريد غير مهيأ/ : /Mail is not configured/).waitFor()
     assert.equal(await page.getByText('Configure a delivering mail transport').count(), 0, 'raw API message is not shown')
+    mailStatus = 409
+    await send.click()
+    await page.getByText(ar ? /يملك ملف مؤسس آخر/ : /already owns another founder profile/).waitFor()
     mailStatus = 200
     await send.click()
     await page.getByText(ar ? /قبل خادم البريد دعوة التفعيل/ : /accepted the activation invitation/).waitFor()
     assert.deepEqual(writes.at(-1).body, { email: 'sara@example.com', recipient_evidence: 'Confirmed on a call with the founder', recipient_verified: true })
     await page.screenshot({ path: `/tmp/admin-operations-scorecards-${locale}-${width}.png`, fullPage: true })
+
+    // A verified account keeps its address and status visible, with nothing to send.
+    await page.getByRole('button', { name: /^Verified Founder/ }).click()
+    await page.getByText('verified@example.com').waitFor()
+    await page.getByText(ar ? 'البريد موثّق' : 'Email verified', { exact: false }).waitFor()
+    assert.equal(await page.getByRole('button', { name: ar ? 'إرسال رسالة التوثيق' : 'Send verification email' }).count(), 0)
 
     // A pending profile offers no email action.
     await page.getByRole('button', { name: ar ? /^مؤسس رقم 12/ : /^Founder #12/ }).click()

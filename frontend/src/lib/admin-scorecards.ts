@@ -118,6 +118,9 @@ const ar = {
   sendFailed: "تعذر إرسال البريد. حاول مرة أخرى.",
   mailUnavailable: "خادم البريد غير مهيأ أو لم يقبل الرسالة. راجع إعدادات البريد ثم أعد المحاولة.",
   sendConflict: "لم يُرسل البريد: الحساب موثّق مسبقًا أو الملف غير نشط. حدّث القائمة.",
+  recipientOwnsProfile: "لم تُرسل الدعوة: صاحب هذا البريد يملك ملف مؤسس آخر. استخدم بريدًا آخر أو راجع الملفين في إدارة المؤسسين.",
+  inviteRevoked: "أُلغيت الدعوة أثناء الإرسال، فالرابط المرسل غير فعّال. أرسل دعوة جديدة إن لزم.",
+  waitBeforeResend: "أُرسلت دعوة لهذا الملف قبل أقل من دقيقة. انتظر دقيقة ثم أعد المحاولة.",
   scores: {
     aggregate_score: "الدرجة الإجمالية",
     momentum: "الزخم",
@@ -185,6 +188,9 @@ const en: AdminScorecardsCopy = {
   sendFailed: "The email could not be sent. Try again.",
   mailUnavailable: "Mail is not configured or did not accept the message. Check the mail settings and try again.",
   sendConflict: "Not sent: the account is already verified or the profile is not active. Refresh the list.",
+  recipientOwnsProfile: "Not sent: this address already owns another founder profile. Use a different address or review both profiles in founder admin.",
+  inviteRevoked: "The invitation was revoked while it was being sent, so the emailed link is inactive. Send a new invitation if needed.",
+  waitBeforeResend: "An invitation was sent for this profile less than a minute ago. Wait a minute and try again.",
   scores: {
     aggregate_score: "Aggregate",
     momentum: "Momentum",
@@ -304,11 +310,21 @@ export function fieldErrors<F extends string>(fields: readonly F[], errors: unkn
   return result
 }
 
-/** A failed email send, in the administrator's language instead of the API's English message. */
-export function sendErrorMessage(locale: Locale, status: number | null): string {
+/**
+ * A failed email send, in the administrator's language instead of the API's English message.
+ * The API returns 409 for several different conflicts, so its (fixed, server-side) message picks
+ * which explanation applies; see `FounderInvitationService::send` and `ScorecardController`.
+ */
+export function sendErrorMessage(locale: Locale, status: number | null, apiMessage?: string | null): string {
   const copy = adminScorecards(locale)
+  const message = apiMessage ?? ""
   if (status === 503) return copy.mailUnavailable
-  if (status === 409) return copy.sendConflict
+  if (status === 429) return copy.waitBeforeResend
+  if (status === 409) {
+    if (/already owns a founder profile/i.test(message)) return copy.recipientOwnsProfile
+    if (/revoked while mail was sending/i.test(message)) return copy.inviteRevoked
+    return copy.sendConflict
+  }
   return copy.sendFailed
 }
 
