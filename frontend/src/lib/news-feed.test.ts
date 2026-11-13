@@ -206,3 +206,19 @@ test('11 November Persona and AIREV stories keep source dates and link to verifi
   assert.deepEqual(newsFounders(airev).map(founder => founder.slug).sort(),
     ['muhammad-khalid-airev', 'kayaan-unwalla-airev', 'youssef-youssef-airev'].sort())
 })
+
+
+test('13 November source-linked stories retain publication dates and founder associations', () => {
+  for (const [slug, date] of [['mawsool-saudi-preseed-november-2026','2026-11-10'], ['multipolitan-two-million-preseed-november-2026','2026-11-10'], ['4401-holcim-investment-november-2026','2026-11-04']] as const) {
+    const item = curatedNews.find(row => row.slug === slug)!
+    assert.ok(item, slug)
+    assert.equal(item.publishedAt, date)
+    assert.equal(item.imageUrl, '')
+    assert.equal(item.keyFacts?.length, 3)
+    assert.equal(item.translations?.ar.keyFacts?.length, 3)
+    assert.ok(safeNewsUrl(item.sourceUrl))
+  }
+  assert.deepEqual(newsFounders(curatedNews.find(row => row.slug === 'mawsool-saudi-preseed-november-2026')!).map(x => x.slug).sort(), ['oday-ali-mawsool','osama-abdelhadi-mawsool'])
+  assert.deepEqual(newsFounders(curatedNews.find(row => row.slug === 'multipolitan-two-million-preseed-november-2026')!).map(x => x.slug).sort(), ['lee-smith-multipolitan','nirbhay-handa-multipolitan'])
+  assert.deepEqual(newsFounders(curatedNews.find(row => row.slug === '4401-holcim-investment-november-2026')!).map(x => x.slug).sort(), ['ehab-tasfai-4401','karan-khimji-4401','talal-hasan-4401'])
+})
