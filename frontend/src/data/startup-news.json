@@ -5711,5 +5711,50 @@
         ]
       }
     }
+  },
+  {
+    "id": "sourced-svc-jadwa-private-credit-november-2026",
+    "slug": "svc-jadwa-private-credit-november-2026",
+    "title": "Saudi Venture Capital invests in Jadwa's private-credit fund",
+    "excerpt": "The 11 November announcement did not disclose SVC's investment amount; Jadwa's fund reported more than SAR 400m committed across five investments.",
+    "content": "Saudi Venture Capital (SVC) announced on 11 November 2026 that it had invested in Jadwa Investment's flagship regional private-credit fund, which provides Shariah-compliant financing to companies in Saudi Arabia and the wider region. Jadwa said the fund had committed more than SAR 400 million across five investments, with a sixth expected in the final quarter of 2026. SVC chief executive Nora Alsarhan described private credit as an additional financing channel for growth-oriented Saudi SMEs. SVC's investment amount and share of the fund were not disclosed. The fund's overall commitments must not be confused with SVC's undisclosed contribution or with startup revenue.",
+    "category": "Funding",
+    "region": "saudi",
+    "imageUrl": "",
+    "imageCredit": "",
+    "sourceUrl": "https://www.zawya.com/en/press-release/companies-news/saudi-venture-capital-invests-in-jadwa-investments-flagship-private-credit-fund-2211633",
+    "sourceName": "SVC / Jadwa Investment (statement via Zawya)",
+    "companies": [
+      "Saudi Venture Capital",
+      "Jadwa Investment"
+    ],
+    "publishedAt": "2026-11-11",
+    "author": "Wosool news desk",
+    "tags": [
+      "Saudi Arabia",
+      "SVC",
+      "Jadwa Investment",
+      "Private credit",
+      "SME financing"
+    ],
+    "keyFacts": [
+      "SVC investment announced 11 November 2026; amount not disclosed",
+      "Jadwa fund's total commitments exceed SAR 400m across five investments",
+      "Private credit provides Shariah-compliant financing for Saudi and regional companies"
+    ],
+    "translations": {
+      "ar": {
+        "title": "«الاستثمار الجريء السعودي» يستثمر في صندوق الائتمان الخاص التابع لـ«جدوى»",
+        "excerpt": "أُعلن الاستثمار في 11 نوفمبر دون الإفصاح عن قيمته؛ أما التزامات الصندوق فتجاوزت 400 مليون ريال عبر خمسة استثمارات.",
+        "body": [
+          "أعلنت الشركة السعودية للاستثمار الجريء (SVC) في 11 نوفمبر 2026 استثمارها في صندوق الائتمان الخاص الإقليمي الذي تديره «جدوى للاستثمار»، والهادف إلى تمويل الشركات في المملكة والمنطقة بحلول متوافقة مع الشريعة. وقالت «جدوى» إن الصندوق التزم بأكثر من 400 مليون ريال ضمن خمسة استثمارات، مع توقع استثمار سادس في الربع الأخير من 2026. وأشارت الرئيسة التنفيذية لـSVC، نورا السرحان، إلى دور الائتمان الخاص في تنويع خيارات تمويل المنشآت الصغيرة والمتوسطة الساعية للنمو. ولم يُكشف عن مبلغ استثمار SVC أو حصتها؛ ولا تمثل التزامات الصندوق إجمالاً قيمة استثمار SVC أو إيرادات للشركات."
+        ],
+        "keyFacts": [
+          "إعلان الاستثمار في 11 نوفمبر 2026 دون الإفصاح عن قيمته",
+          "التزامات صندوق «جدوى» تجاوزت 400 مليون ريال عبر خمسة استثمارات",
+          "تمويل ائتماني خاص متوافق مع الشريعة للشركات السعودية والإقليمية"
+        ]
+      }
+    }
   }
 ]
