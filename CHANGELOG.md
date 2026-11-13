@@ -1,5 +1,11 @@
 # Changelog
 
+## Verified Saudi founder and dated private-credit brief — 2026-11-13
+
+- Add an externally sourced, unclaimed profile for Solidrange co-founder and CEO Jamal M. Labani, with bilingual role, founder/company summaries, the active official company website and an identity-matched professional profile. No account, membership, invitation, moderation state, logo or portrait was created or changed.
+- Add an original bilingual brief for SVC's 11 November 2026 investment in Jadwa Investment's private-credit fund. The copy keeps SVC's undisclosed contribution separate from the fund's reported SAR 400m-plus commitments and from company revenue. Solidrange's US$2.4m seed round and company-reported 50-plus enterprise customers are likewise labelled as funding and customer activity, not earned revenue.
+- Register both mirrored catalog updates and retain all editor-owned records. `content:check` reports **391 founders / 212 companies / 136 stories**, zero integrity problems and **32 founder reviews due**; the 12 content-review tests and required PR CI passed. Repository publication does not prove a production database import or live Hostinger release.
+
 ## Admin scorecards page: both languages, overrides that apply what was typed — 2026-11-13
 
 - **Problem:** `/admin/scorecards` was fixed English, so an Arabic administrator got English headings, buttons and notices in an RTL workspace. The override inputs had placeholders as their only labels and no validation: a score such as `7a` became `NaN`, which JSON sends as `null`, and the API ignores a `null` score while still saving the override note in the audit log, so an override looked applied when nothing changed. `0` for a 1–100 score and an empty reason were only rejected by the API, whose English message was shown raw, as were mail-transport errors when sending a verification email or activation invitation. Override had no busy state and could be sent twice; the list had no loading, error or empty state; readiness and support gap were not shown at all; the fallback name used the scorecard id in the panel but the founder id in the list; "Next" assumed 20 per page; and the list button used physical `text-left`.
