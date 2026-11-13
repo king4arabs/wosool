@@ -2309,5 +2309,25 @@
     "src": "/company-logos/ziina.png",
     "tone": "light",
     "status": "existing-local-asset"
+  },
+  {
+    "company_key": "multipolitan",
+    "company": "Multipolitan",
+    "website": "https://www.multipolitan.com/",
+    "src": null,
+    "tone": null,
+    "reviewed_at": "2026-11-13",
+    "status": "unresolved",
+    "reason": "No licensed original downloadable logo verified; keep the company-name fallback."
+  },
+  {
+    "company_key": "44-01-carbon-mineralisation",
+    "company": "44.01",
+    "website": "https://www.4401.earth/",
+    "src": null,
+    "tone": null,
+    "reviewed_at": "2026-11-13",
+    "status": "unresolved",
+    "reason": "No licensed original downloadable logo verified; keep the company-name fallback."
   }
 ]

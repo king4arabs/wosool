@@ -5,8 +5,9 @@ import discoveryProfiles from "../data/founder-spotlight-expansion-2026-10-22.js
 import countryProfiles from "../data/founder-spotlight-expansion-2026-10-29.json"
 import novemberProfiles from "../data/founder-spotlight-expansion-2026-11-10.json"
 import november12Profiles from "../data/founder-spotlight-expansion-2026-11-12.json"
+import november13Profiles from "../data/founder-spotlight-expansion-2026-11-13.json"
 
-const profiles = [...baseProfiles, ...additionalProfiles, ...discoveryProfiles, ...countryProfiles, ...novemberProfiles, ...november12Profiles]
+const profiles = [...baseProfiles, ...additionalProfiles, ...discoveryProfiles, ...countryProfiles, ...novemberProfiles, ...november12Profiles, ...november13Profiles]
 import curated from "../data/startup-news.json"
 import { dateLocale } from "./date-locale"
 
