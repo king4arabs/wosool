@@ -12,6 +12,16 @@
     "status": "local-asset"
   },
   {
+    "company_key": "44-01-carbon-mineralisation",
+    "company": "44.01",
+    "website": "https://www.4401.earth/",
+    "src": null,
+    "tone": null,
+    "reviewed_at": "2026-11-13",
+    "status": "unresolved",
+    "reason": "No licensed original downloadable logo verified; keep the company-name fallback."
+  },
+  {
     "company_key": "abwaab",
     "website": "https://abwaab.com/",
     "src": "/company-logos/abwaab.jpg",
@@ -1251,6 +1261,16 @@
     "status": "existing-local-asset"
   },
   {
+    "company_key": "multipolitan",
+    "company": "Multipolitan",
+    "website": "https://www.multipolitan.com/",
+    "src": null,
+    "tone": null,
+    "reviewed_at": "2026-11-13",
+    "status": "unresolved",
+    "reason": "No licensed original downloadable logo verified; keep the company-name fallback."
+  },
+  {
     "company_key": "n26",
     "company": "N26",
     "website": "https://n26.com/",
@@ -1730,6 +1750,17 @@
     "status": "existing-local-asset"
   },
   {
+    "company_key": "safqah-capital",
+    "company": "Safqah Capital",
+    "website": "https://safqah.co/",
+    "src": null,
+    "tone": null,
+    "reviewed_at": "2026-11-14",
+    "source_page": "https://safqah.co/mediakit",
+    "status": "unresolved",
+    "reason": "Official downloadable logo and usage guidance located in Safqah media kit; no verified local logo was acquired in this change. Preserve name fallback and do not recolor."
+  },
+  {
     "company_key": "salasa",
     "company": "Salasa",
     "website": "https://salasa.co/",
@@ -1849,6 +1880,17 @@
     "asset_kind": "existing-reviewed-asset"
   },
   {
+    "company_key": "signit",
+    "company": "Signit",
+    "website": "https://signit.sa/",
+    "src": null,
+    "tone": null,
+    "reviewed_at": "2026-11-14",
+    "source_page": "https://signit.sa/",
+    "status": "unresolved",
+    "reason": "No validated original local artwork was obtained. Preserve company-name fallback; do not fabricate."
+  },
+  {
     "company_key": "sirdab",
     "company": "Sirdab",
     "website": "https://sirdab.co/en/",
@@ -1903,6 +1945,16 @@
     "src": "/company-logos/snoonu.svg",
     "tone": "light",
     "status": "existing-local-asset"
+  },
+  {
+    "company_key": "solidrange",
+    "company": "Solidrange",
+    "website": "https://www.solidrange.com/",
+    "src": null,
+    "tone": null,
+    "reviewed_at": "2026-11-13",
+    "status": "unresolved",
+    "reason": "No verified reusable original company logo asset; keep the company-name fallback."
   },
   {
     "company_key": "solink",
@@ -2309,35 +2361,5 @@
     "src": "/company-logos/ziina.png",
     "tone": "light",
     "status": "existing-local-asset"
-  },
-  {
-    "company_key": "multipolitan",
-    "company": "Multipolitan",
-    "website": "https://www.multipolitan.com/",
-    "src": null,
-    "tone": null,
-    "reviewed_at": "2026-11-13",
-    "status": "unresolved",
-    "reason": "No licensed original downloadable logo verified; keep the company-name fallback."
-  },
-  {
-    "company_key": "44-01-carbon-mineralisation",
-    "company": "44.01",
-    "website": "https://www.4401.earth/",
-    "src": null,
-    "tone": null,
-    "reviewed_at": "2026-11-13",
-    "status": "unresolved",
-    "reason": "No licensed original downloadable logo verified; keep the company-name fallback."
-  },
-  {
-    "company_key": "solidrange",
-    "company": "Solidrange",
-    "website": "https://www.solidrange.com/",
-    "src": null,
-    "tone": null,
-    "reviewed_at": "2026-11-13",
-    "status": "unresolved",
-    "reason": "No verified reusable original company logo asset; keep the company-name fallback."
   }
 ]
