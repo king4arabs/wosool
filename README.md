@@ -11,7 +11,7 @@
   <a href="https://github.com/king4arabs/wosool/actions/workflows/ci.yml">CI</a>
 </p>
 
-**Documentation version: 0.6.4 · Updated: 13 November 2026.**
+**Documentation version: 0.6.5 · Updated: 14 November 2026.**
 
 Wosool is an Arabic/English founders platform connecting Saudi Arabia, the GCC, MENA and the world. It brings founder and company profiles, events, news, introductions and community services together, with a dedicated EO Riyadh Accelerator experience.
 
@@ -20,6 +20,8 @@ Community membership, Accelerator admission and administrator access are separat
 **Administration:** `/admin/services` provides bilingual search, work-area filters and daily shortcuts across management tools. The mobile menu shares the desktop service directory; CRM/PR queues preserve filters and record links in the URL, and Accelerator sections support direct links. EOA administration groups services by task and preserves API capability checks. See [administration](docs/ADMIN-OPERATIONS.md) for navigation and CRM workflows. Public partner cards include local logo artwork and service search.
 
 **Admin scorecards (13 November 2026):** `/admin/scorecards` now follows Arabic/English direction, validates integer score overrides before sending, requires an audit reason, shows all five current measures and explains invitation/verification failures without exposing raw API text. Only entered scores are submitted; verified accounts remain visible, inactive or pending profiles cannot trigger email, and a founder cannot be switched while a request is in flight. Source merge and CI do not establish deployment or a production data change.
+
+**Backend security update (14 November 2026):** the locked Laravel framework is updated from 13.35.0 to 13.42.0, beyond the 13.40.0 patched boundary for GHSA-63hm-g96r-2m2q. Required PR CI run 683 and post-merge run 684 passed the complete matrix, restoring the Composer-audit gate without changing application code, frontend dependencies or the accepted Hostinger packaging baseline. Source merge and CI do not establish that the production Laravel service has received the patch; backend deployment and serving-revision verification remain separate release steps.
 
 **EOA program update:** the two-year curriculum, annual US$4,000 package with US$2,000 sponsor contribution, learning calendar, dedicated board and protected readiness controls are described in [the release notes](docs/EOA-GLOBAL-ALIGNMENT-2026-11-10.md).
 
