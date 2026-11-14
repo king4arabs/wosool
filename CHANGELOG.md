@@ -1,5 +1,11 @@
 # Changelog
 
+## Laravel 13.42 security update unblocks CI — 2026-11-14
+
+- **Problem:** every backend CI job on `main` (PHP 8.3.36, 8.4.27 and 8.5.12) has failed at `composer audit` since advisory GHSA-63hm-g96r-2m2q (CVE-2026-128083, "Task Output Injection – Concurrency Process", low severity) was published on 13 November 2026 against `laravel/framework` `>=13.0.0,<13.40.0`. The lock file pinned v13.35.0, so the Laravel tests, cache-compile check and backend build were skipped for the merge of #238, and every new pull request would fail the same step.
+- **Fix:** update the locked `laravel/framework` from v13.35.0 to v13.42.0 (the newest 13.x release, tagged 10 November 2026). `composer.json` is unchanged (`^13.0`), so the content hash is the same. The framework's new runtime requirements (`laravel/prompts ^0.3.25`, `league/uri ^7.6`) are already satisfied by the locked v0.3.25 and 7.8.1, so no other package changes. No application code, deployment configuration, Hostinger runtime packaging or frontend dependency changes.
+- **Checks:** PHP 8.5.12 from conda-forge (no GD). On `main` before the change: `npm run verify` passes production-ops, hosting and content checks (396 founders / 214 companies / 138 stories, 0 integrity problems, 32 founder reviews due), lint, type-check and 386 frontend tests; Laravel 359 pass and the same 14 GD-only image tests fail as in previous runs (CI has GD); entrepreneur validation and the production build pass. After the change: `composer validate --strict`, `composer install` from the lock (Laravel Framework 13.42.0), Laravel 359 pass with the same 14 GD-only failures, and `config:cache`, `route:cache` and `view:cache` compile with `APP_ENV=production`. This sandbox cannot reach Packagist, so `composer audit` itself runs only in CI. Production health monitoring (run 341) is green; this sandbox cannot reach wosool.org.
+
 ## Verified Saudi founder and dated private-credit brief — 2026-11-13
 
 - Add an externally sourced, unclaimed profile for Solidrange co-founder and CEO Jamal M. Labani, with bilingual role, founder/company summaries, the active official company website and an identity-matched professional profile. No account, membership, invitation, moderation state, logo or portrait was created or changed.
