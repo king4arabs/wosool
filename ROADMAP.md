@@ -1,6 +1,10 @@
 # Roadmap
 
-## Current execution plan — 13 November 2026
+## Current execution plan — 14 November 2026
+
+Source update: **396 editorial founder records, 214 company groups and 138 bilingual news briefs** in eight mirrored founder catalogs and the news catalog; five new Saudi founder scorecards, three sourced Ejari corrections and two dated Saudi briefs. Existing imported production data is not inferred from these totals. The 197 original local company logos remain unchanged; two new brands keep name fallbacks. See [14 November source review](docs/research/CONTENT-REFRESH-2026-11-14.md). Release requires successful CI, separate safe backend imports, verified Hostinger revisions and live API checks.
+
+## Historical execution snapshot — 13 November 2026
 
 Release checkpoint: current source contains **391 editorial founder profiles across 212 company groups and 136 news briefs**, with zero integrity problems and 32 founder reviews due. Seven mirrored founder catalog pairs and the mirrored news pair are registered in the integrity checks. Reviewed local artwork covers **197 companies and 364 founder cards**; 15 companies retain accessible name or website-icon fallbacks because verified reusable artwork was unavailable or blocked. Required main CI runs 677 and 678 passed the admin-scorecard and content merges. Source provides sanitized, independently configurable frontend/backend revision fields and optional expected-revision enforcement in the production monitor. Live checks on 13 November returned 200 for frontend health, API health, readiness and `/eoa`, but the frontend revision remains `null` and `/api/openapi.json` returns 404. The public API still reports only 29 founders, 22 companies and 34 news records, so the reviewed repository totals are not a production-import claim. This does not identify the serving Hostinger SHAs or prove authenticated journeys. Next: re-review the 32 due profiles without advancing dates prematurely, expose and pin compatible serving revisions, restore the live OpenAPI route, then use the existing deployment and optional additive-import processes. [Release identity](docs/RELEASE-REVISION-2026-11-10.md) · [latest content evidence](docs/research/CONTENT-REFRESH-2026-11-13.md) · [logo audit](docs/research/COMPANY-LOGOS-2026-11-12.md).
 
