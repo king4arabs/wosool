@@ -1,6 +1,6 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import { createNewsVisitStore, newsVisitOrder } from './news-discovery'
+import { createNewsVisitStore, newsVisitOrder, newsVisitPageOrder } from './news-discovery'
 
 const stories = Array.from({ length: 36 }, (_, i) => ({ slug: `story-${i}`, sourceUrl: `https://publisher.example/story-${i}` }))
 
@@ -21,6 +21,13 @@ test('search subsets, API corrections and additional pages retain the visit orde
   const changedSlug = stories.map(item => ({ ...item, slug: `new-${item.slug}` }))
   assert.deepEqual(newsVisitOrder(changedSlug, 78).map(item => item.sourceUrl), ordered.map(item => item.sourceUrl))
   assert.deepEqual(newsVisitOrder(stories, 0), stories)
+})
+
+test('page ordering keeps cards stable as later API pages arrive', () => {
+  const firstPage = newsVisitPageOrder(stories.slice(0, 12), 78, 12)
+  const loaded = newsVisitPageOrder(stories.slice(0, 24), 78, 12)
+  assert.deepEqual(loaded.slice(0, 12), firstPage)
+  assert.deepEqual(loaded.slice(12), newsVisitOrder(stories.slice(12, 24), 78))
 })
 
 test('a news visit starts randomness after hydration and does not change on resubscription', () => {

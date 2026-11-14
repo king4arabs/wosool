@@ -10,7 +10,7 @@ import { PageHero } from "@/components/sections/PageHero"
 import { usePublicCollection } from "@/lib/use-public-collection"
 import { mapNewsItem, type ApiNewsItem } from "@/lib/content-api"
 import { mergeNews, curatedNews } from "@/lib/news-feed"
-import { createNewsVisitStore, newsVisitOrder } from "@/lib/news-discovery"
+import { createNewsVisitStore, newsVisitPageOrder } from "@/lib/news-discovery"
 import { getLocalizedNewsContent } from "@/lib/news-content"
 import { useLocale } from "@/lib/locale"
 
@@ -52,7 +52,7 @@ function Newsroom({ params }: { params: SearchParamsLike }) {
       return [localized.title, localized.excerpt, item.title, item.excerpt, item.translations?.ar.title, item.translations?.ar.excerpt, item.sourceName, ...(item.companies ?? []), ...(item.tags ?? [])]
         .join(" ").toLocaleLowerCase().includes(needle)
     })
-    return newsVisitOrder(rows, visitSeed)
+    return newsVisitPageOrder(rows, visitSeed, PAGE_SIZE)
   }, [items, query, locale, visitSeed])
 
   const showLead = !query && filtered.length > 0
