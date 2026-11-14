@@ -1,5 +1,93 @@
 [
   {
+    "id": "sourced-ejari-pfg-warehouse-november-2026",
+    "slug": "ejari-pfg-warehouse-50m-november-2026",
+    "title": "Saudi Ejari expands Shariah-compliant rental warehouse facility to US$50m",
+    "excerpt": "The expanded PFG Murabaha facility supports rent transactions; it is not a US$50m equity round.",
+    "content": "On 10 November 2026, Startup Scene reported that Saudi proptech Ejari had increased its Shariah-compliant Murabaha warehouse financing arrangement with Partners for Growth to a total capacity of up to US$50 million (SAR 187.5 million). The facility finances rental transactions through Ejari's Rent Now, Pay Later offering, enabling landlords to receive annual rent upfront while tenants pay monthly. Ejari says it operates in more than 40 Saudi cities and is preparing a commercial-leasing product. The facility expands an existing 2024 credit relationship: its ceiling is not equity raised, revenue earned or proof that the full amount has been drawn.",
+    "category": "Funding",
+    "region": "saudi",
+    "imageUrl": "",
+    "imageCredit": "",
+    "sourceUrl": "https://thestartupscene.me/INVESTMENTS/Saudi-Proptech-Ejari-Expands-Rental-Financing-Facility-to-50-Million",
+    "sourceName": "Startup Scene (Ejari announcement)",
+    "companies": [
+      "Ejari",
+      "إيجاري"
+    ],
+    "publishedAt": "2026-11-10",
+    "author": "Wosool news desk",
+    "tags": [
+      "Saudi Arabia",
+      "Ejari",
+      "Proptech",
+      "Rental financing"
+    ],
+    "keyFacts": [
+      "Total capacity up to US$50m in Murabaha credit",
+      "Extends PFG financing relationship begun in 2024",
+      "Company reports activity in over 40 Saudi cities; not equity financing"
+    ],
+    "translations": {
+      "ar": {
+        "title": "«إيجاري» توسع تسهيل تمويل الإيجارات إلى 50 مليون دولار",
+        "excerpt": "التسهيل بصيغة المرابحة يدعم معاملات الإيجار، ولا يمثل جولة استثمارية بأسهم الشركة.",
+        "body": [
+          "ذكر تقرير نُشر في 10 نوفمبر 2026 أن «إيجاري» السعودية رفعت السقف الإجمالي لتسهيل تمويل الإيجارات بصيغة المرابحة المتوافقة مع الشريعة، بالتعاون مع «بارتنرز فور غروث»، إلى 50 مليون دولار (187.5 مليون ريال). ويُخصص التسهيل لتمويل معاملات خدمة «استأجر الآن وادفع لاحقًا»، حيث يحصل مالك العقار على الإيجار السنوي مقدمًا ويسدده المستأجر شهريًا. وتقول الشركة إنها تعمل في أكثر من 40 مدينة سعودية وتستعد لتقديم خدمات التأجير التجاري. ويُعد التوسع امتدادًا لعلاقة تمويل ائتماني بدأت عام 2024، ولا يمثل جولة أسهم أو إيرادات محققة أو دليلًا على سحب كامل سقف التسهيل."
+        ],
+        "keyFacts": [
+          "سقف ائتماني يصل إلى 50 مليون دولار بصيغة المرابحة",
+          "توسع لعلاقة تمويل بدأت عام 2024",
+          "أكثر من 40 مدينة وفق الشركة؛ ليس تمويل أسهم"
+        ]
+      }
+    }
+  },
+  {
+    "id": "sourced-cognna-waed-ventures-november-2026",
+    "slug": "cognna-waed-ventures-november-2026",
+    "title": "Saudi cybersecurity company COGNNA secures Wa'ed Ventures backing",
+    "excerpt": "A 9 November investment report does not specify the deal value, ownership stake or valuation.",
+    "content": "Startup Scene reported on 9 November 2026 that Wa'ed Ventures invested in Saudi cybersecurity company COGNNA to support expansion and development of its Nexus AI-led security operations platform. Founded in 2022, COGNNA pairs automated threat triage with specialist-led investigation and response. The company says Nexus connects to more than 300 security tools; this measures claimed product integrations, not independently verified customer adoption. The report did not disclose the investment amount, ownership percentage or valuation. It is distinct from COGNNA's separately announced US$9.2 million Series A in December 2025.",
+    "category": "Funding",
+    "region": "saudi",
+    "imageUrl": "",
+    "imageCredit": "",
+    "sourceUrl": "https://thestartupscene.me/INVESTMENTS/COGNNA-Secures-Investment-From-Wa-ed-Ventures",
+    "sourceName": "Startup Scene",
+    "companies": [
+      "COGNNA",
+      "كوجنا"
+    ],
+    "publishedAt": "2026-11-09",
+    "author": "Wosool news desk",
+    "tags": [
+      "Saudi Arabia",
+      "COGNNA",
+      "Wa'ed Ventures",
+      "Cybersecurity"
+    ],
+    "keyFacts": [
+      "Wa'ed Ventures investment reported 9 November 2026",
+      "Deal size, valuation and stake not disclosed",
+      "More than 300 claimed Nexus tool integrations, not customer count"
+    ],
+    "translations": {
+      "ar": {
+        "title": "«كوجنا» السعودية تحصل على استثمار من «واعد فنتشرز»",
+        "excerpt": "الصفقة المعلنة في 9 نوفمبر لم يُكشف عن قيمتها أو نسبة الملكية.",
+        "body": [
+          "أفاد تقرير منشور في 9 نوفمبر 2026 باستثمار «واعد فنتشرز» في شركة الأمن السيبراني السعودية «كوجنا»، لدعم توسعها وتطوير منصة «نيكسس» لعمليات الأمن المعززة بالذكاء الاصطناعي. تأسست الشركة عام 2022 وتجمع بين فرز التنبيهات آليًا والتحقيق والاستجابة بإشراف مختصي الأمن السيبراني. وتقول إن «نيكسس» تتكامل مع أكثر من 300 أداة أمنية؛ وهو عدد تكاملات تقنية بحسب الشركة، وليس عدد عملاء تم التحقق منه استقلاليًا. ولم يعلن التقرير مبلغ الاستثمار أو الحصة أو التقييم. وتختلف الصفقة عن جولة الفئة A السابقة بقيمة 9.2 مليون دولار التي أعلنتها «كوجنا» في ديسمبر 2025."
+        ],
+        "keyFacts": [
+          "استثمار من «واعد فنتشرز» وفق تقرير 9 نوفمبر 2026",
+          "القيمة والحصة والتقييم غير معلنة",
+          "أكثر من 300 تكامل تقني وفق الشركة، وليس عدد العملاء"
+        ]
+      }
+    }
+  },
+  {
     "id": "sourced-mawsool-saudi-preseed-november-2026",
     "slug": "mawsool-saudi-preseed-november-2026",
     "title": "Saudi Mawsool closes undisclosed pre-seed financing",
