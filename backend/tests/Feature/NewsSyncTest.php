@@ -484,6 +484,28 @@ class NewsSyncTest extends TestCase
         }
     }
 
+    public function test_public_news_search_covers_all_terms_arabic_copy_and_exact_associations(): void
+    {
+        $news = $this->manualNews();
+        $news->update([
+            'title' => 'Saudi fintech closes a round',
+            'excerpt' => 'Alpha Capital led the investment.',
+            'companies' => ['Acme Holdings'],
+            'tags' => ['venture-debt'],
+            'translations' => ['ar' => ['title' => 'تمويل سعودي جديد', 'excerpt' => 'قاد المستثمر الجولة']],
+        ]);
+
+        $this->getJson('/api/v1/news?search='.rawurlencode('Saudi Alpha'))
+            ->assertOk()->assertJsonCount(1, 'data')->assertJsonPath('data.0.id', $news->id);
+        foreach (['تمويل سعودي', 'Acme Holdings', 'venture-debt'] as $search) {
+            $this->getJson('/api/v1/news?search='.rawurlencode($search))
+                ->assertOk()->assertJsonCount(1, 'data')->assertJsonPath('data.0.id', $news->id);
+        }
+        $this->getJson('/api/v1/news?search=%25_%25')->assertOk()->assertJsonCount(0, 'data');
+        $this->getJson('/api/v1/news?search='.str_repeat('a', 121))
+            ->assertUnprocessable()->assertJsonValidationErrors(['search']);
+    }
+
     public function test_sync_is_scheduled_daily_without_overlapping(): void
     {
         $event = collect(app(Schedule::class)->events())

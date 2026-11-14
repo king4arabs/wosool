@@ -33,3 +33,13 @@ export function newsVisitOrder<T extends { slug: string; sourceUrl?: string }>(i
   }
   return [...items].sort((a, b) => rank(identity(a)) - rank(identity(b)) || identity(a).localeCompare(identity(b)))
 }
+
+/** Shuffle each API page independently so loading the next page never moves cards already shown. */
+export function newsVisitPageOrder<T extends { slug: string; sourceUrl?: string }>(items: readonly T[], seed: number, pageSize: number): T[] {
+  if (!Number.isInteger(pageSize) || pageSize < 1) return newsVisitOrder(items, seed)
+  const ordered: T[] = []
+  for (let start = 0; start < items.length; start += pageSize) {
+    ordered.push(...newsVisitOrder(items.slice(start, start + pageSize), seed))
+  }
+  return ordered
+}

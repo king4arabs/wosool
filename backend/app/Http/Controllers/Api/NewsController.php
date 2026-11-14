@@ -21,6 +21,7 @@ class NewsController extends Controller
         $request->validate([
             'company' => ['nullable', 'string', 'max:255'],
             'companies' => ['nullable', 'string', 'max:2559'],
+            'search' => ['nullable', 'string', 'max:120'],
         ]);
         $aliases = array_values(array_filter(array_map('trim', [
             ...explode(',', (string) $request->input('companies', '')),
@@ -50,11 +51,26 @@ class NewsController extends Controller
         }
         if ($request->filled('search')) {
             $search = trim((string) $request->input('search'));
-            $query->where(function ($builder) use ($search) {
-                $builder
-                    ->where('title', 'like', "%{$search}%")
-                    ->orWhere('excerpt', 'like', "%{$search}%")
-                    ->orWhere('source_name', 'like', "%{$search}%");
+            $terms = array_values(array_filter(preg_split('/\s+/u', str_replace(['%', '_'], ' ', $search)) ?: []));
+            $query->where(function ($builder) use ($search, $terms) {
+                if ($terms === []) {
+                    $builder->whereRaw('1 = 0');
+                } else {
+                    $builder->where(function ($text) use ($terms) {
+                        foreach ($terms as $term) {
+                            $text->where(function ($part) use ($term) {
+                                $like = "%{$term}%";
+                                $part->where('title', 'like', $like)
+                                    ->orWhere('excerpt', 'like', $like)
+                                    ->orWhere('source_name', 'like', $like)
+                                    ->orWhere('translations->ar->title', 'like', $like)
+                                    ->orWhere('translations->ar->excerpt', 'like', $like);
+                            });
+                        }
+                    });
+                }
+                $builder->orWhereJsonContains('companies', $search)
+                    ->orWhereJsonContains('tags', $search);
             });
         }
 

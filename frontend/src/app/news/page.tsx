@@ -1,6 +1,6 @@
 "use client"
 
-import { Suspense, useCallback, useMemo, useState, useSyncExternalStore } from "react"
+import { Suspense, useCallback, useDeferredValue, useMemo, useState, useSyncExternalStore } from "react"
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
 import { Search } from "lucide-react"
 import { PublicLayout } from "@/components/layout/PublicLayout"
@@ -10,7 +10,7 @@ import { PageHero } from "@/components/sections/PageHero"
 import { usePublicCollection } from "@/lib/use-public-collection"
 import { mapNewsItem, type ApiNewsItem } from "@/lib/content-api"
 import { mergeNews, curatedNews } from "@/lib/news-feed"
-import { createNewsVisitStore, newsVisitOrder } from "@/lib/news-discovery"
+import { createNewsVisitStore, newsVisitPageOrder } from "@/lib/news-discovery"
 import { getLocalizedNewsContent } from "@/lib/news-content"
 import { useLocale } from "@/lib/locale"
 
@@ -24,23 +24,21 @@ function Newsroom({ params }: { params: SearchParamsLike }) {
   const ar = locale === "ar"
   const router = useRouter()
   const pathname = usePathname()
-  const collection = usePublicCollection<ApiNewsItem>("/news")
+  const query = params.get("q") ?? ""
+  const serverQuery = useDeferredValue(query.trim())
+  const collection = usePublicCollection<ApiNewsItem>("/news", PAGE_SIZE, { search: serverQuery || undefined })
 
   const [visitStore] = useState(createNewsVisitStore)
   const visitSeed = useSyncExternalStore(visitStore.subscribe, visitStore.getSnapshot, visitStore.getServerSnapshot)
 
-  const query = params.get("q") ?? ""
-  const visible = Math.max(PAGE_SIZE, Number(params.get("show")) || PAGE_SIZE)
-
   const setParams = useCallback((changes: Record<string, string | null>) => {
     const next = new URLSearchParams(params.toString())
     // Old bookmarks must not silently hide regions or topics after the controls are removed.
-    for (const key of ["region", "topic", "sort"]) next.delete(key)
+    for (const key of ["region", "topic", "sort", "show"]) next.delete(key)
     for (const [key, value] of Object.entries(changes)) {
       if (value) next.set(key, value)
       else next.delete(key)
     }
-    if (!("show" in changes)) next.delete("show")
     const search = next.toString()
     router.replace(search ? `${pathname}?${search}` : pathname, { scroll: false })
   }, [params, pathname, router])
@@ -54,13 +52,12 @@ function Newsroom({ params }: { params: SearchParamsLike }) {
       return [localized.title, localized.excerpt, item.title, item.excerpt, item.translations?.ar.title, item.translations?.ar.excerpt, item.sourceName, ...(item.companies ?? []), ...(item.tags ?? [])]
         .join(" ").toLocaleLowerCase().includes(needle)
     })
-    return newsVisitOrder(rows, visitSeed)
+    return newsVisitPageOrder(rows, visitSeed, PAGE_SIZE)
   }, [items, query, locale, visitSeed])
 
   const showLead = !query && filtered.length > 0
   const lead = showLead ? filtered[0] : undefined
   const rest = showLead ? filtered.slice(1) : filtered
-  const shown = rest.slice(0, visible)
 
   return <div dir={direction} lang={locale} className="min-h-screen bg-[var(--page-bg)]">
     <PageHero
@@ -86,8 +83,7 @@ function Newsroom({ params }: { params: SearchParamsLike }) {
       {collection.error && <div role="status" className="mb-6 rounded-xl border border-[var(--border-soft)] bg-[var(--surface)] p-4 text-sm text-[var(--text-muted)]"><p>{collection.snapshotAllowed ? ar ? "تعذر تحديث الأخبار الآن. يمكنك متابعة قراءة الأخبار المتاحة." : "News could not be refreshed. You can still read the available stories." : ar ? "تعذر تحميل الأخبار. يرجى إعادة المحاولة." : "News could not be loaded. Please try again."}</p><button onClick={collection.retry} className="mt-2 min-h-11 font-bold text-[var(--link)]">{ar ? "إعادة المحاولة" : "Try again"}</button></div>}
 
       {lead && <div className="mb-8"><NewsCard item={lead} variant="lead" /></div>}
-      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">{shown.map(item => <NewsCard key={item.sourceUrl || item.slug} item={item} />)}</div>
-      {rest.length > shown.length && <div className="mt-8 text-center"><button type="button" onClick={() => setParams({ show: String(visible + PAGE_SIZE) })} className="min-h-12 rounded-xl border border-[var(--border)] bg-[var(--surface)] px-6 font-bold text-[var(--text)] hover:border-[var(--action-bg)]">{ar ? "عرض المزيد" : "Show more"}</button></div>}
+      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">{rest.map(item => <NewsCard key={item.sourceUrl || item.slug} item={item} />)}</div>
       {!collection.loading && !collection.error && !filtered.length && <div className="rounded-2xl border border-[var(--border-soft)] bg-[var(--surface)] p-10 text-center"><p>{ar ? "لا توجد أخبار مطابقة. جرّب بحثاً آخر." : "No matching stories. Try a different search."}</p><button onClick={() => router.replace(pathname, { scroll: false })} className="mt-4 min-h-11 font-bold text-[var(--link)]">{ar ? "مسح البحث" : "Clear search"}</button></div>}
       {!collection.error && <CollectionStatus {...collection} empty={false} />}
     </section>

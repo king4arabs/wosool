@@ -23,6 +23,8 @@ test("Arabic rows use Arabic copy; English rows keep the OpenAPI wording; parame
   assert.equal(news(ar).summary, "قراءة الأخبار المنشورة")
   assert.equal(news(en).summary, "Read published news")
   assert.match(news(en).description ?? "", /per_page is clamped to 1–50/)
+  assert.match(news(en).description ?? "", /every matching database page/)
+  assert.match(news(ar).description ?? "", /جميع صفحات قاعدة البيانات/)
   assert.deepEqual(news(ar).parameters, news(en).parameters)
   assert.ok(news(en).parameters.includes("per_page"))
   assert.deepEqual(ar.find(row => row.path === "/api/health")!.parameters, [])
