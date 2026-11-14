@@ -1,7 +1,7 @@
 import test from "node:test"
 import assert from "node:assert/strict"
 import { ApiError } from "./api"
-import { beginCollection, failCollection, initialCollection, receiveCollection } from "./public-collection-state"
+import { beginCollection, collectionParamsKey, failCollection, initialCollection, receiveCollection } from "./public-collection-state"
 
 const initial = () => initialCollection<{ id: number; name?: string }>("/founders\u0000ar")
 const pageOne = () => receiveCollection(initial(), { data: [{ id: 1, name: "Public" }], meta: { last_page: 2, total: 2 } }, 1)
@@ -63,4 +63,9 @@ test("a new resource starts isolated; page-one retries reset stale counts", () =
   const other = initialCollection("/news\u0000en")
   assert.deepEqual(other.items, [])
   assert.equal(other.snapshotBlocked, false)
+})
+
+test("collection filters have a stable request identity and omit empty values", () => {
+  assert.equal(collectionParamsKey({ search: "تمويل سعودي", featured: false, region: undefined, company: "" }), "featured=false&search=%D8%AA%D9%85%D9%88%D9%8A%D9%84+%D8%B3%D8%B9%D9%88%D8%AF%D9%8A")
+  assert.equal(collectionParamsKey({ search: "Tabby", page_hint: 2 }), collectionParamsKey({ page_hint: 2, search: "Tabby" }))
 })

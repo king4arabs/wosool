@@ -2,9 +2,19 @@ import { ApiError } from "./api"
 
 export type CollectionMeta = { current_page?: number; last_page?: number; total?: number; sectors?: { en: string; ar: string }[]; stages?: string[] }
 export type Collection<T> = { data: T[]; meta?: CollectionMeta; links?: { next?: string | null } }
+export type CollectionParams = Record<string, string | number | boolean | null | undefined>
 export type CollectionState<T> = {
   key: string; items: T[]; meta: CollectionMeta; loading: boolean; error: string | null
   nextPage: number | null; failedPage: number; snapshotAllowed: boolean; snapshotBlocked: boolean
+}
+
+/** Stable request identity for filters supplied by a public collection page. */
+export function collectionParamsKey(params: CollectionParams = {}): string {
+  return new URLSearchParams(Object.entries(params)
+    .filter((entry): entry is [string, string | number | boolean] => entry[1] !== undefined && entry[1] !== null && entry[1] !== "")
+    .sort(([left], [right]) => left.localeCompare(right))
+    .map(([name, value]) => [name, String(value)]))
+    .toString()
 }
 
 export function initialCollection<T>(key: string): CollectionState<T> {
