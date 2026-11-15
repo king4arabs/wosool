@@ -17,7 +17,11 @@ class RegistrationController extends Controller
     public function show(Request $request)
     {
         $application = Application::where('user_id', $request->user()->id)->latest('id')->first();
-        return response()->json(['step' => MembershipRegistration::state($request->user()), 'verification' => ['email_verified' => $request->user()->hasVerifiedEmail(), 'admin_verified' => (bool) $request->user()->founderProfile?->is_verified], 'application' => $application ? $application->only(['id', 'full_name', 'phone', 'company_name', 'company_website', 'sector', 'stage', 'location', 'motivation', 'what_you_offer', 'what_you_need', 'linkedin_url', 'status', 'onboarding_data']) : null])->header('Cache-Control', 'no-store');
+        $user = $request->user(); $profile = $user->founderProfile;
+        $step = MembershipRegistration::state($user);
+        // Existing members can prove a changed address without submitting a second application.
+        if ($step === null && $user->hasRole('member') && (! $profile || $profile->status === 'active')) $step = 'active';
+        return response()->json(['step' => $step, 'verification' => ['email_verified' => $user->hasVerifiedEmail(), 'admin_verified' => (bool) $profile?->is_verified], 'application' => $application ? $application->only(['id', 'full_name', 'phone', 'company_name', 'company_website', 'sector', 'stage', 'location', 'motivation', 'what_you_offer', 'what_you_need', 'linkedin_url', 'status', 'onboarding_data']) : null])->header('Cache-Control', 'no-store');
     }
 
     public function submit(Request $request)

@@ -10,10 +10,18 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Str;
 use Tests\TestCase;
+use Spatie\Permission\Models\Role;
 
 class ChatReliabilityTest extends TestCase
 {
     use RefreshDatabase;
+
+    private function member(): User
+    {
+        $user = User::factory()->create();
+        $user->assignRole(Role::findOrCreate('member', 'web'));
+        return $user;
+    }
 
     private function room(User $user): ChatRoom
     {
@@ -24,7 +32,7 @@ class ChatReliabilityTest extends TestCase
 
     public function test_room_opens_with_latest_messages_and_older_history_is_paginated(): void
     {
-        $user = User::factory()->create();
+        $user = $this->member();
         $room = $this->room($user);
         for ($i = 1; $i <= 55; $i++) {
             ChatMessage::create(['room_id' => $room->id, 'sender_user_id' => $user->id, 'message_type' => 'text', 'body' => "Message {$i}"]);
@@ -38,7 +46,7 @@ class ChatReliabilityTest extends TestCase
     public function test_writes_require_active_membership_and_an_open_room(): void
     {
         Event::fake();
-        $user = User::factory()->create();
+        $user = $this->member();
         $room = $this->room($user);
         $this->actingAs($user)->postJson("/api/v1/chat/rooms/{$room->id}/messages", ['body' => 'Hello'])->assertCreated();
         $room->participants()->update(['status' => 'muted']);
@@ -46,14 +54,14 @@ class ChatReliabilityTest extends TestCase
         $room->participants()->update(['status' => 'active']);
         $room->update(['status' => 'closed']);
         $this->postJson("/api/v1/chat/rooms/{$room->id}/messages", ['body' => 'Closed'])->assertStatus(409);
-        $this->actingAs(User::factory()->create())->getJson("/api/v1/chat/rooms/{$room->id}")->assertNotFound();
+        $this->actingAs($this->member())->getJson("/api/v1/chat/rooms/{$room->id}")->assertNotFound();
         $this->assertDatabaseCount('chat_messages', 1);
     }
 
     public function test_empty_or_system_messages_and_cross_room_references_are_rejected(): void
     {
         Event::fake();
-        $user = User::factory()->create();
+        $user = $this->member();
         $room = $this->room($user);
         $otherRoom = $this->room($user);
         $message = ChatMessage::create(['room_id' => $otherRoom->id, 'sender_user_id' => $user->id, 'message_type' => 'text', 'body' => 'Other room']);
@@ -65,7 +73,7 @@ class ChatReliabilityTest extends TestCase
 
     public function test_a_broadcast_failure_does_not_turn_a_saved_message_into_a_failed_request(): void
     {
-        $user = User::factory()->create();
+        $user = $this->member();
         $room = $this->room($user);
         Event::listen(ChatMessageCreated::class, fn () => throw new \RuntimeException('Broker unavailable'));
         $this->actingAs($user)->postJson("/api/v1/chat/rooms/{$room->id}/messages", ['body' => 'Saved successfully'])->assertCreated();

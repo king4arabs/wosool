@@ -78,8 +78,12 @@ class ApplicationController extends Controller
 
         $previousStatus = $application->status;
         $application = DB::transaction(function () use ($request, $application, $data) {
+            // All membership writers lock account -> application -> founder.
+            $userId = Application::whereKey($application->id)->value('user_id');
+            $user = $userId ? User::whereKey($userId)->lockForUpdate()->firstOrFail() : null;
             $application = Application::whereKey($application->id)->lockForUpdate()->firstOrFail();
-            $user = $application->user;
+            abort_if($application->user_id !== $userId, 409, __('identity.stale'));
+            $application->setRelation('user', $user);
             if ($data['status'] === 'approved' && $user?->community_registration_started_at) {
                 abort_unless($user->hasVerifiedEmail() && $application->onboarding_data, 409, 'The applicant must verify email and complete registration before approval.');
             }
@@ -106,7 +110,7 @@ class ApplicationController extends Controller
             }
             AdminAction::log(adminId: $request->user()->id, action: 'application.updated', entityType: 'application', entityId: $application->id, notes: "Application moved to {$application->status}", beforeState: $beforeState, afterState: $application->only(['status', 'admin_notes', 'reviewed_by', 'reviewed_at']));
             return $application;
-        });
+        }, 3);
         $notification = null;
         if ($previousStatus !== $application->status && $application->user_id) {
             $notification = Mailer::safely($application->email, ($application->status === 'approved' && $application->onboarding_data ? WosoolMail::membershipStatus(true) : WosoolMail::applicationUpdate(rtrim(config('app.frontend_url'), '/').($application->status === 'approved' ? '/dashboard' : '/onboarding'))), ['application_id' => $application->id]);

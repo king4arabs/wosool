@@ -101,19 +101,26 @@ class FounderController extends Controller
             'status' => ['sometimes', 'in:active,pending,suspended'],
             'is_verified' => ['sometimes', 'boolean'],
         ]);
-        if (array_key_exists('is_verified', $data)) {
-            // Verification is the admin review that also vets a founder for introductions.
-            $data['vetted_status'] = $data['is_verified'];
-            if ($data['is_verified']) {
-                abort_unless($founder->user?->hasVerifiedEmail() && $founder->status === 'active', 409, __('identity.active'));
+        $founder = \Illuminate\Support\Facades\DB::transaction(function () use ($founder, $request, $data) {
+            $userId = FounderProfile::whereKey($founder->id)->value('user_id');
+            $user = $userId ? \App\Models\User::whereKey($userId)->lockForUpdate()->firstOrFail() : null;
+            $founder = FounderProfile::whereKey($founder->id)->lockForUpdate()->firstOrFail();
+            abort_if($founder->user_id !== $userId, 409, __('identity.stale'));
+            $status = $data['status'] ?? $founder->status;
+            if ($data['is_verified'] ?? false) {
+                abort_unless($user?->hasVerifiedEmail() && $status === 'active', 409, __('identity.active'));
+            } elseif ($status !== 'active') {
+                $data['is_verified'] = false;
             }
-        }
-        $before = $founder->only(array_keys($data));
-        $founder->update($data);
-        if (array_key_exists('is_verified', $data)) {
-            $founder->forceFill(['admin_verified_at' => $data['is_verified'] ? now() : null, 'admin_verified_by' => $data['is_verified'] ? $request->user()->id : null])->save();
-        }
-        \App\Models\AdminAction::log($request->user()->id, 'founder_profile_moderated', 'founder_profile', $founder->id, null, $before, $data);
+            if (array_key_exists('is_verified', $data)) $data['vetted_status'] = $data['is_verified'];
+            $before = $founder->only(array_keys($data));
+            $founder->update($data);
+            if (array_key_exists('is_verified', $data)) {
+                $founder->forceFill(['admin_verified_at' => $data['is_verified'] ? now() : null, 'admin_verified_by' => $data['is_verified'] ? $request->user()->id : null])->save();
+            }
+            \App\Models\AdminAction::log($request->user()->id, 'founder_profile_moderated', 'founder_profile', $founder->id, null, $before, $data);
+            return $founder;
+        }, 3);
         return response()->json(['data' => new FounderResource($founder->load(['user', 'companies', 'latestInvitation']))]);
     }
 }

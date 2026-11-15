@@ -154,7 +154,8 @@ class AuthController extends Controller
 
         $data = [
             'id' => $user->id,
-            'registration_step' => MembershipRegistration::state($user),
+            'registration_step' => MembershipRegistration::state($user) ?? (! $isAdmin && ! $user->hasVerifiedEmail()
+                && ($user->hasRole('member') || $user->founderProfile()->exists()) ? 'verify' : null),
             'name' => $name,
             'email' => $user->email,
             'role_token' => $roleToken !== '' ? $roleToken : null,

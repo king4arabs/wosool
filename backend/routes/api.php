@@ -211,8 +211,8 @@ Route::prefix('v1')->group(function () {
         Route::put('/settings', [MemberSettingsController::class, 'update']);
     });
 
-    // Chat/help alias routes (non-member-prefixed) for WebSocket clients and mobile integrations
-    Route::middleware(['auth:sanctum'])->group(function () {
+    // Aliases retain the same approval boundary as the member-prefixed endpoints.
+    Route::middleware(['auth:sanctum', 'member'])->group(function () {
         Route::get('/chat/rooms', [MemberChatRoomController::class, 'index']);
         Route::get('/chat/rooms/{room}', [MemberChatRoomController::class, 'show']);
         Route::post('/chat/rooms', [MemberChatRoomController::class, 'store']);

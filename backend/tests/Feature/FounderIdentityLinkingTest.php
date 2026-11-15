@@ -2,7 +2,7 @@
 
 namespace Tests\Feature;
 
-use App\Models\{Application, CompanyProfile, FounderIdentityReview, FounderProfile, Scorecard, User};
+use App\Models\{Application, CompanyProfile, FounderIdentityReview, FounderOutreach, FounderProfile, Scorecard, User};
 use App\Services\FounderIdentityService;
 use Database\Seeders\RoleAndPermissionSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -71,6 +71,57 @@ class FounderIdentityLinkingTest extends TestCase
         $this->actingAs($this->admin)->patchJson('/api/v1/admin/applications/'.$application->id, ['status' => 'approved'])->assertStatus(409);
         $this->assertSame('submitted', $application->fresh()->status);
         $this->assertDatabaseCount('scorecards', 0);
+    }
+
+    public function test_unapproved_registration_cannot_use_community_aliases_or_broadcast_authorization(): void
+    {
+        $user = $this->member(); $user->assignRole('member');
+        $this->submit($user);
+        foreach (['/api/v1', '/v1'] as $prefix) {
+            $this->actingAs($user)->getJson($prefix.'/chat/rooms')->assertForbidden();
+            $this->getJson($prefix.'/help-requests')->assertForbidden();
+            $this->postJson($prefix.'/chat/rooms', ['title' => 'Unapproved'])->assertForbidden();
+        }
+        $this->postJson('/broadcasting/auth', ['channel_name' => 'private-chat.room.1', 'socket_id' => '1.2'])->assertForbidden();
+        $this->actingAs($this->admin)->postJson('/api/v1/admin/users/'.$user->id.'/verify', ['identity_verified' => true, 'create_new_profile' => true])->assertOk();
+        $this->actingAs($user->fresh())->getJson('/api/v1/chat/rooms')->assertOk();
+        $this->getJson('/api/v1/help-requests')->assertOk();
+    }
+
+    public function test_public_company_name_and_website_do_not_grant_a_new_applicant_company_access(): void
+    {
+        $source = $this->source(); $company = $source->companies()->first();
+        $user = $this->member('Separate Founder');
+        $this->submit($user, ['full_name' => 'Separate Founder', 'linkedin_url' => null]);
+        $this->actingAs($this->admin)->postJson('/api/v1/admin/users/'.$user->id.'/verify', ['identity_verified' => true, 'create_new_profile' => true])->assertOk();
+        $this->assertFalse($user->fresh()->founderProfile->companies()->whereKey($company->id)->exists());
+        $this->actingAs($user->fresh())->putJson('/api/v1/member/companies/'.$company->id, ['name' => 'Unauthorized edit'])->assertForbidden();
+        $this->assertSame('Example Company', $company->fresh()->name);
+    }
+
+    public function test_admin_verification_uses_resulting_status_and_inactive_profiles_lose_the_badge(): void
+    {
+        $user = $this->member();
+        $profile = FounderProfile::create(['user_id' => $user->id, 'slug' => 'moderated-founder', 'display_name' => $user->name, 'status' => 'pending']);
+        $url = '/api/v1/admin/founders/'.$profile->id;
+        $this->actingAs($this->admin)->patchJson($url, ['status' => 'active', 'is_verified' => true])->assertOk();
+        $this->assertTrue($profile->fresh()->is_verified);
+        $this->patchJson($url, ['status' => 'suspended', 'is_verified' => true])->assertConflict();
+        $this->assertSame('active', $profile->fresh()->status);
+        $this->patchJson($url, ['status' => 'suspended'])->assertOk();
+        $this->assertFalse($profile->fresh()->is_verified); $this->assertNull($profile->fresh()->admin_verified_at);
+    }
+
+    public function test_invited_email_search_uses_decrypted_display_precedence_before_pagination(): void
+    {
+        $source = $this->source();
+        FounderOutreach::create(['founder_profile_id' => $source->id, 'requested_by' => $this->admin->id,
+            'email' => 'reviewed@example.com', 'status' => 'ready', 'evidence' => 'Confirmed by the founder.', 'verified_at' => now()]);
+        $source->invitations()->create(['invited_by' => $this->admin->id, 'email' => 'older@example.com', 'recipient_evidence' => 'Earlier reviewed address.',
+            'token_hash' => hash('sha256', 'old-token'), 'otp_hash' => 'unused', 'status' => 'sent', 'expires_at' => now()->addDay()]);
+        $this->actingAs($this->admin)->getJson('/api/v1/admin/users?origin=invited&search=REVIEWED%40EXAMPLE.COM&per_page=1')
+            ->assertOk()->assertJsonPath('meta.total', 1)->assertJsonPath('data.0.founder_profile_id', $source->id);
+        $this->getJson('/api/v1/admin/users?origin=invited&search=older%40example.com')->assertOk()->assertJsonPath('meta.total', 0);
     }
 
     public function test_admin_link_preserves_uid_slug_sources_and_scorecard_and_unifies_owner_data(): void

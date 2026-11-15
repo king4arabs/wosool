@@ -39,6 +39,9 @@ class FounderActivationController extends Controller
         ]);
         $founder = DB::transaction(function () use ($data, $request, $service) {
             $initial = $service->resolve($data['token']);
+            // Existing accounts must be locked before founder/invitation rows,
+            // matching registration and administrator approval lock order.
+            $user = User::whereRaw('LOWER(email) = ?', [$initial->email])->lockForUpdate()->first();
             $founder = FounderProfile::lockForUpdate()->findOrFail($initial->founder_profile_id);
             $invite = $service->resolve($data['token'], true);
             abort_if($founder->user_id !== null || $founder->status !== 'active', 409, 'This profile is unavailable for activation.');
@@ -49,7 +52,6 @@ class FounderActivationController extends Controller
                 }
                 return null;
             }
-            $user = User::whereRaw('LOWER(email) = ?', [$invite->email])->lockForUpdate()->first();
             if ($user) {
                 if (! Hash::check($data['password'], $user->getAuthPassword())) {
                     throw ValidationException::withMessages(['password' => ['Enter the current password for the invited account. You can reset it on the sign-in page.']]);
@@ -70,7 +72,7 @@ class FounderActivationController extends Controller
             $founder->invitations()->where('id', '!=', $invite->id)->whereIn('status', ['sent', 'pending'])->update(['status' => 'revoked']);
             app(\App\Services\FounderIdentityService::class)->refresh($user);
             return $founder;
-        });
+        }, 3);
         if (! $founder) {
             throw ValidationException::withMessages(['code' => ['Invalid activation code or too many attempts. Ask Wosool for a new invitation if needed.']]);
         }

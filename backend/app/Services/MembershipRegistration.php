@@ -71,11 +71,8 @@ final class MembershipRegistration
         }
         if ($publishing) {
             $company = $profile->companies()->get()->first(fn ($item) => FounderIdentityService::website($item->website) === FounderIdentityService::website($application->company_website));
-            if (! $company) {
-                $company = CompanyProfile::where('status', 'active')->where('is_public', true)->get()->first(fn ($item) =>
-                    FounderIdentityService::website($item->website) === FounderIdentityService::website($application->company_website)
-                    && in_array(FounderIdentityService::normalize($application->company_name), [FounderIdentityService::normalize($item->name), FounderIdentityService::normalize($item->translations['ar']['name'] ?? null)], true));
-            }
+            // Public company attributes never grant account authority. Reuse only
+            // relationships already held by the administrator-reviewed founder.
             if (! $company) {
                 $company = CompanyProfile::create(['slug' => $this->slug(CompanyProfile::class, $application->company_name),
                     'name' => $application->company_name, 'legal_name' => $application->company_name,
