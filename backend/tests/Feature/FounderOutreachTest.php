@@ -44,6 +44,17 @@ class FounderOutreachTest extends TestCase
         $this->artisan('wosool:founder-outreach')->assertSuccessful();
         Notification::assertCount(1);
     }
+    public function test_registered_accounts_are_not_reinvited_before_administrator_linking(): void {
+        $profile = $this->profile(); $this->verify($profile);
+        $this->bulk('invite', ['all_inactive' => true])->assertOk()->assertJsonPath('data.queued', 1);
+        // Registration can finish after queueing but before the worker sends mail.
+        User::factory()->create(['email' => 'Founder@Example.com', 'community_registration_started_at' => now()]);
+        $this->artisan('wosool:founder-outreach')->assertSuccessful();
+        $this->assertSame('cancelled', FounderOutreach::first()->status);
+        $this->assertNull($profile->fresh()->user_id);
+        $this->bulk('invite', ['all_inactive' => true])->assertOk()->assertJsonPath('data.queued', 0)->assertJsonPath('data.skipped', 1);
+        Notification::assertNothingSent();
+    }
     public function test_research_retries_then_requires_review_and_never_exposes_email_publicly(): void {
         $profile = $this->profile();
         $this->mock(FounderEmailResearch::class, function ($mock) {
