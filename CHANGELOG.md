@@ -1,3 +1,10 @@
+## Saudi founder discovery and gaming news — 2026-11-15
+
+- Added unclaimed bilingual founder scorecards for Lambda Studios' co-founders Sari and Firas AlSaedi, grounded in the official company, investor and dated media evidence. Personal profiles and executive titles beyond co-founder were not assumed.
+- Added bilingual 12 November 2026 brief for the Merak-led US$1.3m funding round, preserving actual source publication date, canonical URL and distinction between reported audience reach and audited revenue. No unlicensed imagery was copied.
+- Synchronized frontend/Laravel catalogs; registered the ninth founder batch with read models, importer, content integrity and count/pagination tests for **398 founders / 215 companies / 139 news items**.
+- Marked Lambda Studios logo unresolved and retained the readable company-name fallback. Existing artwork, member/approval state, editorial edits and deletion tombstones remain untouched. No production import or live Hostinger deployment is implied.
+
 # Changelog
 
 ## Full-collection bilingual newsroom search — 2026-11-14
