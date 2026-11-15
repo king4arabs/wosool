@@ -267,9 +267,21 @@ export function fromRiyadhInput(value: string): string | null {
   return Number.isNaN(time) ? null : new Date(time).toISOString()
 }
 
-/** Splits a comma list; the Arabic comma counts too, so an Arabic keyboard works. */
+/** Splits a comma list typed by the administrator. */
 export function splitList(value: string): string[] {
-  return value.split(/[,،]/).map((item) => item.trim()).filter(Boolean)
+  return value.split(",").map((item) => item.trim()).filter(Boolean)
+}
+
+type StoredLists = Pick<AdminNewsItem, "companies" | "tags">
+
+/**
+ * The list to save for a comma field. A stored list the administrator left untouched is kept
+ * exactly as stored, so a name or tag that itself contains a comma (Latin or Arabic) is never
+ * split by an unrelated edit; only text that was changed is re-parsed.
+ */
+export function listValue(text: string, stored?: string[] | null): string[] {
+  if (stored && text === stored.join(", ")) return [...stored]
+  return splitList(text)
 }
 
 export function splitLines(value: string): string[] {
@@ -332,7 +344,7 @@ function urlProtocol(value: string): string | null {
 }
 
 /** Mirrors the rules in `Admin\NewsController::validated`, so a bad value is caught before sending. */
-export function validateNewsForm(locale: Locale, form: NewsForm): NewsFormErrors {
+export function validateNewsForm(locale: Locale, form: NewsForm, stored?: StoredLists | null): NewsFormErrors {
   const copy = adminNews(locale)
   const errors: NewsFormErrors = {}
   const value = (field: NewsField) => form[field].trim()
@@ -354,13 +366,13 @@ export function validateNewsForm(locale: Locale, form: NewsForm): NewsFormErrors
   if (form.region && !isNewsRegion(form.region)) errors.region = copy.optionInvalid
   if (value("published_at") && !fromRiyadhInput(value("published_at"))) errors.published_at = copy.dateInvalid
 
-  const companies = splitList(form.companies)
+  const companies = listValue(form.companies, stored?.companies)
   const duplicate = companies.find((name, index) => companies.indexOf(name) !== index)
   if (companies.length > newsLimits.companies.count) errors.companies = fill(copy.tooManyItems, { max: newsLimits.companies.count })
   else if (companies.some((name) => characterCount(name) > newsLimits.companies.each)) errors.companies = fill(copy.itemTooLong, { max: newsLimits.companies.each })
   else if (duplicate) errors.companies = fill(copy.duplicateItem, { name: duplicate })
 
-  if (splitList(form.tags).some((tag) => characterCount(tag) > newsLimits.tags.each)) errors.tags = fill(copy.itemTooLong, { max: newsLimits.tags.each })
+  if (listValue(form.tags, stored?.tags).some((tag) => characterCount(tag) > newsLimits.tags.each)) errors.tags = fill(copy.itemTooLong, { max: newsLimits.tags.each })
 
   const facts = splitLines(form.key_facts)
   if (facts.length > newsLimits.key_facts.count) errors.key_facts = fill(copy.tooManyItems, { max: newsLimits.key_facts.count })
@@ -368,7 +380,7 @@ export function validateNewsForm(locale: Locale, form: NewsForm): NewsFormErrors
   return errors
 }
 
-export function newsPayload(form: NewsForm): NewsPayload {
+export function newsPayload(form: NewsForm, stored?: StoredLists | null): NewsPayload {
   const optional = (field: NewsField) => form[field].trim() || null
   return {
     title: form.title.trim(),
@@ -380,8 +392,8 @@ export function newsPayload(form: NewsForm): NewsPayload {
     source_url: optional("source_url"),
     source_name: optional("source_name"),
     image_credit: optional("image_credit"),
-    companies: splitList(form.companies),
-    tags: splitList(form.tags),
+    companies: listValue(form.companies, stored?.companies),
+    tags: listValue(form.tags, stored?.tags),
     key_facts: splitLines(form.key_facts),
     region: isNewsRegion(form.region) ? form.region : null,
     status: form.status,

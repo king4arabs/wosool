@@ -100,6 +100,15 @@ export default function AdminNewsPage() {
     setFocusField(newsFields.find((field) => found[field]) ?? null)
   }
 
+  // Submitting the search shown now (including an empty one) reloads it, so the list can be
+  // refreshed after changes made elsewhere; a new search loads through the effect above.
+  const submitSearch = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+    const next = searchInput.trim()
+    if (next === query) void load()
+    else setQuery(next)
+  }
+
   const openEditor = (article?: AdminNewsItem) => {
     setEditing(article ?? null)
     setForm(toNewsForm(article))
@@ -120,7 +129,7 @@ export default function AdminNewsPage() {
   const save = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     if (savingRef.current) return
-    const found = validateNewsForm(locale, form)
+    const found = validateNewsForm(locale, form, editing)
     setErrors(found)
     if (Object.keys(found).length) {
       focusFirstError(found)
@@ -130,7 +139,7 @@ export default function AdminNewsPage() {
     savingRef.current = true
     setSaving(true)
     try {
-      const payload = newsPayload(form)
+      const payload = newsPayload(form, editing)
       if (editing) await api.put(`/admin/news/${editing.id}`, payload)
       else await api.post("/admin/news", payload)
       toast(editing ? copy.updated : copy.created, "success")
@@ -320,7 +329,7 @@ export default function AdminNewsPage() {
 
       <Card>
         <CardContent className="pt-5">
-          <form role="search" className="flex gap-3" onSubmit={(event) => { event.preventDefault(); setQuery(searchInput.trim()) }}>
+          <form role="search" className="flex gap-3" onSubmit={submitSearch}>
             <div className="flex-1 relative">
               <Label htmlFor="news-search" className="sr-only">{copy.searchLabel}</Label>
               <Search className="absolute start-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" aria-hidden="true" />

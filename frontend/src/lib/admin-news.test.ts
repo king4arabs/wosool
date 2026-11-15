@@ -15,6 +15,7 @@ import {
   newsRegions,
   newsStatusLabel,
   newsStatuses,
+  listValue,
   splitList,
   toNewsForm,
   toRiyadhInput,
@@ -144,7 +145,15 @@ test("saving keeps every stored value and sends blanks as null", () => {
   assert.equal(payload.image_url, null)
   assert.equal(payload.is_public, true)
   assert.ok(!("translations" in payload))
-  assert.deepEqual(splitList("الرياض، جدة, Riyadh"), ["الرياض", "جدة", "Riyadh"])
+  assert.deepEqual(splitList("Riyadh, Jeddah,"), ["Riyadh", "Jeddah"])
+  // A stored tag or company containing a comma survives an unrelated edit unchanged.
+  const lists = { ...stored, tags: ["تقنية، مالية", "seed"], companies: ["Example, Inc."] }
+  const kept = newsPayload({ ...toNewsForm(lists), title: "Edited title" }, lists)
+  assert.deepEqual(kept.tags, ["تقنية، مالية", "seed"])
+  assert.deepEqual(kept.companies, ["Example, Inc."])
+  assert.deepEqual(validateNewsForm("en", toNewsForm(lists), lists), {})
+  assert.deepEqual(listValue("seed, fintech", ["seed"]), ["seed", "fintech"])
+  assert.deepEqual(listValue("", null), [])
   const blank = newsPayload({ ...toNewsForm(), title: " New ", region: "", published_at: "" })
   assert.equal(blank.title, "New")
   assert.equal(blank.region, null)

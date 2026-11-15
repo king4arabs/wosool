@@ -10,7 +10,7 @@ let log = ''; app.stdout.on('data', v => log += v); app.stderr.on('data', v => l
 const axe = readFileSync(new URL('../node_modules/axe-core/axe.min.js', import.meta.url), 'utf8')
 const initial = () => [
   { id: 1, title: 'Example raises a seed round', slug: 'example-seed', excerpt: 'Example announced a seed round.', content: 'Full text.', category: 'Funding', image_url: null, author_name: 'Wosool Team', is_featured: true, is_public: true, status: 'published', tags: ['seed'], published_at: '2026-11-14T06:00:00+00:00', source_url: 'https://example.com/news/seed', source_name: 'Example News', image_credit: null, companies: ['Example'], region: 'saudi', key_facts: ['Seed round'], translations: { ar: { title: 'عنوان', excerpt: 'ملخص' } } },
-  { id: 2, title: 'Sample opens an office', slug: 'sample-office', excerpt: 'Sample opened an office.', content: null, category: 'Expansion', image_url: null, author_name: 'Wosool Team', is_featured: false, is_public: false, status: 'draft', tags: [], published_at: null, source_url: null, source_name: null, image_credit: null, companies: [], region: null, key_facts: [] },
+  { id: 2, title: 'Sample opens an office', slug: 'sample-office', excerpt: 'Sample opened an office.', content: null, category: 'Expansion', image_url: null, author_name: 'Wosool Team', is_featured: false, is_public: false, status: 'draft', tags: ['تقنية، مالية'], published_at: null, source_url: null, source_name: null, image_credit: null, companies: [], region: null, key_facts: [] },
 ]
 const meta = list => ({ total: list.length, published: list.filter(item => item.status === 'published').length, drafts: list.filter(item => item.status === 'draft').length, archived: 0, featured: list.filter(item => item.is_featured).length })
 let browser
@@ -69,6 +69,11 @@ try {
     await searchBox.fill('')
     await searchBox.press('Enter')
     await page.getByText('Example raises a seed round').waitFor()
+    // Submitting the unchanged (empty) search again refreshes the list.
+    const before = searches.length
+    await searchBox.press('Enter')
+    for (let i = 0; i < 50 && searches.length === before; i++) await page.waitForTimeout(100)
+    assert.equal(searches.length, before + 1, 'resubmitting the same search reloads the list')
 
     // Edit: every field labelled, publish time in Riyadh time; axe on the open dialog.
     await page.getByRole('button', { name: ar ? 'تعديل Example raises a seed round' : 'Edit Example raises a seed round' }).click()
@@ -91,7 +96,7 @@ try {
 
     // A valid save keeps the time, lists and untouched values; translations are not sent.
     await dialog.getByLabel(ar ? /^رابط المصدر/ : /^Source URL/).fill('https://example.com/news/seed')
-    await dialog.getByLabel(ar ? /^الوسوم/ : /^Tags/).fill('seed، fintech')
+    await dialog.getByLabel(ar ? /^الوسوم/ : /^Tags/).fill('seed, fintech')
     await dialog.getByLabel(ar ? /^عام/ : /^Public/).uncheck()
     await dialog.getByRole('button', { name: ar ? 'حفظ' : 'Save', exact: true }).click()
     await page.getByText(ar ? 'حُفظ الخبر.' : 'Story saved.').waitFor()
@@ -105,6 +110,16 @@ try {
     assert.equal(writes[0].body.content, 'Full text.')
     assert.equal('translations' in writes[0].body, false)
 
+    // Saving an unrelated change keeps a stored tag that contains an Arabic comma intact.
+    await page.getByRole('button', { name: ar ? 'تعديل Sample opens an office' : 'Edit Sample opens an office' }).click()
+    await dialog.getByLabel(ar ? /^التصنيف/ : /^Category/).fill('Growth')
+    await dialog.getByRole('button', { name: ar ? 'حفظ' : 'Save', exact: true }).click()
+    await page.getByText(ar ? 'حُفظ الخبر.' : 'Story saved.').first().waitFor()
+    await page.waitForFunction(() => !document.querySelector('[role=dialog]'))
+    const kept = writes.at(-1)
+    assert.equal(kept.id, 2)
+    assert.deepEqual(kept.body.tags, ['تقنية، مالية'])
+
     // A taken source link from the API lands under its field in the page language.
     reject = { source_url: ['The source url has already been taken.'] }
     await page.getByRole('button', { name: ar ? 'خبر جديد' : 'New story' }).click()
@@ -116,9 +131,9 @@ try {
     await dialog.getByText(ar ? 'يوجد خبر آخر بهذا الرابط.' : 'Another story already uses this link.').waitFor()
     await page.waitForFunction(id => document.activeElement?.id === id, 'news-source-url', { timeout: 5000 })
     assert.equal(await page.getByText('has already been taken').count(), 0, 'raw API message is not shown')
-    assert.equal(writes[1].method, 'POST')
-    assert.equal(writes[1].body.status, 'draft')
-    assert.equal(writes[1].body.published_at, null)
+    assert.equal(writes.at(-1).method, 'POST')
+    assert.equal(writes.at(-1).body.status, 'draft')
+    assert.equal(writes.at(-1).body.published_at, null)
     await page.screenshot({ path: `/tmp/admin-news-${locale}-${width}.png`, fullPage: true })
     await dialog.getByRole('button', { name: ar ? 'إلغاء' : 'Cancel' }).click()
 
