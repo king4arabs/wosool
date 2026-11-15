@@ -67,7 +67,7 @@ class FounderProfile extends Model
             'offers' => 'array',
             'skills' => 'array',
             'skills_tags' => 'array',
-            'is_verified' => 'boolean',
+            'is_verified' => 'boolean', 'admin_verified_at' => 'datetime',
             'is_featured' => 'boolean',
             'is_public' => 'boolean',
             'vetted_status' => 'boolean',

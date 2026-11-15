@@ -17,7 +17,7 @@ class RegistrationController extends Controller
     public function show(Request $request)
     {
         $application = Application::where('user_id', $request->user()->id)->latest('id')->first();
-        return response()->json(['step' => MembershipRegistration::state($request->user()), 'application' => $application ? $application->only(['id', 'full_name', 'phone', 'company_name', 'company_website', 'sector', 'stage', 'location', 'motivation', 'what_you_offer', 'what_you_need', 'linkedin_url', 'status', 'onboarding_data']) : null])->header('Cache-Control', 'no-store');
+        return response()->json(['step' => MembershipRegistration::state($request->user()), 'verification' => ['email_verified' => $request->user()->hasVerifiedEmail(), 'admin_verified' => (bool) $request->user()->founderProfile?->is_verified], 'application' => $application ? $application->only(['id', 'full_name', 'phone', 'company_name', 'company_website', 'sector', 'stage', 'location', 'motivation', 'what_you_offer', 'what_you_need', 'linkedin_url', 'status', 'onboarding_data']) : null])->header('Cache-Control', 'no-store');
     }
 
     public function submit(Request $request)
@@ -39,16 +39,16 @@ class RegistrationController extends Controller
             $application = Application::where('user_id', $user->id)->latest('id')->lockForUpdate()->first();
             abort_if($application?->onboarding_data && in_array($application->status, ['submitted', 'reviewing', 'waitlisted', 'approved']), 409, __('messages.registration.application_locked'));
             $application ??= new Application(['user_id' => $user->id]);
-            $preapproved = $application->status === 'approved';
             $assets = [...collect($application->onboarding_data ?? [])->only(['avatar_url', 'logo_url'])->all(), ...($request->hasSession() ? $request->session()->get('registration_assets', []) : [])];
             $application->fill(collect($data)->only(['full_name', 'phone', 'company_name', 'company_website', 'sector', 'stage', 'location', 'motivation', 'what_you_offer', 'what_you_need', 'linkedin_url'])->all());
             $application->email = $user->email;
-            $application->onboarding_data = [...collect($data)->only(['country_code', 'position', 'bio', 'company_description', 'founded_year', 'team_size'])->all(), ...$assets, 'public_profile_consent_at' => now()->toIso8601String()];
-            $application->status = $preapproved ? 'approved' : 'submitted';
-            if (! $preapproved) { $application->reviewed_at = null; $application->reviewed_by = null; }
+            $application->onboarding_data = [...collect($data)->only(['country_code', 'position', 'bio', 'company_description', 'founded_year', 'team_size'])->all(), ...$assets, 'profile_locale' => app()->getLocale(), 'public_profile_consent_at' => now()->toIso8601String()];
+            // Old invitation/preapproval records cannot approve newly submitted identity data.
+            $application->status = 'submitted';
+            $application->reviewed_at = null; $application->reviewed_by = null;
             $application->save();
+            app(\App\Services\FounderIdentityService::class)->refresh($user);
             if (! $user->community_registration_started_at) $user->forceFill(['community_registration_started_at' => now()])->save();
-            if ($preapproved) app(MembershipRegistration::class)->publish($application);
             return $application;
         });
         if ($request->hasSession()) $request->session()->forget('registration_assets');

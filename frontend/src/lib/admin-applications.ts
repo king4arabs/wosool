@@ -4,6 +4,7 @@ import type { Locale } from "./locale"
 export const applicationStatuses: AdminApplication["status"][] = ["submitted", "reviewing", "request_more_info", "approved", "rejected", "waitlisted"]
 
 const ar = {
+  identityReview: 'مراجعة مطابقة الملف والتحقق من العضو',
   title: "مراجعة طلبات العضوية",
   intro: "راجع بيانات المتقدم، اعتمد الطلب، ثم أرسل الدعوة إلى بريده الإلكتروني.",
   refresh: "تحديث",
@@ -79,6 +80,7 @@ const ar = {
 type Copy = typeof ar
 
 const en: Copy = {
+  identityReview: 'Review identity matches and verify this member',
   title: "Membership applications",
   intro: "Review the applicant's details, approve the application, then email them an invitation.",
   refresh: "Refresh",

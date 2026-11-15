@@ -88,6 +88,7 @@ const copy = {
 } as const
 
 const quickActions = [
+  { icon: Users, ar: "عرض جميع الأعضاء", en: "View all users", href: "/admin/users" },
   { icon: PlusCircle, ar: "إضافة شركة", en: "Add company", href: "/admin/companies" },
   { icon: FileText, ar: "مراجعة الطلبات", en: "Review applications", href: "/admin/members" },
   { icon: CalendarDays, ar: "إنشاء فعالية", en: "Create event", href: "/admin/events" },

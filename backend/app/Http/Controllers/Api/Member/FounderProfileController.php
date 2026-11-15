@@ -55,6 +55,7 @@ class FounderProfileController extends Controller
             if ($profile->directory_key && $data) { $profile->translations = null; }
             $profile->fill($data);
             $profile->save();
+            if (filled($data['display_name'] ?? null)) $user->forceFill(['name' => $data['display_name']])->save();
             // The member receives a private, initially unscored card only after a
             // founder profile is created; researched unclaimed founders get none.
             if ($created) {

@@ -13,6 +13,7 @@ import { dashboardDictionary } from "@/lib/dashboard-i18n"
 import AvatarUploader from "@/components/dashboard/AvatarUploader"
 
 interface FounderProfile {
+  admin_verification?: {email_verified: boolean; verified: boolean; verified_at: string | null}
   slug?: string
   display_name?: string | null
   position?: string | null
@@ -380,6 +381,7 @@ export default function ProfilePage() {
 
   return (
     <div data-profile-form className="max-w-3xl mx-auto space-y-6">
+      {profile.admin_verification && <div className="flex flex-wrap gap-3 rounded-2xl border border-emerald-100 bg-white p-4 text-sm font-semibold"><span>{profile.admin_verification.email_verified ? (locale === 'ar' ? 'البريد الإلكتروني مؤكد' : 'Email verified') : (locale === 'ar' ? 'البريد غير مؤكد' : 'Email not verified')}</span><span className={profile.admin_verification.verified ? 'text-emerald-700' : 'text-amber-800'}>{profile.admin_verification.verified ? (locale === 'ar' ? 'تم التحقق' : 'Verified') : (locale === 'ar' ? 'بانتظار تحقق الإدارة' : 'Administrator verification pending')}</span></div>}
       <section className="rounded-2xl border border-indigo-100 bg-indigo-50 p-5 sm:p-7">
         <div className="flex flex-wrap items-start justify-between gap-4"><div><p className="text-xs font-bold text-indigo-600">{locale === 'ar' ? 'مساحتك في وصول' : 'YOUR WOSOOL PROFILE'}</p><h1 className="mt-2 text-2xl font-bold text-slate-950">{profile.display_name || (locale === 'ar' ? 'ملفي الشخصي' : 'My founder profile')}</h1><p className="mt-2 text-sm leading-7 text-slate-600">{locale === 'ar' ? 'راجع بياناتك، عرّف المجتمع بخبراتك، وحدد ما تبحث عنه وما يمكنك تقديمه.' : 'Review your information, share your expertise, and tell the community what you need and can offer.'}</p></div>{profile.slug && <Link className="inline-flex min-h-11 items-center rounded-xl border border-indigo-200 bg-white px-4 text-sm font-semibold text-indigo-700" href="/dashboard">{locale === 'ar' ? 'بطاقتي في المجتمع' : 'My founder card'}</Link>}</div>
         <div className="mt-5"><div className="flex justify-between text-xs font-semibold text-indigo-900"><span>{locale === 'ar' ? 'اكتمال الملف' : 'Profile completeness'}</span><span>{profileCompletion(profile)}%</span></div><progress aria-label={locale === 'ar' ? 'اكتمال الملف' : 'Profile completeness'} max={100} value={profileCompletion(profile)} className="mt-2 h-2 w-full accent-indigo-600" /></div>

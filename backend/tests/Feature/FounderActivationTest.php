@@ -58,7 +58,7 @@ class FounderActivationTest extends TestCase
         $this->patchJson('/api/v1/admin/founders/'.$p->id, ['is_public' => false])->assertForbidden();
         $this->actingAs($this->admin)->postJson('/api/v1/admin/founders/'.$p->id.'/invite', ['email' => 'owner@example.com'])->assertUnprocessable(); Notification::assertNothingSent();
     }
-    public function test_activation_verifies_email_enables_community_and_never_exposes_secrets(): void
+    public function test_activation_verifies_email_and_defers_ownership_until_administrator_review(): void
     {
         $p = $this->profile(); $token = $this->invite($p); $invite = FounderInvitation::first();
         $this->assertSame(hash('sha256', $token), $invite->token_hash); $this->assertNotSame('owner@example.com', $invite->getRawOriginal('email'));
@@ -66,11 +66,12 @@ class FounderActivationTest extends TestCase
         $this->getJson('/api/v1/founders/'.$p->slug)->assertOk()->assertJsonMissing(['email' => 'owner@example.com'])->assertJsonMissingPath('data.invitation');
         $this->postJson('/api/v1/founder-activation/preview', ['token' => $token])->assertOk()->assertJsonPath('data.existing_account', false);
         $this->activate($token)->assertOk(); $user = User::where('email', 'owner@example.com')->firstOrFail();
-        $this->assertNotNull($user->email_verified_at); $this->assertTrue($user->hasRole('member')); $this->assertTrue($p->fresh()->communityActive());
+        $this->assertNotNull($user->email_verified_at); $this->assertFalse($user->hasRole('member')); $this->assertNull($p->fresh()->user_id);
+        $this->assertSame($p->id, \App\Models\FounderIdentityReview::where('user_id', $user->id)->firstOrFail()->candidates[0]['id']);
         $this->activate($token)->assertUnprocessable();
-        $this->actingAs($user)->getJson('/api/v1/member/founder-profile')->assertOk()->assertJsonPath('data.slug', $p->slug);
-        $this->getJson('/api/v1/member/scorecard')->assertOk()->assertJsonPath('data.founder_profile_id', $p->id);
-        $this->getJson('/api/v1/member/chat/rooms')->assertOk();
+        $this->actingAs($user)->getJson('/api/v1/member/founder-profile')->assertForbidden();
+        $this->getJson('/api/v1/member/chat/rooms')->assertForbidden();
+        $this->assertDatabaseCount('scorecards', 0);
     }
     public function test_activation_requires_email_code_and_limits_guesses(): void
     {
@@ -104,7 +105,7 @@ class FounderActivationTest extends TestCase
     {
         $u = User::factory()->create(['email' => 'owner@example.com', 'password' => 'OriginalPassword2026']); $p = $this->profile(); $token = $this->invite($p);
         $this->activate($token)->assertUnprocessable(); $this->assertNull($p->fresh()->user_id);
-        $this->activate($token, ['password' => 'OriginalPassword2026'])->assertOk(); $this->assertSame($u->id, $p->fresh()->user_id);
+        $this->activate($token, ['password' => 'OriginalPassword2026'])->assertOk(); $this->assertNull($p->fresh()->user_id);
         $this->assertTrue(Hash::check('OriginalPassword2026', $u->fresh()->getAuthPassword()));
     }
     public function test_password_strength_and_consent_are_required_without_consuming_link(): void

@@ -104,9 +104,15 @@ class FounderController extends Controller
         if (array_key_exists('is_verified', $data)) {
             // Verification is the admin review that also vets a founder for introductions.
             $data['vetted_status'] = $data['is_verified'];
+            if ($data['is_verified']) {
+                abort_unless($founder->user?->hasVerifiedEmail() && $founder->status === 'active', 409, __('identity.active'));
+            }
         }
         $before = $founder->only(array_keys($data));
         $founder->update($data);
+        if (array_key_exists('is_verified', $data)) {
+            $founder->forceFill(['admin_verified_at' => $data['is_verified'] ? now() : null, 'admin_verified_by' => $data['is_verified'] ? $request->user()->id : null])->save();
+        }
         \App\Models\AdminAction::log($request->user()->id, 'founder_profile_moderated', 'founder_profile', $founder->id, null, $before, $data);
         return response()->json(['data' => new FounderResource($founder->load(['user', 'companies', 'latestInvitation']))]);
     }

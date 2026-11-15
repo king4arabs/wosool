@@ -1,6 +1,7 @@
 "use client"
 
 import Image from "next/image"
+import Link from "next/link"
 import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -253,6 +254,7 @@ export default function AdminMembersPage() {
 
           {selected ? (
             <div className="space-y-5">
+              {selected.user_id && <Link className="inline-flex min-h-11 items-center rounded-xl bg-indigo-50 px-4 text-sm font-bold text-indigo-800 underline" href={`/admin/users?user=${selected.user_id}`}>{copy.identityReview}</Link>}
               <div className="grid sm:grid-cols-2 gap-4 text-sm">
                 <Info label={copy.fullName} value={selected.full_name} />
                 <Info label={copy.email} value={selected.email} ltr />
