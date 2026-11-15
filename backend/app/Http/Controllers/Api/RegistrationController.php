@@ -20,7 +20,8 @@ class RegistrationController extends Controller
         $user = $request->user(); $profile = $user->founderProfile;
         $step = MembershipRegistration::state($user);
         // Existing members can prove a changed address without submitting a second application.
-        if ($step === null && $user->hasRole('member') && (! $profile || $profile->status === 'active')) $step = 'active';
+        if ($step === null && ($profile?->communityActive()
+            || (! $profile && ($user->hasRole('member') || ($user->role_token ?? null) === 'founder')))) $step = 'active';
         return response()->json(['step' => $step, 'verification' => ['email_verified' => $user->hasVerifiedEmail(), 'admin_verified' => (bool) $profile?->is_verified], 'application' => $application ? $application->only(['id', 'full_name', 'phone', 'company_name', 'company_website', 'sector', 'stage', 'location', 'motivation', 'what_you_offer', 'what_you_need', 'linkedin_url', 'status', 'onboarding_data']) : null])->header('Cache-Control', 'no-store');
     }
 
