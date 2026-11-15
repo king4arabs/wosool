@@ -1186,5 +1186,29 @@
     "website": "https://rabeh.sa/",
     "src": "/startup-directory/rabeh-logo.webp",
     "tone": "light"
+  },
+  {
+    "company_key": "q-mart",
+    "website": "https://qeu.app/",
+    "src": "/company-logos/q-mart.png",
+    "tone": "light"
+  },
+  {
+    "company_key": "retailo",
+    "website": "https://retailo.co/",
+    "src": "/company-logos/retailo.svg",
+    "tone": "light"
+  },
+  {
+    "company_key": "widebot",
+    "website": "https://widebot.ai/",
+    "src": "/company-logos/widebot.webp",
+    "tone": "dark"
+  },
+  {
+    "company_key": "trukker",
+    "website": "https://www.trukker.com/",
+    "src": "/company-logos/trukker.webp",
+    "tone": "dark"
   }
 ]

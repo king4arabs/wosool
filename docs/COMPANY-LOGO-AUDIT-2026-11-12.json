@@ -1598,6 +1598,18 @@
     "status": "existing-local-asset"
   },
   {
+    "company_key": "q-mart",
+    "website": "https://qeu.app/",
+    "src": "/company-logos/q-mart.png",
+    "tone": "light",
+    "company": "Q Mart",
+    "reviewed_at": "2026-11-15",
+    "source_url": "https://framerusercontent.com/images/Qq9X89lZNx94WL3VOIJAONc7E.png",
+    "source_page": "https://qeu.app/",
+    "asset_kind": "wordmark",
+    "status": "local-asset"
+  },
+  {
     "company_key": "qahwa-blk",
     "company": "Qahwa BLK",
     "website": "https://blk.jo/",
@@ -1715,6 +1727,18 @@
     "reviewed_at": "2026-11-12",
     "status": "unresolved",
     "reason": "No verified downloadable company artwork found; retain the company name fallback."
+  },
+  {
+    "company_key": "retailo",
+    "website": "https://retailo.co/",
+    "src": "/company-logos/retailo.svg",
+    "tone": "light",
+    "company": "Retailo",
+    "reviewed_at": "2026-11-15",
+    "source_url": "https://retailo.co/images/retailo-logo-eng.svg",
+    "source_page": "https://retailo.co/",
+    "asset_kind": "wordmark",
+    "status": "local-asset"
   },
   {
     "company_key": "revolut",
@@ -2182,6 +2206,18 @@
     "status": "existing-local-asset"
   },
   {
+    "company_key": "trukker",
+    "website": "https://www.trukker.com/",
+    "src": "/company-logos/trukker.webp",
+    "tone": "dark",
+    "company": "TruKKer",
+    "reviewed_at": "2026-11-15",
+    "source_url": "https://www.trukker.com/images-new/trukker-logo.webp",
+    "source_page": "https://www.trukker.com/",
+    "asset_kind": "wordmark",
+    "status": "local-asset"
+  },
+  {
     "company_key": "turuq-innovations",
     "website": "https://www.turuq.co/",
     "src": "/company-logos/turuq-innovations.png",
@@ -2294,6 +2330,18 @@
     "src": "/company-logos/wakecap.png",
     "tone": "light",
     "status": "existing-local-asset"
+  },
+  {
+    "company_key": "widebot",
+    "website": "https://widebot.ai/",
+    "src": "/company-logos/widebot.webp",
+    "tone": "dark",
+    "company": "WideBot",
+    "reviewed_at": "2026-11-15",
+    "source_url": "https://cdn.prod.website-files.com/67e9abca114b7db95b2e01ae/67eac162477f3cab5a0f5f55_logo-header%403x.webp",
+    "source_page": "https://widebot.ai/",
+    "asset_kind": "wordmark",
+    "status": "local-asset"
   },
   {
     "company_key": "xendit",
