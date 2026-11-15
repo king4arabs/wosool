@@ -1,7 +1,7 @@
 <?php
 namespace App\Console\Commands;
 
-use App\Models\FounderOutreach;
+use App\Models\{FounderOutreach, User};
 use App\Services\{FounderEmailResearch, FounderInvitationService};
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
@@ -35,7 +35,8 @@ class ProcessFounderOutreach extends Command
                 if ($send) {
                     if (! $row->verified_at || ! $row->email) { throw new \RuntimeException('Recipient not verified'); }
                     $latest = $row->founder->latestInvitation()->first();
-                    if ($latest && ($latest->status === 'revoked' || ($latest->status === 'sent' && $latest->expires_at->isFuture()))) {
+                    if (User::whereRaw('LOWER(email) = ?', [mb_strtolower(trim($row->email))])->exists()
+                        || ($latest && (in_array($latest->status, ['accepted', 'revoked'], true) || ($latest->status === 'sent' && $latest->expires_at->isFuture())))) {
                         FounderOutreach::whereKey($row->id)->where('status', $processing)->update(['status' => 'cancelled']); continue;
                     }
                     $invitations->send($row->founder, $row->admin, $row->email, $row->evidence);

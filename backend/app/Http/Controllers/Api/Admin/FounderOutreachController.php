@@ -2,7 +2,7 @@
 namespace App\Http\Controllers\Api\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\{AdminAction, FounderOutreach, FounderProfile};
+use App\Models\{AdminAction, FounderOutreach, FounderProfile, User};
 use App\Services\{FounderEmailResearch, FounderInvitationService};
 use Illuminate\Http\{JsonResponse, Request};
 use Illuminate\Support\Facades\DB;
@@ -36,10 +36,12 @@ class FounderOutreachController extends Controller
                 $latest = $profile->latestInvitation()->first();
                 if ($data['action'] === 'invite') {
                     // Never silently resend a valid or explicitly revoked invitation.
-                    if ($latest && ($latest->status === 'revoked' || ($latest->status === 'sent' && $latest->expires_at->isFuture()))) { return false; }
+                    if ($latest && (in_array($latest->status, ['accepted', 'revoked'], true) || ($latest->status === 'sent' && $latest->expires_at->isFuture()))) { return false; }
                     $email = $row?->verified_at ? $row->email : $latest?->email;
                     $evidence = $row?->verified_at ? $row->evidence : $latest?->recipient_evidence;
                     if (! $email || ! $evidence) { return false; }
+                    // Account registration precedes administrator linking; do not invite it again meanwhile.
+                    if (User::whereRaw('LOWER(email) = ?', [mb_strtolower(trim($email))])->exists()) { return false; }
                     $values = ['status' => 'invite_queued', 'email' => $email, 'evidence' => $evidence, 'verified_at' => now()];
                 } else {
                     if ($latest || $row?->email) { return false; }
