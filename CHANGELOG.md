@@ -1,3 +1,10 @@
+## Saudi founder freshness corrections — 2026-11-15
+
+- Re-verified three overdue Saudi profiles against active first-party, government and investor pages: Abdullah Asiri at Lucidya, Hisham Al-Falih at Lean Technologies and Ahmed Alenazi at Barq.
+- Corrected Ahmed Alenazi's bilingual role from founder to founder and CEO and recorded Barq's sourced 2023 founding year. Updated Lucidya's attributed company-reported reach from 11 to 13 countries while retaining the 75M-plus customers-through-clients wording.
+- Preserved funding, valuation, processed-volume and customer-activity claims as non-revenue evidence. No earned-revenue, financial-statement, audit, membership, portrait, logo, moderation or partnership claim was added.
+- Synchronized frontend/Laravel catalogs. The 12 content tests pass; integrity remains clean at **398 founders / 215 companies / 139 stories**, and the source-review queue falls from 129 to **126** after only the three verified dates advance. Source publication is not a production import or Hostinger deployment.
+
 ## Saudi founder discovery and gaming news — 2026-11-15
 
 - Added unclaimed bilingual founder scorecards for Lambda Studios' co-founders Sari and Firas AlSaedi, grounded in the official company, investor and dated media evidence. Personal profiles and executive titles beyond co-founder were not assumed.
