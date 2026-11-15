@@ -1030,6 +1030,16 @@
     "asset_kind": "existing-reviewed-asset"
   },
   {
+    "company_key": "lambda-studios",
+    "company": "Lambda Studios",
+    "website": "https://lambdastudios.sa/",
+    "src": null,
+    "tone": null,
+    "reviewed_at": "2026-11-15",
+    "status": "unresolved",
+    "reason": "Official company and investor identity verified. No original logo file with verified reuse permission has been approved for local hosting; preserve the company-name fallback."
+  },
+  {
     "company_key": "lawazem",
     "company": "Lawazem",
     "website": "https://www.lawazem.com/",

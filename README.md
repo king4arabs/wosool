@@ -11,7 +11,7 @@
   <a href="https://github.com/king4arabs/wosool/actions/workflows/ci.yml">CI</a>
 </p>
 
-**Documentation version: 0.6.6 · Updated: 14 November 2026.**
+**Documentation version: 0.6.6 · Updated: 15 November 2026.**
 
 Wosool is an Arabic/English founders platform connecting Saudi Arabia, the GCC, MENA and the world. It brings founder and company profiles, events, news, introductions and community services together, with a dedicated EO Riyadh Accelerator experience.
 
@@ -28,6 +28,8 @@ Community membership, Accelerator admission and administrator access are separat
 **EOA program update:** the two-year curriculum, annual US$4,000 package with US$2,000 sponsor contribution, learning calendar, dedicated board and protected readiness controls are described in [the release notes](docs/EOA-GLOBAL-ALIGNMENT-2026-11-10.md).
 
 **EOA leadership:** [`/eoa/leadership#program-lead`](https://wosool.org/eoa/leadership#program-lead) presents Mohammed Alsolami (Program Lead), Fouad Alnazawi (Program Operation Partner) and Bashaier Abdullah (EOA Riyadh PMO Leader) in three equal-sized bilingual cards. See [EOA operations](docs/EOA.md#public-program-leadership) for profile sources and maintenance details.
+
+**Editorial update (15 November 2026):** **398 external/unclaimed founder profiles, 215 company identities and 139 original Arabic/English sourced news briefs**. Two Saudi Lambda Studios co-founders, Sari and Firas AlSaedi, and one 12 November 2026 Merak Capital funding brief were added with official company and investor evidence. Financing is US$1.3m, not company revenue; Roblox reach is investor-reported and Steam expansion is planned. No logo was invented or unlicensed artwork reproduced; the company-name fallback remains. See [sourcing and safeguards](docs/research/CONTENT-REFRESH-2026-11-15.md). Repository changes are not production database imports or a verified Hostinger deployment.
 
 **Editorial update (14 November 2026):** **396 external/unclaimed founder profiles, 214 companies and 138 bilingual source-dated news briefs** across nine mirrored catalog pairs (eight founders, one news). Added four Safqah Capital co-founders and Signit's co-founder/CEO; enriched three existing Ejari founder cards without duplication. Two new Saudi financing briefs cover Ejari's rental warehouse facility (10 November) and COGNNA's undisclosed Wa'ed Ventures backing (9 November), distinguishing financing capacity from equity and revenue. See [dated official sources and editorial safeguards](docs/research/CONTENT-REFRESH-2026-11-14.md). Source and tests are not a production database import or verified Hostinger release.
 

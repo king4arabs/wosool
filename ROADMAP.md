@@ -1,6 +1,10 @@
 # Roadmap
 
-## Current execution plan — 14 November 2026
+## Current execution plan — 15 November 2026
+
+Verified editorial addition: two Saudi Lambda Studios co-founders and one source-dated 12 November gaming-financing brief, resulting in **398 founders / 215 company keys / 139 news items** across ten mirrored catalog pairs. The new brand retains a company-name fallback pending rights-cleared artwork. All Laravel and frontend tests, content integrity and runtime/production packaging gates must pass before merge. The company-reported audience is not audited revenue. Hostinger release and database import remain independent tasks. See [15 November evidence](docs/research/CONTENT-REFRESH-2026-11-15.md).
+
+## Historical execution snapshot — 14 November 2026
 
 Source update: **396 editorial founder records, 214 company groups and 138 bilingual news briefs** in eight mirrored founder catalogs and the news catalog; five new Saudi founder scorecards, three sourced Ejari corrections and two dated Saudi briefs. Existing imported production data is not inferred from these totals. The 197 original local company logos remain unchanged; two new brands keep name fallbacks. See [14 November source review](docs/research/CONTENT-REFRESH-2026-11-14.md). Release requires successful CI, separate safe backend imports, verified Hostinger revisions and live API checks.
 
