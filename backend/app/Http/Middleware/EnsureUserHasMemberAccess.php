@@ -16,6 +16,10 @@ class EnsureUserHasMemberAccess
             abort(response()->json(['message' => 'Authentication required.'], 401));
         }
 
+        if (! $user->isPlatformAdmin() && ! $user->hasVerifiedEmail()) {
+            abort(response()->json(['message' => 'Confirm your current email address. أكّد بريدك الإلكتروني الحالي.', 'reason' => 'email_unverified', 'next' => '/onboarding'], 403));
+        }
+
         if (! $user->isPlatformAdmin() && $user->community_registration_started_at && \App\Services\MembershipRegistration::state($user) !== 'active') {
             abort(response()->json(['message' => 'أكمل التحقق وطلب العضوية أولًا. Complete verification and membership approval first.', 'reason' => $user->hasVerifiedEmail() ? 'membership_pending' : 'email_unverified', 'next' => '/onboarding'], 403));
         }

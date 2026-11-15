@@ -22,7 +22,21 @@ class UserController extends Controller
             ->selectRaw("'invited' as origin, NULL as user_id, id as founder_profile_id");
         $query = DB::query()->fromSub($registered->unionAll($invited), 'people');
         if ($request->filled('origin')) $query->where('origin', $data['origin']);
-        if ($search = trim($data['search'] ?? '')) $query->where(fn ($q) => $q->where('name', 'like', '%'.$search.'%')->orWhere('email', 'like', '%'.$search.'%'));
+        if ($search = trim($data['search'] ?? '')) {
+            // Contact fields are encrypted. Compare their effective displayed values
+            // after decryption, then apply matching IDs before database pagination.
+            $contactIds = []; $needle = mb_strtolower($search);
+            if (($data['origin'] ?? null) !== 'registered') {
+                FounderProfile::whereNull('user_id')->select('id')->with(['outreach', 'latestInvitation'])->chunkById(200, function ($profiles) use (&$contactIds, $needle) {
+                    foreach ($profiles as $profile) {
+                        $email = $profile->outreach?->email ?? $profile->latestInvitation?->email;
+                        if ($email && str_contains(mb_strtolower($email), $needle)) $contactIds[] = $profile->id;
+                    }
+                });
+            }
+            $query->where(fn ($q) => $q->where('name', 'like', '%'.$search.'%')->orWhere('email', 'like', '%'.$search.'%')
+                ->orWhere(fn ($q) => $q->where('origin', 'invited')->whereIn('founder_profile_id', $contactIds)));
+        }
         $page = $query->orderByDesc('created_at')->orderBy('origin')->orderByDesc('id')->paginate($request->integer('per_page', 20));
         $ids = collect($page->items())->where('origin', 'registered')->pluck('user_id');
         $users = User::with('founderProfile.companies')->whereIn('id', $ids)->get()->keyBy('id');

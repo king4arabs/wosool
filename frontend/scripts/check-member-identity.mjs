@@ -58,6 +58,40 @@ try {
     await page.screenshot({path: `/tmp/member-identity-${locale}-${width}.png`, fullPage: true})
     await context.close()
   }
+  for (const locale of ['ar', 'en']) {
+    const ar = locale === 'ar'
+    const context = await browser.newContext({viewport: {width: 390, height: 1000}})
+    await context.addCookies([{name: 'laravel_session', value: 'isolated-member-session', url: origin}])
+    await context.addInitScript(value => localStorage.setItem('wosool-locale', value), locale)
+    const page = await context.newPage(); const errors = []; const writes = []; let changed = false
+    page.on('pageerror', error => errors.push(error.message))
+    const preferences = {account: {name: 'Member Example', email: 'original@example.com'}, privacy: {profile_visibility: true, show_founder_score: false, activity_visibility: true, appear_in_directory: true}, notifications: {new_match_suggestions: true, direct_messages: true, event_reminders: true, program_updates: true, community_activity: true, weekly_digest: false}, visibility: {allow_intro_requests: true, show_email_to_matches: false, discoverable_for_matching: true}}
+    await context.route('**/*', route => {
+      const url = new URL(route.request().url())
+      if (url.origin !== origin) return route.abort()
+      if (!url.pathname.startsWith('/api/') && !url.pathname.startsWith('/sanctum/')) return route.continue()
+      if (url.pathname.endsWith('/auth/me')) return route.fulfill({json: {user: {id: 11, name: preferences.account.name, email: changed ? 'new@example.com' : preferences.account.email, roles: ['member'], email_verified_at: changed ? null : '2026-11-15T09:00:00Z', registration_step: changed ? 'verify' : null}}})
+      if (url.pathname.endsWith('/member/dashboard')) return route.fulfill({json: {data: {account_approved: true, profile: {id: 42}, companies: [{id: 8}], intro_requests: {pending_count: 0}}}})
+      if (url.pathname.endsWith('/member/settings')) {
+        if (route.request().method() === 'PUT') { writes.push(route.request().postDataJSON()); changed = true; return route.fulfill({json: {data: preferences, verification_required: true}}) }
+        return route.fulfill({json: {data: preferences}})
+      }
+      if (url.pathname.endsWith('/auth/registration/resend')) { writes.push('resend'); return route.fulfill({json: {message: 'Code sent'}}) }
+      return route.fulfill({json: {data: []}})
+    })
+    await page.goto(origin + '/dashboard/settings', {waitUntil: 'networkidle'})
+    await page.getByLabel(ar ? 'البريد الإلكتروني' : 'Email address', {exact: true}).fill('new@example.com')
+    await page.getByLabel(ar ? 'كلمة المرور الحالية' : 'Current password', {exact: true}).fill('ExamplePassword2026')
+    await page.getByRole('button', {name: ar ? 'حفظ الإعدادات' : 'Save settings', exact: true}).click()
+    await page.getByLabel(ar ? 'رمز التحقق' : 'Verification code', {exact: true}).waitFor()
+    assert.equal(writes[0].account.email, 'new@example.com')
+    assert.equal(writes[0].account.current_password, 'ExamplePassword2026')
+    assert.equal(writes[1], 'resend')
+    assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth + 1), false)
+    assert.deepEqual(errors, [])
+    console.log(`PASS ${locale}/390: changing email sends a fresh code and returns the member to verification`)
+    await context.close()
+  }
 } finally {
   await browser?.close()
   app.kill('SIGTERM')

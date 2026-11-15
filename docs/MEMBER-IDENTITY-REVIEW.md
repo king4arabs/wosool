@@ -14,9 +14,11 @@
 - Normalization folds Arabic alef variants, diacritics, tatweel, punctuation and whitespace. LinkedIn comparisons require an actual `linkedin.com` host and `/in/` profile path; lookalike domains are rejected.
 - `founder_identity_reviews` records the proposed identities, administrator decision, canonical profile, reviewer and decision time. Matching details are never returned by public directory endpoints.
 - A successful link keeps the existing profile ID, immutable founder UID, slug, directory key, source links, company relationships and scorecard. Reviewed owner name/profile data becomes the canonical display data; old imported translations cannot override it. The account name follows its profile name.
-- A sole founder's reviewed company details can be unified; a shared company's existing data and other founders' relationships remain intact. The existing company is reused when its identity/website matches rather than creating a duplicate.
+- A sole founder's reviewed company details can be unified; a shared company's existing data and other founders' relationships remain intact. Reuse is limited to company relationships already held by the administrator-reviewed canonical founder. Public company names and websites alone never grant a new applicant access to an existing company.
 - Existing active owner edits survive repeated approval and login. Deleted or suspended identities are not restored by matching, invitation activation or application approval. Account and selected-profile locks, current email checks and final ownership checks reject stale or conflicting decisions.
 - New details submitted against an old invitation/preapproval always return for review. An invitation code verifies the recipient email; it does not bypass registration details, consent, identity review or administrator approval.
+- Community chat/help aliases and broadcast authorization enforce the same membership boundary as the member endpoints. Changing an account email requires the current password, clears email verification, old codes, unresolved matching evidence and the administrator verification badge. The member verifies the new address with OTP; an existing approved member does not have to submit a second application.
+- Membership writers lock the account before its application and founder rows, and retry transient database deadlocks. Manual administrator verification checks the resulting profile status; moving a profile out of active status clears its badge.
 
 ## Administrator controls
 

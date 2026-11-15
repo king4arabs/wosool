@@ -1,6 +1,8 @@
 "use client"
 
 import { useEffect, useState } from "react"
+import { useRouter } from "next/navigation"
+import { useAuth } from "@/lib/auth"
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -63,6 +65,8 @@ const emptyState: MemberSettings = {
 }
 
 export default function SettingsPage() {
+  const router = useRouter()
+  const { refresh } = useAuth()
   const { toast } = useToast()
   const { locale } = useLocale()
   const lang = resolveDashboardLocale(locale)
@@ -84,7 +88,7 @@ export default function SettingsPage() {
   const save = async () => {
     setSaving(true)
     try {
-      await api.put<{ message: string; data: MemberSettings }>("/member/settings", {
+      const response = await api.put<{ message: string; data: MemberSettings; verification_required?: boolean }>("/member/settings", {
         ...settings,
         account: {
           ...settings.account,
@@ -96,6 +100,14 @@ export default function SettingsPage() {
       setCurrentPassword("")
       setNewPassword("")
       setNewPasswordConfirmation("")
+      if (response.verification_required) {
+        // The verification page also offers resend when mail is temporarily unavailable.
+        await api.post('/auth/registration/resend', {}).catch(() => undefined)
+        await refresh()
+        toast(copy.emailVerificationRequired, "success")
+        router.replace('/onboarding')
+        return
+      }
       toast(copy.saved, "success")
     } catch (err) {
       if (err instanceof ApiError && err.data && typeof err.data === "object") {

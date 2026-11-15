@@ -4,9 +4,12 @@ namespace App\Http\Controllers\Api\Member;
 
 use App\Http\Controllers\Controller;
 use App\Models\UserSetting;
+use App\Models\{FounderIdentityReview, FounderProfile, User};
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\{Rule, ValidationException};
 use Illuminate\Validation\Rules\Password;
 
 class SettingsController extends Controller
@@ -26,10 +29,14 @@ class SettingsController extends Controller
     public function update(Request $request): JsonResponse
     {
         $user = $request->user();
+        $accountInput = (array) $request->input('account', []);
+        $email = mb_strtolower(trim((string) ($accountInput['email'] ?? '')));
+        $request->merge(['account' => array_replace($accountInput, ['email' => $email])]);
+        $emailChanging = $email !== mb_strtolower(trim($user->email));
         $data = $request->validate([
             'account.name' => ['required', 'string', 'max:255'],
             'account.email' => ['required', 'email', 'max:255', 'unique:users,email,' . $user->id],
-            'account.current_password' => ['nullable', 'string', 'required_with:account.new_password'],
+            'account.current_password' => ['nullable', 'string', 'required_with:account.new_password', Rule::requiredIf($emailChanging)],
             'account.new_password' => ['nullable', 'confirmed', Password::min(8)->mixedCase()->numbers()],
             'privacy.profile_visibility' => ['required', 'boolean'],
             'privacy.show_founder_score' => ['required', 'boolean'],
@@ -51,37 +58,43 @@ class SettingsController extends Controller
             'account.new_password' => __('messages.validation.settings.attributes.new_password'),
         ]);
 
-        if (! empty($data['account']['new_password'])) {
-            $current = (string) ($data['account']['current_password'] ?? '');
-            if (! Hash::check($current, $user->getAuthPassword())) {
-                $message = __('messages.validation.settings.current_password_incorrect');
-
-                return response()->json([
-                    'message' => $message,
-                    'errors' => ['account.current_password' => [$message]],
-                ], 422);
+        [$settings, $emailChanged] = DB::transaction(function () use ($request, $user, $data) {
+            $user = User::whereKey($user->id)->lockForUpdate()->firstOrFail();
+            $emailChanged = $data['account']['email'] !== mb_strtolower(trim($user->email));
+            if (($emailChanged || ! empty($data['account']['new_password']))
+                && ! Hash::check((string) ($data['account']['current_password'] ?? ''), $user->getAuthPassword())) {
+                throw ValidationException::withMessages(['account.current_password' => [__('messages.validation.settings.current_password_incorrect')]]);
             }
-        }
-
-        $user->name = $data['account']['name'];
-        $user->email = $data['account']['email'];
-        if (! empty($data['account']['new_password'])) {
-            $passwordField = $user->getAuthPasswordName();
-            $user->{$passwordField} = $data['account']['new_password'];
-        }
-        $user->save();
-
-        $settings = UserSetting::updateOrCreate(
-            ['user_id' => $user->id],
-            [
-                'privacy' => $data['privacy'],
-                'notifications' => $data['notifications'],
-                'visibility' => $data['visibility'],
-            ]
-        );
+            if (User::where('id', '!=', $user->id)->whereRaw('LOWER(email) = ?', [$data['account']['email']])->exists()) {
+                throw ValidationException::withMessages(['account.email' => [__('messages.registration.email_taken')]]);
+            }
+            $user->name = $data['account']['name'];
+            $user->email = $data['account']['email'];
+            if ($emailChanged) {
+                $user->email_verified_at = null;
+                DB::table('registration_email_otps')->where('user_id', $user->id)->delete();
+                FounderIdentityReview::where('user_id', $user->id)->whereNull('reviewed_at')->update(['candidates' => '[]']);
+                FounderProfile::where('user_id', $user->id)->update(['is_verified' => false, 'vetted_status' => false, 'admin_verified_at' => null, 'admin_verified_by' => null]);
+            }
+            if (! empty($data['account']['new_password'])) {
+                $user->{$user->getAuthPasswordName()} = $data['account']['new_password'];
+            }
+            $user->save();
+            $request->setUserResolver(fn () => $user);
+            $settings = UserSetting::updateOrCreate(
+                ['user_id' => $user->id],
+                [
+                    'privacy' => $data['privacy'],
+                    'notifications' => $data['notifications'],
+                    'visibility' => $data['visibility'],
+                ]
+            );
+            return [$settings, $emailChanged];
+        }, 3);
 
         return response()->json([
             'message' => 'Settings updated.',
+            'verification_required' => $emailChanged,
             'data' => $this->payload($request, $settings),
         ]);
     }

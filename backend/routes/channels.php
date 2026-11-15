@@ -3,7 +3,7 @@
 use App\Models\ChatRoomParticipant;
 use Illuminate\Support\Facades\Broadcast;
 
-Broadcast::routes(['middleware' => ['auth:sanctum']]);
+Broadcast::routes(['middleware' => ['auth:sanctum', 'member']]);
 
 Broadcast::channel('chat.room.{roomId}', function ($user, int $roomId) {
     return ChatRoomParticipant::query()
