@@ -4,7 +4,7 @@ use App\Mail\RegistrationOtpMail;
 use App\Models\{Application, User, FounderProfile};
 use App\Services\RegistrationOtp;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\{DB, Mail};
+use Illuminate\Support\Facades\{DB, Mail, Schema};
 use Spatie\Permission\Models\Role;
 use Tests\TestCase;
 class MembershipRegistrationTest extends TestCase
@@ -76,6 +76,25 @@ class MembershipRegistrationTest extends TestCase
             app(\App\Services\MembershipRegistration::class)->resumeLegacyRegistration($user);
             $this->assertNull($user->fresh()->community_registration_started_at);
         }
+    }
+
+    public function test_legacy_founder_token_can_verify_email_and_resume_without_an_extra_application(): void
+    {
+        if (! Schema::hasColumn('users', 'role_token')) {
+            Schema::table('users', fn ($table) => $table->string('role_token')->nullable());
+        }
+        $user = User::factory()->unverified()->create(['email' => 'legacy-token@example.com', 'password' => 'Password123', 'role_token' => 'founder']);
+        $this->postJson('/api/v1/auth/login', ['email' => $user->email, 'password' => 'Password123'])->assertOk()->assertJsonPath('user.registration_step', 'verify');
+        $this->assertNull($user->fresh()->community_registration_started_at);
+        $this->getJson('/api/v1/member/dashboard')->assertForbidden();
+        $code = $this->code($user);
+        $this->postJson('/api/v1/auth/registration/verify', ['code' => $code])->assertOk();
+        $this->actingAs($user->fresh())->getJson('/api/v1/registration/application')->assertOk()->assertJsonPath('step', 'active');
+        $this->getJson('/api/v1/member/dashboard')->assertOk();
+        $profile = FounderProfile::create(['user_id' => $user->id, 'slug' => 'inactive-legacy-token', 'status' => 'pending']);
+        $this->actingAs($user->fresh())->getJson('/api/v1/registration/application')->assertOk()->assertJsonPath('step', null);
+        $profile->update(['status' => 'suspended']);
+        $this->actingAs($user->fresh())->getJson('/api/v1/registration/application')->assertOk()->assertJsonPath('step', null);
     }
 
     public function test_verification_is_required_and_code_is_single_use(): void

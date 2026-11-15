@@ -83,7 +83,8 @@ class MemberSettingsTest extends TestCase
     public function test_changed_email_invalidates_old_codes_identity_evidence_and_admin_verification_until_reverified(): void
     {
         $this->seed(RoleAndPermissionSeeder::class); Mail::fake(); config(['mail.default' => 'smtp']);
-        $user = User::factory()->unverified()->create(['password' => 'Password1']); $user->assignRole('member');
+        // Legacy members can hold their approved founder profile without a Spatie role.
+        $user = User::factory()->unverified()->create(['password' => 'Password1']);
         app(RegistrationOtp::class)->send($user);
         $oldCode = Mail::sent(RegistrationOtpMail::class)->last()->code;
         $user->forceFill(['email_verified_at' => now()])->save();
