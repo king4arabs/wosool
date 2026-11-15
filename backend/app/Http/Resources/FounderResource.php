@@ -42,6 +42,12 @@ class FounderResource extends JsonResource
             'needs' => $publicDirectory ? [] : ($this->needs ?? []),
             'offers' => $publicDirectory ? [] : ($this->offers ?? []),
             'is_verified' => (bool) $this->is_verified,
+            'admin_verification' => $this->when(! $publicDirectory && ($request->user()?->isPlatformAdmin() || $request->user()?->id === $this->user_id), fn () => [
+                'email_verified' => (bool) $this->user?->hasVerifiedEmail(),
+                'verified' => (bool) $this->is_verified,
+                'verified_at' => $this->admin_verified_at?->toIso8601String(),
+            ]),
+            'record_origin' => $this->when(! $publicDirectory && $request->user()?->isPlatformAdmin(), fn () => $this->user_id ? 'registered' : 'invited'),
             'is_featured' => (bool) $this->is_featured,
             'is_public' => (bool) $this->is_public,
             'status' => $this->status,
@@ -54,7 +60,7 @@ class FounderResource extends JsonResource
             'source_reviewed_at' => $this->source_reviewed_at?->toDateString(),
             'claimed_at' => $publicDirectory ? null : $this->claimed_at?->toIso8601String(),
             'outreach' => $this->when($request->user()?->hasRole('admin') && ! $publicDirectory && $this->relationLoaded('outreach'), fn () => $this->outreach?->adminData()),
-            'invitation' => $this->when($request->user()?->hasRole('admin') && $this->relationLoaded('latestInvitation'), function () {
+            'invitation' => $this->when(! $publicDirectory && $request->user()?->isPlatformAdmin() && $this->relationLoaded('latestInvitation'), function () {
                 $invite = $this->latestInvitation;
                 return $invite ? ['status' => $invite->status === 'sent' && $invite->expires_at->isPast() ? 'expired' : $invite->status, 'email' => $invite->email, 'sent_at' => $invite->sent_at?->toIso8601String(), 'expires_at' => $invite->expires_at->toIso8601String()] : null;
             }),

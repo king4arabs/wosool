@@ -30,7 +30,7 @@ final class MembershipRegistration
     }
 
     /** Called within the application's approval transaction, and safe to repeat. */
-    public function publish(Application $application): void
+    public function publish(Application $application, ?User $admin = null, array $decision = []): void
     {
         $user = $application->user;
         if (! $user?->hasVerifiedEmail()) return;
@@ -39,37 +39,70 @@ final class MembershipRegistration
             if (! $user->community_registration_started_at) $user->assignRole(Role::findOrCreate('member', 'web'));
             return;
         }
-        $profile = FounderProfile::where('user_id', $user->id)->lockForUpdate()->first();
+        $user = User::whereKey($user->id)->lockForUpdate()->firstOrFail();
+        abort_unless($user->hasVerifiedEmail(), 409, __('identity.email'));
+        $application->setRelation('user', $user);
+        abort_if(FounderProfile::where('user_id', $user->id)->count() > 1, 409, __('identity.duplicate'));
+        $profile = FounderProfile::withTrashed()->where('user_id', $user->id)->lockForUpdate()->first();
+        abort_if($profile?->trashed(), 409, __('identity.deleted'));
         // A previously suspended founder must be explicitly resumed by an administrator.
         // Re-approving an application cannot silently undo profile moderation.
         if ($profile?->status === 'suspended') return;
-        if (! $profile) $profile = new FounderProfile(['user_id' => $user->id, 'slug' => $this->slug(FounderProfile::class, $application->full_name)]);
+        $reviewer = $admin ?? $application->reviewer;
+        if (! $profile) {
+            abort_unless($reviewer?->isPlatformAdmin(), 409, __('identity.review'));
+            $profile = app(FounderIdentityService::class)->claim($application, $reviewer, $decision)
+                ?? new FounderProfile(['user_id' => $user->id, 'slug' => $this->slug(FounderProfile::class, $application->full_name)]);
+        }
         // Publish the reviewed application once; repeated approvals preserve subsequent owner edits.
-        if (! $profile->exists || $profile->status === 'pending') {
-            $profile->fill(['display_name' => $application->full_name, 'position' => $data['position'],
+        $publishing = ! $profile->exists || $profile->status === 'pending';
+        if ($publishing) {
+            // Both locales use the reviewed owner data instead of stale imported copy.
+            // The immutable directory key and source links retain provenance.
+            $user->forceFill(['name' => $application->full_name])->save();
+            $profile->fill(['display_name' => $application->full_name, 'position' => $data['position'], 'translations' => null,
                 'tagline' => $data['position'].' · '.$application->company_name, 'bio' => $data['bio'],
                 'location' => $application->location, 'country_code' => $data['country_code'],
                 'sector' => $application->sector, 'stage' => $application->stage,
-                'linkedin_url' => $application->linkedin_url, 'website_url' => $application->company_website,
+                'linkedin_url' => $application->linkedin_url ?: $profile->linkedin_url, 'website_url' => $application->company_website,
                 'needs' => [$application->what_you_need], 'offers' => [$application->what_you_offer],
                 'status' => 'active', 'is_public' => true, 'is_verified' => false,
-                'avatar_url' => $data['avatar_url'] ?? null])->save();
+                'avatar_url' => $data['avatar_url'] ?? $profile->avatar_url])->save();
         }
-        $company = $profile->companies()->wherePivot('is_primary', true)->first();
-        if (! $company) {
-            $company = CompanyProfile::create(['slug' => $this->slug(CompanyProfile::class, $application->company_name),
-                'name' => $application->company_name, 'legal_name' => $application->company_name,
-                'description' => $data['company_description'], 'website' => $application->company_website, 'domain_url' => $application->company_website,
-                'location' => $application->location, 'hq_location' => $application->location,
-                'country_code' => $data['country_code'], 'sector' => $application->sector,
-                'stage' => $application->stage, 'operational_stage' => $application->stage,
-                'founded_year' => $data['founded_year'], 'team_size' => $data['team_size'],
-                'logo_url' => $data['logo_url'] ?? null, 'status' => 'active', 'is_public' => true]);
-            $profile->companies()->attach($company->id, ['role' => $data['position'], 'is_primary' => true]);
+        if ($publishing) {
+            $company = $profile->companies()->get()->first(fn ($item) => FounderIdentityService::website($item->website) === FounderIdentityService::website($application->company_website));
+            if (! $company) {
+                $company = CompanyProfile::where('status', 'active')->where('is_public', true)->get()->first(fn ($item) =>
+                    FounderIdentityService::website($item->website) === FounderIdentityService::website($application->company_website)
+                    && in_array(FounderIdentityService::normalize($application->company_name), [FounderIdentityService::normalize($item->name), FounderIdentityService::normalize($item->translations['ar']['name'] ?? null)], true));
+            }
+            if (! $company) {
+                $company = CompanyProfile::create(['slug' => $this->slug(CompanyProfile::class, $application->company_name),
+                    'name' => $application->company_name, 'legal_name' => $application->company_name,
+                    'description' => $data['company_description'], 'website' => $application->company_website, 'domain_url' => $application->company_website,
+                    'location' => $application->location, 'hq_location' => $application->location,
+                    'country_code' => $data['country_code'], 'sector' => $application->sector,
+                    'stage' => $application->stage, 'operational_stage' => $application->stage,
+                    'founded_year' => $data['founded_year'], 'team_size' => $data['team_size'],
+                    'logo_url' => $data['logo_url'] ?? null, 'status' => 'active', 'is_public' => true]);
+            }
+            // A reviewed sole founder may unify their company details. Shared
+            // companies keep the existing data and other founders' relationships.
+            if ($company->status === 'active' && $company->founders()->count() === 1
+                && $company->founders()->where('founder_profiles.id', $profile->id)->exists()) {
+                $company->fill(['name' => $application->company_name, 'description' => $data['company_description'],
+                    'website' => $application->company_website, 'location' => $application->location,
+                    'country_code' => $data['country_code'], 'sector' => $application->sector, 'stage' => $application->stage,
+                    'founded_year' => $data['founded_year'], 'team_size' => $data['team_size'],
+                    'logo_url' => $data['logo_url'] ?? $company->logo_url, 'translations' => null])->save();
+            }
+            $profile->companies()->newPivotStatement()->where('founder_profile_id', $profile->id)->update(['is_primary' => false]);
+            $profile->companies()->syncWithoutDetaching([$company->id => ['role' => $data['position'], 'is_primary' => true]]);
+            if (! $company->is_public && $company->founders()->count() === 1) $company->update(['is_public' => true]);
         }
-        if (! $company->is_public && $company->founders()->count() === 1) $company->update(['is_public' => true]);
         Scorecard::firstOrCreate(['founder_profile_id' => $profile->id], ['aggregate_score' => 0, 'momentum' => 0, 'growth' => 0, 'readiness' => 0, 'support_delta' => 0, 'historical_logs' => []]);
         $user->assignRole(Role::findOrCreate('member', 'web'));
+        if (($publishing || $admin) && $reviewer?->isPlatformAdmin()) app(FounderIdentityService::class)->verify($profile, $reviewer);
     }
 
     public function linkVerifiedApplications(User $user): void
@@ -78,7 +111,14 @@ final class MembershipRegistration
         DB::transaction(function () use ($user) {
             User::whereKey($user->id)->lockForUpdate()->firstOrFail();
             Application::whereRaw('LOWER(email) = ?', [strtolower($user->email)])->whereNull('user_id')->where('status', 'approved')->update(['user_id' => $user->id, 'invite_token' => null]);
-            foreach (Application::where('user_id', $user->id)->where('status', 'approved')->get() as $application) $this->publish($application);
+            foreach (Application::where('user_id', $user->id)->where('status', 'approved')->get() as $application) {
+                if ($user->community_registration_started_at && ! $user->founderProfile()->exists() && $application->onboarding_data) {
+                    $application->update(['status' => 'reviewing', 'reviewed_at' => null, 'reviewed_by' => null]);
+                    app(FounderIdentityService::class)->refresh($user);
+                    continue;
+                }
+                $this->publish($application);
+            }
         });
     }
 

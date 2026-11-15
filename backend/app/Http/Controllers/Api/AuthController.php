@@ -54,6 +54,7 @@ class AuthController extends Controller
         $user = Auth::guard('web')->user();
         app(MembershipRegistration::class)->linkVerifiedApplications($user);
         app(MembershipRegistration::class)->resumeLegacyRegistration($user);
+        if ($user->community_registration_started_at) app(\App\Services\FounderIdentityService::class)->refresh($user);
 
         return response()->json([
             'message' => __('messages.auth.login_success'),
@@ -95,6 +96,7 @@ class AuthController extends Controller
         app(RegistrationOtp::class)->verify($request->user(), $data['code']);
         $user = $request->user()->fresh();
         app(MembershipRegistration::class)->linkVerifiedApplications($user);
+        app(\App\Services\FounderIdentityService::class)->refresh($user);
         if ($request->hasSession()) $request->session()->regenerate();
         return response()->json(['message' => __('messages.registration.email_verified'), 'user' => $this->formatUser($user)]);
     }

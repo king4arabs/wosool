@@ -71,6 +71,9 @@ class ApplicationController extends Controller
         $data = $request->validate([
             'status' => ['required', Rule::in(['submitted', 'reviewing', 'approved', 'rejected', 'waitlisted', 'request_more_info'])],
             'admin_notes' => ['nullable', 'string', 'max:5000'],
+            'matched_founder_id' => ['nullable', 'integer', 'min:1'],
+            'create_new_profile' => ['sometimes', 'boolean'],
+            'identity_verified' => ['sometimes', 'accepted'],
         ]);
 
         $previousStatus = $application->status;
@@ -86,18 +89,18 @@ class ApplicationController extends Controller
                 abort(409, 'Resolve this founder profile suspension through moderation before approving the application.');
             }
             $beforeState = $application->only(['status', 'admin_notes', 'reviewed_by', 'reviewed_at']);
-            $application->fill($data);
+            $application->fill(collect($data)->only(['status', 'admin_notes'])->all());
             $application->reviewed_by = $request->user()->id;
             $application->reviewed_at = now();
             if ($application->status !== 'approved') { $application->invite_token = null; $application->invite_sent_at = null; }
             $application->save();
             if ($application->status === 'approved') {
-                app(MembershipRegistration::class)->publish($application);
+                app(MembershipRegistration::class)->publish($application, $request->user(), $data);
             } elseif ($user?->community_registration_started_at && $application->onboarding_data) {
                 if ($user->hasRole('member')) $user->removeRole('member');
                 $profile = $user->founderProfile;
                 if ($profile) {
-                    $profile->update(['status' => 'pending', 'is_public' => false]);
+                    $profile->forceFill(['status' => 'pending', 'is_public' => false, 'is_verified' => false, 'vetted_status' => false, 'admin_verified_at' => null, 'admin_verified_by' => null])->save();
                     foreach ($profile->companies as $company) if ($company->founders()->count() === 1) $company->update(['is_public' => false]);
                 }
             }

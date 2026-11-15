@@ -3,9 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Models\Application;
 use App\Models\FounderProfile;
-use App\Models\Scorecard;
 use App\Models\User;
 use App\Services\FounderInvitationService;
 use Illuminate\Http\Request;
@@ -14,7 +12,6 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Validation\Rules\Password;
 use Illuminate\Validation\ValidationException;
-use Spatie\Permission\Models\Role;
 
 class FounderActivationController extends Controller
 {
@@ -67,21 +64,16 @@ class FounderActivationController extends Controller
                 if (Schema::hasColumn('users', 'role_token')) { $payload['role_token'] = 'founder'; }
                 $user = User::create($payload);
             }
-            $user->forceFill(['email_verified_at' => $user->email_verified_at ?? now(), 'privacy_accepted_at' => now()])->save();
-            Role::findOrCreate('member', 'web');
-            $user->assignRole('member');
-            $founder->update(['user_id' => $user->id, 'claimed_at' => now()]);
-            Scorecard::firstOrCreate(['founder_profile_id' => $founder->id], ['historical_logs' => []]);
-            Application::query()->whereRaw('LOWER(email) = ?', [strtolower($user->email)])
-                ->where('status', 'approved')->whereNull('user_id')
-                ->update(['user_id' => $user->id, 'invite_token' => null]);
+            $user->forceFill(['email_verified_at' => $user->email_verified_at ?? now(), 'privacy_accepted_at' => now(),
+                'community_registration_started_at' => $user->community_registration_started_at ?? now()])->save();
             $invite->update(['status' => 'accepted', 'accepted_at' => now()]);
             $founder->invitations()->where('id', '!=', $invite->id)->whereIn('status', ['sent', 'pending'])->update(['status' => 'revoked']);
+            app(\App\Services\FounderIdentityService::class)->refresh($user);
             return $founder;
         });
         if (! $founder) {
             throw ValidationException::withMessages(['code' => ['Invalid activation code or too many attempts. Ask Wosool for a new invitation if needed.']]);
         }
-        return response()->json(['message' => 'Profile activated. Sign in to manage your profile and connect with the community.', 'data' => ['slug' => $founder->slug]])->header('Cache-Control', 'no-store');
+        return response()->json(['message' => 'Email verified. Sign in and complete your details for administrator verification.', 'data' => ['slug' => $founder->slug, 'next' => '/onboarding', 'admin_verification' => 'pending']])->header('Cache-Control', 'no-store');
     }
 }

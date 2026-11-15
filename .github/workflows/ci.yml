@@ -69,6 +69,8 @@ jobs:
         run: node scripts/check-admin-news.mjs
       - name: Verify admin scorecards in Arabic and English
         run: node scripts/check-admin-scorecards.mjs
+      - name: Verify member identity review, private origins and invitation controls
+        run: node scripts/check-member-identity.mjs
       - name: Verify interactive FAQs in Arabic and English
         run: node scripts/check-faq-experience.mjs
       - name: Save FAQ browser previews
