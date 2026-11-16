@@ -1784,6 +1784,16 @@
     "status": "existing-local-asset"
   },
   {
+    "company_key": "rkiza",
+    "company": "Rkiza",
+    "website": "https://www.rkiza.sa/",
+    "src": null,
+    "tone": null,
+    "reviewed_at": "2026-11-16",
+    "status": "unresolved",
+    "reason": "Official website checked; original reusable artwork/permission not verified. Retain company-name fallback."
+  },
+  {
     "company_key": "safqah-capital",
     "company": "Safqah Capital",
     "website": "https://safqah.co/",

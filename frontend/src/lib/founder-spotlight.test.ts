@@ -68,13 +68,13 @@ test('frontend source snapshots and database import share the same reviewed reco
   assert.equal(november14Profiles.length, 5)
   const november15Database = JSON.parse(readFileSync(new URL('../../../backend/resources/data/founder-directory-expansion-2026-11-15.json', import.meta.url), 'utf8'))
   assert.deepEqual(november15Database, november15Profiles)
-  assert.equal(november15Profiles.length, 11)
+  assert.equal(november15Profiles.length, 12)
   assert.equal(originalCountryCohort.length, 102)
   assert.equal(october30Additions.length, 8)
   assert.equal(new Set(originalCountryCohort.map(profile => profile.country_code)).size, 51)
   for (const code of new Set(originalCountryCohort.map(profile => profile.country_code))) assert.equal(originalCountryCohort.filter(profile => profile.country_code === code).length, 2, code)
-  assert.equal(new Set(sourceProfiles.map(profile => profile.company_key)).size, 219)
-  assert.equal(sourceProfiles.length, 407)
+  assert.equal(new Set(sourceProfiles.map(profile => profile.company_key)).size, 220)
+  assert.equal(sourceProfiles.length, 408)
   assert.equal(new Set(sourceProfiles.map(profile => profile.founder_name_en.toLowerCase())).size, sourceProfiles.length)
   assert.equal(new Set(sourceProfiles.map(profile => profile.slug)).size, sourceProfiles.length)
   assert.ok(sourceProfiles.every(profile => profile.source_urls.length > 0 && profile.reviewed_at))
@@ -262,4 +262,16 @@ test('6 November founder additions are source-linked, unclaimed and do not dupli
   const mamun = countryProfiles.find(profile => profile.slug === 'mamun-mohammed-al-tamami')!
   assert.equal(mamun.role_en, 'Co-founder & Chief Commercial Officer')
   assert.equal(mamun.reviewed_at, '2026-11-06')
+})
+
+
+test('16 November Saudi Rkiza founder remains unclaimed and sourced without speculative traction', () => {
+  const row = november15Profiles.find(profile => profile.slug === 'fahad-alarifee-rkiza')!
+  assert.ok(row)
+  assert.equal(row.company_key, 'rkiza')
+  assert.equal(row.reviewed_at, '2026-11-16')
+  assert.equal(row.logo_url, null)
+  assert.equal(row.traction_en, null)
+  assert.ok(row.source_urls.includes(row.source_url))
+  assert.ok(!('member' in row) && !('email' in row) && !('isVerified' in row))
 })

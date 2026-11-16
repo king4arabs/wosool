@@ -1,5 +1,50 @@
 [
   {
+    "id": "sourced-alwaleed-rdia-openran-november-2026",
+    "slug": "alwaleed-rdia-open-ran-startups-november-2026",
+    "title": "Saudi SAR 10m innovation partnership to support Open RAN startups",
+    "excerpt": "Alwaleed Philanthropies and RDIA will support four Open RAN challenge winners; the partnership value is not a financing round for each startup.",
+    "content": "An official Alwaleed Philanthropies statement published on 13 November 2026 announced a SAR 10 million strategic partnership with Saudi Arabia's Research, Development and Innovation Authority (RDIA). It will support four winning startups from the Open RAN Technology Challenge to develop deployable solutions, launch products and track impact. The parties will create a joint working group to coordinate implementation and monitor outcomes. SAR 10 million is the stated value of the overall partnership, not a disclosed equity round, an allocation to each of the four startups, or any startup's realised income. The statement did not name the four recipients or specify their individual allocations.",
+    "category": "Ecosystem",
+    "region": "saudi",
+    "imageUrl": "",
+    "imageCredit": "",
+    "sourceUrl": "https://www.prnewswire.com/news-releases/alwaleed-philanthropies-and-the-research-development-and-innovation-authority-sign-strategic-partnership-valued-at-sar-10-million-to-advance-innovation-and-technology-solutions-302939334.html",
+    "sourceName": "Alwaleed Philanthropies (13 Nov statement via PR Newswire)",
+    "companies": [
+      "Alwaleed Philanthropies",
+      "Research, Development and Innovation Authority (RDIA)"
+    ],
+    "publishedAt": "2026-11-13",
+    "author": "Wosool news desk",
+    "tags": [
+      "Saudi Arabia",
+      "RDIA",
+      "Alwaleed Philanthropies",
+      "Open RAN",
+      "Startup ecosystem"
+    ],
+    "keyFacts": [
+      "Official release dated 13 November 2026; overall partnership SAR 10m",
+      "Four Open RAN technology challenge startups to receive implementation support",
+      "Individual recipients and amounts not disclosed; not an equity funding round"
+    ],
+    "translations": {
+      "ar": {
+        "title": "شراكة سعودية بـ10 ملايين ريال لدعم شركات ناشئة في تقنيات «Open RAN»",
+        "excerpt": "تدعم «الوليد للإنسانية» وهيئة تنمية البحث والتطوير والابتكار أربع شركات فائزة؛ المبلغ قيمة الشراكة كاملة وليس جولة تمويل لكل شركة.",
+        "body": [
+          "أعلنت مؤسسة «الوليد للإنسانية» في بيان رسمي نُشر في 13 نوفمبر 2026 شراكة استراتيجية بقيمة إجمالية تبلغ 10 ملايين ريال مع هيئة تنمية البحث والتطوير والابتكار. وتهدف المبادرة إلى دعم أربع شركات ناشئة فائزة بتحدي شبكات النفاذ الراديوي المفتوحة «Open RAN» لتطوير حلول قابلة للتطبيق وإطلاق منتجاتها وقياس أثرها. وسيشرف فريق عمل مشترك على تنفيذ البرامج ومتابعة النتائج. ولا تعني قيمة الشراكة البالغة 10 ملايين ريال حصول كل شركة على ذلك المبلغ أو إعلان جولة استثمارية بالأسهم أو إيرادات محققة؛ ولم تُذكر أسماء الشركات الأربع أو المبالغ المخصصة لكل منها."
+        ],
+        "keyFacts": [
+          "البيان الرسمي بتاريخ 13 نوفمبر 2026 وقيمة الشراكة الإجمالية 10 ملايين ريال",
+          "دعم أربع شركات فائزة بتحدي تقنيات Open RAN حتى إطلاق المنتجات",
+          "لا أسماء معلنة للمستفيدين أو مخصصات فردية أو تمويل بالأسهم"
+        ]
+      }
+    }
+  },
+  {
     "id": "sourced-lambda-studios-merak-november-2026",
     "slug": "lambda-studios-merak-1-3m-november-2026",
     "title": "Merak Capital leads US$1.3m round for Saudi Lambda Studios",
