@@ -1,311 +1,360 @@
 "use client"
 
-import { useCallback, useEffect, useState } from "react"
+import { useCallback, useEffect, useRef, useState, type FormEvent, type ReactNode } from "react"
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
+import { Label } from "@/components/ui/label"
 import { Select } from "@/components/ui/select"
+import { Textarea } from "@/components/ui/textarea"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { useToast } from "@/components/ui/toast"
-import { api } from "@/lib/api"
+import { ApiError, api } from "@/lib/api"
 import { type AdminCollectionResponse, type AdminCompany } from "@/lib/admin"
-import { Search, Building2, ExternalLink, Pencil, Trash2 } from "lucide-react"
+import {
+  adminCompanies,
+  companyDisplayName,
+  companyDisplayText,
+  companyFieldErrors,
+  companyFieldId,
+  companyFields,
+  companyFlags,
+  companyPayload,
+  companyStatusLabel,
+  companyStatuses,
+  fill,
+  isCompanyStatus,
+  isListedPublicly,
+  toCompanyForm,
+  validateCompanyForm,
+  type CompanyField,
+  type CompanyForm,
+  type CompanyFormErrors,
+} from "@/lib/admin-companies"
+import { useLocale } from "@/lib/locale"
+import { Search, Building2, ExternalLink, Pencil, Plus, Trash2 } from "lucide-react"
 
-type CompanyForm = {
-  name: string
-  description: string
-  website: string
-  sector: string
-  stage: string
-  location: string
-  country_code: string
-  founded_year: string
-  team_size: string
-  status: string
-  is_hiring: boolean
-  is_fundraising: boolean
-  is_collaborating: boolean
-  is_featured: boolean
-  is_public: boolean
-}
-
-const emptyForm: CompanyForm = {
-  name: "",
-  description: "",
-  website: "",
-  sector: "",
-  stage: "",
-  location: "",
-  country_code: "",
-  founded_year: "",
-  team_size: "",
-  status: "active",
-  is_hiring: false,
-  is_fundraising: false,
-  is_collaborating: false,
-  is_featured: false,
-  is_public: true,
-}
-
-function toForm(company?: AdminCompany | null): CompanyForm {
-  if (!company) {
-    return emptyForm
-  }
-
-  return {
-    name: company.name,
-    description: company.description || "",
-    website: company.website || "",
-    sector: company.sector || "",
-    stage: company.stage || "",
-    location: company.location || "",
-    country_code: company.country_code || "",
-    founded_year: company.founded_year ? String(company.founded_year) : "",
-    team_size: company.team_size ? String(company.team_size) : "",
-    status: company.status,
-    is_hiring: company.is_hiring,
-    is_fundraising: company.is_fundraising,
-    is_collaborating: company.is_collaborating,
-    is_featured: company.is_featured,
-    is_public: company.is_public,
-  }
+type TextField = Exclude<CompanyField, "status">
+type FieldOptions = {
+  required?: boolean
+  hint?: string
+  wide?: boolean
+  multiline?: boolean
+  type?: "text" | "url" | "number"
+  /** Writing direction of the value: Arabic fields are rtl, codes and URLs ltr. */
+  dir?: "ltr" | "rtl" | "auto"
+  lang?: "ar" | "en"
 }
 
 export default function AdminCompaniesPage() {
   const { toast } = useToast()
+  const { locale } = useLocale()
+  const copy = adminCompanies(locale)
   const [companies, setCompanies] = useState<AdminCompany[]>([])
   const [meta, setMeta] = useState<Record<string, number>>({})
-  const [search, setSearch] = useState("")
+  const [searchInput, setSearchInput] = useState("")
+  const [query, setQuery] = useState("")
+  const [status, setStatus] = useState<"loading" | "ready" | "error">("loading")
   const [editing, setEditing] = useState<AdminCompany | null>(null)
-  const [form, setForm] = useState<CompanyForm>(emptyForm)
+  const [form, setForm] = useState<CompanyForm>(() => toCompanyForm())
+  const [errors, setErrors] = useState<CompanyFormErrors>({})
   const [open, setOpen] = useState(false)
   const [saving, setSaving] = useState(false)
+  const [deletingId, setDeletingId] = useState<number | null>(null)
+  const savingRef = useRef(false)
+  const latestRequest = useRef(0)
+  const currentQuery = useRef(query)
 
-  const loadCompanies = useCallback(async () => {
-    const response = await api.get<AdminCollectionResponse<AdminCompany>>("/admin/companies", {
-      params: { search: search || undefined },
-    })
-    setCompanies(response.data)
-    setMeta(response.meta)
-  }, [search])
+  // Reads the search through a ref so a refresh after a save or delete loads the search shown
+  // now, and ignores slower responses to earlier requests.
+  const load = useCallback(async () => {
+    const request = ++latestRequest.current
+    setStatus("loading")
+    try {
+      const response = await api.get<AdminCollectionResponse<AdminCompany>>("/admin/companies", {
+        params: { search: currentQuery.current || undefined },
+      })
+      if (request !== latestRequest.current) return
+      setCompanies(response.data)
+      setMeta(response.meta)
+      setStatus("ready")
+    } catch {
+      if (request === latestRequest.current) setStatus("error")
+    }
+  }, [])
 
   useEffect(() => {
-    loadCompanies().catch((err: Error) => toast(err.message, "error"))
-  }, [loadCompanies, toast])
+    currentQuery.current = query
+    void load()
+  }, [query, load])
+
+  // Fields are disabled while saving and a disabled input cannot take focus, so the first
+  // invalid field is focused once the form is enabled again.
+  const [focusField, setFocusField] = useState<CompanyField | null>(null)
+  useEffect(() => {
+    if (!focusField || saving) return
+    document.getElementById(companyFieldId(focusField))?.focus()
+    setFocusField(null)
+  }, [focusField, saving])
+
+  const focusFirstError = (found: CompanyFormErrors) => {
+    setFocusField(companyFields.find((field) => found[field]) ?? null)
+  }
 
   const openEditor = (company?: AdminCompany) => {
-    setEditing(company || null)
-    setForm(toForm(company))
+    setEditing(company ?? null)
+    setForm(toCompanyForm(company))
+    setErrors({})
     setOpen(true)
   }
 
-  const saveCompany = async () => {
-    setSaving(true)
+  const update = <K extends keyof CompanyForm>(name: K, value: CompanyForm[K]) => {
+    setForm((current) => ({ ...current, [name]: value }))
+    setErrors((current) => {
+      if (!(name in current)) return current
+      const next = { ...current }
+      delete next[name as CompanyField]
+      return next
+    })
+  }
 
-    const payload = {
-      ...form,
-      country_code: form.country_code || null,
-      founded_year: form.founded_year ? Number(form.founded_year) : null,
-      team_size: form.team_size ? Number(form.team_size) : null,
-      website: form.website || null,
+  const save = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+    if (savingRef.current) return
+    const found = validateCompanyForm(locale, form)
+    setErrors(found)
+    if (Object.keys(found).length) {
+      focusFirstError(found)
+      toast(copy.saveInvalid, "error")
+      return
     }
-
+    savingRef.current = true
+    setSaving(true)
     try {
-      if (editing) {
-        await api.put(`/admin/companies/${editing.id}`, payload)
-      } else {
-        await api.post("/admin/companies", payload)
-      }
-
-      toast(`Company ${editing ? "updated" : "created"}.`, "success")
+      const payload = companyPayload(form)
+      if (editing) await api.put(`/admin/companies/${editing.id}`, payload)
+      else await api.post("/admin/companies", payload)
+      toast(editing ? copy.updated : copy.created, "success")
       setOpen(false)
       setEditing(null)
-      setForm(emptyForm)
-      await loadCompanies()
+      void load()
     } catch (err) {
-      toast(err instanceof Error ? err.message : "Could not save company.", "error")
+      const apiErrors = err instanceof ApiError && err.status === 422
+        ? companyFieldErrors((err.data as { errors?: unknown } | undefined)?.errors, copy.serverRejected)
+        : {}
+      if (Object.keys(apiErrors).length) {
+        setErrors(apiErrors)
+        focusFirstError(apiErrors)
+        toast(copy.saveInvalid, "error")
+      } else {
+        toast(copy.saveFailed, "error")
+      }
     } finally {
+      savingRef.current = false
       setSaving(false)
     }
   }
 
-  const deleteCompany = async (company: AdminCompany) => {
-    if (!window.confirm(`Delete ${company.name}?`)) {
-      return
-    }
-
+  const destroy = async (company: AdminCompany) => {
+    const name = companyDisplayName(locale, company)
+    if (deletingId !== null || !window.confirm(fill(copy.confirmDelete, { name }))) return
+    setDeletingId(company.id)
     try {
       await api.delete(`/admin/companies/${company.id}`)
-      toast("Company deleted.", "success")
-      await loadCompanies()
-    } catch (err) {
-      toast(err instanceof Error ? err.message : "Could not delete company.", "error")
+      toast(copy.deleted, "success")
+      void load()
+    } catch {
+      toast(copy.deleteFailed, "error")
+    } finally {
+      setDeletingId(null)
     }
+  }
+
+  const field = (name: TextField, label: string, options: FieldOptions = {}): ReactNode => {
+    const id = companyFieldId(name)
+    const describedBy = errors[name] ? `${id}-error` : options.hint ? `${id}-hint` : undefined
+    const shared = {
+      id,
+      name,
+      value: form[name],
+      disabled: saving,
+      required: options.required,
+      "aria-invalid": Boolean(errors[name]),
+      "aria-describedby": describedBy,
+      dir: options.dir ?? "auto",
+      lang: options.lang,
+    }
+    return (
+      <div className={options.wide ? "space-y-2 sm:col-span-2" : "space-y-2"}>
+        <Label htmlFor={id}>
+          {label}
+          {options.required && <span className="ms-1 text-xs font-normal text-gray-500">{copy.required}</span>}
+        </Label>
+        {options.multiline
+          ? <Textarea {...shared} rows={3} onChange={(event) => update(name, event.target.value)} />
+          : <Input {...shared} type={options.type ?? "text"} inputMode={options.type === "number" ? "numeric" : undefined} onChange={(event) => update(name, event.target.value)} />}
+        {options.hint && !errors[name] && <p id={`${id}-hint`} className="text-xs text-gray-500">{options.hint}</p>}
+        {errors[name] && <p id={`${id}-error`} className="text-xs font-medium text-red-700">{errors[name]}</p>}
+      </div>
+    )
+  }
+
+  const statusId = companyFieldId("status")
+  const searching = query !== ""
+
+  let records: ReactNode
+  if (status === "loading" && companies.length === 0) {
+    records = <p role="status" className="text-sm text-gray-500">{copy.loading}</p>
+  } else if (status === "error") {
+    records = (
+      <div role="alert" className="space-y-3">
+        <p className="text-sm text-gray-700">{copy.loadFailed}</p>
+        <Button size="sm" variant="outline" className="min-h-11" onClick={() => void load()}>{copy.retry}</Button>
+      </div>
+    )
+  } else if (companies.length === 0) {
+    records = <p className="text-sm text-gray-500">{searching ? copy.emptySearch : copy.empty}</p>
+  } else {
+    records = companies.map((company) => {
+      const name = companyDisplayName(locale, company)
+      const details = [companyDisplayText(locale, company, "sector"), company.stage, companyDisplayText(locale, company, "location")].filter(Boolean)
+      const founders = company.founders?.map((founder) => founder.user?.name).filter(Boolean).join(copy.listSeparator)
+      const listed = isListedPublicly(company)
+      return (
+        <div key={company.id} className="flex items-start justify-between gap-3 rounded-xl border border-gray-100 p-4">
+          <div className="flex min-w-0 gap-3">
+            <div className="hidden h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-gray-100 sm:flex">
+              <Building2 className="h-4 w-4 text-gray-500" aria-hidden="true" />
+            </div>
+            <div className="min-w-0">
+              <p className="font-medium text-gray-900 break-words" dir="auto">{name}</p>
+              {locale === "ar" && !company.ar?.name && <p className="text-xs text-amber-800 mt-1">{copy.missingArabic}</p>}
+              {details.length > 0 && <p className="text-sm text-gray-500 mt-1 break-words" dir="auto">{details.join(" · ")}</p>}
+              {founders && <p className="text-xs text-gray-500 mt-1 break-words">{fill(copy.founders, { names: founders })}</p>}
+              <div className="flex flex-wrap gap-2 mt-3">
+                <Badge variant={listed ? "success" : "secondary"}>{listed ? copy.listed : copy.notListed}</Badge>
+                {company.status !== "active" && <Badge variant="outline">{companyStatusLabel(locale, company.status)}</Badge>}
+                {company.is_featured && <Badge variant="gold">{copy.flags.is_featured}</Badge>}
+                {company.is_hiring && <Badge variant="secondary">{copy.flags.is_hiring}</Badge>}
+                {company.is_fundraising && <Badge variant="warning">{copy.flags.is_fundraising}</Badge>}
+              </div>
+            </div>
+          </div>
+          <div className="flex shrink-0 flex-col gap-1 sm:flex-row">
+            {company.website && (
+              <a href={company.website} target="_blank" rel="noreferrer" className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-md text-gray-500 hover:bg-gray-100 hover:text-gray-700" aria-label={fill(copy.openWebsite, { name })} title={copy.website}>
+                <ExternalLink className="h-4 w-4" aria-hidden="true" />
+              </a>
+            )}
+            <Button size="sm" variant="ghost" className="min-h-11 min-w-11" onClick={() => openEditor(company)} aria-label={fill(copy.edit, { name })} title={fill(copy.edit, { name })}>
+              <Pencil className="h-4 w-4" aria-hidden="true" />
+            </Button>
+            <Button size="sm" variant="ghost" className="min-h-11 min-w-11" disabled={deletingId === company.id} onClick={() => void destroy(company)} aria-label={fill(copy.remove, { name })} title={fill(copy.remove, { name })}>
+              <Trash2 className="h-4 w-4 text-red-500" aria-hidden="true" />
+            </Button>
+          </div>
+        </div>
+      )
+    })
   }
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+      <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
-          <h2 className="text-2xl font-bold text-gray-900">Companies</h2>
-          <p className="text-gray-500 text-sm mt-1">Manage companies in the Wosool network.</p>
+          <h2 className="text-2xl font-bold text-gray-900">{copy.title}</h2>
+          <p className="text-gray-500 text-sm mt-1">{copy.intro}</p>
         </div>
-        <div className="flex gap-2">
-          <Button variant="outline" size="sm" onClick={() => loadCompanies().catch((err: Error) => toast(err.message, "error"))}>
-            Refresh
-          </Button>
-          <Button size="sm" onClick={() => openEditor()}>
-            + Add Company
-          </Button>
-        </div>
+        <Button size="sm" className="min-h-11" onClick={() => openEditor()}><Plus className="h-4 w-4 me-2" aria-hidden="true" />{copy.add}</Button>
+      </div>
+
+      <p className="rounded-lg border border-gray-200 bg-gray-50 px-4 py-3 text-sm text-gray-700">{copy.publicNote}</p>
+
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+        {[
+          { label: copy.total, value: meta.total || 0 },
+          { label: copy.hiringCount, value: meta.hiring || 0 },
+          { label: copy.fundraisingCount, value: meta.fundraising || 0 },
+        ].map((item) => <Card key={item.label}><CardContent className="pt-6"><p className="text-3xl font-bold text-gray-900">{item.value}</p><p className="text-sm text-gray-500 mt-1">{item.label}</p></CardContent></Card>)}
       </div>
 
       <Card>
         <CardContent className="pt-5">
-          <div className="flex flex-col sm:flex-row gap-4">
+          <form role="search" className="flex gap-3" onSubmit={(event) => { event.preventDefault(); setQuery(searchInput.trim()) }}>
             <div className="flex-1 relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" aria-hidden="true" />
-              <Input
-                type="search"
-                value={search}
-                onChange={(event) => setSearch(event.target.value)}
-                onKeyDown={(event) => {
-                  if (event.key === "Enter") {
-                    loadCompanies().catch((err: Error) => toast(err.message, "error"))
-                  }
-                }}
-                placeholder="Search companies by name, sector, or location..."
-                className="pl-10"
-              />
+              <Label htmlFor="company-search" className="sr-only">{copy.searchLabel}</Label>
+              <Search className="absolute start-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" aria-hidden="true" />
+              <Input id="company-search" type="search" dir="auto" value={searchInput} onChange={(event) => setSearchInput(event.target.value)} placeholder={copy.searchPlaceholder} className="ps-10" />
             </div>
-            <Button variant="outline" size="sm" onClick={() => loadCompanies().catch((err: Error) => toast(err.message, "error"))}>
-              Search
-            </Button>
-          </div>
+            <Button type="submit" variant="outline" size="sm" className="min-h-11">{copy.search}</Button>
+          </form>
         </CardContent>
       </Card>
 
       <Card>
-        <CardHeader>
-          <div className="flex items-center justify-between">
-            <h3 className="font-semibold text-gray-900">All Companies ({meta.total || companies.length})</h3>
-            <p className="text-sm text-gray-500">
-              {meta.hiring || 0} hiring · {meta.fundraising || 0} fundraising
-            </p>
-          </div>
-        </CardHeader>
-        <CardContent className="p-0">
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="border-b border-gray-100 bg-gray-50">
-                  <th className="text-left px-6 py-3 font-medium text-gray-500">Company</th>
-                  <th className="text-left px-6 py-3 font-medium text-gray-500">Founders</th>
-                  <th className="text-left px-6 py-3 font-medium text-gray-500">Sector</th>
-                  <th className="text-left px-6 py-3 font-medium text-gray-500">Stage</th>
-                  <th className="text-left px-6 py-3 font-medium text-gray-500">Status</th>
-                  <th className="text-left px-6 py-3 font-medium text-gray-500">Actions</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-100">
-                {companies.map((company) => (
-                  <tr key={company.id} className="hover:bg-gray-50 transition-colors">
-                    <td className="px-6 py-4">
-                      <div className="flex items-center gap-3">
-                        <div className="h-8 w-8 rounded-lg bg-gray-100 flex items-center justify-center">
-                          <Building2 className="h-4 w-4 text-gray-500" aria-hidden="true" />
-                        </div>
-                        <div>
-                          <p className="font-medium text-gray-900">{company.name}</p>
-                          <p className="text-xs text-gray-500">{company.location || "—"}</p>
-                        </div>
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 text-gray-700">
-                      {company.founders?.map((founder) => founder.user?.name).filter(Boolean).join(", ") || "—"}
-                    </td>
-                    <td className="px-6 py-4"><Badge variant="secondary">{company.sector || "—"}</Badge></td>
-                    <td className="px-6 py-4"><Badge variant="outline">{company.stage || "—"}</Badge></td>
-                    <td className="px-6 py-4">
-                      <div className="flex flex-wrap gap-1">
-                        <Badge variant={company.status === "active" ? "success" : "secondary"}>{company.status}</Badge>
-                        {company.is_hiring && <Badge variant="secondary">Hiring</Badge>}
-                        {company.is_fundraising && <Badge variant="warning">Fundraising</Badge>}
-                      </div>
-                    </td>
-                    <td className="px-6 py-4">
-                      <div className="flex items-center gap-2">
-                        {company.website && (
-                          <a href={company.website} target="_blank" rel="noreferrer" className="text-gray-500 hover:text-gray-700" aria-label={`${company.name} website (opens in a new tab)`} title="Website">
-                            <ExternalLink className="h-4 w-4" aria-hidden="true" />
-                          </a>
-                        )}
-                        <button className="text-gray-500 hover:text-gray-700" onClick={() => openEditor(company)} aria-label={`Edit ${company.name}`} title="Edit">
-                          <Pencil className="h-4 w-4" aria-hidden="true" />
-                        </button>
-                        <button className="text-red-500 hover:text-red-700" onClick={() => deleteCompany(company)} aria-label={`Delete ${company.name}`} title="Delete">
-                          <Trash2 className="h-4 w-4" aria-hidden="true" />
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </CardContent>
+        <CardHeader><h3 className="font-semibold text-gray-900">{copy.records}</h3></CardHeader>
+        <CardContent className="space-y-4" aria-busy={status === "loading"}>{records}</CardContent>
       </Card>
 
-      <Dialog open={open} onOpenChange={setOpen}>
+      <Dialog open={open} onOpenChange={(next) => { if (!saving) setOpen(next) }}>
         <DialogContent className="max-w-2xl">
           <DialogHeader>
-            <DialogTitle>{editing ? "Edit company" : "Create company"}</DialogTitle>
-            <DialogDescription>Maintain seeded company records and public company listings.</DialogDescription>
+            <DialogTitle>{editing ? copy.editTitle : copy.addTitle}</DialogTitle>
+            <DialogDescription>{copy.dialogIntro}</DialogDescription>
           </DialogHeader>
-
-          <div className="space-y-4">
-            <div className="grid gap-4 sm:grid-cols-2">
-              <Input placeholder="Company name" value={form.name} onChange={(event) => setForm((current) => ({ ...current, name: event.target.value }))} />
-              <Input placeholder="Website" value={form.website} onChange={(event) => setForm((current) => ({ ...current, website: event.target.value }))} />
-              <Input placeholder="Sector" value={form.sector} onChange={(event) => setForm((current) => ({ ...current, sector: event.target.value }))} />
-              <Input placeholder="Stage" value={form.stage} onChange={(event) => setForm((current) => ({ ...current, stage: event.target.value }))} />
-              <Input placeholder="Location" value={form.location} onChange={(event) => setForm((current) => ({ ...current, location: event.target.value }))} />
-              <Input placeholder="Country code" value={form.country_code} onChange={(event) => setForm((current) => ({ ...current, country_code: event.target.value.toUpperCase() }))} />
-              <Input placeholder="Founded year" value={form.founded_year} onChange={(event) => setForm((current) => ({ ...current, founded_year: event.target.value }))} />
-              <Input placeholder="Team size" value={form.team_size} onChange={(event) => setForm((current) => ({ ...current, team_size: event.target.value }))} />
-              <Select value={form.status} onChange={(event) => setForm((current) => ({ ...current, status: event.target.value }))}>
-                <option value="active">active</option>
-                <option value="pending">pending</option>
-                <option value="suspended">suspended</option>
-                <option value="archived">archived</option>
-              </Select>
+          <form className="space-y-4" onSubmit={save} noValidate>
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              {field("name", copy.name, { required: true, dir: "ltr", lang: "en" })}
+              {field("name_ar", copy.nameAr, { dir: "rtl", lang: "ar" })}
+              {field("sector", copy.sector, { dir: "ltr", lang: "en" })}
+              {field("sector_ar", copy.sectorAr, { dir: "rtl", lang: "ar" })}
+              {field("location", copy.location, { dir: "ltr", lang: "en" })}
+              {field("location_ar", copy.locationAr, { dir: "rtl", lang: "ar" })}
+              {field("description", copy.description, { multiline: true, dir: "ltr", lang: "en" })}
+              {field("description_ar", copy.descriptionAr, { multiline: true, dir: "rtl", lang: "ar" })}
+              {field("website", copy.website, { type: "url", dir: "ltr" })}
+              <div className="space-y-2">
+                <Label htmlFor={statusId}>
+                  {copy.status}
+                  <span className="ms-1 text-xs font-normal text-gray-500">{copy.required}</span>
+                </Label>
+                <Select
+                  id={statusId}
+                  name="status"
+                  value={form.status}
+                  disabled={saving}
+                  required
+                  aria-invalid={Boolean(errors.status)}
+                  aria-describedby={errors.status ? `${statusId}-error` : undefined}
+                  onChange={(event) => update("status", event.target.value)}
+                >
+                  {companyStatuses.map((value) => <option key={value} value={value}>{copy.statuses[value]}</option>)}
+                  {!isCompanyStatus(form.status) && <option value={form.status}>{form.status}</option>}
+                </Select>
+                {errors.status && <p id={`${statusId}-error`} className="text-xs font-medium text-red-700">{errors.status}</p>}
+              </div>
+              {field("stage", copy.stage, { dir: "ltr", hint: copy.stageHint })}
+              {field("country_code", copy.countryCode, { dir: "ltr", hint: copy.countryCodeHint })}
+              {field("founded_year", copy.foundedYear, { type: "number", dir: "ltr" })}
+              {field("team_size", copy.teamSize, { type: "number", dir: "ltr" })}
             </div>
-            <Textarea placeholder="Description" value={form.description} onChange={(event) => setForm((current) => ({ ...current, description: event.target.value }))} />
-            <div className="grid gap-3 sm:grid-cols-2">
-              {[
-                ["is_hiring", "Hiring"],
-                ["is_fundraising", "Fundraising"],
-                ["is_collaborating", "Collaborating"],
-                ["is_featured", "Featured"],
-                ["is_public", "Public"],
-              ].map(([key, label]) => (
-                <label key={key} className="flex items-center gap-2 text-sm text-gray-700">
-                  <input
-                    type="checkbox"
-                    checked={form[key as keyof CompanyForm] as boolean}
-                    onChange={(event) => setForm((current) => ({ ...current, [key]: event.target.checked }))}
-                  />
-                  {label}
-                </label>
-              ))}
-            </div>
+            <fieldset className="space-y-1">
+              <legend className="text-sm font-medium text-gray-900">{copy.flagsLegend}</legend>
+              <div className="grid grid-cols-1 gap-x-4 sm:grid-cols-2">
+                {companyFlags.map((flag) => (
+                  <label key={flag} htmlFor={companyFieldId(flag)} className="flex min-h-11 items-center gap-2 text-sm text-gray-900">
+                    <input id={companyFieldId(flag)} type="checkbox" className="h-4 w-4" checked={form[flag]} disabled={saving} onChange={(event) => update(flag, event.target.checked)} />
+                    {copy.flags[flag]}
+                  </label>
+                ))}
+              </div>
+            </fieldset>
             <div className="flex justify-end gap-2">
-              <Button variant="outline" onClick={() => setOpen(false)}>Cancel</Button>
-              <Button onClick={saveCompany} loading={saving}>Save</Button>
+              <Button type="button" variant="outline" className="min-h-11" disabled={saving} onClick={() => setOpen(false)}>{copy.cancel}</Button>
+              <Button type="submit" className="min-h-11" disabled={saving} aria-busy={saving}>{saving ? copy.saving : copy.save}</Button>
             </div>
-          </div>
+          </form>
         </DialogContent>
       </Dialog>
     </div>

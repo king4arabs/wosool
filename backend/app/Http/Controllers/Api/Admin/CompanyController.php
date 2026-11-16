@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Api\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\CompanyResource;
+use App\Http\Resources\AdminCompanyResource;
 use App\Models\AdminAction;
 use App\Models\CompanyProfile;
 use App\Support\GeneratesUniqueSlug;
@@ -26,7 +26,10 @@ class CompanyController extends Controller
                 $builder
                     ->where('name', 'like', "%{$search}%")
                     ->orWhere('sector', 'like', "%{$search}%")
-                    ->orWhere('location', 'like', "%{$search}%");
+                    ->orWhere('location', 'like', "%{$search}%")
+                    ->orWhere('translations->ar->name', 'like', "%{$search}%")
+                    ->orWhere('translations->ar->sector', 'like', "%{$search}%")
+                    ->orWhere('translations->ar->location', 'like', "%{$search}%");
             });
         }
 
@@ -41,7 +44,7 @@ class CompanyController extends Controller
         $companies = $query->latest()->get();
 
         return response()->json([
-            'data' => CompanyResource::collection($companies),
+            'data' => AdminCompanyResource::collection($companies),
             'meta' => [
                 'total' => $companies->count(),
                 'hiring' => $companies->where('is_hiring', true)->count(),
@@ -53,7 +56,7 @@ class CompanyController extends Controller
 
     public function store(Request $request): JsonResponse
     {
-        $data = $this->validated($request);
+        $data = $this->withArabic($this->validated($request));
         $data['slug'] = ($data['slug'] ?? null) ?: $this->uniqueSlug($data['name'], 'company', CompanyProfile::class);
 
         $company = CompanyProfile::create($data);
@@ -62,13 +65,13 @@ class CompanyController extends Controller
 
         return response()->json([
             'message' => 'Company created.',
-            'data' => new CompanyResource($company->load('founders.user:id,name')),
+            'data' => new AdminCompanyResource($company->load('founders.user:id,name')),
         ], 201);
     }
 
     public function update(Request $request, CompanyProfile $company): JsonResponse
     {
-        $data = $this->validated($request, $company);
+        $data = $this->withArabic($this->validated($request, $company), $company);
         $beforeState = $company->toArray();
 
         $data['slug'] = ($data['slug'] ?? null)
@@ -81,7 +84,7 @@ class CompanyController extends Controller
 
         return response()->json([
             'message' => 'Company updated.',
-            'data' => new CompanyResource($company->fresh()->load('founders.user:id,name')),
+            'data' => new AdminCompanyResource($company->fresh()->load('founders.user:id,name')),
         ]);
     }
 
@@ -114,6 +117,51 @@ class CompanyController extends Controller
             'is_featured' => ['sometimes', 'boolean'],
             'is_public' => ['sometimes', 'boolean'],
             'status' => ['required', Rule::in(['active', 'pending', 'suspended', 'archived'])],
+            'name_ar' => ['sometimes', 'nullable', 'string', 'max:255'],
+            'description_ar' => ['sometimes', 'nullable', 'string'],
+            'sector_ar' => ['sometimes', 'nullable', 'string', 'max:100'],
+            'location_ar' => ['sometimes', 'nullable', 'string', 'max:255'],
         ]);
+    }
+
+    /**
+     * Moves the optional Arabic fields into `translations.ar`, which the public pages show to
+     * Arabic readers. Only the Arabic fields that were sent change; other translation keys are
+     * kept, a blank field removes that Arabic text, and a request without Arabic fields leaves
+     * the translations untouched.
+     */
+    private function withArabic(array $data, ?CompanyProfile $company = null): array
+    {
+        $sent = [];
+        foreach (AdminCompanyResource::ARABIC_FIELDS as $field) {
+            if (array_key_exists("{$field}_ar", $data)) {
+                $sent[$field] = $data["{$field}_ar"];
+            }
+            unset($data["{$field}_ar"]);
+        }
+
+        if ($sent === []) {
+            return $data;
+        }
+
+        $translations = $company?->translations ?? [];
+        $arabic = $translations['ar'] ?? [];
+        foreach ($sent as $field => $value) {
+            $value = is_string($value) ? trim($value) : '';
+            if ($value === '') {
+                unset($arabic[$field]);
+            } else {
+                $arabic[$field] = $value;
+            }
+        }
+
+        if ($arabic === []) {
+            unset($translations['ar']);
+        } else {
+            $translations['ar'] = $arabic;
+        }
+        $data['translations'] = $translations === [] ? null : $translations;
+
+        return $data;
     }
 }

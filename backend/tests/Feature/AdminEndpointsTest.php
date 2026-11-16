@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\Application;
+use App\Models\CompanyProfile;
 use App\Models\User;
 use Database\Seeders\DatabaseSeeder;
 use Database\Seeders\RoleAndPermissionSeeder;
@@ -92,6 +93,75 @@ class AdminEndpointsTest extends TestCase
             ->assertOk();
 
         $this->assertSoftDeleted('company_profiles', ['id' => $companyId]);
+    }
+
+    public function test_admin_company_editor_keeps_english_and_arabic_text_apart(): void
+    {
+        $this->seed(DatabaseSeeder::class);
+
+        $admin = User::where('email', 'admin@wosool.org')->firstOrFail();
+        $company = CompanyProfile::create([
+            'name' => 'Example Logistics',
+            'slug' => 'example-logistics-admin-test',
+            'description' => 'Freight software.',
+            'sector' => 'Logistics',
+            'location' => 'Saudi Arabia',
+            'status' => 'active',
+            'is_public' => true,
+            'translations' => ['ar' => ['name' => 'مثال اللوجستية', 'description' => 'برمجيات شحن.', 'sector' => 'الخدمات اللوجستية', 'location' => 'السعودية']],
+        ]);
+        $arabic = ['X-Locale' => 'ar'];
+
+        // The Arabic admin receives the stored English columns and the Arabic text separately.
+        $listed = collect($this->actingAs($admin)->withHeaders($arabic)->getJson('/api/v1/admin/companies?search='.urlencode('مثال'))
+            ->assertOk()->json('data'))->firstWhere('id', $company->id);
+        $this->assertNotNull($listed, 'the Arabic name is searchable');
+        $this->assertSame('Example Logistics', $listed['name']);
+        $this->assertSame('Logistics', $listed['sector']);
+        $this->assertSame('مثال اللوجستية', $listed['ar']['name']);
+        $this->assertSame('السعودية', $listed['ar']['location']);
+
+        $base = [
+            'name' => 'Example Logistics',
+            'description' => 'Freight software.',
+            'sector' => 'Logistics',
+            'location' => 'Saudi Arabia',
+            'status' => 'active',
+            'is_public' => true,
+        ];
+
+        // Saving from the Arabic admin writes each language to its own place.
+        $this->actingAs($admin)->withHeaders($arabic)->putJson("/api/v1/admin/companies/{$company->id}", $base + [
+            'name_ar' => 'مثال للخدمات اللوجستية',
+            'description_ar' => '',
+        ])->assertOk()
+            ->assertJsonPath('data.name', 'Example Logistics')
+            ->assertJsonPath('data.ar.name', 'مثال للخدمات اللوجستية')
+            ->assertJsonPath('data.ar.description', null);
+
+        $company->refresh();
+        $this->assertSame('Example Logistics', $company->name);
+        $this->assertSame('Freight software.', $company->description);
+        $this->assertSame(['name' => 'مثال للخدمات اللوجستية', 'sector' => 'الخدمات اللوجستية', 'location' => 'السعودية'], $company->translations['ar']);
+
+        // A request without Arabic fields leaves the Arabic text alone.
+        $this->actingAs($admin)->putJson("/api/v1/admin/companies/{$company->id}", ['team_size' => 12] + $base)->assertOk();
+        $this->assertSame('مثال للخدمات اللوجستية', $company->fresh()->translations['ar']['name']);
+
+        // The public Arabic page shows the edited Arabic name; the English page the English one.
+        $this->withHeaders($arabic)->getJson('/api/v1/companies/example-logistics-admin-test')->assertOk()->assertJsonPath('data.name', 'مثال للخدمات اللوجستية');
+        $this->withHeaders(['X-Locale' => 'en'])->getJson('/api/v1/companies/example-logistics-admin-test')->assertOk()->assertJsonPath('data.name', 'Example Logistics');
+
+        // Clearing every Arabic field removes the translation.
+        $this->actingAs($admin)->putJson("/api/v1/admin/companies/{$company->id}", $base + [
+            'name_ar' => '', 'description_ar' => null, 'sector_ar' => ' ', 'location_ar' => '',
+        ])->assertOk()->assertJsonPath('data.ar.name', null);
+        $this->assertNull($company->fresh()->translations);
+
+        $this->actingAs($admin)->postJson('/api/v1/admin/companies', ['name' => 'New Example', 'name_ar' => 'مثال جديد'] + $base)
+            ->assertCreated()->assertJsonPath('data.ar.name', 'مثال جديد')->assertJsonPath('data.name', 'New Example');
+        $this->actingAs($admin)->postJson('/api/v1/admin/companies', $base + ['name_ar' => str_repeat('ا', 256)])
+            ->assertUnprocessable()->assertJsonValidationErrors('name_ar');
     }
 
     public function test_admin_can_review_application(): void
