@@ -158,7 +158,7 @@ class AdminEndpointsTest extends TestCase
         ])->assertOk()->assertJsonPath('data.ar.name', null);
         $this->assertNull($company->fresh()->translations);
 
-        $this->actingAs($admin)->postJson('/api/v1/admin/companies', $base + ['name' => 'New Example', 'name_ar' => 'مثال جديد'])
+        $this->actingAs($admin)->postJson('/api/v1/admin/companies', ['name' => 'New Example', 'name_ar' => 'مثال جديد'] + $base)
             ->assertCreated()->assertJsonPath('data.ar.name', 'مثال جديد')->assertJsonPath('data.name', 'New Example');
         $this->actingAs($admin)->postJson('/api/v1/admin/companies', $base + ['name_ar' => str_repeat('ا', 256)])
             ->assertUnprocessable()->assertJsonValidationErrors('name_ar');
