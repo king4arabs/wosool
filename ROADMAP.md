@@ -1,6 +1,10 @@
 # Roadmap
 
-## Current execution plan — 15 November 2026
+## Current execution plan — 16 November 2026
+
+Admin company correction: `/admin/companies` now returns stored English text and Arabic directory translations separately, preventing an Arabic-locale edit from overwriting the English name, description, sector or location. The editor is bilingual, validates locally, maps server errors to fields, searches only on submit and shows public-listing state. PR CI run 716 passed all seven checks before merge `f584e44`; Cloudflare and Hostinger branch previews also built successfully. Next: verify the protected workflow against compatible serving frontend/backend revisions with a controlled administrator account. Source merge and preview deployment do not establish production activation or a database change.
+
+Editorial checkpoint: **408 external/unclaimed founders / 220 company keys / 140 bilingual news briefs**, with zero integrity problems and 126 founder reviews due. The 16 November addition covers Fahad Alarifee (Rkiza) and the issuer-dated Alwaleed Philanthropies–RDIA Open RAN partnership; its SAR 10m is partnership value, not individual startup financing or earned revenue. Repository totals are not member counts or production-import evidence.
 
 Verified editorial addition: two Saudi Lambda Studios co-founders and one source-dated 12 November gaming-financing brief, resulting in **398 founders / 215 company keys / 139 news items** across ten mirrored catalog pairs. The new brand retains a company-name fallback pending rights-cleared artwork. All Laravel and frontend tests, content integrity and runtime/production packaging gates must pass before merge. The company-reported audience is not audited revenue. Hostinger release and database import remain independent tasks. See [15 November evidence](docs/research/CONTENT-REFRESH-2026-11-15.md).
 
