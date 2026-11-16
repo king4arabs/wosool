@@ -1,3 +1,10 @@
+## Admin companies page: both languages, English and Arabic text kept apart — 2026-11-16
+
+- **Found:** `/admin/companies` loaded companies through the public `CompanyResource`, which swaps in the Arabic name, description, sector and location when the request is in Arabic (the admin's default language). Saving a company from the Arabic admin wrote that Arabic text into the English columns, so English readers of the public directory would then see Arabic. The page was also fixed English, used placeholders as its only labels, sent a request on every keystroke in the search box, showed raw API errors and gave no sign of which companies are hidden from the public directory.
+- **Fixed:** the admin company endpoints now return a new `AdminCompanyResource` with the stored English columns and the Arabic directory text (`ar`) side by side, and accept optional `name_ar`, `description_ar`, `sector_ar` and `location_ar`, which update only those keys in `translations.ar` (a blank field removes that Arabic text; a request without them leaves translations unchanged). Admin search also matches Arabic names, sectors and locations.
+- **Page:** follows the admin's language, labels every field with its language, shows English and Arabic fields side by side with the matching writing direction, validates against `Admin\CompanyController` before sending, maps 422 errors to fields in the page language, searches on submit, ignores stale responses, shows loading/error/empty states and marks each company as listed or not listed in the public directory. Uses logical spacing for RTL.
+- **Tests:** Laravel `test_admin_company_editor_keeps_english_and_arabic_text_apart`; frontend `admin-companies` (6); browser check `check-admin-companies.mjs` in both languages at 390px and 1366px against a mocked API (added to CI). No data import, deployment or hosting change.
+
 ## Saudi founder freshness corrections — 2026-11-15
 
 - Re-verified three overdue Saudi profiles against active first-party, government and investor pages: Abdullah Asiri at Lucidya, Hisham Al-Falih at Lean Technologies and Ahmed Alenazi at Barq.

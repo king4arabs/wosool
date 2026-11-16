@@ -80,6 +80,8 @@ export interface AdminCompany {
   status: string
   founders_count?: number
   founders?: Array<{ id: number; user?: { name?: string | null } | null }>
+  /** Arabic directory text (`translations.ar`); the fields above are the stored English text. */
+  ar?: { name: string | null; description: string | null; sector: string | null; location: string | null } | null
   created_at?: string
   updated_at?: string
 }
