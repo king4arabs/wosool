@@ -421,5 +421,40 @@
     "reviewed_at": "2026-11-15",
     "region": "saudi",
     "founder_socials": []
+  },
+  {
+    "slug": "fahad-alarifee-rkiza",
+    "founder_name_en": "Fahad Alarifee",
+    "founder_name_ar": "فهد العريفي",
+    "role_en": "Founder & CEO",
+    "role_ar": "المؤسس والرئيس التنفيذي",
+    "founder_brief_en": "Saudi software engineer who founded Rkiza in 2024 and leads development of software-as-a-service, developer infrastructure and Arabic-first interactive products.",
+    "founder_brief_ar": "مهندس برمجيات سعودي أسس «ركيزة» عام 2024 ويقود تطوير البرمجيات السحابية والبنية التقنية للمطورين ومنتجات تفاعلية مصممة للمستخدم العربي.",
+    "company_key": "rkiza",
+    "company_name_en": "Rkiza",
+    "company_name_ar": "ركيزة",
+    "company_brief_en": "Riyadh-based software company building and operating digital platforms including the SNDR email infrastructure service, Jawlah interactive streaming games and Asbghm mobile games.",
+    "company_brief_ar": "شركة برمجيات مقرها الرياض تبني وتشغّل منصات رقمية منها خدمة «SNDR» للبريد الإلكتروني للمطورين، وألعاب البث التفاعلية «جولة»، وألعاب الجوال «اسبقهم».",
+    "country_en": "Saudi Arabia",
+    "country_ar": "السعودية",
+    "country_code": "SA",
+    "sector_en": "Software & developer platforms",
+    "sector_ar": "البرمجيات ومنصات المطورين",
+    "website": "https://www.rkiza.sa/",
+    "portrait_url": null,
+    "logo_url": null,
+    "source_url": "https://www.fahad-alarifee.com/",
+    "source_urls": [
+      "https://www.fahad-alarifee.com/",
+      "https://www.rkiza.sa/",
+      "https://waya.media/saudis-rkiza-raised-usd-133k-to-expand-digital-platform-solutions/"
+    ],
+    "reviewed_at": "2026-11-16",
+    "region": "saudi",
+    "founded_year": 2024,
+    "traction_en": null,
+    "traction_ar": null,
+    "traction_source_url": null,
+    "founder_socials": []
   }
 ]

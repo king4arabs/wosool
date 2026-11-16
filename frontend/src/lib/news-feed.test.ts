@@ -222,3 +222,16 @@ test('13 November source-linked stories retain publication dates and founder ass
   assert.deepEqual(newsFounders(curatedNews.find(row => row.slug === 'multipolitan-two-million-preseed-november-2026')!).map(x => x.slug).sort(), ['lee-smith-multipolitan','nirbhay-handa-multipolitan'])
   assert.deepEqual(newsFounders(curatedNews.find(row => row.slug === '4401-holcim-investment-november-2026')!).map(x => x.slug).sort(), ['ehab-tasfai-4401','karan-khimji-4401','talal-hasan-4401'])
 })
+
+
+test('13 November Open RAN partnership reports overall support rather than invented funding', () => {
+  const item = curatedNews.find(row => row.slug === 'alwaleed-rdia-open-ran-startups-november-2026')!
+  assert.ok(item)
+  assert.equal(item.publishedAt, '2026-11-13')
+  assert.equal(item.region, 'saudi')
+  assert.equal(item.category, 'Ecosystem')
+  assert.equal(item.imageUrl, '')
+  assert.equal(item.keyFacts?.length, 3)
+  assert.equal(item.translations?.ar.keyFacts?.length, 3)
+  assert.ok(safeNewsUrl(item.sourceUrl))
+})
