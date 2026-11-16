@@ -36,7 +36,7 @@ class PublicFounderContractTest extends TestCase
             }
             foreach (range(1, 17) as $page) {
                 $response = $this->getJson('/api/v1/founders?per_page=24&page='.$page, ['X-Locale' => $locale])
-                    ->assertOk()->assertJsonPath('meta.total', 408)->assertJsonCount($page === 17 ? 24 : 24, 'data');
+                    ->assertOk()->assertJsonPath('meta.total', 408)->assertJsonCount(24, 'data');
                 $samples[] = $this->sample($response, '/api/v1/founders');
             }
             $detail = $this->getJson('/api/v1/founders/salman-butt', ['X-Locale' => $locale])->assertOk()
