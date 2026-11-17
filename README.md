@@ -2,6 +2,8 @@
   <img src="frontend/public/wosool-logo-eo.svg" alt="Wosool | وصول" width="420" />
 </p>
 
+**Editorial update (17 November 2026):** The editorial source catalogs now contain **411 external/unclaimed founders, 222 company identities and 142 bilingual source-dated briefs**. Added Paul Farhi (Vision Makers, UAE) and Ibrahim Anwar and Mohammed Darwish (Sabika, Egypt), plus two original 16 November 2026 news briefs. No license to reuse their logos was verified, so names remain legible as fallback. Source catalogs are not proof of production imports or Hostinger deployment. See [17 November source evidence](docs/research/CONTENT-REFRESH-2026-11-17.md).
+
 **Editorial update (16 November 2026):** **408 external/unclaimed founders, 220 companies and 140 bilingual source-linked news briefs**. Added Fahad Alarifee (Rkiza) and the 13 November issuer-dated Alwaleed Philanthropies–RDIA Open RAN partnership. Its SAR 10m is overall partnership value, not individual startup financing. Unverified logos use the name fallback. Source commits are not production database imports or live Hostinger releases.
 
 <h1 align="center">Wosool | وصول</h1>
