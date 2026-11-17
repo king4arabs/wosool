@@ -12,9 +12,10 @@ import november12Profiles from '../data/founder-spotlight-expansion-2026-11-12.j
 import november13Profiles from '../data/founder-spotlight-expansion-2026-11-13.json'
 import november14Profiles from '../data/founder-spotlight-expansion-2026-11-14.json'
 import november15Profiles from '../data/founder-spotlight-expansion-2026-11-15.json'
+import november17Profiles from '../data/founder-spotlight-expansion-2026-11-17.json'
 
 const rank: Record<string, number> = { saudi: 0, gcc: 1, mena: 2, global: 3 }
-const sourceProfiles = [...historicalProfiles, ...additionalProfiles, ...discoveryProfiles, ...countryProfiles, ...novemberProfiles, ...november12Profiles, ...november13Profiles, ...november14Profiles, ...november15Profiles]
+const sourceProfiles = [...historicalProfiles, ...additionalProfiles, ...discoveryProfiles, ...countryProfiles, ...novemberProfiles, ...november12Profiles, ...november13Profiles, ...november14Profiles, ...november15Profiles, ...november17Profiles]
   .sort((left, right) => (rank[left.region] ?? 4) - (rank[right.region] ?? 4))
 // Historical batches retain their membership when an existing profile receives new verification dates.
 // Cohort boundaries are source-linked, not array positions: editorial entries can be prepended.
@@ -69,12 +70,15 @@ test('frontend source snapshots and database import share the same reviewed reco
   const november15Database = JSON.parse(readFileSync(new URL('../../../backend/resources/data/founder-directory-expansion-2026-11-15.json', import.meta.url), 'utf8'))
   assert.deepEqual(november15Database, november15Profiles)
   assert.equal(november15Profiles.length, 12)
+  const november17Database = JSON.parse(readFileSync(new URL('../../../backend/resources/data/founder-directory-expansion-2026-11-17.json', import.meta.url), 'utf8'))
+  assert.deepEqual(november17Database, november17Profiles)
+  assert.equal(november17Profiles.length, 3)
   assert.equal(originalCountryCohort.length, 102)
   assert.equal(october30Additions.length, 8)
   assert.equal(new Set(originalCountryCohort.map(profile => profile.country_code)).size, 51)
   for (const code of new Set(originalCountryCohort.map(profile => profile.country_code))) assert.equal(originalCountryCohort.filter(profile => profile.country_code === code).length, 2, code)
-  assert.equal(new Set(sourceProfiles.map(profile => profile.company_key)).size, 220)
-  assert.equal(sourceProfiles.length, 408)
+  assert.equal(new Set(sourceProfiles.map(profile => profile.company_key)).size, 222)
+  assert.equal(sourceProfiles.length, 411)
   assert.equal(new Set(sourceProfiles.map(profile => profile.founder_name_en.toLowerCase())).size, sourceProfiles.length)
   assert.equal(new Set(sourceProfiles.map(profile => profile.slug)).size, sourceProfiles.length)
   assert.ok(sourceProfiles.every(profile => profile.source_urls.length > 0 && profile.reviewed_at))
@@ -274,4 +278,19 @@ test('16 November Saudi Rkiza founder remains unclaimed and sourced without spec
   assert.equal(row.traction_en, null)
   assert.ok(row.source_urls.includes(row.source_url))
   assert.ok(!('member' in row) && !('email' in row) && !('isVerified' in row))
+})
+
+
+test('17 November sourced external profiles retain accurate identity and nonmembership', () => {
+  assert.deepEqual(november17Profiles.map(p => p.slug), ['paul-farhi-vision-makers', 'ibrahim-anwar-sabika', 'mohammed-darwish-sabika'])
+  for (const p of november17Profiles) {
+    assert.equal(p.reviewed_at, '2026-11-17')
+    assert.equal(p.logo_url, null)
+    assert.equal(p.portrait_url, null)
+    assert.deepEqual(p.founder_socials, [])
+    assert.ok(p.source_urls.includes(p.source_url))
+    assert.ok(p.source_urls.includes(p.traction_source_url))
+    assert.ok(!('user_id' in p) && !('email' in p) && !('isVerified' in p) && !('member' in p))
+    assert.ok(!p.role_en.includes('CEO'))
+  }
 })
