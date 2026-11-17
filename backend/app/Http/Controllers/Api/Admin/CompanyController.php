@@ -15,10 +15,13 @@ class CompanyController extends Controller
 {
     use GeneratesUniqueSlug;
 
+    /** Founder user columns read by FounderResource, including the admin email-verification flag. */
+    private const FOUNDER_USERS = 'founders.user:id,name,email,email_verified_at';
+
     public function index(Request $request): JsonResponse
     {
         $query = CompanyProfile::query()
-            ->with(['founders.user:id,name,email'])
+            ->with([self::FOUNDER_USERS])
             ->withCount('founders');
 
         if ($search = trim((string) $request->input('search'))) {
@@ -65,7 +68,7 @@ class CompanyController extends Controller
 
         return response()->json([
             'message' => 'Company created.',
-            'data' => new AdminCompanyResource($company->load('founders.user:id,name')),
+            'data' => new AdminCompanyResource($company->load(self::FOUNDER_USERS)),
         ], 201);
     }
 
@@ -84,7 +87,7 @@ class CompanyController extends Controller
 
         return response()->json([
             'message' => 'Company updated.',
-            'data' => new AdminCompanyResource($company->fresh()->load('founders.user:id,name')),
+            'data' => new AdminCompanyResource($company->fresh()->load(self::FOUNDER_USERS)),
         ]);
     }
 
