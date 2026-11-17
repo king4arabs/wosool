@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\Application;
 use App\Models\CompanyProfile;
+use App\Models\FounderProfile;
 use App\Models\User;
 use Database\Seeders\DatabaseSeeder;
 use Database\Seeders\RoleAndPermissionSeeder;
@@ -93,6 +94,27 @@ class AdminEndpointsTest extends TestCase
             ->assertOk();
 
         $this->assertSoftDeleted('company_profiles', ['id' => $companyId]);
+    }
+
+    public function test_admin_company_list_reports_linked_founder_email_verification(): void
+    {
+        $this->seed(DatabaseSeeder::class);
+
+        $admin = User::where('email', 'admin@wosool.org')->firstOrFail();
+        $company = CompanyProfile::create(['name' => 'Linked Founder Co', 'slug' => 'linked-founder-co-admin-test', 'status' => 'active', 'is_public' => true]);
+        $verified = FounderProfile::create(['user_id' => User::factory()->create(['email_verified_at' => now()])->id, 'slug' => 'linked-founder-verified', 'status' => 'active', 'is_public' => true]);
+        $unverified = FounderProfile::create(['user_id' => User::factory()->unverified()->create()->id, 'slug' => 'linked-founder-unverified', 'status' => 'active', 'is_public' => true]);
+        $company->founders()->attach([$verified->id => ['role' => 'Founder', 'is_primary' => true], $unverified->id => ['role' => 'Co-founder', 'is_primary' => false]]);
+
+        // The founders' users are loaded with a column list, which must include email_verified_at.
+        $listed = collect($this->actingAs($admin)->getJson('/api/v1/admin/companies?search=Linked')->assertOk()->json('data'))->firstWhere('id', $company->id);
+        $founders = collect($listed['founders'])->keyBy('slug');
+        $this->assertTrue($founders['linked-founder-verified']['admin_verification']['email_verified']);
+        $this->assertFalse($founders['linked-founder-unverified']['admin_verification']['email_verified']);
+
+        $updated = $this->actingAs($admin)->putJson("/api/v1/admin/companies/{$company->id}", ['name' => 'Linked Founder Co', 'status' => 'active'])
+            ->assertOk()->json('data.founders');
+        $this->assertTrue(collect($updated)->keyBy('slug')['linked-founder-verified']['admin_verification']['email_verified']);
     }
 
     public function test_admin_company_editor_keeps_english_and_arabic_text_apart(): void
