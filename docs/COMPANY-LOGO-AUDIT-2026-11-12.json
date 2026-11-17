@@ -1794,6 +1794,17 @@
     "reason": "Official website checked; original reusable artwork/permission not verified. Retain company-name fallback."
   },
   {
+    "company_key": "sabika-egypt",
+    "company": "Sabika",
+    "website": "https://www.sabika.app/en",
+    "source_url": "https://www.wamda.com/2026/11/sabika-secures-new-investment-expand-gold-silver-trading-platform",
+    "src": null,
+    "tone": null,
+    "reviewed_at": "2026-11-17",
+    "status": "unresolved",
+    "reason": "Reusable original artwork permission was not verified; retain company-name fallback."
+  },
+  {
     "company_key": "safqah-capital",
     "company": "Safqah Capital",
     "website": "https://safqah.co/",
@@ -2284,6 +2295,17 @@
     "source_page": "https://velents.ai/",
     "asset_kind": "icon",
     "status": "local-asset"
+  },
+  {
+    "company_key": "vision-makers-web3",
+    "company": "Vision Makers",
+    "website": "https://visionmakers.io/",
+    "source_url": "https://visionmakers.io/blogs/vision-makers-secures-4-million-funding/",
+    "src": null,
+    "tone": null,
+    "reviewed_at": "2026-11-17",
+    "status": "unresolved",
+    "reason": "Reusable original artwork permission was not verified; retain company-name fallback."
   },
   {
     "company_key": "vitalls",

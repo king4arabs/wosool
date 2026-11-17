@@ -1,3 +1,9 @@
+## Verified GCC and MENA founder profiles and source-dated news — 2026-11-17
+
+- Added three bilingual, source-linked and unclaimed founder profiles: Paul Farhi of Vision Makers in the UAE, plus Ibrahim Anwar and Mohammed Darwish of Sabika in Egypt. Current executive titles are not inferred where the latest source names a different CEO.
+- Added two original bilingual briefs using the sources' 16 November 2026 publication date. Vision Makers' US$4m is cumulative financing across pre-seed and seed rounds, with the latest individual round amount undisclosed; Sabika did not disclose the values, investors, stages or exact number of its new rounds. Company-reported registrations, marketplace transactions and users are explicitly not earned or audited revenue.
+- Mirrored frontend/backend catalogs, importer registration, content guards and page-count contracts now cover **411 founders / 222 company groups / 142 stories** with zero integrity problems. Both new company identities retain accessible name fallbacks because verified artwork reuse rights were not established. No member account, invitation, moderation state, database import, deployment or hosting setting changed.
+
 ## Admin events page: both languages, labelled fields, times in the event's zone; admin companies list no longer fails — 2026-11-17
 
 - **Found (QA crawl):** `GET /api/v1/admin/companies` returned 500 locally and in CI-like strict mode for any company with a linked founder account. Since 15 November `FounderResource` reports `admin_verification.email_verified` to admins, but the admin company endpoints loaded founder users with only `id,name[,email]`, so `email_verified_at` was never read. Production runs Eloquent non-strict, so there the list loaded but reported every linked founder as unverified.

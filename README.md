@@ -2,6 +2,8 @@
   <img src="frontend/public/wosool-logo-eo.svg" alt="Wosool | وصول" width="420" />
 </p>
 
+**Editorial update (17 November 2026):** The editorial source catalogs now contain **411 external/unclaimed founders, 222 company identities and 142 bilingual source-dated briefs**. Added Paul Farhi (Vision Makers, UAE) and Ibrahim Anwar and Mohammed Darwish (Sabika, Egypt), plus two original 16 November 2026 news briefs. No license to reuse their logos was verified, so names remain legible as fallback. Source catalogs are not proof of production imports or Hostinger deployment. See [17 November source evidence](docs/research/CONTENT-REFRESH-2026-11-17.md).
+
 **Editorial update (16 November 2026):** **408 external/unclaimed founders, 220 companies and 140 bilingual source-linked news briefs**. Added Fahad Alarifee (Rkiza) and the 13 November issuer-dated Alwaleed Philanthropies–RDIA Open RAN partnership. Its SAR 10m is overall partnership value, not individual startup financing. Unverified logos use the name fallback. Source commits are not production database imports or live Hostinger releases.
 
 <h1 align="center">Wosool | وصول</h1>
@@ -13,7 +15,7 @@
   <a href="https://github.com/king4arabs/wosool/actions/workflows/ci.yml">CI</a>
 </p>
 
-**Documentation version: 0.6.8 · Updated: 17 November 2026.**
+**Documentation version: 0.6.9 · Updated: 17 November 2026.**
 
 Wosool is an Arabic/English founders platform connecting Saudi Arabia, the GCC, MENA and the world. It brings founder and company profiles, events, news, introductions and community services together, with a dedicated EO Riyadh Accelerator experience.
 
@@ -47,7 +49,7 @@ Community membership, Accelerator admission and administrator access are separat
 
 **Editorial update (12 November 2026):** **385 external/unclaimed founder profiles, 209 company identities and 132 original bilingual news briefs** across seven mirrored catalog pairs. Source-verified new founders: Saudi OmniOps' Mohammed Altassan and UAE Wafr's Mahmoud Bouchelif and Anthony Murphy. New product/funding briefs retain **11 November** and **10 November 2026** announcement dates. See [evidence and release boundary](docs/research/CONTENT-REFRESH-2026-11-12.md). No membership state, production database import or verified Hostinger deployment is implied.
 
-**Company logos:** Reviewed local artwork covers **201 of 220 companies** and **373 founder cards**. Pale transparent logos use dark panels, including locally served uploads detected after image load. The remaining 19 companies keep name/website-icon fallbacks. See the [logo audit](docs/COMPANY-LOGO-AUDIT-2026-11-12.json) and [presentation rules](docs/research/COMPANY-LOGOS-2026-11-12.md).
+**Company logos:** Reviewed local artwork covers **201 of 222 companies** and **373 founder cards**. Pale transparent logos use dark panels, including locally served uploads detected after image load. The remaining 21 companies keep name/website-icon fallbacks. See the [logo audit](docs/COMPANY-LOGO-AUDIT-2026-11-12.json) and [presentation rules](docs/research/COMPANY-LOGOS-2026-11-12.md).
 
 **Editorial update (11 November 2026):** **375 external/unclaimed founder profiles, 203 company identities and 130 original bilingual news briefs** across six mirrored frontend/backend catalogs. New Saudi Raff, UAE AIREV and US Mercor co-founder profiles are source-verified. Raff's 25 August pre-seed, Persona's 5 November pre-seed, AIREV's 4 November strategic funding and Mercor's 10 November Series D retain the original announcement dates. Financing/valuation are not revenue; company-reported activity is labeled. See [11 November sources](docs/research/CONTENT-REFRESH-2026-11-11.md). No membership changes, production import or Hostinger deployment is implied.
 
