@@ -13,7 +13,7 @@
   <a href="https://github.com/king4arabs/wosool/actions/workflows/ci.yml">CI</a>
 </p>
 
-**Documentation version: 0.6.7 · Updated: 16 November 2026.**
+**Documentation version: 0.6.8 · Updated: 17 November 2026.**
 
 Wosool is an Arabic/English founders platform connecting Saudi Arabia, the GCC, MENA and the world. It brings founder and company profiles, events, news, introductions and community services together, with a dedicated EO Riyadh Accelerator experience.
 
@@ -22,6 +22,8 @@ Community membership, Accelerator admission and administrator access are separat
 **Administration:** `/admin/services` provides bilingual search, work-area filters and daily shortcuts across management tools. The mobile menu shares the desktop service directory; CRM/PR queues preserve filters and record links in the URL, and Accelerator sections support direct links. EOA administration groups services by task and preserves API capability checks. See [administration](docs/ADMIN-OPERATIONS.md) for navigation and CRM workflows. Public partner cards include local logo artwork and service search.
 
 **Company administration (16 November 2026):** `/admin/companies` now keeps stored English company text separate from Arabic directory translations, regardless of the administrator's current locale. The labelled bilingual editor validates before saving, maps API validation failures to fields, searches Arabic and English company data on submit, and identifies whether each company is publicly listed. Required PR CI run 716 passed Laravel on PHP 8.3–8.5, frontend/browser checks, pnpm installation and production guardrails before merge `f584e44`. The merge and preview builds are not evidence of a production deployment or database update.
+
+**Event and company administration (17 November 2026):** `/admin/events` now follows the administrator's Arabic or English locale, labels and validates every editor field, keeps event wall-clock times in the event's own time zone, maps API validation errors to their fields and runs search only when submitted. The admin companies API now loads the linked founder account fields required to report email-verification state, preventing the strict-mode 500 and the non-strict false-unverified result. Required PR CI run 724 passed the complete matrix before merge `ad09a39`. No migration, catalog import, production deployment or hosting setting changed.
 
 **Member identity:** `/admin/users` combines registered accounts and invited founder records with private origin indicators, identity matching, administrator verification and bulk invitation controls. Email verification triggers private matching; administrator approval links the canonical founder profile or publishes a new one. Existing founder IDs, source links and scorecards are preserved. Apply the additive identity-review migration before rollout. See [registration and identity review](docs/MEMBER-IDENTITY-REVIEW.md).
 

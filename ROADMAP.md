@@ -1,6 +1,8 @@
 # Roadmap
 
-## Current execution plan — 16 November 2026
+## Current execution plan — 17 November 2026
+
+Admin events and company-response checkpoint: `/admin/events` now follows the administrator's Arabic/English locale, labels and validates the complete editor, preserves event-local wall-clock times, maps API failures to fields and handles explicit search without stale responses. The admin companies API now includes linked founders' email-verification timestamp in the loaded columns, preventing the strict-mode 500 and false unverified state. Required PR CI run 724 passed before merge `ad09a39`. Next: verify the protected workflows against known compatible serving frontend/backend revisions using a controlled administrator account. The source merge is not evidence of production deployment, database import or a Hostinger configuration change.
 
 Admin company correction: `/admin/companies` now returns stored English text and Arabic directory translations separately, preventing an Arabic-locale edit from overwriting the English name, description, sector or location. The editor is bilingual, validates locally, maps server errors to fields, searches only on submit and shows public-listing state. PR CI run 716 passed all seven checks before merge `f584e44`; Cloudflare and Hostinger branch previews also built successfully. Next: verify the protected workflow against compatible serving frontend/backend revisions with a controlled administrator account. Source merge and preview deployment do not establish production activation or a database change.
 
