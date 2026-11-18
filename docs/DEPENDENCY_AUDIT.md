@@ -32,6 +32,6 @@ npm --prefix backend audit --audit-level=high
 
 The full frontend audit currently exits nonzero for the development advisory above. A clean production dependency audit does not prove application security, patched hosting runtimes, mail delivery or a successful deployment.
 
-The application uses Next.js 16.4.2 and React 19.2.4. Hosting installs are pinned to pnpm 11.24.0. Verify the actual Node.js and PHP serving processes separately using [DEPLOYMENT.md](../DEPLOYMENT.md); updating npm packages cannot patch the runtime itself.
+The application uses Next.js 16.4.6 and React 19.2.4. Hosting installs are pinned to pnpm 11.24.0. Verify the actual Node.js and PHP serving processes separately using [DEPLOYMENT.md](../DEPLOYMENT.md); updating npm packages cannot patch the runtime itself.
 
 [PR #93](https://github.com/king4arabs/wosool/pull/93) adds mandatory release-environment validation, clean standalone pnpm build/start checks, JavaScript/CSS delivery checks, and Laravel deployment-cache compilation. It does not establish that Hostinger has activated the revision.

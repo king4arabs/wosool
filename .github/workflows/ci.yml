@@ -252,5 +252,6 @@ jobs:
           php artisan route:clear
           php artisan view:clear
       - run: npm ci
+      - run: npm run test:security-picomatch
       - run: npm audit --audit-level=high
       - run: npm run build
