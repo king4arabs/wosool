@@ -18,7 +18,10 @@ jobs:
     runs-on: ubuntu-latest
     # The full browser suite (incl. browser installs, Firefox/WebKit EOA checks and axe)
     # reached the final axe crawl when the previous 25-minute ceiling cancelled it.
-    timeout-minutes: 40
+    # Fresh Playwright browser downloads can now consume most of 40 minutes before
+    # the unchanged cross-browser and axe suites run, so preserve the gates and
+    # allow the complete matrix to finish.
+    timeout-minutes: 60
     defaults:
       run:
         working-directory: frontend
@@ -252,5 +255,6 @@ jobs:
           php artisan route:clear
           php artisan view:clear
       - run: npm ci
+      - run: npm run test:security-picomatch
       - run: npm audit --audit-level=high
       - run: npm run build

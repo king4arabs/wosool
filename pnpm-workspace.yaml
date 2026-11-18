@@ -2,6 +2,9 @@ packages:
   - frontend
   - backend
 
+overrides:
+  picomatch: file:backend/vendor-node/picomatch-v4
+
 # Explicit, non-interactive approval for required native toolchain installers.
 allowBuilds:
   esbuild: true
