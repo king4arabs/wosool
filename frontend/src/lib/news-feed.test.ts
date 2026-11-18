@@ -235,3 +235,16 @@ test('13 November Open RAN partnership reports overall support rather than inven
   assert.equal(item.translations?.ar.keyFacts?.length, 3)
   assert.ok(safeNewsUrl(item.sourceUrl))
 })
+
+
+test('iMENA capital increase uses primary-source publication date and both verified founder links', () => {
+  const item = curatedNews.find(item => item.slug === 'imena-sar802m-capital-increase-november-2026')!
+  assert.ok(item)
+  assert.equal(item.publishedAt, '2026-11-16')
+  assert.equal(item.sourceUrl, 'https://www.imena.com/bulletin-post/www-imena-com-bulletin-post')
+  assert.equal(item.imageUrl, '')
+  assert.match(item.content, /two tranches/)
+  assert.equal(item.keyFacts?.length, 3)
+  assert.equal(item.translations?.ar.keyFacts?.length, 3)
+  assert.deepEqual(newsFounders(item).map(profile => profile.slug).sort(), ['khaldoon-tabaza-imena', 'nasir-alsharif-imena'])
+})

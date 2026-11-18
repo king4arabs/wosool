@@ -21,7 +21,8 @@ class FounderDirectoryImporter
         $november14Profiles = json_decode(file_get_contents(resource_path('data/founder-directory-expansion-2026-11-14.json')), true, 512, JSON_THROW_ON_ERROR);
         $november15Profiles = json_decode(file_get_contents(resource_path('data/founder-directory-expansion-2026-11-15.json')), true, 512, JSON_THROW_ON_ERROR);
         $november17Profiles = json_decode(file_get_contents(resource_path('data/founder-directory-expansion-2026-11-17.json')), true, 512, JSON_THROW_ON_ERROR);
-        $records = [...$base, ...$expansion, ...$discovery, ...$countryProfiles, ...$novemberProfiles, ...$november12Profiles, ...$november13Profiles, ...$november14Profiles, ...$november15Profiles, ...$november17Profiles];
+        $november18Profiles = json_decode(file_get_contents(resource_path('data/founder-directory-expansion-2026-11-18.json')), true, 512, JSON_THROW_ON_ERROR);
+        $records = [...$base, ...$expansion, ...$discovery, ...$countryProfiles, ...$novemberProfiles, ...$november12Profiles, ...$november13Profiles, ...$november14Profiles, ...$november15Profiles, ...$november17Profiles, ...$november18Profiles];
         $this->validateRecords($records);
         $counts = ['founders_created' => 0, 'companies_created' => 0, 'preserved' => 0, 'companies_enriched' => 0, 'deleted_skipped' => 0];
         DB::transaction(function () use ($records, &$counts) {

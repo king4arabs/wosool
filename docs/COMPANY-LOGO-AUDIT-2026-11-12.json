@@ -829,6 +829,16 @@
     "status": "existing-local-asset"
   },
   {
+    "company_key": "imena-holding",
+    "company": "iMENA Holding",
+    "website": "https://www.imena.com/",
+    "src": null,
+    "tone": null,
+    "reviewed_at": "2026-11-18",
+    "status": "unresolved",
+    "reason": "Original company assets were not independently verified as reusable; use the accessible company-name fallback without inventing or recoloring a mark."
+  },
+  {
     "company_key": "immensa",
     "company": "Immensa",
     "website": "https://immensa.io/",

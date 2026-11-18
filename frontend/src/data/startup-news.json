@@ -1,5 +1,51 @@
 [
   {
+    "id": "sourced-imena-capital-increase-november-2026",
+    "slug": "imena-sar802m-capital-increase-november-2026",
+    "title": "Saudi iMENA completes SAR 802m capital increase across two tranches",
+    "excerpt": "The Riyadh group's capital increase supports regional marketplace expansion; contributions by investor and valuation were not disclosed.",
+    "content": "On 16 November 2026, Saudi-headquartered technology group iMENA announced completion of a SAR 802 million (approximately US$214 million) capital increase in two tranches, advised by Al Rajhi Capital. The funds are intended to expand its digital marketplaces in Saudi Arabia and across MENA. Co-founded in 2012 by Nasir Alsharif, Khaldoon Tabaza and Adey Salamin, the group operates OpenSooq, SellAnyCar and Jeeny. It reports that its platforms collectively serve over 100 million users in more than 20 countries. Sanabil Investments is an existing investor, but the announcement did not disclose individual investor or tranche contributions or iMENA's valuation. The amount is a completed group capital increase, not startup revenue or a separate single-round fundraising total.",
+    "category": "Funding",
+    "region": "saudi",
+    "imageUrl": "",
+    "imageCredit": "",
+    "sourceUrl": "https://www.imena.com/bulletin-post/www-imena-com-bulletin-post",
+    "sourceName": "iMENA (official announcement, 16 November 2026)",
+    "companies": [
+      "iMENA Holding",
+      "iMENA",
+      "آي مينا"
+    ],
+    "publishedAt": "2026-11-16",
+    "author": "Wosool news desk",
+    "tags": [
+      "Saudi Arabia",
+      "iMENA",
+      "Marketplaces",
+      "Capital increase",
+      "Sanabil Investments"
+    ],
+    "keyFacts": [
+      "SAR 802m (US$214m) capital increase in two tranches",
+      "Marketplaces include OpenSooq, SellAnyCar and Jeeny",
+      "Investor-by-investor contributions, tranche allocations and valuation undisclosed"
+    ],
+    "translations": {
+      "ar": {
+        "title": "«آي مينا» السعودية تستكمل زيادة رأس مال بـ802 مليون ريال على شريحتين",
+        "excerpt": "زيادة رأس المال تدعم توسع منصات المجموعة بالمنطقة، دون الإفصاح عن حصص المستثمرين أو تقييمها.",
+        "body": [
+          "أعلنت مجموعة «آي مينا» التقنية التي تتخذ من الرياض مقراً لها في 16 نوفمبر 2026 استكمال زيادة رأس مال بقيمة 802 مليون ريال (نحو 214 مليون دولار) على شريحتين، مع تولي «الراجحي المالية» دور المستشار المالي. وتهدف الحصيلة إلى توسيع أسواقها الرقمية في السعودية والمنطقة. شارك ناصر الشريف وخلدون طبازة وعدي سلامين في تأسيس المجموعة عام 2012، وتشمل منصاتها «السوق المفتوح» و«سل أني كار» و«جيني». وتفيد المجموعة بأن منصاتها تخدم مجتمعةً أكثر من 100 مليون مستخدم في أكثر من 20 دولة. وتعد «سنابل للاستثمار» من المستثمرين الحاليين، لكن الإعلان لم يفصل المساهمات حسب المستثمر أو الشريحة ولم يعلن تقييم المجموعة. تمثل القيمة زيادة رأس مال مكتملة للمجموعة، ولا تعبر عن إيرادات أو جولة منفردة لشركة ناشئة."
+        ],
+        "keyFacts": [
+          "زيادة رأس مال مكتملة بـ802 مليون ريال (214 مليون دولار) على شريحتين",
+          "منصات المجموعة تشمل «السوق المفتوح» و«سل أني كار» و«جيني»",
+          "لم تُكشف مساهمات المستثمرين في كل شريحة أو تقييم المجموعة"
+        ]
+      }
+    }
+  },
+  {
     "id": "sourced-vision-makers-dual-funding-november-2026",
     "slug": "vision-makers-cumulative-4m-november-2026",
     "title": "Dubai's Vision Makers reports US$4m across pre-seed and seed rounds",
