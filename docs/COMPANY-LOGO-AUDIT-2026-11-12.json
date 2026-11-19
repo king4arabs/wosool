@@ -455,6 +455,16 @@
     "status": "existing-local-asset"
   },
   {
+    "company_key": "daleela-motherbeing",
+    "company": "Daleela",
+    "website": "https://daleela.app/",
+    "src": null,
+    "tone": null,
+    "reviewed_at": "2026-11-19",
+    "status": "unresolved",
+    "reason": "No confirmed reusable original artwork. Use a readable company-name fallback on both themes."
+  },
+  {
     "company_key": "dibsy",
     "company": "Dibsy",
     "website": "https://www.dibsy.one/",
@@ -827,6 +837,16 @@
     "src": "/company-logos/hyperpay.svg",
     "tone": "light",
     "status": "existing-local-asset"
+  },
+  {
+    "company_key": "imena-holding",
+    "company": "iMENA Holding",
+    "website": "https://www.imena.com/",
+    "src": null,
+    "tone": null,
+    "reviewed_at": "2026-11-18",
+    "status": "unresolved",
+    "reason": "Original company assets were not independently verified as reusable; use the accessible company-name fallback without inventing or recoloring a mark."
   },
   {
     "company_key": "immensa",
