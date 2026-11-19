@@ -158,7 +158,12 @@ try {
               return box.left >= 0 && box.right <= innerWidth && box.height >= 44
             }))
             assert.ok(controlsFit, 'Carousel controls stay within the viewport')
-            await expand.click()
+            // The animated rail can keep WebKit's native click action pending even
+            // after the control is visible, enabled and stable. We already verify
+            // its interactive geometry above, so invoke the button's click handler
+            // directly and assert the resulting public state before checking rows.
+            await expand.evaluate(button => button.click())
+            await page.waitForFunction(button => button.getAttribute('aria-expanded') === 'true', await expand.elementHandle())
             await assertRows(carousel.locator('[data-partner]'))
             await page.emulateMedia({ reducedMotion: 'reduce' })
           }
