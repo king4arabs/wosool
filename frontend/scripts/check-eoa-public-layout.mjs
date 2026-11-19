@@ -69,7 +69,9 @@ try {
       for (const path of ['eligibility', 'partners', 'leadership']) {
         await page.goto(`${origin}/eoa/${path}`, { waitUntil: 'networkidle' })
         await page.waitForFunction(value => document.documentElement.lang === value, locale)
-        await page.evaluate(() => document.fonts.ready)
+        // Poll instead of awaiting document.fonts.ready: page.evaluate has no timeout and a
+        // promise WebKit never settles stalled CI until the 60-minute job limit.
+        await page.waitForFunction(() => document.fonts.status === 'loaded', null, { timeout: 15000 })
         if (path === 'eligibility') {
           await page.locator('.eoa-fee dd').first().waitFor()
           const panels = page.locator('[data-eoa-eligibility]:visible > .eoa-card')
@@ -110,7 +112,7 @@ try {
           assert.equal(boxes.every(box => Math.abs(box.top - boxes[0].top) < 2), viewport.threeColumns, `Leadership shares one desktop row and stacks on small screens: ${JSON.stringify({ viewport, boxes })}`)
           for (const image of await cards.locator('img').all()) {
             await image.scrollIntoViewIfNeeded()
-            await image.evaluate(element => element.decode())
+            await page.waitForFunction(element => element.complete && element.naturalWidth > 0, await image.elementHandle(), { timeout: 15000 })
           }
           for (const href of ['https://www.lamarka.com/', 'https://me.sh/profile/fouad-alnazawi', 'https://sa.linkedin.com/in/bashaier-abdullah-685190283']) {
             assert.equal(await cards.locator(`a[href="${href}"]`).count(), 1)
