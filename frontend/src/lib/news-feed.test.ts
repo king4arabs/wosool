@@ -235,3 +235,14 @@ test('13 November Open RAN partnership reports overall support rather than inven
   assert.equal(item.translations?.ar.keyFacts?.length, 3)
   assert.ok(safeNewsUrl(item.sourceUrl))
 })
+
+
+test('source-dated iMENA, accelerator and Daleela briefs connect to verified founders', () => {
+  for (const [slug, date] of [['imena-sar802m-capital-increase-november-2026','2026-11-16'], ['sanabil-global-batch12-seven-startups-november-2026','2026-11-18'], ['daleela-clinician-led-care-430k-registrations-november-2026','2026-11-16']]) {
+    const item = curatedNews.find(n => n.slug === slug)!
+    assert.ok(item); assert.equal(item.publishedAt, date); assert.equal(item.imageUrl, '')
+    assert.equal(item.keyFacts?.length, 3); assert.equal(item.translations?.ar.keyFacts?.length, 3); assert.ok(safeNewsUrl(item.sourceUrl))
+  }
+  assert.deepEqual(newsFounders(curatedNews.find(n => n.slug === 'daleela-clinician-led-care-430k-registrations-november-2026')!).map(p => p.slug).sort(), ['yousef-elsammaa-daleela','nour-emam-daleela','ahmad-abou-hashem-daleela'].sort())
+  assert.deepEqual(newsFounders(curatedNews.find(n => n.slug === 'imena-sar802m-capital-increase-november-2026')!).map(p => p.slug).sort(), ['nasir-alsharif-imena','khaldoon-tabaza-imena'].sort())
+})
