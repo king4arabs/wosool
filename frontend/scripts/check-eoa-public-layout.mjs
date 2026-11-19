@@ -76,10 +76,12 @@ try {
       for (const path of ['eligibility', 'partners', 'leadership']) {
         console.log(`CHECK EOA: ${engine}/${locale}/${width}px/${path}`)
         await page.goto(`${origin}/eoa/${path}`, { waitUntil: 'networkidle' })
-        await page.waitForFunction(value => document.documentElement.lang === value, locale)
+        // Every wait polls on an interval: the default requestAnimationFrame polling never runs
+        // when WebKit stops producing frames (seen at 1440px on the current ubuntu-latest image).
+        await page.waitForFunction(value => document.documentElement.lang === value, locale, { polling: 100 })
         // Poll instead of awaiting document.fonts.ready: page.evaluate has no timeout and a
         // promise WebKit never settles stalled CI until the 60-minute job limit.
-        await page.waitForFunction(() => document.fonts.status === 'loaded', null, { timeout: 15000 })
+        await page.waitForFunction(() => document.fonts.status === 'loaded', null, { timeout: 15000, polling: 100 })
         if (path === 'eligibility') {
           await page.locator('.eoa-fee dd').first().waitFor()
           const panels = page.locator('[data-eoa-eligibility]:visible > .eoa-card')
@@ -120,7 +122,7 @@ try {
           assert.equal(boxes.every(box => Math.abs(box.top - boxes[0].top) < 2), viewport.threeColumns, `Leadership shares one desktop row and stacks on small screens: ${JSON.stringify({ viewport, boxes })}`)
           for (const image of await cards.locator('img').all()) {
             await image.scrollIntoViewIfNeeded()
-            await page.waitForFunction(element => element.complete && element.naturalWidth > 0, await image.elementHandle(), { timeout: 15000 })
+            await page.waitForFunction(element => element.complete && element.naturalWidth > 0, await image.elementHandle(), { timeout: 15000, polling: 100 })
           }
           for (const href of ['https://www.lamarka.com/', 'https://me.sh/profile/fouad-alnazawi', 'https://sa.linkedin.com/in/bashaier-abdullah-685190283']) {
             assert.equal(await cards.locator(`a[href="${href}"]`).count(), 1)
@@ -138,7 +140,7 @@ try {
             await page.waitForFunction(position => {
               const image = document.querySelectorAll('[data-eoa-directory] img')[position]
               return image?.complete && image.naturalWidth > 0
-            }, index, { timeout: 15000 })
+            }, index, { timeout: 15000, polling: 100 })
           }
           await assertRows(page.locator('[data-eoa-directory]:visible article'))
           const links = await page.locator('[data-eoa-directory]:visible article').evaluateAll(elements => elements.map(element => {
@@ -163,7 +165,7 @@ try {
             // its interactive geometry above, so invoke the button's click handler
             // directly and assert the resulting public state before checking rows.
             await expand.evaluate(button => button.click())
-            await page.waitForFunction(button => button.getAttribute('aria-expanded') === 'true', await expand.elementHandle())
+            await page.waitForFunction(button => button.getAttribute('aria-expanded') === 'true', await expand.elementHandle(), { polling: 100 })
             await assertRows(carousel.locator('[data-partner]'))
             await page.emulateMedia({ reducedMotion: 'reduce' })
           }
