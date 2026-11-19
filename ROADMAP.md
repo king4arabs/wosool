@@ -1,6 +1,8 @@
 # Roadmap
 
-## Current execution plan — 17 November 2026
+## Current execution plan — 19 November 2026
+
+Admin partner and CI reliability checkpoint: `/admin/partners` now reports whether each record satisfies the public API's confirmed, visible and logo-backed listing rule, validates bilingual publishing evidence and organization type, submits only editable fields and restores accessible loading, retry, focus and field-error behavior. Two PR runs exposed an unrelated WebKit stall in full-page preview capture after all earlier checks passed. Cross-browser assertions and viewport coverage remain unchanged; deterministic time budgets and Chromium-only preview artifacts prevent an optional screenshot from consuming the release job. Next: require the complete PR matrix before merge, then verify the protected administrator workflow against compatible serving revisions. No production record, deployment or hosting setting changes in this slice.
 
 Backend build security checkpoint: `GHSA-fc5q-39xc-vjpf` has no official patched `picomatch` release as of 18 November 2026 and blocked all three backend CI jobs through Vite's development dependency graph. Source now pins every backend build consumer to a repository-contained 4.0.7-derived package with the focused upstream pull-request guard, verifies the actual resolved paths and adversarial patterns, and keeps the unsuppressed high-severity npm audit. Local install, regression, audit and Vite build pass. Next: require the complete PR matrix, then replace the temporary package with a reviewed official release when one becomes available. This is build-tooling source work, not a frontend/backend deployment or production-data import. [Provenance and retirement criteria](docs/security/PICOMATCH-2026-11-18.md).
 

@@ -2,6 +2,8 @@
   <img src="frontend/public/wosool-logo-eo.svg" alt="Wosool | وصول" width="420" />
 </p>
 
+**Admin partner review and browser reliability update (19 November 2026):** `/admin/partners` now distinguishes a saved partner from one actually eligible for the public partners page, validates the bilingual publishing evidence and organization type before saving, and exposes accessible loading, retry, focus and field-error behavior. The EOA responsive suite keeps its full Chromium/Firefox/WebKit assertion matrix while bounding navigation and eliminating unreliable WebKit full-page preview capture; Chromium remains the single preview-artifact renderer. Source and CI do not deploy Wosool.org or change production partner records.
+
 **Backend build security update (18 November 2026):** required CI now verifies a repository-contained `picomatch` mitigation before retaining the unsuppressed high-severity npm audit. The package is derived from upstream 4.0.7, applies the narrowly scoped fix proposed in `micromatch/picomatch#238`, and is used across Vite, `tinyglobby`, `fdir` and Laravel's reload plugin until an official patched release is available. Local regression, audit and Vite build checks pass; this source change does not deploy either service or import production data. See [mitigation provenance and retirement criteria](docs/security/PICOMATCH-2026-11-18.md).
 
 **Frontend security and admin review update (18 November 2026):** Next.js is patched from 16.4.2 to 16.4.6 in the npm and pnpm locks, clearing the two current cache-isolation advisories while preserving the accepted Hostinger webpack, hoisted-dependency and one-worker baseline. `/admin/opportunities` now keeps newly typed source lines, validates bilingual evidence fields before saving, maps API errors to fields and provides accessible loading, error, focus and empty states. Source merge and CI are separate from a Hostinger rebuild, production activation and database changes.
@@ -19,7 +21,7 @@
   <a href="https://github.com/king4arabs/wosool/actions/workflows/ci.yml">CI</a>
 </p>
 
-**Documentation version: 0.6.10 · Updated: 18 November 2026.**
+**Documentation version: 0.6.11 · Updated: 19 November 2026.**
 
 Wosool is an Arabic/English founders platform connecting Saudi Arabia, the GCC, MENA and the world. It brings founder and company profiles, events, news, introductions and community services together, with a dedicated EO Riyadh Accelerator experience.
 

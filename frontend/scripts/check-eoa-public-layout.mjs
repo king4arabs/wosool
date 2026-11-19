@@ -19,6 +19,11 @@ const program = {
 }
 const app = spawn(process.execPath, ['node_modules/next/dist/bin/next', 'start', '-H', '127.0.0.1', '-p', '18095'], { stdio: ['ignore', 'pipe', 'pipe'] })
 let log = ''
+const suiteTimeout = setTimeout(() => {
+  console.error('EOA browser suite exceeded its 18-minute process budget')
+  app.kill('SIGTERM')
+  process.exit(124)
+}, 18 * 60 * 1000)
 app.stdout.on('data', value => { log = (log + value).slice(-5000) })
 app.stderr.on('data', value => { log = (log + value).slice(-5000) })
 let browser
@@ -64,9 +69,12 @@ try {
         return route.continue()
       })
       const page = await context.newPage()
+      page.setDefaultTimeout(15000)
+      page.setDefaultNavigationTimeout(20000)
       const errors = []
       page.on('pageerror', error => errors.push(error.message))
       for (const path of ['eligibility', 'partners', 'leadership']) {
+        console.log(`CHECK EOA: ${engine}/${locale}/${width}px/${path}`)
         await page.goto(`${origin}/eoa/${path}`, { waitUntil: 'networkidle' })
         await page.waitForFunction(value => document.documentElement.lang === value, locale)
         // Poll instead of awaiting document.fonts.ready: page.evaluate has no timeout and a
@@ -156,7 +164,17 @@ try {
           }
           await assertContained(page, '[data-eoa-directory] h3, [data-eoa-directory] p, [data-eoa-directory] a')
         }
-        if ([390, 1440].includes(width)) await page.screenshot({ path: `/tmp/eoa-layout-${engine}-${locale}-${width}-${path}.png`, fullPage: true })
+        // Cross-browser assertions above remain identical. Preview artifacts are
+        // captured once in Chromium because WebKit full-page screenshot capture
+        // can wait forever on the continuously moving partners rail.
+        if (engine === 'chromium' && [390, 1440].includes(width)) {
+          await page.screenshot({
+            path: `/tmp/eoa-layout-${engine}-${locale}-${width}-${path}.png`,
+            fullPage: true,
+            animations: 'disabled',
+            timeout: 15000,
+          })
+        }
       }
       if (width === 320) {
         unavailable = true
@@ -177,4 +195,5 @@ try {
   await browser?.close()
   app.kill('SIGTERM')
   if (app.exitCode === null) await once(app, 'exit')
+  clearTimeout(suiteTimeout)
 }
