@@ -12,12 +12,37 @@ import {
 
 test("covers website, direct Laravel endpoints, and the frontend proxy", () => {
   const probes = buildProbes("https://wosool.org", "https://api.wosool.org")
-  assert.equal(probes.length, 18)
+  assert.equal(probes.length, 19)
   assert.ok(probes.some((p) => p.url === "https://wosool.org/api/health"))
   assert.ok(probes.some((p) => p.url === "https://api.wosool.org/api/ready"))
+  assert.ok(probes.some((p) => p.url === "https://wosool.org/api/openapi.json" && p.kind === "openapi"))
   assert.deepEqual(
     probes.filter((p) => p.revisionRole).map((p) => p.revisionRole),
     ["frontend", "backend", "backend", "backend"],
+  )
+})
+
+test("requires the downloadable OpenAPI contract and its documented operations", async () => {
+  const spec = buildProbes("https://wosool.org", "https://api.wosool.org")
+    .find(probe => probe.kind === "openapi")
+  assert.ok(spec)
+  const contract = {
+    openapi: spec.openapiVersion,
+    info: { version: spec.apiVersion },
+    paths: Object.fromEntries(Object.entries(spec.operations).map(([path, operationId]) => [path, { get: { operationId } }])),
+  }
+  await probeEndpoint(spec, async () => Response.json(contract))
+  await assert.rejects(
+    () => probeEndpoint(spec, async () => Response.json({ ...contract, info: { version: "1.7.0" } })),
+    /Expected OpenAPI 3\.1\.0 contract 1\.8\.0/,
+  )
+  await assert.rejects(
+    () => probeEndpoint(spec, async () => Response.json({ ...contract, paths: {} })),
+    /missing getHealth/,
+  )
+  await assert.rejects(
+    () => probeEndpoint(spec, async () => new Response("<html>Not found</html>", { status: 404, headers: { "content-type": "text/html" } })),
+    /Expected HTTP 200; got HTTP 404/,
   )
 })
 
@@ -75,6 +100,11 @@ test("fails the production run when a configured expected revision does not matc
     }
     if (probe.kind === "protected") return Response.json({ message: "Unauthenticated." }, { status: 401 })
     if (probe.kind === "empty-founder-list") return Response.json({ data: [], meta: { total: 0 } })
+    if (probe.kind === "openapi") return Response.json({
+      openapi: probe.openapiVersion,
+      info: { version: probe.apiVersion },
+      paths: Object.fromEntries(Object.entries(probe.operations).map(([path, operationId]) => [path, { get: { operationId } }])),
+    })
     return Response.json({ status: probe.status, service: probe.service, revision: probe.revisionRole === "frontend" ? "1111111" : "2222222" })
   }
 

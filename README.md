@@ -2,6 +2,10 @@
   <img src="frontend/public/wosool-logo-eo.svg" alt="Wosool | وصول" width="420" />
 </p>
 
+**Admin matching reliability update (20 November 2026):** `/admin/matches` now loads active founders with scorecards without a strict-mode lazy-loading failure or N+1 query, and its bilingual suggestion form explains field, duplicate and activation errors without exposing raw API text. The two founder pickers exclude the opposite selection; accessible focus, counts, Riyadh dates and loading/error/empty states are covered by frontend and Laravel regression tests. Source and CI do not deploy either service or modify production matches.
+
+**Public API release-monitoring update (20 November 2026):** the production smoke suite now requires the canonical `/api/openapi.json` download to expose OpenAPI 3.1.0, Wosool contract 1.8.0 and all nine documented GET operations. Fresh read-only checks pass the existing 18 frontend, health, registration, newsletter and exact-founder probes, but the live OpenAPI download remains HTTP 404 and health responses still omit serving revisions. This source correction does not deploy either service, import data or change hosting configuration.
+
 **Admin partner review and browser reliability update (19 November 2026):** `/admin/partners` now distinguishes a saved partner from one actually eligible for the public partners page, validates the bilingual publishing evidence and organization type before saving, and exposes accessible loading, retry, focus and field-error behavior. The EOA responsive suite keeps its Chromium/Firefox/WebKit route and viewport matrix, bounds every wait, tests WebKit's carousel toggle at 390px while keeping its runner-specific 1440px layout in reduced-motion mode, and leaves the separate continuous-motion check unchanged. Source and CI do not deploy Wosool.org or change production partner records.
 
 **Backend build security update (18 November 2026):** required CI now verifies a repository-contained `picomatch` mitigation before retaining the unsuppressed high-severity npm audit. The package is derived from upstream 4.0.7, applies the narrowly scoped fix proposed in `micromatch/picomatch#238`, and is used across Vite, `tinyglobby`, `fdir` and Laravel's reload plugin until an official patched release is available. Local regression, audit and Vite build checks pass; this source change does not deploy either service or import production data. See [mitigation provenance and retirement criteria](docs/security/PICOMATCH-2026-11-18.md).
@@ -23,7 +27,7 @@
   <a href="https://github.com/king4arabs/wosool/actions/workflows/ci.yml">CI</a>
 </p>
 
-**Documentation version: 0.6.11 · Updated: 19 November 2026.**
+**Documentation version: 0.6.13 · Updated: 20 November 2026.**
 
 Wosool is an Arabic/English founders platform connecting Saudi Arabia, the GCC, MENA and the world. It brings founder and company profiles, events, news, introductions and community services together, with a dedicated EO Riyadh Accelerator experience.
 
