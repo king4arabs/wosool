@@ -1,75 +1,237 @@
 "use client"
 
-import { FormEvent, useCallback, useEffect, useMemo, useState } from "react"
+import { FormEvent, useCallback, useEffect, useMemo, useRef, useState } from "react"
 import Link from "next/link"
-import { api } from "@/lib/api"
+import { ApiError, api } from "@/lib/api"
 import { useLocale } from "@/lib/locale"
 import { type ApiFounder } from "@/lib/content-api"
+import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
 import { Select } from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog"
-import { dateLocale } from "@/lib/date-locale"
+import { useToast } from "@/components/ui/toast"
+import {
+  adminMatches,
+  characterCount,
+  fill,
+  matchDate,
+  matchFieldOrder,
+  matchPayload,
+  matchReasonMax,
+  matchReasonMin,
+  matchSaveErrors,
+  matchStatusLabel,
+  matchStatusVariant,
+  matchStatuses,
+  matchVisible,
+  validateMatchForm,
+  type MatchField,
+  type MatchFormErrors,
+} from "@/lib/admin-matches"
 
 type Match = { id: number; founder_a: ApiFounder; founder_b: ApiFounder; status: string; match_reasons: string[]; created_at: string }
 const founderName = (founder: ApiFounder) => founder.name || founder.user?.name || founder.slug
+const fieldId: Record<MatchField, string> = { founder_a_id: "match-founder-a", founder_b_id: "match-founder-b", reason: "match-reason" }
 
-function FounderPicker({ label, value, onChange }: { label: string; value: ApiFounder | null; onChange: (value: ApiFounder | null) => void }) {
+function FounderPicker({ field, label, value, exclude, error, disabled, onChange }: {
+  field: MatchField
+  label: string
+  value: ApiFounder | null
+  exclude: number | null
+  error?: string
+  disabled: boolean
+  onChange: (value: ApiFounder | null) => void
+}) {
   const { locale } = useLocale()
+  const copy = adminMatches(locale)
+  const id = fieldId[field]
   const [query, setQuery] = useState("")
   const [items, setItems] = useState<ApiFounder[]>([])
-  const [error, setError] = useState<string | null>(null)
+  const [state, setState] = useState<"loading" | "ready" | "error">("loading")
   useEffect(() => {
     const controller = new AbortController()
     const timer = setTimeout(() => {
-      api.get<{ data: ApiFounder[] }>("/admin/founders", { params: { search: query, status: "active", activation: "active", per_page: 20 }, signal: controller.signal }).then(response => { setItems(response.data); setError(null) }).catch(error => { if (!controller.signal.aborted) setError(error instanceof Error ? error.message : "Unable to load founders") })
+      setState("loading")
+      api.get<{ data: ApiFounder[] }>("/admin/founders", { params: { search: query.trim() || undefined, status: "active", activation: "active", per_page: 20 }, signal: controller.signal })
+        .then(response => { setItems(response.data); setState("ready") })
+        .catch(() => { if (!controller.signal.aborted) setState("error") })
     }, 300)
     return () => { clearTimeout(timer); controller.abort() }
   }, [query])
-  const options = value && !items.some(item => item.id === value.id) ? [value, ...items] : items
-  return <fieldset className="space-y-2"><legend className="mb-2 font-semibold">{label}</legend><Input type="search" value={query} onChange={event => setQuery(event.target.value)} aria-label={`${label}: ${locale === "ar" ? "بحث بالاسم" : "Search by name"}`} placeholder={locale === "ar" ? "بحث بالاسم" : "Search by name"} /><Select required value={value?.id ?? ""} aria-label={label} onChange={event => onChange(options.find(item => item.id === Number(event.target.value)) ?? null)}><option value="">{locale === "ar" ? "اختر المؤسس" : "Select founder"}</option>{options.map(item => <option key={item.id} value={item.id}>{founderName(item)}</option>)}</Select>{error && <p role="alert" className="text-sm text-rose-700">{error}</p>}</fieldset>
+  // Keep the chosen founder selectable after a new search, and never offer the other picker's choice.
+  const options = (value && !items.some(item => item.id === value.id) ? [value, ...items] : items).filter(item => item.id !== exclude)
+  const describedBy = error ? `${id}-error` : `${id}-hint`
+  return (
+    <fieldset className="space-y-2" disabled={disabled}>
+      <legend className="mb-1 font-semibold">{label}<span className="text-red-600"> *<span className="sr-only"> ({copy.required})</span></span></legend>
+      <Input type="search" value={query} onChange={event => setQuery(event.target.value)} aria-label={fill(copy.founderSearchLabel, { label })} placeholder={copy.founderSearch} />
+      <Select
+        id={id}
+        value={value?.id ?? ""}
+        aria-label={label}
+        aria-required
+        aria-invalid={Boolean(error)}
+        aria-describedby={describedBy}
+        onChange={event => onChange(options.find(item => item.id === Number(event.target.value)) ?? null)}
+      >
+        <option value="">{copy.founderSelect}</option>
+        {options.map(item => <option key={item.id} value={item.id}>{founderName(item)}</option>)}
+      </Select>
+      {error
+        ? <p id={`${id}-error`} className="text-xs font-medium text-red-700">{error}</p>
+        : <p id={`${id}-hint`} className="text-xs text-gray-500" aria-live="polite">
+            {state === "loading" ? copy.foundersLoading : state === "error" ? copy.foundersFailed : options.length === 0 ? copy.foundersEmpty : copy.founderHint}
+          </p>}
+    </fieldset>
+  )
 }
 
 export default function AdminMatchesPage() {
   const { locale } = useLocale()
-  const ar = locale === "ar"
+  const copy = adminMatches(locale)
+  const { toast } = useToast()
   const [matches, setMatches] = useState<Match[]>([])
   const [search, setSearch] = useState("")
   const [status, setStatus] = useState("")
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
+  const [loadState, setLoadState] = useState<"loading" | "ready" | "error">("loading")
   const [open, setOpen] = useState(false)
   const [a, setA] = useState<ApiFounder | null>(null)
   const [b, setB] = useState<ApiFounder | null>(null)
   const [reason, setReason] = useState("")
   const [sending, setSending] = useState(false)
+  const [errors, setErrors] = useState<MatchFormErrors>({})
   const [formError, setFormError] = useState<string | null>(null)
-  const labels: Record<string, string> = ar ? { suggested: "مقترح", accepted: "مقبول", connected: "متصل", declined: "مرفوض" } : { suggested: "Suggested", accepted: "Accepted", connected: "Connected", declined: "Declined" }
-  const load = useCallback(async (signal?: AbortSignal) => {
-    setLoading(true); setError(null)
-    try { const response = await api.get<{ data: Match[] }>("/admin/matches", { signal }); if (!signal?.aborted) setMatches(response.data) }
-    catch (error) { if (!signal?.aborted) setError(error instanceof Error ? error.message : "Unable to load matches") }
-    finally { if (!signal?.aborted) setLoading(false) }
+  const latestRequest = useRef(0)
+
+  const load = useCallback(async () => {
+    const request = ++latestRequest.current
+    setLoadState("loading")
+    try {
+      const response = await api.get<{ data: Match[] }>("/admin/matches")
+      if (request !== latestRequest.current) return
+      setMatches(response.data)
+      setLoadState("ready")
+    } catch {
+      if (request === latestRequest.current) setLoadState("error")
+    }
   }, [])
-  useEffect(() => { const controller = new AbortController(); void load(controller.signal); return () => controller.abort() }, [load])
-  const visible = useMemo(() => matches.filter(match => (!status || match.status === status) && [founderName(match.founder_a), founderName(match.founder_b), ...match.match_reasons].join(" ").toLowerCase().includes(search.trim().toLowerCase())), [matches, search, status])
+  useEffect(() => { void load() }, [load])
+
+  const visible = useMemo(
+    () => matches.filter(match => matchVisible({ status: match.status, names: [founderName(match.founder_a), founderName(match.founder_b)], reasons: match.match_reasons }, search, status)),
+    [matches, search, status],
+  )
+
+  const openDialog = () => {
+    setA(null); setB(null); setReason(""); setErrors({}); setFormError(null)
+    setOpen(true)
+  }
+
+  const clearError = (field: MatchField) => {
+    setErrors(previous => (previous[field] ? { ...previous, [field]: undefined } : previous))
+    setFormError(null)
+  }
+
+  const focusFirst = (found: MatchFormErrors) => {
+    const first = matchFieldOrder.find(field => found[field])
+    if (first) window.requestAnimationFrame(() => document.getElementById(fieldId[first])?.focus())
+  }
+
   async function submit(event: FormEvent) {
     event.preventDefault()
-    if (!a || !b || sending) return
+    if (sending) return
+    const form = { founderA: a?.id ?? null, founderB: b?.id ?? null, reason }
+    const found = validateMatchForm(locale, form)
+    if (Object.keys(found).length > 0) {
+      setErrors(found)
+      focusFirst(found)
+      return
+    }
     setSending(true); setFormError(null)
-    try { await api.post("/admin/matches", { founder_a_id: a.id, founder_b_id: b.id, reason: reason.trim() }); setOpen(false); setA(null); setB(null); setReason(""); await load() }
-    catch (error) { setFormError(error instanceof Error ? error.message : "Unable to suggest match") }
-    finally { setSending(false) }
+    try {
+      await api.post("/admin/matches", matchPayload(form))
+      setOpen(false)
+      toast(copy.saved, "success")
+      await load()
+    } catch (error) {
+      const result = matchSaveErrors(locale, error instanceof ApiError ? error.status : 0, error instanceof ApiError ? error.data : undefined)
+      setErrors(result.fields)
+      setFormError(result.message)
+      focusFirst(result.fields)
+    } finally {
+      setSending(false)
+    }
   }
+
+  const reasonLength = characterCount(reason.trim())
+  const reasonDescribedBy = errors.reason ? `${fieldId.reason}-error ${fieldId.reason}-count` : `${fieldId.reason}-hint ${fieldId.reason}-count`
+  const filtered = search.trim() !== "" || status !== ""
+
   return <div className="space-y-6">
-    <header className="flex flex-wrap items-center justify-between gap-4"><div><h2 className="text-2xl font-bold">{ar ? "تعارف المؤسسين" : "Founder matches"}</h2><p className="mt-2 text-slate-600">{ar ? "اقترح علاقات مناسبة وتابع قرارات المؤسسين وطلبات التعارف." : "Suggest useful connections and follow founder responses and introduction requests."}</p></div><Button onClick={() => { setOpen(true); setFormError(null) }}>{ar ? "اقتراح تعارف" : "Suggest match"}</Button></header>
-    <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">{Object.entries(labels).map(([key, label]) => <div key={key} className="rounded-xl border bg-white p-5"><p className="text-3xl font-bold">{loading ? "—" : matches.filter(match => match.status === key).length}</p><p className="mt-2 text-sm text-slate-600">{label}</p></div>)}</div>
-    <div className="flex flex-wrap gap-3"><Input className="min-w-0 flex-1" type="search" value={search} onChange={event => setSearch(event.target.value)} aria-label={ar ? "بحث" : "Search"} placeholder={ar ? "ابحث باسم المؤسس أو سبب الترشيح" : "Search founders or match reasons"} /><Select className="sm:w-52" value={status} onChange={event => setStatus(event.target.value)} aria-label={ar ? "الحالة" : "Status"}><option value="">{ar ? "جميع الحالات" : "All statuses"}</option>{Object.entries(labels).map(([key, label]) => <option key={key} value={key}>{label}</option>)}</Select></div>
-    {loading && <p role="status">{ar ? "جارٍ التحميل…" : "Loading…"}</p>}
-    {error && <div role="alert"><p>{error}</p><Button variant="outline" onClick={() => void load()}>{ar ? "إعادة المحاولة" : "Try again"}</Button></div>}
-    {!loading && !error && <div className="space-y-4">{!visible.length && <p className="rounded-xl border bg-white p-6">{ar ? "لا توجد نتائج مطابقة." : "No matching connections."}</p>}{visible.map(match => <article key={match.id} className="rounded-xl border bg-white p-5"><div className="flex flex-wrap items-center justify-between gap-3"><h2 className="font-bold">{founderName(match.founder_a)} · {founderName(match.founder_b)}</h2><span className="rounded-full bg-slate-100 px-3 py-1 text-sm">{labels[match.status] ?? match.status}</span></div><ul className="mt-3 list-inside list-disc text-sm text-slate-600">{match.match_reasons.map((reason, index) => <li key={index}>{reason}</li>)}</ul><time className="mt-3 block text-xs text-slate-500">{new Date(match.created_at).toLocaleDateString(dateLocale(ar, "en-GB"))}</time></article>)}</div>}
-    <Link className="inline-flex min-h-11 items-center font-semibold text-[#3B52D4] underline" href="/admin/intros">{ar ? "إدارة طلبات التعارف" : "Manage introduction requests"}</Link>
-    <Dialog open={open} onOpenChange={value => { if (!sending) setOpen(value) }}><DialogContent><DialogHeader><DialogTitle>{ar ? "اقتراح تعارف" : "Suggest a match"}</DialogTitle><DialogDescription>{ar ? "اختر مؤسسين مختلفين واشرح قيمة التعارف. يختار المؤسسون قبول المقترح أو رفضه." : "Choose two different founders and explain the value of connecting. Founders decide whether to accept or decline."}</DialogDescription></DialogHeader><form onSubmit={submit} className="space-y-4"><FounderPicker label={ar ? "المؤسس الأول" : "First founder"} value={a} onChange={setA} /><FounderPicker label={ar ? "المؤسس الثاني" : "Second founder"} value={b} onChange={setB} /><label className="block font-semibold" htmlFor="match-reason">{ar ? "سبب الترشيح" : "Reason"}</label><Textarea id="match-reason" required minLength={10} maxLength={2000} value={reason} onChange={event => setReason(event.target.value)} />{formError && <p role="alert" className="text-rose-700">{formError}</p>}<Button type="submit" loading={sending} disabled={!a || !b || a.id === b.id || reason.trim().length < 10}>{ar ? "حفظ المقترح" : "Save suggestion"}</Button></form></DialogContent></Dialog>
+    <header className="flex flex-wrap items-center justify-between gap-4">
+      <div><h2 className="text-2xl font-bold">{copy.title}</h2><p className="mt-2 text-slate-600">{copy.intro}</p></div>
+      <Button onClick={openDialog}>{copy.suggest}</Button>
+    </header>
+    <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+      {matchStatuses.map(key => <div key={key} className="rounded-xl border bg-white p-5"><p className="text-3xl font-bold">{loadState === "ready" ? matches.filter(match => match.status === key).length : "—"}</p><p className="mt-2 text-sm text-slate-600">{matchStatusLabel(locale, key)}</p></div>)}
+    </div>
+    <div className="flex flex-wrap gap-3">
+      <Input className="min-w-0 flex-1" type="search" value={search} onChange={event => setSearch(event.target.value)} aria-label={copy.searchLabel} placeholder={copy.searchLabel} />
+      <Select className="sm:w-52" value={status} onChange={event => setStatus(event.target.value)} aria-label={copy.statusLabel}>
+        <option value="">{copy.allStatuses}</option>
+        {matchStatuses.map(key => <option key={key} value={key}>{matchStatusLabel(locale, key)}</option>)}
+      </Select>
+    </div>
+    <div aria-live="polite">
+      {loadState === "loading" && <p className="text-sm text-gray-500">{copy.loading}</p>}
+      {loadState === "error" && (
+        <div className="flex flex-wrap items-center gap-3 rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-800">
+          <p>{copy.loadFailed}</p>
+          <Button variant="outline" size="sm" onClick={() => void load()}>{copy.retry}</Button>
+        </div>
+      )}
+      {loadState === "ready" && !visible.length && <p className="rounded-xl border border-dashed bg-white p-6 text-center text-sm text-slate-600">{filtered && matches.length ? copy.emptyFilter : copy.empty}</p>}
+    </div>
+    {loadState === "ready" && visible.length > 0 && <ul className="space-y-4">
+      {visible.map(match => {
+        const date = matchDate(locale, match.created_at)
+        return <li key={match.id} className="rounded-xl border bg-white p-5">
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <h3 className="min-w-0 break-words font-bold">{founderName(match.founder_a)} · {founderName(match.founder_b)}</h3>
+            <Badge variant={matchStatusVariant(match.status)}>{matchStatusLabel(locale, match.status)}</Badge>
+          </div>
+          <ul className="mt-3 list-inside list-disc space-y-1 text-sm text-slate-600">{match.match_reasons.map((item, index) => <li key={index} dir="auto" className="break-words">{item}</li>)}</ul>
+          {date && <p className="mt-3 text-xs text-slate-500"><time dateTime={match.created_at}>{fill(copy.suggestedOn, { date })}</time></p>}
+        </li>
+      })}
+    </ul>}
+    <Link className="inline-flex min-h-11 items-center font-semibold text-[#3B52D4] underline" href="/admin/intros">{copy.manageIntros}</Link>
+    <Dialog open={open} onOpenChange={value => { if (!sending) setOpen(value) }}>
+      <DialogContent>
+        <DialogHeader><DialogTitle>{copy.dialogTitle}</DialogTitle><DialogDescription>{copy.dialogDescription}</DialogDescription></DialogHeader>
+        <form noValidate onSubmit={submit} className="space-y-4">
+          <FounderPicker field="founder_a_id" label={copy.founderA} value={a} exclude={b?.id ?? null} error={errors.founder_a_id} disabled={sending} onChange={value => { setA(value); clearError("founder_a_id") }} />
+          <FounderPicker field="founder_b_id" label={copy.founderB} value={b} exclude={a?.id ?? null} error={errors.founder_b_id} disabled={sending} onChange={value => { setB(value); clearError("founder_b_id") }} />
+          <div className="space-y-1.5">
+            <Label htmlFor={fieldId.reason}>{copy.reason}<span className="text-red-600"> *<span className="sr-only"> ({copy.required})</span></span></Label>
+            <Textarea id={fieldId.reason} dir="auto" disabled={sending} aria-required aria-invalid={Boolean(errors.reason)} aria-describedby={reasonDescribedBy} value={reason} onChange={event => { setReason(event.target.value); clearError("reason") }} />
+            <div className="flex flex-wrap justify-between gap-2 text-xs">
+              {errors.reason
+                ? <p id={`${fieldId.reason}-error`} className="font-medium text-red-700">{errors.reason}</p>
+                : <p id={`${fieldId.reason}-hint`} className="text-gray-500">{fill(copy.reasonHint, { min: matchReasonMin, max: matchReasonMax })}</p>}
+              <p id={`${fieldId.reason}-count`} className={reasonLength > matchReasonMax ? "text-red-700" : "text-gray-500"}>{fill(copy.reasonCount, { count: reasonLength, max: matchReasonMax })}</p>
+            </div>
+          </div>
+          {formError && <p role="alert" className="rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-800">{formError}</p>}
+          <div className="flex justify-end gap-2">
+            <Button type="button" variant="outline" disabled={sending} onClick={() => setOpen(false)}>{copy.cancel}</Button>
+            <Button type="submit" loading={sending}>{copy.save}</Button>
+          </div>
+        </form>
+      </DialogContent>
+    </Dialog>
   </div>
 }

@@ -15,7 +15,9 @@ class FounderController extends Controller
     {
         $request->validate(['search' => ['sometimes', 'nullable', 'string', 'max:120']]);
         $query = FounderProfile::query()
-            ->with(['user', 'companies', 'scorecard', 'latestInvitation', 'outreach'])
+            // ScorecardResource reads the scorecard's founder (founder_uid); chaperone() sets it from
+            // the parent instead of one lazy query per founder (refused outside production).
+            ->with(['user', 'companies', 'scorecard' => fn ($relation) => $relation->chaperone('founderProfile'), 'latestInvitation', 'outreach'])
             ->withCount('companies');
 
         if ($request->filled('search')) {
