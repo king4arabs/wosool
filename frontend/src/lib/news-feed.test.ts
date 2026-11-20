@@ -246,3 +246,20 @@ test('source-dated iMENA, accelerator and Daleela briefs connect to verified fou
   assert.deepEqual(newsFounders(curatedNews.find(n => n.slug === 'daleela-clinician-led-care-430k-registrations-november-2026')!).map(p => p.slug).sort(), ['yousef-elsammaa-daleela','nour-emam-daleela','ahmad-abou-hashem-daleela'].sort())
   assert.deepEqual(newsFounders(curatedNews.find(n => n.slug === 'imena-sar802m-capital-increase-november-2026')!).map(p => p.slug).sort(), ['nasir-alsharif-imena','khaldoon-tabaza-imena'].sort())
 })
+
+
+test('Shaffra and Connect Money have actual dated source links and founder associations', () => {
+  const saudi = curatedNews.find(n => n.slug === 'shaffra-riyadh-headquarters-ai-workforce-november-2026')!
+  const egypt = curatedNews.find(n => n.slug === 'connect-money-3-5m-pre-series-a-saudi-morocco-november-2026')!
+  for (const [story, date] of [[saudi, '2026-11-16'], [egypt, '2026-11-19']] as const) {
+    assert.ok(story)
+    assert.equal(story.publishedAt, date)
+    assert.equal(story.imageUrl, '')
+    assert.equal(story.imageCredit, '')
+    assert.ok(safeNewsUrl(story.sourceUrl))
+    assert.equal(story.keyFacts?.length, 3)
+    assert.equal(story.translations?.ar.keyFacts?.length, 3)
+  }
+  assert.deepEqual(newsFounders(saudi).map(p => p.slug).sort(), ['alharith-alatawi-shaffra', 'marc-wehbi-shaffra'].sort())
+  assert.deepEqual(newsFounders(egypt).map(p => p.slug).sort(), ['ayman-essawy-connect-money', 'marwan-kenawy-connect-money', 'momtaz-moussa-connect-money'].sort())
+})
