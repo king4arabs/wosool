@@ -28,6 +28,24 @@ export function buildProbes(site, api) {
     { name: "Frontend liveness", url: site + "/health", kind: "json", status: "healthy", service: "wosool-frontend", revisionRole: "frontend" },
     { name: "Homepage", url: site + "/", kind: "html", contains: /Wosool|وصول/i },
     { name: "Accelerator page", url: site + "/eoa", kind: "html" },
+    {
+      name: "OpenAPI contract download",
+      url: site + "/api/openapi.json",
+      kind: "openapi",
+      openapiVersion: "3.1.0",
+      apiVersion: "1.8.0",
+      operations: {
+        "/api/health": "getHealth",
+        "/api/ready": "getReadiness",
+        "/api/v1/founders": "listFounders",
+        "/api/v1/founders/{slug}": "getFounder",
+        "/api/v1/companies": "listCompanies",
+        "/api/v1/companies/{slug}": "getCompany",
+        "/api/v1/news": "listNews",
+        "/api/v1/news/{slug}": "getNews",
+        "/api/v1/startup-directory": "listStartups",
+      },
+    },
     { name: "Laravel liveness", url: api + "/api/health", kind: "json", status: "healthy", revisionRole: "backend" },
     { name: "Laravel readiness", url: api + "/api/ready", kind: "json", status: "ready", revisionRole: "backend" },
     { name: "Same-origin API proxy", url: site + "/api/health", kind: "json", status: "healthy", revisionRole: "backend" },
@@ -93,6 +111,17 @@ export async function probeEndpoint(spec, fetchImpl = fetch) {
     if (!contentType.includes("application/json")) throw new Error("Expected JSON authentication response")
     const data = await response.json()
     if (typeof data?.message !== "string" || data.user) throw new Error("Expected unauthenticated response")
+  } else if (spec.kind === "openapi") {
+    if (!contentType.includes("application/json")) throw new Error("Expected JSON OpenAPI contract")
+    const data = await response.json()
+    if (data?.openapi !== spec.openapiVersion || data?.info?.version !== spec.apiVersion) {
+      throw new Error(`Expected OpenAPI ${spec.openapiVersion} contract ${spec.apiVersion}`)
+    }
+    for (const [path, operationId] of Object.entries(spec.operations)) {
+      if (data?.paths?.[path]?.get?.operationId !== operationId) {
+        throw new Error(`OpenAPI contract is missing ${operationId} at ${path}`)
+      }
+    }
   } else if (spec.kind === "json") {
     if (!contentType.includes("application/json")) throw new Error("Expected JSON content type")
     const data = await response.json()
