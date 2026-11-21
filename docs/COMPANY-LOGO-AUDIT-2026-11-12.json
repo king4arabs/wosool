@@ -455,6 +455,17 @@
     "status": "existing-local-asset"
   },
   {
+    "company_key": "connect-money-egypt",
+    "company": "Connect Money",
+    "website": "https://www.connect.money/",
+    "source_page": "https://www.connect.money/",
+    "src": null,
+    "tone": null,
+    "reviewed_at": "2026-11-20",
+    "status": "unresolved",
+    "reason": "Original reusable logo rights/asset not verified; keep the dark-panel-readable company-name fallback."
+  },
+  {
     "company_key": "daleela-motherbeing",
     "company": "Daleela",
     "website": "https://daleela.app/",
@@ -1920,6 +1931,17 @@
     "tone": "dark",
     "reviewed_at": "2026-11-12",
     "status": "existing-local-asset"
+  },
+  {
+    "company_key": "shaffra-ai",
+    "company": "Shaffra",
+    "website": "https://shaffra.com/",
+    "source_page": "https://www.theshaffraconvergence.com/",
+    "src": null,
+    "tone": null,
+    "reviewed_at": "2026-11-20",
+    "status": "unresolved",
+    "reason": "Original logo asset and permitted reuse were not verified; use legible company-name fallback, do not recolor."
   },
   {
     "company_key": "shawarmer",

@@ -3,6 +3,50 @@
     "imageUrl": "",
     "imageCredit": "",
     "author": "Wosool news desk",
+    "id": "sourced-connect-money-pre-series-a-november-2026",
+    "slug": "connect-money-3-5m-pre-series-a-saudi-morocco-november-2026",
+    "title": "Egypt's Connect Money reports $3.5m pre-Series A deal before planned Saudi expansion",
+    "excerpt": "The 19 November transaction combines fresh investment with secondary share sales; the primary funding share was not disclosed.",
+    "content": "On 19 November 2026, Egyptian embedded-finance provider Connect Money reported a US$3.5 million pre-Series A transaction led by existing investors Mohamed Farouk, Algebra Ventures and DisrupTech Ventures. The deal combines new funding with secondary sales of early investors' shares; how much of the total entered the company is undisclosed. Connect Money says it has issued more than 300,000 branded payment cards across six sectors. The company plans to develop local infrastructure in Saudi Arabia and Morocco, including pursuing a Saudi Central Bank licence, which was not reported as granted. It describes cumulative funding of US$11.5 million; neither the transaction total nor card count represents revenue.",
+    "category": "Funding",
+    "region": "mena",
+    "sourceUrl": "https://www.wamda.com/en/2026/11/egypt-connect-money-raises-3-5-million-pre-series",
+    "sourceName": "Wamda (19 November 2026)",
+    "companies": [
+      "Connect Money"
+    ],
+    "publishedAt": "2026-11-19",
+    "tags": [
+      "Egypt",
+      "Saudi Arabia",
+      "Connect Money",
+      "Embedded finance",
+      "Morocco"
+    ],
+    "keyFacts": [
+      "US$3.5m transaction mixes primary and secondary investment, split undisclosed",
+      "Company reports over 300,000 cards issued across six sectors",
+      "Saudi SAMA licensing and Morocco entry are planned, not completed"
+    ],
+    "translations": {
+      "ar": {
+        "title": "«كونكت موني» المصرية تعلن صفقة بـ3.5 مليون دولار وتستهدف السعودية والمغرب",
+        "excerpt": "صفقة ما قبل الفئة (أ) المعلنة 19 نوفمبر تجمع استثماراً جديداً وبيع حصص قائمة دون الإفصاح عن قيمة كل جزء.",
+        "body": [
+          "أعلنت شركة «كونكت موني» المصرية في 19 نوفمبر 2026 صفقة بقيمة 3.5 مليون دولار في مرحلة ما قبل الفئة (أ) بقيادة مستثمرين حاليين هم محمد فاروق و«ألجبرا فينتشرز» و«ديسرابتك فينتشرز». وجمعت الصفقة تمويلاً أولياً جديداً للشركة ومبيعات ثانوية لحصص مستثمرين سابقين، من دون الكشف عن المبلغ الذي دخل الشركة فعلياً. وذكرت أنها أصدرت أكثر من 300 ألف بطاقة دفع في ستة قطاعات، وهو رقم تشغيلي وليس إيرادات. وتعتزم تطوير البنية التقنية والعمليات في السعودية والمغرب، بما في ذلك السعي للحصول على ترخيص البنك المركزي السعودي؛ ولم تعلن حصولها عليه. وأفادت بإجمالي تمويل تراكمي قدره 11.5 مليون دولار، وهو لا يمثل إيرادات."
+        ],
+        "keyFacts": [
+          "صفقة 3.5 مليون دولار تجمع استثماراً أولياً وبيع حصص دون توزيع معلن",
+          "أكثر من 300 ألف بطاقة مصدرة بحسب الشركة في ستة قطاعات",
+          "ترخيص البنك المركزي السعودي والتوسع المغربي خطط لم تكتمل"
+        ]
+      }
+    }
+  },
+  {
+    "imageUrl": "",
+    "imageCredit": "",
+    "author": "Wosool news desk",
     "id": "sourced-sanabil-global-batch12-november-2026",
     "slug": "sanabil-global-batch12-seven-startups-november-2026",
     "title": "Seven startups selected from 888 applications for Saudi Sanabil Accelerator Batch 12",
@@ -45,6 +89,49 @@
           "اختيار 7 شركات من 888 طلباً",
           "البرنامج من 27 سبتمبر إلى 9 ديسمبر ويوم العرض مقرر في 9 ديسمبر",
           "المشاركة لا تثبت استثماراً مستقلاً في كل شركة"
+        ]
+      }
+    }
+  },
+  {
+    "imageUrl": "",
+    "imageCredit": "",
+    "author": "Wosool news desk",
+    "id": "sourced-shaffra-saudi-headquarters-november-2026",
+    "slug": "shaffra-riyadh-headquarters-ai-workforce-november-2026",
+    "title": "Shaffra establishes Riyadh headquarters to scale AI workforce services",
+    "excerpt": "The company announced its Saudi base on 16 November and reports 7,000–8,000 AI-handled calls per day in the Kingdom.",
+    "content": "In a company announcement published on 16 November 2026, GCC-born AI workforce provider Shaffra said it had established its headquarters in Riyadh to support Saudi public- and private-sector operations. Its technology deploys autonomous AI teams in customer-service and internal enterprise workflows. The company says its AI call centre handles approximately 7,000–8,000 calls a day in Saudi Arabia; this is a company-reported measure of workload, not independently audited revenue or unique customers. Its official event identifies Alharith Alatawi as co-founder and CEO and Marc Wehbi as co-founder and CTO. The announcement is not a new capital-raising round.",
+    "category": "Product",
+    "region": "saudi",
+    "sourceUrl": "https://www.zawya.com/en/press-release/companies-news/shaffra-establishes-saudi-headquarters-as-ai-workforce-deployments-grow-2278540",
+    "sourceName": "Shaffra via Zawya (16 November 2026)",
+    "companies": [
+      "Shaffra"
+    ],
+    "publishedAt": "2026-11-16",
+    "tags": [
+      "Saudi Arabia",
+      "Shaffra",
+      "Riyadh",
+      "Enterprise AI"
+    ],
+    "keyFacts": [
+      "Riyadh headquarters announced on 16 November 2026",
+      "7,000–8,000 daily Saudi AI call-centre calls claimed by company",
+      "Company-reported call workload is not audited revenue"
+    ],
+    "translations": {
+      "ar": {
+        "title": "«شفرا» تعلن افتتاح مقر رئيسي بالرياض لتوسيع حلول القوى العاملة الذكية",
+        "excerpt": "ذكرت الشركة يوم 16 نوفمبر أن مركز الاتصال الذكي لديها يعالج نحو 7 إلى 8 آلاف مكالمة يومياً في المملكة.",
+        "body": [
+          "أعلنت «شفرا» في بيان صدر يوم 16 نوفمبر 2026 اتخاذ الرياض مقراً رئيسياً لدعم أعمالها مع مؤسسات القطاعين الحكومي والخاص في السعودية. وتقدم الشركة فرق ذكاء اصطناعي مستقلة لخدمة العملاء وتشغيل العمليات الداخلية. وقالت إن مركز الاتصال بالذكاء الاصطناعي لديها يتعامل مع ما يقارب 7 إلى 8 آلاف مكالمة يومياً في المملكة، وهو رقم تشغيلي منسوب إليها وليس إيرادات مدققة أو عدد عملاء مثبتاً. وتؤكد موادها الرسمية أن الحارث العطاوي شريك مؤسس ورئيس تنفيذي ومارك وهبي شريك مؤسس ورئيس التقنية. ولم يتضمن الإعلان جولة تمويل جديدة."
+        ],
+        "keyFacts": [
+          "إعلان المقر الرئيسي في الرياض بتاريخ 16 نوفمبر 2026",
+          "نحو 7 إلى 8 آلاف مكالمة يومياً وفق بيانات الشركة",
+          "العدد التشغيلي المعلن ليس إيرادات مدققة"
         ]
       }
     }

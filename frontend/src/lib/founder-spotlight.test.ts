@@ -15,9 +15,10 @@ import november15Profiles from '../data/founder-spotlight-expansion-2026-11-15.j
 import november17Profiles from '../data/founder-spotlight-expansion-2026-11-17.json'
 import november18Profiles from '../data/founder-spotlight-expansion-2026-11-18.json'
 import november19Profiles from '../data/founder-spotlight-expansion-2026-11-19.json'
+import november20Profiles from '../data/founder-spotlight-expansion-2026-11-20.json'
 
 const rank: Record<string, number> = { saudi: 0, gcc: 1, mena: 2, global: 3 }
-const sourceProfiles = [...historicalProfiles, ...additionalProfiles, ...discoveryProfiles, ...countryProfiles, ...novemberProfiles, ...november12Profiles, ...november13Profiles, ...november14Profiles, ...november15Profiles, ...november17Profiles, ...november18Profiles, ...november19Profiles]
+const sourceProfiles = [...historicalProfiles, ...additionalProfiles, ...discoveryProfiles, ...countryProfiles, ...novemberProfiles, ...november12Profiles, ...november13Profiles, ...november14Profiles, ...november15Profiles, ...november17Profiles, ...november18Profiles, ...november19Profiles, ...november20Profiles]
   .sort((left, right) => (rank[left.region] ?? 4) - (rank[right.region] ?? 4))
 // Historical batches retain their membership when an existing profile receives new verification dates.
 // Cohort boundaries are source-linked, not array positions: editorial entries can be prepended.
@@ -79,12 +80,14 @@ test('frontend source snapshots and database import share the same reviewed reco
   assert.equal(november18Profiles.length, 2)
   assert.deepEqual(JSON.parse(readFileSync(new URL('../../../backend/resources/data/founder-directory-expansion-2026-11-19.json', import.meta.url), 'utf8')), november19Profiles)
   assert.equal(november19Profiles.length, 3)
+  assert.deepEqual(JSON.parse(readFileSync(new URL('../../../backend/resources/data/founder-directory-expansion-2026-11-20.json', import.meta.url), 'utf8')), november20Profiles)
+  assert.equal(november20Profiles.length, 5)
   assert.equal(originalCountryCohort.length, 102)
   assert.equal(october30Additions.length, 8)
   assert.equal(new Set(originalCountryCohort.map(profile => profile.country_code)).size, 51)
   for (const code of new Set(originalCountryCohort.map(profile => profile.country_code))) assert.equal(originalCountryCohort.filter(profile => profile.country_code === code).length, 2, code)
-  assert.equal(new Set(sourceProfiles.map(profile => profile.company_key)).size, 224)
-  assert.equal(sourceProfiles.length, 416)
+  assert.equal(new Set(sourceProfiles.map(profile => profile.company_key)).size, 226)
+  assert.equal(sourceProfiles.length, 421)
   assert.equal(new Set(sourceProfiles.map(profile => profile.founder_name_en.toLowerCase())).size, sourceProfiles.length)
   assert.equal(new Set(sourceProfiles.map(profile => profile.slug)).size, sourceProfiles.length)
   assert.ok(sourceProfiles.every(profile => profile.source_urls.length > 0 && profile.reviewed_at))
@@ -305,11 +308,28 @@ test('17 November sourced external profiles retain accurate identity and nonmemb
 test('new iMENA and Daleela founders are unclaimed and evidence-linked', () => {
   assert.deepEqual(november18Profiles.map(p => p.slug), ['nasir-alsharif-imena', 'khaldoon-tabaza-imena'])
   assert.deepEqual(november19Profiles.map(p => p.slug), ['yousef-elsammaa-daleela', 'nour-emam-daleela', 'ahmad-abou-hashem-daleela'])
-  for (const p of [...november18Profiles, ...november19Profiles]) {
+  for (const p of [...november18Profiles, ...november19Profiles, ...november20Profiles]) {
     assert.ok(p.founder_name_ar && p.founder_brief_ar)
     assert.equal(p.logo_url, null); assert.equal(p.portrait_url, null)
     assert.ok(p.source_urls.includes(p.source_url) && p.source_urls.includes(p.traction_source_url))
     assert.ok(!('email' in p) && !('user_id' in p) && !('isVerified' in p))
   }
   for (const p of november19Profiles) assert.ok(p.founder_socials.every(link => p.source_urls.includes(link.url)))
+})
+
+
+test('20 November Shaffra and Connect Money founder profiles stay evidence-linked and unclaimed', () => {
+  assert.deepEqual(november20Profiles.map(p => p.slug), [
+    'alharith-alatawi-shaffra', 'marc-wehbi-shaffra', 'ayman-essawy-connect-money',
+    'marwan-kenawy-connect-money', 'momtaz-moussa-connect-money',
+  ])
+  for (const p of november20Profiles) {
+    assert.equal(p.reviewed_at, '2026-11-20')
+    assert.equal(p.logo_url, null)
+    assert.equal(p.portrait_url, null)
+    assert.ok(p.founder_name_ar && p.founder_brief_ar && p.company_brief_ar)
+    assert.ok(p.source_urls.includes(p.source_url))
+    assert.ok(p.source_urls.includes(p.traction_source_url))
+    assert.ok(!('email' in p) && !('user_id' in p) && !('is_verified' in p))
+  }
 })

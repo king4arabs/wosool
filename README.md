@@ -1,4 +1,7 @@
 <p align="center">
+
+**Editorial update (20 November 2026):** Mirrored research catalogs now propose **421 external/unclaimed founders, 226 company identities and 147 dated bilingual briefs**. Added Saudi Shaffra co-founders Alharith Alatawi and Marc Wehbi plus Egyptian Connect Money co-founders Ayman Essawy, Marwan Kenawy and Momtaz Moussa. New briefs retain issuer dates of 16 November (Shaffra Riyadh headquarters) and 19 November (Connect Money mixed primary/secondary financing). No unverified logos, membership claims, user edits, data imports or Hostinger release. See [source evidence](docs/research/CONTENT-REFRESH-2026-11-20.md).
+
   <img src="frontend/public/wosool-logo-eo.svg" alt="Wosool | وصول" width="420" />
 </p>
 
