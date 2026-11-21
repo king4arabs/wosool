@@ -263,3 +263,19 @@ test('Shaffra and Connect Money have actual dated source links and founder assoc
   assert.deepEqual(newsFounders(saudi).map(p => p.slug).sort(), ['alharith-alatawi-shaffra', 'marc-wehbi-shaffra'].sort())
   assert.deepEqual(newsFounders(egypt).map(p => p.slug).sort(), ['ayman-essawy-connect-money', 'marwan-kenawy-connect-money', 'momtaz-moussa-connect-money'].sort())
 })
+
+test('new Chipverse and Ziina briefs stay source-dated and linked to existing company profiles', () => {
+  const egypt = curatedNews.find(item => item.slug === 'chipverse-pre-seed-egypt-ai-compute-november-2026')!
+  const uae = curatedNews.find(item => item.slug === 'ziina-split-bill-uae-november-2026')!
+  assert.ok(egypt && uae)
+  for (const item of [egypt, uae]) {
+    assert.equal(item.publishedAt, '2026-11-18')
+    assert.equal(item.imageUrl, '')
+    assert.equal(item.imageCredit, '')
+    assert.equal(item.keyFacts?.length, 3)
+    assert.equal(item.translations?.ar.keyFacts?.length, 3)
+    assert.ok(safeNewsUrl(item.sourceUrl))
+  }
+  assert.deepEqual(newsFounders(egypt).map(p => p.slug), ['andrew-isaac-chipverse'])
+  assert.ok(newsFounders(uae).some(p => p.company_name_en === 'Ziina'))
+})
