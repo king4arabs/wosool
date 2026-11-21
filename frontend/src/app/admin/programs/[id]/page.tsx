@@ -1,64 +1,114 @@
 "use client"
 
-import { useCallback, useEffect, useMemo, useState } from "react"
+import { FormEvent, ReactElement, cloneElement, useCallback, useEffect, useRef, useState } from "react"
 import Link from "next/link"
 import { ProgramOperationsPanel } from "@/components/admin/ProgramOperationsPanel"
 import { useParams } from "next/navigation"
+import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
 import { Select } from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
-import { api } from "@/lib/api"
+import { ApiError, api } from "@/lib/api"
 import { useToast } from "@/components/ui/toast"
 import { useLocale } from "@/lib/locale"
-import { dateLocale } from "@/lib/date-locale"
+import {
+  type ApplicationAction,
+  type CohortErrors,
+  type CohortField,
+  type CohortForm,
+  type SessionErrors,
+  type SessionField,
+  type SessionForm,
+  applicationActions,
+  applicationStatusVariant,
+  applicationUpdateError,
+  codeLabel,
+  cohortFieldOrder,
+  cohortLimits,
+  cohortPayload,
+  cohortStatuses,
+  emptyCohortForm,
+  emptySessionForm,
+  fill,
+  programManage,
+  programTabs,
+  riyadhDate,
+  riyadhDateTimeLabel,
+  saveErrors,
+  sessionFieldOrder,
+  sessionLimits,
+  sessionPayload,
+  sessionTypes,
+  validateCohort,
+  validateSession,
+} from "@/lib/admin-program-manage"
 
-// The Arabic tab name is the panel key ProgramOperationsPanel expects.
-const TABS = [
-  { key: "نظرة عامة", en: "Overview" },
-  { key: "الطلبات", en: "Applications" },
-  { key: "المشاركون", en: "Participants" },
-  { key: "الدفعات", en: "Cohorts" },
-  { key: "الجلسات", en: "Sessions" },
-  { key: "الحضور", en: "Attendance" },
-  { key: "التقدم", en: "Progress" },
-] as const
-
-type TabKey = (typeof TABS)[number]["key"]
-
-const COHORT_STATUSES = [
-  ["draft", "مسودة", "Draft"],
-  ["open", "مفتوحة", "Open"],
-  ["full", "مكتملة العدد", "Full"],
-  ["active", "نشطة", "Active"],
-  ["completed", "منتهية", "Completed"],
-  ["cancelled", "ملغاة", "Cancelled"],
-] as const
-
-const SESSION_TYPES = [
-  ["workshop", "ورشة", "Workshop"],
-  ["office_hour", "ساعات مكتبية", "Office hours"],
-  ["mentorship", "إرشاد", "Mentorship"],
-  ["lecture", "محاضرة", "Lecture"],
-  ["roundtable", "طاولة مستديرة", "Roundtable"],
-  ["demo", "عرض", "Demo"],
-  ["review", "مراجعة", "Review"],
-  ["check_in", "متابعة", "Check-in"],
-] as const
+type TabKey = (typeof programTabs)[number]["key"]
+type LoadState = "loading" | "ready" | "error"
 
 type ApplicationRow = {
   id: number
-  applicant_name?: string
-  email?: string
-  sector?: string
-  company_stage?: string
+  applicant_name?: string | null
+  email?: string | null
+  sector?: string | null
+  company_stage?: string | null
   status: string
-  submitted_at?: string
+  submitted_at?: string | null
 }
 
-type CohortRow = { id: number; name: string; code?: string; status: string; capacity?: number | null; starts_at?: string | null }
+type CohortRow = { id: number; name: string; code?: string | null; status: string; capacity?: number | null; starts_at?: string | null; applications_count?: number }
 type SessionRow = { id: number; title: string; session_type: string; starts_at?: string | null; duration_minutes?: number | null }
+
+type FieldProps = {
+  id: string
+  label: string
+  required?: boolean
+  hint?: string
+  error?: string
+  requiredText: string
+  optionalText: string
+  className?: string
+  children: ReactElement<Record<string, unknown>>
+}
+
+/** A labelled control with its required/optional marker, hint and error tied to it. */
+function Field({ id, label, required, hint, error, requiredText, optionalText, className, children }: FieldProps) {
+  const describedBy = [hint ? `${id}-hint` : "", error ? `${id}-error` : ""].filter(Boolean).join(" ") || undefined
+  return (
+    <div className={`space-y-1 ${className ?? ""}`}>
+      <Label htmlFor={id}>
+        {label}
+        {required
+          ? <span className="text-red-600"> *<span className="sr-only"> ({requiredText})</span></span>
+          : <span className="text-xs font-normal text-gray-500"> ({optionalText})</span>}
+      </Label>
+      {cloneElement(children, { id, "aria-required": required || undefined, "aria-invalid": error ? true : undefined, "aria-describedby": describedBy })}
+      {hint ? <p id={`${id}-hint`} className="text-xs text-gray-500">{hint}</p> : null}
+      {error ? <p id={`${id}-error`} className="text-xs font-medium text-red-700">{error}</p> : null}
+    </div>
+  )
+}
+
+function focusFirst<F extends string>(order: F[], errors: Partial<Record<F, string>>, prefix: string) {
+  const first = order.find(field => errors[field])
+  if (first) window.requestAnimationFrame(() => document.getElementById(`${prefix}-${first}`)?.focus())
+}
+
+function LoadStatus({ state, failed, empty, isEmpty, loading, retry, onRetry }: { state: LoadState; failed: string; empty: string; isEmpty: boolean; loading: string; retry: string; onRetry: () => void }) {
+  if (state === "loading") return <p className="text-sm text-gray-500" role="status">{loading}</p>
+  if (state === "error") {
+    return (
+      <div className="flex flex-wrap items-center gap-3 rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-800" role="alert">
+        <span>{failed}</span>
+        <Button size="sm" variant="outline" onClick={onRetry}>{retry}</Button>
+      </div>
+    )
+  }
+  return isEmpty ? <p className="text-sm text-gray-500">{empty}</p> : null
+}
 
 export default function AdminProgramManagePage() {
   const params = useParams<{ id: string }>()
@@ -66,55 +116,67 @@ export default function AdminProgramManagePage() {
   const { toast } = useToast()
   const { locale } = useLocale()
   const ar = locale === "ar"
-  const t = useCallback((arabic: string, english: string) => (ar ? arabic : english), [ar])
+  const copy = programManage(locale)
 
   const [tab, setTab] = useState<TabKey>("الطلبات")
-  const [loading, setLoading] = useState(false)
   const [applications, setApplications] = useState<ApplicationRow[]>([])
   const [cohorts, setCohorts] = useState<CohortRow[]>([])
   const [sessions, setSessions] = useState<SessionRow[]>([])
+  const [applicationsState, setApplicationsState] = useState<LoadState>("loading")
+  const [cohortsState, setCohortsState] = useState<LoadState>("loading")
+  const [sessionsState, setSessionsState] = useState<LoadState>("loading")
+  const [updating, setUpdating] = useState<number | null>(null)
 
-  const [cohortForm, setCohortForm] = useState({ name: "", code: "", status: "draft", capacity: "", starts_at: "" })
-  const [sessionForm, setSessionForm] = useState({ title: "", session_type: "workshop", starts_at: "", duration_minutes: "60", description: "" })
+  const [cohortForm, setCohortForm] = useState<CohortForm>(emptyCohortForm)
+  const [cohortErrors, setCohortErrors] = useState<CohortErrors>({})
+  const [savingCohort, setSavingCohort] = useState(false)
+  const [sessionForm, setSessionForm] = useState<SessionForm>(emptySessionForm)
+  const [sessionErrors, setSessionErrors] = useState<SessionErrors>({})
+  const [savingSession, setSavingSession] = useState(false)
+  // Ignore responses from a superseded request (for example after switching tabs quickly).
+  const requests = useRef({ applications: 0, cohorts: 0, sessions: 0 })
 
   const loadApplications = useCallback(async () => {
     if (!programId) return
-    setLoading(true)
+    const request = ++requests.current.applications
+    setApplicationsState("loading")
     try {
       const res = await api.get<{ data: ApplicationRow[] }>(`/admin/programs/${programId}/applications`)
+      if (request !== requests.current.applications) return
       setApplications(res.data || [])
-    } catch (e) {
-      toast(e instanceof Error ? e.message : t("تعذر تحميل الطلبات", "Could not load applications"), "error")
-    } finally {
-      setLoading(false)
+      setApplicationsState("ready")
+    } catch {
+      if (request === requests.current.applications) setApplicationsState("error")
     }
-  }, [programId, toast, t])
+  }, [programId])
 
   const loadCohorts = useCallback(async () => {
     if (!programId) return
-    setLoading(true)
+    const request = ++requests.current.cohorts
+    setCohortsState("loading")
     try {
       const res = await api.get<{ data: CohortRow[] }>(`/admin/programs/${programId}/cohorts`)
+      if (request !== requests.current.cohorts) return
       setCohorts(res.data || [])
-    } catch (e) {
-      toast(e instanceof Error ? e.message : t("تعذر تحميل الدفعات", "Could not load cohorts"), "error")
-    } finally {
-      setLoading(false)
+      setCohortsState("ready")
+    } catch {
+      if (request === requests.current.cohorts) setCohortsState("error")
     }
-  }, [programId, toast, t])
+  }, [programId])
 
   const loadSessions = useCallback(async () => {
     if (!programId) return
-    setLoading(true)
+    const request = ++requests.current.sessions
+    setSessionsState("loading")
     try {
       const res = await api.get<{ data: SessionRow[] }>(`/admin/programs/${programId}/sessions`)
+      if (request !== requests.current.sessions) return
       setSessions(res.data || [])
-    } catch (e) {
-      toast(e instanceof Error ? e.message : t("تعذر تحميل الجلسات", "Could not load sessions"), "error")
-    } finally {
-      setLoading(false)
+      setSessionsState("ready")
+    } catch {
+      if (request === requests.current.sessions) setSessionsState("error")
     }
-  }, [programId, toast, t])
+  }, [programId])
 
   useEffect(() => {
     if (tab === "الطلبات") void loadApplications()
@@ -122,102 +184,221 @@ export default function AdminProgramManagePage() {
     if (tab === "الجلسات") void loadSessions()
   }, [tab, loadApplications, loadCohorts, loadSessions])
 
-  const actions = useMemo(() => ([
-    { key: "accept", label: t("قبول", "Accept") },
-    { key: "reject", label: t("رفض", "Reject") },
-    { key: "waitlist", label: t("انتظار", "Waitlist") },
-    { key: "request_more_info", label: t("طلب معلومات", "Request info") },
-    { key: "enroll", label: t("إلحاق", "Enroll") },
-  ]), [t])
-
-  async function updateApplication(id: number, action: string) {
+  async function updateApplication(application: ApplicationRow, action: ApplicationAction) {
     if (!programId) return
+    const name = application.applicant_name || copy.unnamed
+    setUpdating(application.id)
     try {
-      await api.patch(`/admin/programs/${programId}/applications/${id}`, { action })
-      toast(t("تم تحديث الطلب", "Application updated"), "success")
+      await api.patch(`/admin/programs/${programId}/applications/${application.id}`, { action })
+      toast(fill(copy.applicationUpdated, { name }), "success")
       await loadApplications()
-    } catch (e) {
-      toast(e instanceof Error ? e.message : t("فشل تحديث الطلب", "Could not update the application"), "error")
+    } catch (error) {
+      toast(applicationUpdateError(locale, error instanceof ApiError ? error.status : 0), "error")
+    } finally {
+      setUpdating(null)
     }
   }
 
-  async function createCohort() {
-    if (!programId) return
+  function setCohortField(field: CohortField, value: string) {
+    setCohortForm(previous => ({ ...previous, [field]: value }))
+    setCohortErrors(previous => ({ ...previous, [field]: undefined }))
+  }
+
+  function setSessionField(field: SessionField, value: string) {
+    setSessionForm(previous => ({ ...previous, [field]: value }))
+    setSessionErrors(previous => ({ ...previous, [field]: undefined }))
+  }
+
+  async function createCohort(event: FormEvent) {
+    event.preventDefault()
+    if (!programId || savingCohort) return
+    const errors = validateCohort(locale, cohortForm)
+    setCohortErrors(errors)
+    if (Object.keys(errors).length > 0) {
+      focusFirst(cohortFieldOrder, errors, "cohort")
+      return
+    }
+    setSavingCohort(true)
     try {
-      await api.post(`/admin/programs/${programId}/cohorts`, {
-        ...cohortForm,
-        capacity: cohortForm.capacity ? Number(cohortForm.capacity) : null,
-        starts_at: cohortForm.starts_at || null,
-      })
-      toast(t("تم إنشاء الدفعة", "Cohort created"), "success")
-      setCohortForm({ name: "", code: "", status: "draft", capacity: "", starts_at: "" })
+      const payload = cohortPayload(cohortForm)
+      await api.post(`/admin/programs/${programId}/cohorts`, payload)
+      toast(fill(copy.cohortCreated, { name: payload.name }), "success")
+      setCohortForm(emptyCohortForm)
       await loadCohorts()
-    } catch (e) {
-      toast(e instanceof Error ? e.message : t("تعذر إنشاء الدفعة", "Could not create the cohort"), "error")
+    } catch (error) {
+      const result = saveErrors(locale, error instanceof ApiError ? error.status : 0, error instanceof ApiError ? error.data : undefined, cohortFieldOrder, copy.cohortFailed)
+      setCohortErrors(result.fields)
+      focusFirst(cohortFieldOrder, result.fields, "cohort")
+      toast(result.message, "error")
+    } finally {
+      setSavingCohort(false)
     }
   }
 
-  async function createSession() {
-    if (!programId) return
+  async function createSession(event: FormEvent) {
+    event.preventDefault()
+    if (!programId || savingSession) return
+    const errors = validateSession(locale, sessionForm)
+    setSessionErrors(errors)
+    if (Object.keys(errors).length > 0) {
+      focusFirst(sessionFieldOrder, errors, "session")
+      return
+    }
+    setSavingSession(true)
     try {
-      await api.post(`/admin/programs/${programId}/sessions`, {
-        ...sessionForm,
-        duration_minutes: Number(sessionForm.duration_minutes || 60),
-      })
-      toast(t("تم إنشاء الجلسة", "Session created"), "success")
-      setSessionForm({ title: "", session_type: "workshop", starts_at: "", duration_minutes: "60", description: "" })
+      const payload = sessionPayload(sessionForm)
+      await api.post(`/admin/programs/${programId}/sessions`, payload)
+      toast(fill(copy.sessionCreated, { title: payload.title }), "success")
+      setSessionForm(emptySessionForm)
       await loadSessions()
-    } catch (e) {
-      toast(e instanceof Error ? e.message : t("تعذر إنشاء الجلسة", "Could not create the session"), "error")
+    } catch (error) {
+      const result = saveErrors(locale, error instanceof ApiError ? error.status : 0, error instanceof ApiError ? error.data : undefined, sessionFieldOrder, copy.sessionFailed)
+      setSessionErrors(result.fields)
+      focusFirst(sessionFieldOrder, result.fields, "session")
+      toast(result.message, "error")
+    } finally {
+      setSavingSession(false)
     }
   }
+
+  const marker = { requiredText: copy.required, optionalText: copy.optional }
 
   return (
     <div className="space-y-5">
-      <h2 className="text-2xl font-bold">{t("إدارة البرنامج", "Manage program")}</h2>
-      <Link href="/admin/programs" className="inline-flex min-h-11 items-center text-[#3B52D4] underline">{t("بيانات البرامج وإعداداتها", "Program details and settings")}</Link>
-      <div className="flex flex-wrap gap-2">{TABS.map((entry) => <Button key={entry.key} size="sm" variant={tab === entry.key ? "default" : "outline"} aria-pressed={tab === entry.key} onClick={() => setTab(entry.key)}>{ar ? entry.key : entry.en}</Button>)}</div>
+      <h2 className="text-2xl font-bold">{copy.title}</h2>
+      <Link href="/admin/programs" className="inline-flex min-h-11 items-center text-[#3B52D4] underline">{copy.settingsLink}</Link>
+      <div className="flex flex-wrap gap-2" role="group" aria-label={copy.tabsLabel}>
+        {programTabs.map(entry => <Button key={entry.key} size="sm" variant={tab === entry.key ? "default" : "outline"} aria-pressed={tab === entry.key} onClick={() => setTab(entry.key)}>{ar ? entry.key : entry.en}</Button>)}
+      </div>
 
       {tab === "الطلبات" && (
-        <Card><CardContent className="p-4 space-y-3">
-          <div className="flex justify-between items-center"><h2 className="font-bold">{t("طلبات البرنامج", "Program applications")}</h2><a className="text-sm text-blue-600 underline" href={`/api/v1/admin/programs/${programId}/applications/export`}>{t("تصدير CSV", "Export CSV")}</a></div>
-          {loading ? <p className="text-sm text-slate-500">{t("جارٍ التحميل…", "Loading…")}</p> : null}
-          {(applications || []).length === 0 ? <p className="text-sm text-slate-500">{t("لا توجد طلبات.", "No applications.")}</p> : null}
-          {(applications || []).map((a) => (
-            <div key={a.id} className="border rounded-lg p-3 flex flex-col gap-2">
-              <div className="flex justify-between"><div><p className="font-semibold">{a.applicant_name || "—"}</p><p className="text-xs text-slate-500">{a.email} • {a.sector || "—"} • {a.company_stage || "—"}</p></div><span className="text-xs">{a.status}</span></div>
-              <div className="flex flex-wrap gap-2">{actions.map((action) => <Button key={action.key} size="sm" variant="outline" onClick={() => updateApplication(a.id, action.key)}>{action.label}</Button>)}</div>
-            </div>
-          ))}
+        <Card><CardContent className="space-y-3 p-4">
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <h3 className="font-bold">{copy.applicationsTitle}</h3>
+            <a className="inline-flex min-h-11 items-center text-sm text-[#3B52D4] underline" href={`/api/v1/admin/programs/${programId}/applications/export`}>{copy.exportCsv}</a>
+          </div>
+          <LoadStatus state={applicationsState} failed={copy.applicationsFailed} empty={copy.applicationsEmpty} isEmpty={applications.length === 0} loading={copy.loading} retry={copy.retry} onRetry={loadApplications} />
+          {applicationsState !== "error" && applications.map(application => {
+            const name = application.applicant_name || copy.unnamed
+            const submitted = riyadhDate(locale, application.submitted_at)
+            return (
+              <div key={application.id} className="flex flex-col gap-2 rounded-lg border p-3">
+                <div className="flex flex-wrap items-start justify-between gap-2">
+                  <div className="min-w-0">
+                    <p className="font-semibold" dir="auto">{name}</p>
+                    <p className="text-xs text-gray-500 break-words">
+                      {[application.email, application.sector, application.company_stage].filter(Boolean).map((part, index) => <span key={index} dir="auto">{index > 0 ? " • " : ""}{part}</span>)}
+                    </p>
+                    {submitted ? <p className="text-xs text-gray-500">{fill(copy.submittedOn, { date: submitted })}</p> : null}
+                  </div>
+                  <Badge variant={applicationStatusVariant(application.status)}>{codeLabel(locale, "application", application.status)}</Badge>
+                </div>
+                <div className="flex flex-wrap gap-2" role="group" aria-label={fill(copy.actionsFor, { name })}>
+                  {applicationActions.map(action => (
+                    <Button key={action} size="sm" variant="outline" disabled={updating === application.id} onClick={() => updateApplication(application, action)}>
+                      {codeLabel(locale, "action", action)}
+                    </Button>
+                  ))}
+                </div>
+              </div>
+            )
+          })}
         </CardContent></Card>
       )}
 
       {tab === "الدفعات" && (
-        <Card><CardContent className="p-4 space-y-4">
-          <h2 className="font-bold">{t("إدارة الدفعات", "Cohorts")}</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-4 gap-2">
-            <Input placeholder={t("اسم الدفعة", "Cohort name")} aria-label={t("اسم الدفعة", "Cohort name")} value={cohortForm.name} onChange={(e) => setCohortForm((p) => ({ ...p, name: e.target.value }))} />
-            <Input placeholder={t("رمز الدفعة", "Cohort code")} aria-label={t("رمز الدفعة", "Cohort code")} value={cohortForm.code} onChange={(e) => setCohortForm((p) => ({ ...p, code: e.target.value }))} />
-            <Input placeholder={t("السعة", "Capacity")} aria-label={t("السعة", "Capacity")} inputMode="numeric" value={cohortForm.capacity} onChange={(e) => setCohortForm((p) => ({ ...p, capacity: e.target.value }))} />
-            <Select value={cohortForm.status} aria-label={t("حالة الدفعة", "Cohort status")} onChange={(e) => setCohortForm((p) => ({ ...p, status: e.target.value }))}>{COHORT_STATUSES.map(([value, arabic, english]) => <option key={value} value={value}>{ar ? arabic : english}</option>)}</Select>
-          </div>
-          <Button onClick={createCohort}>{t("إضافة دفعة", "Add cohort")}</Button>
-          <div className="space-y-2">{cohorts.map((c) => <div key={c.id} className="border rounded-lg p-3 text-sm">{c.name} ({c.code || "—"}) • {c.status} • {t("السعة", "Capacity")}: {c.capacity || "—"}</div>)}</div>
+        <Card><CardContent className="space-y-4 p-4">
+          <h3 className="font-bold">{copy.cohortsTitle}</h3>
+          <form noValidate onSubmit={createCohort} className="space-y-3 rounded-lg border p-3" aria-labelledby="cohort-form-title">
+            <h4 id="cohort-form-title" className="font-semibold">{copy.newCohort}</h4>
+            <fieldset disabled={savingCohort} className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+              <Field id="cohort-name" label={copy.cohortName} required hint={fill(copy.cohortNameHint, { max: cohortLimits.name })} error={cohortErrors.name} {...marker}>
+                <Input dir="auto" value={cohortForm.name} onChange={event => setCohortField("name", event.target.value)} />
+              </Field>
+              <Field id="cohort-code" label={copy.cohortCode} hint={fill(copy.cohortCodeHint, { max: cohortLimits.code })} error={cohortErrors.code} {...marker}>
+                <Input dir="ltr" value={cohortForm.code} onChange={event => setCohortField("code", event.target.value)} />
+              </Field>
+              <Field id="cohort-status" label={copy.cohortStatus} required error={cohortErrors.status} {...marker}>
+                <Select value={cohortForm.status} onChange={event => setCohortField("status", event.target.value)}>
+                  {cohortStatuses.map(value => <option key={value} value={value}>{codeLabel(locale, "cohort", value)}</option>)}
+                </Select>
+              </Field>
+              <Field id="cohort-capacity" label={copy.capacity} hint={copy.capacityHint} error={cohortErrors.capacity} {...marker}>
+                <Input inputMode="numeric" dir="ltr" value={cohortForm.capacity} onChange={event => setCohortField("capacity", event.target.value)} />
+              </Field>
+              <Field id="cohort-starts_at" label={copy.cohortStart} error={cohortErrors.starts_at} {...marker}>
+                <Input type="date" value={cohortForm.starts_at} onChange={event => setCohortField("starts_at", event.target.value)} />
+              </Field>
+            </fieldset>
+            <Button type="submit" disabled={savingCohort}>{savingCohort ? copy.addingCohort : copy.addCohort}</Button>
+          </form>
+          <LoadStatus state={cohortsState} failed={copy.cohortsFailed} empty={copy.cohortsEmpty} isEmpty={cohorts.length === 0} loading={copy.loading} retry={copy.retry} onRetry={loadCohorts} />
+          {cohortsState !== "error" ? (
+            <ul className="space-y-2">
+              {cohorts.map(cohort => {
+                const starts = riyadhDate(locale, cohort.starts_at)
+                return (
+                  <li key={cohort.id} className="flex flex-wrap items-center justify-between gap-2 rounded-lg border p-3 text-sm">
+                    <div className="min-w-0">
+                      <p className="font-semibold" dir="auto">{cohort.name}{cohort.code ? <span className="font-normal text-gray-500" dir="ltr"> ({cohort.code})</span> : null}</p>
+                      <p className="text-xs text-gray-500">
+                        {[cohort.capacity ? fill(copy.capacityValue, { value: cohort.capacity }) : copy.noCapacity, starts ? fill(copy.startsOn, { date: starts }) : null, typeof cohort.applications_count === "number" ? fill(copy.applicationsCount, { count: cohort.applications_count }) : null].filter(Boolean).join(" • ")}
+                      </p>
+                    </div>
+                    <Badge variant="secondary">{codeLabel(locale, "cohort", cohort.status)}</Badge>
+                  </li>
+                )
+              })}
+            </ul>
+          ) : null}
         </CardContent></Card>
       )}
 
       {tab === "الجلسات" && (
-        <Card><CardContent className="p-4 space-y-4">
-          <h2 className="font-bold">{t("جلسات البرنامج", "Program sessions")}</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-4 gap-2">
-            <Input placeholder={t("عنوان الجلسة", "Session title")} aria-label={t("عنوان الجلسة", "Session title")} value={sessionForm.title} onChange={(e) => setSessionForm((p) => ({ ...p, title: e.target.value }))} />
-            <Select value={sessionForm.session_type} aria-label={t("نوع الجلسة", "Session type")} onChange={(e) => setSessionForm((p) => ({ ...p, session_type: e.target.value }))}>{SESSION_TYPES.map(([value, arabic, english]) => <option key={value} value={value}>{ar ? arabic : english}</option>)}</Select>
-            <Input type="datetime-local" aria-label={t("موعد البداية", "Start time")} value={sessionForm.starts_at} onChange={(e) => setSessionForm((p) => ({ ...p, starts_at: e.target.value }))} />
-            <Input placeholder={t("المدة بالدقائق", "Duration (minutes)")} aria-label={t("المدة بالدقائق", "Duration (minutes)")} inputMode="numeric" value={sessionForm.duration_minutes} onChange={(e) => setSessionForm((p) => ({ ...p, duration_minutes: e.target.value }))} />
-          </div>
-          <Textarea placeholder={t("وصف الجلسة", "Session description")} aria-label={t("وصف الجلسة", "Session description")} value={sessionForm.description} onChange={(e) => setSessionForm((p) => ({ ...p, description: e.target.value }))} />
-          <Button onClick={createSession}>{t("إضافة جلسة", "Add session")}</Button>
-          <div className="space-y-2">{sessions.map((s) => <div key={s.id} className="border rounded-lg p-3 text-sm">{s.title} • {s.session_type} • {s.starts_at ? new Date(s.starts_at).toLocaleString(dateLocale(ar, "en-GB"), { timeZone: "Asia/Riyadh" }) : "—"}</div>)}</div>
+        <Card><CardContent className="space-y-4 p-4">
+          <h3 className="font-bold">{copy.sessionsTitle}</h3>
+          <form noValidate onSubmit={createSession} className="space-y-3 rounded-lg border p-3" aria-labelledby="session-form-title">
+            <h4 id="session-form-title" className="font-semibold">{copy.newSession}</h4>
+            <fieldset disabled={savingSession} className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+              <Field id="session-title" label={copy.sessionTitle} required hint={fill(copy.sessionTitleHint, { max: sessionLimits.title })} error={sessionErrors.title} {...marker}>
+                <Input dir="auto" value={sessionForm.title} onChange={event => setSessionField("title", event.target.value)} />
+              </Field>
+              <Field id="session-session_type" label={copy.sessionType} required error={sessionErrors.session_type} {...marker}>
+                <Select value={sessionForm.session_type} onChange={event => setSessionField("session_type", event.target.value)}>
+                  {sessionTypes.map(value => <option key={value} value={value}>{codeLabel(locale, "session", value)}</option>)}
+                </Select>
+              </Field>
+              <Field id="session-starts_at" label={copy.sessionStart} required hint={copy.sessionStartHint} error={sessionErrors.starts_at} {...marker}>
+                <Input type="datetime-local" value={sessionForm.starts_at} onChange={event => setSessionField("starts_at", event.target.value)} />
+              </Field>
+              <Field id="session-duration_minutes" label={copy.duration} hint={fill(copy.durationHint, { min: sessionLimits.minDuration })} error={sessionErrors.duration_minutes} {...marker}>
+                <Input inputMode="numeric" dir="ltr" value={sessionForm.duration_minutes} onChange={event => setSessionField("duration_minutes", event.target.value)} />
+              </Field>
+              <Field id="session-description" label={copy.sessionDescription} error={sessionErrors.description} className="sm:col-span-2" {...marker}>
+                <Textarea dir="auto" value={sessionForm.description} onChange={event => setSessionField("description", event.target.value)} />
+              </Field>
+            </fieldset>
+            <Button type="submit" disabled={savingSession}>{savingSession ? copy.addingSession : copy.addSession}</Button>
+          </form>
+          <LoadStatus state={sessionsState} failed={copy.sessionsFailed} empty={copy.sessionsEmpty} isEmpty={sessions.length === 0} loading={copy.loading} retry={copy.retry} onRetry={loadSessions} />
+          {sessionsState !== "error" ? (
+            <ul className="space-y-2">
+              {sessions.map(session => {
+                const when = riyadhDateTimeLabel(locale, session.starts_at)
+                return (
+                  <li key={session.id} className="flex flex-wrap items-center justify-between gap-2 rounded-lg border p-3 text-sm">
+                    <div className="min-w-0">
+                      <p className="font-semibold" dir="auto">{session.title}</p>
+                      <p className="text-xs text-gray-500">
+                        {[when ? `${when} (${copy.riyadhTime})` : copy.noTime, session.duration_minutes ? fill(copy.minutes, { count: session.duration_minutes }) : null].filter(Boolean).join(" • ")}
+                      </p>
+                    </div>
+                    <Badge variant="secondary">{codeLabel(locale, "session", session.session_type)}</Badge>
+                  </li>
+                )
+              })}
+            </ul>
+          ) : null}
         </CardContent></Card>
       )}
 
