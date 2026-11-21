@@ -1,0 +1,35 @@
+[
+  {
+    "company_name_en": "Chipverse",
+    "company_name_ar": "تشيبفيرس",
+    "company_brief_en": "Egyptian AI-compute infrastructure provider offering locally hosted dedicated GPU and bare-metal servers priced in Egyptian pounds.",
+    "company_brief_ar": "شركة مصرية للبنية التحتية لحوسبة الذكاء الاصطناعي توفر خوادم مخصصة ومعالجات رسومية مستضافة محلياً بأسعار بالجنيه المصري.",
+    "country_en": "Egypt",
+    "country_ar": "مصر",
+    "country_code": "EG",
+    "sector_en": "AI compute infrastructure",
+    "sector_ar": "البنية التحتية لحوسبة الذكاء الاصطناعي",
+    "website": "https://chipverse.ai/",
+    "portrait_url": null,
+    "logo_url": null,
+    "founder_socials": [],
+    "company_key": "chipverse-egypt",
+    "region": "mena",
+    "founded_year": 2024,
+    "reviewed_at": "2026-11-21",
+    "source_url": "https://thecondia.com/chipverse-pre-seed-funding-egypt-ai-computing/",
+    "source_urls": [
+      "https://thecondia.com/chipverse-pre-seed-funding-egypt-ai-computing/",
+      "https://www.wamda.com/en/2026/11/egypt-chipverse-secures-pre-seed-funding-double-gpu-capacity",
+      "https://weetracker.com/2026/11/20/chipverse-raises-pre-seed-funding-ai-infrastructure-egypt/",
+      "https://chipverse.ai/"
+    ],
+    "slug": "andrew-isaac-chipverse",
+    "founder_name_en": "Andrew Isaac",
+    "founder_name_ar": "أندرو إسحاق",
+    "role_en": "Founder",
+    "role_ar": "مؤسس",
+    "founder_brief_en": "Founded Chipverse in 2024 to make dedicated locally hosted GPU computing available to companies and AI developers in Egypt; developer APIs and AI media tools are planned.",
+    "founder_brief_ar": "أسس «تشيبفيرس» عام 2024 لتوفير قدرات الحوسبة الرسومية المستضافة محلياً للشركات ومطوري الذكاء الاصطناعي في مصر، وتخطط الشركة لتطوير واجهات برمجية وأدوات للوسائط الذكية."
+  }
+]

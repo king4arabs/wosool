@@ -2493,5 +2493,16 @@
     "src": "/company-logos/ziina.png",
     "tone": "light",
     "status": "existing-local-asset"
+  },
+  {
+    "company_key": "chipverse-egypt",
+    "company": "Chipverse",
+    "website": "https://chipverse.ai/",
+    "source_page": "https://chipverse.ai/",
+    "src": null,
+    "tone": null,
+    "reviewed_at": "2026-11-21",
+    "status": "unresolved",
+    "reason": "Original reusable logo rights and asset not verified; retain readable company-name fallback on dark panels."
   }
 ]

@@ -3,6 +3,94 @@
     "imageUrl": "",
     "imageCredit": "",
     "author": "Wosool news desk",
+    "id": "sourced-chipverse-egypt-pre-seed-november-2026",
+    "slug": "chipverse-pre-seed-egypt-ai-compute-november-2026",
+    "title": "Egypt's Chipverse secures undisclosed pre-seed funding to expand local AI compute",
+    "excerpt": "The company plans to double GPU capacity and launch APIs; the amount and investor names have not been released.",
+    "content": "On 18 November 2026, Wamda reported that Egyptian GPU infrastructure startup Chipverse had secured an undisclosed pre-seed investment from regional angel investors and technology entrepreneurs. Founded in 2024, Chipverse offers dedicated, locally hosted servers and GPU computing priced in Egyptian pounds. It plans to double GPU capacity, create developer APIs and introduce AI audio and video tools. The funding amount, investor identities and launch schedule were not disclosed. Proposed expansion is not a completed operational milestone or revenue.",
+    "category": "Funding",
+    "region": "mena",
+    "sourceUrl": "https://www.wamda.com/en/2026/11/egypt-chipverse-secures-pre-seed-funding-double-gpu-capacity",
+    "sourceName": "Wamda (18 November 2026)",
+    "companies": [
+      "Chipverse"
+    ],
+    "publishedAt": "2026-11-18",
+    "tags": [
+      "Egypt",
+      "Chipverse",
+      "AI infrastructure",
+      "GPU computing",
+      "Pre-seed"
+    ],
+    "keyFacts": [
+      "Pre-seed financing announced without a disclosed amount or named investors",
+      "Dedicated GPU and server services hosted in Egypt and priced in EGP",
+      "Doubling GPU capacity and launching APIs remain future plans"
+    ],
+    "translations": {
+      "ar": {
+        "title": "«تشيبفيرس» المصرية تحصل على تمويل أولي غير معلن لتوسيع قدراتها في الحوسبة الذكية",
+        "excerpt": "تعتزم مضاعفة سعة المعالجات الرسومية وطرح واجهات برمجية، دون إعلان مبلغ الاستثمار أو أسماء المستثمرين.",
+        "body": [
+          "أفاد «ومضة» في 18 نوفمبر 2026 بحصول شركة «تشيبفيرس» المصرية للبنية التحتية للحوسبة على تمويل بمرحلة ما قبل البذرة من مستثمرين ملائكيين ورواد تقنية إقليميين، دون الكشف عن القيمة أو الأسماء. تأسست الشركة عام 2024 وتقدم خوادم مخصصة ومعالجات رسومية مستضافة في مصر وبأسعار بالجنيه المصري. وتخطط لمضاعفة السعة الحاسوبية وطرح واجهات برمجية وأدوات صوت وفيديو تعتمد على الذكاء الاصطناعي. ولم يُعلن موعد إطلاق الخدمات الجديدة، ولا تمثل هذه الخطط توسعاً منجزاً أو إيرادات."
+        ],
+        "keyFacts": [
+          "التمويل وأسماء المستثمرين غير معلنة",
+          "حوسبة رسومية وخوادم مخصصة مستضافة في مصر ومسعّرة بالجنيه المصري",
+          "التوسع والواجهات البرمجية خدمات مستقبلية"
+        ]
+      }
+    }
+  },
+  {
+    "imageUrl": "",
+    "imageCredit": "",
+    "author": "Wosool news desk",
+    "id": "sourced-ziina-uae-split-bill-november-2026",
+    "slug": "ziina-split-bill-uae-november-2026",
+    "title": "UAE fintech Ziina launches Split Bill for shared group expenses",
+    "excerpt": "Split Bill lets people allocate costs, track payments and send reminders, with link payments available to non-users.",
+    "content": "A Ziina company announcement published on 18 November 2026 introduced Split Bill, a tool for UAE customers to divide group expenses, send requests, track contributions and automate follow-up reminders. People without a Ziina account can pay through a link using a debit card, Apple Pay or Google Pay. Ziina said the number of peer-to-peer transfers increased 330% year on year during January–October 2026. This is company-reported growth in transaction count, not revenue, and the launch did not announce new equity financing.",
+    "category": "Product",
+    "region": "gcc",
+    "sourceUrl": "https://www.wamda.com/en/2026/11/ziina-offers-new-feature-split-simplify-shared-payments",
+    "sourceName": "Ziina company announcement via Wamda (18 November 2026)",
+    "companies": [
+      "Ziina"
+    ],
+    "publishedAt": "2026-11-18",
+    "tags": [
+      "UAE",
+      "Ziina",
+      "Fintech",
+      "Payments",
+      "Split Bill"
+    ],
+    "keyFacts": [
+      "Split Bill manages shared expense requests, settlement tracking and reminders",
+      "People without Ziina accounts can pay with debit cards, Apple Pay or Google Pay",
+      "330% year-on-year growth refers to company-reported P2P transfer counts, not revenue"
+    ],
+    "translations": {
+      "ar": {
+        "title": "«زينة» الإماراتية تطلق خدمة تقسيم الفواتير والمدفوعات الجماعية",
+        "excerpt": "ميزة جديدة لتقسيم المصاريف ومتابعة سداد المساهمات، مع روابط دفع للمستخدمين غير المسجلين.",
+        "body": [
+          "أعلنت شركة المدفوعات الإماراتية «زينة» في 18 نوفمبر 2026 إطلاق ميزة «Split Bill» لتوزيع المصاريف المشتركة وإرسال طلبات السداد ومتابعة المساهمات والتذكير آلياً. ويمكن لمن لا يملكون حساباً في المنصة الدفع عبر رابط باستخدام بطاقة خصم أو «Apple Pay» أو «Google Pay». وذكرت الشركة أن عدد التحويلات بين الأفراد نما بنسبة 330% على أساس سنوي خلال الفترة من يناير إلى أكتوبر 2026؛ وهي بيانات عن عدد العمليات وليست عن الإيرادات. ولم تعلن الخدمة عن جولة تمويلية جديدة."
+        ],
+        "keyFacts": [
+          "تقسيم المصاريف ومتابعة السداد وإرسال التذكيرات",
+          "الدفع عبر رابط ببطاقة خصم أو محافظ رقمية مدعومة دون حساب",
+          "نمو عدد تحويلات الأفراد 330% بحسب الشركة ولا يمثل إيرادات"
+        ]
+      }
+    }
+  },
+  {
+    "imageUrl": "",
+    "imageCredit": "",
+    "author": "Wosool news desk",
     "id": "sourced-connect-money-pre-series-a-november-2026",
     "slug": "connect-money-3-5m-pre-series-a-saudi-morocco-november-2026",
     "title": "Egypt's Connect Money reports $3.5m pre-Series A deal before planned Saudi expansion",
