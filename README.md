@@ -1,11 +1,15 @@
 <p align="center">
 
+**Editorial update (21 November 2026):** Mirrored research catalogs now contain **422 external/unclaimed founders, 227 company identities and 149 dated bilingual briefs**, with zero integrity problems and 132 founder reviews due. The reviewed Chipverse and Ziina additions remain external editorial profiles and source-dated briefs; they do not imply Wosool membership, earned revenue, a production import or a Hostinger release. See [source evidence](docs/research/CONTENT-REFRESH-2026-11-21.md).
+
 **Editorial update (20 November 2026):** Mirrored research catalogs now propose **421 external/unclaimed founders, 226 company identities and 147 dated bilingual briefs**. Added Saudi Shaffra co-founders Alharith Alatawi and Marc Wehbi plus Egyptian Connect Money co-founders Ayman Essawy, Marwan Kenawy and Momtaz Moussa. New briefs retain issuer dates of 16 November (Shaffra Riyadh headquarters) and 19 November (Connect Money mixed primary/secondary financing). No unverified logos, membership claims, user edits, data imports or Hostinger release. See [source evidence](docs/research/CONTENT-REFRESH-2026-11-20.md).
 
   <img src="frontend/public/wosool-logo-eo.svg" alt="Wosool | وصول" width="420" />
 </p>
 
 **Admin matching reliability update (20 November 2026):** `/admin/matches` now loads active founders with scorecards without a strict-mode lazy-loading failure or N+1 query, and its bilingual suggestion form explains field, duplicate and activation errors without exposing raw API text. The two founder pickers exclude the opposite selection; accessible focus, counts, Riyadh dates and loading/error/empty states are covered by frontend and Laravel regression tests. Source and CI do not deploy either service or modify production matches.
+
+**Program management reliability update (21 November 2026):** `/admin/programs/[id]` now treats session values entered through `datetime-local` as Riyadh time and sends an explicit `+03:00` offset, preventing the previous three-hour shift. Cohort start dates, localized statuses, visible labels, field validation, safe API error mapping, busy states and retry/empty states are covered by frontend and Laravel regressions. The content CLI test now derives its displayed totals from the same report used by integrity checks, restoring the failing `main` gate without weakening exact catalog coverage.
 
 **Public API release-monitoring update (20 November 2026):** the production smoke suite now requires the canonical `/api/openapi.json` download to expose OpenAPI 3.1.0, Wosool contract 1.8.0 and all nine documented GET operations. Fresh read-only checks pass the existing 18 frontend, health, registration, newsletter and exact-founder probes, but the live OpenAPI download remains HTTP 404 and health responses still omit serving revisions. This source correction does not deploy either service, import data or change hosting configuration.
 
@@ -30,7 +34,7 @@
   <a href="https://github.com/king4arabs/wosool/actions/workflows/ci.yml">CI</a>
 </p>
 
-**Documentation version: 0.6.13 · Updated: 20 November 2026.**
+**Documentation version: 0.6.14 · Updated: 21 November 2026.**
 
 Wosool is an Arabic/English founders platform connecting Saudi Arabia, the GCC, MENA and the world. It brings founder and company profiles, events, news, introductions and community services together, with a dedicated EO Riyadh Accelerator experience.
 

@@ -146,12 +146,15 @@ test('loader rejects unregistered and missing catalog files without auto-publish
   await assert.rejects(loadContentReport({ root, now }), /Cannot read backend\/resources\/data\/founder-directory-expansion/)
 })
 
-test('both CLI modes report full coverage from a different working directory', () => {
+test('both CLI modes report full coverage from a different working directory', async () => {
+  // Compare with the in-process report rather than repeating the catalog counts: the exact
+  // totals are pinned once, in the checked-in report test above, so a new batch updates one line.
+  const { totals } = await loadContentReport()
   const script = new URL('./content-review.mjs', import.meta.url)
   const check = spawnSync(process.execPath, [script.pathname, '--check'], { cwd: tmpdir(), encoding: 'utf8' })
   assert.equal(check.status, 0, check.stderr)
-  assert.match(check.stdout, /421 founders, 226 companies, 147 stories/)
+  assert.match(check.stdout, new RegExp(`^${totals.founders} founders, ${totals.companies} companies, ${totals.news} stories;`))
   const review = spawnSync(process.execPath, [script.pathname], { cwd: tmpdir(), encoding: 'utf8' })
   assert.equal(review.status, 0, review.stderr)
-  assert.equal(JSON.parse(review.stdout).totals.founders, 421)
+  assert.deepEqual(JSON.parse(review.stdout).totals, totals)
 })
