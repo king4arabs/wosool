@@ -3,6 +3,52 @@
     "imageUrl": "",
     "imageCredit": "",
     "author": "Wosool news desk",
+    "id": "sourced-barq-tenpay-china-mou-november-2026",
+    "slug": "barq-tenpay-global-weixin-mou-november-2026",
+    "title": "Saudi fintech Barq and TenPay Global sign China remittance and QR-payment MoU",
+    "excerpt": "The 20 November memorandum proposes transfers into Weixin wallets and China merchant payments; integration and rollout are pending.",
+    "content": "A TenPay Global press statement published on 20 November 2026 confirmed a memorandum of understanding with Riyadh-based Barq at the Singapore FinTech Festival. The two companies plan to enable transfers from Barq users to Weixin wallets in the Chinese mainland and QR payments at Weixin Pay merchants during visits to China. TenPay Global said its existing cross-border platform connects more than 60 banking and remittance partners; that network figure does not mean Barq's integration has launched. A launch timetable was not announced. Founder and CEO Ahmed Alenazi represented Barq. The announcement is an MoU, not completed payments capability or a financing round.",
+    "category": "Ecosystem",
+    "region": "saudi",
+    "sourceUrl": "https://www.theasianbanker.com/press-releases/tenpay-global-and-barq-sign-mou-to-enhance-remittances-and-qr-payments-in-china",
+    "sourceName": "TenPay Global press statement via The Asian Banker (20 November 2026)",
+    "companies": [
+      "Barq",
+      "TenPay Global"
+    ],
+    "publishedAt": "2026-11-20",
+    "tags": [
+      "Saudi Arabia",
+      "Barq",
+      "TenPay Global",
+      "Cross-border payments",
+      "Weixin Pay",
+      "MoU"
+    ],
+    "keyFacts": [
+      "MoU reported 20 November 2026; technical integration and launch remain pending",
+      "Planned remittances to Weixin wallets and QR merchant payments in mainland China",
+      "No new funding or Barq revenue figures were announced"
+    ],
+    "translations": {
+      "ar": {
+        "title": "«برق» السعودية و«تين باي غلوبال» توقعان مذكرة تفاهم للمدفوعات والتحويلات في الصين",
+        "excerpt": "مذكرة تفاهم معلنة في 20 نوفمبر تستهدف تحويلات «ويشين» والمدفوعات برمز QR، ولم يكتمل التكامل أو يُعلن موعد التشغيل.",
+        "body": [
+          "أكد بيان صادر عن «تين باي غلوبال» نُشر في 20 نوفمبر 2026 توقيع مذكرة تفاهم مع «برق» السعودية خلال مهرجان سنغافورة للتقنية المالية. وتعتزم الشركتان تمكين مستخدمي «برق» مستقبلاً من تحويل الأموال إلى محافظ «ويشين» في الصين القارية، والدفع برمز الاستجابة السريعة لدى متاجر «ويشين باي» أثناء السفر. وذكرت «تين باي غلوبال» أن شبكتها الحالية تضم أكثر من 60 شريكاً من البنوك ومؤسسات الحوالات، لكن هذا الرقم لا يعني اكتمال ربط خدمات «برق». ولم يُعلن جدول زمني لتشغيل الخدمات. ومثّل «برق» مؤسسها ورئيسها التنفيذي أحمد العنزي. ولا تمثل مذكرة التفاهم إطلاقاً للخدمة أو جولة تمويل جديدة."
+        ],
+        "keyFacts": [
+          "مذكرة تفاهم معلنة في 20 نوفمبر 2026، دون اكتمال التكامل أو تحديد موعد تشغيل",
+          "تحويلات إلى محافظ «ويشين» ومدفوعات تجارية في الصين خدمات مستقبلية",
+          "لا تمويل جديد أو أرقام إيرادات معلنة لشركة «برق»"
+        ]
+      }
+    }
+  },
+  {
+    "imageUrl": "",
+    "imageCredit": "",
+    "author": "Wosool news desk",
     "id": "sourced-chipverse-egypt-pre-seed-november-2026",
     "slug": "chipverse-pre-seed-egypt-ai-compute-november-2026",
     "title": "Egypt's Chipverse secures undisclosed pre-seed funding to expand local AI compute",

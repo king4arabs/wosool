@@ -17,9 +17,10 @@ import november18Profiles from '../data/founder-spotlight-expansion-2026-11-18.j
 import november19Profiles from '../data/founder-spotlight-expansion-2026-11-19.json'
 import november20Profiles from '../data/founder-spotlight-expansion-2026-11-20.json'
 import november21Profiles from '../data/founder-spotlight-expansion-2026-11-21.json'
+import november22Profiles from '../data/founder-spotlight-expansion-2026-11-22.json'
 
 const rank: Record<string, number> = { saudi: 0, gcc: 1, mena: 2, global: 3 }
-const sourceProfiles = [...historicalProfiles, ...additionalProfiles, ...discoveryProfiles, ...countryProfiles, ...novemberProfiles, ...november12Profiles, ...november13Profiles, ...november14Profiles, ...november15Profiles, ...november17Profiles, ...november18Profiles, ...november19Profiles, ...november20Profiles, ...november21Profiles]
+const sourceProfiles = [...historicalProfiles, ...additionalProfiles, ...discoveryProfiles, ...countryProfiles, ...novemberProfiles, ...november12Profiles, ...november13Profiles, ...november14Profiles, ...november15Profiles, ...november17Profiles, ...november18Profiles, ...november19Profiles, ...november20Profiles, ...november21Profiles, ...november22Profiles]
   .sort((left, right) => (rank[left.region] ?? 4) - (rank[right.region] ?? 4))
 // Historical batches retain their membership when an existing profile receives new verification dates.
 // Cohort boundaries are source-linked, not array positions: editorial entries can be prepended.
@@ -85,12 +86,14 @@ test('frontend source snapshots and database import share the same reviewed reco
   assert.equal(november20Profiles.length, 5)
   assert.deepEqual(JSON.parse(readFileSync(new URL('../../../backend/resources/data/founder-directory-expansion-2026-11-21.json', import.meta.url), 'utf8')), november21Profiles)
   assert.equal(november21Profiles.length, 1)
+  assert.deepEqual(JSON.parse(readFileSync(new URL('../../../backend/resources/data/founder-directory-expansion-2026-11-22.json', import.meta.url), 'utf8')), november22Profiles)
+  assert.equal(november22Profiles.length, 2)
   assert.equal(originalCountryCohort.length, 102)
   assert.equal(october30Additions.length, 8)
   assert.equal(new Set(originalCountryCohort.map(profile => profile.country_code)).size, 51)
   for (const code of new Set(originalCountryCohort.map(profile => profile.country_code))) assert.equal(originalCountryCohort.filter(profile => profile.country_code === code).length, 2, code)
-  assert.equal(new Set(sourceProfiles.map(profile => profile.company_key)).size, 227)
-  assert.equal(sourceProfiles.length, 422)
+  assert.equal(new Set(sourceProfiles.map(profile => profile.company_key)).size, 228)
+  assert.equal(sourceProfiles.length, 424)
   assert.equal(new Set(sourceProfiles.map(profile => profile.founder_name_en.toLowerCase())).size, sourceProfiles.length)
   assert.equal(new Set(sourceProfiles.map(profile => profile.slug)).size, sourceProfiles.length)
   assert.ok(sourceProfiles.every(profile => profile.source_urls.length > 0 && profile.reviewed_at))

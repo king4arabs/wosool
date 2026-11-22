@@ -1,0 +1,79 @@
+[
+  {
+    "company_name_en": "COFE Tech",
+    "company_name_ar": "كوفي تك",
+    "company_brief_en": "Kuwait-founded technology company providing AI-enabled commerce and procurement systems alongside a coffee marketplace for Gulf businesses.",
+    "company_brief_ar": "شركة تقنية تأسست بالكويت وتقدم أنظمة التجارة والمشتريات المدعومة بالذكاء الاصطناعي إلى جانب سوق للقهوة مخصص لأسواق الخليج.",
+    "country_en": "Kuwait",
+    "country_ar": "الكويت",
+    "country_code": "KW",
+    "sector_en": "Enterprise commerce technology",
+    "sector_ar": "تقنيات التجارة المؤسسية",
+    "website": "https://www.cofeapp.com/",
+    "portrait_url": null,
+    "logo_url": null,
+    "company_key": "cofe-tech",
+    "region": "gcc",
+    "founded_year": 2018,
+    "reviewed_at": "2026-11-22",
+    "slug": "ali-al-ebrahim-cofe-tech",
+    "founder_name_en": "Ali Al Ebrahim",
+    "founder_name_ar": "علي الإبراهيم",
+    "role_en": "Founder & CEO",
+    "role_ar": "المؤسس والرئيس التنفيذي",
+    "founder_brief_en": "Founded COFE in Kuwait in 2018 and leads its evolution from a coffee marketplace into AI-enabled enterprise commerce and procurement technology across Saudi Arabia, Kuwait and the UAE.",
+    "founder_brief_ar": "أسس «كوفي» في الكويت عام 2018 ويقود تحولها من سوق للقهوة إلى حلول التجارة والمشتريات المؤسسية المدعومة بالذكاء الاصطناعي في السعودية والكويت والإمارات.",
+    "founder_socials": [
+      {
+        "label": "LinkedIn",
+        "url": "https://www.linkedin.com/in/ali-al-ebrahim-b7025966/"
+      }
+    ],
+    "source_url": "https://www.cofeapp.com/company/team/ali-al-ebrahim",
+    "source_urls": [
+      "https://www.cofeapp.com/company/team/ali-al-ebrahim",
+      "https://www.cofeapp.com/cofe-tech-secures-pre-ipo-investment-at-178-million-valuation",
+      "https://ewpartners.sa/news/53",
+      "https://www.wamda.com/index.php/2026/09/cofe-tech-closes-pre-ipo-round-178-million-valuation",
+      "https://www.forbesmiddleeast.com/ar/lists/top-kuwaiti-entrepreneurs-2023/ali-al-ebrahim/"
+    ],
+    "traction_en": "COFE Tech reported more than 1,000 enterprise clients across 3,000 outlets in Saudi Arabia, Kuwait and the UAE (1 September 2026).",
+    "traction_ar": "ذكرت «كوفي تك» أنها تخدم أكثر من 1000 عميل مؤسسي عبر 3000 منفذ في السعودية والكويت والإمارات (1 سبتمبر 2026).",
+    "traction_source_url": "https://www.cofeapp.com/cofe-tech-secures-pre-ipo-investment-at-178-million-valuation"
+  },
+  {
+    "company_name_en": "COFE Tech",
+    "company_name_ar": "كوفي تك",
+    "company_brief_en": "Kuwait-founded technology company providing AI-enabled commerce and procurement systems alongside a coffee marketplace for Gulf businesses.",
+    "company_brief_ar": "شركة تقنية تأسست بالكويت وتقدم أنظمة التجارة والمشتريات المدعومة بالذكاء الاصطناعي إلى جانب سوق للقهوة مخصص لأسواق الخليج.",
+    "country_en": "Kuwait",
+    "country_ar": "الكويت",
+    "country_code": "KW",
+    "sector_en": "Enterprise commerce technology",
+    "sector_ar": "تقنيات التجارة المؤسسية",
+    "website": "https://www.cofeapp.com/",
+    "portrait_url": null,
+    "logo_url": null,
+    "company_key": "cofe-tech",
+    "region": "gcc",
+    "founded_year": 2018,
+    "reviewed_at": "2026-11-22",
+    "slug": "hamad-musaed-al-sayer-cofe-tech",
+    "founder_name_en": "Hamad Musaed Al-Sayer",
+    "founder_name_ar": "حمد مساعد الصاير",
+    "role_en": "Co-founder",
+    "role_ar": "شريك مؤسس",
+    "founder_brief_en": "COFE Tech and its investor ewpartners identify him as a co-founder of the Kuwait-founded company; he represented it at the September 2026 financing announcement in Riyadh.",
+    "founder_brief_ar": "تعرّفه «كوفي تك» ومستثمرها «إي دبليو بارتنرز» بأنه شريك مؤسس للشركة التي انطلقت من الكويت، وقد مثّل الشركة خلال إعلان تمويلها في الرياض في سبتمبر 2026.",
+    "founder_socials": [],
+    "source_url": "https://www.cofeapp.com/cofe-tech-secures-pre-ipo-investment-at-178-million-valuation",
+    "source_urls": [
+      "https://www.cofeapp.com/cofe-tech-secures-pre-ipo-investment-at-178-million-valuation",
+      "https://ewpartners.sa/news/53",
+      "https://www.wamda.com/index.php/2026/09/cofe-tech-closes-pre-ipo-round-178-million-valuation"
+    ],
+    "traction_en": null,
+    "traction_ar": null,
+    "traction_source_url": null
+  }
+]
