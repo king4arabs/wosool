@@ -2504,5 +2504,16 @@
     "reviewed_at": "2026-11-21",
     "status": "unresolved",
     "reason": "Original reusable logo rights and asset not verified; retain readable company-name fallback on dark panels."
+  },
+  {
+    "company_key": "cofe-tech",
+    "company": "COFE Tech",
+    "website": "https://www.cofeapp.com/",
+    "source_page": "https://www.cofeapp.com/",
+    "src": null,
+    "tone": null,
+    "reviewed_at": "2026-11-22",
+    "status": "unresolved",
+    "reason": "No rights-cleared reusable original artwork validated; preserve company-name fallback on a dark logo panel."
   }
 ]
