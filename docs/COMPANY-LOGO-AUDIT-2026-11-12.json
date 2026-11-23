@@ -391,6 +391,17 @@
     "status": "existing-local-asset"
   },
   {
+    "company_key": "chipverse-egypt",
+    "company": "Chipverse",
+    "website": "https://chipverse.ai/",
+    "source_page": "https://chipverse.ai/",
+    "src": null,
+    "tone": null,
+    "reviewed_at": "2026-11-21",
+    "status": "unresolved",
+    "reason": "Original reusable logo rights and asset not verified; retain readable company-name fallback on dark panels."
+  },
+  {
     "company_key": "classera",
     "company": "Classera",
     "website": "https://classera.com/",
@@ -433,6 +444,17 @@
     "src": "/company-logos/cntxt-ai.svg",
     "tone": "dark",
     "status": "existing-local-asset"
+  },
+  {
+    "company_key": "cofe-tech",
+    "company": "COFE Tech",
+    "website": "https://www.cofeapp.com/",
+    "source_page": "https://www.cofeapp.com/",
+    "src": null,
+    "tone": null,
+    "reviewed_at": "2026-11-22",
+    "status": "unresolved",
+    "reason": "No rights-cleared reusable original artwork validated; preserve company-name fallback on a dark logo panel."
   },
   {
     "company_key": "cognna",
@@ -584,6 +606,16 @@
     "src": "/company-logos/emushrif.png",
     "tone": "light",
     "status": "existing-local-asset"
+  },
+  {
+    "company_key": "enza-payments-infrastructure",
+    "company": "enza",
+    "website": "https://www.enzagroup.global/",
+    "src": null,
+    "tone": null,
+    "reviewed_at": "2026-11-23",
+    "status": "unresolved",
+    "reason": "Official imagery seen but public reuse permission for a downloadable original logo is unverified; use the company-name fallback."
   },
   {
     "company_key": "erad",
@@ -2493,27 +2525,5 @@
     "src": "/company-logos/ziina.png",
     "tone": "light",
     "status": "existing-local-asset"
-  },
-  {
-    "company_key": "chipverse-egypt",
-    "company": "Chipverse",
-    "website": "https://chipverse.ai/",
-    "source_page": "https://chipverse.ai/",
-    "src": null,
-    "tone": null,
-    "reviewed_at": "2026-11-21",
-    "status": "unresolved",
-    "reason": "Original reusable logo rights and asset not verified; retain readable company-name fallback on dark panels."
-  },
-  {
-    "company_key": "cofe-tech",
-    "company": "COFE Tech",
-    "website": "https://www.cofeapp.com/",
-    "source_page": "https://www.cofeapp.com/",
-    "src": null,
-    "tone": null,
-    "reviewed_at": "2026-11-22",
-    "status": "unresolved",
-    "reason": "No rights-cleared reusable original artwork validated; preserve company-name fallback on a dark logo panel."
   }
 ]

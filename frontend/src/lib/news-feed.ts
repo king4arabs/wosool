@@ -14,8 +14,9 @@ import november19Profiles from "../data/founder-spotlight-expansion-2026-11-19.j
 import november20Profiles from "../data/founder-spotlight-expansion-2026-11-20.json"
 import november21Profiles from "../data/founder-spotlight-expansion-2026-11-21.json"
 import november22Profiles from "../data/founder-spotlight-expansion-2026-11-22.json"
+import november23Profiles from "../data/founder-spotlight-expansion-2026-11-23.json"
 
-const profiles = [...baseProfiles, ...additionalProfiles, ...discoveryProfiles, ...countryProfiles, ...novemberProfiles, ...november12Profiles, ...november13Profiles, ...november14Profiles, ...november15Profiles, ...november17Profiles, ...november18Profiles, ...november19Profiles, ...november20Profiles, ...november21Profiles, ...november22Profiles]
+const profiles = [...baseProfiles, ...additionalProfiles, ...discoveryProfiles, ...countryProfiles, ...novemberProfiles, ...november12Profiles, ...november13Profiles, ...november14Profiles, ...november15Profiles, ...november17Profiles, ...november18Profiles, ...november19Profiles, ...november20Profiles, ...november21Profiles, ...november22Profiles, ...november23Profiles]
 import curated from "../data/startup-news.json"
 import { dateLocale } from "./date-locale"
 

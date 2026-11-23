@@ -279,3 +279,23 @@ test('new Chipverse and Ziina briefs stay source-dated and linked to existing co
   assert.deepEqual(newsFounders(egypt).map(p => p.slug), ['andrew-isaac-chipverse'])
   assert.ok(newsFounders(uae).some(p => p.company_name_en === 'Ziina'))
 })
+
+
+test('enza and Cashi announcements keep issuer dates and bilingual evidence without unlicensed imagery', () => {
+  for (const [slug, date, region] of [
+    ['enza-six-million-seed-plus-november-2026', '2026-11-03', 'gcc'],
+    ['proparco-cashi-sudan-equity-november-2026', '2026-11-09', 'mena'],
+  ] as const) {
+    const item = curatedNews.find(story => story.slug === slug)!
+    assert.ok(item)
+    assert.equal(item.publishedAt, date)
+    assert.equal(item.region, region)
+    assert.equal(item.imageUrl, '')
+    assert.equal(item.imageCredit, '')
+    assert.ok(safeNewsUrl(item.sourceUrl))
+    assert.equal(item.keyFacts?.length, 3)
+    assert.equal(item.translations?.ar.keyFacts?.length, 3)
+  }
+  const enza = curatedNews.find(story => story.slug === 'enza-six-million-seed-plus-november-2026')!
+  assert.deepEqual(newsFounders(enza).map(profile => profile.slug).sort(), ['hany-fekry-enza', 'hamish-houston-enza'].sort())
+})

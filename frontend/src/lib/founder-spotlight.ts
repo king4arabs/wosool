@@ -13,6 +13,7 @@ import november19Profiles from '../data/founder-spotlight-expansion-2026-11-19.j
 import november20Profiles from '../data/founder-spotlight-expansion-2026-11-20.json'
 import november21Profiles from '../data/founder-spotlight-expansion-2026-11-21.json'
 import november22Profiles from '../data/founder-spotlight-expansion-2026-11-22.json'
+import november23Profiles from '../data/founder-spotlight-expansion-2026-11-23.json'
 import type { Founder } from '../types'
 import { isDirectoryRecordVisible } from './directory-geography'
 
@@ -23,7 +24,7 @@ export type FounderSpotlight = Founder & {
 
 /** Curated editorial datasets do not establish registered or verified membership. */
 const priority: Record<string, number> = { saudi: 0, gcc: 1, mena: 2, global: 3 }
-const profiles = [...historicalProfiles, ...additionalProfiles, ...discoveryProfiles, ...countryProfiles, ...novemberProfiles, ...november12Profiles, ...november13Profiles, ...november14Profiles, ...november15Profiles, ...november17Profiles, ...november18Profiles, ...november19Profiles, ...november20Profiles, ...november21Profiles, ...november22Profiles]
+const profiles = [...historicalProfiles, ...additionalProfiles, ...discoveryProfiles, ...countryProfiles, ...novemberProfiles, ...november12Profiles, ...november13Profiles, ...november14Profiles, ...november15Profiles, ...november17Profiles, ...november18Profiles, ...november19Profiles, ...november20Profiles, ...november21Profiles, ...november22Profiles, ...november23Profiles]
   .filter(profile => isDirectoryRecordVisible({ country_code: profile.country_code, location: profile.country_en }))
   .sort((left, right) => (priority[left.region] ?? 4) - (priority[right.region] ?? 4))
 
