@@ -25,20 +25,30 @@ class PublicFounderContractTest extends TestCase
 
     public function test_both_imported_catalogs_match_the_contract_in_both_locales(): void
     {
+        // The catalog size is pinned once, in FounderActivationTest and the content review test.
+        // Here every imported founder must be listed exactly once in each locale, whatever the size.
         $result = app(FounderDirectoryImporter::class)->run();
-        $this->assertSame(426, $result['founders_created']);
+        $total = $result['founders_created'];
+        $this->assertGreaterThan(0, $total);
+        $this->assertSame($total, FounderProfile::count());
         $this->assertSame(0, User::count());
+        $pages = (int) ceil($total / 24);
+        $this->assertLessThanOrEqual(29, $pages, '/founders allows 30 requests a minute; page this test differently.');
         $samples = [];
         foreach (['en', 'ar'] as $index => $locale) {
-            // 18 requests per locale; /founders is limited to 30 a minute, so start each locale in a new window.
+            // /founders is limited to 30 requests a minute, so start each locale in a new window.
             if ($index > 0) {
                 $this->travel(61)->seconds();
             }
-            foreach (range(1, 18) as $page) {
+            $slugs = [];
+            foreach (range(1, $pages) as $page) {
                 $response = $this->getJson('/api/v1/founders?per_page=24&page='.$page, ['X-Locale' => $locale])
-                    ->assertOk()->assertJsonPath('meta.total', 426)->assertJsonCount($page === 18 ? 18 : 24, 'data');
+                    ->assertOk()->assertJsonPath('meta.total', $total)
+                    ->assertJsonCount($page === $pages ? $total - 24 * ($pages - 1) : 24, 'data');
+                array_push($slugs, ...array_column($response->json('data'), 'slug'));
                 $samples[] = $this->sample($response, '/api/v1/founders');
             }
+            $this->assertCount($total, array_unique($slugs), "Every imported founder is listed once ($locale).");
             $detail = $this->getJson('/api/v1/founders/salman-butt', ['X-Locale' => $locale])->assertOk()
                 ->assertJsonPath('data.activation_status', 'unclaimed')->assertJsonPath('data.can_communicate', false);
             $samples[] = $this->sample($detail, '/api/v1/founders/{slug}');

@@ -35,6 +35,7 @@ class MembershipRegistrationTest extends TestCase
         $this->postJson($prefix.'/auth/register', $credentials + ['name' => 'New Founder',
             'password_confirmation' => 'Password123', 'consent' => true])
             ->assertCreated()->assertJsonPath('user.registration_step', 'verify');
+        $this->assertFalse(Mail::sent(RegistrationOtpMail::class)->last()->emailChange);
         $code = Mail::sent(RegistrationOtpMail::class)->last()->code;
         $this->getJson($prefix.'/auth/me')->assertOk()->assertJsonPath('user.registration_step', 'verify');
         $this->postJson($prefix.'/auth/logout')->assertOk();
@@ -221,5 +222,20 @@ class MembershipRegistrationTest extends TestCase
         $this->assertStringContainsString('123456', $html);
         $this->assertStringContainsString('data:image/png;base64,', $html);
         $this->assertStringContainsString('10', $html);
+        $this->assertStringContainsString('continue your Wosool registration', $html);
+    }
+    public function test_email_change_code_is_not_worded_as_a_registration(): void
+    {
+        $mail = new RegistrationOtpMail('654321', emailChange: true);
+        $html = $mail->render();
+        $this->assertStringContainsString('654321', $html);
+        $this->assertStringContainsString('confirm the new address', $html);
+        $this->assertStringContainsString('أكّد بريدك الجديد', $html);
+        $this->assertStringNotContainsString('registration', $html);
+        $this->assertStringNotContainsString('If you did not register', $html);
+        $this->assertSame('أكّد بريدك الجديد في وصول | Confirm your new Wosool email', $mail->envelope()->subject);
+        $text = view('mail.registration-otp-text', ['code' => '654321', 'emailChange' => true])->render();
+        $this->assertStringContainsString('confirm the new address', $text);
+        $this->assertStringNotContainsString('registration', $text);
     }
 }
