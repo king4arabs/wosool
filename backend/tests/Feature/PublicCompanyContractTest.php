@@ -29,17 +29,30 @@ class PublicCompanyContractTest extends TestCase
 
     public function test_all_imported_companies_match_the_contract_in_both_locales(): void
     {
+        // The catalog size is pinned once, in FounderActivationTest and the content review test.
+        // Here every imported company must be listed exactly once in each locale, whatever the size.
         $result = app(FounderDirectoryImporter::class)->run();
-        $this->assertSame(229, $result['companies_created']);
-        $this->assertSame(426, $result['founders_created']);
+        $total = $result['companies_created'];
+        $this->assertGreaterThan(0, $total);
+        $this->assertSame($total, CompanyProfile::count());
         $this->assertSame(0, User::count());
+        $pages = (int) ceil($total / 24);
+        $this->assertLessThanOrEqual(29, $pages, '/companies allows 30 requests a minute; page this test differently.');
         $samples = [];
-        foreach (['en', 'ar'] as $locale) {
-            foreach (range(1, 10) as $page) {
+        foreach (['en', 'ar'] as $index => $locale) {
+            // /companies is limited to 30 requests a minute, so start each locale in a new window.
+            if ($index > 0) {
+                $this->travel(61)->seconds();
+            }
+            $slugs = [];
+            foreach (range(1, $pages) as $page) {
                 $list = $this->getJson('/api/v1/companies?per_page=24&page='.$page, ['X-Locale' => $locale])->assertOk()
-                    ->assertJsonPath('meta.total', 229)->assertJsonCount($page === 10 ? 13 : 24, 'data');
+                    ->assertJsonPath('meta.total', $total)
+                    ->assertJsonCount($page === $pages ? $total - 24 * ($pages - 1) : 24, 'data');
+                array_push($slugs, ...array_column($list->json('data'), 'slug'));
                 $samples[] = $this->sample($list, '/api/v1/companies');
             }
+            $this->assertCount($total, array_unique($slugs), "Every imported company is listed once ($locale).");
             $detail = $this->getJson('/api/v1/companies/unifonic', ['X-Locale' => $locale])->assertOk()
                 ->assertJsonPath('data.is_public', true)->assertJsonPath('data.status', 'active');
             $samples[] = $this->sample($detail, '/api/v1/companies/{slug}');
