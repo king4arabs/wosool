@@ -101,7 +101,10 @@ class MemberSettingsTest extends TestCase
         $this->getJson('/api/v1/auth/me')->assertOk()->assertJsonPath('user.registration_step', 'verify');
         $this->postJson('/api/v1/auth/registration/verify', ['code' => $oldCode])->assertUnprocessable();
         $this->postJson('/api/v1/auth/registration/resend')->assertOk();
-        $newCode = Mail::sent(RegistrationOtpMail::class)->last()->code;
+        $this->assertFalse(Mail::sent(RegistrationOtpMail::class)->first()->emailChange, 'The first code was sent during registration.');
+        $resent = Mail::sent(RegistrationOtpMail::class)->last();
+        $this->assertTrue($resent->emailChange, 'A member confirming a changed address is not told to finish registering.');
+        $newCode = $resent->code;
         $this->postJson('/api/v1/auth/registration/verify', ['code' => $newCode])->assertOk();
         $this->actingAs($user->fresh())->getJson('/api/v1/registration/application')->assertOk()->assertJsonPath('step', 'active');
         $this->assertFalse($profile->fresh()->is_verified);

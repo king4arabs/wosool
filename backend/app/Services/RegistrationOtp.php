@@ -3,7 +3,7 @@
 namespace App\Services;
 
 use App\Mail\RegistrationOtpMail;
-use App\Models\User;
+use App\Models\{Application, User};
 use Illuminate\Auth\Events\Verified;
 use Illuminate\Support\Facades\{DB, Mail};
 use Illuminate\Validation\ValidationException;
@@ -23,7 +23,7 @@ final class RegistrationOtp
                 'email' => $user->email, 'code_hash' => $this->hash($user, $code), 'attempts' => 0,
                 'sent_at' => now(), 'expires_at' => now()->addMinutes(10), 'consumed_at' => null,
             ]);
-            try { Mail::to($user->email)->send(new RegistrationOtpMail($code)); }
+            try { Mail::to($user->email)->send(new RegistrationOtpMail($code, $this->isEmailChange($user))); }
             catch (\Throwable) { abort(503, __('messages.registration.send_failed')); }
         });
     }
@@ -45,6 +45,16 @@ final class RegistrationOtp
             return true;
         });
         if (! $verified) throw ValidationException::withMessages(['code' => [__('messages.registration.invalid_code')]]);
+    }
+
+    /**
+     * Verification is required before a profile or application can exist, so an unverified
+     * account that already has one is confirming a changed address, not registering.
+     */
+    private function isEmailChange(User $user): bool
+    {
+        return $user->founderProfile()->exists()
+            || Application::where('user_id', $user->id)->whereNotNull('onboarding_data')->exists();
     }
 
     private function hash(User $user, string $code): string
