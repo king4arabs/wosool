@@ -88,19 +88,21 @@
     "portrait_url": "https://jahezgroup.com/wp-content/uploads/2024/12/Ghassab-Bin-Mandeel-1-1.webp",
     "logo_url": "/startup-directory/jahez-logo.webp",
     "founder_socials": [],
-    "source_url": "https://jahezgroup.com/corporate-governance/",
-    "reviewed_at": "2026-10-14",
+    "source_url": "https://jahezgroup.com/jahez-ar/2025/corporate-governance/",
+    "reviewed_at": "2026-11-23",
     "company_key": "jahez",
     "source_urls": [
-      "https://jahezgroup.com/corporate-governance/",
+      "https://jahezgroup.com/jahez-ar/2025/corporate-governance/",
+      "https://jahezgroup.com/investor-relations/",
+      "https://jahezgroup.com/jahez-ar/2025/financial-statements/",
       "https://impact46.sa/jahez-successfully-closed-its-series-a-funding-round-led-by-impact46-vc-in-saudi-arabia/",
       "https://jahezgroup.com/jahez-ar/2025/at-a-glance/"
     ],
     "region": "saudi",
     "founded_year": null,
-    "traction_en": "FY2025 net revenue SAR 2,323.6M; net profit attributable to parent shareholders SAR 73.0M (Jahez annual report).",
-    "traction_ar": "صافي إيرادات 2025 بلغ 2,323.6 مليون ريال، وصافي الربح العائد لمساهمي الشركة الأم 73 مليون ريال وفق التقرير السنوي لجاهز.",
-    "traction_source_url": "https://jahezgroup.com/jahez-ar/2025/at-a-glance/"
+    "traction_en": "FY2025 consolidated financial statements report SAR 2,323.6M revenue and SAR 73.0M net profit attributable to parent shareholders.",
+    "traction_ar": "تُظهر القوائم المالية الموحدة للسنة المالية 2025 إيرادات بقيمة 2,323.6 مليون ريال وصافي ربح عائداً لمساهمي الشركة الأم بقيمة 73.0 مليون ريال.",
+    "traction_source_url": "https://jahezgroup.com/jahez-ar/2025/financial-statements/"
   },
   {
     "slug": "foodics",
