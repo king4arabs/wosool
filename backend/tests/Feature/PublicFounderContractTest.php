@@ -26,7 +26,7 @@ class PublicFounderContractTest extends TestCase
     public function test_both_imported_catalogs_match_the_contract_in_both_locales(): void
     {
         $result = app(FounderDirectoryImporter::class)->run();
-        $this->assertSame(422, $result['founders_created']);
+        $this->assertSame(426, $result['founders_created']);
         $this->assertSame(0, User::count());
         $samples = [];
         foreach (['en', 'ar'] as $index => $locale) {
@@ -36,7 +36,7 @@ class PublicFounderContractTest extends TestCase
             }
             foreach (range(1, 18) as $page) {
                 $response = $this->getJson('/api/v1/founders?per_page=24&page='.$page, ['X-Locale' => $locale])
-                    ->assertOk()->assertJsonPath('meta.total', 422)->assertJsonCount($page === 18 ? 14 : 24, 'data');
+                    ->assertOk()->assertJsonPath('meta.total', 426)->assertJsonCount($page === 18 ? 18 : 24, 'data');
                 $samples[] = $this->sample($response, '/api/v1/founders');
             }
             $detail = $this->getJson('/api/v1/founders/salman-butt', ['X-Locale' => $locale])->assertOk()

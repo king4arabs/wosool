@@ -6382,5 +6382,97 @@
         ]
       }
     }
+  },
+  {
+    "id": "sourced-enza-six-million-seed-plus-november-2026",
+    "slug": "enza-six-million-seed-plus-november-2026",
+    "title": "Abu Dhabi-based enza secures $6m Seed+ funding for African payments infrastructure",
+    "excerpt": "The 3 November company announcement names 4DX as lead investor and BII as a new backer; enza reports serving banks and fintechs in 12 African countries.",
+    "content": "Abu Dhabi-headquartered payments infrastructure provider enza announced a US$6 million Seed+ financing round on 3 November 2026. 4DX Ventures led the investment, British International Investment (BII) joined as a new investor, and existing backers Quona Capital and Algebra Ventures added to their investments. enza supplies payment-processing and acceptance services to banks and fintech companies across Africa.\n\nThe company says it now serves clients in 12 African countries. It intends to use the proceeds for additional markets, regulatory licences and product development. The reported geographic reach is company-supplied, not an independently audited customer or revenue figure; the US$6 million is the size of this announced round rather than sales.",
+    "category": "Funding",
+    "region": "gcc",
+    "imageUrl": "",
+    "imageCredit": "",
+    "sourceUrl": "https://www.enzagroup.global/enza-closes-us6-million-seed-round/",
+    "sourceName": "enza (official announcement)",
+    "companies": [
+      "enza"
+    ],
+    "publishedAt": "2026-11-03",
+    "author": "Wosool news desk",
+    "tags": [
+      "United Arab Emirates",
+      "Africa",
+      "Fintech",
+      "Payments infrastructure",
+      "4DX Ventures",
+      "BII"
+    ],
+    "keyFacts": [
+      "US$6m Seed+ round announced 3 November 2026",
+      "4DX Ventures led; BII joined as a new investor",
+      "enza reports bank and fintech clients in 12 African countries"
+    ],
+    "translations": {
+      "ar": {
+        "title": "«إنزا» في أبوظبي تغلق جولة تمويل إضافية بقيمة 6 ملايين دولار لتوسيع حلول المدفوعات الأفريقية",
+        "excerpt": "إعلان الشركة بتاريخ 3 نوفمبر يحدد «4DX» مستثمراً رئيسياً و«BII» مستثمراً جديداً؛ وتفيد «إنزا» بخدمة مؤسسات مالية في 12 دولة أفريقية.",
+        "body": [
+          "أعلنت شركة «إنزا»، ومقرها أبوظبي، في 3 نوفمبر 2026 إغلاق جولة تمويل من فئة Seed+ بقيمة 6 ملايين دولار أمريكي. قادت الجولة «4DX Ventures»، وانضمت «British International Investment» مستثمراً جديداً، مع زيادة مساهمات المستثمرين الحاليين «Quona Capital» و«Algebra Ventures». وتقدم الشركة للبنوك وشركات التقنية المالية في أفريقيا خدمات معالجة المدفوعات وقبولها.",
+          "وتقول الشركة إن خدماتها تصل إلى عملاء في 12 دولة أفريقية، وتعتزم توظيف التمويل للتوسع والحصول على تراخيص إضافية وتطوير منتجاتها. هذا الانتشار معلن من الشركة وغير معروض باعتباره إيرادات أو عدداً مدققاً للعملاء؛ وتمثل 6 ملايين دولار قيمة الجولة المعلنة لا مبيعات الشركة."
+        ],
+        "keyFacts": [
+          "إعلان جولة Seed+ بقيمة 6 ملايين دولار في 3 نوفمبر 2026",
+          "قيادة «4DX Ventures» وانضمام «BII» مستثمراً جديداً",
+          "تفيد الشركة بخدمة بنوك وشركات تقنية مالية في 12 دولة أفريقية"
+        ]
+      }
+    }
+  },
+  {
+    "id": "sourced-proparco-cashi-sudan-equity-november-2026",
+    "slug": "proparco-cashi-sudan-equity-november-2026",
+    "title": "Proparco invests €600,000 in Sudanese fintech Cashi to extend payment access",
+    "excerpt": "The 9 November investor announcement describes Proparco's first Sudan financing and cites 2.2 million registered MyCashi wallet users, not active users.",
+    "content": "French development finance institution Proparco announced on 9 November 2026 a €600,000 equity investment in Sudanese fintech Cashi. The financier described the transaction as its first financing operation in Sudan. Cashi provides digital wallet and merchant-network services for cash deposits, withdrawals, bill payments and transfers where conventional banking services are constrained.\n\nProparco reported 2.2 million registered users of the MyCashi wallet. Cashi has also developed USSD, SMS and offline-card options to help maintain payment access during connectivity disruptions. The figure denotes registrations rather than verified active users; the announcement did not provide a company valuation or a named funding round. No founder identity is inferred from the company CEO's position.",
+    "category": "Funding",
+    "region": "mena",
+    "imageUrl": "",
+    "imageCredit": "",
+    "sourceUrl": "https://www.proparco.fr/en/news/proparco-partners-cashi-expand-access-essential-financial-services-sudan",
+    "sourceName": "Proparco (official investor announcement)",
+    "companies": [
+      "Cashi"
+    ],
+    "publishedAt": "2026-11-09",
+    "author": "Wosool news desk",
+    "tags": [
+      "Sudan",
+      "Africa",
+      "Fintech",
+      "Digital payments",
+      "Financial inclusion",
+      "Proparco"
+    ],
+    "keyFacts": [
+      "€600,000 equity investment announced 9 November 2026",
+      "Proparco's first financing operation in Sudan",
+      "MyCashi had 2.2m registered wallet users, according to Proparco"
+    ],
+    "translations": {
+      "ar": {
+        "title": "«بروباركو» تستثمر 600 ألف يورو في «كاشي» السودانية لتوسيع خدمات الدفع",
+        "excerpt": "أفاد إعلان المستثمر في 9 نوفمبر بأنها أول عملية تمويل لـ«بروباركو» في السودان، مع 2.2 مليون مستخدم مسجل بمحفظة «ماي كاشي» وليسوا بالضرورة نشطين.",
+        "body": [
+          "أعلنت مؤسسة التمويل التنموي الفرنسية «بروباركو» في 9 نوفمبر 2026 استثماراً في حقوق ملكية شركة التقنية المالية السودانية «كاشي» بقيمة 600 ألف يورو، ووصفت الصفقة بأنها أول عملية تمويل لها في السودان. تقدم «كاشي» خدمات المحفظة الرقمية وشبكة تجار للإيداع والسحب ودفع الفواتير والتحويلات في بيئة تواجه صعوبات مصرفية.",
+          "ووفق «بروباركو»، سجلت محفظة «ماي كاشي» 2.2 مليون مستخدم، وطورت الشركة حلول دفع تعمل عبر USSD والرسائل النصية وبطاقات دون اتصال لمواجهة انقطاع الشبكات. الرقم يخص التسجيلات ولا يثبت عدد المستخدمين النشطين؛ ولم يتضمن الإعلان تقييماً للشركة أو اسماً محدداً لجولة التمويل."
+        ],
+        "keyFacts": [
+          "استثمار في حقوق الملكية بقيمة 600 ألف يورو أُعلن في 9 نوفمبر 2026",
+          "أول عملية تمويل لـ«بروباركو» في السودان",
+          "2.2 مليون مستخدم مسجل بمحفظة «ماي كاشي» وفق المؤسسة"
+        ]
+      }
+    }
   }
 ]
