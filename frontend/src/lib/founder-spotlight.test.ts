@@ -150,6 +150,20 @@ test('Rewaa founders retain current roles, first-party activity evidence and sou
   assert.ok(mohammed.founder_socials.every(link => mohammed.source_urls.includes(link.url)))
 })
 
+test('Jahez founder retains current governance role and financial-statement evidence', () => {
+  const jahez = historicalProfiles.find(profile => profile.slug === 'jahez')!
+
+  assert.equal(jahez.role_en, 'Co-founder, CEO & Board Member')
+  assert.equal(jahez.source_url, 'https://jahezgroup.com/jahez-ar/2025/corporate-governance/')
+  assert.equal(jahez.traction_source_url, 'https://jahezgroup.com/jahez-ar/2025/financial-statements/')
+  assert.match(jahez.traction_en, /FY2025 consolidated financial statements report SAR 2,323\.6M revenue/)
+  assert.equal(jahez.reviewed_at, '2026-11-23')
+  assert.ok(jahez.source_urls.includes(jahez.source_url))
+  assert.ok(jahez.source_urls.includes(jahez.traction_source_url))
+  assert.ok(jahez.traction_ar)
+  assert.ok(!('member' in jahez) && !('user_id' in jahez) && !('is_verified' in jahez))
+})
+
 test('country founder cards have factual provenance and the latest update adds two profiles per country', () => {
   const countryCounts = new Map<string, number>()
   for (const row of sourceProfiles) countryCounts.set(row.country_code, (countryCounts.get(row.country_code) ?? 0) + 1)

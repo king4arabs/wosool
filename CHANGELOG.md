@@ -1,3 +1,11 @@
+## Jahez issuer evidence replaces a secondary revenue summary — 2026-11-23
+
+- Re-verified Ghassab Bin Mandeel as Jahez co-founder, CEO and executive board member through Jahez governance/investor-relations pages and Impact46's founder attribution.
+- Replaced the secondary revenue summary with Jahez's direct FY2025 consolidated financial statements: revenue SAR 2,323.6M and net profit attributable to parent shareholders SAR 73.0M. The fiscal period and statement type are explicit; no audit claim, forecast, funding, GMV or customer-count substitution was added.
+- Kept Rasan's Moayad Alfallaj unchanged and due after the official homepage, governance page, IPO page and financial-statement PDF each returned HTTP 500 during direct verification.
+- Advanced only the Jahez profile review date. Mirrored catalogs remain 426 founders / 229 companies / 152 briefs; the due queue falls from 136 to 135. No account, moderation state, startup-directory eligibility, production import or hosting change. See [the evidence record](docs/research/FOUNDER-REVIEW-LISTED-COMPANIES-2026-11-23.md).
+- Added a regression for the current governance role, exact issuer sources, mirrored financial-statement evidence and unclaimed status.
+
 ## Rewaa founder roles and source provenance refreshed — 2026-11-23
 
 - Re-verified two overdue Saudi profiles against Rewaa's active official site plus current Sadu Capital and Graphene Ventures portfolio pages. Mohammed Alqasir remains co-founder and CEO; Abdullah Aljadhai is corrected from the less precise “Co-founder” to “Co-founder & COO” in Arabic and English.
