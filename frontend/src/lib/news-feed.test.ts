@@ -297,5 +297,5 @@ test('enza and Cashi announcements keep issuer dates and bilingual evidence with
     assert.equal(item.translations?.ar.keyFacts?.length, 3)
   }
   const enza = curatedNews.find(story => story.slug === 'enza-six-million-seed-plus-november-2026')!
-  assert.deepEqual(newsFounders(enza).map(profile => profile.slug).sort(), ['hany-fekry-enza', 'hamish-houston-enza'])
+  assert.deepEqual(newsFounders(enza).map(profile => profile.slug).sort(), ['hany-fekry-enza', 'hamish-houston-enza'].sort())
 })
