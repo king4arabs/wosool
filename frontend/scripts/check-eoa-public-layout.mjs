@@ -51,6 +51,20 @@ async function assertRows(cards) {
   }
 }
 
+async function waitForDirectory(page, label) {
+  const firstCard = page.locator('[data-eoa-directory]:visible article').first()
+  try {
+    await firstCard.waitFor()
+  } catch {
+    // WebKit can occasionally stop applying the fixture response after dozens of
+    // sequential responsive navigations. A clean document retry recovers the
+    // route without weakening any of the layout or image assertions below.
+    console.warn(`RETRY EOA directory render: ${label}`)
+    await page.reload({ waitUntil: 'domcontentloaded' })
+    await firstCard.waitFor({ timeout: 30000 })
+  }
+}
+
 try {
   for (let i = 0; i < 150 && !log.includes('Ready'); i++) await new Promise(resolve => setTimeout(resolve, 100))
   assert.ok(log.includes('Ready'), log)
@@ -130,7 +144,7 @@ try {
           assert.ok(await cards.locator('a').evaluateAll(links => links.every(link => link.getBoundingClientRect().height >= 44)), 'Leadership links have accessible touch targets')
           await assertContained(page, '[data-program-leaders] h2, [data-program-leaders] p, [data-program-leaders] a')
         } else {
-          await page.locator('[data-eoa-directory]:visible article').first().waitFor()
+          await waitForDirectory(page, `${engine}/${locale}/${width}px`)
           assert.equal(await page.locator('[data-eoa-directory] [data-brand-logo]').count(), organizations.length, 'Every organization has a logo space')
           const logos = page.locator('[data-eoa-directory] img')
           for (let index = 0; index < await logos.count(); index++) {
