@@ -1,5 +1,7 @@
 <p align="center">
 
+**Editorial and founder-review update (23 November 2026):** Mirrored research catalogs contain **426 external/unclaimed founders, 229 company identities and 152 dated bilingual briefs**, with zero integrity problems. Two overdue Saudi Rewaa profiles were re-verified against the active official company site and current investor pages: Mohammed Alqasir remains co-founder and CEO, while Abdullah Aljadhai is now recorded more precisely as co-founder and COO. Rewaa's company-reported 23,000-plus merchant count is not revenue, ARR, GMV or audited financial information. Only these two review dates advanced, reducing the due queue from 138 to **136**. No account, membership, moderation state, production import or Hostinger release changed. See [source evidence](docs/research/FOUNDER-REVIEW-2026-11-23.md) and [the 23 November content review](docs/research/CONTENT-REFRESH-2026-11-23.md).
+
 **Editorial update (22 November 2026):** Mirrored research catalogs contain **422 external/unclaimed founders, 227 company identities and 149 dated bilingual briefs**, with zero integrity problems and 134 founder reviews due. The queue changed only because two review deadlines reached their 30-day boundary; no review date was advanced without new source verification. The reviewed Chipverse and Ziina additions remain external editorial profiles and source-dated briefs; they do not imply Wosool membership, earned revenue, a production import or a Hostinger release. See [source evidence](docs/research/CONTENT-REFRESH-2026-11-21.md).
 
 **Editorial update (20 November 2026):** Mirrored research catalogs now propose **421 external/unclaimed founders, 226 company identities and 147 dated bilingual briefs**. Added Saudi Shaffra co-founders Alharith Alatawi and Marc Wehbi plus Egyptian Connect Money co-founders Ayman Essawy, Marwan Kenawy and Momtaz Moussa. New briefs retain issuer dates of 16 November (Shaffra Riyadh headquarters) and 19 November (Connect Money mixed primary/secondary financing). No unverified logos, membership claims, user edits, data imports or Hostinger release. See [source evidence](docs/research/CONTENT-REFRESH-2026-11-20.md).
@@ -36,7 +38,7 @@
   <a href="https://github.com/king4arabs/wosool/actions/workflows/ci.yml">CI</a>
 </p>
 
-**Documentation version: 0.6.15 · Updated: 22 November 2026.**
+**Documentation version: 0.6.16 · Updated: 23 November 2026.**
 
 Wosool is an Arabic/English founders platform connecting Saudi Arabia, the GCC, MENA and the world. It brings founder and company profiles, events, news, introductions and community services together, with a dedicated EO Riyadh Accelerator experience.
 

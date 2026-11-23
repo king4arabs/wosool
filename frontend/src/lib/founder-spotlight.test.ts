@@ -126,6 +126,30 @@ test('every traction claim is bilingual and cites an https source listed on the 
   assert.equal(spotlight.primaryCompany!.foundedYear, 2019)
 })
 
+test('Rewaa founders retain current roles, first-party activity evidence and source provenance', () => {
+  const rewaa = historicalProfiles
+    .filter(profile => profile.company_key === 'rewaa')
+    .sort((left, right) => left.slug.localeCompare(right.slug))
+
+  assert.deepEqual(rewaa.map(profile => [profile.slug, profile.role_en]), [
+    ['abdullah-aljadhai', 'Co-founder & COO'],
+    ['mohammed-alqasir', 'Co-founder & CEO'],
+  ])
+
+  for (const profile of rewaa) {
+    assert.equal(profile.reviewed_at, '2026-11-23')
+    assert.equal(profile.website, 'https://rewaa.com/')
+    assert.equal(profile.traction_source_url, 'https://rewaa.com/about-us/')
+    assert.ok(profile.source_urls.includes('https://www.sadu.vc/portfolio-blog/rewaa'))
+    assert.ok(profile.source_urls.includes('https://graphenevc.com/portfolio/rewaa'))
+    assert.match(profile.traction_en, /Rewaa reports more than 23,000 merchants/)
+    assert.ok(!('member' in profile) && !('user_id' in profile) && !('is_verified' in profile))
+  }
+
+  const mohammed = rewaa.find(profile => profile.slug === 'mohammed-alqasir')!
+  assert.ok(mohammed.founder_socials.every(link => mohammed.source_urls.includes(link.url)))
+})
+
 test('country founder cards have factual provenance and the latest update adds two profiles per country', () => {
   const countryCounts = new Map<string, number>()
   for (const row of sourceProfiles) countryCounts.set(row.country_code, (countryCounts.get(row.country_code) ?? 0) + 1)
