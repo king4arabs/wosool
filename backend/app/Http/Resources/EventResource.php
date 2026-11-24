@@ -94,7 +94,7 @@ class EventResource extends JsonResource
             'targeting_rules' => $this->when($admin, is_array($targetingRules) ? $targetingRules : []),
             'invites' => $this->when($admin, is_array($invites) ? $invites : []),
             'featured_attendees' => is_array($featuredAttendees) ? $featuredAttendees : [],
-            'sponsor_partner_blocks' => is_array($sponsorPartnerBlocks) ? $sponsorPartnerBlocks : [],
+            'sponsor_partner_blocks' => $admin ? (is_array($sponsorPartnerBlocks) ? $sponsorPartnerBlocks : []) : collect(is_array($sponsorPartnerBlocks) ? $sponsorPartnerBlocks : [])->filter(fn ($partner) => is_array($partner) && ($partner['published'] ?? false) === true && filled($partner['name'] ?? null) && is_string($partner['logo_url'] ?? null) && str_starts_with($partner['logo_url'], 'https://'))->map(fn ($partner) => ['name' => $partner['name'], 'logo_url' => $partner['logo_url'], 'type' => $partner['type'] ?? 'partner', 'cta_link' => is_string($partner['cta_link'] ?? null) && str_starts_with($partner['cta_link'], 'https://') ? $partner['cta_link'] : null])->values()->all(),
             'ai_settings' => $this->when($admin, is_array($aiSettings) ? $aiSettings : []),
             'rsvp_settings' => $this->when($admin, is_array($rsvpSettings) ? $rsvpSettings : []),
             'discussion_thread_id' => $this->when($memberOrAdmin, is_string($discussionThreadId) ? $discussionThreadId : null),
