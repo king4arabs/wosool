@@ -9,6 +9,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Validation\Rules\Password;
 use Illuminate\Validation\ValidationException;
@@ -37,11 +38,20 @@ class AuthController extends Controller
     {
         $request->merge(['email' => mb_strtolower(trim((string) $request->input('email')))]);
         $request->validate([
-            'email' => 'required|email',
-            'password' => 'required|string',
+            'email' => 'required|email|max:255',
+            'password' => 'required|string|max:1024',
         ]);
 
+        // Account-scoped protection complements the existing IP-based route throttle.
+        // Use the same key for known and unknown addresses on both API mounts.
+        $key = 'login-account:'.hash_hmac('sha256', $request->input('email'), (string) config('app.key'));
+        if (RateLimiter::tooManyAttempts($key, 10)) {
+            return response()->json(['message' => __('messages.auth.invalid_credentials')], 429)
+                ->header('Retry-After', (string) max(1, RateLimiter::availableIn($key)));
+        }
+
         if (! Auth::guard('web')->attempt($request->only('email', 'password'), $request->boolean('remember'))) {
+            RateLimiter::hit($key, 300);
             throw ValidationException::withMessages([
                 'email' => [__('messages.auth.invalid_credentials')],
             ]);
@@ -51,6 +61,7 @@ class AuthController extends Controller
             $request->session()->regenerate();
         }
 
+        RateLimiter::clear($key);
         $user = Auth::guard('web')->user();
         app(MembershipRegistration::class)->linkVerifiedApplications($user);
         app(MembershipRegistration::class)->resumeLegacyRegistration($user);
