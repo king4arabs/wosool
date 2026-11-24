@@ -15,7 +15,7 @@
 <p>{{ $line }}</p>
 @endforeach
 @if (!empty($code))
-<p class="code-label">{{ $lang === 'ar' ? 'رمز التفعيل' : 'Activation code' }}</p>
+<p class="code-label">{{ $codeLabel[$lang] ?? ($lang === 'ar' ? 'رمز التفعيل' : 'Activation code') }}</p>
 <p class="code" dir="ltr">{{ $code }}</p>
 @endif
 @if (!empty($details))

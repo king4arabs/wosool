@@ -216,14 +216,49 @@ class MembershipRegistrationTest extends TestCase
         $this->postJson('/api/v1/registration/application', $this->profile() + ['logo_url' => 'https://example.com/forged.png'])->assertCreated();
         $this->assertSame($url, Application::firstOrFail()->onboarding_data['logo_url']);
     }
-    public function test_email_renders_code_and_embedded_logo(): void
+    public function test_verification_email_uses_the_shared_bilingual_layout(): void
     {
-        $html = (new RegistrationOtpMail('123456'))->render();
+        $mail = new RegistrationOtpMail('123456');
+        $html = $mail->render();
+        $this->assertSame(\App\Mail\BilingualEmail::VIEW, $mail->content()->markdown, 'The code email shares the layout of every other transactional email.');
         $this->assertStringContainsString('123456', $html);
-        $this->assertStringContainsString('data:image/png;base64,', $html);
-        $this->assertStringContainsString('10', $html);
+        $this->assertStringContainsString('lang="ar" dir="rtl"', $html);
+        $this->assertStringContainsString('lang="en" dir="ltr"', $html);
+        $this->assertStringContainsString('رمز التحقق', $html);
+        $this->assertStringContainsString('Verification code', $html);
+        $this->assertStringNotContainsString('Activation code', $html, 'A sign-up code is not an activation code.');
         $this->assertStringContainsString('continue your Wosool registration', $html);
+        $this->assertStringContainsString('expires in '.RegistrationOtpMail::EXPIRES_MINUTES.' minutes', $html);
+        $this->assertStringContainsString('صالح لمدة '.RegistrationOtpMail::EXPIRES_MINUTES.' دقائق', $html);
+        $this->assertSame('رمز التحقق من بريدك | Wosool verification code', $mail->envelope()->subject);
+        $this->assertContains('registration-otp', $mail->envelope()->tags);
+        $this->assertSame('info@wosool.org', $mail->envelope()->replyTo[0]->address);
+        preg_match_all('/<p class="code"[^>]*style="([^"]*)"/', $html, $codes);
+        $this->assertCount(2, $codes[1]);
+        foreach ($codes[1] as $style) {
+            $this->assertMatchesRegularExpression('/font-size: 26px;(?!.*font-size)/', $style, 'The Arabic code box keeps the large monospace code instead of body text size.');
+            $this->assertStringContainsString('monospace', $style);
+        }
     }
+
+    public function test_other_codes_keep_the_activation_label(): void
+    {
+        $html = (new \App\Mail\WosoolMail('founder-activation', 'تفعيل', 'Activate', \App\Mail\BilingualEmail::data(
+            ar: ['title' => 'تفعيل'], en: ['title' => 'Activate'], code: '777111',
+        )))->render();
+        $this->assertStringContainsString('رمز التفعيل', $html);
+        $this->assertStringContainsString('Activation code', $html);
+    }
+
+    public function test_stored_code_expires_when_the_email_says_it_does(): void
+    {
+        $user = $this->applicant();
+        $this->travelTo(now()->startOfMinute());
+        app(RegistrationOtp::class)->send($user);
+        $expires = DB::table('registration_email_otps')->where('user_id', $user->id)->value('expires_at');
+        $this->assertSame(now()->addMinutes(RegistrationOtpMail::EXPIRES_MINUTES)->toDateTimeString(), now()->parse($expires)->toDateTimeString());
+    }
+
     public function test_email_change_code_is_not_worded_as_a_registration(): void
     {
         $mail = new RegistrationOtpMail('654321', emailChange: true);
@@ -233,9 +268,8 @@ class MembershipRegistrationTest extends TestCase
         $this->assertStringContainsString('أكّد بريدك الجديد', $html);
         $this->assertStringNotContainsString('registration', $html);
         $this->assertStringNotContainsString('If you did not register', $html);
+        $this->assertStringNotContainsString('التسجيل', $html);
         $this->assertSame('أكّد بريدك الجديد في وصول | Confirm your new Wosool email', $mail->envelope()->subject);
-        $text = view('mail.registration-otp-text', ['code' => '654321', 'emailChange' => true])->render();
-        $this->assertStringContainsString('confirm the new address', $text);
-        $this->assertStringNotContainsString('registration', $text);
+        $this->assertContains('email-change-otp', $mail->envelope()->tags);
     }
 }
