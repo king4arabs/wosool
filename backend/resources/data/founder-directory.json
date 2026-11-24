@@ -180,10 +180,10 @@
     "slug": "tamara",
     "founder_name_en": "Abdulmajeed Alsukhan",
     "founder_name_ar": "عبدالمجيد الصخّان",
-    "role_en": "Co-founder",
-    "role_ar": "شريك مؤسس",
-    "founder_brief_en": "One of Tamara’s co-founders, focused on improving the shopping and payment experience.",
-    "founder_brief_ar": "أحد مؤسسي تمارا، يركز على تطوير تجربة التسوق والدفع.",
+    "role_en": "Co-founder & CEO",
+    "role_ar": "شريك مؤسس والرئيس التنفيذي",
+    "founder_brief_en": "Co-founded Tamara and serves as its CEO, leading the Saudi fintech's consumer and merchant financial services.",
+    "founder_brief_ar": "شارك في تأسيس تمارا ويشغل منصب الرئيس التنفيذي، ويقود أعمال الخدمات المالية للمستهلكين والتجار.",
     "company_name_en": "Tamara",
     "company_name_ar": "تمارا",
     "company_brief_en": "A financial technology company offering shopping and payment services to consumers and merchants.",
@@ -198,16 +198,18 @@
     "logo_url": "/startup-directory/tamara-logo.svg",
     "founder_socials": [],
     "source_url": "https://tamara.co/en-kw/blog-post/tamara-secures-up-to-2-4-billion-dollar-facility",
-    "reviewed_at": "2026-11-10",
+    "reviewed_at": "2026-11-24",
     "company_key": "tamara",
     "source_urls": [
-      "https://tamara.co/en-kw/blog-post/tamara-secures-up-to-2-4-billion-dollar-facility"
+      "https://tamara.co/en-kw/blog-post/tamara-secures-up-to-2-4-billion-dollar-facility",
+      "https://tamara.co/en-bh/blog-post/tamara-secures-400-million-abf-mufg-standard-chartered",
+      "https://www.wamda.com/en/2026/11/tamara-expands-debt-financing-facilities-400-million-global-banks"
     ],
     "region": "saudi",
     "founded_year": null,
-    "traction_en": null,
-    "traction_ar": null,
-    "traction_source_url": null
+    "traction_en": "Tamara reported serving more than 26 million customers and over 160,000 merchants in its 23 November 2026 announcement.",
+    "traction_ar": "أفادت تمارا في إعلانها بتاريخ 23 نوفمبر 2026 بأنها تخدم أكثر من 26 مليون عميل وأكثر من 160 ألف تاجر.",
+    "traction_source_url": "https://tamara.co/en-bh/blog-post/tamara-secures-400-million-abf-mufg-standard-chartered"
   },
   {
     "slug": "rasan",
@@ -365,16 +367,18 @@
     "logo_url": "/startup-directory/tamara-logo.svg",
     "founder_socials": [],
     "source_url": "https://www.tamara.co/en-KW/press-release-1",
-    "reviewed_at": "2026-11-10",
+    "reviewed_at": "2026-11-24",
     "company_key": "tamara",
     "source_urls": [
-      "https://www.tamara.co/en-KW/press-release-1"
+      "https://www.tamara.co/en-KW/press-release-1",
+      "https://tamara.co/en-bh/blog-post/tamara-secures-400-million-abf-mufg-standard-chartered",
+      "https://www.wamda.com/en/2026/11/tamara-expands-debt-financing-facilities-400-million-global-banks"
     ],
     "region": "saudi",
     "founded_year": null,
-    "traction_en": null,
-    "traction_ar": null,
-    "traction_source_url": null
+    "traction_en": "Tamara reported serving more than 26 million customers and over 160,000 merchants in its 23 November 2026 announcement.",
+    "traction_ar": "أفادت تمارا في إعلانها بتاريخ 23 نوفمبر 2026 بأنها تخدم أكثر من 26 مليون عميل وأكثر من 160 ألف تاجر.",
+    "traction_source_url": "https://tamara.co/en-bh/blog-post/tamara-secures-400-million-abf-mufg-standard-chartered"
   },
   {
     "slug": "abdulmohsen-al-babtain",
@@ -398,16 +402,18 @@
     "logo_url": "/startup-directory/tamara-logo.svg",
     "founder_socials": [],
     "source_url": "https://www.tamara.co/en-KW/press-release-1",
-    "reviewed_at": "2026-11-10",
+    "reviewed_at": "2026-11-24",
     "company_key": "tamara",
     "source_urls": [
-      "https://www.tamara.co/en-KW/press-release-1"
+      "https://www.tamara.co/en-KW/press-release-1",
+      "https://tamara.co/en-bh/blog-post/tamara-secures-400-million-abf-mufg-standard-chartered",
+      "https://www.wamda.com/en/2026/11/tamara-expands-debt-financing-facilities-400-million-global-banks"
     ],
     "region": "saudi",
     "founded_year": null,
-    "traction_en": null,
-    "traction_ar": null,
-    "traction_source_url": null
+    "traction_en": "Tamara reported serving more than 26 million customers and over 160,000 merchants in its 23 November 2026 announcement.",
+    "traction_ar": "أفادت تمارا في إعلانها بتاريخ 23 نوفمبر 2026 بأنها تخدم أكثر من 26 مليون عميل وأكثر من 160 ألف تاجر.",
+    "traction_source_url": "https://tamara.co/en-bh/blog-post/tamara-secures-400-million-abf-mufg-standard-chartered"
   },
   {
     "slug": "hosam-arab",

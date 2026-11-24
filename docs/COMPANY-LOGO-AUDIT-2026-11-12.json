@@ -2525,5 +2525,25 @@
     "src": "/company-logos/ziina.png",
     "tone": "light",
     "status": "existing-local-asset"
+  },
+  {
+    "company_key": "cqr-ot-cybersecurity",
+    "company": "CQR",
+    "website": "https://cqr.com.sa/",
+    "src": null,
+    "tone": null,
+    "reviewed_at": "2026-11-24",
+    "status": "unresolved",
+    "reason": "Original artwork reuse not established; retain readable company-name fallback."
+  },
+  {
+    "company_key": "justech-legal-ai",
+    "company": "JUSTECH",
+    "website": "https://www.jus-tech.com/en",
+    "src": null,
+    "tone": null,
+    "reviewed_at": "2026-11-24",
+    "status": "unresolved",
+    "reason": "Original artwork reuse not established; retain readable company-name fallback."
   }
 ]
