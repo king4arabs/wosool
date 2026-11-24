@@ -1,3 +1,11 @@
+## Syarah founder roles and Arabic identity re-verified — 2026-11-24
+
+- Re-verified Salah Sharef and Fayez Alanazi against Syarah's active official site and RAED Ventures' current English and Arabic portfolio pages. Salah remains co-founder and CEO; Fayez remains co-founder.
+- Corrected Salah's Arabic name from `صلاح شرف` to the investor-published `صلاح الشارف`, refreshed his short bilingual biography, and added RAED's Arabic evidence page to both mirrored records.
+- Retained Syarah's September 2024 report of more than 12,000 cars sold annually as operating-volume evidence, explicitly not revenue, ARR or GMV. Funding was not substituted for earned income, and no startup-directory eligibility changed.
+- Advanced only these two review dates. Mirrored catalogs remain 429 founders / 231 companies / 153 briefs with zero integrity problems; the due queue falls from 139 to 137. Existing LinkedIn links were not marked freshly verified because direct requests returned an access-restriction response.
+- Added focused mirrored-data regression coverage. No account, membership, moderation state, production import, hosting setting or deployment changed. See [the evidence record](docs/research/FOUNDER-REVIEW-SYARAH-2026-11-24.md).
+
 ## Sign-up and email-change codes use the shared bilingual email; Arabic code box fixed — 2026-11-24
 
 - **Found (email):** the six-digit verification code sent at sign-up and after an email change was the only transactional email with its own hand-built HTML and text templates, outside the shared layout in `mail/bilingual.blade.php`. Its 10-minute lifetime was written separately in the email copy and in `RegistrationOtp`. **Changed:** `RegistrationOtpMail` now extends `WosoolMail` and renders through `BilingualEmail` (Arabic right-to-left first, English second, shared header and footer, `info@wosool.org` reply-to). Subjects, tags (`registration-otp` / `email-change-otp`), the class name and its public `code` / `emailChange` properties are unchanged. The code box is labelled "رمز التحقق / Verification code"; `BilingualEmail::data()` takes an optional `codeLabel`, so founder activation emails keep "رمز التفعيل / Activation code". The stored expiry and both language blocks now read `RegistrationOtpMail::EXPIRES_MINUTES`. The two bespoke templates are removed.

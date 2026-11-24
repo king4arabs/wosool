@@ -1,5 +1,7 @@
 <p align="center">
 
+**Syarah founder freshness review (24 November 2026):** Salah Sharef and Fayez Alanazi were re-verified against Syarah's active official website and RAED Ventures' current bilingual portfolio pages. Salah's Arabic name is corrected to **صلاح الشارف** and his current co-founder/CEO role is retained; Fayez remains co-founder. The September 2024 company report of more than 12,000 cars sold annually remains explicitly operating volume—not revenue, ARR or GMV. Only these two review dates advanced, reducing the due queue from **139** to **137**. Catalogs remain **429 founders / 231 companies / 153 briefs** with zero integrity problems. No account, moderation state, startup-directory eligibility, production import or Hostinger release changed. See [review evidence](docs/research/FOUNDER-REVIEW-SYARAH-2026-11-24.md).
+
 **Listed-company founder review (23 November 2026):** Ghassab Bin Mandeel of Jahez was re-verified against current issuer governance and investor-relations pages. His revenue evidence now points directly to Jahez's FY2025 consolidated financial statements, explicitly distinguishing the retained period and figures from funding, GMV, customer counts and forecasts. Only this review date advanced; Moayad Alfallaj of Rasan remains queued because the official pages returned HTTP 500 during direct verification. Catalogs remain **426 founders / 229 companies / 152 briefs** with zero integrity problems and **135** reviews due. No account, moderation state, production import or Hostinger release changed. See [review evidence](docs/research/FOUNDER-REVIEW-LISTED-COMPANIES-2026-11-23.md).
 
 **Editorial and founder-review update (23 November 2026):** Mirrored research catalogs contain **426 external/unclaimed founders, 229 company identities and 152 dated bilingual briefs**, with zero integrity problems. Two overdue Saudi Rewaa profiles were re-verified against the active official company site and current investor pages: Mohammed Alqasir remains co-founder and CEO, while Abdullah Aljadhai is now recorded more precisely as co-founder and COO. Rewaa's company-reported 23,000-plus merchant count is not revenue, ARR, GMV or audited financial information. Only these two review dates advanced, reducing the due queue from 138 to **136**. No account, membership, moderation state, production import or Hostinger release changed. See [source evidence](docs/research/FOUNDER-REVIEW-2026-11-23.md) and [the 23 November content review](docs/research/CONTENT-REFRESH-2026-11-23.md).
@@ -40,7 +42,7 @@
   <a href="https://github.com/king4arabs/wosool/actions/workflows/ci.yml">CI</a>
 </p>
 
-**Documentation version: 0.6.16 · Updated: 23 November 2026.**
+**Documentation version: 0.6.17 · Updated: 24 November 2026.**
 
 Wosool is an Arabic/English founders platform connecting Saudi Arabia, the GCC, MENA and the world. It brings founder and company profiles, events, news, introductions and community services together, with a dedicated EO Riyadh Accelerator experience.
 
