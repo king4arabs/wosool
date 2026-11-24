@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import Image from "next/image"
-import { CalendarDays, CalendarPlus, MessageCircle, Mail, Share2, Linkedin } from "lucide-react"
+import { CalendarDays, CalendarPlus, MessageCircle, Mail, Share2, Briefcase } from "lucide-react"
 import { WowWeather } from "@/components/events/WowWeather"
 import { WowRegistration } from "@/components/events/WowRegistration"
 import { PublicLayout } from "@/components/layout/PublicLayout"
@@ -52,9 +52,9 @@ export default function WowEventPage() {
  {label:"Google",description:"Google Calendar",Icon:CalendarPlus,href:"https://calendar.google.com/calendar/render?action=TEMPLATE&text=EO%20Riyadh%20WOW%20Event&dates=20261211T110000Z%2F20261211T210000Z&location=Golf%20Club%20Wadi%20Safar%2C%20Diriyah&details="+encodeURIComponent(eventUrl)},
  {label:ar?"التقويم":"Calendar",description:ar?"تقويم Apple أو Outlook":"Apple or Outlook calendar",Icon:CalendarDays,href:"/events/wow-2026/event.ics"},
  {label:"WhatsApp",description:ar?"مشاركة عبر واتساب":"Share on WhatsApp",Icon:MessageCircle,href:"https://wa.me/?text="+encodeURIComponent("EO Riyadh WOW Event | "+eventUrl)},
- {label:"LinkedIn",description:ar?"مشاركة عبر LinkedIn":"Share on LinkedIn",Icon:Linkedin,href:"https://www.linkedin.com/sharing/share-offsite/?url="+encodeURIComponent(eventUrl)},
+ {label:"LinkedIn",description:ar?"مشاركة عبر LinkedIn":"Share on LinkedIn",Icon:Briefcase,href:"https://www.linkedin.com/sharing/share-offsite/?url="+encodeURIComponent(eventUrl)},
  {label:"X",description:ar?"مشاركة عبر X":"Share on X",Icon:Share2,href:"https://twitter.com/intent/tweet?text="+encodeURIComponent("EO Riyadh WOW Event")+"&url="+encodeURIComponent(eventUrl)},
- {label:ar?"البريد":"Email",description:ar?"مشاركة الدعوة بالبريد الإلكتروني":"Share invitation by email",Icon:Mail,href:"mailto:?subject="+encodeURIComponent("EO Riyadh WOW Event")+"&body="+encodeURIComponent("Friday, December 11, 2026 | Golf Club Wadi Safar, Diriyah\\n"+eventUrl)}
+ {label:ar?"البريد":"Email",description:ar?"مشاركة الدعوة بالبريد الإلكتروني":"Share invitation by email",Icon:Mail,href:"mailto:?subject="+encodeURIComponent("EO Riyadh WOW Event")+"&body="+encodeURIComponent("Friday, December 11, 2026 | Golf Club Wadi Safar, Diriyah\n"+eventUrl)}
  ].map(({label,description,Icon,href})=><a key={label} aria-label={description} title={description} className="flex min-h-16 min-w-[76px] flex-1 shrink-0 flex-col items-center justify-center gap-1 rounded-xl border border-white/30 bg-white/10 px-2 py-2 text-center text-xs font-semibold text-white transition-colors hover:bg-white/20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-3px] focus-visible:outline-cyan-300 sm:min-w-[90px]" href={href}><Icon size={21} aria-hidden="true"/><span>{label}</span></a>)}</div></section>
  <h2 className="mt-10 text-2xl font-bold">{ar?"اكتشف مجتمعنا":"Discover our community"}</h2>
  <div className="mt-4 flex flex-wrap gap-4"><Link className="font-bold text-indigo-700 underline" href="/register">{ar?"التسجيل في وصول":"Join Wosool"}</Link><Link className="font-bold text-indigo-700 underline" href="/eoa/account">{ar?"حساب مسرّعة EO":"EO Accelerator account"}</Link><a className="font-bold text-indigo-700 underline" href="https://eonetwork.org/chapter/riyadh">EO Riyadh</a></div>
