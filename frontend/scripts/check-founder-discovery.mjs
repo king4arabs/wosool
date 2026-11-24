@@ -22,7 +22,9 @@ try {
   browser = await chromium.launch({ executablePath: process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH || undefined })
   for (const locale of ['ar', 'en']) for (const width of [390, 1366]) {
     const context = await browser.newContext({ viewport: { width, height: 900 }, reducedMotion: 'reduce' })
-    await context.addInitScript(value => localStorage.setItem('wosool-locale', value), locale)
+    await context.addInitScript(value => {
+      if (!localStorage.getItem('wosool-locale')) localStorage.setItem('wosool-locale', value)
+    }, locale)
     const page = await context.newPage()
     const errors = []
     const starts = []
