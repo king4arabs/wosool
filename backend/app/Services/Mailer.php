@@ -15,11 +15,15 @@ final class Mailer
     public static function safely(string $to, Mailable $mail, array $context = []): bool
     {
         try {
+            if (! app(FounderInvitationService::class)->realMailer((string) config('mail.default')) || ! filled(config('mail.from.address'))) {
+                Log::warning('Email delivery unavailable.', [...$context, 'mail' => $mail::class]);
+                return false;
+            }
             Mail::to($to)->send($mail);
 
             return true;
         } catch (\Throwable $error) {
-            Log::warning('Email delivery failed.', [...$context, 'mail' => $mail::class, 'error' => $error->getMessage()]);
+            Log::warning('Email delivery failed.', [...$context, 'mail' => $mail::class, 'exception' => $error::class]);
 
             return false;
         }
