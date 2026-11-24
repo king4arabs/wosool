@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react"
 import Link from "next/link"
+import { AdminEventPartners } from "@/components/events/AdminEventPartners"
 import { useParams } from "next/navigation"
 import { api } from "@/lib/api"
 import { Button } from "@/components/ui/button"
@@ -96,6 +97,7 @@ export default function AdminEventManagePage() {
     <div className="space-y-4">
       <h2 className="text-2xl font-bold">{t("إدارة الفعالية", "Manage event")}</h2>
       <Link href="/admin/events" className="inline-flex min-h-11 items-center text-[#3B52D4] underline">{t("بيانات الفعاليات وإعداداتها", "Event details and settings")}</Link>
+      {eventId && <AdminEventPartners key={eventId} eventId={eventId} />}
       <div className="flex flex-wrap gap-2">
         {TABS.map((entry) => (
           <Button key={entry.key} size="sm" variant={tab === entry.key ? "default" : "outline"} aria-pressed={tab === entry.key} onClick={() => setTab(entry.key)}>
@@ -139,7 +141,7 @@ export default function AdminEventManagePage() {
                   <td className="px-4 py-3">
                     <div className="flex flex-wrap gap-1">
                       {ACTIONS.map((action) => (
-                        <Button key={action.key} size="sm" variant="outline" className="whitespace-nowrap" disabled={busyKey === `${row.user_id}:${action.key}`} onClick={() => act(row.user_id, action.key)}>
+                        <Button key={action.key} size="sm" variant="outline" className="whitespace-nowrap" disabled={busyKey !== null} onClick={() => act(row.user_id, action.key)}>
                           {ar ? action.ar : action.en}
                         </Button>
                       ))}
