@@ -1,0 +1,61 @@
+"use client"
+import { useState, type FormEvent } from "react"
+import { useAuth } from "@/lib/auth"
+import { api } from "@/lib/api"
+import { useLocale } from "@/lib/locale"
+import Link from "next/link"
+
+export function WowRegistration() {
+ const {user,isLoading,error:sessionError,refresh,login,register}=useAuth()
+ const {locale}=useLocale()
+ const ar=locale==="ar"
+ const t=(a:string,e:string)=>ar?a:e
+ const [mode,setMode]=useState<"login"|"register">("register")
+ const [busy,setBusy]=useState(false)
+ const [error,setError]=useState("")
+ const [notice,setNotice]=useState("")
+ const [ticket,setTicket]=useState(false)
+ const field="gateway-input"
+ async function submit(e:FormEvent<HTMLFormElement>) {
+  e.preventDefault()
+  if(busy)return
+  setBusy(true);setError("");setNotice("")
+  const f=new FormData(e.currentTarget)
+  const val=(key:string)=>String(f.get(key)||"").trim()
+  try {
+   if(!user){
+    const password=String(f.get("password")||"")
+    if(mode==="login")await login(val("email"),password)
+    else await register(val("name"),val("email"),password,String(f.get("confirmation")||""))
+   }else if(!user.email_verified_at){
+    await api.post("/auth/registration/verify",{code:val("code")})
+    await refresh()
+   }else{
+    const result=await api.post<{registration:{ticket_email_sent_at:string|null},ticket_url:string}>("/wow-registration",{phone:val("phone"),company:val("company"),eo_interest:f.get("eo")==="on",eoa_interest:f.get("eoa")==="on",consent:f.get("consent")==="on"})
+    setTicket(true)
+    setNotice(result.registration.ticket_email_sent_at?t("تم إرسال رابط التذكرة إلى بريدك.","Your ticket link has been emailed."):t("تم حفظ تسجيلك. استخدم الرابط أدناه لإكمال الحجز.","Registration saved. Use the link below to complete RSVP."))
+   }
+  }catch(err){setError(err instanceof Error?err.message:t("تعذر إكمال الطلب","Unable to complete your request"))}
+  finally{setBusy(false)}
+ }
+ async function resend(){
+  if(busy)return
+  setBusy(true);setError("")
+  try{await api.post("/auth/registration/resend");setNotice(t("تم إرسال رمز التحقق","Verification code sent"))}catch(err){setError(err instanceof Error?err.message:t("تعذر الإرسال","Unable to send"))}finally{setBusy(false)}
+ }
+ return <section id="registration" className="scroll-mt-28 rounded-3xl border border-indigo-100 bg-white p-5 shadow-sm sm:p-8">
+ <h2 className="text-2xl font-extrabold text-indigo-950">{t("سجّل وأكمل حجز تذكرتك","Register & complete your ticket")}</h2>
+ <p className="mt-2 text-slate-600">{t("حجز التذكرة لا يتطلب قبول عضوية وصول أو المسرّعة.","Ticket booking does not require Wosool or Accelerator membership approval.")}</p>
+ {isLoading?<p role="status" className="mt-4">{t("جارٍ التحقق من الحساب…","Checking your account…")}</p>:sessionError?<button className="gateway-button mt-4" onClick={()=>void refresh()}>{t("إعادة المحاولة","Retry")}</button>:ticket?<div className="mt-5 space-y-4" role="status"><p>{notice}</p><a className="gateway-button w-full" href="https://luma.com/8fccrqkx">{t("أكمل الحجز واستلم تذكرتك","Complete RSVP & get your ticket")}</a><p>{t("استخدم البريد نفسه في Luma. الحضور مشروط بموافقة المنظمين.","Use the same email in Luma. Attendance is subject to organizer approval.")}</p></div>:<form key={user?user.email_verified_at?"details":"verify":mode} onSubmit={submit} className="mt-6 space-y-4" aria-busy={busy}>
+ {!user?<><div className="flex flex-wrap gap-3"><button type="button" aria-pressed={mode==="register"} onClick={()=>setMode("register")} className="gateway-button-secondary">{t("حساب جديد","New account")}</button><button type="button" aria-pressed={mode==="login"} onClick={()=>setMode("login")} className="gateway-button-secondary">{t("حساب وصول أو EOA","Existing Wosool / EOA account")}</button></div>
+ {mode==="register"&&<label className="gateway-label">{t("الاسم الكامل","Full name")}<input name="name" required maxLength={255} autoComplete="name" className={field}/></label>}
+ <label className="gateway-label">{t("البريد الإلكتروني","Email")}<input name="email" type="email" required autoComplete="email" dir="ltr" className={field}/></label>
+ <label className="gateway-label">{t("كلمة المرور","Password")}<input name="password" type="password" required minLength={mode==="register"?8:undefined} autoComplete={mode==="register"?"new-password":"current-password"} className={field}/></label>
+ {mode==="register"?<><label className="gateway-label">{t("تأكيد كلمة المرور","Confirm password")}<input name="confirmation" type="password" required minLength={8} autoComplete="new-password" className={field}/></label><label className="flex items-start gap-2"><input type="checkbox" required/><span>{t("أوافق على","I agree to")} <Link href="/terms" className="underline">{t("الشروط","Terms")}</Link> · <Link href="/privacy" className="underline">{t("الخصوصية","Privacy")}</Link></span></label></>:<Link href="/forgot-password" className="underline">{t("نسيت كلمة المرور؟","Forgot password?")}</Link>}
+ </>:!user.email_verified_at?<><p>{user.email}</p><label className="gateway-label">{t("رمز التحقق","Verification code")}<input name="code" required pattern="[0-9]{6}" inputMode="numeric" autoComplete="one-time-code" maxLength={6} className={field}/></label><button type="button" disabled={busy} onClick={resend} className="underline">{t("إعادة إرسال الرمز","Resend code")}</button></>:<><p>{user.name} · {user.email}</p><label className="gateway-label">{t("رقم الجوال","Mobile number")}<input name="phone" type="tel" required autoComplete="tel" maxLength={50} className={field}/></label><label className="gateway-label">{t("الشركة أو الجهة","Company / organization")}<input name="company" required autoComplete="organization" maxLength={255} className={field}/></label><label className="flex gap-2"><input name="eo" type="checkbox"/>{t("أرغب بمعلومات عن عضوية EO","I am interested in EO membership")}</label><label className="flex gap-2"><input name="eoa" type="checkbox"/>{t("أرغب بمعلومات عن مسرّعة EOA","I am interested in EOA")}</label><label className="flex gap-2"><input name="consent" type="checkbox" required/>{t("أوافق على حفظ بيانات التسجيل لإدارة الفعالية والتواصل بشأن الاهتمامات التي اخترتها.","I agree to storing registration data for event administration and follow-up on my selected interests.")}</label></>}
+ {error&&<p role="alert" className="gateway-error">{error}</p>}{notice&&<p role="status">{notice}</p>}
+ <button className="gateway-button w-full" disabled={busy}>{busy?t("جارٍ المعالجة…","Please wait…"):!user?t("متابعة","Continue"):!user.email_verified_at?t("تحقق من البريد","Verify email"):t("حفظ ومتابعة حجز التذكرة","Save & complete RSVP")}</button>
+ </form>}
+ <p className="mt-5 text-sm text-slate-600">{t("لديك حجز سابق؟","Already registered?")} <a className="underline" href="https://luma.com/8fccrqkx">{t("متابعة الحجز في Luma","Manage RSVP in Luma")}</a></p>
+ </section>
+}
