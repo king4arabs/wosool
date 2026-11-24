@@ -9,7 +9,7 @@
 | Founders on company profiles | The moderated many-to-many `founder_company_links` relationship. |
 | News articles | Up to ten exact company names/slugs, matched against public linked companies in either language. No match means no founder links. The news grid makes no per-card founder requests. |
 
-A listing is not an account or an endorsement. Only the existing activation rules allow a member indicator or messaging. Empty lists, access denials and outages do not restore identities from the source catalog. News stories and revenue evidence retain their own publication policies.
+A listing is not an account or an endorsement. Only the existing activation rules allow a member indicator or messaging. Empty lists, access denials and outages do not restore identities from the source catalog. If an older Laravel router explicitly reports that the discovery route does not exist, the homepage can still read one bounded page from the existing public founder API. Generic 404s and access errors do not trigger this compatibility path. News stories and revenue evidence retain their own publication policies.
 
 ## Database and operations
 

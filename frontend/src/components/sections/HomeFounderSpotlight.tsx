@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react"
 import { api } from "@/lib/api"
 import { mapFounder, type ApiFounder } from "@/lib/content-api"
 import { isDirectoryRecordVisible } from "@/lib/directory-geography"
+import { readFounderSpotlight } from "@/lib/founder-spotlight-request"
 import { useLocale } from "@/lib/locale"
 import { FounderShowcase } from "./CommunityShowcase"
 
@@ -17,7 +18,8 @@ export function HomeFounderSpotlight() {
   useEffect(() => {
     const controller = new AbortController()
     visit.current ||= crypto.randomUUID()
-    api.get<{data: ApiFounder[]}>("/founders/discover/cards", { params: { start: visit.current }, headers: { "X-Locale": locale }, signal: controller.signal, cache: "no-store" })
+    readFounderSpotlight(visit.current, controller.signal, (path, params) =>
+      api.get<{data: ApiFounder[]}>(path, { params, headers: { "X-Locale": locale }, signal: controller.signal, cache: "no-store" }))
       .then(({ data }) => {
         if (!Array.isArray(data)) throw new Error("Invalid discovery response")
         if (!controller.signal.aborted) setResult({ key, rows: data.filter(row => row.is_public === true && row.status === "active" && isDirectoryRecordVisible(row)), failed: false })
