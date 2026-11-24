@@ -1,0 +1,15 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Wosool//EO Riyadh WOW//EN
+CALSCALE:GREGORIAN
+BEGIN:VEVENT
+UID:eo-riyadh-wow-2026@wosool.org
+DTSTAMP:20261124T090000Z
+DTSTART:20261211T110000Z
+DTEND:20261211T210000Z
+SUMMARY:EO Riyadh WOW Event
+LOCATION:Golf Club Wadi Safar\, Diriyah
+DESCRIPTION:Official program 5:30-8:30 PM Riyadh time. RSVP and organizer approval required.\nhttps://wosool.org/events/eo-riyadh-wow-2026
+URL:https://wosool.org/events/eo-riyadh-wow-2026
+END:VEVENT
+END:VCALENDAR
