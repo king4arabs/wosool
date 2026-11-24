@@ -16,8 +16,9 @@ class WowRegistrationController extends Controller
  }
  public function store(Request $request) {
   abort_if(now()->gte(\Carbon\Carbon::parse('2026-12-12T00:00:00+03:00')),410,'Registration is closed.');
-  $data=$request->validate(['phone'=>'required|string|max:50','company'=>'required|string|max:255','eo_interest'=>'required|boolean','eoa_interest'=>'required|boolean','consent'=>'accepted']);
+  $data=$request->validate(['phone'=>'required|string|max:50','company'=>'nullable|string|max:255','eo_interest'=>'required|boolean','eoa_interest'=>'required|boolean','consent'=>'accepted']);
   unset($data['consent']);
+  $data['company'] = $data['company'] ?? '';
   $user=$request->user();
   $record=DB::transaction(function() use ($user,$data) {
    User::whereKey($user->id)->lockForUpdate()->firstOrFail();
