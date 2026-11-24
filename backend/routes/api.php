@@ -283,6 +283,8 @@ Route::prefix('v1')->group(function () {
         Route::post('/events', [AdminEventController::class, 'store']);
         Route::put('/events/{event}', [AdminEventController::class, 'update']);
         Route::delete('/events/{event}', [AdminEventController::class, 'destroy']);
+        Route::get('/events/{event}/partners', [\App\Http\Controllers\Api\Admin\EventPartnerController::class, 'show']);
+        Route::put('/events/{event}/partners', [\App\Http\Controllers\Api\Admin\EventPartnerController::class, 'update']);
         Route::get('/events/{event}/registrations', [AdminEventRegistrationController::class, 'index']);
         Route::patch('/events/{event}/registrations/{userId}', [AdminEventRegistrationController::class, 'updateStatus']);
         Route::get('/events/{event}/registrations/export', [AdminEventRegistrationController::class, 'exportCsv']);
