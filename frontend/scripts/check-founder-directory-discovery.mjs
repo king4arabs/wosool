@@ -1,4 +1,4 @@
-/** Isolated directory visits, bilingual API/fallback search and physical carousel movement. */
+/** Isolated directory visits, bilingual database search and physical carousel movement. */
 import assert from 'node:assert/strict'
 import { spawn } from 'node:child_process'
 import { once } from 'node:events'
@@ -44,7 +44,7 @@ try {
       return route.fulfill({ json: { data: [], meta: { last_page: 1 } } })
     })
     await page.goto(origin + '/founders', { waitUntil: 'networkidle' })
-    await page.getByRole('heading', { level: 1, name: locale === 'ar' ? 'تعرف على مجتمع المؤسسين في شبكة وصول' : 'Meet the founder community in the Wosool network', exact: true }).waitFor()
+    await page.getByRole('heading', { level: 1, name: locale === 'ar' ? 'دليل المؤسسين' : 'Founder directory', exact: true }).waitFor()
     const directory = page.locator('#founder-directory')
     const rail = directory.locator('[aria-roledescription]')
     const ids = () => rail.locator('h3 a').evaluateAll(links => links.map(link => link.getAttribute('href')))
