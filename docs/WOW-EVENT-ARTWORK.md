@@ -21,3 +21,10 @@ Both artwork files are locally served JPEGs resized to at most 1600 pixels on th
 No new configuration, database migration or dependency change. Roll back to the previous successful source/hosting revision if necessary.
 
 Return to the [README](../README.md) or [changelog](../CHANGELOG.md).
+
+## Public experience refinement — 2026-11-24
+
+- Compact hero, horizontal event navigation, directions/QR card, agenda and avatar captions. Avoid nested main landmarks; PublicLayout supplies the main landmark.
+- Remove redundant explanatory copy, retain explicit attendance approval, membership verification, privacy consent and historical climate labels. Empty partner rail presents a partnership enquiry link rather than an unverified announcement.
+- Registration API, Luma destination, partner approval rules, deployment configuration and dependencies remain unchanged.
+- Verify at 320, 390, 768 and 1440 CSS pixels in Arabic and English: no horizontal page overflow; every submenu item reachable; hero and six avatars visible; keyboard focus visible; directions and registration actions usable. Verify both saved and fresh registration states and the weather qualification. Source inspection completed; CI and actual browser/production verification remain pending.
