@@ -4,7 +4,7 @@
 
 | Surface | Read path |
 | --- | --- |
-| Homepage: Meet the founders | One anonymous GET to `/api/v1/founders/discover/cards?start={uuid}`. Up to 24 cards; a per-visit UUID selects an indexed slice of the entire published pool. Changing language reuses that slice. The carousel mixes regions and can be shuffled. |
+| Homepage: Meet the founders | Normal visits use `/api/v1/founders/discover/cards?start={uuid}`. Up to 24 cards; a per-visit UUID selects an indexed slice of the entire published pool. Language changes reuse the slice. A shared `?founder={slug}` link resolves only the exact public card via the directory API. |
 | Founder directory and profile | The existing paginated `/founders` and exact `/founders/{slug}` API routes. The full directory retains bilingual search, region/sector filters, and deep links. |
 | Founders on company profiles | The moderated many-to-many `founder_company_links` relationship. |
 | News articles | Up to ten exact company names/slugs, matched against public linked companies in either language. No match means no founder links. The news grid makes no per-card founder requests. |

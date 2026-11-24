@@ -6,6 +6,21 @@ import { readFounderSpotlight } from "./founder-spotlight-request"
 const start = "d91ffa3c-9b25-4c71-a946-384bd5cf5aab"
 const legacy = "The route v1/founders/discover/cards could not be found."
 
+test("a shared dashboard card requests only its exact public slug, never a random substitute", async () => {
+  const target = { id: 1, slug: "linked-founder", is_verified: false, is_featured: false }
+  for (const rows of [[target], [{ ...target, id: 2, slug: "someone-else" }], []]) {
+    let calls = 0
+    const result = await readFounderSpotlight(start, new AbortController().signal, async (path, params) => {
+      calls++
+      assert.equal(path, "/founders")
+      assert.deepEqual(params, { slug: target.slug, per_page: 1 })
+      return { data: rows }
+    }, target.slug)
+    assert.deepEqual(result.data, rows[0]?.slug === target.slug ? [target] : [])
+    assert.equal(calls, 1)
+  }
+})
+
 test("only a confirmed legacy router uses the existing public founder directory", async () => {
   const calls: string[] = []
   const result = await readFounderSpotlight(start, new AbortController().signal, async (path, params) => {

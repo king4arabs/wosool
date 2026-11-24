@@ -34,6 +34,11 @@ try {
       const url = new URL(route.request().url())
       if (url.origin !== origin) return route.abort()
       if (!url.pathname.startsWith('/api/')) return route.continue()
+      if (url.pathname === '/api/v1/founders' && url.searchParams.has('slug')) {
+        assert.equal(url.searchParams.get('per_page'), '1')
+        // An older backend that ignores the slug filter must never substitute a different founder.
+        return route.fulfill({ json: { data: [{ id: 50, slug: 'shared-founder', name: 'Linked founder', country_code: 'SA', status: 'active', is_public: true, companies: [] }] } })
+      }
       if (url.pathname === '/api/v1/founders/discover/cards') {
         starts.push(url.searchParams.get('start'))
         if (outage) return route.fulfill({ status: 503, json: { message: 'Fixture outage' } })
@@ -97,6 +102,14 @@ try {
     outage = false
     await spotlight.getByRole('button').first().click()
     await eventually(async () => (await ids()).length === 24)
+    const randomRequestsBeforeLinks = starts.length
+    await page.goto(origin + '/?founder=shared-founder#founder-community')
+    await spotlight.locator('[data-founder-focus="true"] a[href="/founders/shared-founder"]').first().waitFor()
+    assert.deepEqual(await ids(), ['/founders/shared-founder'])
+    await page.goto(origin + '/?founder=withdrawn-founder#founder-community')
+    await spotlight.getByText(nextLocale === 'ar' ? 'هذا الملف غير متاح للعامة.' : 'This profile is not publicly available.', { exact: true }).waitFor()
+    assert.deepEqual(await ids(), [])
+    assert.equal(starts.length, randomRequestsBeforeLinks, 'Shared links never request a random replacement')
     await context.close()
     console.log(`Founder discovery passed: ${locale}, ${width}px, pagination, shuffle, search, grid and reload`)
   }
