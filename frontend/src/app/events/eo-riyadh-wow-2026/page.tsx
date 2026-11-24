@@ -2,6 +2,7 @@
 
 import Link from "next/link"
 import Image from "next/image"
+import { WowWeather } from "@/components/events/WowWeather"
 import { WowRegistration } from "@/components/events/WowRegistration"
 import { PublicLayout } from "@/components/layout/PublicLayout"
 import { useLocale } from "@/lib/locale"
@@ -40,6 +41,7 @@ export default function WowEventPage() {
  <div className="mt-5 divide-y rounded-2xl border border-slate-200">{agenda.map(([time,en,arabic])=><div key={time} className="grid gap-2 p-4 sm:grid-cols-[180px_1fr]"><span dir="ltr" className="font-bold text-indigo-800">{time}</span><span>{ar?arabic:en}</span></div>)}</div>
  <p className="mt-3 text-sm text-slate-600">{ar?"استراحات الصلاة حسب التوقيت المحلي.":"Prayer breaks follow local prayer times."}</p>
  <h2 className="mt-10 text-2xl font-bold">{ar?"الزي المقترح":"Dress code"}</h2><p className="mt-3">{ar?"ملابس عمل أنيقة، مع إمكانية ارتداء الثوب السعودي والعباءة.":"Business Smart, with optional Saudi traditional attire (Thobe and Abaya)."}</p>
+ <WowWeather />
  <h2 className="mt-10 text-2xl font-bold">{ar?"اكتشف مجتمعنا":"Discover our community"}</h2>
  <div className="mt-4 flex flex-wrap gap-4"><Link className="font-bold text-indigo-700 underline" href="/register">{ar?"التسجيل في وصول":"Join Wosool"}</Link><Link className="font-bold text-indigo-700 underline" href="/eoa/account">{ar?"حساب مسرّعة EO":"EO Accelerator account"}</Link><a className="font-bold text-indigo-700 underline" href="https://eonetwork.org/chapter/riyadh">EO Riyadh</a></div>
  <p className="mt-5"><a href="mailto:info@wosool.org">info@wosool.org</a></p>
