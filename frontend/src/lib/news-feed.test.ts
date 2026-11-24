@@ -299,3 +299,14 @@ test('enza and Cashi announcements keep issuer dates and bilingual evidence with
   const enza = curatedNews.find(story => story.slug === 'enza-six-million-seed-plus-november-2026')!
   assert.deepEqual(newsFounders(enza).map(profile => profile.slug).sort(), ['hany-fekry-enza', 'hamish-houston-enza'].sort())
 })
+
+
+test('Tamara asset-backed financing preserves source date and company match', () => {
+  const item = curatedNews.find(story => story.slug === 'tamara-mufg-standard-chartered-abf-november-2026')!
+  assert.ok(item)
+  assert.equal(item.publishedAt, '2026-11-23')
+  assert.equal(item.region, 'saudi')
+  assert.equal(item.keyFacts?.length, 3)
+  assert.equal(item.translations?.ar.keyFacts?.length, 3)
+  assert.equal(newsFounders(item).length, 3)
+})

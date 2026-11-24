@@ -6474,5 +6474,50 @@
         ]
       }
     }
+  },
+  {
+    "id": "sourced-tamara-mufg-standard-chartered-abf-november-2026",
+    "slug": "tamara-mufg-standard-chartered-abf-november-2026",
+    "title": "Saudi fintech Tamara expands asset-backed financing by $400m",
+    "excerpt": "MUFG provides a SAR 749 million facility, while Standard Chartered increases Tamara's existing dollar-denominated financing by $200 million.",
+    "content": "On 23 November 2026, Tamara announced two asset-backed financing agreements totalling an initial US$400 million. MUFG is providing a SAR 749 million facility, equivalent to about US$200 million, and Standard Chartered is adding US$200 million to an existing dollar-denominated facility. Tamara described the MUFG agreement as a regional first for riyal-denominated securitisation funding from an international bank.\n\nThe Saudi fintech says the agreements will help it diversify its products and strengthen funding capacity. It reports more than 26 million customers and over 160,000 merchants in Saudi Arabia and the GCC. The announced commitments represent debt financing capacity, not equity investment, revenue or confirmed drawdowns.",
+    "category": "Funding",
+    "region": "saudi",
+    "imageUrl": "",
+    "imageCredit": "",
+    "sourceUrl": "https://tamara.co/en-bh/blog-post/tamara-secures-400-million-abf-mufg-standard-chartered",
+    "sourceName": "Tamara",
+    "companies": [
+      "Tamara"
+    ],
+    "publishedAt": "2026-11-23",
+    "author": "Wosool news desk",
+    "tags": [
+      "Saudi Arabia",
+      "Fintech",
+      "Asset-backed financing",
+      "MUFG",
+      "Standard Chartered"
+    ],
+    "keyFacts": [
+      "US$400m in asset-backed financing commitments",
+      "SAR 749m facility from MUFG; US$200m expansion from Standard Chartered",
+      "Tamara reports more than 26m customers and 160,000 merchants"
+    ],
+    "translations": {
+      "ar": {
+        "title": "تمارا السعودية توسع تمويلها المدعوم بالأصول بقيمة 400 مليون دولار",
+        "excerpt": "يقدم بنك MUFG تسهيلاً بقيمة 749 مليون ريال، ويضيف ستاندرد تشارترد 200 مليون دولار إلى تسهيل قائم بالدولار.",
+        "body": [
+          "أعلنت تمارا في 23 نوفمبر 2026 اتفاقيتي تمويل مدعوم بالأصول بقيمة أولية إجمالية تبلغ 400 مليون دولار أمريكي. يقدم بنك MUFG تسهيلاً بقيمة 749 مليون ريال سعودي، أي نحو 200 مليون دولار، فيما يضيف ستاندرد تشارترد 200 مليون دولار إلى تسهيل قائم بالدولار. ووصفت تمارا اتفاقية MUFG بأنها الأولى من نوعها إقليمياً في التمويل بالريال عبر هيكلة التوريق من بنك دولي.",
+          "وتقول الشركة إن الاتفاقيتين تعززان قدرتها التمويلية وتدعمان تنويع منتجاتها. وتفيد بخدمة أكثر من 26 مليون عميل وأكثر من 160 ألف تاجر في السعودية ودول الخليج. تمثل الالتزامات المعلنة قدرة تمويل بالدين، وليست استثماراً في حقوق الملكية أو إيرادات أو مبالغ مؤكدة السحب."
+        ],
+        "keyFacts": [
+          "التزامات تمويل مدعوم بالأصول بقيمة 400 مليون دولار",
+          "749 مليون ريال من MUFG و200 مليون دولار لتوسيع تسهيل ستاندرد تشارترد",
+          "تفيد تمارا بخدمة أكثر من 26 مليون عميل و160 ألف تاجر"
+        ]
+      }
+    }
   }
 ]

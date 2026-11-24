@@ -27,7 +27,8 @@ class FounderDirectoryImporter
         $november21Profiles = json_decode(file_get_contents(resource_path('data/founder-directory-expansion-2026-11-21.json')), true, 512, JSON_THROW_ON_ERROR);
         $november22Profiles = json_decode(file_get_contents(resource_path('data/founder-directory-expansion-2026-11-22.json')), true, 512, JSON_THROW_ON_ERROR);
         $november23Profiles = json_decode(file_get_contents(resource_path('data/founder-directory-expansion-2026-11-23.json')), true, 512, JSON_THROW_ON_ERROR);
-        $records = [...$base, ...$expansion, ...$discovery, ...$countryProfiles, ...$novemberProfiles, ...$november12Profiles, ...$november13Profiles, ...$november14Profiles, ...$november15Profiles, ...$november17Profiles, ...$november18Profiles, ...$november19Profiles, ...$november20Profiles, ...$november21Profiles, ...$november22Profiles, ...$november23Profiles];
+        $november24Profiles = json_decode(file_get_contents(resource_path('data/founder-directory-expansion-2026-11-24.json')), true, 512, JSON_THROW_ON_ERROR);
+        $records = [...$base, ...$expansion, ...$discovery, ...$countryProfiles, ...$novemberProfiles, ...$november12Profiles, ...$november13Profiles, ...$november14Profiles, ...$november15Profiles, ...$november17Profiles, ...$november18Profiles, ...$november19Profiles, ...$november20Profiles, ...$november21Profiles, ...$november22Profiles, ...$november23Profiles, ...$november24Profiles];
         $this->validateRecords($records);
         $counts = ['founders_created' => 0, 'companies_created' => 0, 'preserved' => 0, 'companies_enriched' => 0, 'deleted_skipped' => 0];
         DB::transaction(function () use ($records, &$counts) {
