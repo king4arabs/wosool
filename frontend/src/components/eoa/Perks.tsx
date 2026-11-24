@@ -47,8 +47,8 @@ export function EoaPerks() {
 
   return <section aria-labelledby="eoa-perks-title">
     <p className="eoa-lead">{ar
-      ? 'قد يقدّم شركاء البرنامج عروضاً للمشاركين. لا تظهر تفاصيل أي عرض إلا بعد اعتماد الشريك والعرض من فريق البرنامج، وتأكيد تسجيلك في الدفعة.'
-      : 'Program partners may make offers to participants. Offer details appear only after the team approves the provider and offer, and your enrollment is confirmed.'}</p>
+      ? 'تختلف عروض الشركاء حسب الدفعة.'
+      : 'Partner offers vary by cohort.'}</p>
     <div className="eoa-card eoa-space"><h2>{ar?'ما تتضمنه المشاركة':'Included in participation'}</h2><p>{ar?'أيام تعلم ربع سنوية، ومجموعات مساءلة شهرية، وأدوات تحديد الأهداف ومتابعتها، وفرص EO المتاحة لدفعتك. تختلف العروض الإضافية للشركاء عن هذه الخدمات الأساسية.':'Quarterly Learning Days, monthly accountability groups, goal-setting and tracking tools, and EO opportunities available to your cohort. Additional partner offers are separate from these core services.'}</p></div>
     <h2 id="eoa-perks-title">{ar ? 'عروض الشركاء المعتمدة' : 'Approved partner perks'}</h2>
     {(isLoading || (user && (loadedFor !== user.id || state === 'loading'))) && <Notice>{ar ? 'جارٍ تحميل المزايا…' : 'Loading perks…'}</Notice>}
@@ -56,7 +56,7 @@ export function EoaPerks() {
     {state === 'restricted' && user && loadedFor === user.id && <Notice>{ar ? 'هذه العروض متاحة فقط للمشاركين المعتمدين والمسجلين في البرنامج.' : 'These offers are available only to approved, enrolled participants.'}</Notice>}
     {state === 'error' && user && loadedFor === user.id && <Notice error>{ar ? 'تعذر تحميل المزايا.' : 'Perks could not load.'} <button type="button" className="eoa-text-link" onClick={() => load(user.id)}>{ar ? 'إعادة المحاولة' : 'Try again'}</button></Notice>}
     {state === 'ready' && user && loadedFor === user.id && (!perks.length
-      ? <Notice>{ar ? 'لا توجد عروض شركاء معتمدة حالياً. تابع الصفحة للحصول على التحديثات.' : 'No partner offers have been approved yet. Check back for updates.'}</Notice>
+      ? <Notice>{ar ? 'لا توجد عروض شركاء متاحة حالياً.' : 'No partner offers are available right now.'}</Notice>
       : <>
         <div className={styles.controls}>
           <button type="button" aria-label={ar ? 'السابق' : 'Previous perk'} onClick={() => slider.current?.scrollBy({ left: -320, behavior: 'smooth' })}><ArrowLeft aria-hidden="true" /></button>

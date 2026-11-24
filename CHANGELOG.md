@@ -1,3 +1,9 @@
+## Database-backed founder discovery and public copy — 2026-11-24
+
+- The homepage, founder directory, profiles and news links now use published Laravel records. Visiting again rotates the homepage sample; a database outage never restores an offline founder. Added a reversible lookup index and shared visibility rules. [Architecture and release order](docs/PUBLIC-FOUNDER-DIRECTORY.md).
+- Shortened bilingual public copy, including accelerator and directory guidance, without removing eligibility rules, financial evidence, image credits or sources. Fixed the WOW event’s date/venue semantics and accessible shortcut names.
+- Added moderation, rollover, company-match and browser regression coverage; aligned isolated mail/calendar fixtures with the existing release. OpenAPI document 1.9.0. No hosted release, production migration, founder import or account changes are asserted by this entry.
+
 ## EO Riyadh WOW public experience refinement — 2026-11-24
 
 - Streamlined Arabic and English event copy, compact hero and venue card, accessible horizontal submenu, agenda, registration and weather cards, preserving required approval, consent and historical climate information.

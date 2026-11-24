@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Support\DirectoryGeography;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -90,6 +92,13 @@ class FounderProfile extends Model
     public function latestInvitation(): HasOne
     {
         return $this->hasOne(FounderInvitation::class)->orderByDesc('created_at')->orderByDesc('id');
+    }
+
+    /** Public directory, discovery, and embedded company rosters share one moderation boundary. */
+    public function scopePubliclyListed(Builder $query): Builder
+    {
+        return DirectoryGeography::founders($query->where('founder_profiles.status', 'active')
+            ->where('founder_profiles.is_public', true));
     }
 
     public function communityActive(): bool

@@ -109,12 +109,11 @@ try {
 
     outage = true
     await page.reload({ waitUntil: 'networkidle' })
-    for (const query of ['Ahmed Hamdan', 'احمد حمدان', 'Unifonic', 'يونيفونيك']) {
-      await directory.getByRole('searchbox').fill(query)
-      await eventually(async () => (await ids()).includes('/founders/unifonic'))
-    }
+    await directory.getByRole('searchbox').fill('Unifonic')
+    await page.getByText(locale === 'ar' ? 'تعذر تحميل ملفات المؤسسين.' : 'Founder profiles are temporarily unavailable.').waitFor()
+    assert.deepEqual(await ids(), [], 'An API outage never republishes a snapshot')
     assert.deepEqual(errors, [])
-    console.log(`PASS directory ${locale}/${width}: visit shuffle, stable grid and language, bilingual founder/company search, secondary company, fallback search, automatic rightward movement, reduced motion`)
+    console.log(`PASS directory ${locale}/${width}: visit shuffle, stable grid and language, bilingual founder/company search, secondary company, no offline identities, automatic rightward movement, reduced motion`)
     await context.close()
   }
 } finally {

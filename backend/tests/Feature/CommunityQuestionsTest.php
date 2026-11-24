@@ -82,6 +82,7 @@ class CommunityQuestionsTest extends TestCase
     public function test_member_can_offer_help_join_the_room_and_requester_is_emailed(): void
     {
         Mail::fake();
+        config(['mail.default' => 'smtp']);
         $asker = $this->member('Sara Asker');
         $helper = $this->member('Omar Helper');
         $question = $this->ask($asker);

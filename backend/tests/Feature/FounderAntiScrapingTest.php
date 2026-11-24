@@ -44,7 +44,7 @@ class FounderAntiScrapingTest extends TestCase
 
     public function test_public_directory_routes_are_throttled(): void
     {
-        foreach (['/api/v1/founders', '/api/v1/founders/example',
+        foreach (['/api/v1/founders', '/api/v1/founders/discover/cards', '/api/v1/founders/example',
             '/api/v1/companies', '/api/v1/companies/example'] as $url) {
             $route = app('router')->getRoutes()->match(\Illuminate\Http\Request::create($url, 'GET'));
             $this->assertContains('throttle:30,1', $route->gatherMiddleware());

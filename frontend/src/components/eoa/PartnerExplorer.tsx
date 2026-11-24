@@ -98,8 +98,8 @@ export function EoaPartnerExplorer({ ar, published, confirmed }: {
           allLabel={ar ? 'عرض جميع الشعارات' : 'View all logos'} />
       </div> : <div role="status" className={styles.noResults}>{ar ? 'لا توجد جهات مطابقة لهذه الفلاتر.' : 'No organizations match these filters.'} <button type="button" onClick={clear}>{ar ? 'إظهار الجميع' : 'Show all'}</button></div>}
       <p className={styles.disclaimer}>{ar
-        ? 'إدراج الجهات هنا للتعريف بمنظومة ريادة الأعمال ولا يعني وجود شراكة أو رعاية أو عضوية مع مسرّعة EO الرياض. تُعرض الشراكات الرسمية بصورة منفصلة بعد اعتمادها.'
-        : 'Directory listings are for ecosystem discovery only; they do not imply a partnership, sponsorship or membership with EO Riyadh Accelerator. Confirmed program partnerships are presented separately.'}</p>
+        ? 'دليل الجهات الريادية منفصل عن قائمة شركاء مسرّعة EO الرياض. الإدراج لا يعني الشراكة أو الرعاية أو العضوية.'
+        : 'The ecosystem directory is separate from the Accelerator’s partners. A listing does not imply partnership, sponsorship or membership.'}</p>
     </section>
 
     <section id="eoa-ecosystem" className={styles.directorySection} aria-labelledby="eoa-directory-title">

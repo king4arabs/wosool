@@ -19,47 +19,51 @@ async function eventually(check) {
 let browser
 try {
   await eventually(() => log.includes('Ready'))
-  browser = await chromium.launch()
+  browser = await chromium.launch({ executablePath: process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH || undefined })
   for (const locale of ['ar', 'en']) for (const width of [390, 1366]) {
     const context = await browser.newContext({ viewport: { width, height: 900 }, reducedMotion: 'reduce' })
     await context.addInitScript(value => localStorage.setItem('wosool-locale', value), locale)
     const page = await context.newPage()
     const errors = []
-    const requestedPages = []
+    const starts = []
+    let outage = false
     page.on('pageerror', error => errors.push(error.message))
     await context.route('**/*', route => {
       const url = new URL(route.request().url())
       if (url.origin !== origin) return route.abort()
       if (!url.pathname.startsWith('/api/')) return route.continue()
-      if (url.pathname === '/api/v1/founders') {
-        assert.equal(url.searchParams.get('per_page'), '100')
-        assert.equal(url.searchParams.get('community'), '1', 'Keep editorial imports out of the community collection')
-        const index = Number(url.searchParams.get('page'))
-        requestedPages.push(index)
-        return route.fulfill({ json: { data: [{ id: index, slug: index === 1 ? 'unifonic' : 'live-later', display_name: `Live founder ${index}`, name: `Live founder ${index}`, is_public: true, status: 'active', companies: [] }], meta: { last_page: 2 } } })
+      if (url.pathname === '/api/v1/founders/discover/cards') {
+        starts.push(url.searchParams.get('start'))
+        if (outage) return route.fulfill({ status: 503, json: { message: 'Fixture outage' } })
+        const ar = route.request().headers()['x-locale'] === 'ar'
+        const rows = Array.from({ length: 24 }, (_, i) => ({
+          id: i + 1, slug: 'database-founder-' + i, name: i === 0 ? (ar ? 'مؤسس الاختبار' : 'Fixture Founder') : 'Person ' + i,
+          sector: i < 3 ? (ar ? 'تقنيات السفر' : 'Travel technology') : (ar ? 'التعليم' : 'Education'),
+          country_code: i < 12 ? 'SA' : i < 17 ? 'AE' : i < 20 ? 'EG' : 'US',
+          is_public: true, status: 'active', can_communicate: false, companies: [],
+        }))
+        return route.fulfill({ json: { data: rows } })
       }
       return route.fulfill({ json: { data: [], meta: { last_page: 1, total: 0 } } })
     })
     await page.goto(origin)
-    await eventually(() => page.locator('#community-profiles-title').count())
     await eventually(() => page.evaluate(value => document.documentElement.lang === value, locale))
-    assert.ok(requestedPages.includes(1) && requestedPages.includes(2))
     const spotlight = page.locator('#founder-spotlight')
     const rail = spotlight.locator('[aria-roledescription]')
-    await eventually(async () => await rail.locator('article').count() === 36)
+    await eventually(async () => await rail.locator('article').count() === 24)
     const ids = () => rail.locator('h3 a').evaluateAll(links => links.map(link => link.getAttribute('href')))
     const first = await ids()
-    assert.equal(new Set(first).size, 36)
-    assert.ok(!first.includes('/founders/unifonic'), 'No duplicated live profile in editorial spotlight')
+    assert.equal(new Set(first).size, 24)
+    assert.ok(first.every(href => href.startsWith('/founders/database-founder-')), 'Only the published API fixture supplies cards')
     const shuffle = spotlight.getByRole('button', { name: locale === 'ar' ? 'اعرض مجموعة أخرى من المؤسسين' : 'Show another founder mix', exact: true })
     await shuffle.click()
     await eventually(async () => JSON.stringify(await ids()) !== JSON.stringify(first))
     const shuffled = await ids()
     const search = spotlight.getByRole('searchbox')
-    await search.fill(locale === 'ar' ? 'برايان تشيسكي' : 'Brian Chesky')
+    await search.fill(locale === 'ar' ? 'مؤسس الاختبار' : 'Fixture Founder')
     await eventually(async () => await rail.locator('article').count() === 1)
     await search.fill('')
-    await eventually(async () => await rail.locator('article').count() === 36)
+    await eventually(async () => await rail.locator('article').count() === 24)
     assert.deepEqual(await ids(), shuffled, 'Clearing search restores this visit’s order')
     await spotlight.getByRole('button', { name: locale === 'ar' ? 'عرض جميع المؤسسين' : 'View all founders', exact: true }).click()
     const grid = spotlight.locator('section[id]')
@@ -75,15 +79,22 @@ try {
     await page.locator('header select:visible').selectOption(nextLocale)
     await eventually(() => page.evaluate(value => document.documentElement.lang === value, nextLocale))
     if (width < 1024) await page.getByRole('button', { name: nextLocale === 'ar' ? 'إغلاق قائمة التنقل' : 'Close navigation menu', exact: true }).click()
-    await eventually(async () => await sector.inputValue() === '' && await rail.locator('article').count() === 36)
+    await eventually(async () => await sector.inputValue() === '' && await rail.locator('article').count() === 24)
     assert.deepEqual(await ids(), shuffled, 'Locale changes preserve the visit mix while clearing translated sector filters')
     assert.equal(await grid.getByRole('button', { name: nextLocale === 'ar' ? 'الصفحة 1' : 'Page 1', exact: true }).getAttribute('aria-current'), 'page')
     assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1), `${locale} ${width}: no page overflow`)
     assert.deepEqual(errors, [], `${locale} ${width}: no hydration/runtime errors`)
     await page.reload()
-    await eventually(async () => await page.locator('#founder-spotlight [aria-roledescription] article').count() === 36)
-    await eventually(() => page.locator('#community-profiles-title').count())
+    await eventually(async () => await page.locator('#founder-spotlight [aria-roledescription] article').count() === 24)
     assert.notDeepEqual(await ids(), first, 'A new visit gets a fresh selection')
+    assert.notEqual(starts.at(-1), starts[0], 'Reload requests a fresh database rotation')
+    outage = true
+    await page.reload()
+    await spotlight.getByRole('button', { name: nextLocale === 'ar' ? 'إعادة المحاولة' : 'Try again' }).waitFor()
+    assert.deepEqual(await ids(), [], 'No bundled or stale founder survives a discovery failure')
+    outage = false
+    await spotlight.getByRole('button').first().click()
+    await eventually(async () => (await ids()).length === 24)
     await context.close()
     console.log(`Founder discovery passed: ${locale}, ${width}px, pagination, shuffle, search, grid and reload`)
   }

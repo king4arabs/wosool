@@ -12,6 +12,13 @@ class PublicEventListingTest extends TestCase
 {
     use RefreshDatabase;
 
+    protected function setUp(): void
+    {
+        parent::setUp();
+        // Isolate date/order assertions from the public WOW event created by the migration.
+        Event::where('slug', 'eo-riyadh-wow-2026')->delete();
+    }
+
     private function event(string $slug, array $attributes = []): Event
     {
         return Event::create(array_merge([

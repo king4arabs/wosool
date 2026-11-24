@@ -7,7 +7,7 @@
 | Project | 0.6.0 |
 | Frontend package | 0.1.0 (package version; project release is 0.6.0) |
 | Backend | Laravel 13; project release 0.6.0 |
-| API contract | v1 |
+| API contract | v1 · OpenAPI document 1.9.0 |
 
 ## Versioning Policy
 

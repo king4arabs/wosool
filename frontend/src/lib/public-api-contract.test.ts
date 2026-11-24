@@ -60,13 +60,14 @@ test('OpenAPI download exports the same contract and preserves operation identif
   assert.equal(response.status, 200)
   assert.equal(response.headers.get('X-Content-Type-Options'), 'nosniff')
   assert.deepEqual(await response.json(), publicApiSpec)
-  assert.equal(publicApiSpec.info.version, '1.8.0')
+  assert.equal(publicApiSpec.info.version, '1.9.0')
   assert.deepEqual(
     (publicApiSpec.paths['/api/health'].get.responses['200'].content['application/json'].schema as { required: string[] }).required,
     ['status', 'version', 'timestamp', 'revision'],
   )
-  assert.equal(Object.keys(publicApiSpec.paths).length, 9)
+  assert.equal(Object.keys(publicApiSpec.paths).length, 10)
   assert.equal(publicApiSpec.paths['/api/v1/news'].get.operationId, 'listNews')
+  assert.equal(publicApiSpec.paths['/api/v1/founders/discover/cards'].get.operationId, 'discoverFounders')
   const newsParameters = publicApiSpec.paths['/api/v1/news'].get.parameters as { name: string; schema: { maxLength?: number } }[]
   assert.equal(newsParameters.find(parameter => parameter.name === 'search')?.schema.maxLength, 120)
   assert.equal(publicApiSpec.paths['/api/v1/news/{slug}'].get.operationId, 'getNews')
@@ -74,8 +75,8 @@ test('OpenAPI download exports the same contract and preserves operation identif
   assert.equal(Object.keys(publicApiSpec.components.schemas.PublicFounder.properties).length, 37)
   assert.equal(publicApiSpec.paths['/api/v1/founders'].get.operationId, 'listFounders')
   assert.equal(publicApiSpec.paths['/api/v1/founders/{slug}'].get.operationId, 'getFounder')
-  assert.equal(Object.keys(publicApiSpec.components.schemas.PublicCompany.properties).length, 24)
-  assert.equal(Object.keys(publicApiSpec.components.schemas.PublicCompanyListItem.properties).length, 25)
+  assert.equal(Object.keys(publicApiSpec.components.schemas.PublicCompany.properties).length, 25)
+  assert.equal(Object.keys(publicApiSpec.components.schemas.PublicCompanyListItem.properties).length, 26)
   assert.equal(Object.keys(publicApiSpec.components.schemas.PublicCompanyFounder.properties).length, 35)
   assert.equal(publicApiSpec.paths['/api/v1/companies'].get.operationId, 'listCompanies')
   assert.equal(publicApiSpec.paths['/api/v1/companies/{slug}'].get.operationId, 'getCompany')

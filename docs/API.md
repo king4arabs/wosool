@@ -1,6 +1,6 @@
 # API Documentation
 
-Public developer reference: `/api`; downloadable OpenAPI 3.1 contract: `/api/openapi.json` (document version 1.8.0). The contract covers nine read endpoints. News, anonymous founder, standalone company and revenue-qualified startup-directory responses have field schemas and real-response contract tests. Startup records distinguish attributed reported revenue/ARR from financial-statement sources and retain the exact evidence period without implying an audit, program approval or Wosool membership. Company founding years can be integers or four-digit strings, matching existing database serialization; public company founder counts and relationships both exclude hidden profiles. Legacy scorecard log internals remain intentionally untyped. Private/member/admin variants remain outside this download. `/api/ready` checks database/migration readiness and returns 503 when unavailable. See [news test prerequisites](API-NEWS-CONTRACT-2026-10-17.md), [founder scope](API-FOUNDER-CONTRACT-2026-10-19.md), [company scope](API-COMPANY-CONTRACT-2026-10-21.md) and [startup scope](API-STARTUP-CONTRACT-2026-10-22.md).
+Public developer reference: `/api`; downloadable OpenAPI 3.1 contract: `/api/openapi.json` (document version 1.9.0). The contract covers ten read endpoints. News, anonymous founder, standalone company and revenue-qualified startup-directory responses have field schemas and real-response contract tests. Startup records distinguish attributed reported revenue/ARR from financial-statement sources and retain the exact evidence period without implying an audit, program approval or Wosool membership. Company founding years can be integers or four-digit strings, matching existing database serialization; public company founder counts and relationships both exclude hidden profiles. Legacy scorecard log internals remain intentionally untyped. Private/member/admin variants remain outside this download. `/api/ready` checks database/migration readiness and returns 503 when unavailable. See [news test prerequisites](API-NEWS-CONTRACT-2026-10-17.md), [founder scope](API-FOUNDER-CONTRACT-2026-10-19.md), [company scope](API-COMPANY-CONTRACT-2026-10-21.md) and [startup scope](API-STARTUP-CONTRACT-2026-10-22.md).
 
 **EO Accelerator integration, 2026-10-09:** `/api/v1/eoa/*` is the canonical application, review and participant API. The earlier gateway registration/draft/submission/onboarding/review/operations write endpoints return HTTP 410; their data is retained and owned legacy reads remain private and read-only. Ecosystem/editorial/privacy APIs remain available. See [EOA operations](EOA.md) and [integration notes](EOA-INTEGRATION-2026-10-09.md). Authenticated `GET/POST /api/v1/eoa/privacy-requests` provides owned data-rights requests and resolution tracking.
 
@@ -37,6 +37,7 @@ The Wosool API is exposed through the Laravel backend and organized around **pub
 |---|---|---|
 | GET | `/api/health` | Service health check |
 | GET | `/api/v1/founders` | Paginated public founders |
+| GET | `/api/v1/founders/discover/cards?start={uuid}` | At most 24 public founder cards, stable within a visit; no pagination or membership inference |
 | GET | `/api/v1/founders/{slug}` | Single public founder |
 | GET | `/api/v1/companies` | Paginated public companies |
 | GET | `/api/v1/companies/{slug}` | Single company |
@@ -212,7 +213,7 @@ Content-Type: application/json
 
 | Endpoint | Supported parameters |
 |---|---|
-| `/founders` | `search`, `stage`, `sector`, `featured`, `per_page` |
+| `/founders` | `companies[]` (up to 10 exact public company names or slugs), `search`, `stage`, `sector`, `featured`, `per_page` |
 | `/companies` | `search`, `stage`, `sector`, `featured`, `per_page` |
 | `/events` | `period` (`upcoming`, `past`, `today`, `this_week`, `this_month`), `type`, `mode`, `format`, `q`, `category`, `tag`, `per_page` (1–100) |
 | `/programs` | `open` |

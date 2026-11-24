@@ -15,6 +15,7 @@ class EventTimeRegressionTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
+        Event::where('slug', 'eo-riyadh-wow-2026')->delete(); // This test owns its calendar fixtures.
         $this->travelTo(now()->setDate(2026, 10, 11)->setTime(12, 0));
         $this->seed(RoleAndPermissionSeeder::class);
     }

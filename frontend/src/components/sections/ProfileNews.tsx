@@ -2,7 +2,7 @@
 
 import { useMemo } from "react"
 import Link from "next/link"
-import { companyAliases, companyMatches, mergeNews, curatedNews } from "@/lib/news-feed"
+import { companyMatches, mergeNews, curatedNews } from "@/lib/news-feed"
 import { mapNewsItem, type ApiNewsItem } from "@/lib/content-api"
 import { usePublicCollection } from "@/lib/use-public-collection"
 import { useLocale } from "@/lib/locale"
@@ -10,7 +10,7 @@ import { NewsCard } from "./NewsCard"
 
 export function ProfileNews({ companyNames }: { companyNames: string[] }) {
   const { locale } = useLocale()
-  const aliases = companyAliases(companyNames)
+  const aliases = [...new Set(companyNames.filter(Boolean))]
   const primary = aliases.find(Boolean)
   const collection = usePublicCollection<ApiNewsItem>(`/news?companies=${encodeURIComponent(aliases.slice(0, 10).join(","))}`)
   const items = useMemo(() => mergeNews(collection.items.map(mapNewsItem), collection.snapshotAllowed ? curatedNews : []), [collection.items, collection.snapshotAllowed])

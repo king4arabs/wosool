@@ -34,7 +34,7 @@ test("requires the downloadable OpenAPI contract and its documented operations",
   await probeEndpoint(spec, async () => Response.json(contract))
   await assert.rejects(
     () => probeEndpoint(spec, async () => Response.json({ ...contract, info: { version: "1.7.0" } })),
-    /Expected OpenAPI 3\.1\.0 contract 1\.8\.0/,
+    /Expected OpenAPI 3\.1\.0 contract 1\.9\.0/,
   )
   await assert.rejects(
     () => probeEndpoint(spec, async () => Response.json({ ...contract, paths: {} })),

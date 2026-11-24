@@ -10,7 +10,7 @@ const timestamp = { type: ['string', 'null'], format: 'date-time' }
 const day = { type: ['string', 'null'], format: 'date' }
 const ref = (name: string) => ({ $ref: `#/components/schemas/${name}` })
 const nullableRef = (name: string) => ({ anyOf: [ref(name), { type: 'null' }] })
-const object = (properties: Record<string, object>) => ({ type: 'object', properties, required: Object.keys(properties).filter(key => key !== 'community_engagement_score'), additionalProperties: false })
+const object = (properties: Record<string, object>) => ({ type: 'object', properties, required: Object.keys(properties).filter(key => key !== 'community_engagement_score' && key !== 'name_aliases'), additionalProperties: false })
 const strings = { type: 'array', items: text }
 const direction = { type: 'string', enum: ['up', 'down', 'flat'] }
 
@@ -31,6 +31,7 @@ export const publicFounderSchemas = {
   }),
   FounderCompany: {
     ...object({
+      name_aliases: strings,
       id: integer,
       source_urls: ref('FounderStringCollection'),
       source_reviewed_at: day,

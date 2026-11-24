@@ -1,23 +1,4 @@
 import type { NewsItem } from "../types"
-import baseProfiles from "../data/founder-spotlight.json"
-import additionalProfiles from "../data/founder-spotlight-expansion-2026-10-16.json"
-import discoveryProfiles from "../data/founder-spotlight-expansion-2026-10-22.json"
-import countryProfiles from "../data/founder-spotlight-expansion-2026-10-29.json"
-import novemberProfiles from "../data/founder-spotlight-expansion-2026-11-10.json"
-import november12Profiles from "../data/founder-spotlight-expansion-2026-11-12.json"
-import november13Profiles from "../data/founder-spotlight-expansion-2026-11-13.json"
-import november14Profiles from "../data/founder-spotlight-expansion-2026-11-14.json"
-import november15Profiles from "../data/founder-spotlight-expansion-2026-11-15.json"
-import november17Profiles from "../data/founder-spotlight-expansion-2026-11-17.json"
-import november18Profiles from "../data/founder-spotlight-expansion-2026-11-18.json"
-import november19Profiles from "../data/founder-spotlight-expansion-2026-11-19.json"
-import november20Profiles from "../data/founder-spotlight-expansion-2026-11-20.json"
-import november21Profiles from "../data/founder-spotlight-expansion-2026-11-21.json"
-import november22Profiles from "../data/founder-spotlight-expansion-2026-11-22.json"
-import november23Profiles from "../data/founder-spotlight-expansion-2026-11-23.json"
-import november24Profiles from "../data/founder-spotlight-expansion-2026-11-24.json"
-
-const profiles = [...baseProfiles, ...additionalProfiles, ...discoveryProfiles, ...countryProfiles, ...novemberProfiles, ...november12Profiles, ...november13Profiles, ...november14Profiles, ...november15Profiles, ...november17Profiles, ...november18Profiles, ...november19Profiles, ...november20Profiles, ...november21Profiles, ...november22Profiles, ...november23Profiles, ...november24Profiles]
 import curated from "../data/startup-news.json"
 import { dateLocale } from "./date-locale"
 
@@ -48,19 +29,6 @@ function normalize(value: string) {
 export function companyMatches(item: Partial<Pick<NewsItem, "companies" | "tags">>, names: string[]) {
   const keys = names.filter(Boolean).map(normalize)
   return [...(item.companies ?? []), ...(item.tags ?? [])].some(company => keys.includes(normalize(company)))
-}
-
-export function companyAliases(names: string[]) {
-  const aliases = profiles.filter(profile => companyMatches(
-    { companies: names },
-    [profile.company_key, profile.company_name_en, profile.company_name_ar],
-  )).flatMap(profile => [profile.company_key, profile.company_name_en, profile.company_name_ar])
-  return [...new Set([...names, ...aliases].filter(Boolean))]
-}
-
-export function newsFounders(item: NewsItem) {
-  return profiles.filter(profile =>
-    companyMatches(item, [profile.company_key, profile.company_name_en, profile.company_name_ar]))
 }
 
 export function safeNewsUrl(value?: string) {

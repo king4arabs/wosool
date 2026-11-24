@@ -1,5 +1,7 @@
 # Roadmap
 
+**Public founder directory — 24 November 2026.** The homepage, directory, profiles and article links now read moderated database relationships. Next: release the API and its additive lookup index, then the frontend; verify serving revisions, homepage rotation, founder withdrawal and company links before any separately reviewed import. [Release and rollback checklist](docs/PUBLIC-FOUNDER-DIRECTORY.md).
+
 ## Current execution plan — 23 November 2026
 Saudi founder freshness checkpoint: Rewaa's active official site and current investor pages re-verify Mohammed Alqasir as co-founder and CEO and Abdullah Aljadhai as co-founder and COO. The two mirrored profiles now carry the precise bilingual roles, current short biographies and source provenance; the company-reported 23,000-plus merchant count remains activity evidence rather than revenue. The integrity snapshot stays at 426 founders / 229 companies / 152 briefs with zero problems, and only the two verified dates advance, reducing the due queue to 136. Next: complete required CI, then continue the Saudi-first review queue without advancing unverifiable records. Production import and Hostinger release remain separate. [Evidence](docs/research/FOUNDER-REVIEW-2026-11-23.md).
 
