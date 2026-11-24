@@ -6,7 +6,6 @@ import { WowRegistration } from "@/components/events/WowRegistration"
 import { PublicLayout } from "@/components/layout/PublicLayout"
 import { useLocale } from "@/lib/locale"
 
-const rsvp = "https://luma.com/8fccrqkx"
 const map = "https://maps.app.goo.gl/G4XGAB566UbG4Lsn9"
 const agenda = [
  ["2:00–5:00 PM","Welcome reception, networking and golf","استقبال الضيوف والتواصل وأنشطة الجولف"],
@@ -36,7 +35,7 @@ export default function WowEventPage() {
  </div></section>
  <section className="mx-auto max-w-5xl px-5 py-12">
  <WowRegistration />
- <div className="mb-10 mt-10 grid gap-5 sm:grid-cols-2">{[[rsvp,"rsvp",ar?"امسح للتسجيل":"Scan to register"],[map,"location",ar?"امسح للوصول للموقع":"Scan for directions"]].map(([href,id,label])=><a key={id} href={href} className="flex flex-col items-center gap-3 rounded-2xl border border-slate-200 p-5 text-center font-bold"><Image src={`/events/wow-2026/${id}.svg`} width={160} height={160} alt={label}/>{label}</a>)}</div>
+ <div className="mb-10 mt-10 grid gap-5 sm:grid-cols-2">{[["#registration","registration",ar?"سجّل عبر وصول":"Register with Wosool"],[map,"location",ar?"امسح للوصول للموقع":"Scan for directions"]].map(([href,id,label])=><a key={id} href={href} className="flex flex-col items-center gap-3 rounded-2xl border border-slate-200 p-5 text-center font-bold">{id==="location"?<Image src="/events/wow-2026/location.svg" width={160} height={160} alt={label}/>:<span className="flex min-h-40 items-center text-xl text-indigo-800">{ar?"ابدأ التسجيل":"Start registration"}</span>}{label}</a>)}</div>
  <h2 className="text-2xl font-bold">{ar?"برنامج الفعالية":"Event agenda"}</h2>
  <div className="mt-5 divide-y rounded-2xl border border-slate-200">{agenda.map(([time,en,arabic])=><div key={time} className="grid gap-2 p-4 sm:grid-cols-[180px_1fr]"><span dir="ltr" className="font-bold text-indigo-800">{time}</span><span>{ar?arabic:en}</span></div>)}</div>
  <p className="mt-3 text-sm text-slate-600">{ar?"استراحات الصلاة حسب التوقيت المحلي.":"Prayer breaks follow local prayer times."}</p>
