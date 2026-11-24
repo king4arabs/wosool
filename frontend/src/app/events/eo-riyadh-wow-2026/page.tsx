@@ -5,6 +5,7 @@ import Image from "next/image"
 import { CalendarDays, CalendarPlus, MessageCircle, Mail, Share2, Briefcase } from "lucide-react"
 import { WowWeather } from "@/components/events/WowWeather"
 import { WowRegistration } from "@/components/events/WowRegistration"
+import { EoaLogo } from "@/components/eoa/Logo"
 import { PublicLayout } from "@/components/layout/PublicLayout"
 import { useLocale } from "@/lib/locale"
 
@@ -24,17 +25,20 @@ export default function WowEventPage() {
  const ar = locale === "ar"
  const action = "inline-flex min-h-12 items-center justify-center rounded-xl bg-white px-6 py-3 font-bold text-indigo-950 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4"
  return <PublicLayout><main dir={ar ? "rtl" : "ltr"} className="bg-slate-50">
- <section className="relative overflow-hidden bg-gradient-to-br from-[#08163d] via-[#202b77] to-[#51218b] px-5 py-16 text-white sm:py-24">
+ <section aria-labelledby="wow-title" className="relative isolate overflow-hidden bg-[#08163d] px-5 py-12 text-white sm:py-16 lg:py-20">
+ <Image src="/events/wow-2026/hero-golf-sunset.jpg" alt="" fill preload unoptimized sizes="100vw" className="-z-20 object-cover object-[65%_center] sm:object-center" />
+ <div aria-hidden="true" className="absolute inset-0 -z-10" style={{background: `linear-gradient(${ar ? "270deg" : "90deg"}, rgba(4,16,44,.92) 0%, rgba(4,16,44,.72) 40%, rgba(4,16,44,.20) 100%), linear-gradient(0deg, rgba(4,16,44,.92), transparent 70%)`}} />
  <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 bottom-0 h-2 bg-gradient-to-r from-cyan-400 via-fuchsia-500 to-yellow-300"/>
  <div className="relative mx-auto max-w-6xl">
- <p className="text-lg font-bold">EO Riyadh · EO Riyadh Accelerator</p>
- <h1 className="mt-6 text-4xl font-extrabold tracking-tight sm:text-6xl">EO Riyadh <span className="text-cyan-300">WOW</span> Event</h1>
+ <EoaLogo inverse priority className="mb-6" />
+ <p className="text-sm font-semibold tracking-wide text-white sm:text-base">EO Riyadh · EO Riyadh Accelerator</p>
+ <h1 id="wow-title" className="mt-3 max-w-3xl text-4xl font-extrabold leading-tight tracking-tight sm:text-6xl">EO Riyadh <span className="text-cyan-300">WOW</span> Event</h1>
  <p className="mt-4 text-xl">Connect. Discover. Inspire. Grow.</p>
  <div className="mt-8 grid gap-4 sm:grid-cols-3">
- {[[ar?"التاريخ":"Date",ar?"الجمعة 11 ديسمبر 2026":"Friday, December 11, 2026"],[ar?"الموقع":"Venue","Golf Club Wadi Safar, Diriyah"],[ar?"الوقت":"Hours","2:00 PM – Midnight"]].map(([label,value])=><div key={label} className="rounded-2xl border border-white/30 p-4"><p className="text-sm text-cyan-200">{label}</p><p className="mt-1 font-bold">{value}</p></div>)}
+ {[[ar?"التاريخ":"Date",ar?"الجمعة 11 ديسمبر 2026":"Friday, December 11, 2026"],[ar?"الموقع":"Venue","Golf Club Wadi Safar, Diriyah"],[ar?"الوقت":"Hours","2:00 PM – Midnight"]].map(([label,value])=><div key={label} className="rounded-2xl border border-white/30 bg-[#06132f]/80 p-4"><p className="text-sm text-cyan-200">{label}</p><p className="mt-1 font-bold">{value}</p></div>)}
  </div>
  <p className="mt-4 font-semibold">{ar?"البرنامج الرسمي: 5:30–8:30 مساءً":"Official program: 5:30–8:30 PM"}</p>
- <div className="mt-7 flex flex-wrap gap-3"><a className={action} href="#registration">{ar?"احجز مكانك":"Reserve your place"}</a><a className={action} href={map}>{ar?"الموقع والاتجاهات":"Location & directions"}</a></div>
+ <div className="mt-7 grid gap-3 sm:flex sm:flex-wrap"><a className={action} href="#registration">{ar?"احجز مكانك":"Reserve your place"}</a><a className={action} href={map}>{ar?"الموقع والاتجاهات":"Location & directions"}</a></div>
  <p className="mt-4 text-sm">{ar?"التسجيل المسبق مطلوب والحضور مشروط بتأكيد اللجنة المنظمة.":"Advance registration is required. Attendance is subject to confirmation by the organizing committee."}</p>
  </div></section>
  <nav aria-label={ar?"أقسام الفعالية":"Event sections"} className="border-b border-slate-200 bg-white"><div className="mx-auto flex max-w-6xl flex-wrap gap-x-6 gap-y-1 px-5 py-2 text-sm font-bold text-indigo-950">{[["agenda",ar?"البرنامج":"Agenda"],["dress",ar?"الزي":"Dress code"],["weather",ar?"الطقس":"Weather"],["actions",ar?"المشاركة":"Share & save"],["registration",ar?"التسجيل":"Register"]].map(([id,label])=><a key={id} href={"#"+id} className="inline-flex min-h-11 items-center hover:underline">{label}</a>)}</div></nav>
@@ -45,7 +49,17 @@ export default function WowEventPage() {
  <div className="mt-5 divide-y rounded-2xl border border-slate-200 bg-white shadow-sm">{agenda.map(([time,en,arabic])=><div key={time} className="grid gap-2 p-4 sm:grid-cols-[150px_1fr]"><span dir="ltr" className="font-bold text-indigo-800">{time}</span><span>{ar?arabic:en}</span></div>)}</div>
  <p className="mt-3 text-sm text-slate-600">{ar?"استراحات الصلاة حسب التوقيت المحلي.":"Prayer breaks follow local prayer times."}</p>
  <h2 id="dress" className="mt-10 scroll-mt-28 text-2xl font-bold">{ar?"الزي المقترح":"Dress code"}</h2><p className="mt-3">{ar?"ملابس عمل أنيقة، أو الثوب السعودي والعباءة، أو ملابس جولف مناسبة للأنشطة الرياضية.":"Business Smart, optional Saudi traditional attire (Thobe and Abaya), or suitable golf attire for golf activities."}</p>
- <div className="mt-4 grid gap-3 sm:grid-cols-2">{[[ar?"الرجال":"Men",ar?"ثوب سعودي · ملابس عمل أنيقة · بولو وبنطال جولف طويل":"Saudi Thobe · Business Smart · Polo and long golf trousers"],[ar?"النساء":"Women",ar?"عباءة أنيقة · ملابس عمل أنيقة · بولو وبنطال جولف طويل":"Elegant Abaya · Business Smart · Polo and full-length golf trousers"]].map(([title,description])=><div key={title} className="rounded-2xl border border-slate-200 bg-white p-4"><h3 className="font-bold text-indigo-950">{title}</h3><p className="mt-2 text-sm leading-7 text-slate-600">{description}</p></div>)}</div>
+ <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
+ {[
+  {title: ar?"الرجال":"Men", items:[{label:ar?"ملابس عمل":"Business Smart",x:9.26},{label:ar?"ثوب سعودي":"Saudi Thobe",x:23.94},{label:ar?"ملابس جولف":"Golf Attire",x:38.82}]},
+  {title: ar?"النساء":"Women", items:[{label:ar?"ملابس عمل":"Business Smart",x:62.07},{label:ar?"عباءة أنيقة":"Elegant Abaya",x:77.71},{label:ar?"ملابس جولف":"Golf Attire",x:93.01}]}
+ ].map(group=><div key={group.title} className="min-w-0 rounded-2xl border border-slate-200 bg-white p-3 sm:p-4"><h3 className="font-bold text-indigo-950">{group.title}</h3>
+ <div className="mt-3 grid grid-cols-3 gap-1.5 sm:gap-2">{group.items.map(item=><figure key={item.label} className="m-0 min-w-0 text-center">
+ <div aria-hidden="true" className="mx-auto aspect-[19/34] w-full max-w-[108px] rounded-lg bg-[#091b49] bg-no-repeat" style={{backgroundImage:"url('/events/wow-2026/dress-avatars.jpg')",backgroundSize:"867.37% 272.94%",backgroundPosition:`${item.x}% 61.22%`}} />
+ <figcaption className="mt-2 break-words text-[11px] font-semibold leading-tight text-slate-800 sm:text-xs">{item.label}</figcaption>
+ </figure>)}</div></div>)}
+ </div>
+ <p className="mt-3 text-sm text-slate-600">{ar?"للجولف: قميص بولو وبنطال طويل وحذاء مناسب للملعب للرجال والنساء.":"Golf activities: polo shirt, full-length golf trousers and course-appropriate footwear for men and women."}</p>
  <div id="weather" className="scroll-mt-28"><WowWeather /></div>
  </div><aside className="min-w-0 lg:sticky lg:top-24"><WowRegistration /></aside></div>
  <section id="actions" className="mt-10 scroll-mt-28 rounded-3xl bg-[#101e50] p-5 text-white sm:p-8"><h2 className="text-2xl font-bold">{ar?"احفظ وشارك الفعالية":"Save & share the event"}</h2><p className="mt-2 text-sm text-slate-200">{ar?"إضافة التقويم لا تعني تأكيد الحضور.":"Saving to your calendar does not confirm attendance."}</p><div className="mt-5 flex min-w-0 gap-2 overflow-x-auto overscroll-x-contain pb-2 sm:gap-3" aria-label={ar?"اختصارات حفظ ومشاركة الفعالية":"Event save and share shortcuts"}>{[

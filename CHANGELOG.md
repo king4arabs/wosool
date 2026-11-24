@@ -1,3 +1,10 @@
+## EO Riyadh WOW event artwork — 2026-11-24
+
+- Added the user-supplied golf sunset hero and the generated full-body dress-code guide as locally served JPEG assets. The hero uses an accessible decorative image, contrast overlays and the existing official EO Riyadh logo component.
+- Six compact dress-code avatars use bounded crop regions from the shared artwork and separate accessible bilingual captions. Golf attire includes full-length trousers for both men and women.
+- Existing authentication, Luma handoff, RSVP, calendar and weather logic is unchanged. No dependency, database, hosting or lockfile changes.
+- Verification: asset and source checks are performed before release; CI and production deployment are separately tracked. See [event artwork documentation](docs/WOW-EVENT-ARTWORK.md).
+
 ## Syarah founder roles and Arabic identity re-verified — 2026-11-24
 
 - Re-verified Salah Sharef and Fayez Alanazi against Syarah's active official site and RAED Ventures' current English and Arabic portfolio pages. Salah remains co-founder and CEO; Fayez remains co-founder.

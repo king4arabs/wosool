@@ -21,7 +21,7 @@ Wosool is an Arabic/English founders platform connecting Saudi Arabia, the GCC, 
 | --- | --- |
 | Founder and company directory | [Founders](https://wosool.org/founders) · [Identity review](docs/MEMBER-IDENTITY-REVIEW.md) |
 | Community account | [Registration](https://wosool.org/register) · [Registration QA](docs/REGISTRATION-QA.md) |
-| Events | [Calendar and events](https://wosool.org/events) · [EO Riyadh WOW 2026](https://wosool.org/events/eo-riyadh-wow-2026) |
+| Events | [Calendar and events](https://wosool.org/events) · [EO Riyadh WOW 2026](https://wosool.org/events/eo-riyadh-wow-2026) · [Event artwork and release checks](docs/WOW-EVENT-ARTWORK.md) |
 | Accelerator | [EOA](https://wosool.org/eoa) · [Operations](docs/EOA.md) |
 | News and ecosystem | [News](https://wosool.org/news) · [Partners](https://wosool.org/partners) |
 | Administration | [Operations guide](docs/ADMIN-OPERATIONS.md) · `/admin/services` |
