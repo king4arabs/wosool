@@ -1,3 +1,8 @@
+## EO Riyadh WOW public experience refinement — 2026-11-24
+
+- Streamlined Arabic and English event copy, compact hero and venue card, accessible horizontal submenu, agenda, registration and weather cards, preserving required approval, consent and historical climate information.
+- Removed duplicate registration card and nested main landmark; retained the existing hero artwork, avatars, partners, QR and ticket workflow. See [event artwork and QA](docs/WOW-EVENT-ARTWORK.md). No API, dependency or hosting configuration changes. CI and live release verification pending.
+
 ## EO Riyadh WOW event artwork — 2026-11-24
 
 - Added the user-supplied golf sunset hero and the generated full-body dress-code guide as locally served JPEG assets. The hero uses an accessible decorative image, contrast overlays and the existing official EO Riyadh logo component.

@@ -17,7 +17,7 @@ export function EventPartners({slug,showEmpty=false}:{slug:string;showEmpty?:boo
   return()=>{active=false;controller.abort()}
  },[slug])
  if(!partners.length&&!showEmpty)return null
- return <section id="partners" aria-labelledby="event-partners-title" className="mt-10 scroll-mt-28 border-t border-slate-200 bg-white px-4 py-8 sm:px-6">
+ return <section id="partners" aria-labelledby="event-partners-title" className="mt-4 scroll-mt-28 border-t border-slate-200 bg-white px-4 py-8 sm:px-6 sm:py-10">
  <div className="mx-auto max-w-6xl">
  <h2 id="event-partners-title" className="text-center text-2xl font-extrabold text-indigo-950">{ar?"شركاؤنا":"Our Partners"}</h2>
  {partners.length?<div className="mt-5 flex min-w-0 items-center gap-2">
@@ -28,7 +28,7 @@ export function EventPartners({slug,showEmpty=false}:{slug:string;showEmpty?:boo
  </div>)}
  </div>
  <button type="button" aria-label={ar?"التالي":"Next logos"} onClick={()=>rail.current?.scrollBy({left:240,behavior:window.matchMedia("(prefers-reduced-motion: reduce)").matches?"instant":"smooth"})} className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-slate-200"><ChevronRight aria-hidden="true"/></button>
- </div>:<p className="mt-4 text-center text-sm text-slate-600">{ar?"سيُعلن عن شركاء الفعالية قريباً.":"Event partners will be announced soon."}</p>}
+ </div>:<div className="mt-4 text-center"><a href="mailto:info@wosool.org" className="inline-flex min-h-11 items-center rounded-xl border border-indigo-200 px-4 py-2 text-sm font-semibold text-indigo-900">{ar?"استفسارات الشراكة":"Partnership enquiries"}</a></div>}
  </div></section>
 }
 function PartnerLogo({partner}:{partner:Partner}){
