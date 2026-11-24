@@ -2,6 +2,7 @@
 
 import Link from "next/link"
 import Image from "next/image"
+import { CalendarDays, CalendarPlus, MessageCircle, Mail, Share2, Linkedin } from "lucide-react"
 import { WowWeather } from "@/components/events/WowWeather"
 import { WowRegistration } from "@/components/events/WowRegistration"
 import { PublicLayout } from "@/components/layout/PublicLayout"
@@ -47,14 +48,14 @@ export default function WowEventPage() {
  <div className="mt-4 grid gap-3 sm:grid-cols-2">{[[ar?"الرجال":"Men",ar?"ثوب سعودي · ملابس عمل أنيقة · بولو وبنطال جولف طويل":"Saudi Thobe · Business Smart · Polo and long golf trousers"],[ar?"النساء":"Women",ar?"عباءة أنيقة · ملابس عمل أنيقة · بولو وبنطال جولف طويل":"Elegant Abaya · Business Smart · Polo and full-length golf trousers"]].map(([title,description])=><div key={title} className="rounded-2xl border border-slate-200 bg-white p-4"><h3 className="font-bold text-indigo-950">{title}</h3><p className="mt-2 text-sm leading-7 text-slate-600">{description}</p></div>)}</div>
  <div id="weather" className="scroll-mt-28"><WowWeather /></div>
  </div><aside className="min-w-0 lg:sticky lg:top-24"><WowRegistration /></aside></div>
- <section id="actions" className="mt-10 scroll-mt-28 rounded-3xl bg-[#101e50] p-5 text-white sm:p-8"><h2 className="text-2xl font-bold">{ar?"احفظ وشارك الفعالية":"Save & share the event"}</h2><p className="mt-2 text-sm text-slate-200">{ar?"إضافة التقويم لا تعني تأكيد الحضور.":"Saving to your calendar does not confirm attendance."}</p><div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">{[
- ["Google Calendar","https://calendar.google.com/calendar/render?action=TEMPLATE&text=EO%20Riyadh%20WOW%20Event&dates=20261211T110000Z%2F20261211T210000Z&location=Golf%20Club%20Wadi%20Safar%2C%20Diriyah&details="+encodeURIComponent(eventUrl)],
- [ar?"تقويم Apple / Outlook":"Apple / Outlook calendar","/events/wow-2026/event.ics"],
- ["WhatsApp","https://wa.me/?text="+encodeURIComponent("EO Riyadh WOW Event | "+eventUrl)],
- ["LinkedIn","https://www.linkedin.com/sharing/share-offsite/?url="+encodeURIComponent(eventUrl)],
- ["X","https://twitter.com/intent/tweet?text="+encodeURIComponent("EO Riyadh WOW Event")+"&url="+encodeURIComponent(eventUrl)],
- [ar?"مشاركة بالبريد":"Email invitation","mailto:?subject="+encodeURIComponent("EO Riyadh WOW Event")+"&body="+encodeURIComponent("Friday, December 11, 2026 | Golf Club Wadi Safar, Diriyah\n"+eventUrl)]
- ].map(([label,href])=><a key={label} className="flex min-h-12 items-center justify-center rounded-xl border border-white/30 bg-white/10 px-4 py-3 text-center text-sm font-bold hover:bg-white/20 focus-visible:outline focus-visible:outline-2" href={href}>{label}</a>)}</div></section>
+ <section id="actions" className="mt-10 scroll-mt-28 rounded-3xl bg-[#101e50] p-5 text-white sm:p-8"><h2 className="text-2xl font-bold">{ar?"احفظ وشارك الفعالية":"Save & share the event"}</h2><p className="mt-2 text-sm text-slate-200">{ar?"إضافة التقويم لا تعني تأكيد الحضور.":"Saving to your calendar does not confirm attendance."}</p><div className="mt-5 flex min-w-0 gap-2 overflow-x-auto overscroll-x-contain pb-2 sm:gap-3" aria-label={ar?"اختصارات حفظ ومشاركة الفعالية":"Event save and share shortcuts"}>{[
+ {label:"Google",description:"Google Calendar",Icon:CalendarPlus,href:"https://calendar.google.com/calendar/render?action=TEMPLATE&text=EO%20Riyadh%20WOW%20Event&dates=20261211T110000Z%2F20261211T210000Z&location=Golf%20Club%20Wadi%20Safar%2C%20Diriyah&details="+encodeURIComponent(eventUrl)},
+ {label:ar?"التقويم":"Calendar",description:ar?"تقويم Apple أو Outlook":"Apple or Outlook calendar",Icon:CalendarDays,href:"/events/wow-2026/event.ics"},
+ {label:"WhatsApp",description:ar?"مشاركة عبر واتساب":"Share on WhatsApp",Icon:MessageCircle,href:"https://wa.me/?text="+encodeURIComponent("EO Riyadh WOW Event | "+eventUrl)},
+ {label:"LinkedIn",description:ar?"مشاركة عبر LinkedIn":"Share on LinkedIn",Icon:Linkedin,href:"https://www.linkedin.com/sharing/share-offsite/?url="+encodeURIComponent(eventUrl)},
+ {label:"X",description:ar?"مشاركة عبر X":"Share on X",Icon:Share2,href:"https://twitter.com/intent/tweet?text="+encodeURIComponent("EO Riyadh WOW Event")+"&url="+encodeURIComponent(eventUrl)},
+ {label:ar?"البريد":"Email",description:ar?"مشاركة الدعوة بالبريد الإلكتروني":"Share invitation by email",Icon:Mail,href:"mailto:?subject="+encodeURIComponent("EO Riyadh WOW Event")+"&body="+encodeURIComponent("Friday, December 11, 2026 | Golf Club Wadi Safar, Diriyah\\n"+eventUrl)}
+ ].map(({label,description,Icon,href})=><a key={label} aria-label={description} title={description} className="flex min-h-16 min-w-[76px] flex-1 shrink-0 flex-col items-center justify-center gap-1 rounded-xl border border-white/30 bg-white/10 px-2 py-2 text-center text-xs font-semibold text-white transition-colors hover:bg-white/20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-3px] focus-visible:outline-cyan-300 sm:min-w-[90px]" href={href}><Icon size={21} aria-hidden="true"/><span>{label}</span></a>)}</div></section>
  <h2 className="mt-10 text-2xl font-bold">{ar?"اكتشف مجتمعنا":"Discover our community"}</h2>
  <div className="mt-4 flex flex-wrap gap-4"><Link className="font-bold text-indigo-700 underline" href="/register">{ar?"التسجيل في وصول":"Join Wosool"}</Link><Link className="font-bold text-indigo-700 underline" href="/eoa/account">{ar?"حساب مسرّعة EO":"EO Accelerator account"}</Link><a className="font-bold text-indigo-700 underline" href="https://eonetwork.org/chapter/riyadh">EO Riyadh</a></div>
  <p className="mt-5"><a href="mailto:info@wosool.org">info@wosool.org</a></p>
