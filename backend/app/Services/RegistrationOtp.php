@@ -21,7 +21,7 @@ final class RegistrationOtp
             $code = str_pad((string) random_int(0, 999999), 6, '0', STR_PAD_LEFT);
             DB::table('registration_email_otps')->updateOrInsert(['user_id' => $user->id], [
                 'email' => $user->email, 'code_hash' => $this->hash($user, $code), 'attempts' => 0,
-                'sent_at' => now(), 'expires_at' => now()->addMinutes(10), 'consumed_at' => null,
+                'sent_at' => now(), 'expires_at' => now()->addMinutes(RegistrationOtpMail::EXPIRES_MINUTES), 'consumed_at' => null,
             ]);
             try { Mail::to($user->email)->send(new RegistrationOtpMail($code, $this->isEmailChange($user))); }
             catch (\Throwable) { abort(503, __('messages.registration.send_failed')); }

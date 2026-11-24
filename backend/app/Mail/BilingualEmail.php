@@ -7,7 +7,8 @@ use Illuminate\Notifications\Messages\MailMessage;
 /**
  * Builds the data for resources/views/mail/bilingual.blade.php so every Wosool email
  * shares one layout: Arabic block (RTL) first, English block (LTR) second, one action,
- * optional activation code and optional detail rows.
+ * optional code (labelled "Activation code" unless $codeLabel gives ['ar' => …, 'en' => …])
+ * and optional detail rows.
  *
  * $ar / $en: ['title' => string, 'greeting' => ?string, 'lines' => string[], 'after' => string[]]
  */
@@ -21,6 +22,7 @@ final class BilingualEmail
         ?array $action = null,
         ?string $code = null,
         array $details = [],
+        ?array $codeLabel = null,
     ): array {
         $normalize = fn (array $copy): array => [
             'title' => (string) $copy['title'],
@@ -33,6 +35,10 @@ final class BilingualEmail
             'content' => ['ar' => $normalize($ar), 'en' => $normalize($en)],
             'action' => $action,
             'code' => $code,
+            'codeLabel' => [
+                'ar' => (string) ($codeLabel['ar'] ?? 'رمز التفعيل'),
+                'en' => (string) ($codeLabel['en'] ?? 'Activation code'),
+            ],
             'details' => array_values(array_filter($details, fn ($row) => filled($row['value'] ?? null))),
         ];
     }

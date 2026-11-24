@@ -307,6 +307,11 @@ a { color: #3B52D4; }
 .button-primary, .button-blue { background-color: #3B52D4; border-bottom: 8px solid #3B52D4; border-left: 22px solid #3B52D4; border-right: 22px solid #3B52D4; border-top: 8px solid #3B52D4; border-radius: 10px; font-weight: 700; font-size: 15px; }
 .lang-ar p, .lang-ar h1 { font-family: 'Cairo', 'Segoe UI', Tahoma, Arial, sans-serif; }
 .lang-ar p { font-size: 16px; line-height: 1.9; }
+/* `.lang-ar p` outranks the single-class rules below, so restate the smaller notes and the code box for Arabic. */
+.lang-ar p.note { font-size: 14px; line-height: 1.8; }
+.lang-ar p.fallback { font-size: 13px; line-height: 1.7; }
+.lang-ar p.code-label { font-size: 13px; letter-spacing: 0; }
+.lang-ar p.code { font-family: 'SFMono-Regular', Consolas, monospace; font-size: 26px; line-height: 1.4; }
 .lang-divider { border: 0; border-top: 1px solid #E4E7F0; margin: 28px 0; }
 .note { color: #6B7280; font-size: 13px; line-height: 1.7; }
 .fallback { color: #8A90A2; font-size: 12px; line-height: 1.6; margin-top: 18px; }
