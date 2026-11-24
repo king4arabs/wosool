@@ -80,7 +80,7 @@ Route::prefix('v1')->group(function () {
     Route::post('/founder-activation/preview', [\App\Http\Controllers\Api\FounderActivationController::class, 'preview'])->middleware('throttle:15,1');
     Route::post('/founder-activation/activate', [\App\Http\Controllers\Api\FounderActivationController::class, 'activate'])->middleware('throttle:5,1');
 
-    Route::middleware(['auth:sanctum', 'verified', 'throttle:10,1'])->group(function () {
+    Route::middleware(['auth:sanctum', 'throttle:10,1'])->group(function () {
         Route::get('/wow-registration', [\App\Http\Controllers\Api\WowRegistrationController::class, 'show']);
         Route::post('/wow-registration', [\App\Http\Controllers\Api\WowRegistrationController::class, 'store']);
     });
