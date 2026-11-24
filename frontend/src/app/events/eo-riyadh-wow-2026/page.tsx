@@ -2,6 +2,7 @@
 
 import Link from "next/link"
 import Image from "next/image"
+import { WowRegistration } from "@/components/events/WowRegistration"
 import { PublicLayout } from "@/components/layout/PublicLayout"
 import { useLocale } from "@/lib/locale"
 
@@ -30,11 +31,12 @@ export default function WowEventPage() {
  {[[ar?"التاريخ":"Date",ar?"الجمعة 11 ديسمبر 2026":"Friday, December 11, 2026"],[ar?"الموقع":"Venue","Golf Club Wadi Safar, Diriyah"],[ar?"الوقت":"Hours","2:00 PM – Midnight"]].map(([label,value])=><div key={label} className="rounded-2xl border border-white/30 p-4"><p className="text-sm text-cyan-200">{label}</p><p className="mt-1 font-bold">{value}</p></div>)}
  </div>
  <p className="mt-4 font-semibold">{ar?"البرنامج الرسمي: 5:30–8:30 مساءً":"Official program: 5:30–8:30 PM"}</p>
- <div className="mt-7 flex flex-wrap gap-3"><a className={action} href={rsvp}>{ar?"احجز مكانك":"Reserve your place"}</a><a className={action} href={map}>{ar?"الموقع والاتجاهات":"Location & directions"}</a></div>
+ <div className="mt-7 flex flex-wrap gap-3"><a className={action} href="#registration">{ar?"احجز مكانك":"Reserve your place"}</a><a className={action} href={map}>{ar?"الموقع والاتجاهات":"Location & directions"}</a></div>
  <p className="mt-4 text-sm">{ar?"التسجيل المسبق مطلوب والحضور مشروط بتأكيد اللجنة المنظمة.":"Advance registration is required. Attendance is subject to confirmation by the organizing committee."}</p>
  </div></section>
  <section className="mx-auto max-w-5xl px-5 py-12">
- <div className="mb-10 grid gap-5 sm:grid-cols-2">{[[rsvp,"rsvp",ar?"امسح للتسجيل":"Scan to register"],[map,"location",ar?"امسح للوصول للموقع":"Scan for directions"]].map(([href,id,label])=><a key={id} href={href} className="flex flex-col items-center gap-3 rounded-2xl border border-slate-200 p-5 text-center font-bold"><Image src={`/events/wow-2026/${id}.svg`} width={160} height={160} alt={label}/>{label}</a>)}</div>
+ <WowRegistration />
+ <div className="mb-10 mt-10 grid gap-5 sm:grid-cols-2">{[[rsvp,"rsvp",ar?"امسح للتسجيل":"Scan to register"],[map,"location",ar?"امسح للوصول للموقع":"Scan for directions"]].map(([href,id,label])=><a key={id} href={href} className="flex flex-col items-center gap-3 rounded-2xl border border-slate-200 p-5 text-center font-bold"><Image src={`/events/wow-2026/${id}.svg`} width={160} height={160} alt={label}/>{label}</a>)}</div>
  <h2 className="text-2xl font-bold">{ar?"برنامج الفعالية":"Event agenda"}</h2>
  <div className="mt-5 divide-y rounded-2xl border border-slate-200">{agenda.map(([time,en,arabic])=><div key={time} className="grid gap-2 p-4 sm:grid-cols-[180px_1fr]"><span dir="ltr" className="font-bold text-indigo-800">{time}</span><span>{ar?arabic:en}</span></div>)}</div>
  <p className="mt-3 text-sm text-slate-600">{ar?"استراحات الصلاة حسب التوقيت المحلي.":"Prayer breaks follow local prayer times."}</p>
