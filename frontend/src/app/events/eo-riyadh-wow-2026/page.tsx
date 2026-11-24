@@ -3,6 +3,7 @@
 import Link from "next/link"
 import Image from "next/image"
 import { CalendarDays, CalendarPlus, MessageCircle, Mail, Share2, Briefcase } from "lucide-react"
+import { EventPartners } from "@/components/events/EventPartners"
 import { WowWeather } from "@/components/events/WowWeather"
 import { WowRegistration } from "@/components/events/WowRegistration"
 import { EoaLogo } from "@/components/eoa/Logo"
@@ -26,10 +27,10 @@ export default function WowEventPage() {
  const action = "inline-flex min-h-12 items-center justify-center rounded-xl bg-white px-6 py-3 font-bold text-indigo-950 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4"
  return <PublicLayout><main dir={ar ? "rtl" : "ltr"} className="bg-slate-50">
  <section aria-labelledby="wow-title" className="relative isolate overflow-hidden bg-[#08163d] px-5 py-12 text-white sm:py-16 lg:py-20">
- <Image src="/events/wow-2026/hero-golf-sunset.jpg" alt="" fill preload unoptimized sizes="100vw" className="-z-20 object-cover object-[65%_center] sm:object-center" />
- <div aria-hidden="true" className="absolute inset-0 -z-10" style={{background: `linear-gradient(${ar ? "270deg" : "90deg"}, rgba(4,16,44,.92) 0%, rgba(4,16,44,.72) 40%, rgba(4,16,44,.20) 100%), linear-gradient(0deg, rgba(4,16,44,.92), transparent 70%)`}} />
- <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 bottom-0 h-2 bg-gradient-to-r from-cyan-400 via-fuchsia-500 to-yellow-300"/>
- <div className="relative mx-auto max-w-6xl">
+ <Image src="/events/wow-2026/hero-golf-sunset.jpg" alt="" fill preload unoptimized sizes="100vw" className="z-0 object-cover object-[65%_center] sm:object-center" />
+ <div aria-hidden="true" className="absolute inset-0 z-10 pointer-events-none" style={{background: `linear-gradient(${ar ? "270deg" : "90deg"}, rgba(4,16,44,.92) 0%, rgba(4,16,44,.72) 40%, rgba(4,16,44,.20) 100%), linear-gradient(0deg, rgba(4,16,44,.92), transparent 70%)`}} />
+ <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 bottom-0 z-20 h-2 bg-gradient-to-r from-cyan-400 via-fuchsia-500 to-yellow-300"/>
+ <div className="relative z-20 mx-auto max-w-6xl">
  <EoaLogo inverse priority className="mb-6" />
  <p className="text-sm font-semibold tracking-wide text-white sm:text-base">EO Riyadh · EO Riyadh Accelerator</p>
  <h1 id="wow-title" className="mt-3 max-w-3xl text-4xl font-extrabold leading-tight tracking-tight sm:text-6xl">EO Riyadh <span className="text-cyan-300">WOW</span> Event</h1>
@@ -41,7 +42,7 @@ export default function WowEventPage() {
  <div className="mt-7 grid gap-3 sm:flex sm:flex-wrap"><a className={action} href="#registration">{ar?"احجز مكانك":"Reserve your place"}</a><a className={action} href={map}>{ar?"الموقع والاتجاهات":"Location & directions"}</a></div>
  <p className="mt-4 text-sm">{ar?"التسجيل المسبق مطلوب والحضور مشروط بتأكيد اللجنة المنظمة.":"Advance registration is required. Attendance is subject to confirmation by the organizing committee."}</p>
  </div></section>
- <nav aria-label={ar?"أقسام الفعالية":"Event sections"} className="border-b border-slate-200 bg-white"><div className="mx-auto flex max-w-6xl flex-wrap gap-x-6 gap-y-1 px-5 py-2 text-sm font-bold text-indigo-950">{[["agenda",ar?"البرنامج":"Agenda"],["dress",ar?"الزي":"Dress code"],["weather",ar?"الطقس":"Weather"],["actions",ar?"المشاركة":"Share & save"],["registration",ar?"التسجيل":"Register"]].map(([id,label])=><a key={id} href={"#"+id} className="inline-flex min-h-11 items-center hover:underline">{label}</a>)}</div></nav>
+ <nav aria-label={ar?"أقسام الفعالية":"Event sections"} className="border-b border-slate-200 bg-white"><div className="mx-auto flex max-w-6xl flex-wrap gap-x-6 gap-y-1 px-5 py-2 text-sm font-bold text-indigo-950">{[["agenda",ar?"البرنامج":"Agenda"],["dress",ar?"الزي":"Dress code"],["weather",ar?"الطقس":"Weather"],["partners",ar?"الشركاء":"Partners"],["actions",ar?"المشاركة":"Share & save"],["registration",ar?"التسجيل":"Register"]].map(([id,label])=><a key={id} href={"#"+id} className="inline-flex min-h-11 items-center hover:underline">{label}</a>)}</div></nav>
  <section className="mx-auto max-w-6xl px-4 py-8 sm:px-6 sm:py-12">
  <div className="grid items-start gap-8 lg:grid-cols-[minmax(0,1.45fr)_minmax(0,1fr)]"><div className="min-w-0">
  <div className="mb-8 grid gap-5 sm:grid-cols-2">{[["#registration","registration",ar?"سجّل عبر وصول":"Register with Wosool"],[map,"location",ar?"امسح للوصول للموقع":"Scan for directions"]].map(([href,id,label])=><a key={id} href={href} className="flex flex-col items-center gap-3 rounded-2xl border border-slate-200 p-5 text-center font-bold">{id==="location"?<Image src="/events/wow-2026/location.svg" width={160} height={160} alt={label}/>:<span className="flex min-h-40 items-center text-xl text-indigo-800">{ar?"ابدأ التسجيل":"Start registration"}</span>}{label}</a>)}</div>
@@ -73,5 +74,5 @@ export default function WowEventPage() {
  <h2 className="mt-10 text-2xl font-bold">{ar?"اكتشف مجتمعنا":"Discover our community"}</h2>
  <div className="mt-4 flex flex-wrap gap-4"><Link className="font-bold text-indigo-700 underline" href="/register">{ar?"التسجيل في وصول":"Join Wosool"}</Link><Link className="font-bold text-indigo-700 underline" href="/eoa/account">{ar?"حساب مسرّعة EO":"EO Accelerator account"}</Link><a className="font-bold text-indigo-700 underline" href="https://eonetwork.org/chapter/riyadh">EO Riyadh</a></div>
  <p className="mt-5"><a href="mailto:info@wosool.org">info@wosool.org</a></p>
- </section></main></PublicLayout>
+ </section><EventPartners slug="eo-riyadh-wow-2026" showEmpty /></main></PublicLayout>
 }
