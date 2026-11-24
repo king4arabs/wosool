@@ -18,3 +18,7 @@ Read `DEPLOYMENT.md` before deployment changes. Keep these instructions current 
 ## Public interface copy
 
 Keep internal editorial, AI-generation, source-collection and review-process notes out of public UI in both Arabic and English. Use concise product copy instead. Do not render internal review dates or review-due badges on public cards. Preserve useful business facts, source links, image credits, accurate membership/verification state, and functional error or eligibility guidance.
+
+## Documentation and update evidence
+
+Follow [docs/DOCUMENTATION-STANDARD.md](docs/DOCUMENTATION-STANDARD.md) for every material change. Update the changelog and affected guides in the same PR, link detailed evidence from the documentation index, keep the root README concise, and distinguish source changes, CI, production migration/import, deployment and live verification. Update the version register and manifests only when an actual release version changes.
