@@ -167,6 +167,33 @@ test('Jahez founder retains current governance role and financial-statement evid
   assert.ok(!('member' in jahez) && !('user_id' in jahez) && !('is_verified' in jahez))
 })
 
+test('Syarah founders retain current bilingual roles and activity evidence without a revenue claim', () => {
+  const syarah = historicalProfiles
+    .filter(profile => profile.company_key === 'syarah')
+    .sort((left, right) => left.slug.localeCompare(right.slug))
+
+  assert.deepEqual(syarah.map(profile => [profile.slug, profile.role_en, profile.role_ar]), [
+    ['fayez-alanazi', 'Co-founder', 'شريك مؤسس'],
+    ['salah-sharef', 'Co-founder & CEO', 'شريك مؤسس ورئيس تنفيذي'],
+  ])
+
+  for (const profile of syarah) {
+    assert.equal(profile.reviewed_at, '2026-11-24')
+    assert.equal(profile.website, 'https://syarah.com/')
+    assert.ok(profile.source_urls.includes('https://raed.vc/portfolio/syarah/'))
+    assert.ok(profile.source_urls.includes('https://raed.vc/ar/portfolio/%D8%B3%D9%8A%D8%A7%D8%B1%D8%A9/'))
+    assert.ok(profile.traction_source_url)
+    assert.ok(profile.traction_en)
+    assert.ok(profile.source_urls.includes(profile.traction_source_url))
+    assert.match(profile.traction_en, /sales volume, not a revenue amount/)
+    assert.ok(!('member' in profile) && !('user_id' in profile) && !('is_verified' in profile))
+  }
+
+  const salah = syarah.find(profile => profile.slug === 'salah-sharef')!
+  assert.equal(salah.founder_name_ar, 'صلاح الشارف')
+  assert.equal(salah.source_url, 'https://syarah.com/carsguide/en/syarah-series-c-investment/')
+})
+
 test('country founder cards have factual provenance and the latest update adds two profiles per country', () => {
   const countryCounts = new Map<string, number>()
   for (const row of sourceProfiles) countryCounts.set(row.country_code, (countryCounts.get(row.country_code) ?? 0) + 1)

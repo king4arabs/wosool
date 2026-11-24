@@ -1220,11 +1220,11 @@
   {
     "slug": "salah-sharef",
     "founder_name_en": "Salah Sharef",
-    "founder_name_ar": "صلاح شرف",
+    "founder_name_ar": "صلاح الشارف",
     "role_en": "Co-founder & CEO",
     "role_ar": "شريك مؤسس ورئيس تنفيذي",
-    "founder_brief_en": "Co-founded Syarah, developing its online automotive marketplace in Saudi Arabia.",
-    "founder_brief_ar": "شارك في تأسيس سيارة وتطوير سوقها الرقمي لبيع السيارات في السعودية.",
+    "founder_brief_en": "Co-founded Syarah and serves as CEO, leading its online automotive marketplace in Saudi Arabia.",
+    "founder_brief_ar": "شارك في تأسيس سيارة ويتولى منصب الرئيس التنفيذي، ويقود سوقها الرقمي للسيارات في السعودية.",
     "company_name_en": "Syarah",
     "company_name_ar": "سيارة",
     "company_brief_en": "Online car sales with vehicle inspection, reconditioning, financing options and home delivery.",
@@ -1243,11 +1243,12 @@
         "url": "https://www.linkedin.com/in/salah-sharef/"
       }
     ],
-    "source_url": "https://raed.vc/portfolio/syarah/",
-    "reviewed_at": "2026-10-14",
+    "source_url": "https://syarah.com/carsguide/en/syarah-series-c-investment/",
+    "reviewed_at": "2026-11-24",
     "company_key": "syarah",
     "source_urls": [
       "https://raed.vc/portfolio/syarah/",
+      "https://raed.vc/ar/portfolio/%D8%B3%D9%8A%D8%A7%D8%B1%D8%A9/",
       "https://syarah.com/",
       "https://syarah.com/carsguide/en/syarah-series-c-investment/"
     ],
@@ -1284,10 +1285,11 @@
       }
     ],
     "source_url": "https://raed.vc/portfolio/syarah/",
-    "reviewed_at": "2026-10-14",
+    "reviewed_at": "2026-11-24",
     "company_key": "syarah",
     "source_urls": [
       "https://raed.vc/portfolio/syarah/",
+      "https://raed.vc/ar/portfolio/%D8%B3%D9%8A%D8%A7%D8%B1%D8%A9/",
       "https://syarah.com/",
       "https://syarah.com/carsguide/en/syarah-series-c-investment/"
     ],
