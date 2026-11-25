@@ -69,7 +69,7 @@ class WowRegistrationController extends Controller
 
     private function ensureOpen(): void
     {
-        abort_if(now()->gte(\Carbon\Carbon::parse('2026-12-12T00:00:00+03:00')), 410, 'Registration is closed.');
+        abort_if(now()->gte(\Carbon\Carbon::parse('2026-12-11T23:00:00+03:00')), 410, 'Registration is closed.');
     }
 
     private function details(Request $request): array
