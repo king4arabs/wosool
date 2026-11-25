@@ -1,6 +1,7 @@
 import test from "node:test"
 import assert from "node:assert/strict"
-import { relatedNews, curatedNews, mergeNews, companyMatches, companyAliases, newsFounders, safeNewsUrl, newsDate } from "./news-feed"
+import { relatedNews, curatedNews, mergeNews, companyMatches, safeNewsUrl, newsDate } from "./news-feed"
+import { companyAliases, newsFounders } from "./founder-spotlight"
 import { getLocalizedNewsContent } from "./news-content"
 import type { NewsItem } from "../types"
 

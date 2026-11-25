@@ -422,9 +422,9 @@ export const foundersPageCopy: Record<Locale, {
 }> = {
   ar: {
     badge: "دليل المؤسسين",
-    title: "تعرف على مجتمع المؤسسين في شبكة وصول",
-    description: "ملفات المؤسسين وشركاتهم في السعودية والخليج، مع القطاع والمرحلة وما يبحث عنه كل مؤسس.",
-    featuredEyebrow: "أعضاء مختارون",
+    title: "دليل المؤسسين",
+    description: "ابحث عن مؤسس بالاسم أو الشركة أو القطاع.",
+    featuredEyebrow: "ملفات مختارة",
     featuredTitle: "مؤسسون تحت الضوء",
     directoryEyebrow: "الدليل",
     directoryTitle: "جميع المؤسسين",
@@ -442,9 +442,9 @@ export const foundersPageCopy: Record<Locale, {
   },
   en: {
     badge: "Founder Directory",
-    title: "Meet the founder community in the Wosool network",
-    description: "Founders and their companies across Saudi Arabia and the GCC, with each founder's sector, stage and what they are looking for.",
-    featuredEyebrow: "Featured Members",
+    title: "Founder directory",
+    description: "Find a founder by name, company or sector.",
+    featuredEyebrow: "Featured profiles",
     featuredTitle: "Founders in focus",
     directoryEyebrow: "Directory",
     directoryTitle: "All founders",

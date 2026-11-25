@@ -66,7 +66,7 @@ class AdminContactInboxTest extends TestCase
     public function test_team_alert_uses_the_form_label_and_links_to_the_inbox(): void
     {
         Mail::fake();
-        config(['mail.team_address' => 'team@wosool.org']);
+        config(['mail.default' => 'smtp', 'mail.team_address' => 'team@wosool.org']);
         $this->send('office-hours', 'Fundraising questions');
 
         Mail::assertSent(WosoolMail::class, function (WosoolMail $mail) {

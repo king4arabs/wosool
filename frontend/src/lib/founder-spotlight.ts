@@ -16,7 +16,8 @@ import november22Profiles from '../data/founder-spotlight-expansion-2026-11-22.j
 import november23Profiles from '../data/founder-spotlight-expansion-2026-11-23.json'
 import november24Profiles from '../data/founder-spotlight-expansion-2026-11-24.json'
 import november25Profiles from '../data/founder-spotlight-expansion-2026-11-25.json'
-import type { Founder } from '../types'
+import type { Founder, NewsItem } from '../types'
+import { companyMatches } from './news-feed'
 import { isDirectoryRecordVisible } from './directory-geography'
 
 export type FounderSpotlight = Founder & {
@@ -101,4 +102,18 @@ export function getSpotlightApiProfile(slug: string, locale: 'ar' | 'en') {
       is_hiring: false, is_fundraising: false, is_collaborating: false,
       pivot: { role: profile[`role_${locale}`], is_primary: true } }],
   }
+}
+
+// Import/source parity checks only; public pages must read moderated database records.
+export function companyAliases(names: string[]) {
+  const aliases = profiles.filter(profile => companyMatches(
+    { companies: names },
+    [profile.company_key, profile.company_name_en, profile.company_name_ar],
+  )).flatMap(profile => [profile.company_key, profile.company_name_en, profile.company_name_ar])
+  return [...new Set([...names, ...aliases].filter(Boolean))]
+}
+
+export function newsFounders(item: NewsItem) {
+  return profiles.filter(profile =>
+    companyMatches(item, [profile.company_key, profile.company_name_en, profile.company_name_ar]))
 }

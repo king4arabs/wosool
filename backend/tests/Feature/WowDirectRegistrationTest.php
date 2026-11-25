@@ -54,7 +54,10 @@ class WowDirectRegistrationTest extends TestCase
     {
         Queue::fake();
         $this->postJson('/api/v1/auth/wow-register', array_replace($this->signup(), ['phone' => '', 'account_consent' => false]))
-            ->assertUnprocessable()->assertJsonValidationErrors('account_consent');
+            ->assertUnprocessable()
+            ->assertHeader('Cache-Control', 'private, no-store, max-age=0')
+            ->assertHeader('X-Robots-Tag', 'noindex, nofollow')
+            ->assertJsonValidationErrors('account_consent');
         $this->assertDatabaseMissing('users', ['email' => 'wow-guest@example.test']);
         $this->assertDatabaseCount('wow_event_registrations', 0);
         Queue::assertNothingPushed();

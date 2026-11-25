@@ -33,11 +33,12 @@ export function buildProbes(site, api) {
       url: site + "/api/openapi.json",
       kind: "openapi",
       openapiVersion: "3.1.0",
-      apiVersion: "1.8.0",
+      apiVersion: "1.9.0",
       operations: {
         "/api/health": "getHealth",
         "/api/ready": "getReadiness",
         "/api/v1/founders": "listFounders",
+        "/api/v1/founders/discover/cards": "discoverFounders",
         "/api/v1/founders/{slug}": "getFounder",
         "/api/v1/companies": "listCompanies",
         "/api/v1/companies/{slug}": "getCompany",

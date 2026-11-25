@@ -16,6 +16,9 @@ class CompanyResource extends JsonResource
             'source_reviewed_at' => $this->source_reviewed_at?->toDateString(),
             'name' => $localized['name'] ?? $this->name,
             'slug' => $this->slug,
+            'name_aliases' => array_values(array_unique(array_filter([
+                $this->name, $this->slug, data_get($this->translations, 'ar.name'), data_get($this->translations, 'en.name'),
+            ]))),
             'description' => $localized['description'] ?? $this->description,
             'logo_url' => $this->logo_url,
             'website' => $this->website,

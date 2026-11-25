@@ -1,5 +1,9 @@
 # Roadmap
 
+**WOW registration handoff — 25 November 2026.** New event signups now save the unverified account and attendee atomically before returning the fixed Luma RSVP link; OTP and ticket mail are queued separately and cannot confer verification, membership or ticket approval. Next: complete the required CI matrix, deploy the backend before the frontend, verify the durable worker/shared cache and actual inbox delivery, then confirm bilingual browser navigation against the serving revisions. Source changes do not establish deployment or a production record change. [Acceptance checklist](docs/REGISTRATION-QA.md).
+
+**Public founder directory — 24 November 2026.** The homepage, directory, profiles and article links now read moderated database relationships. Next: release the API and its additive lookup index, then the frontend; verify serving revisions, homepage rotation, founder withdrawal and company links before any separately reviewed import. [Release and rollback checklist](docs/PUBLIC-FOUNDER-DIRECTORY.md).
+
 ## Current execution plan — 23 November 2026
 Saudi founder freshness checkpoint: Rewaa's active official site and current investor pages re-verify Mohammed Alqasir as co-founder and CEO and Abdullah Aljadhai as co-founder and COO. The two mirrored profiles now carry the precise bilingual roles, current short biographies and source provenance; the company-reported 23,000-plus merchant count remains activity evidence rather than revenue. The integrity snapshot stays at 426 founders / 229 companies / 152 briefs with zero problems, and only the two verified dates advance, reducing the due queue to 136. Next: complete required CI, then continue the Saudi-first review queue without advancing unverifiable records. Production import and Hostinger release remain separate. [Evidence](docs/research/FOUNDER-REVIEW-2026-11-23.md).
 

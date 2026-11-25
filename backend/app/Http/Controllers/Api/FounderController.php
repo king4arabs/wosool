@@ -6,19 +6,42 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\FounderResource;
 use App\Models\FounderProfile;
 use App\Support\{CommunityEngagement, DirectoryGeography, FounderSearch};
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class FounderController extends Controller
 {
+    private function profiles(): Builder
+    {
+        return CommunityEngagement::withCounts(FounderProfile::query()->publiclyListed())
+            ->with(['user:id,name', 'companies' => fn ($q) => DirectoryGeography::visible($q->getQuery())
+                ->where('is_public', true)->where('status', 'active')]);
+    }
+
+    /** A stable slice for one visit. Two indexed ranges avoid a table-wide random sort. */
+    public function discover(Request $request): JsonResponse
+    {
+        $params = $request->validate(['start' => 'required|uuid']);
+        $limit = 24;
+        $base = $this->profiles()->orderBy('founder_uid');
+        $cards = (clone $base)->where('founder_uid', '>=', $params['start'])->limit($limit)->get();
+        if ($cards->count() < $limit) {
+            $cards = $cards->concat((clone $base)->where('founder_uid', '<', $params['start'])
+                ->limit($limit - $cards->count())->get());
+        }
+
+        return FounderResource::collection($cards)->response()->header('Cache-Control', 'no-store');
+    }
+
     public function index(Request $request): JsonResponse
     {
-        $request->validate(['country' => 'sometimes|string|size:2', 'region' => 'sometimes|in:saudi,gcc,mena,other', 'search' => 'sometimes|string|max:120', 'slug' => 'sometimes|string|max:255']);
-        $query = FounderProfile::with(['user', 'companies' => fn ($q) => DirectoryGeography::visible($q->getQuery())->where('is_public', true)->where('status', 'active'), 'scorecard'])
-            ->where('status', 'active')
-            ->where('is_public', true);
-        DirectoryGeography::founders($query);
-        CommunityEngagement::withCounts($query);
+        $request->validate([
+            'country' => 'sometimes|string|size:2', 'region' => 'sometimes|in:saudi,gcc,mena,other',
+            'search' => 'sometimes|string|max:120', 'slug' => 'sometimes|string|max:255',
+            'companies' => 'sometimes|array|min:1|max:10', 'companies.*' => 'required|string|max:255',
+        ]);
+        $query = $this->profiles();
 
         if ($request->boolean('community')) { $query->whereNotNull('user_id')->where(fn ($q) => $q->whereNull('directory_key')->orWhereNotNull('claimed_at')); }
 
@@ -31,6 +54,13 @@ class FounderController extends Controller
         if ($request->filled('country')) DirectoryGeography::filterCountry($query, strtoupper(trim($request->country)));
         if ($request->filled('region')) DirectoryGeography::filterRegion($query, $request->region);
 
+        if ($request->has('companies')) {
+            $aliases = $request->input('companies');
+            $query->whereHas('companies', fn ($q) => DirectoryGeography::visible($q)->where('is_public', true)
+                ->where('status', 'active')->where(fn ($names) => $names->whereIn('slug', $aliases)
+                    ->orWhereIn('name', $aliases)->orWhereIn('translations->ar->name', $aliases)
+                    ->orWhereIn('translations->en->name', $aliases)));
+        }
         if ($request->has('sector')) {
             $query->where(fn ($q) => $q->where('sector', $request->sector)->orWhere('translations->ar->sector', $request->sector));
         }
@@ -45,6 +75,7 @@ class FounderController extends Controller
         $founders = DirectoryGeography::orderFounders($query)
             ->orderBy('is_featured', 'desc')
             ->orderBy('created_at', 'desc')
+            ->orderBy('id', 'desc')
             ->paginate(max(1, min(24, $request->integer('per_page', 12))))
             ->withQueryString();
 
@@ -53,11 +84,7 @@ class FounderController extends Controller
 
     public function show(string $slug): JsonResponse
     {
-        $founder = CommunityEngagement::withCounts(DirectoryGeography::founders(FounderProfile::query()))
-            ->with(['user', 'companies' => fn ($q) => DirectoryGeography::visible($q->getQuery())->where('is_public', true)->where('status', 'active'), 'scorecard'])
-            ->where('slug', $slug)
-            ->where('status', 'active')
-            ->where('is_public', true)
+        $founder = $this->profiles()->where('slug', $slug)
             ->firstOrFail();
 
         return response()->json([

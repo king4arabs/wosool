@@ -26,7 +26,7 @@ class TransactionalEmailTest extends TestCase
     public function test_contact_message_confirms_to_sender_and_alerts_the_team_with_reply_to(): void
     {
         Mail::fake();
-        config(['mail.team_address' => 'team@wosool.org']);
+        config(['mail.default' => 'smtp', 'mail.team_address' => 'team@wosool.org']);
 
         $this->postJson('/api/v1/contact', $this->contact())->assertCreated();
 
@@ -38,6 +38,7 @@ class TransactionalEmailTest extends TestCase
 
     public function test_mail_outage_does_not_fail_a_saved_submission(): void
     {
+        config(['mail.default' => 'smtp']);
         Mail::shouldReceive('to')->andThrow(new \RuntimeException('SMTP down'));
 
         $this->postJson('/api/v1/contact', $this->contact())->assertCreated();

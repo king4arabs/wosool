@@ -88,6 +88,7 @@ Route::prefix('v1')->group(function () {
 
     // ── Public read endpoints ───────────────────────────────────────
     Route::get('/founders', [FounderController::class, 'index'])->middleware('throttle:30,1');
+    Route::get('/founders/discover/cards', [FounderController::class, 'discover'])->middleware('throttle:30,1');
     Route::get('/founders/{slug}', [FounderController::class, 'show'])->middleware('throttle:30,1');
 
     Route::get('/companies', [CompanyController::class, 'index'])->middleware('throttle:30,1');

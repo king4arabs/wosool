@@ -9,7 +9,6 @@ import { useLocale } from "@/lib/locale"
 import { publicWebsite } from "@/lib/community-display"
 import { type ApiFounder, type ApiCompany, mapCompany, mapFounder } from "@/lib/content-api"
 import { useAuth } from "@/lib/auth"
-import { getSpotlightApiProfile } from "@/lib/founder-spotlight"
 import { isDirectoryRecordVisible } from '@/lib/directory-geography'
 import { getInitials } from "@/lib/utils"
 import { PublicLayout } from "@/components/layout/PublicLayout"
@@ -23,13 +22,17 @@ type PublicCompany = ApiCompany & { founders?: ApiFounder[] }
 export function PublicProfile({ kind }: { kind: "founder" | "company" }) {
   const { slug } = useParams<{ slug: string }>()
   const { locale } = useLocale()
+  return <ProfileDetails key={[kind, slug, locale].join(":")} kind={kind} slug={slug} />
+}
+
+function ProfileDetails({ kind, slug }: { kind: "founder" | "company"; slug: string }) {
+  const { locale } = useLocale()
   const { user } = useAuth()
   const router = useRouter()
   const [shareState, setShareState] = useState<"idle" | "copied" | "manual">("idle")
   const [shareUrl, setShareUrl] = useState("")
   const [connecting, setConnecting] = useState(false)
   const [connectionError, setConnectionError] = useState<string | null>(null)
-  const [snapshot, setSnapshot] = useState(false)
   const ar = locale === "ar"
   const [data, setData] = useState<ApiFounder | PublicCompany | null>(null)
   const [loading, setLoading] = useState(true)
@@ -37,11 +40,9 @@ export function PublicProfile({ kind }: { kind: "founder" | "company" }) {
   const [attempt, setAttempt] = useState(0)
   useEffect(() => {
     const controller = new AbortController()
-    setLoading(true); setError(null); setData(null); setSnapshot(false)
-    api.get<{ data: ApiFounder | PublicCompany }>(`/${kind === "founder" ? "founders" : "companies"}/${encodeURIComponent(slug)}`, { signal: controller.signal, headers: { "X-Locale": locale } }).then(response => { if (!controller.signal.aborted) { if (isDirectoryRecordVisible(response.data)) setData(response.data); else setError(ar ? 'هذا الملف غير متاح للعرض العام.' : 'This profile is not publicly available.') } }).catch(error => {
-      const fallback = kind === 'founder' && (!(error instanceof ApiError) || error.status >= 500) ? getSpotlightApiProfile(slug, locale) : null
-      if (!controller.signal.aborted && fallback) { setData(fallback); setSnapshot(true); return }
-      if (!controller.signal.aborted) setError(error instanceof ApiError && error.status === 404 ? (ar ? "هذا الملف غير متاح للعرض العام." : "This profile is not publicly available.") : error instanceof Error ? error.message : "Unable to load profile")
+    setLoading(true); setError(null); setData(null)
+    api.get<{ data: ApiFounder | PublicCompany }>(`/${kind === "founder" ? "founders" : "companies"}/${encodeURIComponent(slug)}`, { signal: controller.signal, headers: { "X-Locale": locale } }).then(response => { if (!controller.signal.aborted) { if (response.data.slug === slug && response.data.is_public === true && response.data.status === "active" && isDirectoryRecordVisible(response.data)) setData(response.data); else setError(ar ? 'هذا الملف غير متاح للعرض العام.' : 'This profile is not publicly available.') } }).catch(error => {
+      if (!controller.signal.aborted) setError(error instanceof ApiError && error.status === 404 ? (ar ? "هذا الملف غير متاح للعرض العام." : "This profile is not publicly available.") : (ar ? "تعذر تحميل الملف. حاول مرة أخرى." : "This profile could not be loaded. Try again."))
     }).finally(() => { if (!controller.signal.aborted) setLoading(false) })
     return () => controller.abort()
   }, [slug, kind, locale, ar, attempt])
@@ -81,14 +82,14 @@ export function PublicProfile({ kind }: { kind: "founder" | "company" }) {
         <div className="min-w-0 space-y-6">
           <section id="profile-about" className="scroll-mt-24 rounded-3xl border border-slate-200 bg-white p-6 sm:p-8"><h2 className="text-xl font-bold text-slate-950">{ar?'نبذة':'About'}</h2><p className="mt-4 whitespace-pre-wrap text-base leading-8 text-slate-600">{founder?.bio || company?.description || (ar?'لم تُضف نبذة بعد.':'A biography has not been added yet.')}</p>{(() => { const traction = company?.traction || founder?.primaryCompany?.traction; const year = company?.foundedYear || founder?.primaryCompany?.foundedYear; const source = publicWebsite(traction?.sourceUrl); return (traction || year) ? <div className="mt-6 rounded-2xl border border-emerald-200 bg-emerald-50 p-5">{traction && <p className="mt-2 text-sm leading-7 text-slate-800">{traction.text}</p>}{!!year && <p className="mt-2 text-xs font-semibold text-slate-600">{ar?'سنة التأسيس: ':'Founded: '}{year}</p>}{source && <a href={source} target="_blank" rel="noopener noreferrer" className="mt-2 inline-flex min-h-11 items-center text-xs font-bold text-indigo-700 underline">{ar?'عرض المصدر':'View source'}</a>}</div> : null })()}{skills.length > 0 && <div className="mt-7 border-t pt-6"><h3 className="text-sm font-bold text-slate-900">{ar?'الخبرات والمهارات':'Expertise & skills'}</h3><ul className="mt-3 flex flex-wrap gap-2">{skills.map(skill=><li key={skill} className="rounded-full bg-indigo-50 px-3 py-2 text-xs font-semibold text-indigo-700">{skill}</li>)}</ul></div>}</section>
           {founder && (founder.needs.length > 0 || founder.offers.length > 0) && <div className="grid gap-4 sm:grid-cols-2">{[[ar?'أبحث عن':'Looking for',founder.needs],[ar?'يمكنني المساعدة في':'I can help with',founder.offers]].map(([label,items])=>Array.isArray(items) && items.length > 0 && <section key={String(label)} className="rounded-3xl border border-indigo-100 bg-indigo-50 p-6"><h2 className="text-lg font-bold text-indigo-950">{label}</h2><ul className="mt-4 space-y-3 text-sm leading-7 text-indigo-900">{items.map(item=><li key={item} className="flex gap-2"><ArrowUpRight size={17} className="mt-1 shrink-0"/>{item}</li>)}</ul></section>)}</div>}
-          {founder && ((data as ApiFounder).companies?.length ?? 0) > 0 && <section id="profile-companies" className="scroll-mt-24"><h2 className="mb-5 text-xl font-bold">{ar?'الشركات والمشاريع':'Companies & ventures'}</h2><div className="grid gap-5 sm:grid-cols-2">{(data as ApiFounder).companies?.map(item=><CompanyCard key={item.id} company={mapCompany(item)} linkToProfile={!snapshot}/>)}</div></section>}
-          {company && ((data as PublicCompany).founders?.length ?? 0) > 0 && <section className="rounded-3xl border bg-white p-6"><h2 className="text-xl font-bold">{ar?'المؤسسون':'Founders'}</h2><ul className="mt-4 divide-y">{(data as PublicCompany).founders?.filter(isDirectoryRecordVisible).map(item=><li key={item.id}><Link className="flex min-h-14 items-center justify-between gap-3 py-3 font-semibold text-indigo-600" href={`/founders/${encodeURIComponent(item.slug)}`}>{mapFounder(item).name}<ArrowUpRight size={17}/></Link></li>)}</ul></section>}
-          <ProfileNews companyNames={kind === "founder" ? ((data as ApiFounder).companies ?? []).flatMap(item => [item.name, item.slug]) : [company?.name ?? "", company?.slug ?? ""]} />
+          {founder && ((data as ApiFounder).companies?.length ?? 0) > 0 && <section id="profile-companies" className="scroll-mt-24"><h2 className="mb-5 text-xl font-bold">{ar?'الشركات والمشاريع':'Companies & ventures'}</h2><div className="grid gap-5 sm:grid-cols-2">{(data as ApiFounder).companies?.map(item=><CompanyCard key={item.id} company={mapCompany(item)}/>)}</div></section>}
+          {company && ((data as PublicCompany).founders?.length ?? 0) > 0 && <section className="rounded-3xl border bg-white p-6"><h2 className="text-xl font-bold">{ar?'المؤسسون':'Founders'}</h2><ul className="mt-4 divide-y">{(data as PublicCompany).founders?.filter(item => item.is_public === true && item.status === "active" && isDirectoryRecordVisible(item)).map(item=><li key={item.id}><Link className="flex min-h-14 items-center justify-between gap-3 py-3 font-semibold text-indigo-600" href={`/founders/${encodeURIComponent(item.slug)}`}>{mapFounder(item).name}<ArrowUpRight size={17}/></Link></li>)}</ul></section>}
+          <ProfileNews companyNames={kind === "founder" ? ((data as ApiFounder).companies ?? []).flatMap(item => item.name_aliases ?? [item.name, item.slug]) : ((data as ApiCompany).name_aliases ?? [company?.name ?? "", company?.slug ?? ""])} />
         </div>
         <aside id="profile-connect" className="min-w-0 scroll-mt-24 space-y-4 lg:sticky lg:top-24">
           <section className="rounded-3xl border border-slate-200 bg-white p-6"><h2 className="text-lg font-bold">{ar?'ابدأ التواصل':'Make a connection'}</h2>
-            {founder && <>{!snapshot && founder.canCommunicate && <p className="mt-4 inline-flex rounded-full bg-emerald-50 px-3 py-2 text-xs font-bold text-emerald-800">{ar ? 'عضو نشط في وصول' : 'Active Wosool member'}</p>}
-              <p className="mt-4 text-sm leading-7 text-slate-600">{!snapshot && founder.canCommunicate ? ar ? 'ابدأ محادثة خاصة وعرّف المؤسس بهدف تواصلك.' : 'Start a private conversation and share what you hope to achieve together.' : ar ? 'تواصل مع فريق وصول لطلب التعارف.' : 'Contact the Wosool team to request an introduction.'}</p>
+            {founder && <>{founder.canCommunicate && <p className="mt-4 inline-flex rounded-full bg-emerald-50 px-3 py-2 text-xs font-bold text-emerald-800">{ar ? 'عضو نشط في وصول' : 'Active Wosool member'}</p>}
+              <p className="mt-4 text-sm leading-7 text-slate-600">{founder.canCommunicate ? ar ? 'ابدأ محادثة خاصة وعرّف المؤسس بهدف تواصلك.' : 'Start a private conversation and share what you hope to achieve together.' : ar ? 'تواصل مع فريق وصول لطلب التعارف.' : 'Contact the Wosool team to request an introduction.'}</p>
               <div className="mt-5">{founder.canCommunicate && String(user?.id) !== String(founder.userId) ? <Button className="min-h-12 w-full" disabled={connecting} onClick={connect}>{connecting ? ar?'جارٍ فتح المحادثة…':'Opening conversation…' : ar?'تواصل مع المؤسس':'Message founder'}</Button> : String(user?.id) === String(founder.userId) && founder.userId ? <Button className="w-full" asChild><Link href="/dashboard/profile">{ar?'تعديل ملفي':'Edit my profile'}</Link></Button> : <Button className="h-auto min-h-12 w-full whitespace-normal text-center" variant="outline" asChild><Link href={`/contact?subject=${encodeURIComponent(`Founder profile activation: ${founder.name}`)}`}>{ar?'هل هذا ملفك؟ اطلب التفعيل':'Is this your profile? Request activation'}</Link></Button>}</div></>}
             {website && <a href={website} target="_blank" rel="noopener noreferrer" className="mt-3 flex min-h-12 items-center justify-between gap-2 rounded-xl border border-[var(--border)] px-3 text-sm font-semibold text-indigo-600">{ar?'زيارة موقع الشركة':'Visit company website'}<ArrowUpRight size={16}/></a>}
             {founder && <div className="mt-3 flex flex-wrap gap-3">{[['LinkedIn',founder.linkedinUrl],['X',founder.twitterUrl]].map(([label,url])=>publicWebsite(url) && <a key={label} href={publicWebsite(url)} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-11 items-center text-sm text-indigo-600 underline">{label}</a>)}</div>}
