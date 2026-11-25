@@ -1,3 +1,7 @@
+## EO Riyadh WOW final hours — 2026-11-25
+
+- Preserved the approved 3 PM after-Asr start, with no separate pre-event prayer slot, and corrected the event end to 11 PM Riyadh time across the agenda, hero, calendar exports, promotional listing and registration closure. Guarded migration updates the former midnight database value only. Luma and production release still require verification.
+
 ## EO Riyadh WOW event — after-Asr start — 2026-11-25
 
 - Reception and golf now begin at 3 PM Riyadh time; removed the earlier 2 PM reception slot and separate 2:45 PM Asr prayer entry. Formal opening, remaining prayer breaks, dinner and midnight end are unchanged.

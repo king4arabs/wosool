@@ -45,7 +45,7 @@ export default function EventsPage() {
         </>}
       />
 
-      {now < Date.parse("2026-12-12T00:00:00+03:00") && <section className="bg-[#101e50] px-5 py-8 text-white"><div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-5"><div><p className="text-sm font-bold text-cyan-200">11 DEC 2026 · GOLF CLUB WADI SAFAR</p><h2 className="mt-2 text-2xl font-extrabold">EO Riyadh WOW Event</h2><p className="mt-2">{ar ? "التسجيل المسبق والموافقة مطلوبان للحضور" : "Advance registration and approval required"}</p></div><Link href="/events/eo-riyadh-wow-2026" className="inline-flex min-h-12 items-center rounded-xl bg-white px-5 py-3 font-bold text-indigo-950">{ar ? "تفاصيل الفعالية والتسجيل" : "Event details & RSVP"}</Link></div></section>}
+      {now < Date.parse("2026-12-11T23:00:00+03:00") && <section className="bg-[#101e50] px-5 py-8 text-white"><div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-5"><div><p className="text-sm font-bold text-cyan-200">11 DEC 2026 · GOLF CLUB WADI SAFAR</p><h2 className="mt-2 text-2xl font-extrabold">EO Riyadh WOW Event</h2><p className="mt-2">{ar ? "التسجيل المسبق والموافقة مطلوبان للحضور" : "Advance registration and approval required"}</p></div><Link href="/events/eo-riyadh-wow-2026" className="inline-flex min-h-12 items-center rounded-xl bg-white px-5 py-3 font-bold text-indigo-950">{ar ? "تفاصيل الفعالية والتسجيل" : "Event details & RSVP"}</Link></div></section>}
 
       <FounderCalendar events={calendarEvents} now={now} loading={upcoming.loading || past.loading} error={upcoming.error || past.error} retry={() => { upcoming.retry(); past.retry() }} />
 
