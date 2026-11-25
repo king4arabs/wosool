@@ -80,6 +80,7 @@ function ProgramDetailPageContent({ initialRecord }: { initialRecord?: ProgramDe
 
   const [program, setProgram] = useState<ProgramDetails | null>(initialRecord ?? null)
   const [loading, setLoading] = useState(!initialRecord)
+  const [loadIssue, setLoadIssue] = useState<"not-found" | "unavailable" | null>(null)
   const [isApplyOpen, setIsApplyOpen] = useState(false)
   const [submitting, setSubmitting] = useState(false)
   const [applicationStatus, setApplicationStatus] = useState<string | null>(null)
@@ -107,7 +108,9 @@ function ProgramDetailPageContent({ initialRecord }: { initialRecord?: ProgramDe
 
   useEffect(() => {
     if (!slug || authLoading) return
+    let active = true
     setLoading(!initialRecord || initialRecord.slug !== slug)
+    setLoadIssue(null)
     Promise.all([
       api.get<{ data: ProgramDetails }>(`/programs/${slug}`),
       // Only members have application history; visitors skip the private lookup.
@@ -116,13 +119,17 @@ function ProgramDetailPageContent({ initialRecord }: { initialRecord?: ProgramDe
         : Promise.resolve({ data: [] as Array<ProgramApplicationStatus & { program: { slug: string } }> }),
     ])
       .then(([programRes, applicationsRes]) => {
+        if (!active) return
         setProgram(programRes.data)
         const mine = (applicationsRes.data || []).find((item) => item.program?.slug === slug)
         setApplicationStatus(mine?.status ?? null)
       })
-      .catch((err: Error) => toast(err.message, "error"))
-      .finally(() => setLoading(false))
-  }, [slug, toast, authLoading, signedIn, initialRecord])
+      .catch((err: unknown) => {
+        if (active) setLoadIssue(err instanceof ApiError && err.status === 404 ? "not-found" : "unavailable")
+      })
+      .finally(() => { if (active) setLoading(false) })
+    return () => { active = false }
+  }, [slug, authLoading, signedIn, initialRecord])
 
   async function submitApplication() {
     if (!program) return
@@ -141,9 +148,11 @@ function ProgramDetailPageContent({ initialRecord }: { initialRecord?: ProgramDe
 
   if (loading) return <div className="py-16 text-center text-slate-500" role="status">{copy.loading}</div>
   if (!program) {
+    const unavailable = loadIssue === "unavailable"
     return (
       <div className="py-16 text-center space-y-3">
-        <h1 className="text-xl font-bold text-slate-900">{copy.notFound}</h1>
+        <h1 className="text-xl font-bold text-slate-900">{unavailable ? copy.unavailable : copy.notFound}</h1>
+        {unavailable ? <p className="text-sm text-slate-600">{copy.unavailableHint}</p> : null}
         <Link href="/programs" className="text-sm font-semibold text-blue-700 underline">{copy.backToPrograms}</Link>
       </div>
     )

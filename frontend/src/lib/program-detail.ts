@@ -10,6 +10,8 @@ export const programDetailCopy = {
   ar: {
     loading: "جارٍ تحميل تفاصيل البرنامج…",
     notFound: "لم نجد هذا البرنامج. ربما أُغلق أو تغيّر رابطه.",
+    unavailable: "تعذر تحميل البرنامج الآن",
+    unavailableHint: "حاول مرة أخرى بعد قليل.",
     backToPrograms: "كل البرامج",
     program: "برنامج",
     overview: "نظرة عامة",
@@ -47,6 +49,8 @@ export const programDetailCopy = {
   en: {
     loading: "Loading program details…",
     notFound: "We couldn't find this program. It may have closed or moved.",
+    unavailable: "This program is temporarily unavailable",
+    unavailableHint: "Please try again shortly.",
     backToPrograms: "All programs",
     program: "Program",
     overview: "Overview",

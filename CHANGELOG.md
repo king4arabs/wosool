@@ -5,7 +5,7 @@
 
 ## Public fallback and accessibility polish — 2026-11-25
 
-- Replaced raw event API failures with concise bilingual visitor copy and preserved a distinct not-found state.
+- Replaced raw event and program API failures with concise bilingual visitor copy and preserved distinct not-found states.
 - Increased leadership step-number contrast and extended the public browser gate to reject common network-error leakage.
 
 ## Database-backed founder discovery and public copy — 2026-11-24
