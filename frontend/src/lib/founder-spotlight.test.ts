@@ -20,9 +20,10 @@ import november21Profiles from '../data/founder-spotlight-expansion-2026-11-21.j
 import november22Profiles from '../data/founder-spotlight-expansion-2026-11-22.json'
 import november23Profiles from '../data/founder-spotlight-expansion-2026-11-23.json'
 import november24Profiles from '../data/founder-spotlight-expansion-2026-11-24.json'
+import november25Profiles from '../data/founder-spotlight-expansion-2026-11-25.json'
 
 const rank: Record<string, number> = { saudi: 0, gcc: 1, mena: 2, global: 3 }
-const sourceProfiles = [...historicalProfiles, ...additionalProfiles, ...discoveryProfiles, ...countryProfiles, ...novemberProfiles, ...november12Profiles, ...november13Profiles, ...november14Profiles, ...november15Profiles, ...november17Profiles, ...november18Profiles, ...november19Profiles, ...november20Profiles, ...november21Profiles, ...november22Profiles, ...november23Profiles, ...november24Profiles]
+const sourceProfiles = [...historicalProfiles, ...additionalProfiles, ...discoveryProfiles, ...countryProfiles, ...novemberProfiles, ...november12Profiles, ...november13Profiles, ...november14Profiles, ...november15Profiles, ...november17Profiles, ...november18Profiles, ...november19Profiles, ...november20Profiles, ...november21Profiles, ...november22Profiles, ...november23Profiles, ...november24Profiles, ...november25Profiles]
   .sort((left, right) => (rank[left.region] ?? 4) - (rank[right.region] ?? 4))
 // Historical batches retain their membership when an existing profile receives new verification dates.
 // Cohort boundaries are source-linked, not array positions: editorial entries can be prepended.
@@ -94,12 +95,14 @@ test('frontend source snapshots and database import share the same reviewed reco
   assert.deepEqual(november23Profiles.map(p => p.slug), ['hany-fekry-enza', 'hamish-houston-enza'])
   assert.deepEqual(JSON.parse(readFileSync(new URL('../../../backend/resources/data/founder-directory-expansion-2026-11-24.json', import.meta.url), 'utf8')), november24Profiles)
   assert.equal(november24Profiles.length, 3)
+  assert.deepEqual(JSON.parse(readFileSync(new URL('../../../backend/resources/data/founder-directory-expansion-2026-11-25.json', import.meta.url), 'utf8')), november25Profiles)
+  assert.equal(november25Profiles.length, 6)
   assert.equal(originalCountryCohort.length, 102)
   assert.equal(october30Additions.length, 8)
   assert.equal(new Set(originalCountryCohort.map(profile => profile.country_code)).size, 51)
   for (const code of new Set(originalCountryCohort.map(profile => profile.country_code))) assert.equal(originalCountryCohort.filter(profile => profile.country_code === code).length, 2, code)
-  assert.equal(new Set(sourceProfiles.map(profile => profile.company_key)).size, 231)
-  assert.equal(sourceProfiles.length, 429)
+  assert.equal(new Set(sourceProfiles.map(profile => profile.company_key)).size, 233)
+  assert.equal(sourceProfiles.length, 435)
   assert.equal(new Set(sourceProfiles.map(profile => profile.founder_name_en.toLowerCase())).size, sourceProfiles.length)
   assert.equal(new Set(sourceProfiles.map(profile => profile.slug)).size, sourceProfiles.length)
   assert.ok(sourceProfiles.every(profile => profile.source_urls.length > 0 && profile.reviewed_at))
@@ -436,4 +439,17 @@ test('24 November Saudi profiles and Tamara refresh retain source-backed facts',
   const tamara = historicalProfiles.filter(p => p.company_key === 'tamara')
   assert.equal(tamara.length, 3)
   assert.ok(tamara.every(p => p.traction_en?.includes('26 million') && p.traction_ar && p.reviewed_at === '2026-11-24'))
+})
+
+
+test('25 November founders retain official bilingual roles, attribution and unclaimed status', () => {
+  assert.deepEqual(november25Profiles.map(p => p.slug), ['muhannad-tobal-invoiceq', 'mohammad-baseet-invoiceq', 'fadi-al-jabali-invoiceq', 'amer-ayyad-invoiceq', 'nasreddine-riahi-cynoia', 'ayoub-rabeh-cynoia'])
+  for (const p of november25Profiles) {
+    assert.equal(p.reviewed_at, '2026-11-25')
+    assert.equal(p.portrait_url, null)
+    assert.equal(p.logo_url, null)
+    assert.ok(p.role_ar && p.founder_brief_ar && p.traction_ar)
+    assert.ok(p.source_urls.includes(p.source_url) && p.source_urls.includes(p.traction_source_url))
+    assert.ok(!('member' in p) && !('user_id' in p) && !('is_verified' in p))
+  }
 })

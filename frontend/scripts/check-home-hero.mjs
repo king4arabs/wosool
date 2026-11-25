@@ -29,13 +29,17 @@ try {
     const errors = []
     page.on('pageerror', error => errors.push(error.message))
     await page.goto(origin)
-    const hero = page.locator('section[aria-labelledby="home-title"]')
+    await page.waitForFunction(value => document.documentElement.lang === value, locale)
+    // Next can retain a hidden prerender tree during locale hydration. Interact
+    // with the one rendered hero instead of double-counting hidden metrics.
+    const hero = page.locator('section[aria-labelledby="home-title"]:visible').last()
+    await hero.waitFor()
     const video = hero.locator('video')
     await page.waitForFunction(() => {
       const video = document.querySelector('section[aria-labelledby="home-title"] video')
       return video && !video.paused && video.currentTime > 0
     })
-    const panel = hero.locator('aside')
+    const panel = hero.locator('aside:visible')
     assert.equal(await panel.locator('article').count(), 4)
     // Region figures are refreshed monthly from sourced data (docs/REGIONAL-HERO-METRICS.md), so this
     // smoke test checks how they render, not last month's numbers. A figure without a supported source

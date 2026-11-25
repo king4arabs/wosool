@@ -311,3 +311,24 @@ test('Tamara asset-backed financing preserves source date and company match', ()
   assert.equal(item.translations?.ar.keyFacts?.length, 3)
   assert.equal(newsFounders(item).length, 3)
 })
+
+
+test('25 November briefs retain actual publication dates and source-linked founder matches', () => {
+  for (const [slug, date, region] of [
+    ['oori-oumla-private-market-infrastructure-november-2026', '2026-11-23', 'saudi'],
+    ['invoiceq-five-million-series-a-november-2026', '2026-11-23', 'mena'],
+    ['cynoia-hannibal-workspace-ai-november-2026', '2026-11-12', 'mena'],
+  ] as const) {
+    const item = curatedNews.find(story => story.slug === slug)!
+    assert.ok(item)
+    assert.equal(item.publishedAt, date)
+    assert.equal(item.region, region)
+    assert.equal(item.imageUrl, '')
+    assert.equal(item.imageCredit, '')
+    assert.ok(safeNewsUrl(item.sourceUrl))
+    assert.equal(item.keyFacts?.length, 3)
+    assert.equal(item.translations?.ar.keyFacts?.length, 3)
+  }
+  assert.equal(newsFounders(curatedNews.find(n => n.slug === 'invoiceq-five-million-series-a-november-2026')!).length, 4)
+  assert.equal(newsFounders(curatedNews.find(n => n.slug === 'cynoia-hannibal-workspace-ai-november-2026')!).length, 2)
+})
