@@ -1,3 +1,7 @@
+## EO Riyadh WOW learning event — 2026-11-25
+
+- Renamed the 7 PM session to Learning event with special guests in English and Arabic. Retained its bold purple styling and the requested rose dinner highlight. Event timing and registration remain unchanged.
+
 ## EO Riyadh WOW agenda update — 2026-11-25
 
 - Updated the bilingual event schedule: reception at 2 PM, Asr at 2:45 PM, golf tournament 3–5 PM (first come, first served), winners at 4:30 PM, formal opening at 5:30 PM and main session with special guests at 7 PM. Existing Maghrib, Isha, dinner and open networking times remain unchanged.
