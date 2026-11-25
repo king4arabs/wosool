@@ -1,6 +1,6 @@
 ## EO Riyadh WOW learning event — 2026-11-25
 
-- Renamed the 7 PM session to Learning event with special guests in English and Arabic. Retained its bold purple styling and the requested rose dinner highlight. Event timing and registration remain unchanged.
+- Renamed the 7 PM session to Learning event with special guests in English and Arabic. Retained its bold purple styling and the requested rose dinner highlight. The 5:30 PM formal opening now introduces EO and includes a panel discussion, in both languages. Event timing and registration remain unchanged.
 
 ## EO Riyadh WOW agenda update — 2026-11-25
 
