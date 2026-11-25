@@ -20,7 +20,7 @@ const agenda: {time: string; en: string; ar: string; tone: AgendaTone; detailEn?
  {time:"3:00–5:00 PM",en:"Golf Tournament",ar:"بطولة الجولف",tone:"golf",detailEn:"First come, first served",detailAr:"الأولوية حسب أسبقية الحضور"},
  {time:"4:30 PM",en:"Winners announcement",ar:"إعلان الفائزين",tone:"winners"},
  {time:"5:00 PM",en:"Maghrib prayer break",ar:"استراحة صلاة المغرب",tone:"maghrib"},
- {time:"5:30 PM",en:"Formal opening, introduction to EO and panel discussion",ar:"الافتتاح الرسمي والتعريف بـ EO وجلسة حوارية",tone:"formal"},
+ {time:"5:30 PM",en:"Formal opening, introducing EO, and panel discussion",ar:"الافتتاح الرسمي والتعريف بـ EO وجلسة حوارية",tone:"formal"},
  {time:"6:30 PM",en:"Isha prayer break",ar:"استراحة صلاة العشاء",tone:"isha"},
  {time:"7:00 PM",en:"Learning event with special guests",ar:"لقاء تعليمي مع ضيوف مميزين",tone:"main"},
  {time:"8:00 PM",en:"Dinner and networking",ar:"العشاء والتواصل",tone:"dinner"},
