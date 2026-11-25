@@ -1,3 +1,9 @@
+## EO Riyadh WOW direct RSVP handoff — 2026-11-25
+
+- New event-specific signup saves the account and participant in one transaction, then returns the official Luma RSVP link without waiting for OTP or ticket emails. Existing accounts retain authenticated registration.
+- OTP and ticket messages use separate queued jobs, with retries and delivery guards. Membership remains subject to verified email and administrator approval; regular signup is unchanged. No ticket approval is inferred from Wosool registration.
+- Production requires a running queue worker, shared cache and real SMTP delivery. Tests cover mail outage, privilege injection, duplicate registration and queued delivery; CI and production verification remain separate. See [registration QA](docs/REGISTRATION-QA.md).
+
 ## Founder and news editorial refresh — 2026-11-25
 
 - Added four invoiceQ and two Cynoia bilingual external founder profiles, plus three dated briefs covering Saudi OORI–Oumla, invoiceQ Series A and Cynoia's expanded workplace AI. Candidate totals: 435 founders, 233 companies, 156 news stories.
