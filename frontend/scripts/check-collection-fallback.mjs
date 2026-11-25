@@ -18,7 +18,7 @@ async function eventually(check) {
 }
 try {
   await eventually(() => log.includes("Ready"))
-  browser = await chromium.launch()
+  browser = await chromium.launch({ executablePath: process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH || undefined })
   for (const locale of ["ar", "en"]) for (const width of [390, 1366]) {
     for (const path of ["/founders", "/news", "/founders/fixture-founder"]) {
       for (const status of [200, 401, 403, 404, 410, 429, 503]) {
@@ -55,7 +55,7 @@ try {
         }
         release()
         await eventually(() => requests > 0)
-        if (status === 503) await eventually(async () => await page.locator(selector).count() > 0)
+        if (status === 503 && path !== "/founders") await eventually(async () => await page.locator(selector).count() > 0)
         else {
           if (path !== "/founders/fixture-founder" && status !== 200) await page.getByRole("button", { name: locale === "ar" ? "إعادة المحاولة" : "Try again", exact: true }).filter({ visible: true }).first().waitFor()
           await delay(100)

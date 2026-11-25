@@ -3,6 +3,18 @@
 - Added four invoiceQ and two Cynoia bilingual external founder profiles, plus three dated briefs covering Saudi OORI–Oumla, invoiceQ Series A and Cynoia's expanded workplace AI. Candidate totals: 435 founders, 233 companies, 156 news stories.
 - Synchronized source mirrors, importer/coverage registration, logo audit and test assertions. No accounts, invitations, existing editorial changes, API schema, hosting configuration or version changes. See [internal source evidence](docs/research/CONTENT-REFRESH-2026-11-25.md). CI and production imports/deployment are separate.
 
+## Public fallback and accessibility polish — 2026-11-25
+
+- Replaced raw event and program API failures with concise bilingual visitor copy and preserved distinct not-found states.
+- Increased leadership step-number contrast and extended the public browser gate to reject common network-error leakage.
+
+## Database-backed founder discovery and public copy — 2026-11-24
+
+- The homepage, founder directory, profiles and news links now use published Laravel records. Visiting again rotates the homepage sample; a database outage never restores an offline founder. Added a reversible lookup index and shared visibility rules. [Architecture and release order](docs/PUBLIC-FOUNDER-DIRECTORY.md).
+- Shortened bilingual public copy, including accelerator and directory guidance, without removing eligibility rules, financial evidence, image credits or sources. Fixed the WOW event’s date/venue semantics and accessible shortcut names.
+- Added moderation, rollover, company-match and browser regression coverage; aligned isolated mail/calendar fixtures with the existing release. OpenAPI document 1.9.0. No hosted release, production migration, founder import or account changes are asserted by this entry.
+- Browser checks target the visible hydrated homepage and use immediate scrolling for the animated Accelerator directory, preventing hidden locale trees and WebKit frame stability from producing false CI failures.
+
 ## EO Riyadh WOW public experience refinement — 2026-11-24
 
 - Streamlined Arabic and English event copy, compact hero and venue card, accessible horizontal submenu, agenda, registration and weather cards, preserving required approval, consent and historical climate information.

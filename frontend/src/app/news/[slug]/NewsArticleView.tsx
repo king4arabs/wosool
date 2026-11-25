@@ -6,8 +6,9 @@ import { ArrowUpRight, Check, ChevronLeft, ChevronRight, Link2, ListChecks, MapP
 import type { NewsItem } from "@/types"
 import { PublicLayout } from "@/components/layout/PublicLayout"
 import { NewsImage } from "@/components/sections/NewsImage"
+import { StoryFounders } from "@/components/sections/StoryFounders"
 import { NewsCard } from "@/components/sections/NewsCard"
-import { categoryLabel, curatedNews, newsDate, newsFounders, newsRegion, regionLabel, relatedNews, safeNewsUrl } from "@/lib/news-feed"
+import { categoryLabel, curatedNews, newsDate, newsRegion, regionLabel, relatedNews, safeNewsUrl } from "@/lib/news-feed"
 import { getLocalizedNewsContent } from "@/lib/news-content"
 import { useLocale } from "@/lib/locale"
 
@@ -18,7 +19,6 @@ export default function NewsArticleView({ item }: { item: NewsItem | null }) {
   const Back = ar ? ChevronRight : ChevronLeft
   if (!item) return <PublicLayout><section dir={direction} className="mx-auto max-w-3xl px-4 py-20 text-center"><h1 className="text-2xl font-bold">{ar ? "الخبر غير متاح حالياً" : "This story is currently unavailable"}</h1><Link href="/news" className="mt-6 inline-flex min-h-11 items-center text-[var(--link)]">{ar ? "العودة للأخبار" : "Back to news"}</Link></section></PublicLayout>
   const story = getLocalizedNewsContent(item, locale)
-  const founders = newsFounders(item)
   const source = safeNewsUrl(item.sourceUrl)
   const publisherExcerpt = item.slug.startsWith("rss-")
   const contentLanguage = publisherExcerpt ? "en" : locale
@@ -53,7 +53,7 @@ export default function NewsArticleView({ item }: { item: NewsItem | null }) {
         <aside className="space-y-5">
           {source && <section className="rounded-2xl border border-[var(--border-soft)] bg-[var(--surface)] p-5"><h2 className="font-bold">{ar ? "المصدر" : "Source & attribution"}</h2><p className="mt-3 text-sm">{item.sourceName}</p><a className="mt-2 inline-flex min-h-11 items-center gap-2 break-all text-sm text-[var(--link)] underline" href={source} target="_blank" rel="noopener noreferrer">{new URL(source).hostname}<ArrowUpRight size={16} /></a></section>}
           {(item.companies?.length ?? 0) > 0 && <section className="rounded-2xl border border-[var(--border-soft)] bg-[var(--surface)] p-5"><h2 className="font-bold">{ar ? "شركات في الخبر" : "Companies in this story"}</h2><ul className="mt-3 flex flex-wrap gap-2">{item.companies!.map(company => <li key={company}><Link href={`/news?q=${encodeURIComponent(company)}`} className="inline-flex min-h-11 items-center gap-1 rounded-full bg-[var(--surface-soft)] px-3 text-sm font-semibold text-[var(--link)]"><Link2 size={14} aria-hidden="true" />{company}</Link></li>)}</ul></section>}
-          {founders.length > 0 && <section className="rounded-2xl border border-[var(--border-soft)] bg-[var(--surface)] p-5"><h2 className="font-bold">{ar ? "تعرّف على المؤسس" : "Meet the founder"}</h2>{founders.map(founder => <Link key={founder.slug} href={`/founders/${founder.slug}`} className="mt-3 flex min-h-12 items-center justify-between gap-2 text-sm font-semibold text-[var(--link)]">{ar ? founder.founder_name_ar : founder.founder_name_en}<ArrowUpRight size={16} /></Link>)}<p className="mt-3 text-xs leading-6 text-[var(--text-muted)]">{ar ? "التغطية الإخبارية لا تعني العضوية أو التأييد." : "News coverage does not imply membership or endorsement."}</p></section>}
+          {item.companies?.some(name => name.trim()) && <StoryFounders companies={item.companies} />}
         </aside>
       </div>
       {related.length > 0 && <section className="mt-12"><h2 className="mb-6 text-2xl font-bold">{ar ? "أخبار ذات صلة" : "Related stories"}</h2><div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">{related.map(other => <NewsCard key={other.slug} item={other} />)}</div></section>}

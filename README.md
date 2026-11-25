@@ -128,7 +128,7 @@ The established Hostinger frontend configuration is **`frontend` root · Node 22
 | --- | --- |
 | [Architecture](ARCHITECTURE.md) · [API](docs/API.md) | System structure and interfaces |
 | [Registration QA](docs/REGISTRATION-QA.md) | Signup, OTP, account recovery and verified admin provisioning |
-| [Founder activation](docs/FOUNDER-ACTIVATION.md) | Invitations and profile activation |
+| [Public founder directory](docs/PUBLIC-FOUNDER-DIRECTORY.md) · [Founder activation](docs/FOUNDER-ACTIVATION.md) | Published profiles, company relationships, invitations and activation |
 | [EOA operations](docs/EOA.md) | Accelerator applications, roles and program operations |
 | [Administration](docs/ADMIN-OPERATIONS.md) | CRM, PR, analytics and community approval workflows |
 | [Startup directory](docs/STARTUP-DIRECTORY.md) · [Research](docs/research/) | Source review, imports and publication evidence |

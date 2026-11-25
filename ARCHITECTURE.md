@@ -1,5 +1,7 @@
 # Architecture
 
+The [public founder directory](docs/PUBLIC-FOUNDER-DIRECTORY.md) reads one Laravel publication scope across the homepage, lists, profile pages and company relationships. Source catalogs are import inputs, not a visitor-facing fallback.
+
 ## EO Accelerator canonical integration (2026-10-09)
 
 The program journey lives under `/EOA`; `backend/routes/eoa.php` and the Eoa services/controllers own verified accounts, encrypted applications, assigned reviews, onboarding and participant operations. The earlier `/accelerator` pages redirect to `/EOA`. Legacy application/review writes in `backend/routes/gateway.php` return 410; their data and owned read access are retained without granting learning access. Existing gateway ecosystem/editorial/privacy services remain supported. `/opportunities`, `ecosystem_records` and `ecosystem_revisions` provide sourced discovery separate from applicant companies and confirmed partnerships.

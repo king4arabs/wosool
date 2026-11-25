@@ -7,7 +7,7 @@ export function CollectionStatus({ loading, error, retry, hasMore, loadMore, emp
   if (!loading && !error && !hasMore && !empty) return null
   return <div className="mx-auto max-w-7xl px-4 py-6 text-center">
     {loading && <p role="status">{ar ? "جارٍ تحميل المحتوى…" : "Loading content…"}</p>}
-    {error && <div role="alert" className="rounded-xl border border-rose-200 bg-rose-50 p-5"><p>{error}</p><Button variant="outline" className="mt-3" onClick={retry}>{ar ? "إعادة المحاولة" : "Try again"}</Button></div>}
+    {error && <div role="alert" className="rounded-xl border border-rose-200 bg-rose-50 p-5"><p>{ar ? "تعذر تحميل المحتوى." : "Unable to load this content."}</p><Button variant="outline" className="mt-3" onClick={retry}>{ar ? "إعادة المحاولة" : "Try again"}</Button></div>}
     {!loading && !error && empty && <p>{emptyMessage ?? (ar ? "لا توجد عناصر منشورة حاليًا." : "No published items yet.")}</p>}
     {!loading && !error && hasMore && <Button variant="outline" onClick={loadMore}>{ar ? "عرض المزيد" : "Load more"}</Button>}
   </div>

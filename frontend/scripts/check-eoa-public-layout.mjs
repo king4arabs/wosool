@@ -148,7 +148,10 @@ try {
           assert.equal(await page.locator('[data-eoa-directory] [data-brand-logo]').count(), organizations.length, 'Every organization has a logo space')
           const logos = page.locator('[data-eoa-directory] img')
           for (let index = 0; index < await logos.count(); index++) {
-            await logos.nth(index).scrollIntoViewIfNeeded()
+            // The partner rail can animate at a sub-pixel level while WebKit waits
+            // for scrollIntoViewIfNeeded() stability. Native instant scrolling still
+            // exercises lazy image loading without depending on a stable frame.
+            await logos.nth(index).evaluate(image => image.scrollIntoView({ block: 'center', inline: 'nearest', behavior: 'instant' }))
             // Firefox can reject decode() for an already rendered SVG. Verify
             // actual image loading instead, including lazy off-screen images.
             await page.waitForFunction(position => {

@@ -41,6 +41,7 @@ export interface ApiScorecard {
 }
 
 export interface ApiCompany {
+  name_aliases?: string[]
   country_code?: string | null
   founders?: ApiFounder[]
   pivot?: { role?: string | null; is_primary?: boolean }
@@ -66,6 +67,7 @@ export interface ApiCompany {
 }
 
 export interface ApiFounder {
+  display_name?: string | null
   /** Permanent opaque profile identity; never a user account ID. */
   founder_uid?: string | null
   community_engagement_score?: number | null

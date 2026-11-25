@@ -11,10 +11,11 @@ export const arabicOperationCopy: Record<string, { summary: string; description?
     summary: "تصفح ملفات المؤسسين العامة",
     description: "الملفات النشطة والعامة فقط. الملفات التحريرية لا تعني العضوية في المجتمع. قيمة per_page محصورة بين 1 و24.",
   },
+  discoverFounders: { summary: "تعرّف على المؤسسين", description: "حتى 24 ملفاً عاماً بترتيب ثابت خلال الزيارة. لا يعني الإدراج عضوية وصول." },
   getFounder: { summary: "قراءة ملف مؤسس عام" },
   listCompanies: {
     summary: "تصفح الشركات العامة",
-    description: "الشركات النشطة والعامة فقط. لا تتضمن founders_count وfounders سوى ملفات المؤسسين النشطة والعامة. قيمة per_page محصورة بين 1 و24. الاستعلامات غير الصحيحة لا تعيد بعدُ خطأ 422 موثقاً.",
+    description: "الشركات النشطة والعامة فقط. لا تتضمن founders_count وfounders سوى ملفات المؤسسين النشطة والعامة. قيمة per_page محصورة بين 1 و24. ",
   },
   getCompany: { summary: "قراءة ملف شركة عام" },
   listNews: {

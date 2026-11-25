@@ -37,9 +37,8 @@ export function StartupDirectory({ compact = false }: { compact?: boolean }) {
   const typeLabel = (type: string) => type === 'technology' ? (ar ? 'أعمال تقنية' : 'Technology business') : (ar ? 'سلع وخدمات تقليدية' : 'Traditional goods & services')
   function clear() { setSearch(''); setRegion(''); setSector(''); setBusinessType(''); setSource('') }
   return <section className="mx-auto max-w-7xl px-4 py-16" aria-labelledby={compact ? 'startup-preview' : 'startup-heading'}>
-    <p className="text-sm font-bold text-blue-700">{ar ? 'من السعودية إلى العالم' : 'From Saudi Arabia to the world'}</p>
     <Heading id={compact ? 'startup-preview' : 'startup-heading'} className="mt-3 text-3xl font-extrabold text-slate-900">{ar ? 'اكتشف الشركات ومؤسسيها' : 'Discover businesses and their founders'}</Heading>
-    <p className="mt-4 max-w-3xl text-slate-600 leading-relaxed">{ar ? 'استكشف الشركات ومؤسسيها حسب القطاع والمنطقة ومجال العمل.' : 'Explore businesses and their founders by sector, region and area of focus.'}</p>
+    <p className="mt-4 max-w-3xl text-slate-600 leading-relaxed">{ar ? 'شركات لها إيرادات أو إيرادات سنوية متكررة منشورة. يعرض كل ملف الفترة والمصدر.' : 'Companies with published revenue or ARR. Each entry links to its source and reporting period.'}</p>
     {!compact && <>
       <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
         <label className="flex min-w-0 flex-col gap-2 text-sm">{ar ? 'البحث' : 'Search'}<input type="search" maxLength={120} className={control} value={search} onChange={e=>setSearch(e.target.value)} placeholder={ar ? 'شركة، مؤسس أو مجال تركيز' : 'Company, founder or focus area'} /></label>

@@ -5,7 +5,7 @@ import { ArrowUpRight, MapPin } from "lucide-react"
 import type { NewsItem } from "@/types"
 import { useLocale } from "@/lib/locale"
 import { getLocalizedNewsContent } from "@/lib/news-content"
-import { categoryLabel, newsDate, newsFounders, newsRegion, regionLabel } from "@/lib/news-feed"
+import { categoryLabel, newsDate, newsRegion, regionLabel } from "@/lib/news-feed"
 import { NewsImage } from "./NewsImage"
 
 /** Story card. The "lead" variant presents the top story with its key facts. */
@@ -13,7 +13,6 @@ export function NewsCard({ item, variant = "default" }: { item: NewsItem; varian
   const { locale } = useLocale()
   const story = getLocalizedNewsContent(item, locale)
   const contentLanguage = item.slug.startsWith("rss-") ? "en" : locale
-  const founders = newsFounders(item)
   const region = newsRegion(item)
   const href = `/news/${encodeURIComponent(item.slug)}`
   const lead = variant === "lead"
@@ -38,7 +37,6 @@ export function NewsCard({ item, variant = "default" }: { item: NewsItem; varian
       </ul>}
       <p className="mt-4 text-xs text-[var(--text-muted)]">{locale === "ar" ? "المصدر: " : "Source: "}<span className="font-semibold">{item.sourceName || item.author}</span></p>
       <div className="mt-auto flex flex-wrap items-center justify-between gap-3 border-t border-[var(--border-soft)] pt-4">
-        <div className="flex flex-wrap gap-x-3">{founders.slice(0, 2).map(founder => <Link key={founder.slug} href={`/founders/${founder.slug}`} className="inline-flex min-h-11 items-center gap-2 text-xs font-semibold text-[var(--link)]">{locale === "ar" ? founder.founder_name_ar : founder.founder_name_en}</Link>)}</div>
         <Link className="inline-flex min-h-11 items-center gap-2 text-sm font-bold text-[var(--link)]" href={href}>{locale === "ar" ? "اقرأ الخبر" : "Read brief"}<ArrowUpRight size={16} aria-hidden="true" /></Link>
       </div>
     </div>

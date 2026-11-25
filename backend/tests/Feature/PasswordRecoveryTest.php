@@ -42,7 +42,7 @@ class PasswordRecoveryTest extends TestCase
         $header = view('vendor.mail.html.header', ['url' => 'https://wosool.org'])->render();
         $footer = view('vendor.mail.html.footer')->render();
 
-        $this->assertStringContainsString('https://wosool.org/wosool-network-logo.png', $header);
+        $this->assertStringContainsString('https://wosool.org/wosool-logo-eo.svg', $header);
         $this->assertStringContainsString('Wosool | وصول', $header);
         $this->assertStringContainsString('Founders to Founders', $footer);
     }
