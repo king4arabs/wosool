@@ -3,6 +3,12 @@
 - Updated the bilingual event schedule: reception at 2 PM, Asr at 2:45 PM, golf tournament 3–5 PM (first come, first served), winners at 4:30 PM, formal opening at 5:30 PM and main session with special guests at 7 PM. Existing Maghrib, Isha, dinner and open networking times remain unchanged.
 - Added distinct high-contrast colors for prayer breaks and golf, and prominent bold styles for winners and formal sessions. The responsive ordered list preserves the existing event, RSVP and hosting behavior. Times follow the organizer's requested agenda; independent prayer-time verification and live release checks remain pending. See [event QA](docs/WOW-EVENT-ARTWORK.md).
 
+## EO Riyadh WOW direct RSVP handoff — 2026-11-25
+
+- New event-specific signup saves the account and participant in one transaction, then returns the official Luma RSVP link without waiting for OTP or ticket emails. Existing accounts retain authenticated registration.
+- OTP and ticket messages use separate queued jobs, with retries and delivery guards. Membership remains subject to verified email and administrator approval; regular signup is unchanged. No ticket approval is inferred from Wosool registration.
+- Production requires a running queue worker, shared cache and real SMTP delivery. Tests cover mail outage, privilege injection, duplicate registration and queued delivery; CI and production verification remain separate. See [registration QA](docs/REGISTRATION-QA.md).
+
 ## Founder and news editorial refresh — 2026-11-25
 
 - Added four invoiceQ and two Cynoia bilingual external founder profiles, plus three dated briefs covering Saudi OORI–Oumla, invoiceQ Series A and Cynoia's expanded workplace AI. Candidate totals: 435 founders, 233 companies, 156 news stories.

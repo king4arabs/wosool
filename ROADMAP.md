@@ -1,5 +1,7 @@
 # Roadmap
 
+**WOW registration handoff — 25 November 2026.** New event signups now save the unverified account and attendee atomically before returning the fixed Luma RSVP link; OTP and ticket mail are queued separately and cannot confer verification, membership or ticket approval. Next: complete the required CI matrix, deploy the backend before the frontend, verify the durable worker/shared cache and actual inbox delivery, then confirm bilingual browser navigation against the serving revisions. Source changes do not establish deployment or a production record change. [Acceptance checklist](docs/REGISTRATION-QA.md).
+
 **Public founder directory — 24 November 2026.** The homepage, directory, profiles and article links now read moderated database relationships. Next: release the API and its additive lookup index, then the frontend; verify serving revisions, homepage rotation, founder withdrawal and company links before any separately reviewed import. [Release and rollback checklist](docs/PUBLIC-FOUNDER-DIRECTORY.md).
 
 ## Current execution plan — 23 November 2026

@@ -62,6 +62,7 @@ Route::prefix('v1')->group(function () {
     Route::get('/auth/csrf-cookie', [AuthController::class, 'csrf']);
     Route::post('/auth/login', [AuthController::class, 'login'])->middleware('throttle:10,1');
     Route::post('/auth/register', [AuthController::class, 'register'])->middleware('throttle:5,1');
+    Route::post('/auth/wow-register', [\App\Http\Controllers\Api\WowRegistrationController::class, 'signup'])->middleware('throttle:5,1');
     Route::post('/auth/forgot-password', [PasswordController::class, 'forgot'])->middleware('throttle:5,1');
     Route::post('/auth/reset-password', [PasswordController::class, 'reset'])->middleware('throttle:5,1');
 
