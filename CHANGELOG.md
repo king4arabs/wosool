@@ -1,3 +1,8 @@
+## Founder and news editorial refresh — 2026-11-25
+
+- Added four invoiceQ and two Cynoia bilingual external founder profiles, plus three dated briefs covering Saudi OORI–Oumla, invoiceQ Series A and Cynoia's expanded workplace AI. Candidate totals: 435 founders, 233 companies, 156 news stories.
+- Synchronized source mirrors, importer/coverage registration, logo audit and test assertions. No accounts, invitations, existing editorial changes, API schema, hosting configuration or version changes. See [internal source evidence](docs/research/CONTENT-REFRESH-2026-11-25.md). CI and production imports/deployment are separate.
+
 ## EO Riyadh WOW public experience refinement — 2026-11-24
 
 - Streamlined Arabic and English event copy, compact hero and venue card, accessible horizontal submenu, agenda, registration and weather cards, preserving required approval, consent and historical climate information.
