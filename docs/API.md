@@ -28,6 +28,7 @@ The Wosool API is exposed through the Laravel backend and organized around **pub
 | POST | `/api/v1/auth/reset-password` | No | Consume a recovery token and change the password |
 | POST | `/api/v1/auth/login` | No | Authenticate and start session |
 | POST | `/api/v1/auth/register` | No | Create account and start session |
+| POST | `/api/v1/auth/wow-register` | No | Atomically create an event account and WOW attendee record, then return the allowlisted Luma handoff |
 | POST | `/api/v1/auth/logout` | Yes | End session |
 | GET | `/api/v1/auth/me` | Yes | Current authenticated user |
 
@@ -59,6 +60,12 @@ The Wosool API is exposed through the Laravel backend and organized around **pub
 |---|---|---|
 | POST | `/api/v1/applications` | Founder application submission |
 | POST | `/api/v1/contact` | Contact form submission |
+
+### WOW Event Registration
+
+`POST /api/v1/auth/wow-register` is limited to five requests per minute. It creates a new unverified account and the WOW attendee record in one database transaction, starts the first-party session and returns only the fixed `https://luma.com/8fccrqkx` handoff after a successful save. It does not verify the email address, approve a ticket, grant Wosool membership or grant any role. OTP and ticket messages are separate queued jobs, so their delivery does not block or roll back the attendee save.
+
+Existing accounts use authenticated `GET/POST /api/v1/wow-registration`. These event-specific responses and validation failures are private, non-cacheable and marked `noindex`. Production acceptance requires a durable queue worker, shared cache, real SMTP inbox verification and a compatible backend release before the frontend redirect is enabled. See [registration QA](REGISTRATION-QA.md).
 
 ### Authenticated Member Endpoints
 

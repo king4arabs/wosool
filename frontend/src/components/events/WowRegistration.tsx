@@ -6,7 +6,7 @@ import { useLocale } from "@/lib/locale"
 import Link from "next/link"
 
 export function WowRegistration() {
- const {user,isLoading,error:sessionError,refresh,login,register}=useAuth()
+ const {user,isLoading,error:sessionError,refresh,login}=useAuth()
  const {locale}=useLocale()
  const ar=locale==="ar"
  const t=(a:string,e:string)=>ar?a:e
@@ -34,15 +34,19 @@ export function WowRegistration() {
   const f=new FormData(e.currentTarget)
   const val=(key:string)=>String(f.get(key)||"").trim()
   try {
-   if(!user){
-    const password=String(f.get("password")||"")
-    if(mode==="login")await login(val("email"),password)
-    else await register(val("name"),val("email"),password,String(f.get("confirmation")||""))
+   const details={phone:val("phone"),company:val("company"),eo_interest:f.get("eo")==="yes",eoa_interest:f.get("eoa")==="yes",consent:f.get("consent")==="on"}
+   type Handoff={registration:{ticket_email_sent_at:string|null},ticket_url:string}
+   let result:Handoff
+   if(!user&&mode==="register"){
+    result=await api.post<Handoff>("/auth/wow-register",{...details,name:val("name"),email:val("email"),password:String(f.get("password")||""),password_confirmation:String(f.get("confirmation")||""),account_consent:f.get("account_consent")==="on"})
+   }else{
+    if(!user)await login(val("email"),String(f.get("password")||""))
+    result=await api.post<Handoff>("/wow-registration",details)
    }
-   const result=await api.post<{registration:{ticket_email_sent_at:string|null},ticket_url:string}>("/wow-registration",{phone:val("phone"),company:val("company"),eo_interest:f.get("eo")==="yes",eoa_interest:f.get("eoa")==="yes",consent:f.get("consent")==="on"})
+   if(result.ticket_url!=="https://luma.com/8fccrqkx")throw new Error(t("تعذر فتح رابط الحجز. يرجى المحاولة مجدداً.","Unable to open the RSVP link. Please try again."))
    setTicket(true)
-   setNotice(t("تم التسجيل بنجاح.","Registration saved."))
-   if(result.ticket_url==="https://luma.com/8fccrqkx") window.location.assign(result.ticket_url)
+   setNotice(t("تم التسجيل. جارٍ الانتقال لحجز التذكرة…","Registered. Opening ticket booking…"))
+   window.location.assign(result.ticket_url)
   }catch(err){setError(err instanceof Error?err.message:t("تعذر إكمال الطلب","Unable to complete your request"))}
   finally{setBusy(false)}
  }
@@ -54,7 +58,7 @@ export function WowRegistration() {
  {mode==="register"&&<label className="gateway-label">{t("الاسم الكامل","Full name")}<input name="name" required maxLength={255} autoComplete="name" className={field}/></label>}
  <label className="gateway-label">{t("البريد الإلكتروني","Email")}<input name="email" type="email" required autoComplete="email" dir="ltr" className={field}/></label>
  <label className="gateway-label">{t("كلمة المرور","Password")}<input name="password" type="password" required minLength={mode==="register"?8:undefined} autoComplete={mode==="register"?"new-password":"current-password"} className={field}/></label>
- {mode==="register"?<><label className="gateway-label">{t("تأكيد كلمة المرور","Confirm password")}<input name="confirmation" type="password" required minLength={8} autoComplete="new-password" className={field}/></label><label className="flex min-h-12 items-start gap-3 text-sm leading-6"><input type="checkbox" className="mt-1 h-5 w-5 shrink-0 accent-indigo-700" required/><span>{t("أوافق على","I agree to")} <Link href="/terms" className="underline">{t("الشروط","Terms")}</Link> · <Link href="/privacy" className="underline">{t("الخصوصية","Privacy")}</Link></span></label></>:<Link href="/forgot-password" className="inline-flex min-h-11 items-center underline">{t("نسيت كلمة المرور؟","Forgot password?")}</Link>}
+ {mode==="register"?<><label className="gateway-label">{t("تأكيد كلمة المرور","Confirm password")}<input name="confirmation" type="password" required minLength={8} autoComplete="new-password" className={field}/></label><label className="flex min-h-12 items-start gap-3 text-sm leading-6"><input name="account_consent" type="checkbox" className="mt-1 h-5 w-5 shrink-0 accent-indigo-700" required/><span>{t("أوافق على","I agree to")} <Link href="/terms" className="underline">{t("الشروط","Terms")}</Link> · <Link href="/privacy" className="underline">{t("الخصوصية","Privacy")}</Link></span></label></>:<Link href="/forgot-password" className="inline-flex min-h-11 items-center underline">{t("نسيت كلمة المرور؟","Forgot password?")}</Link>}
  </>:<p className="break-all rounded-xl bg-indigo-50 p-3 text-sm text-indigo-950">{user.name} · {user.email}</p>}
  <label className="gateway-label">{t("رقم الجوال","Phone")}<input name="phone" defaultValue={saved?.phone||""} type="tel" dir="ltr" placeholder="+966" required autoComplete="tel" maxLength={50} className={field}/></label><label className="gateway-label">{t("الجهة / الشركة (اختياري)","Entity / Company (Optional)")}<input name="company" defaultValue={saved?.company||""} autoComplete="organization" maxLength={255} className={field}/></label>{[["eo",t("الاهتمام بعضوية EO","EO membership interest")],["eoa",t("الاهتمام بمسرّعة EOA","EO Accelerator interest")]].map(([name,label])=><fieldset key={name} className="min-w-0 rounded-xl border border-slate-200 p-3 sm:p-4"><legend className="px-1 font-semibold">{label} <span className="text-sm font-normal text-slate-500">{t("(اختياري)","(Optional)")}</span></legend><div className="grid grid-cols-3 gap-1 sm:gap-2">{["yes","no","skip"].map(value=><label key={value} className="flex min-h-12 min-w-0 cursor-pointer items-center justify-center gap-1 rounded-lg border border-slate-200 px-1 text-sm has-[:checked]:border-indigo-600 has-[:checked]:bg-indigo-50"><input type="radio" className="h-4 w-4 shrink-0 accent-indigo-700" name={name} value={value} defaultChecked={!!saved && value===(Boolean(name==="eo"?saved.eo_interest:saved.eoa_interest)?"yes":"no")}/>{value==="yes"?t("نعم","Yes"):value==="no"?t("لا","No"):t("تخطي","Skip")}</label> )}</div></fieldset>)}<label className="flex min-h-12 items-start gap-3 text-sm leading-6"><input name="consent" type="checkbox" className="mt-1 h-5 w-5 shrink-0 accent-indigo-700" required/>{t("أوافق على حفظ بيانات التسجيل لإدارة الفعالية والتواصل بشأن الاهتمامات التي اخترتها.","I agree to storing registration data for event administration and follow-up on my selected interests.")}</label>
  {recoveryError&&<p role="status" className="text-sm text-slate-600">{t("تعذر تحميل بيانات التسجيل السابقة. يمكنك المتابعة.","Previous registration unavailable. You may continue.")}</p>}
