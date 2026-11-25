@@ -1,3 +1,7 @@
+## EO Riyadh WOW golf wording — 2026-11-25
+
+- Updated the Arabic golf agenda label as requested, retaining the first-come-first-served note, green styling and existing time. Retained the requested English formal-opening wording. No registration or hosting changes.
+
 ## EO Riyadh WOW learning event — 2026-11-25
 
 - Renamed the 7 PM session to Learning event with special guests in English and Arabic. Retained its bold purple styling and the requested rose dinner highlight. The 5:30 PM formal opening now introduces EO and includes a panel discussion, in both languages. Event timing and registration remain unchanged.
