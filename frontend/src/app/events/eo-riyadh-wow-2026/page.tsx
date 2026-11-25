@@ -22,7 +22,7 @@ const agenda: {time: string; en: string; ar: string; tone: AgendaTone; detailEn?
  {time:"6:30 PM",en:"Isha prayer break",ar:"استراحة صلاة العشاء",tone:"isha"},
  {time:"7:00 PM",en:"Learning event with special guests",ar:"لقاء تعليمي مع ضيوف مميزين",tone:"main"},
  {time:"8:00 PM",en:"Dinner and networking",ar:"العشاء والتواصل",tone:"dinner"},
- {time:"9:00 PM–Midnight",en:"Open networking and activities",ar:"لقاءات وأنشطة مفتوحة",tone:"regular"},
+ {time:"9:00–11:00 PM",en:"Open networking and activities",ar:"لقاءات وأنشطة مفتوحة",tone:"regular"},
 ]
 
 const agendaStyles: Record<AgendaTone, {row:string; time:string; label:string}> = {
@@ -53,7 +53,7 @@ export default function WowEventPage() {
  {[
  {label:ar?"التاريخ":"Date",value:ar?"الجمعة 11 ديسمبر 2026":"Fri, Dec 11, 2026",Icon:CalendarDays},
  {label:ar?"الموقع":"Venue",value:ar?"نادي جولف وادي صفار، الدرعية":"Golf Club Wadi Safar, Diriyah",Icon:MapPin},
- {label:ar?"الوقت":"Hours",value:ar?"٣ عصراً – منتصف الليل":"3 PM – Midnight",Icon:Clock}
+ {label:ar?"الوقت":"Hours",value:ar?"٣ عصراً – ١١ مساءً":"3 PM – 11 PM",Icon:Clock}
  ].map(({label,value,Icon})=><div key={label} className="min-w-0 rounded-xl border border-white/25 bg-[#06132f]/80 p-3"><dt className="flex items-center gap-2 text-xs font-medium text-cyan-100"><Icon size={18} aria-hidden="true"/>{label}</dt><dd className="mt-1 text-sm font-bold leading-snug sm:text-base">{value}</dd></div>)}
  </dl>
  <p className="mt-3 text-sm font-medium text-white">{ar?"البرنامج الرسمي: ٥:٣٠–٨:٣٠ مساءً":"Official program: 5:30–8:30 PM"}</p>
@@ -91,7 +91,7 @@ export default function WowEventPage() {
  <div id="weather" className="scroll-mt-28"><WowWeather /></div>
  </div><aside className="min-w-0 lg:sticky lg:top-24"><WowRegistration /></aside></div>
  <section id="actions" className="mt-10 scroll-mt-28 rounded-3xl bg-[#101e50] p-5 text-white sm:p-8"><h2 className="text-2xl font-bold">{ar?"احفظ وشارك الفعالية":"Save & share the event"}</h2><div className="mt-4 flex min-w-0 gap-2 overflow-x-auto overscroll-x-contain pb-2 sm:gap-3" aria-label={ar?"اختصارات حفظ ومشاركة الفعالية":"Event save and share shortcuts"}>{[
- {label:"Google",description:"Google Calendar",Icon:CalendarPlus,href:"https://calendar.google.com/calendar/render?action=TEMPLATE&text=EO%20Riyadh%20WOW%20Event&dates=20261211T120000Z%2F20261211T210000Z&location=Golf%20Club%20Wadi%20Safar%2C%20Diriyah&details="+encodeURIComponent(eventUrl)},
+ {label:"Google",description:"Google Calendar",Icon:CalendarPlus,href:"https://calendar.google.com/calendar/render?action=TEMPLATE&text=EO%20Riyadh%20WOW%20Event&dates=20261211T120000Z%2F20261211T200000Z&location=Golf%20Club%20Wadi%20Safar%2C%20Diriyah&details="+encodeURIComponent(eventUrl)},
  {label:ar?"التقويم":"Calendar",description:ar?"تقويم Apple أو Outlook":"Apple or Outlook calendar",Icon:CalendarDays,href:"/events/wow-2026/event.ics"},
  {label:"WhatsApp",description:ar?"مشاركة عبر واتساب":"Share on WhatsApp",Icon:MessageCircle,href:"https://wa.me/?text="+encodeURIComponent("EO Riyadh WOW Event | "+eventUrl)},
  {label:"LinkedIn",description:ar?"مشاركة عبر LinkedIn":"Share on LinkedIn",Icon:Briefcase,href:"https://www.linkedin.com/sharing/share-offsite/?url="+encodeURIComponent(eventUrl)},
