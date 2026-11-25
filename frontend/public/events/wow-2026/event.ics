@@ -5,9 +5,9 @@ CALSCALE:GREGORIAN
 BEGIN:VEVENT
 UID:eo-riyadh-wow-2026@wosool.org
 DTSTAMP:20261125T144100Z
-SEQUENCE:1
+SEQUENCE:2
 DTSTART:20261211T120000Z
-DTEND:20261211T210000Z
+DTEND:20261211T200000Z
 SUMMARY:EO Riyadh WOW Event
 LOCATION:Golf Club Wadi Safar\, Diriyah
 DESCRIPTION:Official program 5:30-8:30 PM Riyadh time. RSVP and organizer approval required.\nhttps://wosool.org/events/eo-riyadh-wow-2026
