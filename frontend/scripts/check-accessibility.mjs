@@ -43,7 +43,7 @@ const details = [
   "/founders/qa-unavailable", "/founders/companies/qa-unavailable", "/events/qa-unavailable", "/programs/qa-unavailable",
 ]
 const targets = process.env.A11Y_ROUTES?.split(",").filter(Boolean) ?? [...new Set([...routes().filter(route => !isPrivate(route)), ...details])]
-const internalCopy = /(?:editorial note:|source[- ]review queue|review due:|seed data|as an AI language model|ملاحظة تحريرية:|قائمة انتظار مراجعة المصادر|موعد المراجعة الداخلية)/i
+const internalCopy = /(?:editorial note:|source[- ]review queue|review due:|seed data|as an AI language model|failed to fetch|network error|axioserror|econnrefused|ملاحظة تحريرية:|قائمة انتظار مراجعة المصادر|موعد المراجعة الداخلية)/i
 
 const app = spawn(process.execPath, ["node_modules/next/dist/bin/next", "start", "-H", "127.0.0.1", "-p", "18131"], { stdio: ["ignore", "pipe", "pipe"] })
 let log = ""

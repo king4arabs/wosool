@@ -35,7 +35,7 @@
 .engines article:nth-child(2) { border-top-color: #892879; }
 .engines article:nth-child(3) { border-top-color: #126c77; }
 .engineIcon { display: flex; align-items: center; justify-content: space-between; color: var(--link); margin-bottom: 28px; }
-.engineIcon span { font-size: 32px; font-weight: 700; color: var(--text-muted); opacity: .5; }
+.engineIcon span { font-size: 32px; font-weight: 700; color: var(--brand-navy); }
 .engines h3 { font-size: 22px; }
 .engines p { font-size: 14px; margin-bottom: 0; }
 .sectionHeading { margin: 56px 0 24px; max-width: 720px; }

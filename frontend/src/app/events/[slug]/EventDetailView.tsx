@@ -121,7 +121,7 @@ function EventDetailPageContent({ initialRecord }: { initialRecord?: EventDetail
   const slug = params?.slug
   const [event, setEvent] = useState<EventDetails | null>(initialRecord ?? null)
   const [loading, setLoading] = useState(!initialRecord)
-  const [error, setError] = useState<string | null>(null)
+  const [error, setError] = useState<"not-found" | "unavailable" | null>(null)
   const [busyAction, setBusyAction] = useState<"rsvp" | "save" | "share" | null>(null)
   const [isSaved, setIsSaved] = useState(false)
   const [registrationState, setRegistrationState] = useState<string>("open")
@@ -147,7 +147,9 @@ function EventDetailPageContent({ initialRecord }: { initialRecord?: EventDetail
         setEvent(response.data)
         setIsSaved(Boolean(response.data.is_saved))
       })
-      .catch((err: Error) => { if (active) setError(err.message) })
+      .catch((err: unknown) => {
+        if (active) setError(err instanceof ApiError && err.status === 404 ? "not-found" : "unavailable")
+      })
       .finally(() => { if (active) setLoading(false) })
     return () => { active = false }
   }, [slug, initialRecord])
@@ -239,10 +241,15 @@ function EventDetailPageContent({ initialRecord }: { initialRecord?: EventDetail
 
   if (loading) return <div className="mx-auto max-w-5xl px-4 py-8 text-sm text-slate-500" role="status">{t("جارٍ تحميل الفعالية...", "Loading event...")}</div>
   if (error || !event) {
+    const unavailable = error === "unavailable"
     return (
       <div className="mx-auto max-w-5xl px-4 py-8 space-y-3">
-        <h1 className="text-xl font-bold text-slate-900">{t("لم نجد هذه الفعالية", "We could not find this event")}</h1>
-        <p className="text-sm text-rose-600">{error || t("ربما أُزيلت أو تغيّر رابطها.", "It may have been removed or its link changed.")}</p>
+        <h1 className="text-xl font-bold text-slate-900">
+          {unavailable ? t("تعذر تحميل الفعالية الآن", "This event is temporarily unavailable") : t("لم نجد هذه الفعالية", "We could not find this event")}
+        </h1>
+        <p className="text-sm text-slate-600">
+          {unavailable ? t("حاول مرة أخرى بعد قليل.", "Please try again shortly.") : t("ربما أُزيلت أو تغيّر رابطها.", "It may have been removed or its link changed.")}
+        </p>
         <Link href="/events" className="text-sm font-semibold text-[var(--link)] underline-offset-4 hover:underline">{t("كل الفعاليات", "All events")}</Link>
       </div>
     )

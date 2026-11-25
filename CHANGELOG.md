@@ -3,6 +3,11 @@
 - Added four invoiceQ and two Cynoia bilingual external founder profiles, plus three dated briefs covering Saudi OORI–Oumla, invoiceQ Series A and Cynoia's expanded workplace AI. Candidate totals: 435 founders, 233 companies, 156 news stories.
 - Synchronized source mirrors, importer/coverage registration, logo audit and test assertions. No accounts, invitations, existing editorial changes, API schema, hosting configuration or version changes. See [internal source evidence](docs/research/CONTENT-REFRESH-2026-11-25.md). CI and production imports/deployment are separate.
 
+## Public fallback and accessibility polish — 2026-11-25
+
+- Replaced raw event API failures with concise bilingual visitor copy and preserved a distinct not-found state.
+- Increased leadership step-number contrast and extended the public browser gate to reject common network-error leakage.
+
 ## Database-backed founder discovery and public copy — 2026-11-24
 
 - The homepage, founder directory, profiles and news links now use published Laravel records. Visiting again rotates the homepage sample; a database outage never restores an offline founder. Added a reversible lookup index and shared visibility rules. [Architecture and release order](docs/PUBLIC-FOUNDER-DIRECTORY.md).
