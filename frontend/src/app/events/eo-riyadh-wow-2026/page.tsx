@@ -12,15 +12,32 @@ import { useLocale } from "@/lib/locale"
 
 const eventUrl = "https://wosool.org/events/eo-riyadh-wow-2026"
 const map = "https://maps.app.goo.gl/G4XGAB566UbG4Lsn9"
-const agenda = [
- ["2:00–5:00 PM","Welcome reception, networking and golf","استقبال الضيوف والتواصل وأنشطة الجولف"],
- ["5:00 PM","Maghrib prayer break","استراحة صلاة المغرب"],
- ["5:30 PM","Opening, introduction to EO and EOA, and panel discussion","الافتتاح والتعريف بـ EO وEOA وجلسة حوارية"],
- ["6:30 PM","Isha prayer break","استراحة صلاة العشاء"],
- ["7:00 PM","Main session with special guest","الجلسة الرئيسية مع الضيف الخاص"],
- ["8:00 PM","Dinner and networking","العشاء والتواصل"],
- ["9:00 PM–Midnight","Open networking and activities","لقاءات وأنشطة مفتوحة"],
+type AgendaTone = "regular" | "asr" | "golf" | "winners" | "maghrib" | "formal" | "isha" | "main"
+
+const agenda: {time: string; en: string; ar: string; tone: AgendaTone; detailEn?: string; detailAr?: string}[] = [
+ {time:"2:00 PM",en:"Welcome reception and open time for golf",ar:"استقبال الضيوف ووقت مفتوح للجولف",tone:"regular"},
+ {time:"2:45 PM",en:"Asr prayer time",ar:"وقت صلاة العصر",tone:"asr"},
+ {time:"3:00–5:00 PM",en:"Golf Tournament",ar:"بطولة الجولف",tone:"golf",detailEn:"First come, first served",detailAr:"الأولوية حسب أسبقية الحضور"},
+ {time:"4:30 PM",en:"Winners announcement",ar:"إعلان الفائزين",tone:"winners"},
+ {time:"5:00 PM",en:"Maghrib prayer break",ar:"استراحة صلاة المغرب",tone:"maghrib"},
+ {time:"5:30 PM",en:"Formal opening, introduction to EO and EOA, and panel discussion",ar:"الافتتاح الرسمي والتعريف بـ EO وEOA وجلسة حوارية",tone:"formal"},
+ {time:"6:30 PM",en:"Isha prayer break",ar:"استراحة صلاة العشاء",tone:"isha"},
+ {time:"7:00 PM",en:"Main session with special guests",ar:"الجلسة الرئيسية مع الضيوف المميزين",tone:"main"},
+ {time:"8:00 PM",en:"Dinner and networking",ar:"العشاء والتواصل",tone:"regular"},
+ {time:"9:00 PM–Midnight",en:"Open networking and activities",ar:"لقاءات وأنشطة مفتوحة",tone:"regular"},
 ]
+
+const agendaStyles: Record<AgendaTone, {row:string; time:string; label:string}> = {
+ regular: {row:"bg-white border-s-slate-200",time:"text-indigo-800",label:"text-slate-800"},
+ asr: {row:"bg-amber-50 border-s-amber-500",time:"text-amber-900",label:"font-semibold text-amber-950"},
+ golf: {row:"bg-emerald-50 border-s-emerald-600",time:"text-emerald-900",label:"font-bold text-emerald-950"},
+ winners: {row:"bg-yellow-100 border-s-yellow-500",time:"text-yellow-950",label:"font-extrabold text-yellow-950"},
+ maghrib: {row:"bg-teal-50 border-s-teal-500",time:"text-teal-900",label:"font-semibold text-teal-950"},
+ formal: {row:"bg-[#183a82] border-s-cyan-300",time:"text-cyan-100",label:"font-extrabold text-white"},
+ isha: {row:"bg-violet-50 border-s-violet-500",time:"text-violet-900",label:"font-semibold text-violet-950"},
+ main: {row:"bg-[#4b2078] border-s-fuchsia-300",time:"text-fuchsia-100",label:"font-extrabold text-white"},
+}
+
 export default function WowEventPage() {
  const { locale } = useLocale()
  const ar = locale === "ar"
@@ -54,7 +71,13 @@ export default function WowEventPage() {
  <Image src="/events/wow-2026/location.svg" width={80} height={80} alt={ar?"رمز الاستجابة السريعة للموقع":"Venue directions QR code"} className="h-20 w-20 shrink-0"/>
  </a>
  <h2 id="agenda" className="scroll-mt-28 text-2xl font-extrabold text-indigo-950">{ar?"برنامج الفعالية":"Event agenda"}</h2>
- <div className="mt-4 divide-y divide-slate-100 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">{agenda.map(([time,en,arabic])=><div key={time} className="grid gap-1 px-4 py-3.5 sm:grid-cols-[150px_minmax(0,1fr)] sm:gap-3"><span dir="ltr" className="text-sm font-bold text-indigo-800">{time}</span><span className="text-sm leading-6 text-slate-800">{ar?arabic:en}</span></div>)}</div>
+ <ol aria-labelledby="agenda" className="mt-4 divide-y divide-slate-200/70 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">{agenda.map((item)=>{
+  const style=agendaStyles[item.tone]
+  return <li key={item.time} className={`grid min-w-0 gap-1 border-s-4 px-3 py-3.5 sm:grid-cols-[150px_minmax(0,1fr)] sm:gap-3 sm:px-4 ${style.row}`}>
+   <span dir="ltr" className={`text-start text-sm font-bold tabular-nums ${style.time}`}>{item.time}</span>
+   <div className="min-w-0"><span className={`block break-words text-sm leading-6 ${style.label}`}>{ar?item.ar:item.en}</span>{item.detailEn&&<span className="mt-0.5 block text-xs font-semibold text-emerald-900">{ar?item.detailAr:item.detailEn}</span>}</div>
+  </li>
+ })}</ol>
  <p className="mt-2 text-xs text-slate-600">{ar?"الصلاة حسب التوقيت المحلي.":"Prayer times are local."}</p>
  <h2 id="dress" className="mt-10 scroll-mt-28 text-2xl font-bold">{ar?"الزي المقترح":"Dress code"}</h2>
  <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
