@@ -1,3 +1,8 @@
+## EO Riyadh WOW event — after-Asr start — 2026-11-25
+
+- Reception and golf now begin at 3 PM Riyadh time; removed the earlier 2 PM reception slot and separate 2:45 PM Asr prayer entry. Formal opening, remaining prayer breaks, dinner and midnight end are unchanged.
+- Synchronized the hero hours, Google Calendar link, downloadable ICS and canonical event start via a guarded migration. Existing registrations and approval states are preserved. Luma is an independent provider and its published schedule must be checked separately. CI, migration and live deployment remain to be verified.
+
 ## EO Riyadh WOW agenda — remove winners announcement
 
 - Removed the 4:30 PM winners announcement in both languages and its unused style. All remaining schedule items, highlights and registration flows are unchanged.
