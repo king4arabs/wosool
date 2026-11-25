@@ -12,7 +12,7 @@ import { useLocale } from "@/lib/locale"
 
 const eventUrl = "https://wosool.org/events/eo-riyadh-wow-2026"
 const map = "https://maps.app.goo.gl/G4XGAB566UbG4Lsn9"
-type AgendaTone = "regular" | "asr" | "golf" | "winners" | "maghrib" | "formal" | "isha" | "main"
+type AgendaTone = "regular" | "asr" | "golf" | "winners" | "maghrib" | "formal" | "isha" | "main" | "dinner"
 
 const agenda: {time: string; en: string; ar: string; tone: AgendaTone; detailEn?: string; detailAr?: string}[] = [
  {time:"2:00 PM",en:"Welcome reception and open time for golf",ar:"استقبال الضيوف ووقت مفتوح للجولف",tone:"regular"},
@@ -20,10 +20,10 @@ const agenda: {time: string; en: string; ar: string; tone: AgendaTone; detailEn?
  {time:"3:00–5:00 PM",en:"Golf Tournament",ar:"بطولة الجولف",tone:"golf",detailEn:"First come, first served",detailAr:"الأولوية حسب أسبقية الحضور"},
  {time:"4:30 PM",en:"Winners announcement",ar:"إعلان الفائزين",tone:"winners"},
  {time:"5:00 PM",en:"Maghrib prayer break",ar:"استراحة صلاة المغرب",tone:"maghrib"},
- {time:"5:30 PM",en:"Formal opening, introduction to EO and EOA, and panel discussion",ar:"الافتتاح الرسمي والتعريف بـ EO وEOA وجلسة حوارية",tone:"formal"},
+ {time:"5:30 PM",en:"Formal opening, introduction to EO and panel discussion",ar:"الافتتاح الرسمي والتعريف بـ EO وجلسة حوارية",tone:"formal"},
  {time:"6:30 PM",en:"Isha prayer break",ar:"استراحة صلاة العشاء",tone:"isha"},
- {time:"7:00 PM",en:"Main session with special guests",ar:"الجلسة الرئيسية مع الضيوف المميزين",tone:"main"},
- {time:"8:00 PM",en:"Dinner and networking",ar:"العشاء والتواصل",tone:"regular"},
+ {time:"7:00 PM",en:"Learning event with special guests",ar:"لقاء تعليمي مع ضيوف مميزين",tone:"main"},
+ {time:"8:00 PM",en:"Dinner and networking",ar:"العشاء والتواصل",tone:"dinner"},
  {time:"9:00 PM–Midnight",en:"Open networking and activities",ar:"لقاءات وأنشطة مفتوحة",tone:"regular"},
 ]
 
@@ -36,6 +36,7 @@ const agendaStyles: Record<AgendaTone, {row:string; time:string; label:string}> 
  formal: {row:"bg-[#183a82] border-s-cyan-300",time:"text-cyan-100",label:"font-extrabold text-white"},
  isha: {row:"bg-violet-50 border-s-violet-500",time:"text-violet-900",label:"font-semibold text-violet-950"},
  main: {row:"bg-[#4b2078] border-s-fuchsia-300",time:"text-fuchsia-100",label:"font-extrabold text-white"},
+ dinner: {row:"bg-rose-50 border-s-rose-500",time:"text-rose-900",label:"font-bold text-rose-950"},
 }
 
 export default function WowEventPage() {
