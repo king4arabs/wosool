@@ -28,3 +28,7 @@ Return to the [README](../README.md) or [changelog](../CHANGELOG.md).
 - Remove redundant explanatory copy, retain explicit attendance approval, membership verification, privacy consent and historical climate labels. Empty partner rail presents a partnership enquiry link rather than an unverified announcement.
 - Registration API, Luma destination, partner approval rules, deployment configuration and dependencies remain unchanged.
 - Verify at 320, 390, 768 and 1440 CSS pixels in Arabic and English: no horizontal page overflow; every submenu item reachable; hero and six avatars visible; keyboard focus visible; directions and registration actions usable. Verify both saved and fresh registration states and the weather qualification. Source inspection completed; CI and actual browser/production verification remain pending.
+
+## Agenda styling — 25 November 2026
+
+The organizer-supplied schedule includes Asr at 2:45 PM, the 3–5 PM golf tournament (first come, first served), a 4:30 PM winners announcement within that block, the 5:30 PM formal opening and 7 PM main session with special guests. Maghrib and Isha retain their previous time slots. Verify actual local prayer times with the organizer before the event. Check Arabic and English text, logical-start accent borders, legible foreground contrast and all ten rows on mobile and desktop. Colors are supplementary: all activities have explicit textual labels. No change to registration, event hours, location, dependencies or hosting. CI and live verification remain separate.
