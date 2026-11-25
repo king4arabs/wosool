@@ -1,7 +1,7 @@
 ## EO Riyadh WOW agenda update — 2026-11-25
 
 - Updated the bilingual event schedule: reception at 2 PM, Asr at 2:45 PM, golf tournament 3–5 PM (first come, first served), winners at 4:30 PM, formal opening at 5:30 PM and main session with special guests at 7 PM. Existing Maghrib, Isha, dinner and open networking times remain unchanged.
-- Added distinct high-contrast colors for prayer breaks and golf, and prominent bold styles for winners and formal sessions. The responsive ordered list preserves the existing event, RSVP and hosting behavior. Times follow the organizer's requested agenda; independent prayer-time verification and live release checks remain pending. See [event QA](docs/WOW-EVENT-ARTWORK.md).
+- Added distinct high-contrast colors for prayer breaks and golf, and prominent bold styles for winners and formal sessions, plus a distinct rose highlight for dinner and networking. The responsive ordered list preserves the existing event, RSVP and hosting behavior. Times follow the organizer's requested agenda; independent prayer-time verification and live release checks remain pending. See [event QA](docs/WOW-EVENT-ARTWORK.md).
 
 ## Founder and news editorial refresh — 2026-11-25
 
