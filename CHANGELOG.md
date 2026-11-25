@@ -1,3 +1,7 @@
+## EO Riyadh WOW agenda — remove winners announcement
+
+- Removed the 4:30 PM winners announcement in both languages and its unused style. All remaining schedule items, highlights and registration flows are unchanged.
+
 ## EO Riyadh WOW golf wording — 2026-11-25
 
 - Updated the Arabic golf agenda label as requested, retaining the first-come-first-served note, green styling and existing time. Retained the requested English formal-opening wording. No registration or hosting changes.
