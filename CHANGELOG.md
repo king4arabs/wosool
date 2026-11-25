@@ -1,3 +1,8 @@
+## Email header logo shows in Gmail and Outlook — 2026-11-25
+
+- **Found:** the shared transactional email header used the official horizontal logo as an SVG. Gmail and Outlook do not display SVG images, so recipients saw alt text instead of the logo.
+- **Changed:** the same artwork is served as `frontend/public/wosool-logo-eo.png` (480×108, transparent, 2× the 240px display width) and used by the shared header. New test: the header image is a PNG/JPEG that exists in `frontend/public`, at least 2× display width, with proportional `width`/`height` (fails on the SVG header). Rendered at 390px and 1366px: logo at 240px, no horizontal overflow. No API, data, deployment or hosting change.
+
 ## Symfony 7.4.24 security release — 2026-11-27
 
 - Current `main` CI failed the unsuppressed Composer audit on PHP 8.3, 8.4 and 8.5 after five Symfony advisories were published on 25 November. Frontend, production guardrails and the standalone pnpm/Hostinger build remained green.
