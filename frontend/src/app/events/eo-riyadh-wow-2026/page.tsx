@@ -15,7 +15,7 @@ const map = "https://maps.app.goo.gl/G4XGAB566UbG4Lsn9"
 type AgendaTone = "regular" | "golf" | "maghrib" | "formal" | "isha" | "main" | "dinner"
 
 const agenda: {time: string; en: string; ar: string; tone: AgendaTone; detailEn?: string; detailAr?: string}[] = [
- {time:"3:00 PM",en:"Welcome reception and open time for golf",ar:"استقبال الضيوف ووقت مفتوح للجولف",tone:"regular"},
+ {time:"3:00 PM",en:"Reception and open time",ar:"استقبال ووقت مفتوح",tone:"regular"},
  {time:"3:00–5:00 PM",en:"Golf Tournament",ar:"دورية جولف مبسطه",tone:"golf",detailEn:"First come, first served",detailAr:"الأولوية حسب أسبقية الحضور"},
  {time:"5:00 PM",en:"Maghrib prayer break",ar:"استراحة صلاة المغرب",tone:"maghrib"},
  {time:"5:30 PM",en:"Formal opening, introducing EO, and panel discussion",ar:"الافتتاح الرسمي والتعريف بـ EO وجلسة حوارية",tone:"formal"},
