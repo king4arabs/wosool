@@ -2545,5 +2545,27 @@
     "reviewed_at": "2026-11-24",
     "status": "unresolved",
     "reason": "Original artwork reuse not established; retain readable company-name fallback."
+  },
+  {
+    "company_key": "invoiceq-jordan",
+    "company": "invoiceQ",
+    "website": "https://invoiceq.com/",
+    "source_page": "https://jo.invoiceq.com/en/about-us/",
+    "src": null,
+    "tone": null,
+    "reviewed_at": "2026-11-25",
+    "status": "unresolved",
+    "reason": "Original artwork reuse permission not established; retain readable company-name fallback."
+  },
+  {
+    "company_key": "cynoia-tunisia",
+    "company": "Cynoia",
+    "website": "https://cynoia.com/",
+    "source_page": "https://cynoia.com/about-us",
+    "src": null,
+    "tone": null,
+    "reviewed_at": "2026-11-25",
+    "status": "unresolved",
+    "reason": "Original artwork reuse permission not established; retain readable company-name fallback."
   }
 ]
