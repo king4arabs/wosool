@@ -53,7 +53,7 @@ export default function WowEventPage() {
  {[
  {label:ar?"التاريخ":"Date",value:ar?"الجمعة 11 ديسمبر 2026":"Fri, Dec 11, 2026",Icon:CalendarDays},
  {label:ar?"الموقع":"Venue",value:ar?"نادي جولف وادي صفار، الدرعية":"Golf Club Wadi Safar, Diriyah",Icon:MapPin},
- {label:ar?"الوقت":"Hours",value:ar?"٣ عصراً – ١١ مساءً":"3 PM – 11 PM",Icon:Clock}
+ {label:ar?"الوقت":"Hours",value:ar?"٣:٠٠ عصراً – ١١:٠٠ مساءً":"3:00 PM – 11:00 PM",Icon:Clock}
  ].map(({label,value,Icon})=><div key={label} className="min-w-0 rounded-xl border border-white/25 bg-[#06132f]/80 p-3"><dt className="flex items-center gap-2 text-xs font-medium text-cyan-100"><Icon size={18} aria-hidden="true"/>{label}</dt><dd className="mt-1 text-sm font-bold leading-snug sm:text-base">{value}</dd></div>)}
  </dl>
  <p className="mt-3 text-sm font-medium text-white">{ar?"البرنامج الرسمي: ٥:٣٠–٨:٣٠ مساءً":"Official program: 5:30–8:30 PM"}</p>
