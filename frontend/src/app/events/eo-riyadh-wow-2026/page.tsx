@@ -12,13 +12,12 @@ import { useLocale } from "@/lib/locale"
 
 const eventUrl = "https://wosool.org/events/eo-riyadh-wow-2026"
 const map = "https://maps.app.goo.gl/G4XGAB566UbG4Lsn9"
-type AgendaTone = "regular" | "asr" | "golf" | "winners" | "maghrib" | "formal" | "isha" | "main" | "dinner"
+type AgendaTone = "regular" | "asr" | "golf" | "maghrib" | "formal" | "isha" | "main" | "dinner"
 
 const agenda: {time: string; en: string; ar: string; tone: AgendaTone; detailEn?: string; detailAr?: string}[] = [
  {time:"2:00 PM",en:"Welcome reception and open time for golf",ar:"استقبال الضيوف ووقت مفتوح للجولف",tone:"regular"},
  {time:"2:45 PM",en:"Asr prayer time",ar:"وقت صلاة العصر",tone:"asr"},
  {time:"3:00–5:00 PM",en:"Golf Tournament",ar:"دورية جولف مبسطه",tone:"golf",detailEn:"First come, first served",detailAr:"الأولوية حسب أسبقية الحضور"},
- {time:"4:30 PM",en:"Winners announcement",ar:"إعلان الفائزين",tone:"winners"},
  {time:"5:00 PM",en:"Maghrib prayer break",ar:"استراحة صلاة المغرب",tone:"maghrib"},
  {time:"5:30 PM",en:"Formal opening, introducing EO, and panel discussion",ar:"الافتتاح الرسمي والتعريف بـ EO وجلسة حوارية",tone:"formal"},
  {time:"6:30 PM",en:"Isha prayer break",ar:"استراحة صلاة العشاء",tone:"isha"},
@@ -31,7 +30,6 @@ const agendaStyles: Record<AgendaTone, {row:string; time:string; label:string}> 
  regular: {row:"bg-white border-s-slate-200",time:"text-indigo-800",label:"text-slate-800"},
  asr: {row:"bg-amber-50 border-s-amber-500",time:"text-amber-900",label:"font-semibold text-amber-950"},
  golf: {row:"bg-emerald-50 border-s-emerald-600",time:"text-emerald-900",label:"font-bold text-emerald-950"},
- winners: {row:"bg-yellow-100 border-s-yellow-500",time:"text-yellow-950",label:"font-extrabold text-yellow-950"},
  maghrib: {row:"bg-teal-50 border-s-teal-500",time:"text-teal-900",label:"font-semibold text-teal-950"},
  formal: {row:"bg-[#183a82] border-s-cyan-300",time:"text-cyan-100",label:"font-extrabold text-white"},
  isha: {row:"bg-violet-50 border-s-violet-500",time:"text-violet-900",label:"font-semibold text-violet-950"},
