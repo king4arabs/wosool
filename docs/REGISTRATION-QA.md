@@ -81,3 +81,9 @@ Verify with a fresh sign-in, confirm the intended identity and `/admin` access, 
 - `frontend/scripts/check-member-onboarding.mjs`: Arabic/English mobile/desktop signup, wrong-code recovery and profile review with isolated API fixtures. These browser fixtures do not prove SMTP delivery.
 - `scripts/production-smoke.test.mjs`: monitoring detects missing routes and old registration validators.
 - CI runs dependency audits, frontend build/types/lint/tests, browser checks and backend tests on the supported PHP patch branches. Store final run and deployed revisions with release evidence.
+
+## WOW event-specific registration — 25 November 2026
+
+The public event signup uses `POST /api/v1/auth/wow-register` (also `/v1/auth/wow-register`). Account and participant data are committed together before returning the fixed Luma link. OTP verification is not a precondition for requesting a ticket; member/admin authorization and the normal signup route are unchanged. The frontend redirects only on a successful response containing the official URL. Existing accounts sign in and submit to `/wow-registration`.
+
+OTP and ticket email jobs run independently from the response; production should run the configured durable queue worker and use a shared cache for delivery locks. Verify queue readiness, retry/failed jobs and actual inbox delivery. If queue dispatch fails, a best-effort post-response attempt is made; use normal authenticated OTP resend if needed. Never mark an address verified or a ticket approved just because signup succeeded. Mail delivery is at-least-once, not guaranteed exactly once across worker crashes. Deploy the compatible backend before the updated frontend. Test fresh accounts, existing unverified accounts, closed registration, both route mounts, unavailable SMTP, and actual navigation to Luma. CI and production results must be recorded separately.
