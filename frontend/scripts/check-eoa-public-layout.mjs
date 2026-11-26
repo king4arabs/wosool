@@ -158,7 +158,11 @@ try {
           await form.getByRole('status').waitFor()
           await assertContained(page, '[data-eoa-eligibility] h2, [data-eoa-eligibility] p, [data-eoa-eligibility] input, [data-eoa-eligibility] select, [data-eoa-eligibility] .eoa-btn, .eoa-fee dd')
         } else if (path === 'leadership') {
-          const cards = page.locator('[data-program-leaders] > article')
+          // During a responsive route transition Next.js can briefly retain the
+          // outgoing tree off-screen. Validate the rendered leadership grid, not
+          // a hidden transition copy that is unavailable to users.
+          const cards = page.locator('[data-program-leaders]:visible > article')
+          await cards.first().waitFor()
           assert.equal(await cards.count(), 3, 'Program leadership includes all three requested positions')
           assert.deepEqual(await cards.locator('h2').allTextContents(), locale === 'ar'
             ? ['محمد السلمي', 'فؤاد النزّاوي', 'بشاير عبدالله']
