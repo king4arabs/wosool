@@ -2567,5 +2567,27 @@
     "reviewed_at": "2026-11-25",
     "status": "unresolved",
     "reason": "Original artwork reuse permission not established; retain readable company-name fallback."
+  },
+  {
+    "company_key": "009-labs",
+    "company": "009",
+    "website": "https://009labs.ai/",
+    "source_page": "https://009labs.ai/",
+    "src": null,
+    "tone": null,
+    "reviewed_at": "2026-11-26",
+    "status": "unresolved",
+    "reason": "Official site verified; reusable original artwork permission not established. Retain readable company-name fallback."
+  },
+  {
+    "company_key": "sooner-uae",
+    "company": "Sooner",
+    "website": "https://joinsooner.com/",
+    "source_page": "https://joinsooner.com/",
+    "src": null,
+    "tone": null,
+    "reviewed_at": "2026-11-26",
+    "status": "unresolved",
+    "reason": "Official site verified; reusable original artwork permission not established. Retain readable company-name fallback."
   }
 ]

@@ -99,8 +99,8 @@ test('news parity, duplicate URL and publication guards are preserved', () => {
 test('checked-in report covers the exact frontend and importer catalog paths', async () => {
   const result = await loadContentReport()
   assert.deepEqual(result.problems, [])
-  assert.deepEqual(result.totals, { founders: 435, companies: 233, news: 156 })
-  assert.equal(result.upcoming_reviews.length + result.reviews_due.length, 435)
+  assert.deepEqual(result.totals, { founders: 440, companies: 235, news: 158 })
+  assert.equal(result.upcoming_reviews.length + result.reviews_due.length, 440)
   assert.equal([...result.upcoming_reviews, ...result.reviews_due].filter(row => row.catalog === catalogs[1].backend).length, 100)
   assert.equal([...result.upcoming_reviews, ...result.reviews_due].filter(row => row.catalog === catalogs[4].backend).length, 153)
   for (const [path, field, prefix] of [

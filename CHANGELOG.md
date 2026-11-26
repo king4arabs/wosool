@@ -1,3 +1,7 @@
+## Founder and startup news refresh — 2026-11-26
+
+- Added five bilingual founder profiles for 009 and Sooner, two funding briefs, catalog mirrors, importer registration, logo audit and regression assertions. See [editorial evidence](docs/research/CONTENT-REFRESH-2026-11-26.md). Production import and deployment not performed; CI pending.
+
 ## EO Riyadh WOW final hours — 2026-11-25
 
 - Preserved the approved 3 PM after-Asr start, with no separate pre-event prayer slot, and corrected the event end to 11 PM Riyadh time across the agenda, hero, calendar exports, promotional listing and registration closure. Guarded migration updates the former midnight database value only. Luma and production release still require verification.

@@ -6653,5 +6653,92 @@
         ]
       }
     }
+  },
+  {
+    "imageUrl": "",
+    "imageCredit": "",
+    "author": "Wosool news desk",
+    "id": "sourced-009-saudi-ai-preseed-november-2026",
+    "slug": "009-saudi-ai-preseed-november-2026",
+    "title": "Saudi enterprise AI startup 009 secures $1.4 million pre-seed",
+    "excerpt": "Outliers Venture Capital led funding for the Riyadh company's enterprise automation software.",
+    "content": "In a company statement published on 25 November 2026, 009 announced US$1.4 million in pre-seed investment led by Outliers Venture Capital, joined by angel investors. The company was established in Riyadh in 2026 by Abdulrahman Bajaber and Mohammed Hashmi. Its software models operational processes and evaluates automation against past records before deployment inside client systems. The capital is intended for product development and deployment. Customer contract values and revenue were not disclosed.",
+    "category": "Funding",
+    "region": "saudi",
+    "sourceUrl": "https://www.wamda.com/2026/11/saudi-ai-startup-009-raises-1-4-million-pre-seed-led-outliers-venture-capital",
+    "sourceName": "009 press release via Wamda (25 November 2026)",
+    "companies": [
+      "009"
+    ],
+    "publishedAt": "2026-11-25",
+    "tags": [
+      "Saudi Arabia",
+      "Enterprise AI",
+      "Pre-seed",
+      "Outliers Venture Capital"
+    ],
+    "keyFacts": [
+      "US$1.4 million pre-seed led by Outliers Venture Capital",
+      "Enterprise AI agents designed for government and industrial workflows",
+      "New capital earmarked for development and deployment"
+    ],
+    "translations": {
+      "ar": {
+        "title": "«009» السعودية تحصل على 1.4 مليون دولار لتطوير الذكاء الاصطناعي المؤسسي",
+        "excerpt": "قادت Outliers Venture Capital جولة ما قبل البذرة لشركة الأتمتة التي تتخذ من الرياض مقراً لها.",
+        "body": [
+          "أعلنت شركة 009 في بيان نُشر في 25 نوفمبر 2026 جمع 1.4 مليون دولار في جولة ما قبل البذرة بقيادة Outliers Venture Capital ومشاركة مستثمرين ملائكيين. أسسها عبدالرحمن باجبير ومحمد هاشمي في الرياض عام 2026. وتعمل على نمذجة الإجراءات التشغيلية وتقييم الأتمتة باستخدام السجلات السابقة قبل تشغيل الوكلاء داخل أنظمة العملاء. وتخصص التمويل لتطوير المنتج ونشره، دون إعلان قيم عقود العملاء أو الإيرادات."
+        ],
+        "keyFacts": [
+          "جولة ما قبل البذرة بقيمة 1.4 مليون دولار بقيادة Outliers Venture Capital",
+          "وكلاء ذكاء اصطناعي للعمليات الحكومية والصناعية",
+          "التمويل مخصص للتطوير والنشر"
+        ]
+      }
+    }
+  },
+  {
+    "imageUrl": "",
+    "imageCredit": "",
+    "author": "Wosool news desk",
+    "id": "sourced-sooner-uae-equity-debt-seed-november-2026",
+    "slug": "sooner-uae-equity-debt-seed-november-2026",
+    "title": "UAE's Sooner announces $20 million in combined equity and debt financing",
+    "excerpt": "The package includes $5 million in equity and a $15 million debt facility to support eligible homebuyers.",
+    "content": "Sooner announced on 25 November 2026 a US$5 million equity investment led by Nuwa Capital and a US$15 million debt facility from Amwal Capital Partners, described as Shariah-compliant. The Dubai platform helps eligible first-time purchasers finance part of the initial payment for completed homes. The company says it has supported about US$10 million of purchases since July. It expects the financing capacity to support AED1 billion of home purchases in 2027; this is a forward-looking capacity estimate, not completed sales or revenue.",
+    "category": "Funding",
+    "region": "gcc",
+    "sourceUrl": "https://www.zawya.com/en/press-release/sooner-raises-usd-20mln-seed-to-help-uae-homebuyers-buy-with-half-the-down-payment-2503545",
+    "sourceName": "Sooner press release via Zawya (25 November 2026)",
+    "companies": [
+      "Sooner"
+    ],
+    "publishedAt": "2026-11-25",
+    "tags": [
+      "UAE",
+      "Proptech",
+      "Seed",
+      "Equity",
+      "Debt financing"
+    ],
+    "keyFacts": [
+      "US$5 million equity led by Nuwa Capital",
+      "US$15 million debt facility from Amwal Capital Partners",
+      "AED1 billion of prospective 2027 home-purchase capacity, not completed sales"
+    ],
+    "translations": {
+      "ar": {
+        "title": "«سونر» الإماراتية تعلن تمويلاً بقيمة 20 مليون دولار يجمع حقوق الملكية والدين",
+        "excerpt": "تشمل الحزمة 5 ملايين دولار استثماراً في حقوق الملكية و15 مليون دولار تسهيلاً ائتمانياً لدعم مشتري المنازل المؤهلين.",
+        "body": [
+          "أعلنت سونر في 25 نوفمبر 2026 استثماراً في حقوق الملكية بقيمة 5 ملايين دولار بقيادة Nuwa Capital، وتسهيلات دين بقيمة 15 مليون دولار من Amwal Capital Partners وصفت بأنها متوافقة مع الشريعة. وتساعد المنصة في دبي المشترين المؤهلين للمرة الأولى على تمويل جزء من الدفعة المقدمة للمنازل الجاهزة. وتقول الشركة إنها دعمت شراء منازل بنحو 10 ملايين دولار منذ يوليو. وتتوقع أن تتيح الحزمة قدرة تمويلية لدعم شراء منازل بقيمة مليار درهم في 2027، وهو تقدير مستقبلي وليس مبيعات منجزة أو إيرادات."
+        ],
+        "keyFacts": [
+          "5 ملايين دولار استثمار في حقوق الملكية بقيادة Nuwa Capital",
+          "15 مليون دولار تسهيل دين من Amwal Capital Partners",
+          "مليار درهم قدرة تمويلية متوقعة لعمليات شراء في 2027 وليست مبيعات منجزة"
+        ]
+      }
+    }
   }
 ]

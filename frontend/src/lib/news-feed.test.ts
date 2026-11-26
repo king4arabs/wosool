@@ -332,3 +332,19 @@ test('25 November briefs retain actual publication dates and source-linked found
   assert.equal(newsFounders(curatedNews.find(n => n.slug === 'invoiceq-five-million-series-a-november-2026')!).length, 4)
   assert.equal(newsFounders(curatedNews.find(n => n.slug === 'cynoia-hannibal-workspace-ai-november-2026')!).length, 2)
 })
+
+
+test('26 November funding briefs distinguish equity, debt and future plans and match founders', () => {
+  for (const [slug, region, count] of [['009-saudi-ai-preseed-november-2026', 'saudi', 2], ['sooner-uae-equity-debt-seed-november-2026', 'gcc', 3]] as const) {
+    const item = curatedNews.find(n => n.slug === slug)!
+    assert.ok(item)
+    assert.equal(item.publishedAt, '2026-11-25')
+    assert.equal(item.region, region)
+    assert.equal(item.imageUrl, '')
+    assert.equal(item.imageCredit, '')
+    assert.equal(item.keyFacts?.length, 3)
+    assert.equal(item.translations?.ar.keyFacts?.length, 3)
+    assert.ok(safeNewsUrl(item.sourceUrl))
+    assert.equal(newsFounders(item).length, count)
+  }
+})
