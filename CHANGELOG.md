@@ -1,3 +1,11 @@
+## EOA WebKit release-gate recovery — 2026-11-26
+
+- Replaced the EOA browser check's retry on a stalled WebKit document with a fresh page in the same fixture-backed context. The replacement page repeats locale, font, directory, image, layout, overflow and accessibility assertions; no product assertion is removed.
+- Added a 90-second labelled viewport watchdog and switched fixture navigation to `DOMContentLoaded`, while retaining explicit waits for every datum and image used by the checks. A deterministic Arabic 1440px WebKit fixture exercises the fresh-page recovery in required CI.
+- Scoped the leadership-card assertion to the visible responsive tree. The first PR run exposed that Next.js can briefly retain a hidden outgoing tree at Chromium 768px; the gate still requires exactly three rendered cards with the same names, links, dimensions and touch targets.
+- `node --check`, the 99-page one-worker local frontend build and content integrity checks pass. Browser binaries could not be downloaded locally because the Playwright CDN returned HTTP 403, so the complete Chromium/Firefox/WebKit result remains a required PR CI gate.
+- This change does not alter API behavior, founder/editorial records, hosting configuration, production data or either serving revision. Production smoke remains 18/19: the canonical OpenAPI route is still HTTP 404.
+
 ## Founder and startup news refresh — 2026-11-26
 
 - Added five bilingual founder profiles for 009 and Sooner, two funding briefs, catalog mirrors, importer registration, logo audit and regression assertions. See [editorial evidence](docs/research/CONTENT-REFRESH-2026-11-26.md). Production import and deployment not performed; CI pending.
