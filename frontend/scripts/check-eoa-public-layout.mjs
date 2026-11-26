@@ -51,17 +51,40 @@ async function assertRows(cards) {
   }
 }
 
-async function waitForDirectory(page, label) {
+async function createCheckedPage(context, errors) {
+  const page = await context.newPage()
+  page.setDefaultTimeout(15000)
+  page.setDefaultNavigationTimeout(20000)
+  page.on('pageerror', error => errors.push(error.message))
+  return page
+}
+
+async function waitForReadyDocument(page, locale) {
+  // Every wait polls on an interval: the default requestAnimationFrame polling never runs
+  // when WebKit stops producing frames (seen at 1440px on the current ubuntu-latest image).
+  await page.waitForFunction(value => document.documentElement.lang === value, locale, { polling: 100 })
+  // Poll instead of awaiting document.fonts.ready: page.evaluate has no timeout and a
+  // promise WebKit never settles stalled CI until the job-level timeout.
+  await page.waitForFunction(() => document.fonts.status === 'loaded', null, { timeout: 15000, polling: 100 })
+}
+
+async function waitForDirectory({ context, errors, label, locale, page }) {
   const firstCard = page.locator('[data-eoa-directory]:visible article').first()
   try {
     await firstCard.waitFor()
+    return page
   } catch {
     // WebKit can occasionally stop applying the fixture response after dozens of
-    // sequential responsive navigations. A clean document retry recovers the
-    // route without weakening any of the layout or image assertions below.
-    console.warn(`RETRY EOA directory render: ${label}`)
-    await page.reload({ waitUntil: 'domcontentloaded' })
-    await firstCard.waitFor({ timeout: 30000 })
+    // sequential responsive navigations. Reloading that stalled document can hang
+    // too, so recover on a fresh page in the same fixture-backed context instead.
+    const url = page.url()
+    console.warn(`RETRY EOA directory render on a fresh page: ${label}`)
+    await page.close({ runBeforeUnload: false }).catch(() => {})
+    const recovered = await createCheckedPage(context, errors)
+    await recovered.goto(url, { waitUntil: 'domcontentloaded', timeout: 20000 })
+    await waitForReadyDocument(recovered, locale)
+    await recovered.locator('[data-eoa-directory]:visible article').first().waitFor({ timeout: 30000 })
+    return recovered
   }
 }
 
@@ -74,28 +97,43 @@ try {
       const context = await browser.newContext({ viewport: { width, height: 1000 }, reducedMotion: 'reduce' })
       await context.addInitScript(value => localStorage.setItem('wosool-locale', value), locale)
       let unavailable = false
+      let directoryRecoveryPage
+      let directoryRecoveryExercised = false
+      const errors = []
       await context.route('**/*', route => {
         const url = new URL(route.request().url())
         if (url.origin !== origin) return route.abort()
         if (url.pathname.endsWith('/eoa/program')) return route.fulfill({ status: unavailable ? 503 : 200, json: { data: program } })
-        if (url.pathname.endsWith('/eoa/directory')) return route.fulfill({ status: unavailable ? 503 : 200, json: { data: organizations } })
+        if (url.pathname.endsWith('/eoa/directory')) {
+          if (directoryRecoveryPage && route.request().frame().page() === directoryRecoveryPage) {
+            directoryRecoveryExercised = true
+            return route.fulfill({ status: 200, json: { data: [] } })
+          }
+          return route.fulfill({ status: unavailable ? 503 : 200, json: { data: organizations } })
+        }
         if (url.pathname.startsWith('/api/')) return route.fulfill({ status: 401, json: { message: 'Unauthenticated' } })
         return route.continue()
       })
-      const page = await context.newPage()
-      page.setDefaultTimeout(15000)
-      page.setDefaultNavigationTimeout(20000)
-      const errors = []
-      page.on('pageerror', error => errors.push(error.message))
-      for (const path of ['eligibility', 'partners', 'leadership']) {
-        console.log(`CHECK EOA: ${engine}/${locale}/${width}px/${path}`)
-        await page.goto(`${origin}/eoa/${path}`, { waitUntil: 'networkidle' })
-        // Every wait polls on an interval: the default requestAnimationFrame polling never runs
-        // when WebKit stops producing frames (seen at 1440px on the current ubuntu-latest image).
-        await page.waitForFunction(value => document.documentElement.lang === value, locale, { polling: 100 })
-        // Poll instead of awaiting document.fonts.ready: page.evaluate has no timeout and a
-        // promise WebKit never settles stalled CI until the 60-minute job limit.
-        await page.waitForFunction(() => document.fonts.status === 'loaded', null, { timeout: 15000, polling: 100 })
+      const viewportLabel = `${engine}/${locale}/${width}px`
+      let viewportTimedOut = false
+      const viewportTimeout = setTimeout(() => {
+        viewportTimedOut = true
+        console.error(`EOA viewport exceeded its 90-second budget: ${viewportLabel}`)
+        void context.close().catch(() => {})
+      }, 90000)
+      try {
+        let page = await createCheckedPage(context, errors)
+        for (const path of ['eligibility', 'partners', 'leadership']) {
+          console.log(`CHECK EOA: ${viewportLabel}/${path}`)
+          // Exercise the fresh-page recovery once on the exact runner/viewport that
+          // has stalled intermittently in CI. The first directory response is empty;
+          // the replacement page must fetch and render the real fixture.
+          directoryRecoveryPage = engine === 'webkit' && locale === 'ar' && width === 1440 && path === 'partners' ? page : undefined
+          // The assertions below wait for every piece of data and every image they use.
+          // DOMContentLoaded avoids making this isolated fixture test depend on a
+          // browser-specific network-idle signal after a renderer recovery.
+          await page.goto(`${origin}/eoa/${path}`, { waitUntil: 'domcontentloaded', timeout: 20000 })
+          await waitForReadyDocument(page, locale)
         if (path === 'eligibility') {
           await page.locator('.eoa-fee dd').first().waitFor()
           const panels = page.locator('[data-eoa-eligibility]:visible > .eoa-card')
@@ -144,7 +182,7 @@ try {
           assert.ok(await cards.locator('a').evaluateAll(links => links.every(link => link.getBoundingClientRect().height >= 44)), 'Leadership links have accessible touch targets')
           await assertContained(page, '[data-program-leaders] h2, [data-program-leaders] p, [data-program-leaders] a')
         } else {
-          await waitForDirectory(page, `${engine}/${locale}/${width}px`)
+          page = await waitForDirectory({ context, errors, label: viewportLabel, locale, page })
           assert.equal(await page.locator('[data-eoa-directory] [data-brand-logo]').count(), organizations.length, 'Every organization has a logo space')
           const logos = page.locator('[data-eoa-directory] img')
           for (let index = 0; index < await logos.count(); index++) {
@@ -204,18 +242,27 @@ try {
             timeout: 15000,
           })
         }
-      }
-      if (width === 320) {
-        unavailable = true
-        for (const path of ['eligibility', 'partners']) {
-          await page.goto(`${origin}/eoa/${path}`, { waitUntil: 'networkidle' })
-          await page.locator('.eoa-error').waitFor()
-          await assertContained(page, '.eoa-error')
         }
+        if (engine === 'webkit' && locale === 'ar' && width === 1440) {
+          assert.equal(directoryRecoveryExercised, true, 'The WebKit recovery path must be exercised')
+        }
+        if (width === 320) {
+          unavailable = true
+          for (const path of ['eligibility', 'partners']) {
+            await page.goto(`${origin}/eoa/${path}`, { waitUntil: 'domcontentloaded', timeout: 20000 })
+            await page.locator('.eoa-error').waitFor()
+            await assertContained(page, '.eoa-error')
+          }
+        }
+        assert.deepEqual(errors, [], `${viewportLabel}: script errors`)
+        console.log(`PASS EOA partners + eligibility + leadership: ${viewportLabel}`)
+      } catch (error) {
+        if (viewportTimedOut) throw new Error(`EOA viewport timed out: ${viewportLabel}`, { cause: error })
+        throw error
+      } finally {
+        clearTimeout(viewportTimeout)
+        await context.close().catch(() => {})
       }
-      assert.deepEqual(errors, [], `${engine}/${locale}/${width}: script errors`)
-      console.log(`PASS EOA partners + eligibility + leadership: ${engine}/${locale}/${width}px`)
-      await context.close()
     }
     await browser.close()
     browser = undefined

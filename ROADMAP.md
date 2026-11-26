@@ -1,5 +1,7 @@
 # Roadmap
 
+**Immediate CI recovery — 26 November 2026.** Restore the required frontend release gate by validating fresh-page recovery for the intermittent Linux WebKit EOA renderer stall across the full Chromium, Firefox and WebKit matrix. Merge dependent email work only after that matrix is green. Then deploy backend first, expose both serving revisions and repeat the 19-probe production monitor; `/api/openapi.json` remains the only failing live probe. Source changes and branch previews are not production deployment.
+
 **WOW registration handoff — 25 November 2026.** New event signups now save the unverified account and attendee atomically before returning the fixed Luma RSVP link; OTP and ticket mail are queued separately and cannot confer verification, membership or ticket approval. Next: complete the required CI matrix, deploy the backend before the frontend, verify the durable worker/shared cache and actual inbox delivery, then confirm bilingual browser navigation against the serving revisions. Source changes do not establish deployment or a production record change. [Acceptance checklist](docs/REGISTRATION-QA.md).
 
 **Public founder directory — 24 November 2026.** The homepage, directory, profiles and article links now read moderated database relationships. Next: release the API and its additive lookup index, then the frontend; verify serving revisions, homepage rotation, founder withdrawal and company links before any separately reviewed import. [Release and rollback checklist](docs/PUBLIC-FOUNDER-DIRECTORY.md).
