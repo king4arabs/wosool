@@ -1,3 +1,9 @@
+## Newsletter plain-text part matches each email and no longer shows HTML entities — 2026-11-26
+
+- **Found:** the plain-text part of newsletter emails (`mail/newsletter-text.blade.php`), which text-only clients and some previews show, escaped values as HTML, so a story such as "Founders & funds: Ali's raise" arrived as `Founders &amp; funds: Ali&#039;s raise`. The monthly digest also opened with the welcome line ("Welcome to Wosool: monthly news…"), and the main link had no label.
+- **Fixed:** the text part now uses the same heading and intro as the HTML part for confirm, welcome and digest emails in Arabic and English, prints values without HTML escaping (it is sent as `text/plain`), labels the main link ("Confirm subscription:" / "Explore the Wosool community:") and adds the "Key updates" heading. HTML part, subjects, headers, unsubscribe handling and sending logic are unchanged.
+- **Tests:** new `NewsletterTest::test_plain_text_part_matches_each_kind_and_does_not_contain_html_entities` (fails on the old template) checks all six kind/language combinations for raw `&`, apostrophes and quotes, the correct heading only, the labelled action link and the unsubscribe link outside confirmation emails.
+
 ## Email header logo shows in Gmail and Outlook — 2026-11-25
 
 - **Found:** the shared transactional email header used the official horizontal logo as an SVG. Gmail and Outlook do not display SVG images, so recipients saw alt text instead of the logo.
