@@ -79,7 +79,6 @@ function BackgroundVideo({ ar }: { ar: boolean }) {
         ? ar ? "تشغيل فيديو الخلفية" : "Play background video"
         : ar ? "إيقاف فيديو الخلفية مؤقتًا" : "Pause background video"}>
       {paused ? <Play size={16} aria-hidden="true" /> : <Pause size={16} aria-hidden="true" />}
-      <span>{paused ? ar ? "تشغيل" : "Play" : ar ? "إيقاف مؤقت" : "Pause"}</span>
     </button>
   </>
 }
