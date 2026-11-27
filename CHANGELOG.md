@@ -1,3 +1,10 @@
+## Symfony 7.4.24 security release — 2026-11-27
+
+- Current `main` CI failed the unsuppressed Composer audit on PHP 8.3, 8.4 and 8.5 after five Symfony advisories were published on 25 November. Frontend, production guardrails and the standalone pnpm/Hostinger build remained green.
+- Updated only the backend lock entries for `symfony/http-foundation`, `symfony/http-kernel`, `symfony/mailer` and `symfony/routing` to the coordinated 7.4.24 security release. HTTP Kernel's lock metadata now carries its upstream `^7.4.24|^8.1.12` HTTP Foundation floor.
+- The four signed upstream tags, commit references and component manifests were checked against Symfony's release. This environment has no PHP or Composer binary, so install, `composer validate --strict`, unsuppressed audit and the Laravel suite remain required hosted CI gates.
+- No application code, API/schema, migration, frontend dependency, Hostinger baseline, founder/editorial record or production data changed. A source merge does not activate the backend patch; deployment and serving-revision verification remain separate.
+
 ## EOA WebKit release-gate recovery — 2026-11-26
 
 - Replaced the EOA browser check's retry on a stalled WebKit document with a fresh page in the same fixture-backed context. The replacement page repeats locale, font, directory, image, layout, overflow and accessibility assertions; no product assertion is removed.

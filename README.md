@@ -13,7 +13,7 @@
 
 Wosool is an Arabic/English founders platform connecting Saudi Arabia, the GCC, MENA and the world. It brings founder and company profiles, events, news, introductions and community services together, with a dedicated EO Riyadh Accelerator experience.
 
-**Project version:** 0.6.0 (root package and [version register](VERSION.md)). **Documentation revision:** 26 November 2026. Source versions, CI and serving deployment revisions are separate.
+**Project version:** 0.6.0 (root package and [version register](VERSION.md)). **Documentation revision:** 27 November 2026. Source versions, CI and serving deployment revisions are separate.
 
 ## Platform
 
