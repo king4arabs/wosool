@@ -6740,5 +6740,86 @@
         ]
       }
     }
+  },
+  {
+    "imageUrl": "",
+    "imageCredit": "",
+    "author": "Wosool news desk",
+    "id": "sourced-qatar-tech-startup-community-awards-november-2026",
+    "slug": "qatar-tech-startup-community-awards-november-2026",
+    "title": "Qatar launches third edition of startup community awards",
+    "excerpt": "Startup Grind Doha and Business Leaders Middle East announce 11 recognition categories.",
+    "content": "An organisers' announcement published on 26 November describes the third edition of Qatar's Tech Startup Community Awards. The programme recognises early-stage and growth-stage companies, AI and financial technology ventures, female founders, investors and ecosystem supporters. A five-person committee will assess nominations. The announcement did not identify winners or a confirmed ceremony date.",
+    "category": "Ecosystem",
+    "region": "gcc",
+    "sourceUrl": "https://www.wamda.com/2026/11/qatars-tech-startup-community-awards-return-edition",
+    "sourceName": "Startup Grind Doha announcement via Wamda (26 November 2026)",
+    "companies": [],
+    "publishedAt": "2026-11-26",
+    "tags": [
+      "Qatar",
+      "Startup awards",
+      "Entrepreneurship"
+    ],
+    "keyFacts": [
+      "Third edition of the awards",
+      "11 award categories",
+      "Five-person nomination review committee"
+    ],
+    "translations": {
+      "ar": {
+        "title": "قطر تطلق النسخة الثالثة من جوائز مجتمع الشركات الناشئة",
+        "excerpt": "أعلنت Startup Grind Doha ومجلة Business Leaders Middle East عن 11 فئة للتكريم.",
+        "body": [
+          "أوضح إعلان المنظمين المنشور في 26 نوفمبر تفاصيل النسخة الثالثة من جوائز مجتمع الشركات التقنية الناشئة في قطر. وتشمل الفئات الشركات في مراحلها المبكرة والمتقدمة، ومشاريع الذكاء الاصطناعي والتقنيات المالية، ورائدات الأعمال والمستثمرين وداعمي المنظومة. وتتولى لجنة من خمسة أعضاء تقييم الترشيحات. ولم يحدد الإعلان أسماء الفائزين أو موعداً مؤكداً لحفل التكريم."
+        ],
+        "keyFacts": [
+          "النسخة الثالثة من الجوائز",
+          "11 فئة للتكريم",
+          "لجنة من خمسة أعضاء لتقييم الترشيحات"
+        ]
+      }
+    }
+  },
+  {
+    "imageUrl": "",
+    "imageCredit": "",
+    "author": "Wosool news desk",
+    "id": "sourced-dubai-doers-summit-concludes-november-2026",
+    "slug": "dubai-doers-summit-concludes-november-2026",
+    "title": "Dubai's DOERS Summit concludes with international startup participation",
+    "excerpt": "WAM reports more than 6,000 attendees from 130 countries at the two-day gathering.",
+    "content": "Dubai Silicon Oasis hosted the second Middle East edition of DOERS Summit on 25–26 November at Dubai Digital Park. In its 26 November report, the Emirates News Agency recorded more than 6,000 attendees from 130 countries and over 100 speakers. The host signed a memorandum with Germany's Fraunhofer IPK to explore applied research and technology transfer. The agreement establishes a collaboration framework, not a disclosed investment or completed technology transfer.",
+    "category": "Ecosystem",
+    "region": "gcc",
+    "sourceUrl": "https://www.wam.ae/en/article/c3g7r56-dubai-silicon-oasis-concludes-2nd-middle-east",
+    "sourceName": "Emirates News Agency (26 November 2026)",
+    "companies": [],
+    "publishedAt": "2026-11-26",
+    "tags": [
+      "UAE",
+      "Dubai",
+      "Startup ecosystem",
+      "Technology transfer"
+    ],
+    "keyFacts": [
+      "More than 6,000 attendees from 130 countries, according to WAM",
+      "Over 100 speakers",
+      "Research and technology transfer memorandum with Fraunhofer IPK"
+    ],
+    "translations": {
+      "ar": {
+        "title": "اختتام قمة DOERS في دبي بمشاركة دولية من منظومة الشركات الناشئة",
+        "excerpt": "أفادت وكالة أنباء الإمارات بمشاركة أكثر من 6 آلاف شخص من 130 دولة.",
+        "body": [
+          "استضافت واحة دبي للسيليكون النسخة الثانية في الشرق الأوسط من قمة DOERS يومي 25 و26 نوفمبر في مجمع دبي الرقمي. وأفادت وكالة أنباء الإمارات في تقريرها المنشور في 26 نوفمبر بحضور أكثر من 6 آلاف مشارك من 130 دولة، وبمشاركة أكثر من 100 متحدث. ووقعت الواحة مذكرة تفاهم مع معهد فراونهوفر الألماني IPK لاستكشاف فرص البحث التطبيقي ونقل التقنية. وتحدد المذكرة إطاراً للتعاون، ولا تمثل استثماراً معلناً أو نقلاً تقنياً منجزاً."
+        ],
+        "keyFacts": [
+          "أكثر من 6 آلاف مشارك من 130 دولة بحسب وكالة أنباء الإمارات",
+          "أكثر من 100 متحدث",
+          "مذكرة تفاهم للبحث ونقل التقنية مع معهد فراونهوفر IPK"
+        ]
+      }
+    }
   }
 ]

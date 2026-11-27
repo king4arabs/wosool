@@ -2589,5 +2589,16 @@
     "reviewed_at": "2026-11-26",
     "status": "unresolved",
     "reason": "Official site verified; reusable original artwork permission not established. Retain readable company-name fallback."
+  },
+  {
+    "company_key": "inovat",
+    "company": "Inovat",
+    "website": "https://inovat.tax/",
+    "source_page": "https://inovat.tax/",
+    "src": null,
+    "tone": null,
+    "reviewed_at": "2026-11-27",
+    "status": "unresolved",
+    "reason": "Official website confirmed; reuse rights for original artwork not established. Retain readable company-name fallback."
   }
 ]

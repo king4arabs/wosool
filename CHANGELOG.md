@@ -1,3 +1,7 @@
+## Founder and ecosystem news refresh — 2026-11-27
+
+- Added three bilingual Inovat founder scorecards and two GCC ecosystem briefs, mirrors, importer registration, logo audit and regression assertions. [Editorial evidence](docs/research/CONTENT-REFRESH-2026-11-27.md). Full CI pending; no production import or deployment performed.
+
 ## EOA WebKit release-gate recovery — 2026-11-26
 
 - Replaced the EOA browser check's retry on a stalled WebKit document with a fresh page in the same fixture-backed context. The replacement page repeats locale, font, directory, image, layout, overflow and accessibility assertions; no product assertion is removed.

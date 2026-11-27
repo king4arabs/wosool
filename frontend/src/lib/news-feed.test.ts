@@ -348,3 +348,17 @@ test('26 November funding briefs distinguish equity, debt and future plans and m
     assert.equal(newsFounders(item).length, count)
   }
 })
+
+
+test('27 November ecosystem briefs keep original publication dates and bilingual facts', () => {
+  for (const slug of ['qatar-tech-startup-community-awards-november-2026', 'dubai-doers-summit-concludes-november-2026']) {
+    const item = curatedNews.find(n => n.slug === slug)!
+    assert.ok(item)
+    assert.equal(item.publishedAt, '2026-11-26')
+    assert.equal(item.region, 'gcc')
+    assert.equal(item.imageUrl, '')
+    assert.equal(item.keyFacts?.length, 3)
+    assert.equal(item.translations?.ar.keyFacts?.length, 3)
+    assert.ok(safeNewsUrl(item.sourceUrl))
+  }
+})
