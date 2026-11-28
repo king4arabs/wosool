@@ -13,7 +13,7 @@
 
 Wosool is an Arabic/English founders platform connecting Saudi Arabia, the GCC, MENA and the world. It brings founder and company profiles, events, news, introductions and community services together, with a dedicated EO Riyadh Accelerator experience.
 
-**Project version:** 0.6.0 (root package and [version register](VERSION.md)). **Documentation revision:** 27 November 2026. Source versions, CI and serving deployment revisions are separate.
+**Project version:** 0.6.0 (root package and [version register](VERSION.md)). **Documentation revision:** 28 November 2026. Source versions, CI and serving deployment revisions are separate.
 
 ## Platform
 
@@ -133,6 +133,7 @@ The established Hostinger frontend configuration is **`frontend` root · Node 22
 | [Administration](docs/ADMIN-OPERATIONS.md) | CRM, PR, analytics and community approval workflows |
 | [Startup directory](docs/STARTUP-DIRECTORY.md) · [Research](docs/research/) | Source review, imports and publication evidence |
 | [Testing](TESTING.md) · [Deployment](DEPLOYMENT.md) | Validation, releases and operational checks |
+| [Project verification](docs/verification/PROJECT_MANAGER_PLAYBOOK.md) · [Database assurance](docs/verification/DATABASE-ASSURANCE-2026-11-28.md) | Feature-map evidence, scoped data operations and promotion gates |
 | [SEO operations](docs/SEO-OPERATIONS.md) | Search verification, sitemaps and social previews |
 | [Changelog](CHANGELOG.md) · [Roadmap](ROADMAP.md) | Release history and planned work |
 

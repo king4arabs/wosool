@@ -1,3 +1,10 @@
+## Database assurance and scoped fixture corrections — 2026-11-28
+
+- Added the first deterministic database feature map and drift gate, covering the existing named-admin readiness probe and a new disabled-by-default, expiring project-scoped Agent command for one-row corrections to unclaimed non-production founder fixtures.
+- Added an additive, indexed audit schema and a transaction-bound correction service. Only three bounded public URL fields are permitted; preview is the default, values are represented by hashes in the audit, and project/identity/expiry/optimistic-lock/claimed-profile boundaries fail closed.
+- Added synthetic Laravel coverage for preview, one-row apply, separate audit, adjacent-project and identity denial, sensitive/export/grant/destructive denial, expiry, stale data, claimed-founder denial and rollback when audit persistence fails. PHP is unavailable locally, so hosted CI remains required before this evidence can advance.
+- Recorded the database architecture, recovery, MFA, engine/version and production-access evidence gaps in [the assurance record](docs/verification/DATABASE-ASSURANCE-2026-11-28.md). No account, privilege, live migration, production row, import, deployment or hosting setting changed.
+
 ## Founder and startup news refresh — 2026-11-28
 
 - Continued PR #305 on the latest main, retaining the Symfony security update and existing editorial changes; added two XEBO.ai bilingual founder profiles and Saudi Mawj / UAE XEBO.ai funding briefs. [Editorial evidence and source-inspected feature map](docs/research/CONTENT-REFRESH-2026-11-28.md). Candidate only; fresh hosted CI and independent review required, no production import or deployment.
