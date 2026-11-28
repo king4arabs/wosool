@@ -83,7 +83,7 @@ class FounderActivationTest extends TestCase
         $html = (string) app(\Illuminate\Mail\Markdown::class)->render($message->markdown, $message->viewData);
         $this->assertStringContainsString($this->code, $html);
         $this->assertStringContainsString('&lt;Founder&gt;', $html);
-        $this->assertStringContainsString('wosool-logo-eo.svg', $html);
+        $this->assertStringContainsString('wosool-logo-eo.png', $html);
         $this->assertStringContainsString('Founders to Founders', $html);
         $this->activate($token, ['code' => '123'])->assertUnprocessable();
         $wrong = $this->code === '000000' ? '999999' : '000000';

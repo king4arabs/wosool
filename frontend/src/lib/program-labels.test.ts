@@ -1,5 +1,6 @@
 import { test } from "node:test"
 import assert from "node:assert/strict"
+import { readFileSync } from "node:fs"
 import { localizeApiProgram, programCategoryLabel, programCode, programDurationLabel, programStageLabel } from "./program-labels"
 import type { Program } from "../types"
 
@@ -22,6 +23,28 @@ test("stage codes match the application form wording", () => {
   assert.equal(programStageLabel("series-a", "en"), "Series A")
   assert.equal(programStageLabel("Seed", "en"), "Seed")
   assert.equal(programStageLabel("pre_seed", "en"), "Pre-seed")
+})
+
+test("founder and company stages read as words in both languages, whichever form saved them", () => {
+  // The member profile form saves codes ("series-a"); the company form saves English labels ("Series A").
+  for (const stage of ["pre-seed", "seed", "series-a", "scale-up", "exited", "Pre-seed", "Seed", "Series A", "Series B", "Scale-up", "Exited"]) {
+    assert.match(programStageLabel(stage, "ar"), arabic, stage)
+    assert.doesNotMatch(programStageLabel(stage, "en"), /^[a-z]|[_]/, stage)
+  }
+  assert.equal(programStageLabel("seed", "en"), programStageLabel("Seed", "en"))
+  assert.equal(programStageLabel("Series A", "ar"), programStageLabel("series-a", "ar"))
+  assert.equal(programStageLabel("exited", "ar"), "تخارج")
+  assert.equal(programStageLabel("Exited", "en"), "Exited")
+  assert.equal(programStageLabel("ما قبل الطرح", "ar"), "ما قبل الطرح", "Arabic text entered by a member stays as written")
+})
+
+test("founder cards, profiles, the directory filter and member stage pickers show localized stages", () => {
+  const source = (path: string) => readFileSync(new URL(path, import.meta.url), "utf8")
+  assert.match(source("../components/sections/ProfileCard.tsx"), /programStageLabel\(data\.stage,/)
+  assert.match(source("../components/sections/PublicProfile.tsx"), /programStageLabel\(String\(founder\?\.stage \|\| company\?\.stage\)/)
+  assert.match(source("../app/founders/page.tsx"), /<option value=\{value\} key=\{value\}>\{programStageLabel\(value, locale\)\}<\/option>/)
+  assert.match(source("../app/dashboard/profile/page.tsx"), /<option key=\{s\} value=\{s\}>\{programStageLabel\(s, locale\)\}<\/option>/)
+  assert.match(source("../app/dashboard/company/page.tsx"), /\{programStageLabel\(s, locale\)\}/)
 })
 
 test("durations use Arabic number agreement and stay readable in RTL", () => {

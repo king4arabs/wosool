@@ -33,5 +33,8 @@ export function EventPartners({slug,showEmpty=false}:{slug:string;showEmpty?:boo
 }
 function PartnerLogo({partner}:{partner:Partner}){
  const [failed,setFailed]=useState(false)
- return failed?<span className="text-center text-sm font-semibold">{partner.name}</span>:/* eslint-disable-next-line @next/next/no-img-element */ <img src={partner.logo_url} alt={partner.name} loading="lazy" referrerPolicy="no-referrer" className="max-h-full max-w-full object-contain" onError={()=>setFailed(true)}/>
+ if(failed) return <span className="text-center text-sm font-semibold">{partner.name}</span>
+ // Partner logos are external URLs entered by administrators; next/image would need every host allowlisted.
+ // eslint-disable-next-line @next/next/no-img-element
+ return <img src={partner.logo_url} alt={partner.name} loading="lazy" referrerPolicy="no-referrer" className="max-h-full max-w-full object-contain" onError={()=>setFailed(true)}/>
 }

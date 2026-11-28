@@ -13,6 +13,7 @@ import { api, ApiError } from "@/lib/api"
 import { useToast } from "@/components/ui/toast"
 import { Save, Globe, Users, Briefcase } from "lucide-react"
 import { useLocale } from "@/lib/locale"
+import { programStageLabel } from "@/lib/program-labels"
 
 const sectors = ["Fintech", "HealthTech", "SaaS / B2B", "Logistics", "FoodTech", "HRTech", "EdTech", "CleanTech"]
 const stages = ["Pre-seed", "Seed", "Series A", "Series B", "Scale-up", "Exited"]
@@ -369,7 +370,7 @@ export default function CompanyPage() {
                 <option value="">{copy.selectStage}</option>
                 {stages.map((s) => (
                   <option key={s} value={s}>
-                    {s}
+                    {programStageLabel(s, locale)}
                   </option>
                 ))}
               </select>

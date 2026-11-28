@@ -1,3 +1,27 @@
+## Company stage shows as words in Arabic and English — 2026-11-28
+
+- **Found:** founder cards, founder profiles, the `/founders` stage filter and the member profile/company stage pickers printed the stored stage as-is. The profile form saves codes (`seed`, `series-a`) and the company form saves English labels (`Seed`, `Series A`), so Arabic pages showed English and English pages could show lowercase codes such as `seed`.
+- **Changed:** these views now use the existing `programStageLabel` helper (already used for programs and member matches), with `exited` added. Stored values, filter values, API and data are unchanged; Arabic text a member typed is shown as written. Moved the partner-logo `eslint-disable` comment onto its own line so lint is warning-free.
+- **Verified locally:** new label and wiring tests in `frontend/src/lib/program-labels.test.ts`; `npm run verify` and the QA crawl results are recorded in the PR. No API, schema, migration, dependency, deployment or hosting change.
+
+## Transactional email plain-text part is readable and links to wosool.org — 2026-11-27
+
+- **Found:** rendering the `text/plain` part of the shared bilingual email (`mail/bilingual.blade.php`, used by every `WosoolMail` and notification) showed four problems. It opened with `Wosool: https://api.wosool.org` (Laravel's default text header prints `APP_URL`, the API host). Detail rows ran together (`QuestionHow do I price…`). The copy-the-link fallback had no space before the URL and the action label had no link next to it. The footer was Laravel's `© Wosool. All rights reserved.` instead of the HTML footer.
+- **Fixed:** the button, detail rows and link fallback are now `mail::wosool-*` components with `html/` and `text/` versions. Plain text shows `Label: value` rows and the action label followed by its URL, and drops the "if the button does not work" line. New text header and footer mirror the HTML ones: brand, `FRONTEND_URL`, the sender address and the bilingual "if you did not request this" line. The HTML part is byte-for-byte unchanged (compared before and after for a detail-row email and a code email). The newsletter has its own text template and is not affected.
+- **Test:** `TransactionalEmailTest::test_plain_text_part_is_readable_and_links_to_the_public_site` sends a `WosoolMail` and a notification through the array mailer with `APP_URL=https://api.wosool.org`. It checks the text part for the public-site header, no API host, `Label: value` rows, labelled links, the footer and no HTML entities, and that the HTML part keeps its button, fallback and detail table. It fails on the old templates.
+- No API, schema, data, dependency, deployment or hosting change.
+
+## Newsletter plain-text part matches each email and no longer shows HTML entities — 2026-11-26
+
+- **Found:** the plain-text part of newsletter emails (`mail/newsletter-text.blade.php`), which text-only clients and some previews show, escaped values as HTML, so a story such as "Founders & funds: Ali's raise" arrived as `Founders &amp; funds: Ali&#039;s raise`. The monthly digest also opened with the welcome line ("Welcome to Wosool: monthly news…"), and the main link had no label.
+- **Fixed:** the text part now uses the same heading and intro as the HTML part for confirm, welcome and digest emails in Arabic and English, prints values without HTML escaping (it is sent as `text/plain`), labels the main link ("Confirm subscription:" / "Explore the Wosool community:") and adds the "Key updates" heading. HTML part, subjects, headers, unsubscribe handling and sending logic are unchanged.
+- **Tests:** new `NewsletterTest::test_plain_text_part_matches_each_kind_and_does_not_contain_html_entities` (fails on the old template) checks all six kind/language combinations for raw `&`, apostrophes and quotes, the correct heading only, the labelled action link and the unsubscribe link outside confirmation emails.
+
+## Email header logo shows in Gmail and Outlook — 2026-11-25
+
+- **Found:** the shared transactional email header used the official horizontal logo as an SVG. Gmail and Outlook do not display SVG images, so recipients saw alt text instead of the logo.
+- **Changed:** the same artwork is served as `frontend/public/wosool-logo-eo.png` (480×108, transparent, 2× the 240px display width) and used by the shared header. New test: the header image is a PNG/JPEG that exists in `frontend/public`, at least 2× display width, with proportional `width`/`height` (fails on the SVG header). Rendered at 390px and 1366px: logo at 240px, no horizontal overflow. No API, data, deployment or hosting change.
+
 ## Founder and startup news refresh — 2026-11-28
 
 - Continued PR #305 on the latest main, retaining the Symfony security update and existing editorial changes; added two XEBO.ai bilingual founder profiles and Saudi Mawj / UAE XEBO.ai funding briefs. [Editorial evidence and source-inspected feature map](docs/research/CONTENT-REFRESH-2026-11-28.md). Candidate only; fresh hosted CI and independent review required, no production import or deployment.

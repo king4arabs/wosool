@@ -42,9 +42,26 @@ class PasswordRecoveryTest extends TestCase
         $header = view('vendor.mail.html.header', ['url' => 'https://wosool.org'])->render();
         $footer = view('vendor.mail.html.footer')->render();
 
-        $this->assertStringContainsString('https://wosool.org/wosool-logo-eo.svg', $header);
+        $this->assertStringContainsString('https://wosool.org/wosool-logo-eo.png', $header);
         $this->assertStringContainsString('Wosool | وصول', $header);
         $this->assertStringContainsString('Founders to Founders', $footer);
+    }
+
+    public function test_email_header_logo_is_a_served_raster_image(): void
+    {
+        // Gmail and Outlook do not display SVG images, so the header logo must be PNG/JPEG
+        // and the file must ship in the frontend's public folder that serves it.
+        config(['app.frontend_url' => 'https://wosool.org']);
+        $header = view('vendor.mail.html.header', ['url' => 'https://wosool.org'])->render();
+
+        $this->assertSame(1, preg_match('#<img src="https://wosool\.org/([^"]+)"#', $header, $match));
+        $this->assertMatchesRegularExpression('/\.(png|jpe?g)$/', $match[1]);
+        $file = base_path('../frontend/public/'.$match[1]);
+        $this->assertFileExists($file);
+        [$width, $height, $type] = getimagesize($file);
+        $this->assertSame(IMAGETYPE_PNG, $type);
+        $this->assertGreaterThanOrEqual(480, $width, 'Provide at least 2x the 240px display width.');
+        $this->assertEqualsWithDelta(54, 240 * $height / $width, 0.5, 'Keep the width/height attributes proportional to the image.');
     }
 
     public function test_valid_token_updates_password_and_cannot_be_reused(): void

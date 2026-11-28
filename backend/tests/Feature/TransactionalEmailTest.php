@@ -58,6 +58,43 @@ class TransactionalEmailTest extends TestCase
         $this->assertStringContainsString('Founders to Founders', $html);
     }
 
+    public function test_plain_text_part_is_readable_and_links_to_the_public_site(): void
+    {
+        config(['mail.default' => 'array', 'app.url' => 'https://api.wosool.org', 'app.frontend_url' => 'https://wosool.org', 'mail.from.address' => 'hello@wosool.org']);
+
+        Mail::to('layla@example.com')->send(WosoolMail::helpOffered('Ali & Sara', "O'Neil", 'How do I price B2B & SaaS?', 5));
+        User::factory()->create()->notify(new FounderActivationInvitation('Layla', 'https://wosool.org/activate-founder#token=a', '123456'));
+
+        $messages = array_map(fn ($sent) => $sent->getOriginalMessage(), iterator_to_array(app('mailer')->getSymfonyTransport()->messages()));
+        $this->assertCount(2, $messages);
+        [$help, $activation] = array_values($messages);
+
+        foreach ([$help, $activation] as $email) {
+            $text = $email->getTextBody();
+            $this->assertStringStartsWith('وصول | Wosool — https://wosool.org', $text);
+            $this->assertStringNotContainsString('api.wosool.org', $text);
+            $this->assertStringNotContainsString('If the button does not work', $text);
+            $this->assertStringNotContainsString('All rights reserved', $text);
+            $this->assertStringContainsString("https://wosool.org · hello@wosool.org\nإذا لم تطلب هذه الرسالة، يمكنك تجاهلها.\nIf you did not request this message, please ignore it.", $text);
+            $this->assertDoesNotMatchRegularExpression('/&(amp|#0?39|quot|lt|gt);/', $text);
+            // The HTML part keeps the button and its copy-the-link fallback.
+            $this->assertStringContainsString('button-primary', $email->getHtmlBody());
+            $this->assertStringContainsString('If the button does not work', $email->getHtmlBody());
+        }
+
+        $text = $help->getTextBody();
+        $this->assertStringContainsString('السؤال: How do I price B2B & SaaS?', $text);
+        $this->assertStringContainsString('Question: How do I price B2B & SaaS?', $text);
+        $this->assertStringContainsString("فتح المحادثة:\nhttps://wosool.org/dashboard/messages?room=5", $text);
+        $this->assertStringContainsString("Open the conversation:\nhttps://wosool.org/dashboard/messages?room=5", $text);
+        $this->assertStringContainsString("O'Neil offered to help", $text);
+        $this->assertStringContainsString('class="details"', $help->getHtmlBody());
+
+        $text = $activation->getTextBody();
+        $this->assertStringContainsString("Activation code\n123456", $text);
+        $this->assertStringContainsString("Activate my account at Wosool:\nhttps://wosool.org/activate-founder#token=a", $text);
+    }
+
     public function test_every_notification_uses_the_bilingual_layout(): void
     {
         config(['app.frontend_url' => 'https://wosool.org']);

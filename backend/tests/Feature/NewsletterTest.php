@@ -268,6 +268,28 @@ class NewsletterTest extends TestCase
         $this->assertSame([], (new NewsletterMail('confirm', 'en', 'https://wosool.org', ''))->headers()->text);
     }
 
+    public function test_plain_text_part_matches_each_kind_and_does_not_contain_html_entities(): void
+    {
+        $headings = ['en' => ['confirm' => 'One step to subscribe', 'welcome' => 'Welcome to the Wosool community', 'digest' => 'This month at Wosool'],
+            'ar' => ['confirm' => 'خطوة واحدة للاشتراك', 'welcome' => 'أهلاً بك في مجتمع وصول', 'digest' => 'مختارات هذا الشهر']];
+        $actions = ['en' => ['confirm' => 'Confirm subscription: https://wosool.org/action', 'other' => 'Explore the Wosool community: https://wosool.org/action'],
+            'ar' => ['confirm' => 'تأكيد الاشتراك: https://wosool.org/action', 'other' => 'استكشف مجتمع وصول: https://wosool.org/action']];
+        foreach (['ar', 'en'] as $locale) foreach (['confirm', 'welcome', 'digest'] as $kind) {
+            $text = view('mail.newsletter-text', ['kind' => $kind, 'language' => $locale, 'actionUrl' => 'https://wosool.org/action', 'unsubscribeUrl' => 'https://wosool.org/unsubscribe', 'period' => 'October 2026',
+                'stories' => [['title' => "Founders & funds: Ali's raise", 'excerpt' => 'Seed "round" closed.', 'date' => '2026-10-29', 'url' => 'https://wosool.org/news/example']],
+                'members' => [['name' => 'Sara & Omar', 'company' => "O'Neil Labs", 'url' => 'https://wosool.org/founders/example']], 'events' => []])->render();
+            $this->assertStringContainsString("Founders & funds: Ali's raise", $text);
+            $this->assertStringContainsString("Sara & Omar · O'Neil Labs", $text);
+            $this->assertStringContainsString('Seed "round" closed.', $text);
+            $this->assertDoesNotMatchRegularExpression('/&(amp|quot|lt|gt|#0?39);/', $text);
+            foreach ($headings[$locale] as $other => $heading) {
+                $other === $kind ? $this->assertStringContainsString($heading, $text) : $this->assertStringNotContainsString($heading, $text, "$locale $kind must not use the $other heading");
+            }
+            $this->assertStringContainsString($actions[$locale][$kind === 'confirm' ? 'confirm' : 'other'], $text);
+            $kind === 'confirm' ? $this->assertStringNotContainsString('https://wosool.org/unsubscribe', $text) : $this->assertStringContainsString('https://wosool.org/unsubscribe', $text);
+        }
+    }
+
     public function test_bilingual_templates_escape_content_and_include_reading_and_subscription_links(): void
     {
         foreach (['ar', 'en'] as $locale) foreach (['confirm', 'welcome', 'digest'] as $kind) {
