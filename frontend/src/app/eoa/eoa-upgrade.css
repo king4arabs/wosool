@@ -200,16 +200,21 @@
   inset-inline-end: max(1.25rem, calc((100vw - 1240px) / 2));
   display: inline-flex;
   align-items: center;
-  gap: .5rem;
-  min-height: 42px;
-  padding: .55rem .8rem;
+  justify-content: center;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0;
   border: 1px solid rgb(255 255 255 / 28%);
   border-radius: 999px;
   background: rgb(12 12 49 / 68%);
   color: var(--brand-white);
-  font-size: .78rem;
-  font-weight: 700;
+  cursor: pointer;
   backdrop-filter: blur(14px);
+}
+
+.eoa-hero-media-control:focus-visible {
+  outline: 3px solid var(--brand-white);
+  outline-offset: 4px;
 }
 
 .eoa-hero-retry {

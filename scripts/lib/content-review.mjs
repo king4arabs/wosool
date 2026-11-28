@@ -28,6 +28,7 @@ export const catalogs = [
   { kind: 'founders', backend: 'backend/resources/data/founder-directory-expansion-2026-11-25.json', frontend: 'frontend/src/data/founder-spotlight-expansion-2026-11-25.json' },
   { kind: 'founders', backend: 'backend/resources/data/founder-directory-expansion-2026-11-26.json', frontend: 'frontend/src/data/founder-spotlight-expansion-2026-11-26.json' },
   { kind: 'founders', backend: 'backend/resources/data/founder-directory-expansion-2026-11-27.json', frontend: 'frontend/src/data/founder-spotlight-expansion-2026-11-27.json' },
+  { kind: 'founders', backend: 'backend/resources/data/founder-directory-expansion-2026-11-28.json', frontend: 'frontend/src/data/founder-spotlight-expansion-2026-11-28.json' },
 ]
 const hasText = value => typeof value === 'string' && value.trim().length > 0
 const validUrl = value => {

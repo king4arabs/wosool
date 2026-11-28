@@ -243,6 +243,7 @@ Route::prefix('v1')->group(function () {
 
     Route::middleware(['auth:sanctum', 'admin', \App\Http\Middleware\CanonicalEoaProgram::class])->prefix('admin')->group(function () {
         Route::get('/dashboard', AdminDashboardController::class);
+        Route::get('/data-readiness', \App\Http\Controllers\Api\Admin\DataReadinessController::class)->middleware('throttle:10,1');
         Route::get('/users', [\App\Http\Controllers\Api\Admin\UserController::class, 'index']);
         Route::get('/users/{user}/identity', [\App\Http\Controllers\Api\Admin\UserController::class, 'identity']);
         Route::post('/users/{user}/verify', [\App\Http\Controllers\Api\Admin\UserController::class, 'verify'])->middleware('throttle:20,1');

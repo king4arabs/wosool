@@ -2600,5 +2600,16 @@
     "reviewed_at": "2026-11-27",
     "status": "unresolved",
     "reason": "Official website confirmed; reuse rights for original artwork not established. Retain readable company-name fallback."
+  },
+  {
+    "company_key": "xebo-ai",
+    "company": "XEBO.ai",
+    "website": "https://www.xebo.ai/",
+    "source_page": "https://www.xebo.ai/about",
+    "src": null,
+    "tone": null,
+    "reviewed_at": "2026-11-28",
+    "status": "unresolved",
+    "reason": "Official brand confirmed; reusable original artwork permission not established. Retain readable company-name fallback."
   }
 ]

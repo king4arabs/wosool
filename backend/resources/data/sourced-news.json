@@ -6821,5 +6821,91 @@
         ]
       }
     }
+  },
+  {
+    "imageUrl": "",
+    "imageCredit": "",
+    "author": "Wosool news desk",
+    "id": "sourced-mawj-saudi-series-a-november-2026",
+    "slug": "mawj-saudi-series-a-november-2026",
+    "title": "Saudi voice AI company Mawj closes Series A of undisclosed size",
+    "excerpt": "SEEDRA Ventures led the round with Impact46 and Sharaka Capital participating.",
+    "content": "Riyadh-based Mawj has closed a Series A round, according to reporting on 26 November 2026. The company develops AI agents that handle calls and messages in Arabic and English, including Saudi and Gulf dialects, and connect to enterprise systems to complete customer requests. Its official site reports more than 100 client organisations across over 17 sectors. The full round size and revenue were not disclosed.",
+    "category": "Funding",
+    "region": "saudi",
+    "sourceUrl": "https://www.fwdstart.me/p/saudi-ai-startup-mawj-raises-series-a-as-customer-service-competition-grows",
+    "sourceName": "FWDstart (26 November 2026)",
+    "companies": [
+      "Mawj"
+    ],
+    "publishedAt": "2026-11-26",
+    "tags": [
+      "Saudi Arabia",
+      "AI",
+      "Series A",
+      "Customer service"
+    ],
+    "keyFacts": [
+      "Series A led by SEEDRA Ventures; total undisclosed",
+      "Impact46 and Sharaka Capital participated",
+      "100+ client organisations, according to Mawj"
+    ],
+    "translations": {
+      "ar": {
+        "title": "«موج» السعودية تغلق جولة استثمارية من الفئة أ بقيمة غير معلنة",
+        "excerpt": "قادت سيدرا فنتشرز الجولة بمشاركة Impact46 وSharaka Capital.",
+        "body": [
+          "أغلقت شركة موج، ومقرها الرياض، جولة من الفئة أ بحسب تقرير نُشر في 26 نوفمبر 2026. وتطور الشركة وكلاء ذكاء اصطناعي للتعامل مع المكالمات والرسائل بالعربية والإنجليزية، بما فيها اللهجات السعودية والخليجية، والاتصال بأنظمة المؤسسات لتنفيذ طلبات العملاء. ويفيد موقع الشركة الرسمي بأنها تخدم أكثر من 100 جهة في أكثر من 17 قطاعاً. ولم تُعلن القيمة الإجمالية للجولة أو الإيرادات."
+        ],
+        "keyFacts": [
+          "جولة من الفئة أ بقيادة سيدرا فنتشرز بقيمة إجمالية غير معلنة",
+          "مشاركة Impact46 وSharaka Capital",
+          "أكثر من 100 جهة عميلة بحسب موج"
+        ]
+      }
+    }
+  },
+  {
+    "imageUrl": "",
+    "imageCredit": "",
+    "author": "Wosool news desk",
+    "id": "sourced-xebo-ai-egf-series-a-november-2026",
+    "slug": "xebo-ai-egf-series-a-november-2026",
+    "title": "Emirates Growth Fund signs $10.5 million XEBO.ai investment agreement",
+    "excerpt": "The proposed Series A investment would support product development and geographic expansion.",
+    "content": "On 26 November 2026, Emirates Growth Fund announced an agreement to invest US$10.5 million in Dubai-based XEBO.ai as part of its Series A. The company applies AI to customer and employee feedback and plans to expand in the GCC and enter the US. The investor reports more than 350 enterprise and government clients served since inception. The signed agreement does not independently establish that funds have been disbursed or that the expansion has been completed.",
+    "category": "Funding",
+    "region": "gcc",
+    "sourceUrl": "https://www.egf.gov.ae/en/news/emirates-growth-fund-invests-%2410.5-million-in-uae-built-ai-company-xebo.ai",
+    "sourceName": "Emirates Growth Fund (26 November 2026)",
+    "companies": [
+      "XEBO.ai"
+    ],
+    "publishedAt": "2026-11-26",
+    "tags": [
+      "UAE",
+      "AI",
+      "Enterprise software",
+      "Series A"
+    ],
+    "keyFacts": [
+      "US$10.5 million proposed investment under signed agreement",
+      "350+ enterprise and government clients served since inception, per investor",
+      "GCC expansion and US entry are planned"
+    ],
+    "translations": {
+      "ar": {
+        "title": "صندوق الإمارات للنمو يوقع اتفاقية لاستثمار 10.5 مليون دولار في XEBO.ai",
+        "excerpt": "يدعم الاستثمار المقترح ضمن الجولة من الفئة أ تطوير المنتجات والتوسع الجغرافي.",
+        "body": [
+          "أعلن صندوق الإمارات للنمو في 26 نوفمبر 2026 توقيع اتفاقية لاستثمار 10.5 مليون دولار في شركة XEBO.ai التي تتخذ من دبي مقراً لها ضمن جولتها من الفئة أ. وتستخدم الشركة الذكاء الاصطناعي لتحليل ملاحظات العملاء والموظفين وتخطط للتوسع في الخليج ودخول السوق الأمريكية. ويفيد الصندوق بأنها خدمت أكثر من 350 عميلاً من المؤسسات والجهات الحكومية منذ تأسيسها. ولا يثبت توقيع الاتفاقية وحده صرف التمويل أو اكتمال التوسع."
+        ],
+        "keyFacts": [
+          "اتفاقية لاستثمار مقترح بقيمة 10.5 مليون دولار",
+          "أكثر من 350 عميلاً من المؤسسات والجهات الحكومية منذ التأسيس بحسب الصندوق",
+          "التوسع الخليجي ودخول السوق الأمريكية ضمن الخطط"
+        ]
+      }
+    }
   }
 ]

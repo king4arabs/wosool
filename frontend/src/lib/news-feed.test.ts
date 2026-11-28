@@ -362,3 +362,16 @@ test('27 November ecosystem briefs keep original publication dates and bilingual
     assert.ok(safeNewsUrl(item.sourceUrl))
   }
 })
+
+
+test('28 November briefs retain source dates, bilingual facts and exact XEBO founder links', () => {
+  for (const slug of ['mawj-saudi-series-a-november-2026', 'xebo-ai-egf-series-a-november-2026']) {
+    const item = curatedNews.find(n => n.slug === slug)!
+    assert.ok(item)
+    assert.equal(item.publishedAt, '2026-11-26')
+    assert.equal(item.keyFacts?.length, 3)
+    assert.equal(item.translations?.ar.keyFacts?.length, 3)
+    assert.ok(safeNewsUrl(item.sourceUrl))
+  }
+  assert.deepEqual(newsFounders(curatedNews.find(n => n.slug === 'xebo-ai-egf-series-a-november-2026')!).map(n => n.slug).sort(), ['anand-nigam-xebo-ai', 'yash-sultania-xebo-ai'])
+})

@@ -23,9 +23,10 @@ import november24Profiles from '../data/founder-spotlight-expansion-2026-11-24.j
 import november25Profiles from '../data/founder-spotlight-expansion-2026-11-25.json'
 import november26Profiles from '../data/founder-spotlight-expansion-2026-11-26.json'
 import november27Profiles from '../data/founder-spotlight-expansion-2026-11-27.json'
+import november28Profiles from '../data/founder-spotlight-expansion-2026-11-28.json'
 
 const rank: Record<string, number> = { saudi: 0, gcc: 1, mena: 2, global: 3 }
-const sourceProfiles = [...historicalProfiles, ...additionalProfiles, ...discoveryProfiles, ...countryProfiles, ...novemberProfiles, ...november12Profiles, ...november13Profiles, ...november14Profiles, ...november15Profiles, ...november17Profiles, ...november18Profiles, ...november19Profiles, ...november20Profiles, ...november21Profiles, ...november22Profiles, ...november23Profiles, ...november24Profiles, ...november25Profiles, ...november26Profiles, ...november27Profiles]
+const sourceProfiles = [...historicalProfiles, ...additionalProfiles, ...discoveryProfiles, ...countryProfiles, ...novemberProfiles, ...november12Profiles, ...november13Profiles, ...november14Profiles, ...november15Profiles, ...november17Profiles, ...november18Profiles, ...november19Profiles, ...november20Profiles, ...november21Profiles, ...november22Profiles, ...november23Profiles, ...november24Profiles, ...november25Profiles, ...november26Profiles, ...november27Profiles, ...november28Profiles]
   .sort((left, right) => (rank[left.region] ?? 4) - (rank[right.region] ?? 4))
 // Historical batches retain their membership when an existing profile receives new verification dates.
 // Cohort boundaries are source-linked, not array positions: editorial entries can be prepended.
@@ -103,13 +104,15 @@ test('frontend source snapshots and database import share the same reviewed reco
   assert.equal(november26Profiles.length, 5)
   assert.deepEqual(JSON.parse(readFileSync(new URL('../../../backend/resources/data/founder-directory-expansion-2026-11-27.json', import.meta.url), 'utf8')), november27Profiles)
   assert.equal(november27Profiles.length, 3)
+  assert.deepEqual(JSON.parse(readFileSync(new URL('../../../backend/resources/data/founder-directory-expansion-2026-11-28.json', import.meta.url), 'utf8')), november28Profiles)
+  assert.equal(november28Profiles.length, 2)
   for (const profile of november27Profiles) assert.ok(profile.founder_socials.every(link => profile.source_urls.includes(link.url)))
   assert.equal(originalCountryCohort.length, 102)
   assert.equal(october30Additions.length, 8)
   assert.equal(new Set(originalCountryCohort.map(profile => profile.country_code)).size, 51)
   for (const code of new Set(originalCountryCohort.map(profile => profile.country_code))) assert.equal(originalCountryCohort.filter(profile => profile.country_code === code).length, 2, code)
-  assert.equal(new Set(sourceProfiles.map(profile => profile.company_key)).size, 236)
-  assert.equal(sourceProfiles.length, 443)
+  assert.equal(new Set(sourceProfiles.map(profile => profile.company_key)).size, 237)
+  assert.equal(sourceProfiles.length, 445)
   assert.equal(new Set(sourceProfiles.map(profile => profile.founder_name_en.toLowerCase())).size, sourceProfiles.length)
   assert.equal(new Set(sourceProfiles.map(profile => profile.slug)).size, sourceProfiles.length)
   assert.ok(sourceProfiles.every(profile => profile.source_urls.length > 0 && profile.reviewed_at))

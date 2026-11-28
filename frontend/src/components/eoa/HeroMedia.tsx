@@ -109,18 +109,8 @@ export function EoaHeroMedia({ ar }: { ar: boolean }) {
                 ? 'إيقاف خلفية الرياض مؤقتاً'
                 : 'Pause Riyadh background video'
           }
-          aria-pressed={paused}
         >
-          {paused ? <Play size={17} /> : <Pause size={17} />}
-          <span>
-            {paused
-              ? ar
-                ? 'تشغيل'
-                : 'Play'
-              : ar
-                ? 'إيقاف مؤقت'
-                : 'Pause'}
-          </span>
+          {paused ? <Play size={17} aria-hidden="true" /> : <Pause size={17} aria-hidden="true" />}
         </button>
       )}
     </>
