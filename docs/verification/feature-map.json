@@ -1,0 +1,49 @@
+{
+  "schema_version": 1,
+  "project": "wosool",
+  "repository": "king4arabs/wosool",
+  "trust_stage": "local-observed-partial",
+  "scope_note": "Only verified database-operation entry points are mapped in this first slice. Public bilingual journey acceptance and cloud eval promotion remain unverified.",
+  "features": [
+    {
+      "id": "DB-READINESS-ADMIN-001",
+      "status": "verified-source-and-isolated-test",
+      "description": "A nominated verified platform administrator can request a status-only database readiness result without receiving rows, counts, or diagnostics.",
+      "platforms": ["api"],
+      "locales": ["not-applicable"],
+      "role": "named-platform-admin",
+      "entry_point": {
+        "type": "http",
+        "method": "GET",
+        "value": "/api/v1/admin/data-readiness",
+        "source": "backend/routes/api.php"
+      },
+      "states": ["unauthenticated", "forbidden", "ready", "unavailable"],
+      "synthetic_data": "RefreshDatabase users and founder profiles only",
+      "evidence": {
+        "implementation": "backend/app/Http/Controllers/Api/Admin/DataReadinessController.php",
+        "test": "backend/tests/Feature/DataReadinessTest.php"
+      }
+    },
+    {
+      "id": "DB-AGENT-CORRECTION-001",
+      "status": "verified-source-pending-hosted-test",
+      "description": "A distinct, expiring Wosool Agent identity can preview or apply one allowlisted public-URL correction to an unclaimed synthetic founder in local/testing only, with optimistic locking and a value-redacted audit.",
+      "platforms": ["cli"],
+      "locales": ["not-applicable"],
+      "role": "project-scoped-agent",
+      "entry_point": {
+        "type": "command",
+        "method": "artisan",
+        "value": "wosool:agent-correct-founder",
+        "source": "backend/app/Console/Commands/ApplyScopedAgentDataCorrection.php"
+      },
+      "states": ["disabled", "denied", "expired", "stale", "previewed", "applied", "no_change", "rolled_back"],
+      "synthetic_data": "Disposable SQLite founder fixtures; no production identity or row",
+      "evidence": {
+        "implementation": "backend/app/Services/ScopedAgentDataCorrection.php",
+        "test": "backend/tests/Feature/ScopedAgentDataCorrectionTest.php"
+      }
+    }
+  ]
+}

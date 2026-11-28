@@ -33,7 +33,7 @@
     "eoa:install": "php backend/artisan eoa:install",
     "qa": "npm run verify && npm --prefix frontend run qa:crawl",
     "qa:crawl": "npm --prefix frontend run qa:crawl",
-    "content:test": "node --test scripts/content-review.test.mjs",
+    "content:test": "node --test scripts/content-review.test.mjs scripts/feature-map.test.mjs",
     "content:check": "node scripts/content-review.mjs --check",
     "content:review": "node scripts/content-review.mjs"
   },
