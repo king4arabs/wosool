@@ -40,7 +40,7 @@ class ScopedAgentDataCorrectionTest extends TestCase
             'website_url' => 'https://other.example.test',
             'status' => 'active',
         ]);
-        $options = $this->options($target, ['--value' => 'https://new.example.test']);
+        $options = $this->commandOptions($target, ['--value' => 'https://new.example.test']);
 
         $this->artisan('wosool:agent-correct-founder', $options)
             ->expectsOutputToContain('"status":"previewed"')
@@ -80,37 +80,37 @@ class ScopedAgentDataCorrectionTest extends TestCase
         ]);
 
         config(['data_operations.agent.enabled' => false]);
-        $this->artisan('wosool:agent-correct-founder', $this->options($target))
+        $this->artisan('wosool:agent-correct-founder', $this->commandOptions($target))
             ->expectsOutputToContain('disabled')
             ->assertFailed();
         config(['data_operations.agent.enabled' => true]);
 
-        $this->artisan('wosool:agent-correct-founder', $this->options($target, ['--project' => 'adjacent-project']))
+        $this->artisan('wosool:agent-correct-founder', $this->commandOptions($target, ['--project' => 'adjacent-project']))
             ->expectsOutputToContain('Cross-project')
             ->assertFailed();
 
         config(['data_operations.agent.expires_at' => now()->subMinute()->toIso8601String()]);
-        $this->artisan('wosool:agent-correct-founder', $this->options($target))
+        $this->artisan('wosool:agent-correct-founder', $this->commandOptions($target))
             ->expectsOutputToContain('expired')
             ->assertFailed();
         config(['data_operations.agent.expires_at' => now()->addHour()->toIso8601String()]);
 
         foreach (['is_public', 'role', 'export', 'deleted_at'] as $deniedField) {
-            $this->artisan('wosool:agent-correct-founder', $this->options($target, ['--field' => $deniedField]))
+            $this->artisan('wosool:agent-correct-founder', $this->commandOptions($target, ['--field' => $deniedField]))
                 ->expectsOutputToContain('allowlisted')
                 ->assertFailed();
         }
 
-        $this->artisan('wosool:agent-correct-founder', $this->options($target, ['--actor' => 'adjacent-agent']))
+        $this->artisan('wosool:agent-correct-founder', $this->commandOptions($target, ['--actor' => 'adjacent-agent']))
             ->expectsOutputToContain('identity')
             ->assertFailed();
 
-        $this->artisan('wosool:agent-correct-founder', $this->options($target, ['--expected-updated-at' => now()->subDay()->toIso8601String()]))
+        $this->artisan('wosool:agent-correct-founder', $this->commandOptions($target, ['--expected-updated-at' => now()->subDay()->toIso8601String()]))
             ->expectsOutputToContain('changed after preview')
             ->assertFailed();
 
         $target->forceFill(['user_id' => \App\Models\User::factory()->create()->id, 'claimed_at' => now()])->save();
-        $this->artisan('wosool:agent-correct-founder', $this->options($target))
+        $this->artisan('wosool:agent-correct-founder', $this->commandOptions($target))
             ->expectsOutputToContain('unclaimed founder fixture')
             ->assertFailed();
 
@@ -127,7 +127,7 @@ class ScopedAgentDataCorrectionTest extends TestCase
         ]);
         Schema::drop('data_operation_audits');
 
-        $this->artisan('wosool:agent-correct-founder', $this->options($target, ['--value' => 'https://new.example.test']) + ['--apply' => true])
+        $this->artisan('wosool:agent-correct-founder', $this->commandOptions($target, ['--value' => 'https://new.example.test']) + ['--apply' => true])
             ->expectsOutputToContain('failed and was rolled back')
             ->assertFailed();
 
@@ -135,7 +135,7 @@ class ScopedAgentDataCorrectionTest extends TestCase
     }
 
     /** @return array<string, mixed> */
-    private function options(FounderProfile $target, array $overrides = []): array
+    private function commandOptions(FounderProfile $target, array $overrides = []): array
     {
         return array_replace([
             '--actor' => self::ACTOR,
