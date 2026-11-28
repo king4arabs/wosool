@@ -17,6 +17,8 @@ import november23Profiles from '../data/founder-spotlight-expansion-2026-11-23.j
 import november24Profiles from '../data/founder-spotlight-expansion-2026-11-24.json'
 import november25Profiles from '../data/founder-spotlight-expansion-2026-11-25.json'
 import november26Profiles from '../data/founder-spotlight-expansion-2026-11-26.json'
+import november27Profiles from '../data/founder-spotlight-expansion-2026-11-27.json'
+import november28Profiles from '../data/founder-spotlight-expansion-2026-11-28.json'
 import type { Founder, NewsItem } from '../types'
 import { companyMatches } from './news-feed'
 import { isDirectoryRecordVisible } from './directory-geography'
@@ -28,7 +30,7 @@ export type FounderSpotlight = Founder & {
 
 /** Curated editorial datasets do not establish registered or verified membership. */
 const priority: Record<string, number> = { saudi: 0, gcc: 1, mena: 2, global: 3 }
-const profiles = [...historicalProfiles, ...additionalProfiles, ...discoveryProfiles, ...countryProfiles, ...novemberProfiles, ...november12Profiles, ...november13Profiles, ...november14Profiles, ...november15Profiles, ...november17Profiles, ...november18Profiles, ...november19Profiles, ...november20Profiles, ...november21Profiles, ...november22Profiles, ...november23Profiles, ...november24Profiles, ...november25Profiles, ...november26Profiles]
+const profiles = [...historicalProfiles, ...additionalProfiles, ...discoveryProfiles, ...countryProfiles, ...novemberProfiles, ...november12Profiles, ...november13Profiles, ...november14Profiles, ...november15Profiles, ...november17Profiles, ...november18Profiles, ...november19Profiles, ...november20Profiles, ...november21Profiles, ...november22Profiles, ...november23Profiles, ...november24Profiles, ...november25Profiles, ...november26Profiles, ...november27Profiles, ...november28Profiles]
   .filter(profile => isDirectoryRecordVisible({ country_code: profile.country_code, location: profile.country_en }))
   .sort((left, right) => (priority[left.region] ?? 4) - (priority[right.region] ?? 4))
 
