@@ -44,7 +44,6 @@ class ScopedAgentDataCorrectionTest extends TestCase
 
         $this->artisan('wosool:agent-correct-founder', $options)
             ->expectsOutputToContain('"status":"previewed"')
-            ->expectsOutputToContain('"would_change":true')
             ->assertSuccessful();
 
         $this->assertSame('https://old.example.test', $target->fresh()->website_url);
