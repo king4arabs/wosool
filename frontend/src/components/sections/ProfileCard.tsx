@@ -4,6 +4,7 @@ import type { ReactNode } from "react"
 import { useId, useState } from "react"
 import Image from "next/image"
 import Link from "next/link"
+import { programStageLabel } from "@/lib/program-labels"
 import {
   ArrowUpRight,
   BadgeCheck,
@@ -221,7 +222,7 @@ export function ProfileCard({ data, variant = "company", layout = "carousel" }: 
             <div><span>{ar ? "القطاع" : "Sector"}</span><strong>{data.sector}</strong></div>
           )}
           {data.stage && (
-            <div><span>{ar ? "المرحلة" : "Stage"}</span><strong>{data.stage}</strong></div>
+            <div><span>{ar ? "المرحلة" : "Stage"}</span><strong>{programStageLabel(data.stage, ar ? "ar" : "en")}</strong></div>
           )}
           {data.location && (
             <div>

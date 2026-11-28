@@ -24,6 +24,7 @@ const STAGE_LABELS: Record<string, Label> = {
   "series-c": { ar: "السلسلة C", en: "Series C" },
   growth: { ar: "النمو", en: "Growth" },
   "scale-up": { ar: "التوسّع", en: "Scale-up" },
+  exited: { ar: "تخارج", en: "Exited" },
 }
 
 /**
@@ -64,6 +65,7 @@ export function programCategoryLabel(category: string, locale: Locale): string {
   return label(CATEGORY_LABELS, category, locale)
 }
 
+/** Also used for founder and company stages, which are saved either as codes ("series-a") or English labels ("Series A"). */
 export function programStageLabel(stage: string, locale: Locale): string {
   return label(STAGE_LABELS, stage, locale)
 }

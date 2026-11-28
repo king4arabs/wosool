@@ -6,6 +6,7 @@ import { useParams, useRouter } from "next/navigation"
 import Link from "next/link"
 import { ApiError, api } from "@/lib/api"
 import { useLocale } from "@/lib/locale"
+import { programStageLabel } from "@/lib/program-labels"
 import { publicWebsite } from "@/lib/community-display"
 import { type ApiFounder, type ApiCompany, mapCompany, mapFounder } from "@/lib/content-api"
 import { useAuth } from "@/lib/auth"
@@ -95,7 +96,7 @@ function ProfileDetails({ kind, slug }: { kind: "founder" | "company"; slug: str
             {founder && <div className="mt-3 flex flex-wrap gap-3">{[['LinkedIn',founder.linkedinUrl],['X',founder.twitterUrl]].map(([label,url])=>publicWebsite(url) && <a key={label} href={publicWebsite(url)} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-11 items-center text-sm text-indigo-600 underline">{label}</a>)}</div>}
             {connectionError && <p role="alert" className="mt-3 text-sm text-red-700">{connectionError}</p>}
           </section>
-          <section className="rounded-3xl border bg-white p-6"><h2 className="text-sm font-bold">{ar?'نظرة سريعة':'At a glance'}</h2><dl className="mt-4 space-y-4">{[[ar?'الموقع':'Location',founder?.location || company?.location],[ar?'القطاع':'Sector',founder?.sector || company?.sector],[ar?'المرحلة':'Stage',founder?.stage || company?.stage]].map(([label,value])=>value && <div key={label}><dt className="text-xs text-slate-500">{label}</dt><dd className="mt-1 text-sm font-semibold text-slate-900">{value}</dd></div>)}</dl></section>
+          <section className="rounded-3xl border bg-white p-6"><h2 className="text-sm font-bold">{ar?'نظرة سريعة':'At a glance'}</h2><dl className="mt-4 space-y-4">{[[ar?'الموقع':'Location',founder?.location || company?.location],[ar?'القطاع':'Sector',founder?.sector || company?.sector],[ar?'المرحلة':'Stage',(founder?.stage || company?.stage) ? programStageLabel(String(founder?.stage || company?.stage), ar?'ar':'en') : '']].map(([label,value])=>value && <div key={label}><dt className="text-xs text-slate-500">{label}</dt><dd className="mt-1 text-sm font-semibold text-slate-900">{value}</dd></div>)}</dl></section>
           {!!founder?.sourceUrls?.length && <details className="rounded-2xl border bg-slate-50 p-5"><summary className="cursor-pointer text-sm font-semibold">{ar?'المصادر':'Sources'}</summary><ul className="mt-3 space-y-2">{founder.sourceUrls.filter(url=>publicWebsite(url)).map((url,index)=><li key={url}><a href={url} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-11 items-center break-all text-xs text-indigo-600 underline">{ar?'المصدر':'Source'} {index+1} · {new URL(url).hostname}</a></li>)}</ul></details>}
         </aside>
       </div>

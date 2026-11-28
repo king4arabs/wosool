@@ -8,6 +8,7 @@ import { PublicLayout } from "@/components/layout/PublicLayout"
 import { FounderShowcase } from "@/components/sections/CommunityShowcase"
 import { type FounderRegionFilter } from "@/lib/founder-filters"
 import { createFounderMixStore } from "@/lib/founder-discovery"
+import { programStageLabel } from "@/lib/program-labels"
 import { countryRegion, directoryCountryGroups, isDirectoryRecordVisible } from '@/lib/directory-geography'
 import { type FounderCardProfile } from "@/components/sections/FounderCard"
 import { foundersPageCopy } from "@/data/localized-seed"
@@ -90,7 +91,7 @@ function FounderDirectory({ visitSeed }: { visitSeed: number }) {
         <div className="grid min-w-0 gap-3 sm:grid-cols-2">
           <label className={label}><span>{ar ? 'القطاع' : 'Sector'}</span><select value={sector} onChange={event => setSector(event.target.value)} className={control}><option value="">{copy.sectors[0]}</option>{options('sector').map(value => <option value={value} key={value}>{value}</option>)}</select></label>
           <label className={label}><span>{ar ? 'الدولة' : 'Country'}</span><select value={location} onChange={event => { const value = event.target.value; setLocation(value); setRegion(value ? countryRegion(value) : 'all') }} className={control}><option value="">{ar ? 'جميع الدول' : 'All countries'}</option>{countries.map(group => <optgroup label={group.label} key={group.region}>{group.countries.map(country => <option value={country.code} key={country.code}>{country.label}</option>)}</optgroup>)}</select></label>
-          {options('stage').length > 0 && <label className={label}><span>{ar ? 'المرحلة' : 'Stage'}</span><select value={stage} onChange={event => setStage(event.target.value)} className={control}><option value="">{copy.stages[0]}</option>{options('stage').map(value => <option value={value} key={value}>{value}</option>)}</select></label>}
+          {options('stage').length > 0 && <label className={label}><span>{ar ? 'المرحلة' : 'Stage'}</span><select value={stage} onChange={event => setStage(event.target.value)} className={control}><option value="">{copy.stages[0]}</option>{options('stage').map(value => <option value={value} key={value}>{programStageLabel(value, locale)}</option>)}</select></label>}
         </div>
         {hasFilters && <button type="button" className="min-h-11 justify-self-start px-3 text-sm font-bold text-[var(--action-bg)] underline underline-offset-4" onClick={() => { setSearch(''); setSector(''); setStage(''); setLocation(''); setRegion('all') }}>{ar ? 'مسح الفلاتر' : 'Clear filters'}</button>}
       </div>}

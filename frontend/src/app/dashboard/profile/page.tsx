@@ -9,6 +9,7 @@ import { profileErrorId, profileFieldErrors, profileInvalidProps } from "@/lib/p
 import { api, ApiError } from "@/lib/api"
 import { useToast } from "@/components/ui/toast"
 import { useLocale } from "@/lib/locale"
+import { programStageLabel } from "@/lib/program-labels"
 import { dashboardDictionary } from "@/lib/dashboard-i18n"
 import AvatarUploader from "@/components/dashboard/AvatarUploader"
 
@@ -609,9 +610,9 @@ export default function ProfilePage() {
               className={selectClass}
             >
               <option value="">{copy.selectStage}</option>
-              {profile.stage && !STAGES.includes(profile.stage) && <option value={profile.stage}>{profile.stage}</option>}
+              {profile.stage && !STAGES.includes(profile.stage) && <option value={profile.stage}>{programStageLabel(profile.stage, locale)}</option>}
               {STAGES.map((s) => (
-                <option key={s} value={s}>{s}</option>
+                <option key={s} value={s}>{programStageLabel(s, locale)}</option>
               ))}
             </select>
           </Field>

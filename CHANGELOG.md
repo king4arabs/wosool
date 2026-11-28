@@ -1,3 +1,9 @@
+## Company stage shows as words in Arabic and English — 2026-11-28
+
+- **Found:** founder cards, founder profiles, the `/founders` stage filter and the member profile/company stage pickers printed the stored stage as-is. The profile form saves codes (`seed`, `series-a`) and the company form saves English labels (`Seed`, `Series A`), so Arabic pages showed English and English pages could show lowercase codes such as `seed`.
+- **Changed:** these views now use the existing `programStageLabel` helper (already used for programs and member matches), with `exited` added. Stored values, filter values, API and data are unchanged; Arabic text a member typed is shown as written. Moved the partner-logo `eslint-disable` comment onto its own line so lint is warning-free.
+- **Verified locally:** new label and wiring tests in `frontend/src/lib/program-labels.test.ts`; `npm run verify` and the QA crawl results are recorded in the PR. No API, schema, migration, dependency, deployment or hosting change.
+
 ## Transactional email plain-text part is readable and links to wosool.org — 2026-11-27
 
 - **Found:** rendering the `text/plain` part of the shared bilingual email (`mail/bilingual.blade.php`, used by every `WosoolMail` and notification) showed four problems. It opened with `Wosool: https://api.wosool.org` (Laravel's default text header prints `APP_URL`, the API host). Detail rows ran together (`QuestionHow do I price…`). The copy-the-link fallback had no space before the URL and the action label had no link next to it. The footer was Laravel's `© Wosool. All rights reserved.` instead of the HTML footer.
