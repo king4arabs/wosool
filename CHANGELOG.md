@@ -1,3 +1,11 @@
+## Founder and startup news refresh — 2026-11-28
+
+- Continued PR #305 on the latest main, retaining the Symfony security update and existing editorial changes; added two XEBO.ai bilingual founder profiles and Saudi Mawj / UAE XEBO.ai funding briefs. [Editorial evidence and source-inspected feature map](docs/research/CONTENT-REFRESH-2026-11-28.md). Candidate only; fresh hosted CI and independent review required, no production import or deployment.
+
+## Founder and ecosystem news refresh — 2026-11-27
+
+- Added three bilingual Inovat founder scorecards and two GCC ecosystem briefs, mirrors, importer registration, logo audit and regression assertions. [Editorial evidence](docs/research/CONTENT-REFRESH-2026-11-27.md). Prior CI failed Composer audit; fresh validation required.
+
 ## Symfony 7.4.24 security release — 2026-11-27
 
 - Current `main` CI failed the unsuppressed Composer audit on PHP 8.3, 8.4 and 8.5 after five Symfony advisories were published on 25 November. Frontend, production guardrails and the standalone pnpm/Hostinger build remained green.
